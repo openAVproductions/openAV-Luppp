@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "jackclient.hpp"
+#include "rtqueue.hpp"
 
 // the Top class is a portal trough which the rest of the program can
 // commnunicate. It allows the JACK thread send messages to other threads,
@@ -20,7 +21,7 @@ class Top
     JackClient* jackClient;
     
   private:
-    
+    RtQueue toJackQueue;
 };
 
 #endif

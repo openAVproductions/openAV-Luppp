@@ -33,6 +33,8 @@ def build(ctx):
   
   #     ENGINE
   engineList=['src/top.cpp',
+              'src/rtqueue.cpp',
+              'src/engineevent.cpp',
               'src/jackclient.cpp']
   
   engineDepends = 'JACK' # LADSPA.H SNDFILE'

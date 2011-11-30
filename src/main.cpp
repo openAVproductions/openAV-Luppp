@@ -9,8 +9,9 @@ using namespace std;
 
 Top* top = 0;
 
-void sighandler(int sig)
+void sighandler(int)
 {
+  
   top->jackClient->deactivate();
   exit(0);
 }
