@@ -32,7 +32,8 @@ def build(ctx):
   print '\nBuilding the sources to objects...'
   
   #     ENGINE
-  engineList=['src/jackclient.cpp']
+  engineList=['src/top.cpp',
+              'src/jackclient.cpp']
   
   engineDepends = 'JACK' # LADSPA.H SNDFILE'
   
