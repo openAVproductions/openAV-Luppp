@@ -28,7 +28,6 @@ class JackClient
     Top* top;
     JClient* client;
     
-    
     Mixer mixer;
     
     JPort* sidechainPort;
@@ -37,6 +36,8 @@ class JackClient
     JPort* midiInputPort;
     
     int process(jack_nframes_t);
+    int processMidi(jack_nframes_t);
+    
     static int static_process(jack_nframes_t, void *);
     
     int framesPerBeat;

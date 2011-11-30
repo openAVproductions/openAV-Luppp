@@ -14,6 +14,8 @@ JackClient::JackClient( Top* t) :
   
   client = jack_client_open ( "Luppp", JackNullOption , 0 , 0 );
   
+  t->jackBufferSize = jack_get_buffer_size(client);
+  
   inputPort = jack_port_register ( client,
                                     "input",
                                     JACK_DEFAULT_AUDIO_TYPE,
@@ -53,6 +55,15 @@ int JackClient::static_process(jack_nframes_t nframes, void* thisPointer)
 
 int JackClient::process(jack_nframes_t nframes)
 {
+  float* outBuffer   = (float*)jack_port_get_buffer (outputPort    , nframes);
+  
+  mixer.process(nframes, outBuffer);
+  
+  return true;
+};
+
+int JackClient::processMidi(jack_nframes_t nframes)
+{
   // process incoming MIDI
   midiInputBuffer = jack_port_get_buffer (midiInputPort, nframes);
   jack_midi_event_t in_event; // event buffer
@@ -76,12 +87,8 @@ int JackClient::process(jack_nframes_t nframes)
     midiIndex++;
   }
   
-  float* outBuffer   = (float*)jack_port_get_buffer (outputPort    , nframes);
-  
-  mixer.process(nframes, outBuffer);
-  
-  return true;
-};
+  return 0;
+}
 
 void JackClient::deactivate()
 {

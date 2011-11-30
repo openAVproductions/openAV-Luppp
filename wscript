@@ -22,7 +22,7 @@ def configure(ctx):
   
   #   Engine Depends
   ctx.check_cfg	(package='jack',at_least_version='0.118',args='--cflags --libs',uselib_store='JACK')
-  #ctx.check_cfg	(package='sndfile',args='--cflags --libs',uselib_store='SNDFILE')
+  ctx.check_cfg	(package='sndfile',args='--cflags --libs',uselib_store='SNDFILE')
   
   # Check for headers:
   #ctx.check(header_name="ladspa.h",mandatory=False,uselib_store='LADSPA.H')
@@ -34,11 +34,13 @@ def build(ctx):
   #     ENGINE
   engineList=['src/top.cpp',
               'src/rtqueue.cpp',
+              'src/fileaudiosource.cpp',
               'src/mixer.cpp',
               'src/engineevent.cpp',
+              'src/audiotrack.cpp',
               'src/jackclient.cpp']
   
-  engineDepends = 'JACK' # LADSPA.H SNDFILE'
+  engineDepends = 'JACK SNDFILE'
   
   print 'Building ENGINE'
   buildList = engineList

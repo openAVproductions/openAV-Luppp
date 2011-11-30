@@ -20,6 +20,7 @@ class Top
     Top();
     
     JackClient* jackClient;
+    int jackBufferSize;
     
   private:
     RtQueue toJackQueue;
