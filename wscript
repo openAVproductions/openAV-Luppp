@@ -21,7 +21,7 @@ def configure(ctx):
   ctx.env.CXXFLAGS = ['-pg','-g','-Wall','-Wextra']
   
   #   Engine Depends
-  #ctx.check_cfg	(package='jack',at_least_version='0.118',args='--cflags --libs',uselib_store='JACK')
+  ctx.check_cfg	(package='jack',at_least_version='0.118',args='--cflags --libs',uselib_store='JACK')
   #ctx.check_cfg	(package='sndfile',args='--cflags --libs',uselib_store='SNDFILE')
   
   # Check for headers:
@@ -31,11 +31,10 @@ def configure(ctx):
 def build(ctx):
   print '\nBuilding the sources to objects...'
   
-  '''
   #     ENGINE
-  engineList=['src/main.cpp']
+  engineList=['src/jackclient.cpp']
   
-  engineDepends = '' # 'JACK LADSPA.H SNDFILE'
+  engineDepends = 'JACK' # LADSPA.H SNDFILE'
   
   print 'Building ENGINE'
   buildList = engineList
@@ -49,12 +48,11 @@ def build(ctx):
     target		= 'engine_gui',
     uselib		= engineDepends,
     export_includes = '.')
-  '''
   
   
   main			= ctx.new_task_gen(
     features	= 'cxx cprogram',
     source		= 'src/main.cpp',
-    #use       = 'engine_gui',
-    #uselib    = engineDepends,
+    use       = 'engine_gui',
+    uselib    = engineDepends,
     target		= 'luppp' )
