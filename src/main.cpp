@@ -2,16 +2,16 @@
 #include <iostream>
 #include <signal.h>
 
-#include "jackclient.hpp"
+#include "top.hpp"
 
 
 using namespace std;
 
-JackClient* jackClient = 0;
+Top* top = 0;
 
 void sighandler(int sig)
 {
-  jackClient->deactivate();
+  top->jackClient->deactivate();
   exit(0);
 }
 
@@ -21,7 +21,7 @@ int main()
   
   signal(SIGINT, &sighandler);
   
-  jackClient = new JackClient();
+  top = new Top();
   
   for ( ; ; )
   {

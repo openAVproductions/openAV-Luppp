@@ -7,8 +7,8 @@
 #include <jack/midiport.h>
 #include <jack/transport.h>
 
-#include <sndfile.hh>
 #include <vector>
+#include <sndfile.hh>
 
 typedef jack_client_t JClient;
 typedef jack_port_t JPort;

@@ -41,7 +41,7 @@ JackClient::JackClient()
   jack_activate(client);
 }
 
-int JackClient::process(jack_nframes_t nframes, void *arg)
+int JackClient::process(jack_nframes_t nframes, void*)
 {
   // process incoming MIDI
   midiInputBuffer = jack_port_get_buffer (midiInputPort, nframes);
@@ -61,14 +61,14 @@ int JackClient::process(jack_nframes_t nframes, void *arg)
     int b2 = (int)in_event.buffer[1];
     int b3 = (int)in_event.buffer[2];
     
-    cout << b1 << "  " << b2 << endl;
+    cout << b1 << "  " << b2 << "  " << b3 << endl;
     
     midiIndex++;
   }
   
   float* outBuffer   = (float*)jack_port_get_buffer (outputPort    , nframes);
   
-  for (int i = 0; i < (unsigned int)nframes; i++ )
+  for (int i = 0; i < (int)nframes; i++ )
   {
     *outBuffer++ = 0.f;
   }
