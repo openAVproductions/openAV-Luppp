@@ -6,6 +6,7 @@
 #include "rtqueue.hpp"
 
 #include  "jackclient.hpp"
+#include  "mixer.hpp"
 
 // the Top class is a portal trough which the rest of the program can
 // commnunicate. It allows the JACK thread send messages to other threads,
@@ -19,8 +20,11 @@ class Top
   public:
     Top();
     
+    Mixer* mixer;
     JackClient* jackClient;
     int jackBufferSize;
+    
+    int bpm;
     
   private:
     RtQueue toJackQueue;

@@ -12,6 +12,8 @@ JackClient::JackClient( Top* t) :
 {
   top = t;
   
+  top->mixer = &mixer;
+  
   client = jack_client_open ( "Luppp", JackNullOption , 0 , 0 );
   
   t->jackBufferSize = jack_get_buffer_size(client);

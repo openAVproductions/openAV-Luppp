@@ -9,10 +9,14 @@ Mixer::Mixer(Top* t)
   
   std::cout << "Resizing Mixer output buffer to " << 1024 << std::endl;
   outputBuffer.resize(1024);
-  
+}
+
+void Mixer::addTrack()
+{
   AudioTrack track(top);
   audiotrackList.push_back( track );
 }
+
 
 void Mixer::process(int nframes, float* ports)
 {

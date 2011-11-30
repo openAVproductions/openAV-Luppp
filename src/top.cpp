@@ -12,5 +12,8 @@ Top::Top()
   cout << "Creating JackClient... " << flush;
   jackClient = new JackClient(this);
   cout << "\t\t\tDone" << endl;
+  
+  mixer->addTrack();
+  
 }
 

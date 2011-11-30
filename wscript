@@ -36,6 +36,7 @@ def build(ctx):
               'src/rtqueue.cpp',
               'src/fileaudiosource.cpp',
               'src/mixer.cpp',
+              'src/statestore.cpp',
               'src/engineevent.cpp',
               'src/audiotrack.cpp',
               'src/jackclient.cpp']

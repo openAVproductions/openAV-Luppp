@@ -9,6 +9,11 @@
 
 #include "audiosource.hpp"
 
+struct FileAudioSourceState
+{
+  
+};
+
 using std::string;
 
 class FileAudioSource : AudioSource
