@@ -15,6 +15,8 @@ class AudioTrack
   public:
     AudioTrack(Top*);
     
+    void addEffect( int, Effect* );
+    
     void process(int nframes, float* ports);
   
   protected:

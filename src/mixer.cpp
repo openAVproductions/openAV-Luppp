@@ -7,7 +7,7 @@ Mixer::Mixer(Top* t)
 {
   top = t;
   
-  std::cout << "Resizing Mixer output buffer to " << 1024 << std::endl;
+  //std::cout << "Resizing Mixer output buffer to " << 1024 << std::endl;
   outputBuffer.resize(1024);
   
   AudioTrack track(top);

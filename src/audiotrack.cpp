@@ -11,6 +11,15 @@ AudioTrack::AudioTrack( Top* t) :
   top = t;
 }
 
+void AudioTrack::addEffect( int pos,  Effect* eff )
+{
+  std::list<Effect*>::iterator iter =  effects.begin();
+  
+  std::advance(iter, pos);
+  
+  effects.insert( iter , eff);
+}
+
 void AudioTrack::process(int nframes, float* buffer)
 {
   

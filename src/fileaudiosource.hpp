@@ -11,10 +11,12 @@
 
 using std::string;
 
-class FileAudioSource : AudioSource
+class FileAudioSource : public AudioSource
 {
   public:
     FileAudioSource(string name);
+    
+    void setSpeed(float s);
     void process (int, float* );
     
     float index;
