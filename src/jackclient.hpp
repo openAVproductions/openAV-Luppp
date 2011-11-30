@@ -10,18 +10,26 @@
 #include <vector>
 #include <sndfile.hh>
 
+#include "mixer.hpp"
+
+class Top;
+
 typedef jack_client_t JClient;
 typedef jack_port_t JPort;
 
 class JackClient
 {
   public:
-    JackClient();
+    JackClient(Top*);
     
     void deactivate();
     
   private:
+    Top* top;
     JClient* client;
+    
+    
+    Mixer mixer;
     
     JPort* sidechainPort;
     JPort* inputPort;

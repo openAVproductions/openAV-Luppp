@@ -3,8 +3,9 @@
 #define LUPPP_TOP
 
 #include <iostream>
-#include "jackclient.hpp"
 #include "rtqueue.hpp"
+
+#include  "jackclient.hpp"
 
 // the Top class is a portal trough which the rest of the program can
 // commnunicate. It allows the JACK thread send messages to other threads,

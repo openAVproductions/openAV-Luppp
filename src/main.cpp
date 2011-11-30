@@ -11,7 +11,6 @@ Top* top = 0;
 
 void sighandler(int)
 {
-  
   top->jackClient->deactivate();
   exit(0);
 }

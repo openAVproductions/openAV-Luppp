@@ -3,10 +3,15 @@
 
 #include <iostream>
 
+#include "top.hpp"
+
 using namespace std;
 
-JackClient::JackClient()
+JackClient::JackClient( Top* t) :
+                        mixer(t)
 {
+  top = t;
+  
   client = jack_client_open ( "Luppp", JackNullOption , 0 , 0 );
   
   inputPort = jack_port_register ( client,
@@ -73,10 +78,7 @@ int JackClient::process(jack_nframes_t nframes)
   
   float* outBuffer   = (float*)jack_port_get_buffer (outputPort    , nframes);
   
-  for (int i = 0; i < (int)nframes; i++ )
-  {
-    *outBuffer++ = 0.f;
-  }
+  mixer.process(nframes, outBuffer);
   
   return true;
 };

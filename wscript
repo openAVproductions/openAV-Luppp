@@ -34,6 +34,7 @@ def build(ctx):
   #     ENGINE
   engineList=['src/top.cpp',
               'src/rtqueue.cpp',
+              'src/mixer.cpp',
               'src/engineevent.cpp',
               'src/jackclient.cpp']
   
