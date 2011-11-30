@@ -6,7 +6,7 @@
 int AudioTrack::privateID = 0;
 
 AudioTrack::AudioTrack( Top* t) :
-                        source("sample.wav")
+                        source(t, "sample.wav")
 {
   top = t;
 }

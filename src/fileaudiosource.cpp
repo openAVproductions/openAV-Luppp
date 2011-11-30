@@ -1,12 +1,9 @@
 
 #include "fileaudiosource.hpp"
 
-
-FileAudioSource::FileAudioSource(std::string name)
+FileAudioSource::FileAudioSource(Top* t,std::string name)
 {
-  // speed of playback
-  speed = 1.0f;
-  index = 0.f;
+  top = t;
   
   SndfileHandle infile( name , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 1 , 44100);
 
@@ -33,6 +30,11 @@ FileAudioSource::FileAudioSource(std::string name)
 
 void FileAudioSource::process (int nframes, float* buffer )
 {
+  std::list<FileAudioSourceState>::iterator iter = top->fileAudioSourceState.begin();
+  
+  float index = iter->index;
+  float speed = iter->speed;
+  
   // playback the sample
   int size = sampleBuffer.size();
   

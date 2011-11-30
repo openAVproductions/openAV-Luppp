@@ -2,6 +2,7 @@
 #ifndef LUPPP_FILEAUDIOSOURCE
 #define LUPPP_FILEAUDIOSOURCE
 
+#include <list>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -11,7 +12,7 @@
 
 struct FileAudioSourceState
 {
-  
+  float speed, index;
 };
 
 using std::string;
@@ -19,12 +20,12 @@ using std::string;
 class FileAudioSource : AudioSource
 {
   public:
-    FileAudioSource(string name);
+    FileAudioSource(Top*, string name);
     void process (int, float* );
     
-    float index;
-    float speed;
     std::vector<float> sampleBuffer;
+  private:
+    Top* top;
 };
 
 

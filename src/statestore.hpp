@@ -11,8 +11,9 @@ class StateStore
 {
   public:
     StateStore();
-  
-  private:
+    
+    void addTrack();
+    
     std::list<FileAudioSourceState> fileAudioSourceState;
     
 };

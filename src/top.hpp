@@ -5,8 +5,10 @@
 #include <iostream>
 #include "rtqueue.hpp"
 
-#include  "jackclient.hpp"
-#include  "mixer.hpp"
+#include "jackclient.hpp"
+#include "mixer.hpp"
+
+#include "statestore.hpp"
 
 // the Top class is a portal trough which the rest of the program can
 // commnunicate. It allows the JACK thread send messages to other threads,
@@ -20,11 +22,15 @@ class Top
   public:
     Top();
     
-    Mixer* mixer;
+    void addTrack();
+    
+    void* mixer;
     JackClient* jackClient;
     int jackBufferSize;
     
     int bpm;
+    
+    StateStore state;
     
   private:
     RtQueue toJackQueue;
