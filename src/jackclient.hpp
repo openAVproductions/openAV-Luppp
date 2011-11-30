@@ -21,21 +21,22 @@ class JackClient
     void deactivate();
     
   private:
-    static JClient* client;
+    JClient* client;
     
-    static JPort* sidechainPort;
-    static JPort* inputPort;
-    static JPort* outputPort;
-    static JPort* midiInputPort;
+    JPort* sidechainPort;
+    JPort* inputPort;
+    JPort* outputPort;
+    JPort* midiInputPort;
     
-    static int process(jack_nframes_t, void *);
+    int process(jack_nframes_t);
+    static int static_process(jack_nframes_t, void *);
     
-    static int framesPerBeat;
-    static int nframeCounter;
+    int framesPerBeat;
+    int nframeCounter;
     
-    static void writeMidi(int,int,int);
-    static void* midiBuffer;
-    static void* midiInputBuffer;
+    void writeMidi(int,int,int);
+    void* midiBuffer;
+    void* midiInputBuffer;
 };
 
 #endif

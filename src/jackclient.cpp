@@ -3,15 +3,6 @@
 
 #include <iostream>
 
-JClient* JackClient::client = 0;
-
-JPort* JackClient::sidechainPort = 0;
-JPort* JackClient::inputPort = 0;
-JPort* JackClient::outputPort = 0;
-JPort* JackClient::midiInputPort = 0;
-
-void* JackClient::midiInputBuffer = 0;
-
 using namespace std;
 
 JackClient::JackClient()
@@ -36,12 +27,26 @@ JackClient::JackClient()
                                     JackPortIsInput,
                                     0 );
   
-  jack_set_process_callback  (client, process , 0);
+  
+  //jack_set_process_callback  (client, process , 0);
+  
+  int retval = jack_set_process_callback( client,
+                                  static_process,
+                                  static_cast<void*>(this));
+   if(retval) {
+       cerr << "JackClient::JackClient() Could not set process callback." << endl;
+       return;
+   }
   
   jack_activate(client);
 }
 
-int JackClient::process(jack_nframes_t nframes, void*)
+int JackClient::static_process(jack_nframes_t nframes, void* thisPointer)
+{
+  return static_cast<JackClient*>(thisPointer)->process(nframes);
+}
+
+int JackClient::process(jack_nframes_t nframes)
 {
   // process incoming MIDI
   midiInputBuffer = jack_port_get_buffer (midiInputPort, nframes);
