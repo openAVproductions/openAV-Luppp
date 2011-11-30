@@ -2,6 +2,7 @@
 #include "audiotrack.hpp"
 
 #include "top.hpp"
+#include "ladspahost.hpp"
 
 int AudioTrack::privateID = 0;
 
@@ -9,6 +10,7 @@ AudioTrack::AudioTrack( Top* t) :
                         source("sample.wav")
 {
   top = t;
+  addEffect( 1, new LadspaHost(EFFECT_REVERB, top->samplerate) );
 }
 
 void AudioTrack::addEffect( int pos,  Effect* eff )

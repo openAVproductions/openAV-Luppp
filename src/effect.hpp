@@ -18,8 +18,8 @@ enum EffectType
 class Effect
 {
   public:
-    Effect();
-    virtual void process(int, float*);
+    Effect(){};
+    virtual void process(int, float*){};
   
   protected:
     
