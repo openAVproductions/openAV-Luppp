@@ -20,6 +20,7 @@ class Window
     Gtk::Main* kit;
     
     Gtk::Window* window;
+    Gtk::Table* mainTable;
     
     StateStore guiState;
     
@@ -28,7 +29,7 @@ class Window
     
     
     // lists of widget
-    std::list<TrackOutput> trackoutputList;
+    std::list<TrackOutput*> trackoutputList;
     
 };
 

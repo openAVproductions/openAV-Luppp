@@ -17,6 +17,8 @@ TrackOutput::TrackOutput(StateStore* s)
   //std::cout << "Enterin TrackOutput contructor" << std::endl;
   add_events(Gdk::EXPOSURE_MASK | Gdk::BUTTON_PRESS_MASK);
   signal_button_press_event().connect(sigc::mem_fun(*this, &TrackOutput::on_button_press_event) );
+  
+  set_size_request(74,102);
 }
 
 bool TrackOutput::redraw()

@@ -29,14 +29,22 @@ Window::Window(Gtk::Main *k, Top* t)
   refBuilder->get_widget("window", window);
   window->set_title("Luppp 2.0");
   
+  refBuilder->get_widget("mainTable", mainTable);
   
+  addTrack();
   
+  // last thing, now we're starting the GUI main loop
   kit->run(*window);
 }
 
 void Window::addTrack()
 {
-  //trackoutputList.push_back( TrackOutput(top) );
+  std::cout << "Window::addTrack()" << std::endl;
+  trackoutputList.push_back( new TrackOutput( &guiState ) );
   
+  std::list<TrackOutput*>::iterator i = trackoutputList.begin();
+  
+  mainTable->attach( **i, 0, 1, 7, 8);
+  mainTable->show_all();
 }
 
