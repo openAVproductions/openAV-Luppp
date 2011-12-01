@@ -17,6 +17,13 @@ void Mixer::addTrack()
   audiotrackList.push_back( track );
 }
 
+void Mixer::setParameter(int track, int pos, int param, float val )
+{
+  std::list<AudioTrack>::iterator iter;
+  std::advance(iter, track);
+  iter->setParameter(pos, param, val);
+}
+
 
 void Mixer::process(int nframes, float* ports)
 {

@@ -18,6 +18,8 @@ class AudioTrack
     void addEffect( int, Effect* );
     
     void process(int nframes, float* ports);
+    
+    void setParameter(int, int ,float);
   
   protected:
     int ID;

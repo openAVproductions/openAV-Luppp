@@ -59,6 +59,9 @@ int JackClient::process(jack_nframes_t nframes)
 {
   float* outBuffer   = (float*)jack_port_get_buffer (outputPort    , nframes);
   
+  // handle incoming midi
+  processMidi(nframes);
+  
   mixer.process(nframes, outBuffer);
   
   return true;
@@ -85,6 +88,8 @@ int JackClient::processMidi(jack_nframes_t nframes)
     int b3 = (int)in_event.buffer[2];
     
     cout << b1 << "  " << b2 << "  " << b3 << endl;
+    
+    ((Mixer*)top->mixer)->setParameter(0,0,0, (b3 / 127.f) + 0.5 );
     
     midiIndex++;
   }

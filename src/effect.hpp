@@ -19,6 +19,7 @@ class Effect
 {
   public:
     Effect(){};
+    virtual void setParameter(int,float){};
     virtual void process(int, float*){};
   
   protected:
