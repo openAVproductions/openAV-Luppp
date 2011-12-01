@@ -3,15 +3,17 @@
 #include <signal.h>
 
 #include "top.hpp"
+#include "jackclient.hpp"
 
 
 using namespace std;
 
-Top* top = 0;
+static Top* top = 0;
+static JackClient* jackClient = 0;
 
 void sighandler(int)
 {
-  top->jackClient->deactivate();
+  jackClient->deactivate();
   exit(0);
 }
 
@@ -22,6 +24,8 @@ int main()
   signal(SIGINT, &sighandler);
   
   top = new Top();
+  
+  jackClient = new JackClient(top);
   
   for ( ; ; )
   {

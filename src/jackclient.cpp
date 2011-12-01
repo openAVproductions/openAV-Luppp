@@ -3,16 +3,12 @@
 
 #include <iostream>
 
-#include "top.hpp"
-
 using namespace std;
 
 JackClient::JackClient( Top* t) :
                         mixer(t)
 {
   top = t;
-  
-  top->mixer = &mixer;
   
   client = jack_client_open ( "Luppp", JackNullOption , 0 , 0 );
   
@@ -46,6 +42,9 @@ JackClient::JackClient( Top* t) :
        cerr << "JackClient::JackClient() Could not set process callback." << endl;
        return;
    }
+   
+   mixer.addTrack();
+   mixer.addTrack();
   
   jack_activate(client);
 }
@@ -89,7 +88,7 @@ int JackClient::processMidi(jack_nframes_t nframes)
     
     cout << b1 << "  " << b2 << "  " << b3 << endl;
     
-    ((Mixer*)top->mixer)->setParameter(0,0,0, (b3 / 127.f) + 0.5 );
+    mixer.setParameter(0,0,0, (b3 / 127.f) + 0.5 );
     
     midiIndex++;
   }

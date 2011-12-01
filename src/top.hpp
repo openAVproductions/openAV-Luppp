@@ -5,9 +5,6 @@
 #include <iostream>
 #include "rtqueue.hpp"
 
-#include "jackclient.hpp"
-#include "mixer.hpp"
-
 #include "statestore.hpp"
 
 // the Top class is a portal trough which the rest of the program can
@@ -24,8 +21,6 @@ class Top
     
     void addTrack();
     
-    void* mixer;
-    JackClient* jackClient;
     int bufferSize;
     int samplerate;
     

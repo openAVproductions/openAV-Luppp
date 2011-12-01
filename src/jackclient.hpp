@@ -12,7 +12,7 @@
 
 #include "mixer.hpp"
 
-class Top;
+#include "top.hpp"
 
 typedef jack_client_t JClient;
 typedef jack_port_t JPort;
