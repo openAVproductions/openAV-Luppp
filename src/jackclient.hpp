@@ -17,6 +17,13 @@
 typedef jack_client_t JClient;
 typedef jack_port_t JPort;
 
+enum ApcTrackControlMode {
+  APC_TRACK_CONTROL_MODE_PAN    = 87,
+  APC_TRACK_CONTROL_MODE_SEND_A = 88,
+  APC_TRACK_CONTROL_MODE_SEND_B = 89,
+  APC_TRACK_CONTROL_MODE_SEND_C = 90,
+};
+
 class JackClient
 {
   public:
@@ -35,6 +42,14 @@ class JackClient
     JPort* outputPort;
     JPort* midiInputPort;
     
+    JPort* apcInputPort;
+    JPort* apcOutputPort;
+    
+    int trackControlMode;
+    void apcRead(int);
+    
+    void writeMidi( void*, int,int,int);
+    
     int process(jack_nframes_t);
     int processMidi(jack_nframes_t);
     
@@ -43,7 +58,6 @@ class JackClient
     int framesPerBeat;
     int nframeCounter;
     
-    void writeMidi(int,int,int);
     void* midiBuffer;
     void* midiInputBuffer;
 };

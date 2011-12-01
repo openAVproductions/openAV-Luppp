@@ -15,6 +15,8 @@ class StateStore
     
     void addTrack();
     
+    
+    
     std::list<FileAudioSourceState> fileAudioSourceState;
     
     std::list<TrackOutputState> trackoutputState;
