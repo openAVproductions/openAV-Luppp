@@ -32,7 +32,6 @@ void AudioTrack::process(int nframes, float* buffer)
   
   for(iter = effects.begin(); iter != effects.end(); iter++ )
   {
-    std::cout << "AudioTrack::process() in effects" << std::endl;
     (*iter)->process( nframes, &buffer[0] );
   }
   
