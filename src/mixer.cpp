@@ -35,10 +35,17 @@ void Mixer::process(int nframes, float* ports)
     iter->process( nframes, &outputBuffer[0] );
   }
   
+  float* outPointer = &outputBuffer[0];
+  
   // now sum up the master output buffers and write them
   for(int i = 0; i < nframes; i++)
   {
-    *ports++ = outputBuffer[i];
+    // copy value
+    *ports++ = *outPointer;
+    
+    // write 0.f to buffer, and increment
+    *outPointer++ = 0.f;
+    
   }
   
 }

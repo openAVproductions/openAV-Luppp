@@ -3,13 +3,21 @@
 
 #include "fileaudiosource.hpp"
 
+int FileAudioSource::privateID = 0;
 
 FileAudioSource::FileAudioSource( std::string name)
 {
   //top = t;
   
+  ID = privateID++;
+  
   index = 0.f;
   speed = 1.f;
+  
+  if (ID == 0)
+    name = "sample.wav";
+  else if ( ID == 1 )
+    name = "sample2.wav";
   
   SndfileHandle infile( name , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 1 , 44100);
 
@@ -17,7 +25,7 @@ FileAudioSource::FileAudioSource( std::string name)
 
   if ( size == 0 )
   {
-    std::cout << "Could not load sound file, or empty file detected!" << std::endl;
+    std::cout << "FileAudioSource() " << ID << ":  Could not load sound file, or empty file detected!" << std::endl;
     return;
   }
   
@@ -57,7 +65,7 @@ void FileAudioSource::process (int nframes, float* buffer )
       index = 0.f;
     }
     
-    *buffer++ = sampleBuffer.at(index * size);
+    *buffer++  += sampleBuffer.at(index * size);
     index = index + ( speed / size );
   }
   //std::cout << "FAS: process() " << index << "  nframes: " << nframes << std::endl;

@@ -6,11 +6,11 @@
 
 int AudioTrack::privateID = 0;
 
-AudioTrack::AudioTrack( Top* t) :
+AudioTrack::AudioTrack( Top* t ) :
                         source(  "sample.wav")
 {
   top = t;
-  addEffect( 1, new LadspaHost(EFFECT_TRANSIENT, top->samplerate) );
+  //addEffect( 1, new LadspaHost(EFFECT_TRANSIENT, top->samplerate) );
 }
 
 void AudioTrack::addEffect( int pos,  Effect* eff )

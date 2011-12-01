@@ -14,6 +14,7 @@ Top::Top()
   cout << "\t\t\tDone" << endl;
   
   addTrack();
+  addTrack();
 }
 
 void Top::addTrack()

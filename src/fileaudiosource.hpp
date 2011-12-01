@@ -33,6 +33,8 @@ class FileAudioSource : public AudioSource
     std::vector<float> sampleBuffer;
   private:
     //Top* top;
+    int ID;
+    static int privateID;
 };
 
 
