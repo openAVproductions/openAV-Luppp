@@ -1,13 +1,23 @@
 
 #include "g_window.hpp"
 
+using namespace std;
+
 Window::Window(Gtk::Main *k, Top* t)
 {
-  // store the "kit" instance from main
+  // store the "kit" instance from main to run it at the end of the
+  // constructor.
   kit = k;
   
-  // keep the top pointer for communication
+  
+  // We take a Top* and keep it local (its static so this is safe).
+  // Connecting the "dispatcher" signal to the "handleEvent()" function
+  // of the StateStore performs the functions on the store, and then
+  // we call "redraw()" on the nessiary widgets to refresh the GUI.
   top = t;
+  
+  top->guiDispatcher->connect( sigc::mem_fun( this, &Window::handleEvent) );
+  
   
   
   // load Glade file
@@ -35,6 +45,20 @@ Window::Window(Gtk::Main *k, Top* t)
   
   // last thing, now we're starting the GUI main loop
   kit->run(*window);
+}
+
+void Window::handleEvent()
+{
+  cout << "Window::handleEvent()" << endl;
+  EngineEvent* e = top->toGuiQueue.pull();
+  
+  if ( e->type == EE_MIXER_VOLUME )
+  {
+    cout << "MixerVolume" << e->ia << ", " << e->fa << endl;
+    list<TrackOutputState>::iterator i = guiState.trackoutputState.begin();
+    advance(i,e->ia);
+    i->volume = e->fa;
+  }
 }
 
 void Window::addTrack()

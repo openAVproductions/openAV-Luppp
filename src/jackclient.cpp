@@ -122,8 +122,15 @@ int JackClient::processMidi(jack_nframes_t nframes)
       std::list<FileAudioSourceState>::iterator i = top->state.fileAudioSourceState.begin();
       if ( b2 == 17 )
         std::advance(i,1);
-      i->speed = (b3/127.f) + 0.5;
+      float value = (b3/127.f);
+      i->speed = value  + 0.5;
       std::cout << "i->speed = " << i->speed << endl;
+      
+      EngineEvent* x = new EngineEvent();
+      x->setMixerVolume(0, value);
+      top->toGuiQueue.push(x);
+      
+      top->guiDispatcher->emit();
     }
     
     

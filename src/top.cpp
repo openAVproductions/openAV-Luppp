@@ -7,6 +7,8 @@ Top::Top()
 {
   cout << "Top()" << endl;
   
+  guiDispatcher = new Glib::Dispatcher();
+  
   addTrack();
   addTrack();
 }

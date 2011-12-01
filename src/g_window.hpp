@@ -27,6 +27,8 @@ class Window
     // helper functions
     void addTrack();
     
+    void handleEvent();
+    
     
     // lists of widget
     std::list<TrackOutput*> trackoutputList;

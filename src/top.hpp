@@ -3,6 +3,9 @@
 #define LUPPP_TOP
 
 #include <iostream>
+
+#include <glibmm.h>
+
 #include "rtqueue.hpp"
 
 #include "statestore.hpp"
@@ -27,8 +30,8 @@ class Top
     int bpm;
     
     StateStore state;
-  
-  private:
+    
+    Glib::Dispatcher* guiDispatcher;
     RtQueue toGuiQueue;
 };
 
