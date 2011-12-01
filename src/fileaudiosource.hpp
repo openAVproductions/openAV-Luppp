@@ -10,6 +10,8 @@
 
 #include "audiosource.hpp"
 
+//class Top;
+
 struct FileAudioSourceState
 {
   float speed, index;
@@ -17,15 +19,20 @@ struct FileAudioSourceState
 
 using std::string;
 
-class FileAudioSource : AudioSource
+class FileAudioSource : public AudioSource
 {
   public:
-    FileAudioSource(Top*, string name);
+    FileAudioSource(string name);
+    
+    void setParameter(int p,float s);
     void process (int, float* );
+    
+    float index;
+    float speed;
     
     std::vector<float> sampleBuffer;
   private:
-    Top* top;
+    //Top* top;
 };
 
 

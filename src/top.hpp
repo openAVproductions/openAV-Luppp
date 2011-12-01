@@ -26,7 +26,8 @@ class Top
     
     void* mixer;
     JackClient* jackClient;
-    int jackBufferSize;
+    int bufferSize;
+    int samplerate;
     
     int bpm;
     

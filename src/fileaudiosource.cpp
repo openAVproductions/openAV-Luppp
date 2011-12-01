@@ -18,14 +18,19 @@ FileAudioSource::FileAudioSource(Top* t,std::string name)
   //int tmpChan= infile.channels();
   int tmpSR  = infile.samplerate();
 
-  std::cout << "Sampler sample info: size:" << size << ", sr:" << tmpSR << std::flush;
+  //std::cout << "Sampler sample info: size:" << size << ", sr:" << tmpSR << std::flush;
 
   // initialize new buffer to hold <size> elements
   sampleBuffer.resize(size);
 
-  std::cout << "\t sampleBuffer->resize("<<size<<")"<<std::endl;
+  //std::cout << "\t sampleBuffer->resize("<<size<<")"<<std::endl;
 
   infile.read( &sampleBuffer.at(0) , size );
+}
+
+void FileAudioSource::setSpeed(float s)
+{
+  speed = s;
 }
 
 void FileAudioSource::process (int nframes, float* buffer )
@@ -52,5 +57,5 @@ void FileAudioSource::process (int nframes, float* buffer )
     *buffer++ = sampleBuffer.at(index * size);
     index = index + ( speed / size );
   }
-  std::cout << "FAS: process() " << index << "  nframes: " << nframes << std::endl;
+  //std::cout << "FAS: process() " << index << "  nframes: " << nframes << std::endl;
 }

@@ -16,7 +16,7 @@ JackClient::JackClient( Top* t) :
   
   client = jack_client_open ( "Luppp", JackNullOption , 0 , 0 );
   
-  t->jackBufferSize = jack_get_buffer_size(client);
+  t->bufferSize = jack_get_buffer_size(client);
   
   inputPort = jack_port_register ( client,
                                     "input",

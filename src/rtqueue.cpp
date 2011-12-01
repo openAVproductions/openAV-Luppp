@@ -5,7 +5,7 @@ using namespace std;
 
 RtQueue::RtQueue()
 {
-  std::cout << "RtQueue()" << std::flush;
+  //std::cout << "RtQueue()" << std::flush;
   
   // initialize the ringbuffer to 100 elements
   buffer = jack_ringbuffer_create( 2000 * sizeof(EngineEvent));
@@ -17,9 +17,9 @@ RtQueue::RtQueue()
   
   // lock the buffer into memory
   int res = jack_ringbuffer_mlock(buffer);
-  if ( !res )
+  if ( res )
   {
-    std::cout << " locked memory successfully!" << std::endl;
+    std::cout << "RtQueue() Error locking memory!" << std::endl;
   }
   
   tempEvent = new EngineEvent;

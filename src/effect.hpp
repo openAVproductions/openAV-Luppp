@@ -7,11 +7,19 @@
 
 class Top;
 
+enum EffectType
+{
+  EFFECT_REVERB = 0,
+  EFFECT_TRANSIENT,
+  EFFECT_PARAMETRIC_EQ,
+  EFFECT_COMPRESSOR,
+};
+
 class Effect
 {
   public:
-    Effect();
-    virtual void process(int, float*) = 0;
+    Effect(){};
+    virtual void process(int, float*){};
   
   protected:
     
