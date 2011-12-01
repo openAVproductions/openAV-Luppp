@@ -10,7 +10,7 @@ AudioTrack::AudioTrack( Top* t) :
                         source("sample.wav")
 {
   top = t;
-  addEffect( 1, new LadspaHost(EFFECT_REVERB, top->samplerate) );
+  addEffect( 1, new LadspaHost(EFFECT_TRANSIENT, top->samplerate) );
 }
 
 void AudioTrack::addEffect( int pos,  Effect* eff )
@@ -27,6 +27,14 @@ void AudioTrack::process(int nframes, float* buffer)
   
   // get audio from source
   source.process(nframes, buffer);
+  
+  std::list<Effect*>::iterator iter;
+  
+  for(iter = effects.begin(); iter != effects.end(); iter++ )
+  {
+    std::cout << "AudioTrack::process() in effects" << std::endl;
+    (*iter)->process( nframes, &buffer[0] );
+  }
   
 }
 

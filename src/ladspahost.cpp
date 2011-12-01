@@ -12,7 +12,7 @@ LadspaHost::LadspaHost(EffectType t, int s)
   samplerate = s;
   
   type = t;
-  active = 0;
+  active = 1;
   
   descriptor = 0; // ladspa_descriptor*
   
@@ -21,15 +21,13 @@ LadspaHost::LadspaHost(EffectType t, int s)
     controlBuffer.push_back(0.0);
   }
   
-  /*
   switch(t)
   {
-    case EFFECT_REVERB: "/usr/lib/ladspa/g2reverb.so";
-    case EFFECT_TRANSIENT: "/usr/lib/ladspa/transient_1206.so";
-    case EFFECT_PARAMETRIC_EQ: "/usr/lib/ladspa/filters.so";
+    case EFFECT_REVERB: setPluginByString("/usr/lib/ladspa/g2reverb.so"); break;
+    case EFFECT_TRANSIENT:  setPluginByString("/usr/lib/ladspa/transient_1206.so"); break;
+    case EFFECT_PARAMETRIC_EQ:  setPluginByString("/usr/lib/ladspa/filters.so"); break;
     
   }
-  */
 }
 
 void LadspaHost::setParameter(int param, float value)
@@ -540,6 +538,12 @@ void LadspaHost::process(int nframes, float* buffer)
 {
   //std::cout << "LadpsaHost active = " << active << std::endl;
   
+  if ( pluginHandle == 0 )
+  {
+    std::cout << "PluginHandle == 0!!" << std::endl;
+    return;
+  }
+  
   if ( !active )
   {
     return;
@@ -567,7 +571,7 @@ void LadspaHost::process(int nframes, float* buffer)
     descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] );
     descriptor -> connect_port ( pluginHandle , 1, &controlBuffer[1] );
     descriptor -> connect_port ( pluginHandle , 2, buffer );
-    descriptor -> connect_port ( pluginHandle , 3, &outputBuffer[0] );
+    descriptor -> connect_port ( pluginHandle , 3, buffer );
   }
   else if ( type == EFFECT_PARAMETRIC_EQ )
   {
@@ -604,6 +608,7 @@ void LadspaHost::process(int nframes, float* buffer)
   // node in the track automatically
   descriptor->run( pluginHandle , nframes);
   
+  cout << "LadspaHost process()" << endl;
 }
 
 LadspaHost::~LadspaHost()
