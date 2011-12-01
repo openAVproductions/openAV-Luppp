@@ -5,10 +5,10 @@ using namespace std;
 
 Top::Top()
 {
-  //cout << "Top()" << endl;
+  cout << "Top()" << endl;
   
-  //addTrack();
-  //addTrack();
+  addTrack();
+  addTrack();
 }
 
 void Top::addTrack()

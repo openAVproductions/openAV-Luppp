@@ -1,6 +1,7 @@
 
 #include "jackclient.hpp"
 
+#include <cmath>
 #include <iostream>
 
 using namespace std;
@@ -38,13 +39,17 @@ JackClient::JackClient( Top* t) :
   int retval = jack_set_process_callback( client,
                                   static_process,
                                   static_cast<void*>(this));
-   if(retval) {
-       cerr << "JackClient::JackClient() Could not set process callback." << endl;
-       return;
-   }
-   
-   mixer.addTrack();
-   mixer.addTrack();
+  
+  if(retval) {
+     cerr << "JackClient::JackClient() Could not set process callback." << endl;
+     return;
+  }
+
+  mixer.addTrack();
+  mixer.addTrack();
+
+  top->state.addTrack();
+  top->state.addTrack();
   
   jack_activate(client);
 }
@@ -88,7 +93,39 @@ int JackClient::processMidi(jack_nframes_t nframes)
     
     cout << b1 << "  " << b2 << "  " << b3 << endl;
     
-    mixer.setParameter(0,0,0, (b3 / 127.f) + 0.5 );
+    if ( b1 >= 144 && b1 < 144 + 16 ) // note on
+    {
+      std::list<FileAudioSourceState>::iterator i = top->state.fileAudioSourceState.begin();
+      std::advance(i,1);
+      
+      // frequency of cycles trough the buffer
+      float freq = pow( 2.0, ((double)b2 - 69.0) / 12.0 );
+      
+      // buffer size = 512
+      float cyclesTroughBuffer = freq;
+      
+      std::cout << "CyclesTroughBuffer = " << cyclesTroughBuffer << std::endl;
+      
+      i->speed = freq;
+      
+      std::cout << "i->speed = (freq) " << i->speed << endl;
+    }
+    else if ( b1 >= 128 && b1 < 128 + 16 ) // note off
+    {
+      std::list<FileAudioSourceState>::iterator i = top->state.fileAudioSourceState.begin();
+      std::advance(i,1);
+      i->speed = 0;
+      std::cout << "i->speed = " << i->speed << endl;
+    }
+    else if ( b1 >= 176 && b1 < 176 + 16 ) // CC change
+    {
+      std::list<FileAudioSourceState>::iterator i = top->state.fileAudioSourceState.begin();
+      if ( b2 == 17 )
+        std::advance(i,1);
+      i->speed = (b3/127.f) + 0.5;
+      std::cout << "i->speed = " << i->speed << endl;
+    }
+    
     
     midiIndex++;
   }

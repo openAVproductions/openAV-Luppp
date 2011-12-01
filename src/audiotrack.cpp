@@ -7,7 +7,7 @@
 int AudioTrack::privateID = 0;
 
 AudioTrack::AudioTrack( Top* t ) :
-                        source(  "sample.wav")
+                        source( t, "sample.wav")
 {
   top = t;
   //addEffect( 1, new LadspaHost(EFFECT_TRANSIENT, top->samplerate) );
