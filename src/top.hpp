@@ -21,6 +21,8 @@ class Top
     
     void addTrack();
     
+    //void set(
+    
     int bufferSize;
     int samplerate;
     
@@ -28,8 +30,10 @@ class Top
     
     StateStore state;
     
+    StateStore* getGuiStatePointer();
+  
   private:
-    RtQueue toJackQueue;
+    RtQueue toGuiQueue;
 };
 
 #endif

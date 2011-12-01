@@ -23,6 +23,7 @@ def configure(ctx):
   #   Engine Depends
   ctx.check_cfg	(package='jack',at_least_version='0.118',args='--cflags --libs',uselib_store='JACK')
   ctx.check_cfg	(package='sndfile',args='--cflags --libs',uselib_store='SNDFILE')
+  ctx.check_cfg	(package='gtkmm-2.4',at_least_version='2.0.0',args='--cflags --libs',uselib_store='GTKMM')
   
   # Check for headers:
   #ctx.check(header_name="ladspa.h",mandatory=False,uselib_store='LADSPA.H')
@@ -42,10 +43,12 @@ def build(ctx):
               'src/audiotrack.cpp',
               'src/jackclient.cpp']
   
-  engineDepends = 'JACK SNDFILE'
+  guiList = [ 'src/g_window.cpp' ]
+  
+  engineDepends = 'JACK SNDFILE GTKMM'
   
   print 'Building ENGINE'
-  buildList = engineList
+  buildList = engineList + guiList
   dependList = engineDepends
   
   print 'Depends list:',dependList

@@ -5,6 +5,8 @@
 #include "top.hpp"
 #include "jackclient.hpp"
 
+#include <gtkmm.h>
+#include "g_window.hpp"
 
 using namespace std;
 
@@ -17,20 +19,22 @@ void sighandler(int)
   exit(0);
 }
 
-int main()
+int main(int argc, char** argv)
 {
   cout << "Luppp 2.0" << endl;
+  
+  Gtk::Main kit (argc, argv);
   
   signal(SIGINT, &sighandler);
   
   top = new Top();
-  
   jackClient = new JackClient(top);
   
-  for ( ; ; )
-  {
-    sleep(1);
-  }
+  // we pass the GUI the Top* too, its the method of interaction between
+  // engine and GUI.
+  Window window(top);
+  
+  kit.run(window);
   
   return 0;
 }
