@@ -4,28 +4,10 @@
 
 #include <gtkmm/drawingarea.h>
 
+#include "g_widgets.hpp"
+
 namespace Luppp
 {
-  enum Colour {
-    COLOUR_ORANGE_1 = 0,
-    COLOUR_ORANGE_2,
-    COLOUR_ORANGE_3,
-    COLOUR_GREEN_1,
-    COLOUR_GREEN_2,
-    COLOUR_GREEN_3,
-    COLOUR_BLUE_1,
-    COLOUR_BLUE_2,
-    COLOUR_BLUE_3,
-    COLOUR_PURPLE_1,
-    COLOUR_PURPLE_2,
-    COLOUR_PURPLE_3,
-    COLOUR_GREY_1,
-    COLOUR_GREY_2,
-    COLOUR_GREY_3,
-    COLOUR_GREY_4,
-    COLOUR_BACKGROUND,
-  };
-  
   void setColour( Cairo::RefPtr<Cairo::Context> cr, Colour c, float alpha)
   {
     switch( c )

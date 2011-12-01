@@ -1,7 +1,7 @@
 
 #include "g_trackoutput.hpp"
 
-#include "g_drawhelper.hpp"
+#include "g_widgets.hpp"
 
 using namespace std;
 using namespace Luppp;
@@ -71,11 +71,11 @@ bool TrackOutput::on_expose_event(GdkEventExpose* event)
     cr->rectangle(0, 0, 74, 102);
     cr->fill();
     
-    //Dial(cr, true,7  , 4, state.panValue, DIAL_MODE_PAN); // pan
-    //Mute(cr, 9  , 41 , state.ID, state.mode ); // mute button
-    //Solo(cr, 9  , 68 , state.ID, state.mode ); // mute button
-    //Rec (cr, 9  , 85 , state.ID, state.mode ); // mute button
-    //Fader(cr,46 , 4  , state.volume, 0, 0 ); // fader
+    Dial(cr,true,7,4,state.pan,DIAL_MODE_PAN); // pan
+    Mute(cr, 9  , 41 , state.ID, state.mute ); // mute button
+    Solo(cr, 9  , 68 , state.ID, state.solo ); // solo button
+    Rec (cr, 9  , 85 , state.ID, state.rec  ); // rec button
+    Fader(cr,46 , 4  , state.volume, 0, 0 ); // fader
     
     if ( state.selected )
     {

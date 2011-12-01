@@ -44,6 +44,12 @@ def build(ctx):
               'src/jackclient.cpp']
   
   guiList = [ 'src/g_window.cpp',
+              'src/g_widgets.cpp',
+              'src/g_mute.cpp',
+              'src/g_rec.cpp',
+              'src/g_solo.cpp',
+              'src/g_fader.cpp',
+              'src/g_dial.cpp',
               'src/g_trackoutput.cpp']
   
   engineDepends = 'JACK SNDFILE GTKMM'

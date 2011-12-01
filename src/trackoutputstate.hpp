@@ -5,9 +5,12 @@
 
 struct TrackOutputState
 {
+  int ID;
   bool selected;
   float volume;
   float pan;
+  
+  bool mute, solo, rec;
 };
 
 #endif
