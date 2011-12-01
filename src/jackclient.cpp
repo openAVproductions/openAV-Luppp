@@ -61,7 +61,9 @@ JackClient::JackClient( Top* t) :
 
   mixer.addTrack();
   mixer.addTrack();
+  mixer.addTrack();
 
+  top->state.addTrack();
   top->state.addTrack();
   top->state.addTrack();
   
@@ -363,7 +365,7 @@ void JackClient::apcRead( int nframes )
       std::cout << "i->speed = " << i->speed << endl;
       
       EngineEvent* x = new EngineEvent();
-      x->setMixerVolume(0, value);
+      x->setMixerVolume(trackID, value);
       top->toGuiQueue.push(x);
       top->guiDispatcher->emit();
     }

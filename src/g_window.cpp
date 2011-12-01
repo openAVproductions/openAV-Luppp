@@ -18,7 +18,8 @@ Window::Window(Gtk::Main *k, Top* t)
   
   top->guiDispatcher->connect( sigc::mem_fun( this, &Window::handleEvent) );
   
-  
+  // initialize variables
+  numTracks = 0;
   
   // load Glade file
   Glib::RefPtr<Gtk::Builder> refBuilder;
@@ -42,6 +43,8 @@ Window::Window(Gtk::Main *k, Top* t)
   refBuilder->get_widget("mainTable", mainTable);
   
   addTrack();
+  addTrack();
+  addTrack();
   
   // last thing, now we're starting the GUI main loop
   kit->run(*window);
@@ -56,13 +59,14 @@ void Window::handleEvent()
   // update its GUI componenets based on values changed
   if ( e->type == EE_MIXER_VOLUME )
   {
-    cout << "MixerVolume" << e->ia << ", " << e->fa << endl;
+    cout << "MixerVolume: " << e->ia << ", " << e->fa << endl;
     list<TrackOutputState>::iterator i = guiState.trackoutputState.begin();
     advance(i,e->ia);
     i->volume = e->fa;
     
     // manually update GUI
     std::list<TrackOutput*>::iterator iter = trackoutputList.begin();
+    advance(i,e->ia);
     (*iter)->redraw();
   }
 }
@@ -73,8 +77,11 @@ void Window::addTrack()
   trackoutputList.push_back( new TrackOutput( &guiState ) );
   
   std::list<TrackOutput*>::iterator i = trackoutputList.begin();
+  std::advance(i,numTracks);
   
-  mainTable->attach( **i, 0, 1, 7, 8);
+  mainTable->attach( **i, numTracks, numTracks+1, 7, 8);
   mainTable->show_all();
+  
+  numTracks++;
 }
 

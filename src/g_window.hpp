@@ -25,6 +25,7 @@ class Window
     StateStore guiState;
     
     // helper functions
+    int numTracks;
     void addTrack();
     
     void handleEvent();
