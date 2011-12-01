@@ -52,12 +52,18 @@ void Window::handleEvent()
   cout << "Window::handleEvent()" << endl;
   EngineEvent* e = top->toGuiQueue.pull();
   
+  // replace this style code with code in StateStore, and have stateStore
+  // update its GUI componenets based on values changed
   if ( e->type == EE_MIXER_VOLUME )
   {
     cout << "MixerVolume" << e->ia << ", " << e->fa << endl;
     list<TrackOutputState>::iterator i = guiState.trackoutputState.begin();
     advance(i,e->ia);
     i->volume = e->fa;
+    
+    // manually update GUI
+    std::list<TrackOutput*>::iterator iter = trackoutputList.begin();
+    (*iter)->redraw();
   }
 }
 

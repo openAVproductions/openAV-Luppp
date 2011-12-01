@@ -15,13 +15,14 @@ class TrackOutput : public Gtk::DrawingArea
   public:
     TrackOutput(StateStore*);
     ~TrackOutput();
+    
+    bool redraw();
   
   protected:
     int ID;
     static int privateID;
     StateStore* stateStore;
     
-    bool redraw();
     
     //Override default signal handler:
     bool on_expose_event			(GdkEventExpose* event);
