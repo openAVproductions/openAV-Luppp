@@ -37,6 +37,14 @@ namespace Luppp
     COLOUR_BACKGROUND,
   };
   
+  enum BlockState {
+    BLOCK_STATE_EMPTY,
+    BLOCK_STATE_LOADED,
+    BLOCK_STATE_PLAYING,
+    BLOCK_STATE_QUEUED,
+    BLOCK_STATE_RECORDING,
+  };
+  
   void Rec ( Cairo::RefPtr<Cairo::Context> cr, float x, float y, int id, bool active);
   void Solo( Cairo::RefPtr<Cairo::Context> cr, float x, float y, int id, bool active);
   void Mute( Cairo::RefPtr<Cairo::Context> cr, float x, float y, int id, bool active);
@@ -50,6 +58,7 @@ namespace Luppp
   */
   
   // helper functions
+  void Block(Cairo::RefPtr<Cairo::Context> cr, float x, float y, bool active);
   void setColour( Cairo::RefPtr<Cairo::Context> cr, Colour c);
   void setColour( Cairo::RefPtr<Cairo::Context> cr, Colour c, float alpha);
 }
