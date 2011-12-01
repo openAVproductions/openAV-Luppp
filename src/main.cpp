@@ -31,10 +31,8 @@ int main(int argc, char** argv)
   jackClient = new JackClient(top);
   
   // we pass the GUI the Top* too, its the method of interaction between
-  // engine and GUI.
-  Window window(top);
-  
-  kit.run(window);
+  // engine and GUI. We also pass in "kit", and then we run the mainloop
+  Window window( &kit, top);
   
   return 0;
 }

@@ -7,15 +7,29 @@
 #include "top.hpp"
 #include "statestore.hpp"
 
-class Window : public Gtk::Window
+#include "g_trackoutput.hpp"
+#include "trackoutputstate.hpp"
+
+class Window
 {
   public:
-    Window(Top* t);
+    Window(Gtk::Main *kit, Top* t);
   
   private:
     Top* top;
+    Gtk::Main* kit;
+    
+    Gtk::Window* window;
     
     StateStore guiState;
+    
+    // helper functions
+    void addTrack();
+    
+    
+    // lists of widget
+    std::list<TrackOutput> trackoutputList;
+    
 };
 
 #endif

@@ -21,16 +21,12 @@ class Top
     
     void addTrack();
     
-    //void set(
-    
     int bufferSize;
     int samplerate;
     
     int bpm;
     
     StateStore state;
-    
-    StateStore* getGuiStatePointer();
   
   private:
     RtQueue toGuiQueue;

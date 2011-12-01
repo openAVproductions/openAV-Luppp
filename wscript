@@ -43,7 +43,8 @@ def build(ctx):
               'src/audiotrack.cpp',
               'src/jackclient.cpp']
   
-  guiList = [ 'src/g_window.cpp' ]
+  guiList = [ 'src/g_window.cpp',
+              'src/g_trackoutput.cpp']
   
   engineDepends = 'JACK SNDFILE GTKMM'
   
