@@ -37,6 +37,7 @@ class Window
     std::list<TrackOutput*> trackoutputList;
     std::list<Gtk::Label*> tracklabelList;
     std::list<Gtk::ComboBoxText*> trackinputList;
+    std::list<Gtk::ProgressBar*> trackprogressList;
     
 };
 

@@ -66,8 +66,12 @@ void Window::handleEvent()
     
     // manually update GUI
     std::list<TrackOutput*>::iterator iter = trackoutputList.begin();
-    advance(i,e->ia);
+    advance(iter,e->ia);
     (*iter)->redraw();
+    
+    std::list<Gtk::ProgressBar*>::iterator progIter = trackprogressList.begin();
+    advance(progIter,e->ia);
+    (*progIter)->set_fraction(e->fa);
   }
 }
 
@@ -89,7 +93,15 @@ void Window::addTrack()
   std::list<Gtk::ComboBoxText*>::iterator inputIter = trackinputList.begin();
   std::advance(inputIter,numTracks);
   (**inputIter).append_text("test");
+  (**inputIter).set_active(0);
   mainTable->attach( **inputIter, numTracks, numTracks+1, 1, 2);
+  
+  // progress bar
+  trackprogressList.push_back( new Gtk::ProgressBar() );
+  std::list<Gtk::ProgressBar*>::iterator progressIter = trackprogressList.begin();
+  std::advance(progressIter,numTracks);
+  (**progressIter).set_fraction(numTracks / 8.f);
+  mainTable->attach( **progressIter, numTracks, numTracks+1, 3, 4);
   
   // fader / pan
   trackoutputList.push_back( new TrackOutput( &guiState ) );
