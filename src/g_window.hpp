@@ -2,6 +2,8 @@
 #ifndef LUPPP_G_WINDOW
 #define LUPPP_G_WINDOW
 
+#include <sstream>
+
 #include <gtkmm.h>
 
 #include "top.hpp"
@@ -30,6 +32,8 @@ class Window
     
     // lists of widget
     std::list<TrackOutput*> trackoutputList;
+    std::list<Gtk::Label*> tracklabelList;
+    std::list<Gtk::ComboBoxText*> trackinputList;
     
 };
 
