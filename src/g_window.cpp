@@ -74,14 +74,30 @@ void Window::handleEvent()
 void Window::addTrack()
 {
   std::cout << "Window::addTrack()" << std::endl;
-  trackoutputList.push_back( new TrackOutput( &guiState ) );
   
+  std::stringstream trackName;
+  trackName << numTracks;
+  
+  // label
+  tracklabelList.push_back( new Gtk::Label( trackName.str() ) );
+  std::list<Gtk::Label*>::iterator labelIter = tracklabelList.begin();
+  std::advance(labelIter,numTracks);
+  mainTable->attach( **labelIter, numTracks, numTracks+1, 0, 1);
+  
+  // input selector
+  trackinputList.push_back( new Gtk::ComboBoxText() );
+  std::list<Gtk::ComboBoxText*>::iterator inputIter = trackinputList.begin();
+  std::advance(inputIter,numTracks);
+  (**inputIter).append_text("test");
+  mainTable->attach( **inputIter, numTracks, numTracks+1, 1, 2);
+  
+  // fader / pan
+  trackoutputList.push_back( new TrackOutput( &guiState ) );
   std::list<TrackOutput*>::iterator i = trackoutputList.begin();
   std::advance(i,numTracks);
-  
   mainTable->attach( **i, numTracks, numTracks+1, 7, 8);
-  mainTable->show_all();
   
+  mainTable->show_all();
   numTracks++;
 }
 
