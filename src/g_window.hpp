@@ -38,6 +38,16 @@ class Window
     std::list<Gtk::Label*> tracklabelList;
     std::list<Gtk::ComboBoxText*> trackinputList;
     std::list<Gtk::ProgressBar*> trackprogressList;
+    std::list<Gtk::ToggleButton*> trackmuteList;
+    std::list<Gtk::ToggleButton*> tracksoloList;
+    std::list<Gtk::ToggleButton*> trackrecList;
+    
+    // iters for lists of widgets
+    std::list<Gtk::ComboBoxText*>::iterator inputIter;
+    std::list<Gtk::ProgressBar*>::iterator progressIter;
+    std::list<Gtk::ToggleButton*>::iterator muteIter;
+    std::list<Gtk::ToggleButton*>::iterator soloIter;
+    std::list<Gtk::ToggleButton*>::iterator recIter;
     
 };
 

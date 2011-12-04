@@ -90,18 +90,36 @@ void Window::addTrack()
   
   // input selector
   trackinputList.push_back( new Gtk::ComboBoxText() );
-  std::list<Gtk::ComboBoxText*>::iterator inputIter = trackinputList.begin();
+  inputIter = trackinputList.begin();
   std::advance(inputIter,numTracks);
-  (**inputIter).append_text("test");
+  (**inputIter).append_text("input");
   (**inputIter).set_active(0);
   mainTable->attach( **inputIter, numTracks, numTracks+1, 1, 2);
   
   // progress bar
   trackprogressList.push_back( new Gtk::ProgressBar() );
-  std::list<Gtk::ProgressBar*>::iterator progressIter = trackprogressList.begin();
+  progressIter = trackprogressList.begin();
   std::advance(progressIter,numTracks);
   (**progressIter).set_fraction(numTracks / 8.f);
   mainTable->attach( **progressIter, numTracks, numTracks+1, 3, 4);
+  
+  // mute button
+  trackmuteList.push_back( new Gtk::ToggleButton("On") );
+  muteIter = trackmuteList.begin();
+  std::advance(muteIter,numTracks);
+  mainTable->attach( **muteIter, numTracks, numTracks+1, 4, 5);
+  
+  // solo / cue button
+  tracksoloList.push_back( new Gtk::ToggleButton("Cue") );
+  soloIter = tracksoloList.begin();
+  std::advance(soloIter,numTracks);
+  mainTable->attach( **soloIter, numTracks, numTracks+1, 5, 6);
+  
+  // record button
+  trackrecList.push_back( new Gtk::ToggleButton("Rec") );
+  recIter = trackrecList.begin();
+  std::advance(recIter,numTracks);
+  mainTable->attach( **recIter, numTracks, numTracks+1, 6, 7);
   
   // fader / pan
   trackoutputList.push_back( new TrackOutput( &guiState ) );
