@@ -103,29 +103,11 @@ void Window::addTrack()
   (**progressIter).set_fraction(numTracks / 8.f);
   mainTable->attach( **progressIter, numTracks, numTracks+1, 3, 4);
   
-  // mute button
-  trackmuteList.push_back( new Gtk::ToggleButton("On") );
-  muteIter = trackmuteList.begin();
-  std::advance(muteIter,numTracks);
-  mainTable->attach( **muteIter, numTracks, numTracks+1, 4, 5);
-  
-  // solo / cue button
-  tracksoloList.push_back( new Gtk::ToggleButton("Cue") );
-  soloIter = tracksoloList.begin();
-  std::advance(soloIter,numTracks);
-  mainTable->attach( **soloIter, numTracks, numTracks+1, 5, 6);
-  
-  // record button
-  trackrecList.push_back( new Gtk::ToggleButton("Rec") );
-  recIter = trackrecList.begin();
-  std::advance(recIter,numTracks);
-  mainTable->attach( **recIter, numTracks, numTracks+1, 6, 7);
-  
   // fader / pan
   trackoutputList.push_back( new TrackOutput( &guiState ) );
   std::list<TrackOutput*>::iterator i = trackoutputList.begin();
   std::advance(i,numTracks);
-  mainTable->attach( **i, numTracks, numTracks+1, 7, 8);
+  mainTable->attach( **i, numTracks, numTracks+1, 4, 5);
   
   mainTable->show_all();
   numTracks++;
