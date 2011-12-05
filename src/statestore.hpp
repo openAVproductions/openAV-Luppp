@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "trackoutputstate.hpp"
+#include "clipselectorstate.hpp"
 #include "fileaudiosourcestate.hpp"
 
 class StateStore
@@ -18,6 +19,7 @@ class StateStore
     
     
     std::list<FileAudioSourceState> fileAudioSourceState;
+    std::list<ClipSelectorState> clipSelectorState;
     
     std::list<TrackOutputState> trackoutputState;
     

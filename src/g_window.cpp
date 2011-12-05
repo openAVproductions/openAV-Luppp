@@ -55,10 +55,12 @@ void Window::handleEvent()
   cout << "Window::handleEvent()" << endl;
   EngineEvent* e = top->toGuiQueue.pull();
   
+  
   // replace this style code with code in StateStore, and have stateStore
   // update its GUI componenets based on values changed
   if ( e->type == EE_MIXER_VOLUME )
   {
+    if ( e->ia > numTracks ) { cout << "MIXER_VOLUME: Out of bounds" << endl; return; }
     cout << "MixerVolume: " << e->ia << ", " << e->fa << endl;
     list<TrackOutputState>::iterator i = guiState.trackoutputState.begin();
     advance(i,e->ia);
@@ -96,12 +98,18 @@ void Window::addTrack()
   (**inputIter).set_active(0);
   mainTable->attach( **inputIter, numTracks, numTracks+1, 1, 2);
   
+  // clip selector
+  clipselectorList.push_back( new ClipSelector( &guiState ) );
+  clipselectorIter = clipselectorList.begin();
+  std::advance(clipselectorIter,numTracks);
+  mainTable->attach( **clipselectorIter, numTracks, numTracks+1, 2, 3);
+  
   // progress bar
   trackprogressList.push_back( new Gtk::ProgressBar() );
   progressIter = trackprogressList.begin();
   std::advance(progressIter,numTracks);
   (**progressIter).set_fraction(numTracks / 8.f);
-  mainTable->attach( **progressIter, numTracks, numTracks+1, 3, 4);
+  //mainTable->attach( **progressIter, numTracks, numTracks+1, 3, 4);
   
   // fader / pan
   trackoutputList.push_back( new TrackOutput( &guiState ) );

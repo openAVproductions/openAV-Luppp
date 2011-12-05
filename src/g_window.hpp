@@ -10,6 +10,7 @@
 #include "statestore.hpp"
 
 #include "g_trackoutput.hpp"
+#include "g_clipselector.hpp"
 #include "trackoutputstate.hpp"
 
 class Window
@@ -34,12 +35,16 @@ class Window
     
     
     // lists of widget
+    
     std::list<TrackOutput*> trackoutputList;
+    std::list<ClipSelector*>clipselectorList;
+    
     std::list<Gtk::Label*> tracklabelList;
     std::list<Gtk::ComboBoxText*> trackinputList;
     std::list<Gtk::ProgressBar*> trackprogressList;
     
     // iters for lists of widgets
+    std::list<ClipSelector*>::iterator clipselectorIter;
     std::list<Gtk::ComboBoxText*>::iterator inputIter;
     std::list<Gtk::ProgressBar*>::iterator progressIter;
     

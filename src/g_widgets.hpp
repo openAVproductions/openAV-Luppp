@@ -35,6 +35,7 @@ namespace Luppp
     COLOUR_GREY_3,
     COLOUR_GREY_4,
     COLOUR_BACKGROUND,
+    COLOUR_TRANSPARENT,
   };
   
   enum BlockState {
@@ -58,7 +59,7 @@ namespace Luppp
   */
   
   // helper functions
-  void Block(Cairo::RefPtr<Cairo::Context> cr, float x, float y, bool active);
+  void Block(Cairo::RefPtr<Cairo::Context> cr, float x, float y, BlockState active);
   void setColour( Cairo::RefPtr<Cairo::Context> cr, Colour c);
   void setColour( Cairo::RefPtr<Cairo::Context> cr, Colour c, float alpha);
 }
