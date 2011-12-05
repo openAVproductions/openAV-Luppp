@@ -10,8 +10,6 @@ struct ClipSelectorState
   // variables to control playback of buffers
   int playing;
   int queued;
-  
-  
 };
 
 #endif

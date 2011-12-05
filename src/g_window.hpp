@@ -31,7 +31,7 @@ class Window
     int numTracks;
     void addTrack();
     
-    void handleEvent();
+    int handleEvent();
     
     
     // lists of widget

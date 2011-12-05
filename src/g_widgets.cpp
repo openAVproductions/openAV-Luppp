@@ -44,6 +44,8 @@ namespace Luppp
         cr->set_source_rgba(  66 / 255.f,  66 / 255.f ,  66 / 255.f , alpha ); break;
       case COLOUR_GREY_4:
         cr->set_source_rgba(  28 / 255.f,  28 / 255.f ,  28 / 255.f , alpha ); break;
+      case COLOUR_TRANSPARENT:
+        cr->set_source_rgba(  0, 0, 0, 0.f ); break;
       case COLOUR_BACKGROUND: default:
         cr->set_source_rgba(  40 / 255.f,  40 / 255.f ,  40 / 255.f , alpha ); break;
     }

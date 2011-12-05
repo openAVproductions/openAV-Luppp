@@ -58,6 +58,18 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
     cr->set_source_rgb(0.1 , 0.1 , 0.1 );
     cr->fill();
     
+    std::cout << "StateStore = " << &stateStore << std::endl;
+    
+    if ( stateStore->clipSelectorState.size() == 0 )
+    {
+      std::cout << "clipSelectorState == 0" << std::endl;
+    }
+    
+    if ( ID >= stateStore->clipSelectorState.size() )
+    {
+      std::cout << "ClipSelector: ID > clipSelectorState.size()" << std::endl;
+    }
+    
     list<ClipSelectorState>::iterator i = stateStore->clipSelectorState.begin();
     advance(i,ID);
     

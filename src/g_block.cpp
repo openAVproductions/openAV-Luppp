@@ -14,7 +14,7 @@ namespace Luppp
      playColour = COLOUR_TRANSPARENT;
      bgColour   = COLOUR_GREY_4;
     } else if ( state == BLOCK_STATE_LOADED ){
-     textColour = COLOUR_GREY_1;
+     textColour = COLOUR_BLUE_1;
      playColour = COLOUR_TRANSPARENT;
      bgColour   = COLOUR_GREY_3;
     } else if ( state == BLOCK_STATE_PLAYING ){

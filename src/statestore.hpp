@@ -23,6 +23,9 @@ class StateStore
     
     std::list<TrackOutputState> trackoutputState;
     
+  private:
+    int numTracks;
+    
 };
 
 #endif

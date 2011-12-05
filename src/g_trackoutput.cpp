@@ -64,9 +64,9 @@ bool TrackOutput::on_expose_event(GdkEventExpose* event)
     TrackOutputState state = *i;
     
     if ( state.selected )
-      setColour(cr, COLOUR_GREY_2 );
-    else
       setColour(cr, COLOUR_GREY_3 );
+    else
+      setColour(cr, COLOUR_GREY_4 );
     
     cr->rectangle(0, 0, 74, 102);
     cr->fill();
@@ -79,7 +79,7 @@ bool TrackOutput::on_expose_event(GdkEventExpose* event)
     
     if ( state.selected )
     {
-      cr->rectangle(0, 0, 74, 102);
+      cr->rectangle(0, -10, 74, 200);
       setColour( cr, COLOUR_PURPLE_1 );
       cr->set_line_width(1);
       cr->stroke();
