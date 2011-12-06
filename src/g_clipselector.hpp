@@ -6,14 +6,14 @@
 
 #include <gtkmm/drawingarea.h>
 
-#include "statestore.hpp"
+#include "g_statestore.hpp"
 
 #include "clipselectorstate.hpp"
 
 class ClipSelector : public Gtk::DrawingArea
 {
   public:
-    ClipSelector(StateStore*);
+    ClipSelector(GuiStateStore*);
     ~ClipSelector();
     
     bool redraw();
@@ -21,7 +21,7 @@ class ClipSelector : public Gtk::DrawingArea
   protected:
     int ID;
     static int privateID;
-    StateStore* stateStore;
+    GuiStateStore* stateStore;
     
     
     //Override default signal handler:

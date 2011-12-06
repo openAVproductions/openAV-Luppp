@@ -8,7 +8,7 @@ using namespace Luppp;
 
 int TrackOutput::privateID = 0;
 
-TrackOutput::TrackOutput(StateStore* s)
+TrackOutput::TrackOutput(GuiStateStore* s)
 {
   ID = privateID++;
   
@@ -58,12 +58,10 @@ bool TrackOutput::on_expose_event(GdkEventExpose* event)
     cr->set_source_rgb(0.1 , 0.1 , 0.1 );
     cr->fill();
     
-    list<TrackOutputState>::iterator i = stateStore->trackoutputState.begin();
-    advance(i,ID);
     
-    TrackOutputState state = *i;
+    TrackOutputState* state = &stateStore->trackoutputState.at(ID);
     
-    if ( state.selected )
+    if ( state->selected )
       setColour(cr, COLOUR_GREY_3 );
     else
       setColour(cr, COLOUR_GREY_4 );
@@ -71,13 +69,13 @@ bool TrackOutput::on_expose_event(GdkEventExpose* event)
     cr->rectangle(0, 0, 74, 102);
     cr->fill();
     
-    Dial(cr,true,7,4,state.pan,DIAL_MODE_PAN); // pan
-    Mute(cr, 9  , 41 , state.ID, state.mute ); // mute button
-    Solo(cr, 9  , 68 , state.ID, state.solo ); // solo button
-    Rec (cr, 9  , 85 , state.ID, state.rec  ); // rec button
-    Fader(cr,46 , 4  , state.volume, 0, 0 ); // fader
+    Dial(cr,true,7,4,state->pan,DIAL_MODE_PAN); // pan
+    Mute(cr, 9  , 41 , state->ID, state->mute ); // mute button
+    Solo(cr, 9  , 68 , state->ID, state->solo ); // solo button
+    Rec (cr, 9  , 85 , state->ID, state->rec  ); // rec button
+    Fader(cr,46 , 4  , state->volume, 0, 0 ); // fader
     
-    if ( state.selected )
+    if ( state->selected )
     {
       cr->rectangle(0, -10, 74, 200);
       setColour( cr, COLOUR_PURPLE_1 );

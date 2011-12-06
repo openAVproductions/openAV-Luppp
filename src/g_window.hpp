@@ -7,7 +7,7 @@
 #include <gtkmm.h>
 
 #include "top.hpp"
-#include "statestore.hpp"
+#include "g_statestore.hpp"
 
 #include "g_trackoutput.hpp"
 #include "g_clipselector.hpp"
@@ -25,7 +25,7 @@ class Window
     Gtk::Window* window;
     Gtk::Table* mainTable;
     
-    StateStore guiState;
+    GuiStateStore guiState;
     
     // helper functions
     int numTracks;

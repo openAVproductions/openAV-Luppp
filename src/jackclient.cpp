@@ -61,11 +61,11 @@ JackClient::JackClient( Top* t) :
 
   mixer.addTrack();
   mixer.addTrack();
-  mixer.addTrack();
+  //mixer.addTrack();
 
   top->state.addTrack();
   top->state.addTrack();
-  top->state.addTrack();
+  //top->state.addTrack();
   
   jack_activate(client);
 }

@@ -8,7 +8,7 @@ using namespace Luppp;
 
 int ClipSelector::privateID = 0;
 
-ClipSelector::ClipSelector(StateStore* s)
+ClipSelector::ClipSelector(GuiStateStore* s)
 {
   ID = privateID++;
   
@@ -70,10 +70,12 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
       std::cout << "ClipSelector: ID > clipSelectorState.size()" << std::endl;
     }
     
-    list<ClipSelectorState>::iterator i = stateStore->clipSelectorState.begin();
-    advance(i,ID);
+    //list<ClipSelectorState>::iterator i = stateStore->clipSelectorState.begin();
+    //advance(i,ID);
     
-    ClipSelectorState state = *i;
+    return true;
+    
+    //ClipSelectorState state = *i;
     
     float y = 0.f;
     /*
@@ -86,6 +88,7 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
     };
     */
     
+    /*
     BlockState blockState = BLOCK_STATE_LOADED;
     
     
@@ -101,6 +104,7 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
       Block(cr, 0, y, blockState);
       y += 18;
     }
+    */
     
     /*
     if ( state.selected )

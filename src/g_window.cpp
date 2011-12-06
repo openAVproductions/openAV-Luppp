@@ -46,10 +46,10 @@ Window::Window(Gtk::Main *k, Top* t)
   
   addTrack();
   addTrack();
-  addTrack();
+  //addTrack();
   
   // poll the event Queue
-  Glib::signal_timeout().connect(sigc::mem_fun(*this, &Window::handleEvent), 1000);
+  Glib::signal_timeout().connect(sigc::mem_fun(*this, &Window::handleEvent), 50);
   
   // last thing, now we're starting the GUI main loop
   kit->run(*window);
@@ -57,7 +57,7 @@ Window::Window(Gtk::Main *k, Top* t)
 
 int Window::handleEvent()
 {
-  cout << "Window::handleEvent()" << endl;
+  //cout << "Window::handleEvent()" << endl;
   
   bool moreEventsWaiting = true;
   
@@ -78,11 +78,9 @@ int Window::handleEvent()
     // update its GUI componenets based on values changed
     if ( e->type == EE_MIXER_VOLUME )
     {
-      if ( e->ia > numTracks ) { cout << "MIXER_VOLUME: Out of bounds" << endl; }
+      if ( e->ia >= numTracks ) { cout << "MIXER_VOLUME: Out of bounds" << endl; }
       cout << "MixerVolume: " << e->ia << ", " << e->fa << endl;
-      list<TrackOutputState>::iterator i = guiState.trackoutputState.begin();
-      advance(i,e->ia);
-      i->volume = e->fa;
+      guiState.trackoutputState.at(e->ia).volume = e->fa;
       
       // manually update GUI
       std::list<TrackOutput*>::iterator iter = trackoutputList.begin();
@@ -90,9 +88,11 @@ int Window::handleEvent()
       std::cout << "Redraw Iter = " << &iter << std::endl;
       (*iter)->redraw();
       
+      /*
       std::list<Gtk::ProgressBar*>::iterator progIter = trackprogressList.begin();
       advance(progIter,e->ia);
       (*progIter)->set_fraction(e->fa);
+      */
     }
   }
   return true;

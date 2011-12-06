@@ -6,14 +6,14 @@
 
 #include <gtkmm/drawingarea.h>
 
-#include "statestore.hpp"
+#include "g_statestore.hpp"
 
 #include "trackoutputstate.hpp"
 
 class TrackOutput : public Gtk::DrawingArea
 {
   public:
-    TrackOutput(StateStore*);
+    TrackOutput(GuiStateStore*);
     ~TrackOutput();
     
     bool redraw();
@@ -21,7 +21,7 @@ class TrackOutput : public Gtk::DrawingArea
   protected:
     int ID;
     static int privateID;
-    StateStore* stateStore;
+    GuiStateStore* stateStore;
     
     
     //Override default signal handler:
