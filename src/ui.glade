@@ -195,16 +195,25 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHBox" id="trackEffectBox">
+          <object class="GtkHBox" id="hbox2">
             <property name="visible">True</property>
             <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
+              <object class="GtkHBox" id="trackEffectBox">
+                <property name="visible">True</property>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
           </object>
           <packing>

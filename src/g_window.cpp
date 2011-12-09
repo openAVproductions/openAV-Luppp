@@ -147,7 +147,7 @@ void Window::addTrack()
   progressIter = trackprogressList.begin();
   std::advance(progressIter,numTracks);
   (**progressIter).set_fraction(numTracks / 8.f);
-  mainTable->attach( **progressIter, numTracks, numTracks+1, 3, 4);
+  //mainTable->attach( **progressIter, numTracks, numTracks+1, 3, 4);
   
   // fader / pan
   trackoutputList.push_back( new TrackOutput( &guiState ) );
