@@ -43,6 +43,13 @@ Window::Window(Gtk::Main *k, Top* t)
   window->set_title("Luppp 2.0");
   
   refBuilder->get_widget("mainTable", mainTable);
+  refBuilder->get_widget("trackEffectBox", trackEffectBox);
+  
+  equalizer = new Equalizer( &guiState);
+  
+  // hack to show parametric
+  trackEffectBox->add( *equalizer );
+  trackEffectBox->show_all();
   
   addTrack();
   addTrack();
@@ -78,7 +85,7 @@ int Window::handleEvent()
     // update its GUI componenets based on values changed
     if ( e->type == EE_MIXER_VOLUME )
     {
-      if ( e->ia >= numTracks ) { cout << "MIXER_VOLUME: Out of bounds" << endl; }
+      if ( e->ia >= numTracks ) { cout << "MIXER_VOLUME: Out of bounds" << endl; return true; }
       cout << "MixerVolume: " << e->ia << ", " << e->fa << endl;
       guiState.trackoutputState.at(e->ia).volume = e->fa;
       
@@ -88,14 +95,22 @@ int Window::handleEvent()
       std::cout << "Redraw Iter = " << &iter << std::endl;
       (*iter)->redraw();
       
-      /*
       std::list<Gtk::ProgressBar*>::iterator progIter = trackprogressList.begin();
       advance(progIter,e->ia);
       (*progIter)->set_fraction(e->fa);
-      */
     }
   }
   return true;
+}
+
+void Window::setEffectsBox(int trackID)
+{
+  // check its different, big redraw() call made for no reason otherwise
+  if ( currentEffectsTrack == trackID ) {
+    return;
+  }
+  
+  currentEffectsTrack = trackID;
 }
 
 void Window::addTrack()
@@ -132,7 +147,7 @@ void Window::addTrack()
   progressIter = trackprogressList.begin();
   std::advance(progressIter,numTracks);
   (**progressIter).set_fraction(numTracks / 8.f);
-  //mainTable->attach( **progressIter, numTracks, numTracks+1, 3, 4);
+  mainTable->attach( **progressIter, numTracks, numTracks+1, 3, 4);
   
   // fader / pan
   trackoutputList.push_back( new TrackOutput( &guiState ) );

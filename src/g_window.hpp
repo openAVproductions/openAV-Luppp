@@ -13,6 +13,9 @@
 #include "g_clipselector.hpp"
 #include "trackoutputstate.hpp"
 
+
+#include "g_equalizer.hpp"
+
 class Window
 {
   public:
@@ -24,8 +27,13 @@ class Window
     
     Gtk::Window* window;
     Gtk::Table* mainTable;
+    Gtk::HBox* trackEffectBox;
     
     GuiStateStore guiState;
+    
+    int currentEffectsTrack;
+    void setEffectsBox(int trackID);
+    Equalizer* equalizer;
     
     // helper functions
     int numTracks;
@@ -34,8 +42,7 @@ class Window
     int handleEvent();
     
     
-    // lists of widget
-    
+    // lists of widgets
     std::list<TrackOutput*> trackoutputList;
     std::list<ClipSelector*>clipselectorList;
     

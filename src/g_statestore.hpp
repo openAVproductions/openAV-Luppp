@@ -6,6 +6,7 @@
 #include <vector>
 #include <iostream>
 
+#include "g_equalizerstate.hpp"
 #include "trackoutputstate.hpp"
 #include "clipselectorstate.hpp"
 #include "fileaudiosourcestate.hpp"
@@ -19,6 +20,7 @@ class GuiStateStore
     
     void addTrack();
     
+    EqualizerState eqState;
     
     vector<FileAudioSourceState> fileAudioSourceState;
     vector<ClipSelectorState> clipSelectorState;
