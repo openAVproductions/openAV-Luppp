@@ -48,6 +48,7 @@ def build(ctx):
               'src/g_statestore.cpp',
               'src/g_equalizer.cpp',
               'src/g_frequencygraph.cpp',
+              'src/g_titlebar.cpp',
               'src/g_block.cpp',
               'src/g_mute.cpp',
               'src/g_rec.cpp',

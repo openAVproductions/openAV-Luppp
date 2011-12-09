@@ -106,7 +106,10 @@ namespace Luppp
       // outline
       cr->rectangle( x, y , xS, yS );
       cr->set_line_width(3);
-      setColour(cr, COLOUR_GREY_2 );
+      if ( active )
+        setColour(cr, COLOUR_GREY_2 );
+      else
+        setColour(cr, COLOUR_GREY_3 );
       cr->stroke();
       
       //std::cout << "LupppWidget::FrequencyGraph() called!" << std::endl;

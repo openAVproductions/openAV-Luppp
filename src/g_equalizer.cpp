@@ -18,7 +18,7 @@ Equalizer::Equalizer(GuiStateStore* s)
   add_events(Gdk::EXPOSURE_MASK | Gdk::BUTTON_PRESS_MASK);
   signal_button_press_event().connect(sigc::mem_fun(*this, &Equalizer::on_button_press_event) );
   
-  set_size_request(260, 216);
+  set_size_request(250, 216);
 }
 
 bool Equalizer::redraw()
@@ -64,7 +64,7 @@ bool Equalizer::on_expose_event(GdkEventExpose* event)
     
     int dialSize = 30;
     
-    bool active = false;
+    bool active = true;
     
     
     // setup array of dials
@@ -85,7 +85,7 @@ bool Equalizer::on_expose_event(GdkEventExpose* event)
     
     FrequencyGraph(cr, active, 10, 22, 225, 95, *freqState );
     
-    //TitleBar(cr, x,y, xS, yS, "Parametric EQ", active);
+    TitleBar(cr, 0,0 , 250, 216, "Parametric EQ", active);
     
     /*
     if ( state.selected )
