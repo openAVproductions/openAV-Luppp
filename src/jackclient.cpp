@@ -135,7 +135,7 @@ int JackClient::processMidi(jack_nframes_t nframes)
       i->speed = 0;
       std::cout << "i->speed = " << i->speed << endl;
     }
-    else if ( b1 >= 176 && b1 < 176 + 16 ) // CC change
+    else if ( b1 >= 176 && b1 < 176 + 16 ) // CC change Device control
     {
       std::list<FileAudioSourceState>::iterator i = top->state.fileAudioSourceState.begin();
       if ( b2 == 17 )
@@ -198,7 +198,7 @@ void JackClient::apcRead( int nframes )
     int b2 = (int)in_event.buffer[1];
     int b3 = (int)in_event.buffer[2];
     
-    std::cout << "From APC  B1: " << b1 << "  B2: " << b2 << "  B3: " << b3 << std::endl;
+    //std::cout << "From APC  B1: " << b1 << "  B2: " << b2 << "  B3: " << b3 << std::endl;
     
     /* #### Track selection
     if ( b1 >= 176 && b1 < 176 + 16 )
@@ -356,13 +356,13 @@ void JackClient::apcRead( int nframes )
     if ( (int)in_event.buffer[1] == 7 )
     {
       int trackID = (int)in_event.buffer[0] - 176;
-      std::cout << " SETTING TRACK FADER " << trackID << " FROM APC40!" << std::endl;
+      //std::cout << " SETTING TRACK FADER " << trackID << " FROM APC40!" << std::endl;
       
-      std::list<FileAudioSourceState>::iterator i = top->state.fileAudioSourceState.begin();
+      std::list<TrackOutputState>::iterator i = top->state.trackoutputState.begin();
       std::advance(i,trackID);
       float value = (b3/127.f);
-      i->speed = value  + 0.5;
-      std::cout << "i->speed = " << i->speed << endl;
+      i->volume = value  + 0.5;
+      //std::cout << "i->volume = " << i->volume << endl;
       
       EngineEvent* x = new EngineEvent();
       x->setMixerVolume(trackID, value);

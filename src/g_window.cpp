@@ -79,20 +79,20 @@ int Window::handleEvent()
       break;
     }
     
-    std::cout << "Non null event in GUI thread" << std::endl;
+    //std::cout << "Non null event in GUI thread" << std::endl;
     
     // replace this style code with code in StateStore, and have stateStore
     // update its GUI componenets based on values changed
     if ( e->type == EE_MIXER_VOLUME )
     {
       if ( e->ia >= numTracks ) { cout << "MIXER_VOLUME: Out of bounds" << endl; return true; }
-      cout << "MixerVolume: " << e->ia << ", " << e->fa << endl;
+      //cout << "MixerVolume: " << e->ia << ", " << e->fa << endl;
       guiState.trackoutputState.at(e->ia).volume = e->fa;
       
       // manually update GUI
       std::list<TrackOutput*>::iterator iter = trackoutputList.begin();
       advance(iter,e->ia);
-      std::cout << "Redraw Iter = " << &iter << std::endl;
+      //std::cout << "Redraw Iter = " << &iter << std::endl;
       (*iter)->redraw();
       
       std::list<Gtk::ProgressBar*>::iterator progIter = trackprogressList.begin();
