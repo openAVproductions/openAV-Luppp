@@ -4,6 +4,10 @@
 #include "top.hpp"
 #include "ladspahost.hpp"
 
+// only needed for implementation
+#include "fileaudiosource.hpp"
+#include "audiosinkoutput.hpp"
+
 int AudioTrack::privateID = 0;
 
 AudioTrack::AudioTrack( Top* t )
@@ -11,6 +15,10 @@ AudioTrack::AudioTrack( Top* t )
   top = t;
   
   source = new FileAudioSource(t, "sample.wav");
+  
+  sink = new AudioSinkOutput(t);
+  
+  trackBuffer.resize(1024);
   
   //addEffect( 1, new LadspaHost(EFFECT_TRANSIENT, top->samplerate) );
 }
@@ -34,18 +42,20 @@ void AudioTrack::setParameter(int pos, int param, float f)
   //(*iter)->setParameter(param, f);
 }
 
-void AudioTrack::process(int nframes, float* buffer)
+void AudioTrack::process(int nframes, float* buffer, float* W, float* X, float* Y, float* Z)
 {
+  //std::cout << "AudioTrack::process()" << std::endl;
   
   // get audio from source
-  source->process(nframes, buffer);
+  source->process(nframes, &trackBuffer[0]);
   
-  std::list<Effect*>::iterator iter;
-  
-  for(iter = effects.begin(); iter != effects.end(); iter++ )
+  for(std::list<Effect*>::iterator iter = effects.begin(); iter != effects.end(); iter++ )
   {
-    (*iter)->process( nframes, &buffer[0] );
+    (*iter)->process( nframes, &trackBuffer[0] );
   }
+  
+  // do volume & panning
+  sink->process(nframes, &trackBuffer[0], W, X, Y, Z);
   
 }
 

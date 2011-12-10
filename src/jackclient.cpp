@@ -358,11 +358,16 @@ void JackClient::apcRead( int nframes )
       int trackID = (int)in_event.buffer[0] - 176;
       //std::cout << " SETTING TRACK FADER " << trackID << " FROM APC40!" << std::endl;
       
+      /*
       std::list<TrackOutputState>::iterator i = top->state.trackoutputState.begin();
       std::advance(i,trackID);
-      float value = (b3/127.f);
+      
       i->volume = value  + 0.5;
       //std::cout << "i->volume = " << i->volume << endl;
+      */
+      
+      float value = (b3/127.f);
+      top->state.setVolume( trackID, value );
       
       EngineEvent* x = new EngineEvent();
       x->setMixerVolume(trackID, value);

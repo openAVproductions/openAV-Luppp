@@ -21,14 +21,19 @@ class Mixer
     void addTrack();
     void setParameter(int track, int pos, int param, float );
     
-    void process( int nframes, float* portList );
+    void process( int nframes, float* outBuffer );
     
   private:
     Top* top;
     
     list<AudioTrack> audiotrackList;
     
-    std::vector<float> outputBuffer;
+    std::vector<float> inputBuffer;
+    
+    std::vector<float> outputW;
+    std::vector<float> outputX;
+    std::vector<float> outputY;
+    std::vector<float> outputZ;
     
 };
 

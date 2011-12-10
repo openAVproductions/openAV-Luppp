@@ -3,6 +3,7 @@
 #define LUPPP_STATESTORE
 
 #include <list>
+#include <cmath>
 #include <iostream>
 
 #include "trackoutputstate.hpp"
@@ -16,6 +17,9 @@ class StateStore
     
     void addTrack();
     
+    void setVolume(int,float);
+    
+    TrackOutputState* getAudioSinkOutput(int);
     
     
     std::list<FileAudioSourceState> fileAudioSourceState;
@@ -25,6 +29,8 @@ class StateStore
     
   private:
     int numTracks;
+    
+    bool trackCheck(int);
     
 };
 

@@ -8,56 +8,18 @@ AudioSinkOutput::AudioSinkOutput(Top* t)
   ID = privateID++;
   
   top = t;
-  
-  volume = 0.f;
-  pan    = 0.f;
-  panZ   = 0.f;
-}
-
-void AudioSinkOutput::setParameter(int, float)
-{
-  
-}
-
-void AudioSinkOutput::setPan(float inPan)
-{
-  if (inPan > 1.0)
-    inPan = 1.0;
-  
-  if (inPan < -1.0)
-    inPan = -1.0;
-  
-  pan = inPan;
-  
-  std::cout << "AudioSinkOutput() pan = " << pan << std::endl;
-}
-
-void AudioSinkOutput::setVolume(float vol)
-{
-  // Clip vol input to range
-  if (vol > 1.0)
-    vol = 1.0;
-  else if (vol < 0.00001)
-    vol = 0.0;
-  
-  // Keep a copy for "input" [0,1] volume (linear)
-  volume = vol;
-  
-  // linear input, hence we need to convert the [0,1] range
-  // to a logarithmic scale. Formula used:
-  // y = x ^ 3, this is an approximation of the human hearing curve.
-  // http://www.dr-lex.be/info-stuff/logVolumecontrols.html for info
-  
-  float volMultiplier = (float)pow( vol , 3);
-  
-  // apply scaling to volMultiplier, so we can amplify to +50%
-  logVolume = volMultiplier * 2;
-  
-  std::cout << "Volume::setVolume(), inVol:" << vol << "  final:" << logVolume << std::endl;
 }
 
 void AudioSinkOutput::process(int nframes, float* in, float *W, float *X, float *Y, float* Z)
 {
+  TrackOutputState* state = top->state.getAudioSinkOutput(ID);
+  
+  //std::cout << "AudioSinkOutput::process() vol = " << state->volume << std::endl;
+  
+  float logVolume = state->volume;
+  float pan = state->pan;
+  float panZ = 0.f;
+  
   // azimuth
   float cosAzimuth  = cos( pan * 3.14 );
   float sinAzimuth  = sin( pan * 3.14 );
@@ -89,5 +51,8 @@ void AudioSinkOutput::process(int nframes, float* in, float *W, float *X, float 
     X[i] += in[i] * cosAzimuth * cosElevation * logVolume;
     Y[i] += in[i] * sinAzimuth * cosElevation * logVolume;
     Z[i] += in[i] * sinElevation * logVolume;
+    
+    // clear the internal track buffer
+    in[i] = 0.f;
   }
 }

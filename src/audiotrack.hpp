@@ -8,7 +8,8 @@ class Top;
 #include <memory>
 
 #include "effect.hpp"
-#include "fileaudiosource.hpp"
+#include "audiosink.hpp"
+#include "audiosource.hpp"
 
 class AudioTrack
 {
@@ -17,7 +18,7 @@ class AudioTrack
     
     void addEffect( int, Effect* );
     
-    void process(int nframes, float* ports);
+    void process(int nframes, float* ports, float*,float*,float*,float*);
     
     void setParameter(int, int ,float);
   
@@ -27,13 +28,14 @@ class AudioTrack
     
     Top* top;
     
-    // Source of audio
-    AudioSource* source;
-    
-    
+    // Audio elements
+    AudioSink*    sink;
+    AudioSource*  source;
     
     // list of effects
     std::list<Effect*> effects;
+    
+    std::vector<float> trackBuffer;
 };
 
 #endif

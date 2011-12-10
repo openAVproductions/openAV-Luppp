@@ -15,7 +15,6 @@ class AudioSinkOutput : public AudioSink
   public:
     AudioSinkOutput(Top*);
     
-    void setParameter(int, float);
     void process(int nframes, float* in, float* W, float *X, float *Y, float *Z);
   
   private:
@@ -23,15 +22,6 @@ class AudioSinkOutput : public AudioSink
     static int privateID;
     
     Top* top;
-    
-    float pan;
-    float panZ;
-    float volume;
-    float logVolume;
-    
-    // convienience functions
-    void setPan(float);
-    void setVolume(float);
 };
 
 #endif

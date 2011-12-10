@@ -32,3 +32,52 @@ void StateStore::addTrack()
   
   numTracks++;
 }
+
+void StateStore::setVolume(int t, float v)
+{
+  if ( !trackCheck(t) ) {
+    std::cout << "StateStore::setVolume() track OOB" << std::endl; return;
+  }
+  
+  std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
+  std::advance(iter, t);
+  
+  // Clip vol input to range
+  if (v > 1.0)
+    v = 1.0;
+  else if (v < 0.00001)
+    v = 0.0;
+  
+  // linear input, hence we need to convert the [0,1] range
+  // to a logarithmic scale. Formula used:
+  // y = x ^ 3, this is an approximation of the human hearing curve.
+  // http://www.dr-lex.be/info-stuff/logVolumecontrols.html for info
+  float volMultiplier = (float)pow( v , 3);
+  
+  // apply scaling to volMultiplier, so we can amplify to +50%
+  float logVolume = volMultiplier * 2;
+  
+  iter->volume = logVolume;
+  
+  //std::cout << "StateStore::setVolume() Track: " << t << ", linVol:" << v << "  logVol:" << logVolume << std::endl;
+}
+
+TrackOutputState* StateStore::getAudioSinkOutput(int t)
+{
+  if ( !trackCheck(t) ) {
+    std::cout << "StateStore::getAudioSinkOutput() track OOB" << std::endl; return 0;
+  }
+  
+  std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
+  std::advance(iter, t);
+  
+  return &(*iter);
+}
+
+bool StateStore::trackCheck(int t)
+{
+  if ( t >= numTracks )
+    return false;
+  
+  return true;
+}

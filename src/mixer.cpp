@@ -8,7 +8,12 @@ Mixer::Mixer(Top* t)
   top = t;
   
   //std::cout << "Resizing Mixer output buffer to " << 1024 << std::endl;
-  outputBuffer.resize(1024);
+  outputW.resize(1024);
+  outputX.resize(1024);
+  outputY.resize(1024);
+  outputZ.resize(1024);
+  
+  inputBuffer.resize(1024);
 }
 
 void Mixer::addTrack()
@@ -25,26 +30,27 @@ void Mixer::setParameter(int track, int pos, int param, float val )
 }
 
 
-void Mixer::process(int nframes, float* ports)
+void Mixer::process(int nframes, float* outBuffer)
 {
   // process the entire audio chain here
   std::list<AudioTrack>::iterator iter;
   
   for(iter = audiotrackList.begin(); iter != audiotrackList.end(); iter++ )
   {
-    iter->process( nframes, &outputBuffer[0] );
+    iter->process( nframes, &outputW[0], &outputW[0], &outputX[0], &outputY[0], &outputZ[0] );
   }
   
-  float* outPointer = &outputBuffer[0];
+  float* outPointer = &outputW[0];
   
   // now sum up the master output buffers and write them
   for(int i = 0; i < nframes; i++)
   {
     // copy value
-    *ports++ = *outPointer;
+    *outBuffer++ = *outPointer;
     
     // write 0.f to buffer, and increment
     *outPointer++ = 0.f;
+    inputBuffer[i] = 0.f;
     
   }
   
