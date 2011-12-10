@@ -6,10 +6,12 @@
 
 int AudioTrack::privateID = 0;
 
-AudioTrack::AudioTrack( Top* t ) :
-                        source( t, "sample.wav")
+AudioTrack::AudioTrack( Top* t )
 {
   top = t;
+  
+  source = new FileAudioSource(t, "sample.wav");
+  
   //addEffect( 1, new LadspaHost(EFFECT_TRANSIENT, top->samplerate) );
 }
 
@@ -36,7 +38,7 @@ void AudioTrack::process(int nframes, float* buffer)
 {
   
   // get audio from source
-  source.process(nframes, buffer);
+  source->process(nframes, buffer);
   
   std::list<Effect*>::iterator iter;
   

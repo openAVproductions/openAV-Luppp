@@ -8,6 +8,9 @@ class AudioSource
 {
   public:
     AudioSource(){};
+    //virtual ~AudioSource();
+    
+    //virtual void setParameter(int param, float val);
     virtual void process(int nframes, float* buffer) = 0;
 };
 

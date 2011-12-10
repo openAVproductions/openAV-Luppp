@@ -28,7 +28,9 @@ class AudioTrack
     Top* top;
     
     // Source of audio
-    FileAudioSource source;
+    AudioSource* source;
+    
+    
     
     // list of effects
     std::list<Effect*> effects;
