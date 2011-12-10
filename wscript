@@ -41,6 +41,7 @@ def build(ctx):
               'src/statestore.cpp',
               'src/engineevent.cpp',
               'src/audiotrack.cpp',
+              'src/audiosinkoutput.cpp',
               'src/jackclient.cpp']
   
   guiList = [ 'src/g_window.cpp',
