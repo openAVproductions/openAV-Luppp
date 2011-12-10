@@ -6,6 +6,8 @@
 #include <cmath>
 #include <iostream>
 
+class Top;
+
 #include "trackoutputstate.hpp"
 #include "clipselectorstate.hpp"
 #include "fileaudiosourcestate.hpp"
@@ -13,7 +15,7 @@
 class StateStore
 {
   public:
-    StateStore();
+    StateStore(Top*);
     
     void addTrack();
     
@@ -33,6 +35,7 @@ class StateStore
     std::list<TrackOutputState> trackoutputState;
     
   private:
+    Top* top;
     int numTracks;
     
     bool trackCheck(int);

@@ -1,11 +1,15 @@
 
 #include "statestore.hpp"
 
+#include "top.hpp"
+
 using namespace std;
 
-StateStore::StateStore()
+StateStore::StateStore(Top* t)
 {
   numTracks = 0;
+  
+  top = t;
 }
 
 void StateStore::addTrack()
@@ -58,6 +62,11 @@ void StateStore::setVolume(int t, float v)
   float logVolume = volMultiplier * 2;
   
   iter->volume = logVolume;
+  
+  EngineEvent* x = new EngineEvent();
+  x->setMixerVolume(t, v);
+  top->toGuiQueue.push(x);
+  top->guiDispatcher->emit();
   
   //std::cout << "StateStore::setVolume() Track: " << t << ", linVol:" << v << "  logVol:" << logVolume << std::endl;
 }

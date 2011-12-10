@@ -3,7 +3,8 @@
 
 using namespace std;
 
-Top::Top()
+Top::Top() :
+  state(this)
 {
   cout << "Top()" << endl;
   

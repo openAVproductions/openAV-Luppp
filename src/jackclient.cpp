@@ -75,9 +75,37 @@ int JackClient::static_process(jack_nframes_t nframes, void* thisPointer)
   return static_cast<JackClient*>(thisPointer)->process(nframes);
 }
 
+int JackClient::processRtQueue()
+{
+  bool moreEventsWaiting = true;
+  
+  // loop over events queue, return when no events to process
+  while ( moreEventsWaiting )
+  {
+    EngineEvent* e = top->toEngineQueue.pull();
+    
+    if ( e == 0 )
+    {
+      // exit the loop
+      break;
+    }
+    
+    std::cout << "processRtQueue() in engine got event!" << std::endl;
+    
+    if ( e->type == EE_MIXER_VOLUME )
+    {
+      top->state.setVolume( e->ia, e->fa );
+    }
+    else if ( e->type == EE_TRACK_SET_MUTE ) {
+    }
+  }
+}
+
 int JackClient::process(jack_nframes_t nframes)
 {
   float* outBuffer   = (float*)jack_port_get_buffer (outputPort    , nframes);
+  
+  processRtQueue();
   
   apcRead(nframes);
   
@@ -368,11 +396,6 @@ void JackClient::apcRead( int nframes )
       
       float value = (b3/127.f);
       top->state.setVolume( trackID, value );
-      
-      EngineEvent* x = new EngineEvent();
-      x->setMixerVolume(trackID, value);
-      top->toGuiQueue.push(x);
-      top->guiDispatcher->emit();
     }
     
     

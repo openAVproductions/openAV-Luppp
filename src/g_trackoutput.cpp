@@ -8,15 +8,21 @@ using namespace Luppp;
 
 int TrackOutput::privateID = 0;
 
-TrackOutput::TrackOutput(GuiStateStore* s)
+TrackOutput::TrackOutput(Top* t, GuiStateStore* s)
 {
   ID = privateID++;
   
+  top = t;
   stateStore = s;
   
+  mouseX = -1;
+  mouseY = -1;
+  
   //std::cout << "Enterin TrackOutput contructor" << std::endl;
-  add_events(Gdk::EXPOSURE_MASK | Gdk::BUTTON_PRESS_MASK);
+  add_events(Gdk::EXPOSURE_MASK | Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK);
   signal_button_press_event().connect(sigc::mem_fun(*this, &TrackOutput::on_button_press_event) );
+  signal_button_release_event().connect(sigc::mem_fun(*this, &TrackOutput::on_button_release_event) );
+  signal_motion_notify_event().connect( sigc::mem_fun( *this, &TrackOutput::onMouseMove ) );
   
   set_size_request(74,102);
 }
@@ -99,13 +105,36 @@ void TrackOutput::on_menu_file_popup_generic()
 
 bool TrackOutput::on_button_press_event(GdkEventButton* event)
 {
-  if( event->type == GDK_BUTTON_PRESS  ) // && event->button == 3
+  if( event->type == GDK_BUTTON_PRESS && event->button == 1 )
   {
-    
-    return true; //It's been handled.
+    mouseX = event->x;
+    mouseY = event->y;
   }
-  else
-    return false;
+  
+  return true;
+}
+bool TrackOutput::on_button_release_event(GdkEventButton* event)
+{
+  if( event->type == GDK_BUTTON_RELEASE && event->button == 1 )
+  {
+    mouseX = -1;
+    mouseY = -1;
+  }
+  
+  return true;
+}
+
+bool TrackOutput::onMouseMove(GdkEventMotion* event)
+{
+  if ( mouseX != -1 )
+  {
+    int mouseYdelta = mouseY - event->y;
+    std::cout << "MouseYdelta: " << mouseYdelta << std::endl;
+    
+    EngineEvent* x = new EngineEvent();
+    x->setMixerVolume(ID, mouseYdelta / 100.f);
+    top->toEngineQueue.push(x);
+  }
 }
 
 TrackOutput::~TrackOutput()

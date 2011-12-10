@@ -50,6 +50,7 @@ class JackClient
     
     void writeMidi( void*, int,int,int);
     
+    int processRtQueue();
     int process(jack_nframes_t);
     int processMidi(jack_nframes_t);
     

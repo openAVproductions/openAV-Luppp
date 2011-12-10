@@ -33,6 +33,8 @@ class Top
     
     Glib::Dispatcher* guiDispatcher;
     RtQueue toGuiQueue;
+    
+    RtQueue toEngineQueue;
 };
 
 #endif
