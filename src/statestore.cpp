@@ -62,6 +62,56 @@ void StateStore::setVolume(int t, float v)
   //std::cout << "StateStore::setVolume() Track: " << t << ", linVol:" << v << "  logVol:" << logVolume << std::endl;
 }
 
+void StateStore::setPan(int t, float v)
+{
+  if ( !trackCheck(t) ) {
+    std::cout << "StateStore::setPan() track OOB" << std::endl; return;
+  }
+  std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
+  std::advance(iter, t);
+  iter->pan = v;
+}
+
+void StateStore::setMute(int t, int v)
+{
+  if ( !trackCheck(t) ) {
+    std::cout << "StateStore::setMute() track OOB" << std::endl; return;
+  }
+  std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
+  std::advance(iter, t);
+  iter->mute = v;
+}
+
+void StateStore::setSolo(int t, int v)
+{
+  if ( !trackCheck(t) ) {
+    std::cout << "StateStore::setSolo() track OOB" << std::endl; return;
+  }
+  std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
+  std::advance(iter, t);
+  iter->solo = v;
+}
+
+void StateStore::setRec(int t, int v)
+{
+  if ( !trackCheck(t) ) {
+    std::cout << "StateStore::setRec() track OOB" << std::endl; return;
+  }
+  std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
+  std::advance(iter, t);
+  iter->rec = v;
+}
+
+void StateStore::setPanZ(int t, float v)
+{
+  if ( !trackCheck(t) ) {
+    std::cout << "StateStore::setPanZ() track OOB" << std::endl; return;
+  }
+  std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
+  std::advance(iter, t);
+  iter->panZ = v;
+}
+
 TrackOutputState* StateStore::getAudioSinkOutput(int t)
 {
   if ( !trackCheck(t) ) {

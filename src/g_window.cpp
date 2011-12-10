@@ -99,6 +99,14 @@ int Window::handleEvent()
       advance(progIter,e->ia);
       (*progIter)->set_fraction(e->fa);
     }
+    else if ( e->type == EE_TRACK_SET_MUTE ) {
+      std::cout << e->ib << std::endl;
+      guiState.trackoutputState.at(e->ia).mute = e->ib;
+      
+      std::list<TrackOutput*>::iterator i = trackoutputList.begin();
+      std::advance(i,e->ia);
+      (*i)->redraw();
+    }
   }
   return true;
 }

@@ -17,6 +17,11 @@ class StateStore
     
     void addTrack();
     
+    void setMute(int,int);
+    void setSolo(int,int);
+    void setRec (int,int);
+    void setPan(int,float);
+    void setPanZ(int,float);
     void setVolume(int,float);
     
     TrackOutputState* getAudioSinkOutput(int);

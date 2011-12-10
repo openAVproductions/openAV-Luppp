@@ -570,13 +570,21 @@ void JackClient::apcRead( int nframes )
       {
         int trackID = b1 - 144;
         std::cout << "APC: Mute on track " << trackID << " off!" << std::endl;
-        //lo_send( //lo_address_new(NULL, "14688") , "/luppp/track/mute", "ii", trackID, 0 );
+        top->state.setMute( trackID, false );
+        EngineEvent* x = new EngineEvent();
+        x->setTrackMute(trackID, false);
+        top->toGuiQueue.push(x);
+        top->guiDispatcher->emit();
       }
       else if ( b1 >= 128 && b1 < 128 + 16 ) // for note off
       {
         int trackID = b1 - 128;
         std::cout << "APC: Mute on track " << trackID << " on!" << std::endl;
-        //lo_send( //lo_address_new(NULL, "14688") , "/luppp/track/mute", "ii", trackID, 1 );
+        top->state.setMute( trackID, true );
+        EngineEvent* x = new EngineEvent();
+        x->setTrackMute(trackID, true);
+        top->toGuiQueue.push(x);
+        top->guiDispatcher->emit();
       }
     }
     

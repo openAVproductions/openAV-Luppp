@@ -19,7 +19,7 @@ namespace Luppp
   {
     //std::cout << "Mute() called, ID " << id << "  mode: " << mode << std::endl;
     // main rectangle
-    if ( active )
+    if ( !active )
       setColour(cr, COLOUR_GREEN_1 );
     else
       setColour(cr, COLOUR_GREY_1 );

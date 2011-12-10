@@ -9,6 +9,7 @@ struct TrackOutputState
   bool selected;
   float volume;
   float pan;
+  float panZ;
   
   bool mute, solo, rec;
 };
