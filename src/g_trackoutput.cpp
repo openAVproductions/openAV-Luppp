@@ -107,8 +107,34 @@ bool TrackOutput::on_button_press_event(GdkEventButton* event)
 {
   if( event->type == GDK_BUTTON_PRESS && event->button == 1 )
   {
-    mouseX = event->x;
-    mouseY = event->y;
+    if ( event->x > 35 ) // fader
+    {
+      mouseX = event->x;
+      mouseY = event->y;
+    }
+    else if ( event->x > 5 && event->y > 39 && event->y < 39 + 23 ) // mute
+    {
+      EngineEvent* x = new EngineEvent();
+      TrackOutputState* state = &stateStore->trackoutputState.at(ID);
+      x->setTrackMute(ID, !state->mute);
+      top->toEngineQueue.push(x);
+    }
+    else if ( event->x > 5 && event->y > 67 && event->y < 67 + 13 ) // solo
+    {
+      std::cout << "SOLO" << std::endl;
+      EngineEvent* x = new EngineEvent();
+      TrackOutputState* state = &stateStore->trackoutputState.at(ID);
+      x->setTrackSolo(ID, !state->solo);
+      top->toEngineQueue.push(x);
+    }
+    else if ( event->x > 5 && event->y > 85 && event->y < 85 + 13 ) // rec
+    {
+      std::cout << "REC" << std::endl;
+      EngineEvent* x = new EngineEvent();
+      TrackOutputState* state = &stateStore->trackoutputState.at(ID);
+      x->setTrackRec(ID, !state->rec);
+      top->toEngineQueue.push(x);
+    }
   }
   
   return true;
@@ -120,7 +146,6 @@ bool TrackOutput::on_button_release_event(GdkEventButton* event)
     mouseX = -1;
     mouseY = -1;
   }
-  
   return true;
 }
 
@@ -128,12 +153,19 @@ bool TrackOutput::onMouseMove(GdkEventMotion* event)
 {
   if ( mouseX != -1 )
   {
-    int mouseYdelta = mouseY - event->y;
+    TrackOutputState* state = &stateStore->trackoutputState.at(ID);
+    
+    float mouseYdelta = (mouseY - event->y) / 25.f;
     std::cout << "MouseYdelta: " << mouseYdelta << std::endl;
     
     EngineEvent* x = new EngineEvent();
-    x->setMixerVolume(ID, mouseYdelta / 100.f);
+    
+    // move volume relative to current value
+    x->setMixerVolume(ID, mouseYdelta + state->volume);
     top->toEngineQueue.push(x);
+    
+    // reset mouseY
+    mouseY = event->y;
   }
 }
 

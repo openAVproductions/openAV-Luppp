@@ -100,9 +100,21 @@ int Window::handleEvent()
       (*progIter)->set_fraction(e->fa);
     }
     else if ( e->type == EE_TRACK_SET_MUTE ) {
-      std::cout << e->ib << std::endl;
+      //std::cout << "GUI MUTE event: " << e->ib << std::endl;
       guiState.trackoutputState.at(e->ia).mute = e->ib;
       
+      std::list<TrackOutput*>::iterator i = trackoutputList.begin();
+      std::advance(i,e->ia);
+      (*i)->redraw();
+    }
+    else if ( e->type == EE_TRACK_SET_SOLO ) {
+      guiState.trackoutputState.at(e->ia).solo = e->ib;
+      std::list<TrackOutput*>::iterator i = trackoutputList.begin();
+      std::advance(i,e->ia);
+      (*i)->redraw();
+    }
+    else if ( e->type == EE_TRACK_SET_REC ) {
+      guiState.trackoutputState.at(e->ia).rec = e->ib;
       std::list<TrackOutput*>::iterator i = trackoutputList.begin();
       std::advance(i,e->ia);
       (*i)->redraw();

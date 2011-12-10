@@ -97,6 +97,13 @@ int JackClient::processRtQueue()
       top->state.setVolume( e->ia, e->fa );
     }
     else if ( e->type == EE_TRACK_SET_MUTE ) {
+      top->state.setMute( e->ia, e->ib );
+    }
+    else if ( e->type == EE_TRACK_SET_SOLO ) {
+      top->state.setSolo( e->ia, e->ib );
+    }
+    else if ( e->type == EE_TRACK_SET_REC ) {
+      top->state.setRec( e->ia, e->ib );
     }
   }
 }

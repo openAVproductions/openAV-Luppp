@@ -8,7 +8,6 @@ using namespace std;
 StateStore::StateStore(Top* t)
 {
   numTracks = 0;
-  
   top = t;
 }
 
@@ -89,6 +88,11 @@ void StateStore::setMute(int t, int v)
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
   iter->mute = v;
+  
+  EngineEvent* x = new EngineEvent();
+  x->setTrackMute(t, v);
+  top->toGuiQueue.push(x);
+  top->guiDispatcher->emit();
 }
 
 void StateStore::setSolo(int t, int v)
@@ -99,6 +103,11 @@ void StateStore::setSolo(int t, int v)
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
   iter->solo = v;
+  
+  EngineEvent* x = new EngineEvent();
+  x->setTrackSolo(t, v);
+  top->toGuiQueue.push(x);
+  top->guiDispatcher->emit();
 }
 
 void StateStore::setRec(int t, int v)
@@ -109,6 +118,11 @@ void StateStore::setRec(int t, int v)
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
   iter->rec = v;
+  
+  EngineEvent* x = new EngineEvent();
+  x->setTrackRec(t, v);
+  top->toGuiQueue.push(x);
+  top->guiDispatcher->emit();
 }
 
 void StateStore::setPanZ(int t, float v)
