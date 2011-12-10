@@ -37,7 +37,7 @@ void Mixer::process(int nframes, float* outBuffer)
   
   for(iter = audiotrackList.begin(); iter != audiotrackList.end(); iter++ )
   {
-    iter->process( nframes, &outputW[0], &outputW[0], &outputX[0], &outputY[0], &outputZ[0] );
+    iter->process( nframes, &inputBuffer[0], &outputW[0], &outputX[0], &outputY[0], &outputZ[0] );
   }
   
   float* outPointer = &outputW[0];

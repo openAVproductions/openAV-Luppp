@@ -8,11 +8,15 @@
 #include "fileaudiosource.hpp"
 #include "audiosinkoutput.hpp"
 
+#include "trackoutputstate.hpp"
+
 int AudioTrack::privateID = 0;
 
 AudioTrack::AudioTrack( Top* t )
 {
   top = t;
+  
+  ID = privateID++;
   
   source = new FileAudioSource(t, "sample.wav");
   
@@ -45,6 +49,9 @@ void AudioTrack::setParameter(int pos, int param, float f)
 void AudioTrack::process(int nframes, float* buffer, float* W, float* X, float* Y, float* Z)
 {
   //std::cout << "AudioTrack::process()" << std::endl;
+  
+  TrackOutputState* state = top->state.getAudioSinkOutput(ID);
+  if ( state->mute ) { return; }
   
   // get audio from source
   source->process(nframes, &trackBuffer[0]);

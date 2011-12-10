@@ -138,7 +138,7 @@ void StateStore::setPanZ(int t, float v)
 TrackOutputState* StateStore::getAudioSinkOutput(int t)
 {
   if ( !trackCheck(t) ) {
-    std::cout << "StateStore::getAudioSinkOutput() track OOB" << std::endl; return 0;
+    std::cout << "StateStore::getAudioSinkOutput() track OOB: " << t << std::endl; return 0;
   }
   
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
