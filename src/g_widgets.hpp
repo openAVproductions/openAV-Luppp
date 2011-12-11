@@ -52,7 +52,7 @@ namespace Luppp
   void FrequencyGraph( Cairo::RefPtr<Cairo::Context> cr, bool, float x, float y, float xS, float yS, EqualizerState state);
   
   // helper functions
-  void Block(Cairo::RefPtr<Cairo::Context> cr, float x, float y, ClipState);
+  void Block(Cairo::RefPtr<Cairo::Context> cr, float x, float y, ClipState, std::string);
   void setColour( Cairo::RefPtr<Cairo::Context> cr, Colour c);
   void setColour( Cairo::RefPtr<Cairo::Context> cr, Colour c, float alpha);
 }

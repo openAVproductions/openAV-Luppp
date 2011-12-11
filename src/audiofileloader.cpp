@@ -52,8 +52,6 @@ int AudioFileLoader::load( int ID, int block, std::string name)
   x->looperLoad( ID, block, buffer->getID() );
   top->toEngineQueue.push(x);
   
-  
-  
   return 0;
 }
 

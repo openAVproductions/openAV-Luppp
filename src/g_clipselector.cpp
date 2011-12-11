@@ -67,16 +67,16 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
     
     float y = 0.f;
     
-    ClipState clipState;
-    
-    
     // 5 should be replaced with "max num scenes" from Store
     for( int i = 0; i < 5; i++)
     {
-      clipState = state.clipInfo.at(i).state;
+      // prepare values
+      ClipState clipState = state.clipInfo.at(i).state;
+      std::string name = "";
+      if ( state.clipInfo.at(i).bufferID < stateStore->audioBufferNameVector.size() )
+        name = stateStore->audioBufferNameVector.at( state.clipInfo.at(i).bufferID );
       
-      // void Block(Cairo::RefPtr<Cairo::Context> cr, float x, float y, bool active);
-      Block(cr, 0, y, clipState);
+      Block(cr, 0, y, clipState, name );
       y += 18;
     }
     
@@ -150,7 +150,13 @@ void ClipSelector::loadSample(int block)
       stateStore->setLastDir( Glib::path_get_dirname(filename) );
       
       // audioFileLoader informs engine & updates StateStore
-      top->audioFileLoader.load( ID, block, filename );
+      int ret = top->audioFileLoader.load( ID, block, filename );
+      
+      if ( ret == 0 ) // successful load, so store filename in vector
+      {
+        stateStore->audioBufferNameVector.push_back( Glib::path_get_basename(filename) );
+      }
+      
       return;
     }
     case(Gtk::RESPONSE_CANCEL):

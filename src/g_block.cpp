@@ -5,7 +5,7 @@
 
 namespace Luppp
 {
-  void Block( Cairo::RefPtr<Cairo::Context> cr, float x, float y, ClipState state)
+  void Block( Cairo::RefPtr<Cairo::Context> cr, float x, float y, ClipState state, std::string name)
   {
     int blockSize = 17;
     
@@ -36,9 +36,9 @@ namespace Luppp
     cr->fill();
     
     cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_NORMAL);
-    cr->set_font_size ( 12 );
+    cr->set_font_size ( 13 );
     cr->move_to ( x + 22, (y + 13) );
     setColour(cr, textColour);
-    cr->show_text ( "name" );
+    cr->show_text ( name );
   }
 }

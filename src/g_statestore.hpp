@@ -29,8 +29,9 @@ class GuiStateStore
     
     vector<FileAudioSourceState> fileAudioSourceState;
     vector<ClipSelectorState> clipSelectorState;
-    
     vector<TrackOutputState> trackoutputState;
+    
+    vector<std::string> audioBufferNameVector;
     
   private:
     int numTracks;

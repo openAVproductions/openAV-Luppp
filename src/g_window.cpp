@@ -130,9 +130,21 @@ int Window::handleEvent()
       advance(progIter,e->ia);
       (*progIter)->set_fraction(e->fa);
     }
+    else if ( e->type == EE_LOOPER_LOAD )
+    {
+      cout << "LOOPER_LOAD event in GUI" << endl;
+      if ( e->ia < guiState.clipSelectorState.size() ) {
+        guiState.clipSelectorState.at(e->ia).clipInfo.at(e->ib).state = CLIP_STATE_LOADED;
+        guiState.clipSelectorState.at(e->ia).clipInfo.at(e->ib).bufferID = e->ic;
+        std::list<ClipSelector*>::iterator clipIter = clipselectorList.begin();
+        advance(clipIter,e->ia);
+        (*clipIter)->redraw();
+      }
+      else
+        cout << "GUI: LOOPER_LOAD track OOB " << e->ia << endl;
+    }
     else if ( e->type == EE_LOOPER_SELECT_BUFFER )
     {
-      cout << "LOOPER_SELECT_BUFFER event in GUI" << endl;
       if ( e->ia < guiState.clipSelectorState.size() ) {
         // set previous playing to just "loaded"
         int playing = guiState.clipSelectorState.at(e->ia).playing;
