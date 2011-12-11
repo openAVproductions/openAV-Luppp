@@ -165,7 +165,7 @@ bool TrackOutput::onMouseMove(GdkEventMotion* event)
     TrackOutputState* state = &stateStore->trackoutputState.at(ID);
     
     float mouseYdelta = (mouseY - event->y) / 25.f;
-    std::cout << "MouseYdelta: " << mouseYdelta << std::endl;
+    //std::cout << "MouseYdelta: " << mouseYdelta << std::endl;
     
     EngineEvent* x = new EngineEvent();
     

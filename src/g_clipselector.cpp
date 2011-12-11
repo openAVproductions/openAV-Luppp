@@ -111,7 +111,10 @@ bool ClipSelector::on_button_press_event(GdkEventButton* event)
   
   if( event->type == GDK_BUTTON_PRESS && event->button == 1 ) // left
   {
-    std::cout << "ClipSelector " << ID << ": Button Press on block " << block << std::endl; 
+    std::cout << "ClipSelector " << ID << ": Button Press on block " << block << std::endl;
+    EngineEvent* x = new EngineEvent();
+    x->looperSelectBuffer(ID,block);
+    top->toEngineQueue.push(x);
   }
   else if( event->type == GDK_BUTTON_PRESS && event->button == 3 ) // right
   {
@@ -146,16 +149,8 @@ void ClipSelector::loadSample(int block)
     {
       stateStore->setLastDir( Glib::path_get_dirname(filename) );
       
+      // audioFileLoader informs engine & updates StateStore
       top->audioFileLoader.load( ID, block, filename );
-      
-      /*
-      std::cout << "Lo" << std::endl;
-      EngineEvent* x = new EngineEvent();
-      TrackOutputState* state = &stateStore->trackoutputState.at(ID);
-      x->setTrackSolo(ID, !state->solo);
-      top->toEngineQueue.push(x);
-      */
-      
       return;
     }
     case(Gtk::RESPONSE_CANCEL):

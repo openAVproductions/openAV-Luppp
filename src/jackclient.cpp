@@ -111,14 +111,23 @@ int JackClient::processRtQueue()
       top->state.setPan( e->ia, e->ib );
     }
     else if ( e->type == EE_STATE_SET_AUDIO_BUFFER ) {
+      // sets the unique bufferID into the AudioBuffer list, so we can
+      // retrieve the actual AudioBuffer instance with the unique id
+      // with a call to   state->getAudioBuffer( bufID );
       cout << "STATE_SET_AUDIO_BUFFER, buffer id = " << flush;
       AudioBuffer* buffer = (AudioBuffer*)e->vPtr;
       cout << buffer->getID() << endl;
       top->state.setAudioBuffer( buffer );
     }
     else if ( e->type == EE_LOOPER_LOAD ) {
+      // insert the correct buffer ID into the list, so we can retrieve by sceneID later
       cout << "EE_LOOPER_LOAD " << e->ia << ", " << e->ib << "," << e->ic << endl;
-      //top->state.setAudioBuffer( buffer );
+      top->state.setClipSelectorState( e->ia, e->ib, e->ic );
+    }
+    else if ( e->type == EE_LOOPER_SELECT_BUFFER) {
+      // tells the AudioSource @ track ia to play scene ib
+      cout << "EE_LOOPER_SELECT_BUFFER " << e->ia << ", " << e->ib << endl;
+      top->state.clipSelectorQueue(e->ia, e->ib);
     }
   }
   

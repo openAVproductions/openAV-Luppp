@@ -31,9 +31,13 @@ class StateStore
     void setAudioBuffer(AudioBuffer*);
     AudioBuffer* getAudioBuffer(int ID);
     
+    void clipSelectorQueue(int,int);
+    
+    // sets loaded on that clip
     void setClipSelectorState(int t,int block, int bufferID);
     
-    TrackOutputState* getAudioSinkOutput(int);
+    TrackOutputState*  getAudioSinkOutput(int);
+    ClipSelectorState* getClipSelectorState(int);
     
     
     // these lists will be private, and functions as above will be used

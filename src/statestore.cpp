@@ -178,11 +178,23 @@ void StateStore::setClipSelectorState(int t,int block, int bufferID)
   if ( block < iter->clipInfo.size() )
   {
     iter->clipInfo.at(block).state = CLIP_STATE_LOADED;
+    iter->clipInfo.at(block).bufferID = bufferID;
   }
   else
   {
     cout << "StateStore::setClipSelectorState(), block OOB" << block << endl;
   }
+}
+
+void StateStore::clipSelectorQueue(int t, int b)
+{
+  // we get a track & scene number, so we set them in the ClipSelectorState
+  // later the playback will request the bufferID ClipInfo of the right position in the list
+  std::cout << "StateStore::clipSelectorQueue() " << t << ", " << b << endl;
+  std::list<ClipSelectorState>::iterator iter = clipSelectorState.begin();
+  std::advance(iter, t);
+  
+  iter->playing = b;
 }
 
 TrackOutputState* StateStore::getAudioSinkOutput(int t)
@@ -192,6 +204,18 @@ TrackOutputState* StateStore::getAudioSinkOutput(int t)
   }
   
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
+  std::advance(iter, t);
+  
+  return &(*iter);
+}
+
+ClipSelectorState* StateStore::getClipSelectorState(int t)
+{
+  if ( !trackCheck(t) ) {
+    std::cout << "StateStore::getClipSelectorState() track OOB: " << t << std::endl; return 0;
+  }
+  
+  std::list<ClipSelectorState>::iterator iter = clipSelectorState.begin();
   std::advance(iter, t);
   
   return &(*iter);

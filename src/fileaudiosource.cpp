@@ -21,10 +21,16 @@ void FileAudioSource::process (int nframes, float* buffer )
   std::advance(iter, ID);
   float index = iter->index;
   float speed = iter->speed;
-  int audioBufferID = iter->bufferID;
+  //int audioBufferID = iter->bufferID;
+  
+  // get buffer variables
+  ClipSelectorState* clipSelState = top->state.getClipSelectorState(ID);
+  int playingScene = clipSelState->playing;
+  int playingBuffer = clipSelState->clipInfo.at(playingScene).bufferID;
+  std::cout << "FAS:P()   sceneID: " << playingScene << "   bID = " << playingBuffer << endl;
   
   // get AudioBuffer pointer
-  AudioBuffer* bufPtr = top->state.getAudioBuffer(audioBufferID);
+  AudioBuffer* bufPtr = top->state.getAudioBuffer(playingBuffer);
   if ( bufPtr == 0 ) {
     // happens until a valid file has been loaded for this 
     //cout << "FileAudioSource, bufPtr == 0! returning..." << endl;
