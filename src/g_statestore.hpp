@@ -23,6 +23,8 @@ class GuiStateStore
     std::string getLastDir();
     void setLastDir(std::string s);
     
+    void setClipSelectorState(int t,int block, int bufferID);
+    
     EqualizerState eqState;
     
     vector<FileAudioSourceState> fileAudioSourceState;

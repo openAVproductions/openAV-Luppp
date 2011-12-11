@@ -10,6 +10,9 @@ AudioFileLoader::AudioFileLoader(Top* t)
   top = t;
 }
 
+// called by GUI thread, to load an audiofile to a buffer. The buffer
+// is then passed by pointer to Engine, and its unique ID allows its
+// use everywhere in Engine
 int AudioFileLoader::load( int ID, int block, std::string name)
 {
   SndfileHandle infile( name , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 1 , 44100);

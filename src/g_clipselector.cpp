@@ -111,11 +111,11 @@ bool ClipSelector::on_button_press_event(GdkEventButton* event)
   
   if( event->type == GDK_BUTTON_PRESS && event->button == 1 ) // left
   {
-    std::cout << "ClipSelector: Button Press on block " << block << std::endl; 
+    std::cout << "ClipSelector " << ID << ": Button Press on block " << block << std::endl; 
   }
   else if( event->type == GDK_BUTTON_PRESS && event->button == 3 ) // right
   {
-    std::cout << "ClipSelector: Load event on block " << block << std::endl; 
+    std::cout << "ClipSelector " << ID << ": Load event on block " << block << std::endl; 
     loadSample(block);
   }
   

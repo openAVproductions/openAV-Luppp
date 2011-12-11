@@ -59,3 +59,24 @@ void GuiStateStore::setLastDir(std::string s)
 {
   lastUsedDir = s;
 }
+
+void GuiStateStore::setClipSelectorState(int t,int block, int bufferID)
+{
+  if ( t < clipSelectorState.size() ) {
+    cout << "GuiStateStore::setClipSelectorState() track OOB " << t << endl;
+    return;
+  }
+  
+  if ( block < clipSelectorState.at(t).clipStates.size() )
+  {
+    clipSelectorState.at(t).clipStates.at(block) = CLIP_STATE_LOADED;
+  }
+  else
+  {
+    while( block < clipSelectorState.at(t).clipStates.size() )
+    {
+      clipSelectorState.at(t).clipStates.push_back(CLIP_STATE_EMPTY);
+    }
+    clipSelectorState.at(t).clipStates.at(block) = CLIP_STATE_LOADED;
+  }
+}

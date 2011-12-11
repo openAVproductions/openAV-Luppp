@@ -166,6 +166,25 @@ void StateStore::setPanZ(int t, float v)
   iter->panZ = v;
 }
 
+void StateStore::setClipSelectorState(int t,int block, int bufferID)
+{
+  std::list<ClipSelectorState>::iterator iter = clipSelectorState.begin();
+  std::advance(iter, t);
+  
+  if ( block < iter->clipStates.size() )
+  {
+    iter->clipStates.at(block) = CLIP_STATE_LOADED;
+  }
+  else
+  {
+    while( block < iter->clipStates.size() )
+    {
+      iter->clipStates.push_back(CLIP_STATE_EMPTY);
+    }
+    iter->clipStates.at(block) = CLIP_STATE_LOADED;
+  }
+}
+
 TrackOutputState* StateStore::getAudioSinkOutput(int t)
 {
   if ( !trackCheck(t) ) {

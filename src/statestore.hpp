@@ -31,6 +31,8 @@ class StateStore
     void setAudioBuffer(AudioBuffer*);
     AudioBuffer* getAudioBuffer(int ID);
     
+    void setClipSelectorState(int t,int block, int bufferID);
+    
     TrackOutputState* getAudioSinkOutput(int);
     
     
