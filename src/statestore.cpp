@@ -195,6 +195,13 @@ void StateStore::clipSelectorQueue(int t, int b)
   std::advance(iter, t);
   
   iter->playing = b;
+  
+  // update GUI
+  EngineEvent* x = new EngineEvent();
+  x->looperSelectBuffer(t, b);
+  top->toGuiQueue.push(x);
+  top->guiDispatcher->emit();
+  
 }
 
 TrackOutputState* StateStore::getAudioSinkOutput(int t)
