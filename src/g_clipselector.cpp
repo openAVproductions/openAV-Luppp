@@ -116,13 +116,14 @@ bool ClipSelector::on_button_press_event(GdkEventButton* event)
   else if( event->type == GDK_BUTTON_PRESS && event->button == 3 ) // right
   {
     std::cout << "ClipSelector: Load event on block " << block << std::endl; 
-    loadSample();
+    loadSample(block);
   }
   
   return true;
 }
 
-void ClipSelector::loadSample()
+// loadsample has access to ID, so we know the track already
+void ClipSelector::loadSample(int block)
 {
   std::cout << "ClipSelector::loadSample()" << std::endl;
   int result = 0;
@@ -145,11 +146,15 @@ void ClipSelector::loadSample()
     {
       stateStore->setLastDir( Glib::path_get_dirname(filename) );
       
+      top->audioFileLoader.load( ID, block, filename );
+      
+      /*
       std::cout << "Lo" << std::endl;
       EngineEvent* x = new EngineEvent();
       TrackOutputState* state = &stateStore->trackoutputState.at(ID);
       x->setTrackSolo(ID, !state->solo);
       top->toEngineQueue.push(x);
+      */
       
       return;
     }

@@ -31,8 +31,13 @@ int AudioFileLoader::load( int, int, std::string name)
   
   infile.read( &sampleBuffer.at(0) , size );
   
-  // swap buffer with the loaded one
   AudioBuffer* buffer = new AudioBuffer();
+  
+  // swap buffer with the loaded one
+  sampleBuffer.swap( *buffer->getPointer() );
+  
+  std::cout << "Loaded file " << name << " successfully! (Frames = " <<
+    buffer->getPointer()->size() << " )  Stored in AudioBuffer ID " << buffer->getID() << std::endl;
   
   return 0;
 }

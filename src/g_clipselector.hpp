@@ -35,7 +35,7 @@ class ClipSelector : public Gtk::DrawingArea
     void on_menu_file_popup_generic();
     
     // action functions
-    void loadSample();
+    void loadSample(int);
 };
 
 #endif // SCENE_SELECTOR
