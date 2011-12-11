@@ -20,6 +20,9 @@ class GuiStateStore
     
     void addTrack();
     
+    std::string getLastDir();
+    void setLastDir(std::string s);
+    
     EqualizerState eqState;
     
     vector<FileAudioSourceState> fileAudioSourceState;
@@ -29,6 +32,8 @@ class GuiStateStore
     
   private:
     int numTracks;
+    
+    std::string lastUsedDir;
     
 };
 

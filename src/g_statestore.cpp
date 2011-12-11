@@ -1,11 +1,15 @@
 
 #include "g_statestore.hpp"
 
+#include "glibmm.h"
+
 using namespace std;
 
 GuiStateStore::GuiStateStore()
 {
   numTracks = 0;
+  lastUsedDir = Glib::get_home_dir();
+  cout << "Last used dir = " << lastUsedDir << endl;
 }
 
 void GuiStateStore::addTrack()
@@ -45,4 +49,13 @@ void GuiStateStore::addTrack()
   cout << "GuiStateStore::addTrack()  index , speed = " << i->index << ", " << i->speed << endl;
   
   numTracks++;
+}
+
+std::string GuiStateStore::getLastDir()
+{
+  return lastUsedDir;
+}
+void GuiStateStore::setLastDir(std::string s)
+{
+  lastUsedDir = s;
 }

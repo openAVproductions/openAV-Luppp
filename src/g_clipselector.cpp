@@ -3,6 +3,8 @@
 
 #include "g_widgets.hpp"
 
+#include "gtkmm/filechooserdialog.h"
+
 using namespace std;
 using namespace Luppp;
 
@@ -104,13 +106,57 @@ void ClipSelector::on_menu_file_popup_generic()
 
 bool ClipSelector::on_button_press_event(GdkEventButton* event)
 {
-  if( event->type == GDK_BUTTON_PRESS  ) // && event->button == 3
+  int block = ((int)event->y) / 18;
+  
+  if( event->type == GDK_BUTTON_PRESS && event->button == 1 ) // left
   {
-    std::cout << "ClipSelector: Button Press on block " << ((int)event->y) / 18 << "  pix: " << event->y << std::endl; 
-    return true; //It's been handled.
+    std::cout << "ClipSelector: Button Press on block " << block << std::endl; 
   }
-  else
-    return false;
+  else if( event->type == GDK_BUTTON_PRESS && event->button == 3 ) // right
+  {
+    std::cout << "ClipSelector: Load event on block " << block << std::endl; 
+    loadSample();
+  }
+  
+  return true;
+}
+
+void ClipSelector::loadSample()
+{
+  std::cout << "ClipSelector::loadSample()" << std::endl;
+  int result = 0;
+  std::string filename;
+  
+  Gtk::FileChooserDialog dialog("Load Sample");
+  
+  dialog.set_current_folder( stateStore->getLastDir() );
+  
+  dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+  dialog.add_button("Load", Gtk::RESPONSE_OK);
+  
+  result = dialog.run();
+  filename = dialog.get_filename();
+  
+  //Handle the response:
+  switch(result)
+  {
+    case(Gtk::RESPONSE_OK):
+    {
+      stateStore->setLastDir( Glib::path_get_dirname(filename) );
+      //lo_send( lo_address_new( NULL,"14688") , "/luppp/track/load","iis", loadSampleTrack, loadSampleSlot, &filename[0] );
+      return;
+    }
+    case(Gtk::RESPONSE_CANCEL):
+    {
+      std::cout << "Cancel clicked." << std::endl;
+      return;
+    }
+    default:
+    {
+      std::cout << "Unexpected button clicked." << std::endl;
+      break;
+    }
+  }
 }
 
 ClipSelector::~ClipSelector()
