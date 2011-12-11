@@ -13,11 +13,21 @@ enum ClipState {
   CLIP_STATE_RECORDING,
 };
 
+struct ClipInfo {
+  ClipInfo()
+  {
+    state = CLIP_STATE_EMPTY;
+    bufferID = -1;
+  }
+  ClipState state;
+  int bufferID;
+};
+
 struct ClipSelectorState
 {
   int ID;
   
-  std::vector<ClipState> clipStates;
+  std::vector<ClipInfo> clipInfo;
 };
 
 #endif

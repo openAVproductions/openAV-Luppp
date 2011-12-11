@@ -25,7 +25,7 @@ void GuiStateStore::addTrack()
   ClipSelectorState* c = &clipSelectorState.back();
   c->ID = -1;
   for ( int i = 0; i < 10; i++ )
-    c->clipStates.push_back(CLIP_STATE_EMPTY);
+    c->clipInfo.push_back( ClipInfo() );
   
   eqState.active = true;
   eqState.type = FREQUENCY_GRAPH_TYPE_PARAMETRIC;
@@ -67,16 +67,12 @@ void GuiStateStore::setClipSelectorState(int t,int block, int bufferID)
     return;
   }
   
-  if ( block < clipSelectorState.at(t).clipStates.size() )
+  if ( block < clipSelectorState.at(t).clipInfo.size() )
   {
-    clipSelectorState.at(t).clipStates.at(block) = CLIP_STATE_LOADED;
+    clipSelectorState.at(t).clipInfo.at(block).state = CLIP_STATE_LOADED;
   }
   else
   {
-    while( block < clipSelectorState.at(t).clipStates.size() )
-    {
-      clipSelectorState.at(t).clipStates.push_back(CLIP_STATE_EMPTY);
-    }
-    clipSelectorState.at(t).clipStates.at(block) = CLIP_STATE_LOADED;
+    cout << "GuiStateStore::setClipSelectorState(), block OOB" << block << endl;
   }
 }

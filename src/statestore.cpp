@@ -19,12 +19,16 @@ void StateStore::addTrack()
   i->speed = 1.f;
   i->bufferID = -1;
   
+  // initialize the clipSelectorState for this track
   clipSelectorState.push_back( ClipSelectorState() );
   ClipSelectorState* c = &clipSelectorState.back();
   c->ID = -1;
   for ( int i = 0; i < 10; i++ )
-    c->clipStates.push_back(CLIP_STATE_EMPTY);
+  {
+    c->clipInfo.push_back( ClipInfo() );
+  }
   
+  // initialize the TrackOutputState
   trackoutputState.push_back( TrackOutputState() );
   std::list<TrackOutputState>::iterator outputStateIter = trackoutputState.begin();
   std::advance(outputStateIter, numTracks);
@@ -171,17 +175,13 @@ void StateStore::setClipSelectorState(int t,int block, int bufferID)
   std::list<ClipSelectorState>::iterator iter = clipSelectorState.begin();
   std::advance(iter, t);
   
-  if ( block < iter->clipStates.size() )
+  if ( block < iter->clipInfo.size() )
   {
-    iter->clipStates.at(block) = CLIP_STATE_LOADED;
+    iter->clipInfo.at(block).state = CLIP_STATE_LOADED;
   }
   else
   {
-    while( block < iter->clipStates.size() )
-    {
-      iter->clipStates.push_back(CLIP_STATE_EMPTY);
-    }
-    iter->clipStates.at(block) = CLIP_STATE_LOADED;
+    cout << "StateStore::setClipSelectorState(), block OOB" << block << endl;
   }
 }
 

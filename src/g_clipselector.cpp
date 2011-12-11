@@ -73,7 +73,7 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
     // 5 should be replaced with "max num scenes" from Store
     for( int i = 0; i < 5; i++)
     {
-      clipState = state.clipStates.at(i);
+      clipState = state.clipInfo.at(i).state;
       
       // void Block(Cairo::RefPtr<Cairo::Context> cr, float x, float y, bool active);
       Block(cr, 0, y, clipState);
