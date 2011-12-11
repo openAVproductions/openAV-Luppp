@@ -106,6 +106,8 @@ int JackClient::processRtQueue()
       top->state.setRec( e->ia, e->ib );
     }
   }
+  
+  return 0;
 }
 
 int JackClient::process(jack_nframes_t nframes)
@@ -465,10 +467,11 @@ void JackClient::apcRead( int nframes )
     {
       if ( b2 >= 52 && b2 < 58 ) // the 5 vertial "launch" buttons, AND the clip stop (#52)
       {
+        /*
         int id = b1 - 144;
         int val= b2 - 53; // here we take 53 away, so the clip stop button will result in -1 for buffer ID
         
-        /*
+        
         // if based on mode
         if ( apcMode == APC_MODE_CLIP )
         {
@@ -490,10 +493,11 @@ void JackClient::apcRead( int nframes )
     {
       if ( b2 >= 52 && b2 < 58 ) // the 5 vertial "launch" buttons, AND the clip stop (#52)
       {
+        /*
         int id = b1 - 128;
         int val= b2 - 53; // here we take 53 away, so the clip stop button will result in -1 for buffer ID
         
-        /*
+        
         // if based on mode
         if ( apcMode == APC_MODE_CLIP )
         {
@@ -515,7 +519,7 @@ void JackClient::apcRead( int nframes )
     {
       if ( b2 >= 16 && b2 < 24 && b1 != 184 ) // all controllers, excluding master track
       {
-        int trackID = b1 - 176;
+        //int trackID = b1 - 176;
         //std::cout << "APC: Device Control on track " << trackID << std::endl;
         
         /*

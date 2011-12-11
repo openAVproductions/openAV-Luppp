@@ -11,7 +11,7 @@ class AudioSink
     //virtual ~AudioSink();
     
     //virtual void setParameter(int param, float val);
-    virtual void process(int nframes, float* in, float* W, float *X, float *Y, float *Z){};
+    virtual void process(int , float*, float*, float *, float *, float *){};
 };
 
 

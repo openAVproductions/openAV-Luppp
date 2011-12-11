@@ -29,9 +29,10 @@ class StateStore
     TrackOutputState* getAudioSinkOutput(int);
     
     
+    // these lists will be private, and functions as above will be used
+    // to set values, while State* get() methods will provide all data
     std::list<FileAudioSourceState> fileAudioSourceState;
     std::list<ClipSelectorState> clipSelectorState;
-    
     std::list<TrackOutputState> trackoutputState;
     
   private:
