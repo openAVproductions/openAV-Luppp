@@ -21,6 +21,8 @@ void StateStore::addTrack()
   clipSelectorState.push_back( ClipSelectorState() );
   ClipSelectorState* c = &clipSelectorState.back();
   c->ID = 1;
+  c->playing = 0;
+  c->queued = 0;
   
   trackoutputState.push_back( TrackOutputState() );
   std::list<TrackOutputState>::iterator outputStateIter = trackoutputState.begin();
@@ -29,9 +31,7 @@ void StateStore::addTrack()
   outputStateIter->selected = false;
   outputStateIter->volume = 0.f;
   outputStateIter->pan = 0.f;
-  
-  if ( numTracks == 1 )
-    outputStateIter->selected = true;
+  outputStateIter->panZ = 0.f;
   
   numTracks++;
 }
@@ -78,6 +78,12 @@ void StateStore::setPan(int t, float v)
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
   iter->pan = v;
+  std::cout << "New pan: " << iter->pan << std::endl;
+  
+  EngineEvent* x = new EngineEvent();
+  x->setTrackPan(t, v);
+  top->toGuiQueue.push(x);
+  top->guiDispatcher->emit();
 }
 
 void StateStore::setMute(int t, int v)

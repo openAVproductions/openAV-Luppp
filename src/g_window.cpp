@@ -119,6 +119,13 @@ int Window::handleEvent()
       std::advance(i,e->ia);
       (*i)->redraw();
     }
+    else if ( e->type == EE_TRACK_SET_PAN ) {
+      std::cout << "Gui got pan " << e->fa << std::endl; 
+      guiState.trackoutputState.at(e->ia).pan = e->fa;
+      std::list<TrackOutput*>::iterator i = trackoutputList.begin();
+      std::advance(i,e->ia);
+      (*i)->redraw();
+    }
   }
   return true;
 }

@@ -75,7 +75,7 @@ bool TrackOutput::on_expose_event(GdkEventExpose* event)
     cr->rectangle(0, 0, 74, 102);
     cr->fill();
     
-    Dial(cr,true,7,4,state->pan,DIAL_MODE_PAN); // pan
+    Dial(cr,true, 7,4,state->pan,DIAL_MODE_PAN); // pan
     Mute(cr, 9  , 41 , state->ID, state->mute ); // mute button
     Solo(cr, 9  , 68 , state->ID, state->solo ); // solo button
     Rec (cr, 9  , 85 , state->ID, state->rec  ); // rec button
@@ -107,8 +107,12 @@ bool TrackOutput::on_button_press_event(GdkEventButton* event)
 {
   if( event->type == GDK_BUTTON_PRESS && event->button == 1 )
   {
-    if ( event->x > 35 ) // fader
+    // reset click, will be set again if needed
+    clickedWidget = CLICKED_WIDGET_NONE;
+    
+    if ( event->x > 38 ) // fader
     {
+      clickedWidget = CLICKED_WIDGET_FADER;
       mouseX = event->x;
       mouseY = event->y;
     }
@@ -135,6 +139,12 @@ bool TrackOutput::on_button_press_event(GdkEventButton* event)
       x->setTrackRec(ID, !state->rec);
       top->toEngineQueue.push(x);
     }
+    else if ( event->x > 3 && event->y > 7 && event->y < 37 )
+    {
+      std::cout << "DIAL" << std::endl;
+      clickedWidget = CLICKED_WIDGET_DIAL;
+    }
+    
   }
   
   return true;
@@ -146,12 +156,15 @@ bool TrackOutput::on_button_release_event(GdkEventButton* event)
     mouseX = -1;
     mouseY = -1;
   }
+  
+  clickedWidget = CLICKED_WIDGET_NONE;
+  
   return true;
 }
 
 bool TrackOutput::onMouseMove(GdkEventMotion* event)
 {
-  if ( mouseX != -1 )
+  if ( clickedWidget == CLICKED_WIDGET_FADER )
   {
     TrackOutputState* state = &stateStore->trackoutputState.at(ID);
     
@@ -162,6 +175,22 @@ bool TrackOutput::onMouseMove(GdkEventMotion* event)
     
     // move volume relative to current value
     x->setMixerVolume(ID, mouseYdelta + state->volume);
+    top->toEngineQueue.push(x);
+    
+    // reset mouseY
+    mouseY = event->y;
+  }
+  else if ( clickedWidget == CLICKED_WIDGET_DIAL )
+  {
+    TrackOutputState* state = &stateStore->trackoutputState.at(ID);
+    
+    float mouseYdelta = (mouseY - event->y) / 225.f;
+    std::cout << "MouseYdelta: " << mouseYdelta << std::endl;
+    
+    EngineEvent* x = new EngineEvent();
+    
+    // move volume relative to current value
+    x->setTrackPan(ID, mouseYdelta + state->pan);
     top->toEngineQueue.push(x);
     
     // reset mouseY

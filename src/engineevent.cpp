@@ -19,6 +19,8 @@ void EngineEvent::samplerPlay          (int id) { ia = id; type = EE_SAMPLER_PLA
 void EngineEvent::samplerStop          (int id) { ia = id; type = EE_SAMPLER_STOP; }
 void EngineEvent::samplerSetMode       (int id, int b) { ia = id; ib = b; type = EE_SAMPLER_SET_MODE; }
 
+void EngineEvent::setTrackPan          (int id, float v) { ia = id; fa = v; type = EE_TRACK_SET_PAN; }
+
 void EngineEvent::setTrackRec          (int id, int b) { ia = id; ib = b; type = EE_TRACK_SET_REC; }
 void EngineEvent::setTrackSolo         (int id, int b) { ia = id; ib = b; type = EE_TRACK_SET_SOLO; }
 void EngineEvent::setTrackMute         (int id, int b) { ia = id; ib = b; type = EE_TRACK_SET_MUTE; }

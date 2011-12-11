@@ -105,6 +105,9 @@ int JackClient::processRtQueue()
     else if ( e->type == EE_TRACK_SET_REC ) {
       top->state.setRec( e->ia, e->ib );
     }
+    else if ( e->type == EE_TRACK_SET_PAN ) {
+      top->state.setPan( e->ia, e->ib );
+    }
   }
   
   return 0;

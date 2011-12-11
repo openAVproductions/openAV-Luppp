@@ -19,6 +19,14 @@ class TrackOutput : public Gtk::DrawingArea
     bool redraw();
   
   protected:
+    enum ClickedWidget {
+      CLICKED_WIDGET_NONE,
+      CLICKED_WIDGET_DIAL,
+      CLICKED_WIDGET_FADER,
+    };
+    
+    ClickedWidget clickedWidget;
+    
     int ID;
     static int privateID;
     GuiStateStore* stateStore;

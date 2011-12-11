@@ -26,6 +26,7 @@ enum EngineEventType
   EE_SAMPLER_STOP,
   EE_SAMPLER_SET_MODE,
   
+  EE_TRACK_SET_PAN,
   EE_TRACK_SET_REC,
   EE_TRACK_SET_SOLO,
   EE_TRACK_SET_MUTE,
@@ -77,6 +78,7 @@ class EngineEvent
     void samplerStop          (int id);
     void samplerSetMode       (int id, int b);
     
+    void setTrackPan          (int id, float p);
     void setTrackRec          (int id, int b);
     void setTrackSolo         (int id, int b);
     void setTrackMute         (int id, int b);
