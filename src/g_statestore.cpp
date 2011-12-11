@@ -19,7 +19,9 @@ void GuiStateStore::addTrack()
   
   clipSelectorState.push_back( ClipSelectorState() );
   ClipSelectorState* c = &clipSelectorState.back();
-  c->ID = 1;
+  c->ID = -1;
+  for ( int i = 0; i < 10; i++ )
+    c->clipStates.push_back(CLIP_STATE_EMPTY);
   
   eqState.active = true;
   eqState.type = FREQUENCY_GRAPH_TYPE_PARAMETRIC;

@@ -1,23 +1,25 @@
 
 #include "g_widgets.hpp"
 
+#include "clipselectorstate.hpp"
+
 namespace Luppp
 {
-  void Block( Cairo::RefPtr<Cairo::Context> cr, float x, float y, BlockState state)
+  void Block( Cairo::RefPtr<Cairo::Context> cr, float x, float y, ClipState state)
   {
     int blockSize = 17;
     
     Colour textColour, playColour, bgColour;
     
-    if        ( state == BLOCK_STATE_EMPTY ) {
+    if        ( state == CLIP_STATE_EMPTY ) {
      textColour = COLOUR_TRANSPARENT;
      playColour = COLOUR_TRANSPARENT;
      bgColour   = COLOUR_GREY_4;
-    } else if ( state == BLOCK_STATE_LOADED ){
+    } else if ( state == CLIP_STATE_LOADED ){
      textColour = COLOUR_BLUE_1;
      playColour = COLOUR_TRANSPARENT;
      bgColour   = COLOUR_GREY_3;
-    } else if ( state == BLOCK_STATE_PLAYING ){
+    } else if ( state == CLIP_STATE_PLAYING ){
      textColour = COLOUR_GREY_4;
      playColour = COLOUR_GREY_4;
      bgColour   = COLOUR_GREEN_1;

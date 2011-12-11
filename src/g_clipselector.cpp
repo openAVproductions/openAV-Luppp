@@ -55,56 +55,28 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
     
     cr->rectangle(event->area.x, event->area.y,
         event->area.width, event->area.height);
-    cr->set_source_rgb(0.1 , 0.1 , 0.1 );
+    setColour(cr, COLOUR_GREY_3);
     cr->fill();
     
     std::cout << "StateStore = " << &stateStore << std::endl;
     
-    if ( stateStore->clipSelectorState.size() == 0 )
-    {
-      std::cout << "clipSelectorState == 0" << std::endl;
-    }
-    
-    if ( ID >= stateStore->clipSelectorState.size() )
-    {
-      std::cout << "ClipSelector: ID > clipSelectorState.size()" << std::endl;
-    }
-    
-    //list<ClipSelectorState>::iterator i = stateStore->clipSelectorState.begin();
-    //advance(i,ID);
-    
-    return true;
-    
-    //ClipSelectorState state = *i;
+    ClipSelectorState state = stateStore->clipSelectorState.at(ID);
     
     float y = 0.f;
-    /*
-    enum BlockState {
-    BLOCK_STATE_EMPTY,
-    BLOCK_STATE_LOADED,
-    BLOCK_STATE_PLAYING,
-    BLOCK_STATE_QUEUED,
-    BLOCK_STATE_RECORDING,
-    };
-    */
     
-    /*
-    BlockState blockState = BLOCK_STATE_LOADED;
+    ClipState clipState;
     
     
     // 5 should be replaced with "max num scenes" from Store
     for( int i = 0; i < 5; i++)
     {
-      if ( i == ID )
-        blockState = BLOCK_STATE_PLAYING;
-      else
-        blockState = BLOCK_STATE_EMPTY;
+      clipState = state.clipStates.at(i);
       
       // void Block(Cairo::RefPtr<Cairo::Context> cr, float x, float y, bool active);
-      Block(cr, 0, y, blockState);
+      Block(cr, 0, y, clipState);
       y += 18;
     }
-    */
+    
     
     /*
     if ( state.selected )
@@ -134,7 +106,7 @@ bool ClipSelector::on_button_press_event(GdkEventButton* event)
 {
   if( event->type == GDK_BUTTON_PRESS  ) // && event->button == 3
   {
-    
+    std::cout << "ClipSelector: Button Press on block " << ((int)event->y) / 18 << "  pix: " << event->y << std::endl; 
     return true; //It's been handled.
   }
   else

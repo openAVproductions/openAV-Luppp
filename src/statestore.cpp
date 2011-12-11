@@ -20,9 +20,9 @@ void StateStore::addTrack()
   
   clipSelectorState.push_back( ClipSelectorState() );
   ClipSelectorState* c = &clipSelectorState.back();
-  c->ID = 1;
-  c->playing = 0;
-  c->queued = 0;
+  c->ID = -1;
+  for ( int i = 0; i < 10; i++ )
+    c->clipStates.push_back(CLIP_STATE_EMPTY);
   
   trackoutputState.push_back( TrackOutputState() );
   std::list<TrackOutputState>::iterator outputStateIter = trackoutputState.begin();
