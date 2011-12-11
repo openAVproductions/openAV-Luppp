@@ -168,7 +168,7 @@ void Window::addTrack()
   mainTable->attach( **inputIter, numTracks, numTracks+1, 1, 2);
   
   // clip selector
-  clipselectorList.push_back( new ClipSelector( &guiState ) );
+  clipselectorList.push_back( new ClipSelector( top, &guiState ) );
   clipselectorIter = clipselectorList.begin();
   std::advance(clipselectorIter,numTracks);
   mainTable->attach( **clipselectorIter, numTracks, numTracks+1, 2, 3);

@@ -10,10 +10,11 @@ using namespace Luppp;
 
 int ClipSelector::privateID = 0;
 
-ClipSelector::ClipSelector(GuiStateStore* s)
+ClipSelector::ClipSelector(Top* t, GuiStateStore* s)
 {
   ID = privateID++;
   
+  top = t;
   stateStore = s;
   
   //std::cout << "Enterin ClipSelector contructor" << std::endl;
@@ -143,7 +144,13 @@ void ClipSelector::loadSample()
     case(Gtk::RESPONSE_OK):
     {
       stateStore->setLastDir( Glib::path_get_dirname(filename) );
-      //lo_send( lo_address_new( NULL,"14688") , "/luppp/track/load","iis", loadSampleTrack, loadSampleSlot, &filename[0] );
+      
+      std::cout << "Lo" << std::endl;
+      EngineEvent* x = new EngineEvent();
+      TrackOutputState* state = &stateStore->trackoutputState.at(ID);
+      x->setTrackSolo(ID, !state->solo);
+      top->toEngineQueue.push(x);
+      
       return;
     }
     case(Gtk::RESPONSE_CANCEL):

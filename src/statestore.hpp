@@ -8,6 +8,8 @@
 
 class Top;
 
+#include "audiobuffer.hpp"
+
 #include "trackoutputstate.hpp"
 #include "clipselectorstate.hpp"
 #include "fileaudiosourcestate.hpp"
@@ -34,6 +36,7 @@ class StateStore
     std::list<FileAudioSourceState> fileAudioSourceState;
     std::list<ClipSelectorState> clipSelectorState;
     std::list<TrackOutputState> trackoutputState;
+    std::list<AudioBuffer> audiobufferList;
     
   private:
     Top* top;

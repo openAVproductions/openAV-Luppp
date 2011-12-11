@@ -96,10 +96,10 @@ class EngineEvent
     void sendAllPan           ();
     
     // never called from a RT context, so strdup is safe
-    void rhLoadBuffer         (int id, int slot, char* s);
-    void rhWriteBuffer        (int id, char* s);
-    void rhInsertLv2          (int i , int i2, char* s);
-    void setFramesPerBeat     (int i , int i2);
+    void topLoadBuffer        (int id, int slot, char* s);
+    void topWriteBuffer       (int id, char* s);
+    void topInsertLv2         (int i , int i2, char* s);
+    void topSetFramesPerBeat  (int i , int i2);
 };
 
 #endif

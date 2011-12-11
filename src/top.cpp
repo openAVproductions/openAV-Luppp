@@ -4,17 +4,10 @@
 using namespace std;
 
 Top::Top() :
-  state(this)
+  state(this),
+  audioFileLoader(this)
 {
   cout << "Top()" << endl;
   
   guiDispatcher = new Glib::Dispatcher();
-  
-  addTrack();
-  addTrack();
-}
-
-void Top::addTrack()
-{
-  
 }

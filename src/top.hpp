@@ -9,14 +9,12 @@
 #include "rtqueue.hpp"
 
 #include "statestore.hpp"
+#include "audiofileloader.hpp"
 
 // the Top class is a portal trough which the rest of the program can
 // commnunicate. It allows the JACK thread send messages to other threads,
-// and vice versa.
-// 
-// There is a mutex on messages *sent* to JACK, as its a
-// single write, single read queue. This will not affect RT performance
-// as the RT thread will never try write a message to itself.
+// and vice versa. It also aids as a point where various utility classes
+// can communicate
 class Top
 {
   public:
@@ -26,9 +24,9 @@ class Top
     
     int bufferSize;
     int samplerate;
-    
     int bpm;
     
+    AudioFileLoader audioFileLoader;
     StateStore state;
     
     Glib::Dispatcher* guiDispatcher;
