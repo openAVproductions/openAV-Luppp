@@ -4,6 +4,8 @@
 #include <cmath>
 #include <iostream>
 
+#include "audiobuffer.hpp"
+
 using namespace std;
 
 JackClient::JackClient( Top* t) :
@@ -107,6 +109,12 @@ int JackClient::processRtQueue()
     }
     else if ( e->type == EE_TRACK_SET_PAN ) {
       top->state.setPan( e->ia, e->ib );
+    }
+    else if ( e->type == EE_STATE_SET_AUDIO_BUFFER ) {
+      cout << "STATE_SET_AUDIO_BUFFER, buffer id = " << flush;
+      AudioBuffer* buffer = (AudioBuffer*)e->vPtr;
+      cout << buffer->getID() << endl;
+      top->state.setAudioBuffer( buffer );
     }
   }
   

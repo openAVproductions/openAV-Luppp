@@ -36,6 +36,8 @@ void EngineEvent::setMixerVolume       (int id, float v) { ia = id; fa = v; type
 
 void EngineEvent::sendAllPan           () { type = EE_SEND_ALL_PAN; }
 
+void EngineEvent::setStateAudioBuffer  (void* bufPtr) { vPtr = (void*) bufPtr; type = EE_STATE_SET_AUDIO_BUFFER; }
+
 // never called from a RT context, so strdup is safe
 void EngineEvent::topLoadBuffer        (int id, int slot, char* s){ia = id; ib = slot, sa = strdup(s); type = EE_RH_LOAD_BUFFER; }
 void EngineEvent::topWriteBuffer       (int id, char* s){ia = id; sa = strdup(s); type = EE_RH_WRITE_BUFFER; }

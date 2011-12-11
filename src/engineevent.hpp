@@ -47,6 +47,8 @@ enum EngineEventType
   
   EE_RH_INSERT_LV2,
   
+  EE_STATE_SET_AUDIO_BUFFER,
+  
   EE_RH_SET_FRAMES_PER_BEAT,
 };
 
@@ -58,6 +60,7 @@ class EngineEvent
     int ia, ib, ic;
     float fa, fb ,fc;
     char* sa;
+    void* vPtr;
     
     EngineEvent() {
       type = EE_INVALID;
@@ -94,6 +97,8 @@ class EngineEvent
     void setMixerVolume       (int id, float v);
     
     void sendAllPan           ();
+    
+    void setStateAudioBuffer(void*);
     
     // never called from a RT context, so strdup is safe
     void topLoadBuffer        (int id, int slot, char* s);

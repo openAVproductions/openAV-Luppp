@@ -39,6 +39,11 @@ int AudioFileLoader::load( int, int, std::string name)
   std::cout << "Loaded file " << name << " successfully! (Frames = " <<
     buffer->getPointer()->size() << " )  Stored in AudioBuffer ID " << buffer->getID() << std::endl;
   
+  // send event to engine State
+  EngineEvent* x = new EngineEvent();
+  x->setStateAudioBuffer( (void*) buffer);
+  top->toEngineQueue.push(x);
+  
   return 0;
 }
 

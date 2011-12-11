@@ -36,6 +36,27 @@ void StateStore::addTrack()
   numTracks++;
 }
 
+void StateStore::setAudioBuffer(AudioBuffer* bufPtr)
+{
+  cout << "StateStore::setAudioBuffer() Got AudioBuffer ID " << bufPtr->getID() << endl;
+  audiobufferList.push_back( *bufPtr );
+}
+
+AudioBuffer* StateStore::getAudioBuffer(int ID)
+{
+  std::list<AudioBuffer>::iterator iter;
+  
+  for ( iter = audiobufferList.begin(); iter != audiobufferList.end(); iter++ )
+  {
+    if ( iter->getID() == ID )
+    {
+      return &(*iter);
+    }
+  }
+  
+  return 0;
+}
+
 void StateStore::setVolume(int t, float v)
 {
   if ( !trackCheck(t) ) {
