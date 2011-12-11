@@ -30,7 +30,7 @@ int AudioBuffer::getBeats()
 
 std::vector<float>* AudioBuffer::getPointer()
 {
-  std::cout << "AudioBuffer::getPointer()  ID: " << ID << "  size = " << buffer.size() << std::endl;
+  //std::cout << "AudioBuffer::getPointer()  ID: " << ID << "  size = " << buffer.size() << std::endl;
   return &buffer;
 }
 

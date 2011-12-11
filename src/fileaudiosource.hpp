@@ -23,8 +23,7 @@ class FileAudioSource : public AudioSource
     
     void setParameter(int p,float s);
     void process (int, float* );
-    
-    std::vector<float> sampleBuffer;
+  
   private:
     Top* top;
     int ID;

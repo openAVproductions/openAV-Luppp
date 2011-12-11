@@ -92,7 +92,7 @@ int JackClient::processRtQueue()
       break;
     }
     
-    std::cout << "processRtQueue() in engine got event!" << std::endl;
+    //std::cout << "processRtQueue() in engine got event!" << std::endl;
     
     if ( e->type == EE_MIXER_VOLUME )
     {
@@ -115,6 +115,10 @@ int JackClient::processRtQueue()
       AudioBuffer* buffer = (AudioBuffer*)e->vPtr;
       cout << buffer->getID() << endl;
       top->state.setAudioBuffer( buffer );
+    }
+    else if ( e->type == EE_LOOPER_LOAD ) {
+      cout << "EE_LOOPER_LOAD " << e->ia << ", " << e->ib << "," << e->ic << endl;
+      //top->state.setAudioBuffer( buffer );
     }
   }
   

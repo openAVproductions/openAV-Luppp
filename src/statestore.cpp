@@ -17,6 +17,7 @@ void StateStore::addTrack()
   FileAudioSourceState* i = &fileAudioSourceState.back();
   i->index = 0.f;
   i->speed = 1.f;
+  i->bufferID = -1;
   
   clipSelectorState.push_back( ClipSelectorState() );
   ClipSelectorState* c = &clipSelectorState.back();
@@ -44,6 +45,9 @@ void StateStore::setAudioBuffer(AudioBuffer* bufPtr)
 
 AudioBuffer* StateStore::getAudioBuffer(int ID)
 {
+  if ( ID == -1 ) // -1 means not loaded, save itering the list :)
+    return 0;
+  
   std::list<AudioBuffer>::iterator iter;
   
   for ( iter = audiobufferList.begin(); iter != audiobufferList.end(); iter++ )

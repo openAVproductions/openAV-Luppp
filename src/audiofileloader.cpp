@@ -10,7 +10,7 @@ AudioFileLoader::AudioFileLoader(Top* t)
   top = t;
 }
 
-int AudioFileLoader::load( int, int, std::string name)
+int AudioFileLoader::load( int ID, int block, std::string name)
 {
   SndfileHandle infile( name , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 1 , 44100);
   
@@ -39,10 +39,17 @@ int AudioFileLoader::load( int, int, std::string name)
   std::cout << "Loaded file " << name << " successfully! (Frames = " <<
     buffer->getPointer()->size() << " )  Stored in AudioBuffer ID " << buffer->getID() << std::endl;
   
-  // send event to engine State
+  // send new AudioBuffer event to engine State
   EngineEvent* x = new EngineEvent();
   x->setStateAudioBuffer( (void*) buffer);
   top->toEngineQueue.push(x);
+  
+  // send LooperLoad event
+  x = new EngineEvent();
+  x->looperLoad( ID, block, buffer->getID() );
+  top->toEngineQueue.push(x);
+  
+  
   
   return 0;
 }
