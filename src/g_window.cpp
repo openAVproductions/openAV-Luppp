@@ -197,10 +197,7 @@ void Window::addTrack()
   progressIter = trackprogressList.begin();
   std::advance(progressIter,numTracks);
   (**progressIter).set_fraction(numTracks / 8.f);
-  
-  Gtk::HBox* tempBox = Gtk::manage( new Gtk::HBox() );
-  tempBox->pack_start ( **progressIter, false, true, 0);
-  mainTable->attach( *tempBox, numTracks, numTracks+1, 3, 4);
+  //mainTable->attach( **progressIter, numTracks, numTracks+1, 3, 4);
   
   // fader / pan
   trackoutputList.push_back( new TrackOutput( top, &guiState ) );
