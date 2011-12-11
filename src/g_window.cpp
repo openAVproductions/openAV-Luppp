@@ -94,10 +94,6 @@ int Window::handleEvent()
       advance(iter,e->ia);
       //std::cout << "Redraw Iter = " << &iter << std::endl;
       (*iter)->redraw();
-      
-      std::list<Gtk::ProgressBar*>::iterator progIter = trackprogressList.begin();
-      advance(progIter,e->ia);
-      (*progIter)->set_fraction(e->fa);
     }
     else if ( e->type == EE_TRACK_SET_MUTE ) {
       //std::cout << "GUI MUTE event: " << e->ib << std::endl;
@@ -125,6 +121,14 @@ int Window::handleEvent()
       std::list<TrackOutput*>::iterator i = trackoutputList.begin();
       std::advance(i,e->ia);
       (*i)->redraw();
+    }
+    else if ( e->type == EE_TRACK_SET_SPEED )
+    {
+      guiState.fileAudioSourceState.at(e->ia).speed = e->fa;
+      
+      std::list<Gtk::ProgressBar*>::iterator progIter = trackprogressList.begin();
+      advance(progIter,e->ia);
+      (*progIter)->set_fraction(e->fa);
     }
   }
   return true;
@@ -174,7 +178,7 @@ void Window::addTrack()
   progressIter = trackprogressList.begin();
   std::advance(progressIter,numTracks);
   (**progressIter).set_fraction(numTracks / 8.f);
-  //mainTable->attach( **progressIter, numTracks, numTracks+1, 3, 4);
+  mainTable->attach( **progressIter, numTracks, numTracks+1, 3, 4);
   
   // fader / pan
   trackoutputList.push_back( new TrackOutput( top, &guiState ) );

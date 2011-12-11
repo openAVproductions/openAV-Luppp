@@ -48,10 +48,6 @@ bool TrackOutput::on_expose_event(GdkEventExpose* event)
   
   if(window)    // Only run if Window does exist
   {
-    Gtk::Allocation allocation = get_allocation();
-    int width = allocation.get_width();
-    int height = allocation.get_height();
-    
     // clip to the area indicated by the expose event so that we only redraw
     // the portion of the window that needs to be redrawn
     Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();
@@ -196,6 +192,9 @@ bool TrackOutput::onMouseMove(GdkEventMotion* event)
     // reset mouseY
     mouseY = event->y;
   }
+  
+  return true;
+  
 }
 
 TrackOutput::~TrackOutput()

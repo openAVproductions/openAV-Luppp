@@ -185,7 +185,7 @@ int JackClient::processMidi(jack_nframes_t nframes)
       std::cout << "i->speed = " << i->speed << endl;
       
       EngineEvent* x = new EngineEvent();
-      x->setMixerVolume(0, value);
+      x->setTrackSpeed(0, value);
       top->toGuiQueue.push(x);
       top->guiDispatcher->emit();
     }
