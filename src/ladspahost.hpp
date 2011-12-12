@@ -41,6 +41,8 @@ class LadspaHost : public Effect
     
     EffectType type;
     
+    bool hasRunAdding;
+    
     int active;
     
     int nframes;
@@ -63,8 +65,8 @@ class LadspaHost : public Effect
     int numControlOutputs;
     
     // ladspa handles & functions
-    ladspaHandle    pluginHandle;
-    ladspaHandle    libraryHandle;
+    ladspaHandle pluginHandle;
+    ladspaHandle libraryHandle;
     ladspaDescriptor  descriptor;
     
     int inputPortL;

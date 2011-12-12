@@ -11,6 +11,8 @@ LadspaHost::LadspaHost(EffectType t, int s)
   
   samplerate = s;
   
+  hasRunAdding = false;
+  
   type = t;
   active = 1;
   
@@ -190,10 +192,28 @@ void LadspaHost::setPluginByString(std::string inPluginString)
   // set default values based on which plugin is being loaded
   resetParameters();
   
-  // activate the plugin if thats needed
-  if (descriptor->activate != 0 )
+  if ( type == EFFECT_LOWPASS )
   {
-    std::cout << "ACTIVATING LADSPA PLUGIN...  pluginHandle = " << pluginHandle << std::flush;
+    // lowpass ports
+    descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] );
+    descriptor -> connect_port ( pluginHandle , 1, &controlBuffer[1] );
+    descriptor -> connect_port ( pluginHandle , 2, &outputBuffer[0] );
+    descriptor -> connect_port ( pluginHandle , 3, &outputBuffer[0] );
+  }
+  if ( type == EFFECT_HIGHPASS )
+  {
+    // lowpass ports
+    descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] );
+    descriptor -> connect_port ( pluginHandle , 1, &controlBuffer[1] );
+    descriptor -> connect_port ( pluginHandle , 2, &outputBuffer[0] );
+    descriptor -> connect_port ( pluginHandle , 3, &outputBuffer[0] );
+  }
+  
+  // activate the plugin if thats needed
+  if ( descriptor->activate )
+  {
+    std::cout << "ACTIVATING LADSPA PLUGIN...  pluginHandle = " << pluginHandle
+        << "  Descriptor: " << descriptor << std::flush;
     descriptor-> activate( pluginHandle );
     std::cout << "\t\tDone!" << std::flush;
   }
@@ -235,13 +255,18 @@ void LadspaHost::resetParameters()
     controlBuffer[19] = 0;
   }
   
-  /*
   if ( type == EFFECT_LOWPASS )
   {
     controlBuffer[0] = 440;
     controlBuffer[1] = 2;
   }
-  */
+  
+  if ( type == EFFECT_HIGHPASS )
+  {
+    controlBuffer[0] = 440;
+    controlBuffer[1] = 2;
+  }
+  
 }
 
 void LadspaHost::setActive(int a)
@@ -260,6 +285,7 @@ void LadspaHost::process(int nframes, float* buffer)
   
   if ( !active )
   {
+    std::cout << "." << std::endl;
     return;
   }
   
@@ -334,7 +360,20 @@ void LadspaHost::process(int nframes, float* buffer)
   }
   
   // run_adding may go wrong for some plugins, check it!
-  descriptor->run_adding( pluginHandle , nframes);
+  if ( hasRunAdding )
+  {
+    std::cout << "RUnadding" << std::endl;
+    descriptor->run_adding( pluginHandle , nframes);
+  }
+  else
+  {
+    descriptor->run( pluginHandle , nframes);
+    
+    for ( int i = 0; i < nframes; i++ )
+    {
+      buffer[i] = outputBuffer[i];
+    }
+  }
 }
 
 LadspaHost::~LadspaHost()
