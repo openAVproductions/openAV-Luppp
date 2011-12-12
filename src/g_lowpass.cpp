@@ -14,9 +14,15 @@ GLowPass::GLowPass(GuiStateStore* s)
   
   stateStore = s;
   
+  cutoff = 0.40;
+  
+  mouseDown = false;
+  
   //std::cout << "Enterin GLowPass contructor" << std::endl;
-  add_events(Gdk::EXPOSURE_MASK | Gdk::BUTTON_PRESS_MASK);
+  add_events(Gdk::EXPOSURE_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK| Gdk::POINTER_MOTION_MASK);
   signal_button_press_event().connect(sigc::mem_fun(*this, &GLowPass::on_button_press_event) );
+  signal_button_release_event().connect(sigc::mem_fun(*this, &GLowPass::on_button_release_event) );
+  signal_motion_notify_event().connect( sigc::mem_fun( *this, &GLowPass::onMouseMove ) );
   
   set_size_request(250, 216);
 }
@@ -60,32 +66,92 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     
     std::cout << "StateStore = " << &stateStore << std::endl;
     
-    /*
-    GLowPassState* freqState = &stateStore->eqState;
-    
-    int dialSize = 30;
-    
     bool active = true;
     
+    float q = 3.0;
     
-    // setup array of dials
+    int x = 10;
+    int y = 22;
+    xSize = 225;
+    ySize = 95;
+    
+    // works but a bit simple
+    cr -> move_to( x        , y         );
+    cr -> line_to( x + xSize, y         );
+    cr -> line_to( x + xSize, y + ySize );
+    cr -> line_to( x        , y + ySize );
+    cr -> close_path();
+    
+    // Draw outline shape
+    cr -> set_source_rgb (0.1,0.1,0.1);
+    cr -> fill();
+    
+    // draw "frequency guides"
+    std::valarray< double > dashes(2);
+    dashes[0] = 2.0;
+    dashes[1] = 2.0;
+    cr->set_dash (dashes, 0.0);
+    cr->set_line_width(1.0);
+    cr->set_source_rgb (0.4,0.4,0.4);
     for ( int i = 0; i < 4; i++ )
     {
-      for( int j = 0; j < 2; j++ )
-      {
-        float value = 0.f;
-        if ( j % 2 == 0 )
-          value = (freqState->gain[i] * 2) - 1;
-        else
-        {
-          value = (freqState->cutoffFreq[i] - 0.5)*2;
-        }
-        Dial(cr, active, 30 + ( 50 * i)  , 130 + 40 * j , value , DIAL_MODE_PAN);
-      }
+      cr->move_to( x + ((xSize / 4.f)*i), y );
+      cr->line_to( x + ((xSize / 4.f)*i), y + ySize );
     }
+    for ( int i = 0; i < 4; i++ )
+    {
+      cr->move_to( x       , y + ((ySize / 4.f)*i) );
+      cr->line_to( x +xSize, y + ((ySize / 4.f)*i) );
+    }
+    cr->stroke();
+    cr->unset_dash();
     
-    FrequencyGraph(cr, active, 10, 22, 225, 95, *freqState );
-    */
+    // move to bottom left, draw line to middle left
+    cr->move_to( x , y + ySize );
+    cr->line_to( x , y + (ySize/2));
+    cr->line_to( xSize* (cutoff - 0.4) , y + (ySize/2) ); // start of curve
+    
+    cr->curve_to( xSize* (cutoff -0.1), y+(ySize*0.5),   // control point 1
+                  xSize* (cutoff - 0.05), y+(ySize*0.1*q),   // control point 2
+                  xSize* cutoff        , y+(ySize*0.1*q));  // end of curve
+    
+    cr->curve_to( xSize* (cutoff + 0.1 ), y+(ySize*0.15*q),  // control point 1
+                  xSize* (cutoff + 0.15), y+(ySize*0.3*q), // control point 2
+                  xSize* (cutoff + 0.15 ), y+(ySize)   ); // end of curve on floor
+    
+    setColour(cr, COLOUR_BLUE_1, 0.2 );
+    cr->close_path();
+    cr->fill_preserve();
+    
+    // stroke cutoff line
+    cr->set_line_width(2.5);
+    if ( active )
+      setColour(cr, COLOUR_BLUE_1 );
+    else
+      setColour(cr, COLOUR_GREY_1 );
+    cr->stroke();
+    
+    // click center
+    setColour(cr, COLOUR_ORANGE_1, 0.9 );
+    cr->arc( xSize*cutoff, y+ySize*0.5, 7, 0, 6.2830 );
+    cr->stroke();
+    
+    // dials
+    Dial(cr, active, 30, 170, 0.4 , DIAL_MODE_NORMAL);
+    
+    Dial(cr, active, 80, 170, 0.8 , DIAL_MODE_NORMAL);
+    
+    
+    // outline
+    setColour(cr, COLOUR_GREY_3 );
+    cr->rectangle( x, y , xSize, ySize );
+    cr->set_line_width(3);
+    
+    if ( active )
+      setColour(cr, COLOUR_GREY_2 );
+    else
+      setColour(cr, COLOUR_GREY_3 );
+    cr->stroke();
     
     TitleBar(cr, 0,0 , 250, 216, "Lowpass", false);
     
@@ -113,10 +179,33 @@ void GLowPass::on_menu_file_popup_generic()
    std::cout << "A popup menu item was selected." << std::endl;
 }
 
+bool GLowPass::onMouseMove(GdkEventMotion* event)
+{
+  if ( mouseDown )
+  {
+    cutoff = event->x / float(xSize);
+    redraw();
+    std::cout << "GLowPass: Cutoff = " << cutoff << std::endl;
+  }
+}
+
 bool GLowPass::on_button_press_event(GdkEventButton* event)
 {
   if( event->type == GDK_BUTTON_PRESS  ) // && event->button == 3
   {
+    mouseDown = true;
+    
+    return true; //It's been handled.
+  }
+  else
+    return false;
+}
+
+bool GLowPass::on_button_release_event(GdkEventButton* event)
+{
+  if( event->type == GDK_BUTTON_RELEASE  ) // && event->button == 3
+  {
+    mouseDown = false;
     
     return true; //It's been handled.
   }

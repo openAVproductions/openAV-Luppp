@@ -21,10 +21,17 @@ class GLowPass : public Gtk::DrawingArea
     static int privateID;
     GuiStateStore* stateStore;
     
+    float cutoff;
+    int xSize, ySize;
+    
+    bool mouseDown;
+    
     
     //Override default signal handler:
+    bool onMouseMove(GdkEventMotion* event);
     bool on_expose_event			(GdkEventExpose* event);
     bool on_button_press_event(GdkEventButton* event);
+    bool on_button_release_event(GdkEventButton* event);
     
     // For Right-Click Actions
     void on_menu_file_popup_edit();

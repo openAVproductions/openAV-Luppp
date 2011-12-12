@@ -200,6 +200,7 @@
             <child>
               <object class="GtkHBox" id="trackEffectBox">
                 <property name="visible">True</property>
+                <property name="spacing">2</property>
                 <child>
                   <placeholder/>
                 </child>
