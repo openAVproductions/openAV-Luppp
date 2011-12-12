@@ -137,10 +137,8 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     cr->stroke();
     
     // dials
-    Dial(cr, active, 30, 170, 0.4 , DIAL_MODE_NORMAL);
-    
-    Dial(cr, active, 80, 170, 0.8 , DIAL_MODE_NORMAL);
-    
+    Dial(cr, active, 30, 170, 0.4, DIAL_MODE_NORMAL);
+    Dial(cr, active, 80, 170, 0.8, DIAL_MODE_NORMAL);
     
     // outline
     setColour(cr, COLOUR_GREY_3 );
@@ -183,21 +181,24 @@ bool GLowPass::onMouseMove(GdkEventMotion* event)
 {
   if ( mouseDown )
   {
-    cutoff = event->x / float(xSize);
-    q = event->y / float(ySize);
+    if ( (event->x > 22) && (event->x < 220) )
+    {
+      cutoff = event->x / float(xSize);
+      
+      EngineEvent* x = new EngineEvent();
+      x->setPluginParameter(0,0,0, cutoff );
+      top->toEngineQueue.push(x);
+    }
+    
+    if ( (event->y > 35) && (event->y < 103) )
+    {
+      q = event->y / float(ySize);
+      EngineEvent* x = new EngineEvent();
+      x->setPluginParameter(0,0,1, q );
+      top->toEngineQueue.push(x);
+    }
     redraw();
-    
-    // cutoff
-    EngineEvent* x = new EngineEvent();
-    x->setPluginParameter(0,0,0, cutoff );
-    top->toEngineQueue.push(x);
-    
-    // q
-    x = new EngineEvent();
-    x->setPluginParameter(0,0,1, q );
-    top->toEngineQueue.push(x);
-    
-    std::cout << "GLowPass: Cutoff = " << cutoff << std::endl;
+    std::cout << "GLowPass: Cutoff = " << cutoff << "  Q: " << q << std::endl;
   }
 }
 
