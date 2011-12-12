@@ -25,7 +25,7 @@ int AudioFileLoader::load( int ID, int block, std::string name)
     return -1;
   }
   
-  //int tmpChan= infile.channels();
+  int tmpChan= infile.channels();
   int tmpSR  = infile.samplerate();
   
   // initialize new buffer to hold <size> elements
@@ -33,6 +33,20 @@ int AudioFileLoader::load( int ID, int block, std::string name)
   sampleBuffer.resize(size);
   
   infile.read( &sampleBuffer.at(0) , size );
+  
+  if ( tmpChan != 1 )
+  {
+    std::vector<float> tmpVec;
+    for(int i = 0; i < size; i++)
+    {
+      if ( i % tmpChan == 0 )
+      {
+        tmpVec.push_back(sampleBuffer[i]);
+      }
+    }
+    // swap out all samples except 1 channel
+    sampleBuffer.swap( tmpVec );
+  }
   
   AudioBuffer* buffer = new AudioBuffer();
   

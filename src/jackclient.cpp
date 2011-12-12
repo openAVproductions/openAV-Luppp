@@ -536,6 +536,10 @@ void JackClient::apcRead( int nframes )
         //int trackID = b1 - 176;
         //std::cout << "APC: Device Control on track " << trackID << std::endl;
         
+        float freq = 30 + (70 * pow( 2.0, ((double)b3 - 69.0) / 12.0 ) );
+        top->state.cutoff = freq;
+        std::cout << "Freq = " << freq << std::endl;
+        
         /*
         // here we change the OSC param we send based on the track & device selection
         if ( trackID < trackStateVector.size() )

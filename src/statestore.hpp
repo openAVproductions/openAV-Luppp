@@ -19,6 +19,8 @@ class StateStore
   public:
     StateStore(Top*);
     
+    float cutoff;
+    
     void addTrack();
     
     void setMute(int,int);

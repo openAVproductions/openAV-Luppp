@@ -1,19 +1,22 @@
 
 #include "ladspahost.hpp"
 
+#include "top.hpp"
+
 using namespace std;
 
 int LadspaHost::privateID = 0;
 
-LadspaHost::LadspaHost(EffectType t, int s)
+LadspaHost::LadspaHost(Top* t,EffectType et, int s)
 {
   ID = privateID++;
   
+  top = t;
   samplerate = s;
   
   hasRunAdding = false;
   
-  type = t;
+  type = et;
   active = 1;
   
   descriptor = 0; // ladspa_descriptor*
@@ -25,7 +28,7 @@ LadspaHost::LadspaHost(EffectType t, int s)
   
   outputBuffer.resize(1024);
   
-  switch(t)
+  switch(et)
   {
     case EFFECT_REVERB: setPluginByString("/usr/lib/ladspa/g2reverb.so"); break;
     case EFFECT_TRANSIENT:  setPluginByString("/usr/lib/ladspa/transient_1206.so"); break;
@@ -277,6 +280,8 @@ void LadspaHost::setActive(int a)
 
 void LadspaHost::process(int nframes, float* buffer)
 {
+  controlBuffer[0] = top->state.cutoff;
+  
   if ( pluginHandle == 0 )
   {
     std::cout << "PluginHandle == 0!!" << std::endl;

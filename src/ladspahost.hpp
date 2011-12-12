@@ -13,6 +13,7 @@ extern "C" {
 #include <dlfcn.h>
 }
 
+class Top;
 #include "effect.hpp"
 
 // define nice names for LADSPA "components"
@@ -27,7 +28,7 @@ typedef LADSPA_PortRangeHintDescriptor ladspaPortRangeHint;
 class LadspaHost : public Effect
 {
   public:
-    LadspaHost(EffectType type, int samplerate);
+    LadspaHost(Top*, EffectType type, int samplerate);
     ~LadspaHost();
     
     void setActive(int);
@@ -38,6 +39,8 @@ class LadspaHost : public Effect
   protected:
     static int privateID;
     int ID;
+    
+    Top* top;
     
     EffectType type;
     
