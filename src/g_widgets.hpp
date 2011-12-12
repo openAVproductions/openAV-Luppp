@@ -46,7 +46,6 @@ namespace Luppp
   void Dial( Cairo::RefPtr<Cairo::Context> cr, bool, float x, float y, float value, DialMode mode);
   void Fader(Cairo::RefPtr<Cairo::Context> cr, float x, float y, float value, float rms, float peak);
   
-  //void EQ      ( Cairo::RefPtr<Cairo::Context> cr, bool, bool, float x, float y, float xS, float yS, EqualizerState );
   void TitleBar( Cairo::RefPtr<Cairo::Context> cr, float x, float y, float xS, float yS, std::string name, bool active);
   //void WaveDisplay(Cairo::RefPtr<Cairo::Context> cr, float x, float y, float xSize, float ySize, WaveDisplayState* state);
   void FrequencyGraph( Cairo::RefPtr<Cairo::Context> cr, bool, float x, float y, float xS, float yS, EqualizerState state);

@@ -14,6 +14,7 @@
 #include "trackoutputstate.hpp"
 
 
+#include "g_lowpass.hpp"
 #include "g_equalizer.hpp"
 
 class Window
@@ -33,7 +34,9 @@ class Window
     
     int currentEffectsTrack;
     void setEffectsBox(int trackID);
+    
     Equalizer* equalizer;
+    GLowPass* lowPass;
     
     // helper functions
     int numTracks;
