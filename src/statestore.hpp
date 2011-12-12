@@ -20,6 +20,7 @@ class StateStore
     StateStore(Top*);
     
     float cutoff;
+    int numPoles;
     
     void addTrack();
     

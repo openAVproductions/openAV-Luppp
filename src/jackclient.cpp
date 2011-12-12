@@ -130,6 +130,19 @@ int JackClient::processRtQueue()
       cout << "EE_LOOPER_SELECT_BUFFER " << e->ia << ", " << e->ib << endl;
       top->state.clipSelectorQueue(e->ia, e->ib);
     }
+    
+    else if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER) {
+      //cout << "EE_TRACK_SET_PLUGIN_PARAMETER " << e->ia << ", " << e->ib<< ", " << e->ic << ", " << e->fa << endl;
+      if ( e->ic == 1 )
+        top->state.numPoles = e->fa;
+      else
+      {
+        float freq = 200 + (70 * pow( 2.0, ((double)(e->fa*127) - 69.0) / 12.0 ) * 4);
+        top->state.cutoff = freq;
+        cout << "Freq = " << freq << endl;
+      }
+    }
+    
   }
   
   return 0;

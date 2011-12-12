@@ -8,10 +8,11 @@ using namespace Luppp;
 
 int GLowPass::privateID = 0;
 
-GLowPass::GLowPass(GuiStateStore* s)
+GLowPass::GLowPass(Top* t, GuiStateStore* s)
 {
   ID = privateID++;
   
+  top = t;
   stateStore = s;
   
   cutoff = 0.40;
@@ -185,6 +186,17 @@ bool GLowPass::onMouseMove(GdkEventMotion* event)
     cutoff = event->x / float(xSize);
     q = event->y / float(ySize);
     redraw();
+    
+    // cutoff
+    EngineEvent* x = new EngineEvent();
+    x->setPluginParameter(0,0,0, cutoff );
+    top->toEngineQueue.push(x);
+    
+    // q
+    x = new EngineEvent();
+    x->setPluginParameter(0,0,1, q );
+    top->toEngineQueue.push(x);
+    
     std::cout << "GLowPass: Cutoff = " << cutoff << std::endl;
   }
 }

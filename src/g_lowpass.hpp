@@ -6,12 +6,13 @@
 
 #include <gtkmm/drawingarea.h>
 
+#include "top.hpp"
 #include "g_statestore.hpp"
 
 class GLowPass : public Gtk::DrawingArea
 {
   public:
-    GLowPass(GuiStateStore*);
+    GLowPass(Top*, GuiStateStore*);
     ~GLowPass();
     
     bool redraw();
@@ -20,6 +21,8 @@ class GLowPass : public Gtk::DrawingArea
     int ID;
     static int privateID;
     GuiStateStore* stateStore;
+    
+    Top* top;
     
     float cutoff;
     float q;

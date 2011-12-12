@@ -46,7 +46,7 @@ Window::Window(Gtk::Main *k, Top* t)
   refBuilder->get_widget("trackEffectBox", trackEffectBox);
   
   equalizer = new Equalizer( &guiState);
-  lowPass = new GLowPass( &guiState);
+  lowPass = new GLowPass( top, &guiState);
   
   // hack to show parametric
   trackEffectBox->add( *equalizer );
