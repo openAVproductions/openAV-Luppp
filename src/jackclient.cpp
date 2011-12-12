@@ -411,7 +411,6 @@ void JackClient::apcRead( int nframes )
     if ( (int)in_event.buffer[0] == 176 && (int)in_event.buffer[1] == 14 )
     {
       std::cout << " SETTING MASTER FADER FROM APC40!" << std::endl;
-      
     }
     // apc 40 rest of the faders
     if ( (int)in_event.buffer[1] == 7 )
@@ -491,24 +490,14 @@ void JackClient::apcRead( int nframes )
     {
       if ( b2 >= 52 && b2 < 58 ) // the 5 vertial "launch" buttons, AND the clip stop (#52)
       {
-        /*
         int id = b1 - 144;
         int val= b2 - 53; // here we take 53 away, so the clip stop button will result in -1 for buffer ID
         
+        std::cout << "SETTING BUFFER FROM APC40! ID:" << id << " val: " << val << std::endl;
+        top->state.clipSelectorQueue(id, val);
         
-        // if based on mode
-        if ( apcMode == APC_MODE_CLIP )
-        {
-          std::cout << "SETTING BUFFER FROM APC40! ID:" << id << " val: " << val << std::endl;
-          //lo_send( //lo_address_new(NULL, "14688") , "/luppp/looper/selectbuffer", "ii", id, val );
-        }
-        else
-        {
-          int sampleNum = -1;
-          std::cout << "SAMPLER PLAY B2 == " << b2 << "  ID = " << id << std::endl;
-          //lo_send( //lo_address_new(NULL, "14688") , "/luppp/sampler/play", "i", ( -((b2 - 57))*4) + id);
-        }
-        */
+        
+        writeMidi( apcOutBuffer, b1, b2, 127);
       }
     }
     

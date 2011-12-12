@@ -26,6 +26,9 @@ void FileAudioSource::process (int nframes, float* buffer )
   // get buffer variables
   ClipSelectorState* clipSelState = top->state.getClipSelectorState(ID);
   int playingScene = clipSelState->playing;
+  if ( playingScene < 0 )
+    return;
+  
   int playingBuffer = clipSelState->clipInfo.at(playingScene).bufferID;
   //std::cout << "FAS:P()   sceneID: " << playingScene << "   bID = " << playingBuffer << endl;
   

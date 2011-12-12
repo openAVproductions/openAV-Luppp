@@ -148,11 +148,19 @@ int Window::handleEvent()
       if ( e->ia < guiState.clipSelectorState.size() ) {
         // set previous playing to just "loaded"
         int playing = guiState.clipSelectorState.at(e->ia).playing;
-        guiState.clipSelectorState.at(e->ia).clipInfo.at(playing).state = CLIP_STATE_LOADED;
+        if ( playing >= 0 ) // check array access here
+          guiState.clipSelectorState.at(e->ia).clipInfo.at(playing).state = CLIP_STATE_LOADED;
+        
+        // playing can = -1 for "nothing playing", so set regardless
+        guiState.clipSelectorState.at(e->ia).playing = e->ib;
         
         // update currently playing, and set item to playing state
-        guiState.clipSelectorState.at(e->ia).playing = e->ib;
-        guiState.clipSelectorState.at(e->ia).clipInfo.at(e->ib).state = CLIP_STATE_PLAYING;
+        if ( e->ib >= 0 ) // range check
+        {
+          guiState.clipSelectorState.at(e->ia).clipInfo.at(e->ib).state = CLIP_STATE_PLAYING;
+        }
+        else
+          cout << "GUI: LOOPER_SELECT_BUFFER block OOB " << e->ib << endl;
         
         std::list<ClipSelector*>::iterator clipIter = clipselectorList.begin();
         advance(clipIter,e->ia);
