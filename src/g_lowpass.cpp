@@ -15,6 +15,7 @@ GLowPass::GLowPass(GuiStateStore* s)
   stateStore = s;
   
   cutoff = 0.40;
+  q = 1.0;
   
   mouseDown = false;
   
@@ -68,8 +69,6 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     
     bool active = true;
     
-    float q = 3.0;
-    
     int x = 10;
     int y = 22;
     xSize = 225;
@@ -112,11 +111,11 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     cr->line_to( xSize* (cutoff - 0.4) , y + (ySize/2) ); // start of curve
     
     cr->curve_to( xSize* (cutoff -0.1), y+(ySize*0.5),   // control point 1
-                  xSize* (cutoff - 0.05), y+(ySize*0.1*q),   // control point 2
-                  xSize* cutoff        , y+(ySize*0.1*q));  // end of curve
+                  xSize* (cutoff - 0.05), y+(ySize*0.1),   // control point 2
+                  xSize* cutoff        , y+(ySize*0.1));  // end of curve
     
-    cr->curve_to( xSize* (cutoff + 0.1 ), y+(ySize*0.15*q),  // control point 1
-                  xSize* (cutoff + 0.15), y+(ySize*0.3*q), // control point 2
+    cr->curve_to( xSize* (cutoff + 0.1 ), y+(ySize*0.15),  // control point 1
+                  xSize* (cutoff + 0.15), y+(ySize*0.3), // control point 2
                   xSize* (cutoff + 0.15 ), y+(ySize)   ); // end of curve on floor
     
     setColour(cr, COLOUR_BLUE_1, 0.2 );
@@ -133,7 +132,7 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     
     // click center
     setColour(cr, COLOUR_ORANGE_1, 0.9 );
-    cr->arc( xSize*cutoff, y+ySize*0.5, 7, 0, 6.2830 );
+    cr->arc( xSize*cutoff, ySize*q, 7, 0, 6.2830 );
     cr->stroke();
     
     // dials
@@ -184,6 +183,7 @@ bool GLowPass::onMouseMove(GdkEventMotion* event)
   if ( mouseDown )
   {
     cutoff = event->x / float(xSize);
+    q = event->y / float(ySize);
     redraw();
     std::cout << "GLowPass: Cutoff = " << cutoff << std::endl;
   }

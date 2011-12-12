@@ -22,6 +22,7 @@ class GLowPass : public Gtk::DrawingArea
     GuiStateStore* stateStore;
     
     float cutoff;
+    float q;
     int xSize, ySize;
     
     bool mouseDown;
