@@ -24,7 +24,7 @@ AudioTrack::AudioTrack( Top* t )
   
   trackBuffer.resize(1024);
   
-  //addEffect( 1, new LadspaHost(EFFECT_TRANSIENT, top->samplerate) );
+  addEffect( 1, new LadspaHost(EFFECT_HIGHPASS, top->samplerate) );
 }
 
 void AudioTrack::addEffect( int pos,  Effect* eff )

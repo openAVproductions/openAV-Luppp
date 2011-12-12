@@ -28,6 +28,8 @@ LadspaHost::LadspaHost(EffectType t, int s)
     case EFFECT_REVERB: setPluginByString("/usr/lib/ladspa/g2reverb.so"); break;
     case EFFECT_TRANSIENT:  setPluginByString("/usr/lib/ladspa/transient_1206.so"); break;
     case EFFECT_PARAMETRIC_EQ:  setPluginByString("/usr/lib/ladspa/filters.so"); break;
+    case EFFECT_LOWPASS:  setPluginByString("/usr/lib/ladspa/lowpass_iir_1891.so"); break;
+    case EFFECT_HIGHPASS:  setPluginByString("/usr/lib/ladspa/highpass_iir_1890.so"); break;
   }
 }
 
@@ -45,6 +47,8 @@ void LadspaHost::setParameter(int param, float value)
   switch(type)
   {
     case EFFECT_REVERB: { inputPortIndex += 4; } break;
+    case EFFECT_LOWPASS: break;
+    case EFFECT_HIGHPASS: break;
     case EFFECT_TRANSIENT:
     {
       if ( param == 0 ) inputPortIndex = 2;
@@ -140,229 +144,9 @@ void LadspaHost::loadPlugin(int pluginIdFromLibrary)
   
 }
 
-void LadspaHost::analysePorts()
-{
-  // caller has mutex
-  
-  // iterate over all ports
-  for ( int i = 0; i < (int)descriptor->PortCount; i++)
-  {
-    
-    std::cout << i << ": " << descriptor->PortNames[i] << " ";
-    
-    // examine port type
-    if (LADSPA_IS_PORT_INPUT  (descriptor->PortDescriptors[i]) != 0)
-    {
-      numInputs++;
-      std::cout << "INPUT";
-    }
-    if (LADSPA_IS_PORT_OUTPUT (descriptor->PortDescriptors[i]) != 0)
-    {
-      numOutputs++;
-      std::cout << "OUTPUT";
-    }
-    
-    // examine port rate
-    if (LADSPA_IS_PORT_CONTROL(descriptor->PortDescriptors[i]) != 0)
-    {
-      numControl++;
-      std::cout << " CONTROL";
-      
-      // check if its CONTROL & INPUT
-      if (LADSPA_IS_PORT_INPUT (descriptor->PortDescriptors[i]) != 0)
-        numControlInputs++;
-        inputPortIndexVector.push_back(i);
-      // check if its CONTROL & OUTPUT
-      if (LADSPA_IS_PORT_OUTPUT (descriptor->PortDescriptors[i]) != 0)
-        numControlOutputs++;
-    }
-    if (LADSPA_IS_PORT_AUDIO  (descriptor->PortDescriptors[i]) != 0)
-    {
-      numAudio++;
-      std::cout << " AUDIO";
-      
-      // check if its AUDIO & INPUT
-      if (LADSPA_IS_PORT_INPUT (descriptor->PortDescriptors[i]) != 0)
-      {
-        std::cout << "Got a AUDIO INPUT!" << std::endl;
-        numAudioInputs++;
-      }
-      // check if its AUDIO & OUTPUT
-      if (LADSPA_IS_PORT_OUTPUT (descriptor->PortDescriptors[i]) != 0)
-        numAudioOutputs++;
-    }
-    
-    // check range hints
-    ladspaData value;
-    ladspaPortRangeHint hintDescriptor = descriptor->PortRangeHints[i].HintDescriptor;
-    
-    // Lower bound
-    if (LADSPA_IS_HINT_BOUNDED_BELOW( hintDescriptor ) )
-    {
-      value = descriptor->PortRangeHints[i].LowerBound;
-      
-      if (LADSPA_IS_HINT_SAMPLE_RATE( hintDescriptor) && value != 0)
-        value = value * samplerate;
-      
-      std::cout << " BelowBound: " << value;
-    }
-    // Higher bound
-    if (LADSPA_IS_HINT_BOUNDED_ABOVE( hintDescriptor ) )
-    {
-      value = descriptor->PortRangeHints[i].UpperBound;
-      
-      if (LADSPA_IS_HINT_SAMPLE_RATE( hintDescriptor ) && value != 0)
-        value = value * samplerate;
-      
-      std::cout << " AboveBound: " << value;
-    }
-    
-    // switch to check defaults:
-    ladspaData defaultValue;
-    
-    switch (hintDescriptor & LADSPA_HINT_DEFAULT_MASK)
-    {
-      case LADSPA_HINT_DEFAULT_NONE:
-        break;
-      
-      case LADSPA_HINT_DEFAULT_MINIMUM:
-        defaultValue = descriptor->PortRangeHints[i].LowerBound;
-        if (LADSPA_IS_HINT_SAMPLE_RATE(hintDescriptor) && defaultValue != 0) 
-          defaultValue = samplerate * defaultValue;
-        
-        std::cout << "Default Min:" << defaultValue;
-        break;
-      
-      case LADSPA_HINT_DEFAULT_LOW:
-        if (LADSPA_IS_HINT_LOGARITHMIC(hintDescriptor))
-        {
-          defaultValue = exp(log(descriptor->PortRangeHints[i].LowerBound) * 0.75 + log(descriptor->PortRangeHints[i].UpperBound) * 0.25);
-        }
-        else
-        {
-          defaultValue = (descriptor->PortRangeHints[i].LowerBound * 0.75 + descriptor->PortRangeHints[i].UpperBound * 0.25);
-        }
-        if (LADSPA_IS_HINT_SAMPLE_RATE(hintDescriptor) && defaultValue != 0) 
-          defaultValue = samplerate * defaultValue;
-        
-        std::cout << "Default Low:" << defaultValue;
-        break;
-      
-      case LADSPA_HINT_DEFAULT_MIDDLE:
-        if (LADSPA_IS_HINT_LOGARITHMIC(hintDescriptor))
-        {
-          defaultValue = sqrt(descriptor->PortRangeHints[i].LowerBound * descriptor->PortRangeHints[i].UpperBound);
-        }
-        else
-        {
-          defaultValue = 0.5 * (descriptor->PortRangeHints[i].LowerBound + descriptor->PortRangeHints[i].UpperBound);
-        }
-        if (LADSPA_IS_HINT_SAMPLE_RATE(hintDescriptor) && defaultValue != 0) 
-          defaultValue = samplerate * defaultValue;
-        
-        std::cout << "Default Middle:" << defaultValue;
-        
-        break;
-      
-      case LADSPA_HINT_DEFAULT_HIGH:
-        if (LADSPA_IS_HINT_LOGARITHMIC(hintDescriptor))
-        {
-          defaultValue = exp(log(descriptor->PortRangeHints[i].LowerBound) * 0.25 + log(descriptor->PortRangeHints[i].UpperBound) * 0.75);
-        }
-        else
-        {
-          defaultValue = (descriptor->PortRangeHints[i].LowerBound * 0.25 + descriptor->PortRangeHints[i].UpperBound * 0.75);
-        }
-        if (LADSPA_IS_HINT_SAMPLE_RATE(hintDescriptor) && defaultValue != 0) 
-          defaultValue = samplerate * defaultValue;
-        
-        std::cout << "Default High:" << defaultValue;
-        break;
-      
-      case LADSPA_HINT_DEFAULT_MAXIMUM:
-        defaultValue = descriptor->PortRangeHints[i].UpperBound;
-        if (LADSPA_IS_HINT_SAMPLE_RATE(hintDescriptor) && defaultValue != 0) 
-          defaultValue = samplerate * defaultValue;
-        
-        std::cout << "Default Max:" << defaultValue;
-        break;
-      
-      case LADSPA_HINT_DEFAULT_0:
-        cout << ", default 0";
-        break;
-      
-      case LADSPA_HINT_DEFAULT_1:
-        cout << ", default 1";
-        break;
-      
-      case LADSPA_HINT_DEFAULT_100:
-        cout << ", default 100";
-        break;
-      
-      case LADSPA_HINT_DEFAULT_440:
-        cout << ", default 440";
-        break;
-      
-      default:
-        cout << ", UNKNOWN DEFAULT CODE";
-        /* (Not necessarily an error - may be a newer version.) */
-        break;
-    }
-    
-    if (LADSPA_IS_HINT_TOGGLED( hintDescriptor ))
-    {
-      if (  ( hintDescriptor 
-          |  LADSPA_HINT_DEFAULT_0
-          |  LADSPA_HINT_DEFAULT_1)
-          != (  LADSPA_HINT_TOGGLED 
-              | LADSPA_HINT_DEFAULT_0
-              | LADSPA_HINT_DEFAULT_1)      )
-      {
-        cout << ", ERROR: TOGGLED INCOMPATIBLE WITH OTHER HINT";
-      }
-      else
-        cout << ", toggled";
-    }
-    
-    if (LADSPA_IS_HINT_LOGARITHMIC( hintDescriptor ))
-      cout << ", logarithmic";
-    
-    if (LADSPA_IS_HINT_INTEGER( hintDescriptor ))
-      cout << ", integer";
-    
-    /*
-    // check for "run_adding()"
-    printf("Has run_adding() function: ");
-    if (descriptor->run_adding != NULL)
-      printf("Yes\n");
-    */
-    
-    ladspaProperties props = descriptor->Properties;
-    
-    if ( LADSPA_IS_INPLACE_BROKEN( props ) )
-    {
-      std::cout << "Plugin is not capable of in-place processing and therefore cannot be used by this program.\n" << std::endl;
-    }
-    
-    std::cout <<  std::endl;
-  
-  } // port iteration loop
-  
-  std::cout << "Ins:" << numInputs << " Outs:" << numOutputs << " Control:" << numControl << " Audio:" << numAudio << std::endl; 
-  
-  
-  std::cout << "Control Input Port Indexs: " << std::endl;
-  for ( int i = 0; i < (int)inputPortIndexVector.size(); i++)
-  {
-    std::cout << inputPortIndexVector.at(i) << "\t";
-  }
-  std::cout << std::endl;
-  
-}
-
 void LadspaHost::instantiatePlugin()
 {
-  cout << "LadspaHost::instantiatePlugin" << endl;
+  cout << "LadspaHost::instantiatePlugin   samprate = " << samplerate << endl;
   
   if (descriptor == 0)
     std::cout << "Descriptor == 0!" << std::endl;
@@ -385,77 +169,6 @@ void LadspaHost::instantiatePlugin()
   }
 }
 
-void LadspaHost::connectPorts()
-{
-  // caller has mutex
-  
-  std::cout << "ConnectPorts()" << std::endl;
-  
-  int audioCounter = 0;
-  int controlCounter = 0;
-  
-  ladspaPortDescriptor portDescriptor;
-  
-  int doneOneAudioInputAlready = false;
-  int doneOneAudioOutputAlready = false;
-  
-  for ( int i = 0; i < (int)descriptor->PortCount; i++)
-  {
-    portDescriptor = descriptor->PortDescriptors[i];
-    
-    if (LADSPA_IS_PORT_CONTROL(portDescriptor))
-    {
-      if (LADSPA_IS_PORT_INPUT(portDescriptor))
-      {
-        std::cout << "Connecting Control Input "<< i << " to controlBuffer " << controlCounter << std::endl;
-        controlInputPort = i;
-      }
-      if (LADSPA_IS_PORT_OUTPUT(portDescriptor))
-      {
-        std::cout << "Output Control unhandled!" << std::endl;
-      }
-      
-      controlCounter++;
-    }
-    
-    
-    if (LADSPA_IS_PORT_AUDIO(portDescriptor))
-    {
-      if (LADSPA_IS_PORT_INPUT(portDescriptor))
-      {
-        
-        if (numAudioInputs == 1)
-        {
-          std::cout << "Input AUDIO port number stored " << i << std::endl;
-          if ( !doneOneAudioInputAlready )
-            inputPortL = i;
-          else
-            inputPortR = i;
-        }
-      }
-      if (LADSPA_IS_PORT_OUTPUT(portDescriptor))
-      {
-        std::cout << "Output AUDIO port number stored " << i << std::endl;
-        if (numAudioOutputs == 1)
-        {
-          outputPortL = i;
-          outputPortR = i;
-        }
-        if (numAudioOutputs == 2)
-        {
-          if ( !doneOneAudioOutputAlready )
-            outputPortL = i;
-          else
-            outputPortR = i;
-        }
-      }
-      
-      audioCounter++;
-    }
-  }
-  
-}
-
 void LadspaHost::setPluginByString(std::string inPluginString)
 {
   std::cout << "LadspaHost::setPluginByString() Loading .so file:\n" << std::flush;
@@ -471,12 +184,6 @@ void LadspaHost::setPluginByString(std::string inPluginString)
   loadPlugin (0);
   cout << "loaded plugin" << endl;
   
-  // Analyse the plugin ports
-  analysePorts();
-  
-  // connect buffers to ports on plugin
-  connectPorts();
-  
   // instantiate the plugin
   instantiatePlugin();
   
@@ -486,7 +193,7 @@ void LadspaHost::setPluginByString(std::string inPluginString)
   // activate the plugin if thats needed
   if (descriptor->activate != 0 )
   {
-    std::cout << "ACTIVATING LADSPA PLUGIN..." << std::flush;
+    std::cout << "ACTIVATING LADSPA PLUGIN...  pluginHandle = " << pluginHandle << std::flush;
     descriptor-> activate( pluginHandle );
     std::cout << "\t\tDone!" << std::flush;
   }
@@ -527,6 +234,14 @@ void LadspaHost::resetParameters()
     controlBuffer[18] = 1;
     controlBuffer[19] = 0;
   }
+  
+  /*
+  if ( type == EFFECT_LOWPASS )
+  {
+    controlBuffer[0] = 440;
+    controlBuffer[1] = 2;
+  }
+  */
 }
 
 void LadspaHost::setActive(int a)
@@ -562,7 +277,22 @@ void LadspaHost::process(int nframes, float* buffer)
     descriptor -> connect_port ( pluginHandle , 8, &controlBuffer[4] );
     descriptor -> connect_port ( pluginHandle , 9, &controlBuffer[5] );
     descriptor -> connect_port ( pluginHandle ,10, &controlBuffer[6] );
-    
+  }
+  else if ( type == EFFECT_LOWPASS )
+  {
+    // lowpass ports
+    descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] );
+    descriptor -> connect_port ( pluginHandle , 1, &controlBuffer[1] );
+    descriptor -> connect_port ( pluginHandle , 2, buffer );
+    descriptor -> connect_port ( pluginHandle , 3, &outputBuffer[0] );
+  }
+  else if ( type == EFFECT_HIGHPASS )
+  {
+    // highpass ports
+    descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] );
+    descriptor -> connect_port ( pluginHandle , 1, &controlBuffer[1] );
+    descriptor -> connect_port ( pluginHandle , 2, buffer );
+    descriptor -> connect_port ( pluginHandle , 3, &outputBuffer[0] );
   }
   else if ( type == EFFECT_TRANSIENT )
   {

@@ -9,7 +9,9 @@
 
 #include <ladspa.h>
 
+extern "C" {
 #include <dlfcn.h>
+}
 
 #include "effect.hpp"
 
@@ -71,8 +73,6 @@ class LadspaHost : public Effect
     int outputPortR;
     int controlInputPort;
     
-    void analysePorts();
-    void connectPorts();
     void loadPlugin(int);
     void resetParameters();
     void instantiatePlugin();
