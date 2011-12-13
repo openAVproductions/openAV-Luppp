@@ -37,7 +37,6 @@ class LadspaHost : public Effect
     void process(int nframes, float *L);
   
   protected:
-    static int privateID;
     int ID;
     
     Top* top;

@@ -40,6 +40,7 @@ def build(ctx):
               'src/ladspahost.cpp',
               'src/fileaudiosource.cpp',
               'src/mixer.cpp',
+              'src/effect.cpp',
               'src/statestore.cpp',
               'src/engineevent.cpp',
               'src/audiotrack.cpp',

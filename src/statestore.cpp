@@ -11,6 +11,11 @@ StateStore::StateStore(Top* t)
   top = t;
 }
 
+void StateStore::addEffect(int t, int pos, Effect* effect)
+{
+  // here we create an instance of 
+}
+
 void StateStore::addTrack()
 {
   fileAudioSourceState.push_back( FileAudioSourceState() );
@@ -204,8 +209,15 @@ void StateStore::clipSelectorQueue(int t, int b)
   top->guiDispatcher->emit();
 }
 
-void StateStore::setPluginParameter(int,int,int,float)
+void StateStore::setPluginParameter(int e, int param, float value)
 {
+  // all "dynamic" elements in engine ( ladspaHosts, lv2host, etc ) all use
+  // the same generic "EffectState" as thier settings. Up to 8 floats of control
+  // for now, more is *not* suitable for RT LIVE performance.
+  
+  if ( !effectCheck(e) ) {
+    std::cout << "StateStore::setPluginParameter() track OOB: " << e << std::endl; return;
+  }
   
 }
 
@@ -233,9 +245,18 @@ ClipSelectorState* StateStore::getClipSelectorState(int t)
   return &(*iter);
 }
 
+// convinience functions
 bool StateStore::trackCheck(int t)
 {
   if ( t >= numTracks )
+    return false;
+  
+  return true;
+}
+
+bool StateStore::effectCheck(int t)
+{
+  if ( t >= numEffects )
     return false;
   
   return true;

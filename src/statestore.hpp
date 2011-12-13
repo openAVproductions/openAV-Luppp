@@ -10,8 +10,12 @@ class Top;
 
 #include "audiobuffer.hpp"
 
+#include "effect.hpp"
+#include "effectstate.hpp"
+
 #include "trackoutputstate.hpp"
 #include "clipselectorstate.hpp"
+
 #include "fileaudiosourcestate.hpp"
 
 class StateStore
@@ -23,6 +27,7 @@ class StateStore
     int numPoles;
     
     void addTrack();
+    void addEffect(int t, int p, Effect* e);
     
     void setMute(int,int);
     void setSolo(int,int);
@@ -31,7 +36,7 @@ class StateStore
     void setPanZ(int,float);
     void setVolume(int,float);
     
-    void setPluginParameter(int,int,int,float);
+    void setPluginParameter(int,int,float);
     
     void setAudioBuffer(AudioBuffer*);
     AudioBuffer* getAudioBuffer(int ID);
@@ -50,13 +55,19 @@ class StateStore
     std::list<FileAudioSourceState> fileAudioSourceState;
     std::list<ClipSelectorState> clipSelectorState;
     std::list<TrackOutputState> trackoutputState;
+    
     std::list<AudioBuffer> audiobufferList;
+    std::list<Effect> effectList;
+    
+    std::list<EffectState> effectStateList;
     
   private:
     Top* top;
     int numTracks;
+    int numEffects;
     
-    bool trackCheck(int);
+    inline bool trackCheck(int);
+    inline bool effectCheck(int);
     
 };
 

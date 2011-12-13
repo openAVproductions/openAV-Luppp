@@ -20,12 +20,13 @@ enum EffectType
 class Effect
 {
   public:
-    Effect(){};
-    virtual void setParameter(int,float){};
+    Effect(){ ID = privateID++; }
+    int  getID(){ return ID; }
     virtual void process(int, float*){};
   
-  protected:
-    
+  private:
+    int ID;
+    static int privateID;
 };
 
 #endif

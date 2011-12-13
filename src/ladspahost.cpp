@@ -5,11 +5,10 @@
 
 using namespace std;
 
-int LadspaHost::privateID = 0;
-
 LadspaHost::LadspaHost(Top* t,EffectType et, int s)
 {
-  ID = privateID++;
+  ID = Effect::getID();
+  std::cout << "LadspaHost()  Effect::getID() = " << ID << std::endl;
   
   top = t;
   samplerate = s;
