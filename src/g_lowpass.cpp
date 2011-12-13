@@ -153,8 +153,8 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     cr->stroke();
     
     // dials
-    Dial(cr, active, 30, 170, 0.4, DIAL_MODE_NORMAL);
-    Dial(cr, active, 80, 170, 0.8, DIAL_MODE_NORMAL);
+    Dial(cr, active, 70, 140, (cutoff - 0.22272) * 1.36     , DIAL_MODE_NORMAL);
+    Dial(cr, active, 150,140, 1 - ((q - 0.377) * 1.4393936) , DIAL_MODE_NORMAL);
     
     // outline
     setColour(cr, COLOUR_GREY_3 );
@@ -227,10 +227,40 @@ bool GLowPass::on_button_press_event(GdkEventButton* event)
     xSize = 225;
     ySize = 95;
     
-    if ( (event->x > 10) && (event->x < 225) &&
-         (event->y > 22) && (event->y < 95 ) )
+    // graph area
+    if ( (event->x > 10) && (event->x < 235) &&
+         (event->y > 22) && (event->y < 117 ) )
     {
-      mouseDown = true;
+      std::cout << "graph area click!" << std::endl;
+      mouseDown = true; // for pointer motion "drag" operations
+      
+      int evX = event->x;
+      // inform engine of "click" and position co-efficents as such
+      if ( evX < 50) evX = 50;
+      if ( evX > 216)evX = 216;
+      
+      cutoff = evX / float(xSize);
+      EngineEvent* x = new EngineEvent();
+      x->setPluginParameter(0,0,0, cutoff );
+      top->toEngineQueue.push(x);
+      
+      int evY = event->y;
+      if (evY < 35 ) evY = 35;
+      if (evY > 103) evY = 103;
+      
+      q = evY / float(ySize);
+      x = new EngineEvent();
+      x->setPluginParameter(0,0,1, q );
+      top->toEngineQueue.push(x);
+      redraw();
+    }
+    
+    if ( event->y < 20 )
+    {
+      std::cout << "GLowPass Enable / Disable click event!" << std::endl;
+      EngineEvent* x = new EngineEvent();
+      x->setTrackDeviceActive(0,0,1 );
+      top->toEngineQueue.push(x);
     }
     
     return true; //It's been handled.
