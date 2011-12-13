@@ -109,15 +109,31 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     // move to bottom left, draw line to middle left
     cr->move_to( x , y + ySize );
     cr->line_to( x , y + (ySize/2));
-    cr->line_to( xSize* (cutoff - 0.4) , y + (ySize/2) ); // start of curve
+    
+    int startHorizontalLine = xSize* (cutoff - 0.4)  < 50;
+    if ( startHorizontalLine < 50 )
+      startHorizontalLine = 10;
+      
+    cr->line_to( startHorizontalLine, y + (ySize/2) ); // horizontal line to start of curve
     
     cr->curve_to( xSize* (cutoff -0.1), y+(ySize*0.5),   // control point 1
-                  xSize* (cutoff - 0.05), y+(ySize*0.1),   // control point 2
-                  xSize* cutoff        , y+(ySize*0.1));  // end of curve
+                  xSize* (cutoff - 0.08), y+(ySize*0.3),   // control point 2
+                  xSize* cutoff        , y+(ySize*0.3));  // end of curve 1, start curve 2
     
-    cr->curve_to( xSize* (cutoff + 0.1 ), y+(ySize*0.15),  // control point 1
-                  xSize* (cutoff + 0.15), y+(ySize*0.3), // control point 2
-                  xSize* (cutoff + 0.15 ), y+(ySize)   ); // end of curve on floor
+    int xSizeCP1 = xSize* (cutoff + 0.03);
+    int xSizeCP2 = xSize* (cutoff + 0.08);
+    int xSizeEnd = xSize* (cutoff + 0.15);
+    
+    if ( xSizeCP1 > 234 )
+      xSizeCP1 = 234;
+    if ( xSizeCP2 > 234 )
+      xSizeCP2 = 234;
+    if ( xSizeEnd > 234 )
+      xSizeEnd = 234;
+    
+    cr->curve_to( xSizeCP1, y+(ySize*0.3),  // control point 1
+                  xSizeCP2, y+(ySize*0.3), // control point 2
+                  xSizeEnd, y+(ySize)   ); // end of curve on floor
     
     setColour(cr, COLOUR_BLUE_1, 0.2 );
     cr->close_path();
@@ -181,7 +197,7 @@ bool GLowPass::onMouseMove(GdkEventMotion* event)
 {
   if ( mouseDown )
   {
-    if ( (event->x > 22) && (event->x < 220) )
+    if ( (event->x > 50) && (event->x < 216) )
     {
       cutoff = event->x / float(xSize);
       
@@ -198,7 +214,7 @@ bool GLowPass::onMouseMove(GdkEventMotion* event)
       top->toEngineQueue.push(x);
     }
     redraw();
-    std::cout << "GLowPass: Cutoff = " << cutoff << "  Q: " << q << std::endl;
+    std::cout << "GLowPass: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
   }
 }
 
@@ -206,7 +222,16 @@ bool GLowPass::on_button_press_event(GdkEventButton* event)
 {
   if( event->type == GDK_BUTTON_PRESS  ) // && event->button == 3
   {
-    mouseDown = true;
+    int x = 10;
+    int y = 22;
+    xSize = 225;
+    ySize = 95;
+    
+    if ( (event->x > 10) && (event->x < 225) &&
+         (event->y > 22) && (event->y < 95 ) )
+    {
+      mouseDown = true;
+    }
     
     return true; //It's been handled.
   }
