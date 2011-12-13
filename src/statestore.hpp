@@ -31,6 +31,8 @@ class StateStore
     void setPanZ(int,float);
     void setVolume(int,float);
     
+    void setPluginParameter(int,int,int,float);
+    
     void setAudioBuffer(AudioBuffer*);
     AudioBuffer* getAudioBuffer(int ID);
     

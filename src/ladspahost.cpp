@@ -280,7 +280,8 @@ void LadspaHost::setActive(int a)
 
 void LadspaHost::process(int nframes, float* buffer)
 {
-  controlBuffer[0] = top->state.cutoff;
+  float freq = 200 + (70 * pow( 2.0, ((double)(top->state.cutoff*127) - 69.0) / 12.0 ) * 4);
+  controlBuffer[0] = freq;
   
   if ( pluginHandle == 0 )
   {

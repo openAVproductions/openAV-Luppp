@@ -184,6 +184,12 @@ int Window::handleEvent()
       else
         cout << "GUI: LOOPER_SELECT_BUFFER track OOB " << e->ia << endl;
     }
+    else if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER )
+    {
+      std::cout << "PLUGIN PARAM  fa = " << e->fa << std::endl;
+      guiState.cutoff = e->fa;
+      lowPass->redraw();
+    }
   }
   return true;
 }

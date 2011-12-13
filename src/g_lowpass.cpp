@@ -67,6 +67,10 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     cr->fill();
     
     std::cout << "StateStore = " << &stateStore << std::endl;
+    // update value from stateStore
+    float cutoffRangeZeroOne = stateStore->cutoff;
+    
+    cutoff = (48.f / xSize) + (cutoffRangeZeroOne * 0.7541 );
     
     bool active = true;
     
@@ -153,8 +157,8 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     cr->stroke();
     
     // dials
-    Dial(cr, active, 70, 140, (cutoff - 0.22272) * 1.36     , DIAL_MODE_NORMAL);
-    Dial(cr, active, 150,140, 1 - ((q - 0.377) * 1.4393936) , DIAL_MODE_NORMAL);
+    Dial(cr, active, 70, 140, cutoffRangeZeroOne, DIAL_MODE_NORMAL);
+    Dial(cr, active, 150,140, q                 , DIAL_MODE_NORMAL);
     
     // outline
     setColour(cr, COLOUR_GREY_3 );
@@ -202,7 +206,7 @@ bool GLowPass::onMouseMove(GdkEventMotion* event)
       cutoff = event->x / float(xSize);
       
       EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(0,0,0, cutoff );
+      x->setPluginParameter(0,0,0, cutoff);
       top->toEngineQueue.push(x);
     }
     
@@ -239,7 +243,8 @@ bool GLowPass::on_button_press_event(GdkEventButton* event)
       if ( evX < 50) evX = 50;
       if ( evX > 216)evX = 216;
       
-      cutoff = evX / float(xSize);
+      stateStore->cutoff = evX / float(xSize);
+      cutoff = stateStore->cutoff;
       EngineEvent* x = new EngineEvent();
       x->setPluginParameter(0,0,0, cutoff );
       top->toEngineQueue.push(x);

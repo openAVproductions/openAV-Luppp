@@ -202,6 +202,10 @@ void StateStore::clipSelectorQueue(int t, int b)
   x->looperSelectBuffer(t, b);
   top->toGuiQueue.push(x);
   top->guiDispatcher->emit();
+}
+
+void StateStore::setPluginParameter(int,int,int,float)
+{
   
 }
 

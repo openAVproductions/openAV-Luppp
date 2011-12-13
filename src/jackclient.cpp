@@ -130,16 +130,13 @@ int JackClient::processRtQueue()
       cout << "EE_LOOPER_SELECT_BUFFER " << e->ia << ", " << e->ib << endl;
       top->state.clipSelectorQueue(e->ia, e->ib);
     }
-    
     else if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER) {
       //cout << "EE_TRACK_SET_PLUGIN_PARAMETER " << e->ia << ", " << e->ib<< ", " << e->ic << ", " << e->fa << endl;
       if ( e->ic == 1 )
         top->state.numPoles = e->fa;
       else
       {
-        float freq = 200 + (70 * pow( 2.0, ((double)(e->fa*127) - 69.0) / 12.0 ) * 4);
-        top->state.cutoff = freq;
-        cout << "Freq = " << freq << endl;
+        top->state.cutoff = e->fa;
       }
     }
     
@@ -549,9 +546,11 @@ void JackClient::apcRead( int nframes )
         //int trackID = b1 - 176;
         //std::cout << "APC: Device Control on track " << trackID << std::endl;
         
-        float freq = 30 + (70 * pow( 2.0, ((double)b3 - 69.0) / 12.0 ) );
-        top->state.cutoff = freq;
-        std::cout << "Freq = " << freq << std::endl;
+        top->state.cutoff = b3/127.;
+        EngineEvent* x = new EngineEvent();
+        x->setPluginParameter(0,0,1, b3 / 127.);
+        top->toGuiQueue.push(x);
+        //std::cout << "Freq = " << freq << std::endl;
         
         /*
         // here we change the OSC param we send based on the track & device selection

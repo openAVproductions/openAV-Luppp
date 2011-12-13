@@ -20,6 +20,8 @@ class GuiStateStore
     
     void addTrack();
     
+    float cutoff;
+    
     std::string getLastDir();
     void setLastDir(std::string s);
     
