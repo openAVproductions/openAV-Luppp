@@ -13,7 +13,8 @@ StateStore::StateStore(Top* t)
 
 void StateStore::addEffect(int t, int pos, Effect* effect)
 {
-  // here we create an instance of 
+  // here we are passed a pointer to the desired effect,
+  // and told what track & position to insert it
 }
 
 void StateStore::addTrack()

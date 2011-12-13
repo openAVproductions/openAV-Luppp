@@ -47,6 +47,7 @@ enum EngineEventType
   
   EE_RH_INSERT_LV2,
   
+  EE_STATE_NEW_EFFECT,
   EE_STATE_SET_AUDIO_BUFFER,
   
   EE_RH_SET_FRAMES_PER_BEAT,
@@ -98,7 +99,9 @@ class EngineEvent
     
     void sendAllPan           ();
     
-    void setStateAudioBuffer(void*);
+    void setStateAudioBuffer  (void*);
+    void setStateEffect       (int t, int p, void* efctPtr);
+
     
     // never called from a RT context, so strdup is safe
     void topLoadBuffer        (int id, int slot, char* s);
