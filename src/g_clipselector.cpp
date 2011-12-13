@@ -71,10 +71,14 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
     for( int i = 0; i < 5; i++)
     {
       // prepare values
-      ClipState clipState = state.clipInfo.at(i).state;
+      std::list<ClipInfo>::iterator iter = state.clipInfo.begin();
+      std::advance(iter, i);
+      ClipState clipState = (*iter).state;
       std::string name = "";
-      if ( state.clipInfo.at(i).bufferID < stateStore->audioBufferNameVector.size() )
-        name = stateStore->audioBufferNameVector.at( state.clipInfo.at(i).bufferID );
+      
+      // retrieve audio buffer name from unique bufferID and audioBufferNameVector
+      if ( (*iter).bufferID < stateStore->audioBufferNameVector.size() )
+        name = stateStore->audioBufferNameVector.at( (*iter).bufferID );
       
       Block(cr, 0, y, clipState, name );
       y += 18;

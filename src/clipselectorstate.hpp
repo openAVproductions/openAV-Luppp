@@ -28,7 +28,7 @@ struct ClipSelectorState
   int ID;
   int playing;
   
-  std::vector<ClipInfo> clipInfo;
+  std::list<ClipInfo> clipInfo;
 };
 
 #endif

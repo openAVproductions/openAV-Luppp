@@ -69,7 +69,10 @@ void GuiStateStore::setClipSelectorState(int t,int block, int bufferID)
   
   if ( block < clipSelectorState.at(t).clipInfo.size() )
   {
-    clipSelectorState.at(t).clipInfo.at(block).state = CLIP_STATE_LOADED;
+    std::list<ClipInfo>::iterator iter = clipSelectorState.at(t).clipInfo.begin();
+    std::advance(iter, block);
+    
+    (*iter).state = CLIP_STATE_LOADED;
   }
   else
   {

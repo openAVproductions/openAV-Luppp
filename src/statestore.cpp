@@ -174,22 +174,17 @@ void StateStore::setClipSelectorState(int t,int block, int bufferID)
 {
   std::list<ClipSelectorState>::iterator iter = clipSelectorState.begin();
   std::advance(iter, t);
+
+  std::list<ClipInfo>::iterator clipI = iter->clipInfo.begin();
+  std::advance(clipI, block);
+  (*clipI).state = CLIP_STATE_LOADED;
+  (*clipI).bufferID = bufferID;
   
-  if ( block < iter->clipInfo.size() )
-  {
-    iter->clipInfo.at(block).state = CLIP_STATE_LOADED;
-    iter->clipInfo.at(block).bufferID = bufferID;
-    
-    // bufferID here is used to extrace name from GUI list of AudioBuffer names
-    EngineEvent* x = new EngineEvent();
-    x->looperLoad(t, block, bufferID);
-    top->toGuiQueue.push(x);
-    top->guiDispatcher->emit();
-  }
-  else
-  {
-    cout << "StateStore::setClipSelectorState(), block OOB" << block << endl;
-  }
+  // bufferID here is used to extrace name from GUI list of AudioBuffer names
+  EngineEvent* x = new EngineEvent();
+  x->looperLoad(t, block, bufferID);
+  top->toGuiQueue.push(x);
+  top->guiDispatcher->emit();
 }
 
 void StateStore::clipSelectorQueue(int t, int b)

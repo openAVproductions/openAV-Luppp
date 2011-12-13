@@ -136,8 +136,14 @@ int Window::handleEvent()
     {
       cout << "LOOPER_LOAD event in GUI" << endl;
       if ( e->ia < guiState.clipSelectorState.size() ) {
-        guiState.clipSelectorState.at(e->ia).clipInfo.at(e->ib).state = CLIP_STATE_LOADED;
-        guiState.clipSelectorState.at(e->ia).clipInfo.at(e->ib).bufferID = e->ic;
+        // set GuiStateStore value
+        std::list<ClipInfo>::iterator iter = guiState.clipSelectorState.at(e->ia).clipInfo.begin();
+        std::advance(iter, e->ib);
+        
+        (*iter).state = CLIP_STATE_LOADED;
+        (*iter).bufferID = e->ic;
+        
+        // gui widget
         std::list<ClipSelector*>::iterator clipIter = clipselectorList.begin();
         advance(clipIter,e->ia);
         (*clipIter)->redraw();
@@ -150,8 +156,13 @@ int Window::handleEvent()
       if ( e->ia < guiState.clipSelectorState.size() ) {
         // set previous playing to just "loaded"
         int playing = guiState.clipSelectorState.at(e->ia).playing;
-        if ( playing >= 0 ) // check array access here
-          guiState.clipSelectorState.at(e->ia).clipInfo.at(playing).state = CLIP_STATE_LOADED;
+        
+        if ( playing >= 0 ) // check list access here
+        {
+          std::list<ClipInfo>::iterator iter = guiState.clipSelectorState.at(e->ia).clipInfo.begin();
+          std::advance(iter, playing);
+          (*iter).state = CLIP_STATE_LOADED;
+        }
         
         // playing can = -1 for "nothing playing", so set regardless
         guiState.clipSelectorState.at(e->ia).playing = e->ib;
@@ -159,7 +170,9 @@ int Window::handleEvent()
         // update currently playing, and set item to playing state
         if ( e->ib >= 0 ) // range check
         {
-          guiState.clipSelectorState.at(e->ia).clipInfo.at(e->ib).state = CLIP_STATE_PLAYING;
+          std::list<ClipInfo>::iterator iter = guiState.clipSelectorState.at(e->ia).clipInfo.begin();
+          std::advance(iter, e->ib);
+          (*iter).state = CLIP_STATE_PLAYING;
         }
         else
           cout << "GUI: LOOPER_SELECT_BUFFER block OOB " << e->ib << endl;
