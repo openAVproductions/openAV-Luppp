@@ -6,6 +6,8 @@
 
 // only needed for implementation
 #include "fileaudiosource.hpp"
+#include "fluidsynthaudiosource.hpp"
+
 #include "audiosinkoutput.hpp"
 
 #include "trackoutputstate.hpp"

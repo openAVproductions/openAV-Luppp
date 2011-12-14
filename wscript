@@ -24,6 +24,7 @@ def configure(ctx):
   ctx.check_cfg	(package='jack',at_least_version='0.118',args='--cflags --libs',uselib_store='JACK')
   ctx.check_cfg	(package='sndfile',args='--cflags --libs',uselib_store='SNDFILE')
   ctx.check_cfg	(package='gtkmm-2.4',at_least_version='2.0.0',args='--cflags --libs',uselib_store='GTKMM')
+  ctx.check_cfg	(package='fluidsynth',args='--libs',uselib_store='FLUIDSYNTH')
   
   # Check for headers:
   #ctx.check(header_name="ladspa.h",mandatory=False,uselib_store='LADSPA.H')
@@ -39,6 +40,7 @@ def build(ctx):
               'src/audiofileloader.cpp',
               'src/ladspahost.cpp',
               'src/fileaudiosource.cpp',
+              'src/fluidsynthaudiosource.cpp',
               'src/mixer.cpp',
               'src/statestore.cpp',
               'src/engineevent.cpp',
@@ -63,7 +65,7 @@ def build(ctx):
               'src/g_clipselector.cpp',
               'src/g_trackoutput.cpp']
   
-  engineDepends = 'JACK SNDFILE GTKMM'
+  engineDepends = 'JACK SNDFILE GTKMM FLUIDSYNTH'
   
   print 'Building ENGINE'
   buildList = engineList + guiList
