@@ -50,6 +50,24 @@ Window::Window(Gtk::Main *k, Top* t)
   refBuilder->get_widget("menuAddLowpass", menuAddLowpass);
   menuAddLowpass->signal_activate().connect ( sigc::bind (sigc::mem_fun( *this, &Window::addEffect ), EFFECT_LOWPASS ) );
   
+  refBuilder->get_widget("menuAddHighpass", menuAddHighpass);
+  menuAddHighpass->signal_activate().connect( sigc::bind (sigc::mem_fun( *this, &Window::addEffect ), EFFECT_HIGHPASS) );
+  
+  refBuilder->get_widget("menuAddBeatsmasher", menuAddBeatsmasher);
+  menuAddBeatsmasher->signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &Window::addEffect ), EFFECT_BEATSMASH));
+  
+  refBuilder->get_widget("menuAddParametric", menuAddParametric);
+  menuAddParametric->signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &Window::addEffect ), EFFECT_PARAMETRIC_EQ));
+  
+  refBuilder->get_widget("menuAddReverb", menuAddReverb);
+  menuAddReverb->signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &Window::addEffect ), EFFECT_REVERB));
+  
+  refBuilder->get_widget("menuAddTransient", menuAddTransient);
+  menuAddTransient->signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &Window::addEffect ), EFFECT_TRANSIENT));
+  
+  refBuilder->get_widget("menuAddCompressor", menuAddCompressor);
+  menuAddCompressor->signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &Window::addEffect ), EFFECT_COMPRESSOR));
+  
   equalizer = new Equalizer( &guiState);
   lowPass = new GLowPass( top, &guiState);
   highPass = new GHighPass( top, &guiState);

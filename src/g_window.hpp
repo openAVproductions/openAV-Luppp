@@ -32,6 +32,12 @@ class Window
     Gtk::HBox* trackEffectBox;
     
     Gtk::MenuItem* menuAddLowpass;
+    Gtk::MenuItem* menuAddHighpass;
+    Gtk::MenuItem* menuAddParametric;
+    Gtk::MenuItem* menuAddBeatsmasher;
+    Gtk::MenuItem* menuAddReverb;
+    Gtk::MenuItem* menuAddTransient;
+    Gtk::MenuItem* menuAddCompressor;
     
     GuiStateStore guiState;
     

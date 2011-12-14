@@ -15,6 +15,7 @@ enum EffectType
   EFFECT_COMPRESSOR,
   EFFECT_LOWPASS,
   EFFECT_HIGHPASS,
+  EFFECT_BEATSMASH
 };
 
 class Effect
