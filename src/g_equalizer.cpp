@@ -58,8 +58,6 @@ bool Equalizer::on_expose_event(GdkEventExpose* event)
     setColour(cr, COLOUR_GREY_3 );
     cr->fill();
     
-    std::cout << "StateStore = " << &stateStore << std::endl;
-    
     EqualizerState* freqState = &stateStore->eqState;
     
     int dialSize = 30;

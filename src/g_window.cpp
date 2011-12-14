@@ -233,6 +233,10 @@ int Window::handleEvent()
       lowPass->redraw();
       highPass->redraw();
     }
+    else if ( e->type == EE_STATE_NEW_EFFECT )
+    {
+      cout << "GUI: New effect! " << endl;
+    }
   }
   return true;
 }

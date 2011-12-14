@@ -63,8 +63,6 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
     setColour(cr, COLOUR_GREY_3);
     cr->fill();
     
-    std::cout << "StateStore = " << &stateStore << std::endl;
-    
     ClipSelectorState state = stateStore->clipSelectorState.at(ID);
     
     float y = 0.f;
