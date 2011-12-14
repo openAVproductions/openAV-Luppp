@@ -11,6 +11,8 @@
 #include "statestore.hpp"
 #include "audiofileloader.hpp"
 
+class Controller;
+
 // the Top class is a portal trough which the rest of the program can
 // commnunicate. It allows the JACK thread send messages to other threads,
 // and vice versa. It also aids as a point where various utility classes
@@ -26,6 +28,7 @@ class Top
     int samplerate;
     int bpm;
     
+    Controller* controller;
     AudioFileLoader audioFileLoader;
     StateStore state;
     

@@ -6,7 +6,11 @@
 struct TrackOutputState
 {
   int ID;
+  
+  // for parameter control
   bool selected;
+  int selectedDevice;
+  
   float volume;
   float pan;
   float panZ;

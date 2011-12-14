@@ -24,11 +24,16 @@ AudioTrack::AudioTrack( Top* t )
   
   trackBuffer.resize(top->bufferSize);
   
-  if ( ID == 0 || ID == 1 )
+  if ( ID == 0 )
   {
     source = new BufferAudioSource(t);
-    addEffect( 1, new BeatSmash(top) );
     addEffect( 1, new LadspaHost(top, EFFECT_LOWPASS, top->samplerate) );
+  }
+  else if ( ID == 1 )
+  {
+    source = new BufferAudioSource(t);
+    //addEffect( 1, new BeatSmash(top) );
+    addEffect( 1, new LadspaHost(top, EFFECT_PARAMETRIC_EQ, top->samplerate) );
   }
   else
   {

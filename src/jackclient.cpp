@@ -273,6 +273,8 @@ void JackClient::apcRead( int nframes )
   void* apcInBuffer = jack_port_get_buffer ( apcInputPort, nframes);
   void* apcOutBuffer = jack_port_get_buffer ( apcOutputPort, nframes);
   
+  jack_midi_clear_buffer(apcOutBuffer);
+  
   jack_midi_event_t in_event;
   
   int index = 0;
@@ -378,61 +380,24 @@ void JackClient::apcRead( int nframes )
     */
     
     // APc <- Selected device button
-    /*
-    if( b2 == 60 )
+    if( b2 == 60 && ( b1 >= 144 && b1 < 144 + 16 ) )
     {
       int trackID = b1 - 144;
-      if ( b1 >= 144 && b1 < 144 + 16 )
-      {
-        if ( trackID < trackStateVector.size() )
-        {
-          std::cout << "Track ID " << trackID << std::flush;
-          int selDev = (trackStateVector.at(trackID)->selectedDevice) - 1;
-          if (selDev < 0) { selDev = 0; std::cout << "SelDev CLAMPED to 0" << std::endl; }
-          std::cout << "  SelDev = " << selDev << std::endl;
-          
-          // did we change track? if yes, update the device control section
-          if ( trackStateVector.at(trackID)->selectedDevice != selDev )
-            deviceControlSelectionChanged(trackID,selDev);
-        }
-        else
-        {
-          std::cout << "Track ID " << trackID << " out of range!" << std::endl;
-        }
-        // write note off, so the arrow button stops glowing
-        writeMidi( 128 + trackID, 60, 127 );
-      }
+      if ( top->controller->device > 0 ) // range check
+        top->controller->device--;
+      std::cout << "APC <- Device button: NOTE ON track " << trackID << " device " << top->controller->device << std::endl;
+      writeMidi( apcOutBuffer, 128 + trackID, 60, 127 );
     }
-    */
     
-    /*
     // Apc -> selected device button
-    if( b2 == 61 )
+    if( b2 == 61 && ( b1 >= 144 && b1 < 144 + 16 ) )
     {
       int trackID = b1 - 144;
-      
-      if ( b1 >= 144 && b1 < 144 + 16 )
-      {
-        if ( trackID < trackStateVector.size() )
-        {
-          std::cout << "Track ID " << trackID << std::flush;
-          int selDev = (trackStateVector.at(trackID)->selectedDevice) + 1;
-          if (selDev > 9) { selDev = 9; std::cout << "SelDev CLAMPED to 9" << std::endl; }
-          std::cout << "  SelDev = " << selDev << std::endl;
-          
-          // did we change track? if yes, update the device control section
-          if ( trackStateVector.at(trackID)->selectedDevice != selDev )
-            deviceControlSelectionChanged(trackID,selDev);
-        }
-        else
-        {
-          std::cout << "Track ID " << b1 - 144 << " out of range!" << std::endl;
-        }
-        // write note off, so the arrow button stops glowing
-        writeMidi( 128 + trackID, 61, 127 );
-      }
+      if ( top->controller->device < 9 )
+        top->controller->device++;
+      std::cout << "APC -> Device button: NOTE ON track = " << trackID << " device " << top->controller->device << std::endl;
+      writeMidi( apcOutBuffer, 128 + trackID, 61, 127 );
     }
-    */
     
     // apc 40 master fader
     if ( (int)in_event.buffer[0] == 176 && (int)in_event.buffer[1] == 14 )
@@ -566,13 +531,15 @@ void JackClient::apcRead( int nframes )
       if ( b2 >= 16 && b2 < 24 && b1 != 184 ) // all controllers, excluding master track
       {
         //int trackID = b1 - 176;
-        //std::cout << "APC: Device Control on track " << trackID << std::endl;
+        std::cout << "APC: Device Control on track " << top->controller->track << " device " << top->controller->device << std::endl;
         
         top->state.cutoff = b3/127.;
         EngineEvent* x = new EngineEvent();
-        x->setPluginParameter(0,0,1, b3 / 127.);
+        x->setPluginParameter(top->controller->track,
+                              top->controller->device,
+                              1,
+                              b3 / 127.);
         top->toGuiQueue.push(x);
-        //std::cout << "Freq = " << freq << std::endl;
         
         /*
         // here we change the OSC param we send based on the track & device selection

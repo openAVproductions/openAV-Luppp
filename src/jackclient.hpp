@@ -14,6 +14,8 @@
 
 #include "top.hpp"
 
+#include "controller.hpp"
+
 typedef jack_client_t JClient;
 typedef jack_port_t JPort;
 

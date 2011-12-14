@@ -48,6 +48,7 @@ def build(ctx):
               'src/statestore.cpp',
               'src/engineevent.cpp',
               'src/audiotrack.cpp',
+              'src/controller.cpp',
               'src/audiosinkoutput.cpp',
               'src/jackclient.cpp']
   

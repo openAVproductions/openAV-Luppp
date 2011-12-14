@@ -23,6 +23,9 @@ void BufferAudioSource::process (int nframes, float* buffer )
   
   // get buffer variables
   ClipSelectorState* clipSelState = top->state.getClipSelectorState(ID);
+  if ( !clipSelState )
+    return;
+  
   int playingScene = clipSelState->playing;
   if ( playingScene < 0 )
     return;
