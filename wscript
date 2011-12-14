@@ -53,6 +53,7 @@ def build(ctx):
               'src/jackclient.cpp']
   
   guiList = [ 'src/g_window.cpp',
+              'src/g_track.cpp',
               'src/g_widgets.cpp',
               'src/g_statestore.cpp',
               'src/g_equalizer.cpp',

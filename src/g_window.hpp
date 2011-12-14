@@ -7,7 +7,10 @@
 #include <gtkmm.h>
 
 #include "top.hpp"
+
 #include "g_statestore.hpp"
+
+#include "g_track.hpp"
 
 #include "g_trackoutput.hpp"
 #include "g_clipselector.hpp"
@@ -44,17 +47,18 @@ class Window
     int currentEffectsTrack;
     void setEffectsBox(int trackID);
     
-    Equalizer* equalizer;
-    GLowPass* lowPass;
-    GHighPass* highPass;
-    
     // helper functions
+    void redrawEffectBox();
+    
     int numTracks;
     void addTrack();
+    
     
     int handleEvent();
     void addEffect(EffectType);
     
+    // holder for other elements
+    std::vector<GTrack> trackVector;
     
     // lists of widgets
     std::list<TrackOutput*> trackoutputList;

@@ -68,16 +68,6 @@ Window::Window(Gtk::Main *k, Top* t)
   refBuilder->get_widget("menuAddCompressor", menuAddCompressor);
   menuAddCompressor->signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &Window::addEffect ), EFFECT_COMPRESSOR));
   
-  equalizer = new Equalizer( &guiState);
-  lowPass = new GLowPass( top, &guiState);
-  highPass = new GHighPass( top, &guiState);
-  
-  // hack to show parametric
-  trackEffectBox->add( *equalizer );
-  trackEffectBox->add( *lowPass );
-  trackEffectBox->add( *highPass );
-  trackEffectBox->show_all();
-  
   addTrack();
   addTrack();
   //addTrack();
@@ -230,15 +220,44 @@ int Window::handleEvent()
         cout << "Parameter " << e->ic << " " << e->fa << endl;
         guiState.effectState.at(e->ia).values[e->ic] = e->fa;
       }
-      lowPass->redraw();
-      highPass->redraw();
     }
     else if ( e->type == EE_STATE_NEW_EFFECT )
     {
-      cout << "GUI: New effect! " << endl;
+      int t = e->ia;
+      int p = e->ib;
+      int et= e->ic;
+      cout << "GUI: New effect! t " << t << ", p " << p << ", EffectType " << et<< endl;
+      
+      
+      if ( t < trackVector.size() ) // check track
+      {
+        switch ( et )
+        {
+          case EFFECT_LOWPASS: trackVector.at(t).widgetVector.push_back( new GLowPass(top, &guiState) ); break;
+          case EFFECT_HIGHPASS: trackVector.at(t).widgetVector.push_back( new GHighPass(top, &guiState) ); break;
+          //case EFFECT_PARAMETRIC_EQ: trackVector.at(t).widgetVector.push_back( new Equalizer(top, &guiState) ); break;
+        }
+        
+        currentEffectsTrack = e->ia;
+        redrawEffectBox();
+      }
     }
   }
   return true;
+}
+
+void Window::redrawEffectBox()
+{
+  
+  
+  for(int i = 0;  i < trackVector.at(currentEffectsTrack).widgetVector.size(); i++)
+  {
+    // if widget not shown in UI yet, show it
+    if ( !trackVector.at(currentEffectsTrack).widgetVector.at(i)->get_visible() )
+      trackEffectBox->add( *trackVector.at(currentEffectsTrack).widgetVector.at(i) );
+  }
+  
+  trackEffectBox->show_all();
 }
 
 void Window::setEffectsBox(int trackID)
@@ -256,6 +275,8 @@ void Window::addTrack()
   std::cout << "Window::addTrack()" << std::endl;
   
   guiState.addTrack();
+  
+  trackVector.push_back( GTrack() );
   
   std::stringstream trackName;
   trackName << numTracks;

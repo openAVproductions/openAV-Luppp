@@ -31,6 +31,7 @@ class GuiStateStore
     
     EqualizerState eqState;
     
+    // all effects should request state from this vector
     vector<EffectState> effectState;
     
     vector<BufferAudioSourceState> bufferAudioSourceState;
