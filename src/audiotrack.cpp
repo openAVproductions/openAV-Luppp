@@ -2,15 +2,15 @@
 #include "audiotrack.hpp"
 
 #include "top.hpp"
-#include "ladspahost.hpp"
 
-// only needed for implementation
 #include "fileaudiosource.hpp"
 #include "fluidsynthaudiosource.hpp"
 
-#include "audiosinkoutput.hpp"
+#include "beatsmash.hpp"
+#include "ladspahost.hpp"
 
 #include "trackoutputstate.hpp"
+#include "audiosinkoutput.hpp"
 
 int AudioTrack::privateID = 0;
 
@@ -24,13 +24,14 @@ AudioTrack::AudioTrack( Top* t )
   
   if ( ID == 0 )
   {
-    source = new FluidSynthAudioSource(t, "example.sf2");
+    source = new FileAudioSource(t, "sample.wav");
+    addEffect( 1, new BeatSmash(top) );
     addEffect( 1, new LadspaHost(top, EFFECT_LOWPASS, top->samplerate) );
   }
   else
   {
     std::cout << "Creating AudioTrack ID: " << ID << std::endl;
-    source = new FileAudioSource(t, "sample.wav");
+    source = new FluidSynthAudioSource(t, "example.sf2");
   }
   
   sink = new AudioSinkOutput(t);

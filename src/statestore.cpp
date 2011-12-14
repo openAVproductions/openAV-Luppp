@@ -3,6 +3,8 @@
 
 #include "top.hpp"
 
+#include "effectstate.hpp"
+
 using namespace std;
 
 StateStore::StateStore(Top* t)
@@ -65,6 +67,25 @@ AudioBuffer* StateStore::getAudioBuffer(int ID)
     if ( iter->getID() == ID )
     {
       return &(*iter);
+    }
+  }
+  
+  return 0;
+}
+
+void StateStore::addEffectState()
+{
+  effectStateList.push_back ( new EffectState( numEffects ) );
+}
+
+EffectState* StateStore::getEffectState(int ID)
+{
+  std::list<EffectState*>::iterator iter;
+  for ( iter = effectStateList.begin(); iter != effectStateList.end(); iter++ )
+  {
+    if ( (*iter)->ID == ID )
+    {
+      return &(*(*iter));
     }
   }
   

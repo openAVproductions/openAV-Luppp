@@ -5,6 +5,8 @@
 #include <iostream>
 #include <vector>
 
+class Top;
+
 enum EffectType
 {
   EFFECT_REVERB = 0,
@@ -18,7 +20,7 @@ enum EffectType
 class Effect
 {
   public:
-    Effect(){ ID = privateID++; }
+    Effect(Top*);
     int  getID(){ return ID; }
     virtual void process(int, float*){};
   

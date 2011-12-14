@@ -11,7 +11,8 @@ class Top;
 #include "audiobuffer.hpp"
 
 #include "effect.hpp"
-#include "effectstate.hpp"
+
+struct EffectState;
 
 #include "trackoutputstate.hpp"
 #include "clipselectorstate.hpp"
@@ -25,11 +26,16 @@ class StateStore
     
     int midib1,midib2,midib3;
     
+    int beatSmash;
+    
     float cutoff;
-    int numPoles;
+    float highCutoff;
     
     void addTrack();
     void addEffect(int t, int p, Effect* e);
+    
+    // to be called whenever we want a new "EffectState" added to the list
+    void addEffectState();
     
     void setMute(int,int);
     void setSolo(int,int);
@@ -48,6 +54,7 @@ class StateStore
     // sets loaded on that clip
     void setClipSelectorState(int t,int block, int bufferID);
     
+    EffectState*       getEffectState(int);
     TrackOutputState*  getAudioSinkOutput(int);
     ClipSelectorState* getClipSelectorState(int);
     
@@ -61,7 +68,7 @@ class StateStore
     std::list<AudioBuffer> audiobufferList;
     std::list<Effect> effectList;
     
-    std::list<EffectState> effectStateList;
+    std::list<EffectState*> effectStateList;
     
   private:
     Top* top;

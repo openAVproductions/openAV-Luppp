@@ -44,6 +44,7 @@ def build(ctx):
               'src/fluidsynthaudiosource.cpp',
               'src/mixer.cpp',
               'src/effect.cpp',
+              'src/beatsmash.cpp',
               'src/statestore.cpp',
               'src/engineevent.cpp',
               'src/audiotrack.cpp',

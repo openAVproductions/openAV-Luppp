@@ -4,6 +4,8 @@
 
 struct EffectState
 {
+  EffectState(int i) {ID = i; }
+  int ID;
   float values[8];
 };
 

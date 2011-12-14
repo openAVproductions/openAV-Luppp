@@ -133,7 +133,9 @@ int JackClient::processRtQueue()
     else if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER) {
       //cout << "EE_TRACK_SET_PLUGIN_PARAMETER " << e->ia << ", " << e->ib<< ", " << e->ic << ", " << e->fa << endl;
       if ( e->ic == 1 )
-        top->state.numPoles = e->fa;
+      {
+        //top->state.numPoles = e->fa;
+      }
       else
       {
         top->state.cutoff = e->fa;
@@ -429,7 +431,13 @@ void JackClient::apcRead( int nframes )
     // apc 40 master fader
     if ( (int)in_event.buffer[0] == 176 && (int)in_event.buffer[1] == 14 )
     {
-      std::cout << " SETTING MASTER FADER FROM APC40!" << std::endl;
+      top->state.beatSmash = ((b3/127.f) * 10);
+      if ( top->state.beatSmash < 3 )
+        top->state.beatSmash = false;
+      else
+        top->state.beatSmash -= 3;
+      
+      std::cout << "BeatSmash = " << top->state.beatSmash  << std::endl;
     }
     // apc 40 rest of the faders
     if ( (int)in_event.buffer[1] == 7 )
