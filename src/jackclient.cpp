@@ -126,7 +126,14 @@ int JackClient::processRtQueue()
       cout << "STATE_NEW_EFFECT, ID = " << flush;
       Effect* effect = (Effect*)e->vPtr;
       cout << effect->getID() << endl;
-      mixer.addEffect(e->ia, e->ib, effect);
+      
+      int ret = mixer.addEffect(e->ia, e->ib, effect);
+      if ( ret == 0 ) // success
+      {
+        EngineEvent* x = new EngineEvent();
+        x->setStateEffect(e->ia, e->ib, (int)effect->getType(), 0 ); // vPtr = 0, don't give GUI access!
+        top->toGuiQueue.push(x);
+      }
     }
     else if ( e->type == EE_LOOPER_LOAD ) {
       // insert the correct buffer ID into the list, so we can retrieve by sceneID later
@@ -139,16 +146,9 @@ int JackClient::processRtQueue()
       top->state.clipSelectorQueue(e->ia, e->ib);
     }
     else if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER) {
-      //cout << "EE_TRACK_SET_PLUGIN_PARAMETER " << e->ia << ", " << e->ib<< ", " << e->ic << ", " << e->fa << endl;
-      
-      if ( e->ic == 1 )
-      {
-        //top->state.numPoles = e->fa;
-      }
-      else
-      {
-        top->state.cutoff = e->fa;
-      }
+      // send all values on to stateStore, from there we message UI, and
+      // we do the logic on which EffectID we need to write to
+      top->state.setPluginParameter(e->ia,e->ib,e->ic,e->fa);
     }
     
   }

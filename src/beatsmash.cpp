@@ -3,7 +3,7 @@
 
 #include "top.hpp"
 
-BeatSmash::BeatSmash(Top* t) : Effect(t)
+BeatSmash::BeatSmash(Top* t, EffectType et) : Effect(t,et)
 {
   top = t;
   ID = Effect::getID();

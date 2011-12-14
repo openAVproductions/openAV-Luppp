@@ -5,7 +5,7 @@
 
 using namespace std;
 
-LadspaHost::LadspaHost(Top* t,EffectType et, int s) : Effect(t)
+LadspaHost::LadspaHost(Top* t,EffectType et, int s) : Effect(t, et)
 {
   ID = Effect::getID();
   std::cout << "LadspaHost()  Effect::getID() = " << ID << std::endl;

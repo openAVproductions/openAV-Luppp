@@ -20,7 +20,7 @@ class Mixer
     // need to pass in pointer, not create
     void addTrack();
     
-    void addEffect(int, int, Effect* );
+    int addEffect(int, int, Effect* );
     
     void setParameter(int track, int pos, int param, float );
     

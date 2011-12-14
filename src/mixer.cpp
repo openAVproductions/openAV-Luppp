@@ -24,11 +24,13 @@ void Mixer::addTrack()
 }
 
 
-void Mixer::addEffect(int track, int pos,  Effect* eff )
+int Mixer::addEffect(int track, int pos,  Effect* eff )
 {
   std::list<AudioTrack>::iterator iter =  audiotrackList.begin();
   std::advance(iter, track);
   iter->addEffect( pos , eff);
+  
+  return 0;
 }
 
 void Mixer::setParameter(int track, int pos, int param, float val )

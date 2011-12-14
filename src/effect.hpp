@@ -21,13 +21,17 @@ enum EffectType
 class Effect
 {
   public:
-    Effect(Top*);
+    Effect(Top*, EffectType& t);
+    
     int  getID(){ return ID; }
+    EffectType getType(){return type;}
+    
     virtual void process(int, float*){};
   
   private:
     int ID;
     static int privateID;
+    EffectType type;
 };
 
 #endif

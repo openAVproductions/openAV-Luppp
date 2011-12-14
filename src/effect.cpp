@@ -5,8 +5,10 @@
 
 int Effect::privateID = 0;
 
-Effect::Effect(Top* t)
+Effect::Effect(Top* t, EffectType& et)
 {
   ID = privateID++;
   t->state.addEffectState();
+  
+  type = et;
 }

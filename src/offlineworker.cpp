@@ -34,7 +34,7 @@ int OfflineWorker::createNewEffect(int t, int pos, int typeInt )
       effect = new LadspaHost(top, type, top->samplerate);
       break;
     case EFFECT_BEATSMASH:
-      effect = new BeatSmash(top);
+      effect = new BeatSmash(top, type);
       break;
     default: return -1;
   }
@@ -43,7 +43,7 @@ int OfflineWorker::createNewEffect(int t, int pos, int typeInt )
   {
     cout << "OfflineWorker::createNewEffect() writing EE_STATE_NEW_EFFECT" << endl;
     EngineEvent* x = new EngineEvent();
-    x->setStateEffect(0,0,effect);
+    x->setStateEffect(0,0,typeInt,effect);
     top->toEngineQueue.push(x);
   }
   

@@ -29,7 +29,7 @@ AudioTrack::AudioTrack( Top* t )
   if ( ID == 0 )
   {
     source = new BufferAudioSource(t);
-    addEffect( 1, new BeatSmash(top) );
+    addEffect( 1, new BeatSmash(top, EFFECT_BEATSMASH) );
     addEffect( 1, new LadspaHost(top, EFFECT_LOWPASS, top->samplerate) );
   }
   else if ( ID == 1 )
@@ -45,7 +45,7 @@ AudioTrack::AudioTrack( Top* t )
   sink = new AudioSinkOutput(t);
 }
 
-void AudioTrack::addEffect( int pos,  Effect* eff )
+int AudioTrack::addEffect( int pos,  Effect* eff )
 {
   cout << "AudioTrack::addEffect() " << pos << flush;
   std::list<Effect*>::iterator iter =  effects.begin();
@@ -53,6 +53,7 @@ void AudioTrack::addEffect( int pos,  Effect* eff )
   
   effects.insert( iter , eff);
   cout << "\tdone!" << endl;
+  return 0;
 }
 
 void AudioTrack::setParameter(int pos, int param, float f)

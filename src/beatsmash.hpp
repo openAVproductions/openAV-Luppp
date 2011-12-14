@@ -11,7 +11,7 @@ class Top;
 class BeatSmash : public Effect
 {
   public:
-    BeatSmash(Top*);
+    BeatSmash(Top*, EffectType);
     
     void process(int nframes, float *L);
   

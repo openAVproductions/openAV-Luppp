@@ -231,14 +231,16 @@ void StateStore::clipSelectorQueue(int t, int b)
   top->guiDispatcher->emit();
 }
 
-void StateStore::setPluginParameter(int e, int param, float value)
+void StateStore::setPluginParameter(int t, int pos, int param, float value)
 {
   // all "dynamic" elements in engine ( ladspaHosts, lv2host, etc ) all use
   // the same generic "EffectState" as thier settings. Up to 8 floats of control
   // for now, more is *not* suitable for RT LIVE performance.
   
-  if ( !effectCheck(e) ) {
-    std::cout << "StateStore::setPluginParameter() track OOB: " << e << std::endl; return;
+  cout << "StateStore::setPluginParameter() " << t << ", " << pos << ", " << param << ", " << value << endl;
+  
+  if ( !trackCheck(t) ) {
+    std::cout << "StateStore::setPluginParameter() track OOB: " << t << std::endl; return;
   }
   
 }
