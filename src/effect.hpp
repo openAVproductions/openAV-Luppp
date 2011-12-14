@@ -5,8 +5,6 @@
 #include <iostream>
 #include <vector>
 
-class Top;
-
 enum EffectType
 {
   EFFECT_REVERB = 0,

@@ -5,13 +5,10 @@
 
 using namespace std;
 
-int FileAudioSource::privateID = 0;
-
 FileAudioSource::FileAudioSource(Top* t, std::string name)
 {
   top = t;
-  
-  ID = privateID++;
+  ID = AudioSource::getID();
 }
 
 void FileAudioSource::process (int nframes, float* buffer )

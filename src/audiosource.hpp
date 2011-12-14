@@ -7,11 +7,12 @@
 class AudioSource
 {
   public:
-    AudioSource(){};
-    //virtual ~AudioSource();
-    
-    //virtual void setParameter(int param, float val);
+    AudioSource(){ID = privateID++;};
+    int  getID(){ return ID; }
     virtual void process(int nframes, float* buffer) = 0;
+  private:
+    int ID;
+    static int privateID;
 };
 
 

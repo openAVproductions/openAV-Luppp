@@ -35,6 +35,7 @@ def build(ctx):
   #     ENGINE
   engineList=['src/top.cpp',
               'src/rtqueue.cpp',
+              'src/audiosource.cpp',
               'src/audiobuffer.cpp',
               'src/audiofileloader.cpp',
               'src/ladspahost.cpp',

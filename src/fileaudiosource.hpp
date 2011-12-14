@@ -27,7 +27,6 @@ class FileAudioSource : public AudioSource
   private:
     Top* top;
     int ID;
-    static int privateID;
 };
 
 
