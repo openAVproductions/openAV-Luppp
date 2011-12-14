@@ -12,7 +12,6 @@ class BeatSmash : public Effect
 {
   public:
     BeatSmash(Top*);
-    ~BeatSmash();
     
     void process(int nframes, float *L);
   

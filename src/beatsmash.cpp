@@ -8,18 +8,12 @@ BeatSmash::BeatSmash(Top* t) : Effect(t)
   top = t;
   ID = Effect::getID();
   
-  std::cout << "Beatrepeat() ID = " << ID << std::endl;
+  std::cout << "BeatSmash() ID = " << ID << std::endl;
   
   active = false;
   queueActive = false;
   
   audioBuffer.resize(22050, 0.f);
-  
-  /*
-  for (int i = 0; i < top->samplerate * 4; i++)
-  {
-    audioBuffer.push_back(0.0);
-  } */
 }
 
 void BeatSmash::process(int nframes, float *L)
@@ -51,9 +45,3 @@ void BeatSmash::process(int nframes, float *L)
     audioBuffer.pop_front();
   }
 }
-
-BeatSmash::~BeatSmash()
-{
-  
-}
-

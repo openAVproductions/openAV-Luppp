@@ -3,6 +3,8 @@
 
 #include "top.hpp"
 #include "effect.hpp"
+#include "beatsmash.hpp"
+#include "ladspahost.hpp"
 #include "audiobuffer.hpp"
 
 using namespace std;
@@ -18,6 +20,25 @@ int OfflineWorker::createNewEffect(int t, int pos, int typeInt )
 {
   EffectType type = static_cast<EffectType>(typeInt);
   cout << "OfflineWorker::createNewEffect() type = " << type << endl;
+  
+  Effect* effect = 0;
+  
+  switch ( type )
+  {
+    // all Ladspa effects have the same code here
+    case EFFECT_REVERB:
+    case EFFECT_LOWPASS:
+    case EFFECT_HIGHPASS:
+    case EFFECT_TRANSIENT:
+    case EFFECT_COMPRESSOR:
+      effect = new LadspaHost(top, type, top->samplerate);
+      break;
+    case EFFECT_BEATSMASH:
+      effect = new BeatSmash(top);
+      break;
+    default: return -1;
+  }
+  
 }
 
 // called by GUI thread, to load an audiofile to a buffer. The buffer
