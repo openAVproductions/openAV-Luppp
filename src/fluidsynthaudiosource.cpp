@@ -7,6 +7,7 @@ FluidSynthAudioSource::FluidSynthAudioSource(Top* t, std::string name)
 {
   top = t;
   
+  tmpOutput.resize( top->bufferSize );
   dummyOutput.resize( top->bufferSize );
   
   settings = new_fluid_settings();
@@ -42,8 +43,23 @@ void FluidSynthAudioSource::process (int nframes, float* buffer )
   std::advance(iter, ID);
   */
   
+  if ( top->state.midib1 != -1 )
+  {
+    std::cout << "FluidSynth MIDI event: " << top->state.midib1 << ", " << top->state.midib2 << ", " << top->state.midib1 << std::endl;
+    
+    switch ( top->state.midib1 )
+    {
+      case 144: fluid_synth_noteon (synth, 0, top->state.midib2 , top->state.midib3); break;
+      case 128: fluid_synth_noteoff(synth, 0, top->state.midib2 ); break;
+    }
+  }
+  
+  float* tmp = &dummyOutput[0];
   float* dummy = &dummyOutput[0];
-  fluid_synth_nwrite_float ( synth, nframes, &buffer, &dummy , 0, 0 );
+  fluid_synth_nwrite_float ( synth, nframes, &tmp, &dummy , 0, 0 );
   
-  
+  for ( int i = 0; i < nframes; i++ )
+  {
+    *buffer++ += *tmp++;
+  }
 }

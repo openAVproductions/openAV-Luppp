@@ -30,6 +30,7 @@ class FluidSynthAudioSource : public AudioSource
     fluid_settings_t* settings;
     fluid_synth_channel_info_t channelInfo;
     
+    std::vector<float> tmpOutput;
     std::vector<float> dummyOutput;
 };
 

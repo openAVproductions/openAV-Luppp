@@ -19,6 +19,8 @@ class StateStore
   public:
     StateStore(Top*);
     
+    int midib1,midib2,midib3;
+    
     float cutoff;
     int numPoles;
     

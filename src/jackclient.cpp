@@ -170,6 +170,9 @@ int JackClient::processMidi(jack_nframes_t nframes)
   int midiIndex = 0;
   int event_count = (int) jack_midi_get_event_count(midiInputBuffer); // numMessages
   
+  // set to invalid, if b1 = anything its a new valid message
+  top->state.midib1 = -1;
+  
   while (midiIndex < event_count)
   {
     jack_midi_event_get(&in_event, midiInputBuffer, midiIndex); // get first message
@@ -181,7 +184,12 @@ int JackClient::processMidi(jack_nframes_t nframes)
     int b2 = (int)in_event.buffer[1];
     int b3 = (int)in_event.buffer[2];
     
-    cout << b1 << "  " << b2 << "  " << b3 << endl;
+    
+    top->state.midib1 = b1;
+    top->state.midib2 = b2;
+    top->state.midib3 = b3;
+    
+    cout << "JACK MIDI IN" << b1 << "  " << b2 << "  " << b3 << endl;
     
     if ( b1 >= 144 && b1 < 144 + 16 ) // note on
     {
