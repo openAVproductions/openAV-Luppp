@@ -3,7 +3,7 @@
 
 #include "top.hpp"
 
-#include "fileaudiosource.hpp"
+#include "bufferaudiosource.hpp"
 #include "fluidsynthaudiosource.hpp"
 
 #include "beatsmash.hpp"
@@ -26,7 +26,7 @@ AudioTrack::AudioTrack( Top* t )
   
   if ( ID == 0 || ID == 1 )
   {
-    source = new FileAudioSource(t, "sample.wav");
+    source = new BufferAudioSource(t);
     addEffect( 1, new BeatSmash(top) );
     addEffect( 1, new LadspaHost(top, EFFECT_LOWPASS, top->samplerate) );
   }

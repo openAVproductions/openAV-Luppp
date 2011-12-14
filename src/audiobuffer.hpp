@@ -2,13 +2,9 @@
 #ifndef LUPPP_AUDIOBUFFER
 #define LUPPP_AUDIOBUFFER
 
-//#include "globals.hpp"
-
 #include <iostream>
 #include <vector>
 #include <glibmm.h>
-
-// #include <gtkmm.h>
 
 class AudioBuffer
 {
@@ -30,13 +26,6 @@ class AudioBuffer
     int ID;
     
     int numBeats;
-    std::string name;
-    
-    /*
-    int index;
-    int channels;
-    int samplerate;
-    */
     
     std::vector<float> buffer;
 };

@@ -1,21 +1,21 @@
 
-#include "fileaudiosource.hpp"
+#include "bufferaudiosource.hpp"
 
 #include "audiobuffer.hpp"
 
 using namespace std;
 
-FileAudioSource::FileAudioSource(Top* t, std::string name)
+BufferAudioSource::BufferAudioSource(Top* t)
 {
   top = t;
   ID = AudioSource::getID();
-  cout << "FileAudioSource() ID = " << ID << endl;
+  cout << "BufferAudioSource() ID = " << ID << endl;
 }
 
-void FileAudioSource::process (int nframes, float* buffer )
+void BufferAudioSource::process (int nframes, float* buffer )
 {
   // get playback variables
-  std::list<FileAudioSourceState>::iterator iter = top->state.fileAudioSourceState.begin();
+  std::list<BufferAudioSourceState>::iterator iter = top->state.bufferAudioSourceState.begin();
   std::advance(iter, ID);
   float index = iter->index;
   float speed = iter->speed;
@@ -36,7 +36,7 @@ void FileAudioSource::process (int nframes, float* buffer )
   AudioBuffer* bufPtr = top->state.getAudioBuffer(playingBuffer);
   if ( bufPtr == 0 ) {
     // happens until a valid file has been loaded for this 
-    //cout << "FileAudioSource, bufPtr == 0! returning..." << endl;
+    //cout << "BufferAudioSource, bufPtr == 0! returning..." << endl;
     return;
   }
   

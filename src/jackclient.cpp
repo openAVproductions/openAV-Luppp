@@ -195,6 +195,7 @@ int JackClient::processMidi(jack_nframes_t nframes)
     
     if ( b1 >= 144 && b1 < 144 + 16 ) // note on
     {
+      /*
       std::list<FileAudioSourceState>::iterator i = top->state.fileAudioSourceState.begin();
       std::advance(i,1);
       
@@ -209,16 +210,20 @@ int JackClient::processMidi(jack_nframes_t nframes)
       i->speed = freq;
       
       std::cout << "i->speed = (freq) " << i->speed << endl;
+      */
     }
     else if ( b1 >= 128 && b1 < 128 + 16 ) // note off
     {
+      /*
       std::list<FileAudioSourceState>::iterator i = top->state.fileAudioSourceState.begin();
       std::advance(i,1);
       i->speed = 0;
       std::cout << "i->speed = " << i->speed << endl;
+      */
     }
     else if ( b1 >= 176 && b1 < 176 + 16 ) // CC change Device control
     {
+      /*
       std::list<FileAudioSourceState>::iterator i = top->state.fileAudioSourceState.begin();
       if ( b2 == 17 )
         std::advance(i,1);
@@ -230,6 +235,7 @@ int JackClient::processMidi(jack_nframes_t nframes)
       x->setTrackSpeed(0, value);
       top->toGuiQueue.push(x);
       top->guiDispatcher->emit();
+      */
     }
     
     

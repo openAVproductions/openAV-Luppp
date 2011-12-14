@@ -18,8 +18,8 @@ void GuiStateStore::addTrack()
 {
   std::cout << "GuiStateStore::addTrack()" << std::endl;
   
-  fileAudioSourceState.push_back( FileAudioSourceState() );
-  FileAudioSourceState* i = &fileAudioSourceState.back();
+  bufferAudioSourceState.push_back( BufferAudioSourceState() );
+  BufferAudioSourceState* i = &bufferAudioSourceState.back();
   i->index = 0.f;
   i->speed = 1.f;
   

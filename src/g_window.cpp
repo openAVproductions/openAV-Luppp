@@ -128,7 +128,7 @@ int Window::handleEvent()
     }
     else if ( e->type == EE_TRACK_SET_SPEED )
     {
-      guiState.fileAudioSourceState.at(e->ia).speed = e->fa;
+      guiState.bufferAudioSourceState.at(e->ia).speed = e->fa;
       
       std::list<Gtk::ProgressBar*>::iterator progIter = trackprogressList.begin();
       advance(progIter,e->ia);

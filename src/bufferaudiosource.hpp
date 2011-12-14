@@ -10,18 +10,16 @@
 
 #include "audiosource.hpp"
 
-#include "fileaudiosourcestate.hpp"
+#include "bufferaudiosourcestate.hpp"
 
 #include "top.hpp"
 
 using std::string;
 
-class FileAudioSource : public AudioSource
+class BufferAudioSource : public AudioSource
 {
   public:
-    FileAudioSource(Top*,string name);
-    
-    void setParameter(int p,float s);
+    BufferAudioSource(Top*);
     void process (int, float* );
   
   private:

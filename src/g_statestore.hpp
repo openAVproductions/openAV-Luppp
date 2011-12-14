@@ -9,7 +9,7 @@
 #include "g_equalizerstate.hpp"
 #include "trackoutputstate.hpp"
 #include "clipselectorstate.hpp"
-#include "fileaudiosourcestate.hpp"
+#include "bufferaudiosourcestate.hpp"
 
 using std::vector;
 
@@ -29,7 +29,7 @@ class GuiStateStore
     
     EqualizerState eqState;
     
-    vector<FileAudioSourceState> fileAudioSourceState;
+    vector<BufferAudioSourceState> bufferAudioSourceState;
     vector<ClipSelectorState> clipSelectorState;
     vector<TrackOutputState> trackoutputState;
     

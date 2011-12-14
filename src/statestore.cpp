@@ -21,8 +21,8 @@ void StateStore::addEffect(int t, int pos, Effect* effect)
 
 void StateStore::addTrack()
 {
-  fileAudioSourceState.push_back( FileAudioSourceState() );
-  FileAudioSourceState* i = &fileAudioSourceState.back();
+  bufferAudioSourceState.push_back( BufferAudioSourceState() );
+  BufferAudioSourceState* i = &bufferAudioSourceState.back();
   i->index = 0.f;
   i->speed = 1.f;
   i->bufferID = -1;

@@ -17,7 +17,7 @@ struct EffectState;
 #include "trackoutputstate.hpp"
 #include "clipselectorstate.hpp"
 
-#include "fileaudiosourcestate.hpp"
+#include "bufferaudiosourcestate.hpp"
 
 class StateStore
 {
@@ -61,7 +61,7 @@ class StateStore
     
     // these lists will be private, and functions as above will be used
     // to set values, while State* get() methods will provide all data
-    std::list<FileAudioSourceState> fileAudioSourceState;
+    std::list<BufferAudioSourceState> bufferAudioSourceState;
     std::list<ClipSelectorState> clipSelectorState;
     std::list<TrackOutputState> trackoutputState;
     

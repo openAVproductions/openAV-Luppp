@@ -40,7 +40,7 @@ def build(ctx):
               'src/audiobuffer.cpp',
               'src/audiofileloader.cpp',
               'src/ladspahost.cpp',
-              'src/fileaudiosource.cpp',
+              'src/bufferaudiosource.cpp',
               'src/fluidsynthaudiosource.cpp',
               'src/mixer.cpp',
               'src/effect.cpp',
