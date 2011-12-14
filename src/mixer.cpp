@@ -3,6 +3,8 @@
 
 #include "top.hpp"
 
+using namespace std;
+
 Mixer::Mixer(Top* t)
 {
   top = t;
@@ -21,8 +23,20 @@ void Mixer::addTrack()
   audiotrackList.push_back( *(new AudioTrack(top)) );
 }
 
+
+void Mixer::addEffect(int track, int pos,  Effect* eff )
+{
+  std::list<AudioTrack>::iterator iter =  audiotrackList.begin();
+  std::advance(iter, track);
+  iter->addEffect( pos , eff);
+}
+
 void Mixer::setParameter(int track, int pos, int param, float val )
 {
+  cout << "Mixer::setParameter() STUB!!!" << endl;
+  return;
+  
+  
   std::list<AudioTrack>::iterator iter;
   std::advance(iter, track);
   iter->setParameter(pos, param, val);

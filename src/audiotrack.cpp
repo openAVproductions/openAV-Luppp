@@ -14,6 +14,8 @@
 
 int AudioTrack::privateID = 0;
 
+using namespace std;
+
 AudioTrack::AudioTrack( Top* t )
 {
   top = t;
@@ -45,10 +47,12 @@ AudioTrack::AudioTrack( Top* t )
 
 void AudioTrack::addEffect( int pos,  Effect* eff )
 {
+  cout << "AudioTrack::addEffect() " << pos << flush;
   std::list<Effect*>::iterator iter =  effects.begin();
   std::advance(iter, pos);
   
   effects.insert( iter , eff);
+  cout << "\tdone!" << endl;
 }
 
 void AudioTrack::setParameter(int pos, int param, float f)

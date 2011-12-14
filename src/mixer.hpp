@@ -19,6 +19,9 @@ class Mixer
     
     // need to pass in pointer, not create
     void addTrack();
+    
+    void addEffect(int, int, Effect* );
+    
     void setParameter(int track, int pos, int param, float );
     
     void process( int nframes, float* outBuffer );

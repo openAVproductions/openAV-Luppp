@@ -39,6 +39,14 @@ int OfflineWorker::createNewEffect(int t, int pos, int typeInt )
     default: return -1;
   }
   
+  if ( effect )
+  {
+    cout << "OfflineWorker::createNewEffect() writing EE_STATE_NEW_EFFECT" << endl;
+    EngineEvent* x = new EngineEvent();
+    x->setStateEffect(0,0,effect);
+    top->toEngineQueue.push(x);
+  }
+  
 }
 
 // called by GUI thread, to load an audiofile to a buffer. The buffer

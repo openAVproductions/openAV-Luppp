@@ -121,6 +121,13 @@ int JackClient::processRtQueue()
       cout << buffer->getID() << endl;
       top->state.setAudioBuffer( buffer );
     }
+    else if ( e->type == EE_STATE_NEW_EFFECT ) {
+      // we get an Effect*, which we need to insert track @ e->ia, pos e->ib
+      cout << "STATE_NEW_EFFECT, ID = " << flush;
+      Effect* effect = (Effect*)e->vPtr;
+      cout << effect->getID() << endl;
+      mixer.addEffect(e->ia, e->ib, effect);
+    }
     else if ( e->type == EE_LOOPER_LOAD ) {
       // insert the correct buffer ID into the list, so we can retrieve by sceneID later
       cout << "EE_LOOPER_LOAD " << e->ia << ", " << e->ib << "," << e->ic << endl;
