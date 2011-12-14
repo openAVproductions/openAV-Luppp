@@ -47,10 +47,12 @@ Window::Window(Gtk::Main *k, Top* t)
   
   equalizer = new Equalizer( &guiState);
   lowPass = new GLowPass( top, &guiState);
+  highPass = new GHighPass( top, &guiState);
   
   // hack to show parametric
   trackEffectBox->add( *equalizer );
   trackEffectBox->add( *lowPass );
+  trackEffectBox->add( *highPass );
   trackEffectBox->show_all();
   
   addTrack();
@@ -186,9 +188,10 @@ int Window::handleEvent()
     }
     else if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER )
     {
-      std::cout << "PLUGIN PARAM  fa = " << e->fa << std::endl;
+      //std::cout << "PLUGIN PARAM  fa = " << e->fa << std::endl;
       guiState.cutoff = e->fa;
       lowPass->redraw();
+      highPass->redraw();
     }
   }
   return true;
