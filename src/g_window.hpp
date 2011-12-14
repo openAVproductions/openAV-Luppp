@@ -31,6 +31,8 @@ class Window
     Gtk::Table* mainTable;
     Gtk::HBox* trackEffectBox;
     
+    Gtk::MenuItem* menuAddLowpass;
+    
     GuiStateStore guiState;
     
     int currentEffectsTrack;
@@ -45,6 +47,7 @@ class Window
     void addTrack();
     
     int handleEvent();
+    void addEffect(EffectType);
     
     
     // lists of widgets

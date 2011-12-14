@@ -2,6 +2,7 @@
 #include "offlineworker.hpp"
 
 #include "top.hpp"
+#include "effect.hpp"
 #include "audiobuffer.hpp"
 
 using namespace std;
@@ -9,6 +10,14 @@ using namespace std;
 OfflineWorker::OfflineWorker(Top* t)
 {
   top = t;
+}
+
+// called by GUI thread, when we want to create a new Effect instance.
+// A pointer to the Effect is then loaded into the List of Effects in Engine
+int OfflineWorker::createNewEffect(int t, int pos, int typeInt )
+{
+  EffectType type = static_cast<EffectType>(typeInt);
+  cout << "OfflineWorker::createNewEffect() type = " << type << endl;
 }
 
 // called by GUI thread, to load an audiofile to a buffer. The buffer

@@ -1,6 +1,8 @@
 
 #include "g_window.hpp"
 
+#include "offlineworker.hpp"
+
 using namespace std;
 
 Window::Window(Gtk::Main *k, Top* t)
@@ -45,6 +47,9 @@ Window::Window(Gtk::Main *k, Top* t)
   refBuilder->get_widget("mainTable", mainTable);
   refBuilder->get_widget("trackEffectBox", trackEffectBox);
   
+  refBuilder->get_widget("menuAddLowpass", menuAddLowpass);
+  menuAddLowpass->signal_activate().connect ( sigc::bind (sigc::mem_fun( *this, &Window::addEffect ), EFFECT_LOWPASS ) );
+  
   equalizer = new Equalizer( &guiState);
   lowPass = new GLowPass( top, &guiState);
   highPass = new GHighPass( top, &guiState);
@@ -64,6 +69,18 @@ Window::Window(Gtk::Main *k, Top* t)
   
   // last thing, now we're starting the GUI main loop
   kit->run(*window);
+}
+
+void Window::addEffect( EffectType et )
+{
+  cout << "Window::addEffect()  type = " << (int) et << endl;
+  // 
+  int ret = top->offlineWorker->createNewEffect( 0, 1, et );
+  if ( ret != 0 )
+    return;
+  
+  // load success, so pop new widget into UI for the track, pos combo
+  
 }
 
 int Window::handleEvent()
