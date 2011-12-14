@@ -20,9 +20,11 @@ AudioTrack::AudioTrack( Top* t )
   
   ID = privateID++;
   
-  trackBuffer.resize(1024);
+  std::cout << "Creating AudioTrack ID: " << ID << std::endl;
   
-  if ( ID == 0 )
+  trackBuffer.resize(top->bufferSize);
+  
+  if ( ID == 0 || ID == 1 )
   {
     source = new FileAudioSource(t, "sample.wav");
     addEffect( 1, new BeatSmash(top) );
@@ -30,7 +32,6 @@ AudioTrack::AudioTrack( Top* t )
   }
   else
   {
-    std::cout << "Creating AudioTrack ID: " << ID << std::endl;
     source = new FluidSynthAudioSource(t, "example.sf2");
   }
   

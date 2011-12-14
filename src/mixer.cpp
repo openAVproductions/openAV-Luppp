@@ -18,8 +18,7 @@ Mixer::Mixer(Top* t)
 
 void Mixer::addTrack()
 {
-  AudioTrack track(top);
-  audiotrackList.push_back( track );
+  audiotrackList.push_back( *(new AudioTrack(top)) );
 }
 
 void Mixer::setParameter(int track, int pos, int param, float val )
