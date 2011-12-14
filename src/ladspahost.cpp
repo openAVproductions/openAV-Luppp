@@ -280,8 +280,7 @@ void LadspaHost::setActive(int a)
 
 void LadspaHost::process(int nframes, float* buffer)
 {
-  float freq = 200 + (70 * pow( 2.0, ((double)(top->state.cutoff*127) - 69.0) / 12.0 ) * 4);
-  controlBuffer[0] = freq;
+  
   
   if ( pluginHandle == 0 )
   {
@@ -313,6 +312,8 @@ void LadspaHost::process(int nframes, float* buffer)
   else if ( type == EFFECT_LOWPASS )
   {
     // lowpass ports
+    float freq = 200 + (70 * pow( 2.0, ((double)(top->state.cutoff*127) - 69.0) / 12.0 ) * 4);
+    controlBuffer[0] = freq;
     descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] );
     descriptor -> connect_port ( pluginHandle , 1, &controlBuffer[1] );
     descriptor -> connect_port ( pluginHandle , 2, buffer );
@@ -321,6 +322,9 @@ void LadspaHost::process(int nframes, float* buffer)
   else if ( type == EFFECT_HIGHPASS )
   {
     // highpass ports
+    float freq = (70 * pow( 2.0, ((double)(top->state.cutoff*127) - 69.0) / 12.0 ) * 3);
+    controlBuffer[0] = freq;
+    
     descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] );
     descriptor -> connect_port ( pluginHandle , 1, &controlBuffer[1] );
     descriptor -> connect_port ( pluginHandle , 2, buffer );

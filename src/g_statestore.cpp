@@ -10,6 +10,8 @@ GuiStateStore::GuiStateStore()
   numTracks = 0;
   lastUsedDir = Glib::get_home_dir();
   cout << "Last used dir = " << lastUsedDir << endl;
+  
+  cutoff = 0.f;
 }
 
 void GuiStateStore::addTrack()

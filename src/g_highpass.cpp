@@ -1,37 +1,38 @@
 
-#include "g_lowpass.hpp"
+#include "g_highpass.hpp"
 
 #include "g_widgets.hpp"
 
 using namespace std;
 using namespace Luppp;
 
-int GLowPass::privateID = 0;
+int GHighPass::privateID = 0;
 
-GLowPass::GLowPass(Top* t, GuiStateStore* s)
+GHighPass::GHighPass(Top* t, GuiStateStore* s)
 {
   ID = privateID++;
   
   top = t;
   stateStore = s;
   
-  cutoff = 0.40;
+  cutoff = 0.0;
   q = 1.0;
   
   mouseDown = false;
   
-  //std::cout << "Enterin GLowPass contructor" << std::endl;
+  //std::cout << "Enterin GHighPass contructor" << std::endl;
   add_events(Gdk::EXPOSURE_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK| Gdk::POINTER_MOTION_MASK);
-  signal_button_press_event().connect(sigc::mem_fun(*this, &GLowPass::on_button_press_event) );
-  signal_button_release_event().connect(sigc::mem_fun(*this, &GLowPass::on_button_release_event) );
-  signal_motion_notify_event().connect( sigc::mem_fun( *this, &GLowPass::onMouseMove ) );
-  
-  xSize = 225;
+  signal_button_press_event().connect(sigc::mem_fun(*this, &GHighPass::on_button_press_event) );
+  signal_button_release_event().connect(sigc::mem_fun(*this, &GHighPass::on_button_release_event) );
+  signal_motion_notify_event().connect( sigc::mem_fun( *this, &GHighPass::onMouseMove ) );
   
   set_size_request(250, 216);
+  xSize = 225;
+  
+  redraw();
 }
 
-bool GLowPass::redraw()
+bool GHighPass::redraw()
 {
   // force our program to redraw the entire widget.
   Glib::RefPtr<Gdk::Window> win = get_window();
@@ -45,7 +46,7 @@ bool GLowPass::redraw()
 }
 
 
-bool GLowPass::on_expose_event(GdkEventExpose* event)
+bool GHighPass::on_expose_event(GdkEventExpose* event)
 {
   // This is where we draw on the window
   Glib::RefPtr<Gdk::Window> window = get_window();
@@ -68,9 +69,9 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     setColour(cr, COLOUR_GREY_3 );
     cr->fill();
     
-    std::cout << "StateStore = " << &stateStore << std::endl;
-    // update value from stateStore
     float cutoffRangeZeroOne = stateStore->cutoff;
+    std::cout << "StateStore cutoff = " << cutoffRangeZeroOne << std::endl;
+    // update value from stateStore
     
     cutoff = (48.f / xSize) + (cutoffRangeZeroOne * 0.7541 );
     
@@ -113,33 +114,47 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     cr->unset_dash();
     
     // move to bottom left, draw line to middle left
-    cr->move_to( x , y + ySize );
-    cr->line_to( x , y + (ySize/2));
+    cr->move_to( x + xSize , y + ySize );
+    cr->line_to( x + xSize , y + (ySize/2));
     
-    int startHorizontalLine = xSize* (cutoff - 0.4)  < 50;
-    if ( startHorizontalLine < 50 )
-      startHorizontalLine = 10;
+    
+    int startHorizontalLine = xSize* (cutoff + 0.4);
+    if ( startHorizontalLine > 235 )
+      startHorizontalLine = 235;
+    
+    std::cout << "StartHLine = " << startHorizontalLine << std::endl;
       
     cr->line_to( startHorizontalLine, y + (ySize/2) ); // horizontal line to start of curve
     
-    cr->curve_to( xSize* (cutoff -0.1), y+(ySize*0.5),   // control point 1
-                  xSize* (cutoff - 0.08), y+(ySize*0.3),   // control point 2
-                  xSize* cutoff        , y+(ySize*0.3));  // end of curve 1, start curve 2
+    int xSize1CP1 = xSize* (cutoff +0.1);
+    int xSize1CP2 = xSize* (cutoff +0.08);
+    int xSize1End = xSize* cutoff;
     
-    int xSizeCP1 = xSize* (cutoff + 0.03);
-    int xSizeCP2 = xSize* (cutoff + 0.08);
-    int xSizeEnd = xSize* (cutoff + 0.15);
+    if ( xSize1CP1 > 235 )
+      xSize1CP1 = 235;
+    if ( xSize1CP2 > 235 )
+      xSize1CP2 = 235;
+    if ( xSize1End > 235 )
+      xSize1End = 235;
     
-    if ( xSizeCP1 > 234 )
-      xSizeCP1 = 234;
-    if ( xSizeCP2 > 234 )
-      xSizeCP2 = 234;
-    if ( xSizeEnd > 234 )
-      xSizeEnd = 234;
+    cr->curve_to( xSize1CP1, y+(ySize*0.5),   // control point 1
+                  xSize1CP2, y+(ySize*0.3),   // control point 2
+                  xSize1End, y+(ySize*0.3));  // end of curve 1, start curve 2
     
-    cr->curve_to( xSizeCP1, y+(ySize*0.3),  // control point 1
-                  xSizeCP2, y+(ySize*0.3), // control point 2
-                  xSizeEnd, y+(ySize)   ); // end of curve on floor
+    int xSize2CP1 = xSize* (cutoff - 0.03);
+    int xSize2CP2 = xSize* (cutoff - 0.08);
+    int xSize2End = xSize* (cutoff - 0.15);
+    
+    if ( xSize2CP1 > 234 )
+      xSize2CP1 = 234;
+    if ( xSize2CP2 > 234 )
+      xSize2CP2 = 234;
+    if ( xSize2End > 234 )
+      xSize2End = 234;
+    
+    cr->curve_to( xSize2CP1, y+(ySize*0.3),  // control point 1
+                  xSize2CP2, y+(ySize*0.3), // control point 2
+                  xSize2End, y+(ySize)   ); // end of curve on floor
     
     setColour(cr, COLOUR_BLUE_1, 0.2 );
     cr->close_path();
@@ -173,7 +188,7 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
       setColour(cr, COLOUR_GREY_3 );
     cr->stroke();
     
-    TitleBar(cr, 0,0 , 250, 216, "Lowpass", true);
+    TitleBar(cr, 0,0 , 250, 216, "Highpass", true);
     
     /*
     if ( state.selected )
@@ -189,17 +204,17 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
   return true;
 }
 
-void GLowPass::on_menu_file_popup_edit()
+void GHighPass::on_menu_file_popup_edit()
 {
    std::cout << "The Edit menu item was selected." << std::endl;
 }
 
-void GLowPass::on_menu_file_popup_generic()
+void GHighPass::on_menu_file_popup_generic()
 {
    std::cout << "A popup menu item was selected." << std::endl;
 }
 
-bool GLowPass::onMouseMove(GdkEventMotion* event)
+bool GHighPass::onMouseMove(GdkEventMotion* event)
 {
   if ( mouseDown )
   {
@@ -220,11 +235,11 @@ bool GLowPass::onMouseMove(GdkEventMotion* event)
       top->toEngineQueue.push(x);
     }
     redraw();
-    std::cout << "GLowPass: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
+    std::cout << "GHighPass: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
   }
 }
 
-bool GLowPass::on_button_press_event(GdkEventButton* event)
+bool GHighPass::on_button_press_event(GdkEventButton* event)
 {
   if( event->type == GDK_BUTTON_PRESS  ) // && event->button == 3
   {
@@ -264,7 +279,7 @@ bool GLowPass::on_button_press_event(GdkEventButton* event)
     
     if ( event->y < 20 )
     {
-      std::cout << "GLowPass Enable / Disable click event!" << std::endl;
+      std::cout << "GHighPass Enable / Disable click event!" << std::endl;
       EngineEvent* x = new EngineEvent();
       x->setTrackDeviceActive(0,0,1 );
       top->toEngineQueue.push(x);
@@ -276,7 +291,7 @@ bool GLowPass::on_button_press_event(GdkEventButton* event)
     return false;
 }
 
-bool GLowPass::on_button_release_event(GdkEventButton* event)
+bool GHighPass::on_button_release_event(GdkEventButton* event)
 {
   if( event->type == GDK_BUTTON_RELEASE  ) // && event->button == 3
   {
@@ -288,6 +303,6 @@ bool GLowPass::on_button_release_event(GdkEventButton* event)
     return false;
 }
 
-GLowPass::~GLowPass()
+GHighPass::~GHighPass()
 {
 }

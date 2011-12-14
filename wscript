@@ -55,6 +55,7 @@ def build(ctx):
               'src/g_block.cpp',
               'src/g_mute.cpp',
               'src/g_lowpass.cpp',
+              'src/g_highpass.cpp',
               'src/g_rec.cpp',
               'src/g_solo.cpp',
               'src/g_fader.cpp',

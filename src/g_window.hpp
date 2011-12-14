@@ -15,6 +15,7 @@
 
 
 #include "g_lowpass.hpp"
+#include "g_highpass.hpp"
 #include "g_equalizer.hpp"
 
 class Window
@@ -37,6 +38,7 @@ class Window
     
     Equalizer* equalizer;
     GLowPass* lowPass;
+    GHighPass* highPass;
     
     // helper functions
     int numTracks;
