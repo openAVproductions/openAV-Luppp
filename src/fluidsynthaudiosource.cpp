@@ -7,6 +7,8 @@ FluidSynthAudioSource::FluidSynthAudioSource(Top* t, std::string name)
 {
   top = t;
   
+  ID = AudioSource::getID();
+  
   tmpOutput.resize( top->bufferSize );
   dummyOutput.resize( top->bufferSize );
   
@@ -15,7 +17,7 @@ FluidSynthAudioSource::FluidSynthAudioSource(Top* t, std::string name)
   
   std::string openFile = "example.sf2";
   
-  std::cout << "FluidSynth()  Opening file : "<< openFile<< std::endl;
+  std::cout << "FluidSynth() ID = " << ID << "  Opening file : "<< openFile<< std::endl;
   
   // open file
   int soundfontID = fluid_synth_sfload(synth, openFile.c_str(), true); // true = reset patch

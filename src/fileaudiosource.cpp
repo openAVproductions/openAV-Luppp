@@ -9,6 +9,7 @@ FileAudioSource::FileAudioSource(Top* t, std::string name)
 {
   top = t;
   ID = AudioSource::getID();
+  cout << "FileAudioSource() ID = " << ID << endl;
 }
 
 void FileAudioSource::process (int nframes, float* buffer )

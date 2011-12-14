@@ -24,7 +24,7 @@ class FluidSynthAudioSource : public AudioSource
   
   private:
     Top* top;
-    
+    int ID;
     
     fluid_synth_t*    synth;
     fluid_settings_t* settings;
