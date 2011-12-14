@@ -69,7 +69,7 @@ bool GHighPass::on_expose_event(GdkEventExpose* event)
     setColour(cr, COLOUR_GREY_3 );
     cr->fill();
     
-    float cutoffRangeZeroOne = stateStore->cutoff;
+    float cutoffRangeZeroOne = stateStore->effectState.at(0).values[1];
     
     cutoff = (48.f / xSize) + (cutoffRangeZeroOne * 0.7541 );
     

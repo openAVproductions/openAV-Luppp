@@ -189,7 +189,12 @@ int Window::handleEvent()
     else if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER )
     {
       //std::cout << "PLUGIN PARAM t " << e->ia << " pos " << e->ib << " param " << e->ic << " val " << e->fa << std::endl;
-      guiState.cutoff = e->fa;
+      
+      if ( e->ia < guiState.effectState.size() )
+      {
+        cout << "Parameter " << e->ic << " " << e->fa << endl;
+        guiState.effectState.at(e->ia).values[e->ic] = e->fa;
+      }
       lowPass->redraw();
       highPass->redraw();
     }

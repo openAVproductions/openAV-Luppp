@@ -1,7 +1,7 @@
 
 #include "g_statestore.hpp"
 
-#include "glibmm.h"
+#include <glibmm.h>
 
 using namespace std;
 
@@ -17,6 +17,8 @@ GuiStateStore::GuiStateStore()
 void GuiStateStore::addTrack()
 {
   std::cout << "GuiStateStore::addTrack()" << std::endl;
+  
+  effectState.push_back ( EffectState(-1) );
   
   bufferAudioSourceState.push_back( BufferAudioSourceState() );
   BufferAudioSourceState* i = &bufferAudioSourceState.back();

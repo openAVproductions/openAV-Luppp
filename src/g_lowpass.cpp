@@ -69,7 +69,7 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     cr->fill();
     
     // update value from stateStore
-    float cutoffRangeZeroOne = stateStore->cutoff;
+    float cutoffRangeZeroOne = stateStore->effectState.at(0).values[0];
     
     cutoff = (48.f / xSize) + (cutoffRangeZeroOne * 0.7541 );
     

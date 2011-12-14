@@ -6,6 +6,8 @@
 #include <vector>
 #include <iostream>
 
+#include "effectstate.hpp"
+
 #include "g_equalizerstate.hpp"
 #include "trackoutputstate.hpp"
 #include "clipselectorstate.hpp"
@@ -28,6 +30,8 @@ class GuiStateStore
     void setClipSelectorState(int t,int block, int bufferID);
     
     EqualizerState eqState;
+    
+    vector<EffectState> effectState;
     
     vector<BufferAudioSourceState> bufferAudioSourceState;
     vector<ClipSelectorState> clipSelectorState;

@@ -4,6 +4,7 @@
 #include <cmath>
 #include <iostream>
 
+#include "effectstate.hpp"
 #include "audiobuffer.hpp"
 
 using namespace std;
@@ -132,9 +133,6 @@ int JackClient::processRtQueue()
     }
     else if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER) {
       //cout << "EE_TRACK_SET_PLUGIN_PARAMETER " << e->ia << ", " << e->ib<< ", " << e->ic << ", " << e->fa << endl;
-      
-      
-      
       
       if ( e->ic == 1 )
       {
@@ -541,11 +539,17 @@ void JackClient::apcRead( int nframes )
         top->controller->setTrackDevice(track, device);
         std::cout << "APC: Device Control on track " << track << " device " << device << " param " << b2 -16 << std::endl;
         
+        EffectState* state = top->state.getEffectState(track);
+        if ( state )
+        {
+          cout << "State->values 0  " << state->values[0] << endl;
+        }
+        
         top->state.cutoff = b3/127.;
         EngineEvent* x = new EngineEvent();
         x->setPluginParameter(track,
                               device,
-                              1,
+                              b2-16,
                               b3 / 127.);
         top->toGuiQueue.push(x);
         
