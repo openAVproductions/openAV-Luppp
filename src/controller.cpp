@@ -14,3 +14,19 @@ Controller::Controller(Top* t)
   track = 0;
   device = 0;
 }
+
+void Controller::setTrackDevice(int t, int d)
+{
+  track = t;
+  device = d;
+}
+
+int Controller::getTrack()
+{
+  return track;
+}
+
+int Controller::getDevice()
+{
+  return device;
+}

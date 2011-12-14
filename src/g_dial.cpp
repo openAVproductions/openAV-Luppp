@@ -33,7 +33,7 @@ namespace Luppp
         case DIAL_MODE_NORMAL:
           if ( value < 0 )
             value = 0.f;
-          std::cout << "Dial NORMAL: value = " << value << std::endl;
+          //std::cout << "Dial NORMAL: value = " << value << std::endl;
           angle = 2.46 + (4.54 * value);
           setColour(cr, COLOUR_ORANGE_1 );
           cr->arc(xc,yc, 13, 2.46, angle );

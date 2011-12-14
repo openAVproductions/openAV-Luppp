@@ -68,7 +68,6 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     setColour(cr, COLOUR_GREY_3 );
     cr->fill();
     
-    std::cout << "StateStore = " << &stateStore << std::endl;
     // update value from stateStore
     float cutoffRangeZeroOne = stateStore->cutoff;
     

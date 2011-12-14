@@ -31,6 +31,9 @@ class StateStore
     float cutoff;
     float highCutoff;
     
+    int getNumTracks(){return numTracks;}
+    int getNumEffects(){return numEffects;}
+    
     void addTrack();
     void addEffect(int t, int p, Effect* e);
     

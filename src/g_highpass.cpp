@@ -70,8 +70,6 @@ bool GHighPass::on_expose_event(GdkEventExpose* event)
     cr->fill();
     
     float cutoffRangeZeroOne = stateStore->cutoff;
-    std::cout << "StateStore cutoff = " << cutoffRangeZeroOne << std::endl;
-    // update value from stateStore
     
     cutoff = (48.f / xSize) + (cutoffRangeZeroOne * 0.7541 );
     
@@ -121,8 +119,6 @@ bool GHighPass::on_expose_event(GdkEventExpose* event)
     int startHorizontalLine = xSize* (cutoff + 0.4);
     if ( startHorizontalLine > 235 )
       startHorizontalLine = 235;
-    
-    std::cout << "StartHLine = " << startHorizontalLine << std::endl;
       
     cr->line_to( startHorizontalLine, y + (ySize/2) ); // horizontal line to start of curve
     

@@ -9,10 +9,15 @@ class Controller
   public:
     Controller(Top*);
     
-    int track;
-    int device;
+    void setTrackDevice(int,int);
+    int getTrack();
+    int getDevice();
+  
   private:
     Top* top;
+    
+    int track;
+    int device;
 };
 
 #endif

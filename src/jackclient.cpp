@@ -132,6 +132,10 @@ int JackClient::processRtQueue()
     }
     else if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER) {
       //cout << "EE_TRACK_SET_PLUGIN_PARAMETER " << e->ia << ", " << e->ib<< ", " << e->ic << ", " << e->fa << endl;
+      
+      
+      
+      
       if ( e->ic == 1 )
       {
         //top->state.numPoles = e->fa;
@@ -383,9 +387,10 @@ void JackClient::apcRead( int nframes )
     if( b2 == 60 && ( b1 >= 144 && b1 < 144 + 16 ) )
     {
       int trackID = b1 - 144;
-      if ( top->controller->device > 0 ) // range check
-        top->controller->device--;
-      std::cout << "APC <- Device button: NOTE ON track " << trackID << " device " << top->controller->device << std::endl;
+      int device = top->controller->getDevice();
+      if ( device > 0 ) // range check
+        top->controller->setTrackDevice(trackID, --device);
+      std::cout << "APC <- Device button: NOTE ON track " << trackID << " device " << device << std::endl;
       writeMidi( apcOutBuffer, 128 + trackID, 60, 127 );
     }
     
@@ -393,9 +398,10 @@ void JackClient::apcRead( int nframes )
     if( b2 == 61 && ( b1 >= 144 && b1 < 144 + 16 ) )
     {
       int trackID = b1 - 144;
-      if ( top->controller->device < 9 )
-        top->controller->device++;
-      std::cout << "APC -> Device button: NOTE ON track = " << trackID << " device " << top->controller->device << std::endl;
+      int device = top->controller->getDevice();
+      if ( device < 9 )
+        top->controller->setTrackDevice(trackID,++device);
+      std::cout << "APC -> Device button: NOTE ON track = " << trackID << " device " << device << std::endl;
       writeMidi( apcOutBuffer, 128 + trackID, 61, 127 );
     }
     
@@ -530,13 +536,15 @@ void JackClient::apcRead( int nframes )
     {
       if ( b2 >= 16 && b2 < 24 && b1 != 184 ) // all controllers, excluding master track
       {
-        //int trackID = b1 - 176;
-        std::cout << "APC: Device Control on track " << top->controller->track << " device " << top->controller->device << std::endl;
+        int track = b1 - 176;
+        int device= top->controller->getDevice();
+        top->controller->setTrackDevice(track, device);
+        std::cout << "APC: Device Control on track " << track << " device " << device << " param " << b2 -16 << std::endl;
         
         top->state.cutoff = b3/127.;
         EngineEvent* x = new EngineEvent();
-        x->setPluginParameter(top->controller->track,
-                              top->controller->device,
+        x->setPluginParameter(track,
+                              device,
                               1,
                               b3 / 127.);
         top->toGuiQueue.push(x);

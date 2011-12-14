@@ -7,7 +7,7 @@ Mixer::Mixer(Top* t)
 {
   top = t;
   
-  //std::cout << "Resizing Mixer output buffer to " << 1024 << std::endl;
+  // Top isn't initialized yet, so we just initialize all buffers to 1024
   outputW.resize(1024);
   outputX.resize(1024);
   outputY.resize(1024);
@@ -31,6 +31,11 @@ void Mixer::setParameter(int track, int pos, int param, float val )
 
 void Mixer::process(int nframes, float* outBuffer)
 {
+  if ( nframes > 1024 )
+  {
+    std::cout << "Mixer::process() nframes too large for internal buffers, reduce it!!" << std::endl;
+  }
+  
   // process the entire audio chain here
   std::list<AudioTrack>::iterator iter;
   
