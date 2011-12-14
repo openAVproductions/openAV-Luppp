@@ -9,9 +9,9 @@
 #include "rtqueue.hpp"
 
 #include "statestore.hpp"
-#include "audiofileloader.hpp"
 
 class Controller;
+class OfflineWorker;
 
 // the Top class is a portal trough which the rest of the program can
 // commnunicate. It allows the JACK thread send messages to other threads,
@@ -29,7 +29,7 @@ class Top
     int bpm;
     
     Controller* controller;
-    AudioFileLoader audioFileLoader;
+    OfflineWorker* offlineWorker;
     StateStore state;
     
     Glib::Dispatcher* guiDispatcher;

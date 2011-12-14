@@ -5,6 +5,8 @@
 
 #include "gtkmm/filechooserdialog.h"
 
+#include "offlineworker.hpp"
+
 using namespace std;
 using namespace Luppp;
 
@@ -154,7 +156,7 @@ void ClipSelector::loadSample(int block)
       stateStore->setLastDir( Glib::path_get_dirname(filename) );
       
       // audioFileLoader informs engine & updates StateStore
-      int ret = top->audioFileLoader.load( ID, block, filename );
+      int ret = top->offlineWorker->loadAudioBuffer( ID, block, filename );
       
       if ( ret == 0 ) // successful load, so store filename in vector
       {

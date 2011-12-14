@@ -38,7 +38,7 @@ def build(ctx):
               'src/rtqueue.cpp',
               'src/audiosource.cpp',
               'src/audiobuffer.cpp',
-              'src/audiofileloader.cpp',
+              'src/offlineworker.cpp',
               'src/ladspahost.cpp',
               'src/bufferaudiosource.cpp',
               'src/fluidsynthaudiosource.cpp',

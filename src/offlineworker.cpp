@@ -1,11 +1,12 @@
 
-#include "audiofileloader.hpp"
+#include "offlineworker.hpp"
 
 #include "top.hpp"
+#include "audiobuffer.hpp"
 
 using namespace std;
 
-AudioFileLoader::AudioFileLoader(Top* t)
+OfflineWorker::OfflineWorker(Top* t)
 {
   top = t;
 }
@@ -13,7 +14,7 @@ AudioFileLoader::AudioFileLoader(Top* t)
 // called by GUI thread, to load an audiofile to a buffer. The buffer
 // is then passed by pointer to Engine, and its unique ID allows its
 // use everywhere in Engine
-int AudioFileLoader::load( int ID, int block, std::string name)
+int OfflineWorker::loadAudioBuffer( int ID, int block, std::string name)
 {
   SndfileHandle infile( name , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 1 , 44100);
   
@@ -21,7 +22,7 @@ int AudioFileLoader::load( int ID, int block, std::string name)
   
   if ( size == 0 )
   {
-    std::cout << "AudioFileLoader() Could not load sound file, or empty file detected!" << std::endl;
+    std::cout << "OfflineWorker() Could not load sound file, or empty file detected!" << std::endl;
     return -1;
   }
   
