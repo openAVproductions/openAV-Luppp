@@ -553,7 +553,17 @@ void JackClient::apcRead( int nframes )
           //cout << "State->values 0  " << state->values[0] << endl;
         }
         
-        top->state.cutoff = b3/127.;
+        if ( b2 == 16 )
+        {
+          top->state.cutoff = b3/127.;
+          cout << "Cutoff / Thresh = " << top->state.cutoff << endl;
+        }
+        else if ( b2 == 17 )
+        {
+          top->state.highCutoff = b3 / 127.f;
+          cout << "HIghCut / Ratio = " << top->state.highCutoff << endl;
+        }
+        
         EngineEvent* x = new EngineEvent();
         x->setPluginParameter(track,
                               device,

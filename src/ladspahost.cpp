@@ -29,11 +29,13 @@ LadspaHost::LadspaHost(Top* t,EffectType et, int s) : Effect(t, et)
   
   switch(et)
   {
-    case EFFECT_REVERB: setPluginByString("/usr/lib/ladspa/g2reverb.so"); break;
-    case EFFECT_TRANSIENT:  setPluginByString("/usr/lib/ladspa/transient_1206.so"); break;
-    case EFFECT_PARAMETRIC_EQ:  setPluginByString("/usr/lib/ladspa/filters.so"); break;
-    case EFFECT_LOWPASS:  setPluginByString("/usr/lib/ladspa/lowpass_iir_1891.so"); break;
-    case EFFECT_HIGHPASS:  setPluginByString("/usr/lib/ladspa/highpass_iir_1890.so"); break;
+    case EFFECT_REVERB:       setPluginByString("/usr/lib/ladspa/g2reverb.so");         break;
+    case EFFECT_TRANSIENT:    setPluginByString("/usr/lib/ladspa/transient_1206.so");   break;
+    case EFFECT_PARAMETRIC_EQ:setPluginByString("/usr/lib/ladspa/filters.so");          break;
+    case EFFECT_LOWPASS:      setPluginByString("/usr/lib/ladspa/lowpass_iir_1891.so"); break;
+    case EFFECT_HIGHPASS:     setPluginByString("/usr/lib/ladspa/highpass_iir_1890.so");break;
+    case EFFECT_COMPRESSOR:   setPluginByString("/usr/lib/ladspa/sc1_1425.so");         break;
+    default: std::cout << "LadspaHost() got unknown effect type!" << std::endl; break;
   }
 }
 
@@ -256,14 +258,21 @@ void LadspaHost::resetParameters()
     controlBuffer[18] = 1;
     controlBuffer[19] = 0;
   }
-  
-  if ( type == EFFECT_LOWPASS )
+  else if ( type == EFFECT_LOWPASS )
   {
     controlBuffer[0] = 440;
     controlBuffer[1] = 2;
   }
-  
-  if ( type == EFFECT_HIGHPASS )
+  else if ( type == EFFECT_COMPRESSOR )
+  {
+    controlBuffer[0] = 4.0;
+    controlBuffer[1] = 400.0;
+    controlBuffer[2] = 0.0;
+    controlBuffer[3] = 1.0;
+    controlBuffer[4] = 3.25;
+    controlBuffer[5] = 0.0;
+  }
+  else if ( type == EFFECT_HIGHPASS )
   {
     controlBuffer[0] = 440;
     controlBuffer[1] = 2;
@@ -317,6 +326,23 @@ void LadspaHost::process(int nframes, float* buffer)
     descriptor -> connect_port ( pluginHandle , 1, &controlBuffer[1] );
     descriptor -> connect_port ( pluginHandle , 2, buffer );
     descriptor -> connect_port ( pluginHandle , 3, &outputBuffer[0] );
+  }
+  else if ( type == EFFECT_COMPRESSOR )
+  {
+    // lowpass ports
+    float thresh = top->state.cutoff;
+    float ratio  = top->state.highCutoff;
+    controlBuffer[3] = thresh;
+    controlBuffer[4] = ratio;
+    descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] );
+    descriptor -> connect_port ( pluginHandle , 1, &controlBuffer[1] ); // release
+    descriptor -> connect_port ( pluginHandle , 2, &controlBuffer[2] );
+    descriptor -> connect_port ( pluginHandle , 3, &controlBuffer[3] ); // thres
+    descriptor -> connect_port ( pluginHandle , 4, &controlBuffer[4] ); // ratio
+    descriptor -> connect_port ( pluginHandle , 5, &controlBuffer[5] ); // makeup
+    
+    descriptor -> connect_port ( pluginHandle , 6, buffer );
+    descriptor -> connect_port ( pluginHandle , 7, &outputBuffer[0] );
   }
   else if ( type == EFFECT_HIGHPASS )
   {
