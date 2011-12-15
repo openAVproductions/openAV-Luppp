@@ -118,31 +118,29 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     cr->line_to( x + xSize, y );
     cr->stroke();
     
-    // move to bottom left, draw line to middle left
-    cr->set_line_cap(Cairo::LINE_CAP_ROUND);
-    cr->move_to( x , y + ySize );
-    cr->line_to( x + thresh * xSize, y + ((1-thresh) * ySize));
-    
+    // pre calc some variables
     int xThreshRemainPx = ((1-thresh)*xSize);
     float threshCP = ( xThreshRemainPx / 3.f );
     
     int yThreshRemainPx = ((1-thresh)*ySize);
     float yThreshCP = ( yThreshRemainPx / 3.f );
     
-    float cp1x = x + (thresh*xSize) + threshCP;
-    float cp1y = y + ySize - ((yThreshCP) + (thresh)*ySize);
+    float startx = x + xSize * thresh;
+    float starty = y + ySize*(1-thresh);
     
-    float cp2x = cp1x + threshCP;
-    float cp2y = cp1y - yThreshCP;
+    float cp1x = x + (thresh*xSize) - threshCP;
+    float cp1y = y + ySize - ((-yThreshCP) + (thresh)*ySize);
+    
+    float cp2x = cp1x - threshCP;
+    float cp2y = cp1y + yThreshCP;
     
     float endx = x+xSize;
-    float endy = cp2y - ((1-ratio) * yThreshCP); //y + ySize - ((threshCP*2) + (thresh)*ySize - (compressPx*ratio) ); //y  + ((1-thresh) * ySize);
+    float endy = cp2y - ((1-ratio) * yThreshCP);
     
-    /*
-    // set CP2 as midpoint CP1 & end
-    float cp2x = (cp1x + endx) / 2.f;
-    float cp2y = (cp1y + endy) / 2.f;
-    */
+    // move to bottom left, draw line to middle left
+    cr->set_line_cap(Cairo::LINE_CAP_ROUND);
+    cr->move_to( x , y + ySize );
+    cr->line_to( startx, starty );
     
     cout << " Ratio = " << ratio << " CP1 : " << cp1x << "\t" << cp1y << "\t"<< cp2x<<  "\t" <<cp2y<<  "\t" <<endx<<  "\t" <<endy << endl;
     
@@ -172,14 +170,25 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
       setColour(cr, COLOUR_GREY_1 );
     cr->stroke();
     
+    // debug rectangles of CP's
     setColour(cr, COLOUR_ORANGE_1);
-    cr->rectangle(cp1x,cp1y,2,2);
-    cr->rectangle(cp2x,cp2y,2,2);
+    cr->rectangle(cp1x,cp1y,3,3);
+    cr->rectangle(cp2x,cp2y,3,3);
+    cr->fill();
+    // start & end
+    setColour(cr, COLOUR_GREEN_1);
+    cr->rectangle(startx,starty,3,3);
+    cr->rectangle(endx  ,endy  ,3,3);
+    cr->fill();
+    
+    // threshold point
+    setColour(cr, COLOUR_PURPLE_1);
+    cr->rectangle( x + xSize * thresh, y + ySize*(1-thresh),3,3);
     cr->fill();
     
     // click center
     setColour(cr, COLOUR_ORANGE_1, 0.9 );
-    cr->arc( xSize*cutoff, ySize*q, 7, 0, 6.2830 );
+    cr->arc( x + thresh * xSize , endy, 7, 0, 6.2830 );
     cr->stroke();
     
     // dials
