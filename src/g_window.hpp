@@ -20,6 +20,7 @@
 #include "g_lowpass.hpp"
 #include "g_highpass.hpp"
 #include "g_equalizer.hpp"
+#include "g_compressor.hpp"
 
 class Window
 {
@@ -43,6 +44,8 @@ class Window
     Gtk::MenuItem* menuAddCompressor;
     
     GuiStateStore guiState;
+    
+    GCompressor* gCompressor;
     
     int currentEffectsTrack;
     void setEffectsBox(int trackID);

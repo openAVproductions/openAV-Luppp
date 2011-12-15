@@ -72,6 +72,9 @@ Window::Window(Gtk::Main *k, Top* t)
   addTrack();
   //addTrack();
   
+  gCompressor = new GCompressor(top, &guiState );
+  trackEffectBox->add( *gCompressor );
+  
   // poll the event Queue
   Glib::signal_timeout().connect(sigc::mem_fun(*this, &Window::handleEvent), 50);
   
@@ -219,6 +222,7 @@ int Window::handleEvent()
       {
         cout << "Parameter " << e->ic << " " << e->fa << endl;
         guiState.effectState.at(e->ia).values[e->ic] = e->fa;
+        gCompressor->redraw();
       }
     }
     else if ( e->type == EE_STATE_NEW_EFFECT )
@@ -248,7 +252,6 @@ int Window::handleEvent()
 
 void Window::redrawEffectBox()
 {
-  
   
   for(int i = 0;  i < trackVector.at(currentEffectsTrack).widgetVector.size(); i++)
   {
