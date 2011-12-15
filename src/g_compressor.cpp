@@ -69,11 +69,11 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     // update value from stateStore
     float cutoffRangeZeroOne = stateStore->effectState.at(0).values[0];
     float ratio = stateStore->effectState.at(0).values[1];
-    float makeup = stateStore->effectState.at(0).values[2];
+    float makeupZeroOne = stateStore->effectState.at(0).values[2];
     
     // invert range, so 0 = most cut on threshold ( -30dB ), 1 = thresh @ 0dB
     float thresh = cutoffRangeZeroOne;
-    makeup = makeup * ySize * 0.6;
+    float makeup = makeupZeroOne * (ySize * 0.5);
     
     bool active = true;
     
@@ -123,8 +123,8 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     float xDist = 0.1 * xSize;
     float yDist = 0.1 * ySize;
     
-    float xThresh = x + xSize * thresh;
-    float yThresh = y + ySize*(1-thresh);
+    float xThresh = x + (xSize * 0.25) + (xSize*0.5) * thresh;
+    float yThresh = y + (ySize * 0.25) + (ySize*0.5)*(1-thresh);
     
     float startx = xThresh - xDist;
     float starty = yThresh + yDist;
@@ -143,12 +143,10 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     cr->move_to( x , y + ySize - makeup );
     cr->line_to( startx, starty - makeup );
     
-    //cout << " Ratio = " << ratio << " CP1 : " << cp1x << "\t" << cp1y << "\t"<< cp2x<<  "\t" <<cp2y<<  "\t" <<endx<<  "\t" <<endy << endl;
-    
     // draw curve
     cr->curve_to( cp1x, cp1y, cp2x, cp2y, endx, endy );
     
-    cr->line_to(x + xSize, y + ySize*(1-thresh)*(ratio) - makeup );
+    cr->line_to(x + xSize, y + (ySize/4)*ratio + (ySize)*(1-thresh)*(0.5*ratio) - makeup );
     
     cr->line_to(x + xSize, y + ySize );
     cr->line_to(x , y + ySize );
@@ -165,6 +163,14 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     else
       setColour(cr, COLOUR_GREY_1 );
     cr->stroke();
+    
+    // gain line can go beyond the "graph area", and it would be hard to
+    // clip values the right amout with the curve. Instead just cover it
+    // with a "background coloured" rectangle
+    setColour(cr, COLOUR_GREY_3 );
+    cr->rectangle(0,0,130,y); // 130 from widget size
+    cr->fill();
+    
     
     /*
     // debug rectangles of CP's
@@ -184,28 +190,32 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     cr->fill();
     */
     
-    
-    // click center
+    // click center ( range = 1/2 the range of the widget
     setColour(cr, COLOUR_ORANGE_1, 0.9 );
-    cr->arc( xThresh , yThresh, 7, 0, 6.2830 );
+    
+    float xArc = x + (xSize * 0.25) + (xSize*0.5) * thresh;
+    float yArc = y + (ySize * 0.75)  - makeup;
+    
+    cout << " Arc x,y : " << xArc << ", " << yArc <<endl;
+    cr->arc(xArc, yArc, 7, 0, 6.2830 );
     cr->stroke();
     
     // dials
-    Dial(cr, active, 70-48, 140-15, cutoffRangeZeroOne, DIAL_MODE_NORMAL);
-    Dial(cr, active, 68   , 125   , ratio             , DIAL_MODE_NORMAL);
+    Dial(cr, active, 22, 125, cutoffRangeZeroOne, DIAL_MODE_NORMAL);
+    Dial(cr, active, 68, 125, 0.f               , DIAL_MODE_NORMAL);
+    Dial(cr, active, 22, 165, ratio             , DIAL_MODE_NORMAL);
+    Dial(cr, active, 68, 165, makeupZeroOne     , DIAL_MODE_NORMAL);
     
     // outline
-    setColour(cr, COLOUR_GREY_3 );
-    cr->rectangle( x, y , xSize, ySize );
-    cr->set_line_width(3);
-    
     if ( active )
       setColour(cr, COLOUR_GREY_2 );
     else
       setColour(cr, COLOUR_GREY_3 );
+    cr->rectangle( x, y , xSize, ySize );
+    cr->set_line_width(4);
     cr->stroke();
     
-    TitleBar(cr, 0,0 , 250, 216, "Compressor", true);
+    TitleBar(cr, 0,0 , 130, 216, "Compressor", true);
     
     /*
     if ( state.selected )
