@@ -69,9 +69,11 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     // update value from stateStore
     float cutoffRangeZeroOne = stateStore->effectState.at(0).values[0];
     float ratio = stateStore->effectState.at(0).values[1];
+    float makeup = stateStore->effectState.at(0).values[2];
     
     // invert range, so 0 = most cut on threshold ( -30dB ), 1 = thresh @ 0dB
     float thresh = cutoffRangeZeroOne;
+    makeup = makeup * ySize * 0.6;
     
     bool active = true;
     
@@ -128,36 +130,29 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     float starty = yThresh + yDist;
     
     float cp1x = xThresh;
-    float cp1y = yThresh;
+    float cp1y = yThresh - makeup;
     
     float cp2x = xThresh;
-    float cp2y = yThresh;
+    float cp2y = yThresh - makeup;
     
     float endx = xThresh + (xDist*1.2);
-    float endy = yThresh - (yDist*1.2)*(1-ratio);
+    float endy = yThresh - (yDist*1.2)*(1-ratio) - makeup;
     
     // move to bottom left, draw line to middle left
     cr->set_line_cap(Cairo::LINE_CAP_ROUND);
-    cr->move_to( x , y + ySize );
-    cr->line_to( startx, starty );
+    cr->move_to( x , y + ySize - makeup );
+    cr->line_to( startx, starty - makeup );
     
-    cout << " Ratio = " << ratio << " CP1 : " << cp1x << "\t" << cp1y << "\t"<< cp2x<<  "\t" <<cp2y<<  "\t" <<endx<<  "\t" <<endy << endl;
+    //cout << " Ratio = " << ratio << " CP1 : " << cp1x << "\t" << cp1y << "\t"<< cp2x<<  "\t" <<cp2y<<  "\t" <<endx<<  "\t" <<endy << endl;
     
     // draw curve
     cr->curve_to( cp1x, cp1y, cp2x, cp2y, endx, endy );
     
-    cr->line_to(x + xSize, y + ySize*(1-thresh)*(ratio) );
+    cr->line_to(x + xSize, y + ySize*(1-thresh)*(ratio) - makeup );
     
     cr->line_to(x + xSize, y + ySize );
+    cr->line_to(x , y + ySize );
     cr->close_path();
-    /*
-    if ( xSizeCP1 > 234 )
-      xSizeCP1 = 234;
-    if ( xSizeCP2 > 234 )
-      xSizeCP2 = 234;
-    if ( xSizeEnd > 234 )
-      xSizeEnd = 234;
-    */
     
     setColour(cr, COLOUR_BLUE_1, 0.2 );
     cr->close_path();
