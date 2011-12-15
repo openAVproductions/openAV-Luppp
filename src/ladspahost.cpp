@@ -34,7 +34,7 @@ LadspaHost::LadspaHost(Top* t,EffectType et, int s) : Effect(t, et)
     case EFFECT_PARAMETRIC_EQ:setPluginByString("/usr/lib/ladspa/filters.so");          break;
     case EFFECT_LOWPASS:      setPluginByString("/usr/lib/ladspa/lowpass_iir_1891.so"); break;
     case EFFECT_HIGHPASS:     setPluginByString("/usr/lib/ladspa/highpass_iir_1890.so");break;
-    case EFFECT_COMPRESSOR:   setPluginByString("/usr/lib/ladspa/sc1_1425.so");         break;
+    case EFFECT_COMPRESSOR:   setPluginByString("/usr/lib/ladspa/sc4m_1916.so");        break;
     default: std::cout << "LadspaHost() got unknown effect type!" << std::endl; break;
   }
 }
@@ -265,12 +265,18 @@ void LadspaHost::resetParameters()
   }
   else if ( type == EFFECT_COMPRESSOR )
   {
-    controlBuffer[0] = 4.0;
-    controlBuffer[1] = 400.0;
-    controlBuffer[2] = 0.0;
-    controlBuffer[3] = 1.0;
-    controlBuffer[4] = 3.25;
-    controlBuffer[5] = 0.0;
+    // inputs
+    controlBuffer[0] = 1.0;     // RMS = 0, peak = 1
+    controlBuffer[1] = 1.5;     // attack
+    controlBuffer[2] = 60.0;    // release
+    controlBuffer[3] = 0.0;     // threshold
+    controlBuffer[4] = 1.0;     // ratio  1 : 1 - 20
+    controlBuffer[5] = 3.25;    // Knee Radius
+    controlBuffer[6] = 0.0;     // Makeup
+    
+    // outputs
+    controlBuffer[7] = 0.0; // ampli
+    controlBuffer[8] = 0.0; // gain reduc
   }
   else if ( type == EFFECT_HIGHPASS )
   {
@@ -329,20 +335,30 @@ void LadspaHost::process(int nframes, float* buffer)
   }
   else if ( type == EFFECT_COMPRESSOR )
   {
-    // lowpass ports
+    // compressor control values
     float thresh = top->state.cutoff;
     float ratio  = top->state.highCutoff;
-    controlBuffer[3] = thresh;
-    controlBuffer[4] = ratio;
-    descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] );
-    descriptor -> connect_port ( pluginHandle , 1, &controlBuffer[1] ); // release
-    descriptor -> connect_port ( pluginHandle , 2, &controlBuffer[2] );
-    descriptor -> connect_port ( pluginHandle , 3, &controlBuffer[3] ); // thres
-    descriptor -> connect_port ( pluginHandle , 4, &controlBuffer[4] ); // ratio
-    descriptor -> connect_port ( pluginHandle , 5, &controlBuffer[5] ); // makeup
+    float makeup  = top->state.makeup;
+    controlBuffer[4] = thresh * 60 - 30;
+    controlBuffer[5] = 1 + ratio * 9;
+    controlBuffer[6] = makeup * 24;
     
-    descriptor -> connect_port ( pluginHandle , 6, buffer );
-    descriptor -> connect_port ( pluginHandle , 7, &outputBuffer[0] );
+    descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] ); // RMS / peak ( 0, 1 )
+    
+    descriptor -> connect_port ( pluginHandle , 1, &controlBuffer[1] );
+    descriptor -> connect_port ( pluginHandle , 2, &controlBuffer[2] ); // release
+    descriptor -> connect_port ( pluginHandle , 3, &controlBuffer[3] );
+    descriptor -> connect_port ( pluginHandle , 4, &controlBuffer[4] ); // thres
+    descriptor -> connect_port ( pluginHandle , 5, &controlBuffer[5] ); // ratio
+    descriptor -> connect_port ( pluginHandle , 6, &controlBuffer[6] ); // makeup
+    
+    descriptor -> connect_port ( pluginHandle , 7, &controlBuffer[7] ); // amplitude output
+    descriptor -> connect_port ( pluginHandle , 8, &controlBuffer[8] ); // gain reduction output
+    
+    descriptor -> connect_port ( pluginHandle , 9, buffer );
+    descriptor -> connect_port ( pluginHandle ,10, &outputBuffer[0] );
+    
+    std::cout << "T = " << controlBuffer[4] << "\tR = " << controlBuffer[5] << "\tM = " << controlBuffer[6] << "\tamp = " << controlBuffer[7] << " Comp = " << controlBuffer[8] << std::endl;
   }
   else if ( type == EFFECT_HIGHPASS )
   {
@@ -394,6 +410,7 @@ void LadspaHost::process(int nframes, float* buffer)
     return;
   }
   
+  /*
   // run_adding may go wrong for some plugins, check it!
   if ( hasRunAdding )
   {
@@ -401,14 +418,14 @@ void LadspaHost::process(int nframes, float* buffer)
     descriptor->run_adding( pluginHandle , nframes);
   }
   else
-  {
+  { */
     descriptor->run( pluginHandle , nframes);
     
     for ( int i = 0; i < nframes; i++ )
     {
       buffer[i] = outputBuffer[i];
     }
-  }
+  //}
 }
 
 LadspaHost::~LadspaHost()

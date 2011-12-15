@@ -563,6 +563,11 @@ void JackClient::apcRead( int nframes )
           top->state.highCutoff = b3 / 127.f;
           cout << "HIghCut / Ratio = " << top->state.highCutoff << endl;
         }
+        else if ( b2 == 18 )
+        {
+          top->state.makeup = b3 / 127.f;
+          cout << "Makeup = " << top->state.makeup << endl;
+        }
         
         EngineEvent* x = new EngineEvent();
         x->setPluginParameter(track,

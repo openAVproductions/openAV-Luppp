@@ -28,6 +28,7 @@ class StateStore
     
     int beatSmash;
     
+    float makeup;
     float cutoff;
     float highCutoff;
     
