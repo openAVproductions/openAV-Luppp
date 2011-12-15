@@ -26,8 +26,6 @@ GCompressor::GCompressor(Top* t, GuiStateStore* s)
   signal_button_release_event().connect(sigc::mem_fun(*this, &GCompressor::on_button_release_event) );
   signal_motion_notify_event().connect( sigc::mem_fun( *this, &GCompressor::onMouseMove ) );
   
-  xSize = 225;
-  
   set_size_request(130, 216);
 }
 
@@ -70,8 +68,10 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     
     // update value from stateStore
     float cutoffRangeZeroOne = stateStore->effectState.at(0).values[0];
+    float ratio = stateStore->effectState.at(0).values[1];
     
-    cutoff = (48.f / xSize) + (cutoffRangeZeroOne * 0.7541 );
+    // invert range, so 0 = most cut on threshold ( -30dB ), 1 = thresh @ 0dB
+    float thresh = cutoffRangeZeroOne;
     
     bool active = true;
     
@@ -91,7 +91,7 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     cr -> set_source_rgb (0.1,0.1,0.1);
     cr -> fill();
     
-    // draw "frequency guides"
+    // draw "guides"
     std::valarray< double > dashes(2);
     dashes[0] = 2.0;
     dashes[1] = 2.0;
@@ -111,46 +111,71 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     cr->stroke();
     cr->unset_dash();
     
-    // move to bottom left, draw line to middle left
+    // draw "normal" line
+    setColour(cr, COLOUR_GREY_3 );
+    cr->set_line_width(2.5);
     cr->move_to( x , y + ySize );
-    cr->line_to( x , y + (ySize/2));
+    cr->line_to( x + xSize, y );
+    cr->stroke();
     
-    int startHorizontalLine = xSize* (cutoff - 0.4)  < 50;
-    if ( startHorizontalLine < 50 )
-      startHorizontalLine = 10;
-      
-    cr->line_to( startHorizontalLine, y + (ySize/2) ); // horizontal line to start of curve
+    // move to bottom left, draw line to middle left
+    cr->set_line_cap(Cairo::LINE_CAP_ROUND);
+    cr->move_to( x , y + ySize );
+    cr->line_to( x + thresh * xSize, y + ((1-thresh) * ySize));
     
-    cr->curve_to( xSize* (cutoff -0.1), y+(ySize*0.5),   // control point 1
-                  xSize* (cutoff - 0.08), y+(ySize*0.3),   // control point 2
-                  xSize* cutoff        , y+(ySize*0.3));  // end of curve 1, start curve 2
+    int xThreshRemainPx = ((1-thresh)*xSize);
+    float threshCP = ( xThreshRemainPx / 3.f );
     
-    int xSizeCP1 = xSize* (cutoff + 0.03);
-    int xSizeCP2 = xSize* (cutoff + 0.08);
-    int xSizeEnd = xSize* (cutoff + 0.15);
+    int yThreshRemainPx = ((1-thresh)*ySize);
+    float yThreshCP = ( yThreshRemainPx / 3.f );
     
+    float cp1x = x + (thresh*xSize) + threshCP;
+    float cp1y = y + ySize - ((yThreshCP) + (thresh)*ySize);
+    
+    float cp2x = cp1x + threshCP;
+    float cp2y = cp1y - yThreshCP;
+    
+    float endx = x+xSize;
+    float endy = cp2y - ((1-ratio) * yThreshCP); //y + ySize - ((threshCP*2) + (thresh)*ySize - (compressPx*ratio) ); //y  + ((1-thresh) * ySize);
+    
+    /*
+    // set CP2 as midpoint CP1 & end
+    float cp2x = (cp1x + endx) / 2.f;
+    float cp2y = (cp1y + endy) / 2.f;
+    */
+    
+    cout << " Ratio = " << ratio << " CP1 : " << cp1x << "\t" << cp1y << "\t"<< cp2x<<  "\t" <<cp2y<<  "\t" <<endx<<  "\t" <<endy << endl;
+    
+    // draw curve
+    cr->curve_to( cp1x, cp1y, cp2x, cp2y, endx, endy );
+    
+    cr->line_to(x + xSize,y+ ySize );
+    cr->close_path();
+    /*
     if ( xSizeCP1 > 234 )
       xSizeCP1 = 234;
     if ( xSizeCP2 > 234 )
       xSizeCP2 = 234;
     if ( xSizeEnd > 234 )
       xSizeEnd = 234;
-    
-    cr->curve_to( xSizeCP1, y+(ySize*0.3),  // control point 1
-                  xSizeCP2, y+(ySize*0.3), // control point 2
-                  xSizeEnd, y+(ySize)   ); // end of curve on floor
+    */
     
     setColour(cr, COLOUR_BLUE_1, 0.2 );
     cr->close_path();
     cr->fill_preserve();
     
-    // stroke cutoff line
+    // stroke gain line
     cr->set_line_width(2.5);
     if ( active )
       setColour(cr, COLOUR_BLUE_1 );
     else
       setColour(cr, COLOUR_GREY_1 );
     cr->stroke();
+    
+    setColour(cr, COLOUR_ORANGE_1);
+    cr->rectangle(cp1x,cp1y,2,2);
+    cr->rectangle(cp2x,cp2y,2,2);
+    cr->fill();
     
     // click center
     setColour(cr, COLOUR_ORANGE_1, 0.9 );
@@ -159,7 +184,7 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     
     // dials
     Dial(cr, active, 70-48, 140-15, cutoffRangeZeroOne, DIAL_MODE_NORMAL);
-    Dial(cr, active, 150,140, q                 , DIAL_MODE_NORMAL);
+    Dial(cr, active, 68   , 125   , ratio             , DIAL_MODE_NORMAL);
     
     // outline
     setColour(cr, COLOUR_GREY_3 );

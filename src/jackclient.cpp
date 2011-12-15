@@ -545,12 +545,12 @@ void JackClient::apcRead( int nframes )
         int track = b1 - 176;
         int device= top->controller->getDevice();
         top->controller->setTrackDevice(track, device);
-        std::cout << "APC: Device Control on track " << track << " device " << device << " param " << b2 -16 << std::endl;
+        //std::cout << "APC: Device Control on track " << track << " device " << device << " param " << b2 -16 << std::endl;
         
         EffectState* state = top->state.getEffectState(track);
         if ( state )
         {
-          cout << "State->values 0  " << state->values[0] << endl;
+          //cout << "State->values 0  " << state->values[0] << endl;
         }
         
         top->state.cutoff = b3/127.;

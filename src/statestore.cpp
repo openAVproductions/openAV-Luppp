@@ -237,7 +237,7 @@ void StateStore::setPluginParameter(int t, int pos, int param, float value)
   // the same generic "EffectState" as thier settings. Up to 8 floats of control
   // for now, more is *not* suitable for RT LIVE performance.
   
-  cout << "StateStore::setPluginParameter() " << t << ", " << pos << ", " << param << ", " << value << endl;
+  //cout << "StateStore::setPluginParameter() " << t << ", " << pos << ", " << param << ", " << value << endl;
   
   if ( !trackCheck(t) ) {
     std::cout << "StateStore::setPluginParameter() track OOB: " << t << std::endl; return;
