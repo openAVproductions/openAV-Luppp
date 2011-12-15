@@ -118,24 +118,23 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     cr->line_to( x + xSize, y );
     cr->stroke();
     
-    // pre calc some variables
-    int xThreshRemainPx = ((1-thresh)*xSize);
-    float threshCP = ( xThreshRemainPx / 3.f );
+    float xDist = 0.1 * xSize;
+    float yDist = 0.1 * ySize;
     
-    int yThreshRemainPx = ((1-thresh)*ySize);
-    float yThreshCP = ( yThreshRemainPx / 3.f );
+    float xThresh = x + xSize * thresh;
+    float yThresh = y + ySize*(1-thresh);
     
-    float startx = x + xSize * thresh;
-    float starty = y + ySize*(1-thresh);
+    float startx = xThresh - xDist;
+    float starty = yThresh + yDist;
     
-    float cp1x = x + (thresh*xSize) - threshCP;
-    float cp1y = y + ySize - ((-yThreshCP) + (thresh)*ySize);
+    float cp1x = xThresh;
+    float cp1y = yThresh;
     
-    float cp2x = cp1x - threshCP;
-    float cp2y = cp1y + yThreshCP;
+    float cp2x = xThresh;
+    float cp2y = yThresh;
     
-    float endx = x+xSize;
-    float endy = cp2y - ((1-ratio) * yThreshCP);
+    float endx = xThresh + xDist;
+    float endy = yThresh; //(ySize-(ySize-yThresh))*(1-ratio);
     
     // move to bottom left, draw line to middle left
     cr->set_line_cap(Cairo::LINE_CAP_ROUND);
@@ -147,7 +146,9 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     // draw curve
     cr->curve_to( cp1x, cp1y, cp2x, cp2y, endx, endy );
     
-    cr->line_to(x + xSize,y+ ySize );
+    cr->line_to(x + xSize, y + ySize*(1-thresh)*(ratio) );
+    
+    cr->line_to(x + xSize, y + ySize );
     cr->close_path();
     /*
     if ( xSizeCP1 > 234 )
@@ -183,13 +184,15 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     
     // threshold point
     setColour(cr, COLOUR_PURPLE_1);
-    cr->rectangle( x + xSize * thresh, y + ySize*(1-thresh),3,3);
+    cr->rectangle( xThresh, yThresh,3,3);
     cr->fill();
     
+    /*
     // click center
     setColour(cr, COLOUR_ORANGE_1, 0.9 );
     cr->arc( x + thresh * xSize , endy, 7, 0, 6.2830 );
     cr->stroke();
+    */
     
     // dials
     Dial(cr, active, 70-48, 140-15, cutoffRangeZeroOne, DIAL_MODE_NORMAL);
