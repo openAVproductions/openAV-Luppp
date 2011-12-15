@@ -133,8 +133,8 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     float cp2x = xThresh;
     float cp2y = yThresh;
     
-    float endx = xThresh + xDist;
-    float endy = yThresh; //(ySize-(ySize-yThresh))*(1-ratio);
+    float endx = xThresh + (xDist*1.2);
+    float endy = yThresh - (yDist*1.2)*(1-ratio);
     
     // move to bottom left, draw line to middle left
     cr->set_line_cap(Cairo::LINE_CAP_ROUND);
@@ -171,6 +171,7 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
       setColour(cr, COLOUR_GREY_1 );
     cr->stroke();
     
+    /*
     // debug rectangles of CP's
     setColour(cr, COLOUR_ORANGE_1);
     cr->rectangle(cp1x,cp1y,3,3);
@@ -186,13 +187,13 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     setColour(cr, COLOUR_PURPLE_1);
     cr->rectangle( xThresh, yThresh,3,3);
     cr->fill();
+    */
     
-    /*
+    
     // click center
     setColour(cr, COLOUR_ORANGE_1, 0.9 );
-    cr->arc( x + thresh * xSize , endy, 7, 0, 6.2830 );
+    cr->arc( xThresh , yThresh, 7, 0, 6.2830 );
     cr->stroke();
-    */
     
     // dials
     Dial(cr, active, 70-48, 140-15, cutoffRangeZeroOne, DIAL_MODE_NORMAL);
