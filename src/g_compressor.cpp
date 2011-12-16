@@ -263,7 +263,6 @@ bool GCompressor::onMouseMove(GdkEventMotion* event)
       x->setPluginParameter(0,0,1, q );
       top->toEngineQueue.push(x);
     }
-    redraw();
     std::cout << "GCompressor: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
   }
 }
@@ -303,7 +302,6 @@ bool GCompressor::on_button_press_event(GdkEventButton* event)
       x = new EngineEvent();
       x->setPluginParameter(0,0,1, q );
       top->toEngineQueue.push(x);
-      redraw();
     }
     
     if ( event->y < 20 )

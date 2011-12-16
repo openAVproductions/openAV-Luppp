@@ -45,8 +45,6 @@ class Window
     
     GuiStateStore guiState;
     
-    GCompressor* gCompressor;
-    
     int currentEffectsTrack;
     void setEffectsBox(int trackID);
     

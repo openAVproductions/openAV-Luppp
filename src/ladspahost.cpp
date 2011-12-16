@@ -361,7 +361,7 @@ void LadspaHost::process(int nframes, float* buffer)
     descriptor -> connect_port ( pluginHandle , 9, buffer );
     descriptor -> connect_port ( pluginHandle ,10, &outputBuffer[0] );
     
-    std::cout << "T = " << controlBuffer[4] << "\tR = " << controlBuffer[5] << "\tM = " << controlBuffer[6] << " Release: " << controlBuffer[2] << " Comp = " << (int) (controlBuffer[8] / 24.)*100 << "\tamp = " << controlBuffer[7]  << std::endl;
+    //std::cout << "T = " << controlBuffer[4] << "\tR = " << controlBuffer[5] << "\tM = " << controlBuffer[6] << " Release: " << controlBuffer[2] << " Comp = " << (int) (controlBuffer[8] / 24.)*100 << "\tamp = " << controlBuffer[7]  << std::endl;
   }
   else if ( type == EFFECT_HIGHPASS )
   {

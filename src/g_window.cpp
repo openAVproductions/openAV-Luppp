@@ -72,9 +72,6 @@ Window::Window(Gtk::Main *k, Top* t)
   addTrack();
   //addTrack();
   
-  gCompressor = new GCompressor(top, &guiState );
-  trackEffectBox->add( *gCompressor );
-  
   // poll the event Queue
   Glib::signal_timeout().connect(sigc::mem_fun(*this, &Window::handleEvent), 50);
   
@@ -222,7 +219,7 @@ int Window::handleEvent()
       {
         cout << "Parameter " << e->ic << " " << e->fa << endl;
         guiState.effectState.at(e->ia).values[e->ic] = e->fa;
-        gCompressor->redraw();
+        redrawEffectBox();
       }
     }
     else if ( e->type == EE_STATE_NEW_EFFECT )
@@ -235,15 +232,26 @@ int Window::handleEvent()
       
       if ( t < trackVector.size() ) // check track
       {
+        bool newEffect = true;
         switch ( et )
         {
           case EFFECT_LOWPASS: trackVector.at(t).widgetVector.push_back( new GLowPass(top, &guiState) ); break;
           case EFFECT_HIGHPASS: trackVector.at(t).widgetVector.push_back( new GHighPass(top, &guiState) ); break;
-          //case EFFECT_PARAMETRIC_EQ: trackVector.at(t).widgetVector.push_back( new Equalizer(top, &guiState) ); break;
+          case EFFECT_COMPRESSOR:trackVector.at(t).widgetVector.push_back( new GCompressor(top, &guiState) ); break;
+          case EFFECT_PARAMETRIC_EQ:trackVector.at(t).widgetVector.push_back( new Equalizer( &guiState) ); break;
+          default: newEffect = false; break;
         }
         
-        currentEffectsTrack = e->ia;
-        redrawEffectBox();
+        // only attempt to add the new effect if we added one to the vector
+        if ( newEffect )
+        {
+          // add the new widget to the box
+          trackEffectBox->add( *trackVector.at(t).widgetVector.back() );
+          trackEffectBox->show_all();
+          
+          currentEffectsTrack = e->ia;
+          redrawEffectBox();
+        }
       }
     }
   }
@@ -252,15 +260,12 @@ int Window::handleEvent()
 
 void Window::redrawEffectBox()
 {
-  
+  // iter over each widget in the current track's widget vector, and queue redraw them
   for(int i = 0;  i < trackVector.at(currentEffectsTrack).widgetVector.size(); i++)
   {
-    // if widget not shown in UI yet, show it
-    if ( !trackVector.at(currentEffectsTrack).widgetVector.at(i)->get_visible() )
-      trackEffectBox->add( *trackVector.at(currentEffectsTrack).widgetVector.at(i) );
+    // assume "full size" widget, queue it for redraw
+    trackVector.at(currentEffectsTrack).widgetVector.at(i)->queue_draw_area(0,0,250,216);
   }
-  
-  trackEffectBox->show_all();
 }
 
 void Window::setEffectsBox(int trackID)
