@@ -338,8 +338,10 @@ void LadspaHost::process(int nframes, float* buffer)
     // compressor control values
     float thresh = top->state.cutoff;
     float ratio  = top->state.highCutoff;
-    float makeup  = top->state.makeup;
-    controlBuffer[4] = thresh * 60 - 30;
+    float makeup = top->state.makeup;
+    float release= top->state.release;
+    controlBuffer[2] = 4 + release * 400;
+    controlBuffer[4] = 0.1 + (1-thresh) * -30;
     controlBuffer[5] = 1 + ratio * 9;
     controlBuffer[6] = makeup * 24;
     
@@ -358,7 +360,7 @@ void LadspaHost::process(int nframes, float* buffer)
     descriptor -> connect_port ( pluginHandle , 9, buffer );
     descriptor -> connect_port ( pluginHandle ,10, &outputBuffer[0] );
     
-    std::cout << "T = " << controlBuffer[4] << "\tR = " << controlBuffer[5] << "\tM = " << controlBuffer[6] << "\tamp = " << controlBuffer[7] << " Comp = " << controlBuffer[8] << std::endl;
+    std::cout << "T = " << controlBuffer[4] << "\tR = " << controlBuffer[5] << "\tM = " << controlBuffer[6] << " Release: " << controlBuffer[2] << " Comp = " << controlBuffer[8] * 100 << "\tamp = " << controlBuffer[7]  << std::endl;
   }
   else if ( type == EFFECT_HIGHPASS )
   {

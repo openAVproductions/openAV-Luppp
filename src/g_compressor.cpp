@@ -68,8 +68,10 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     
     // update value from stateStore
     float cutoffRangeZeroOne = stateStore->effectState.at(0).values[0];
-    float ratio = stateStore->effectState.at(0).values[1];
-    float makeupZeroOne = stateStore->effectState.at(0).values[2];
+    float release = stateStore->effectState.at(0).values[1];
+    
+    float ratio = stateStore->effectState.at(0).values[4];
+    float makeupZeroOne = stateStore->effectState.at(0).values[5];
     
     // invert range, so 0 = most cut on threshold ( -30dB ), 1 = thresh @ 0dB
     float thresh = cutoffRangeZeroOne;
@@ -202,7 +204,7 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     
     // dials
     Dial(cr, active, 22, 125, cutoffRangeZeroOne, DIAL_MODE_NORMAL);
-    Dial(cr, active, 68, 125, 0.f               , DIAL_MODE_NORMAL);
+    Dial(cr, active, 68, 125, release           , DIAL_MODE_NORMAL);
     Dial(cr, active, 22, 165, ratio             , DIAL_MODE_NORMAL);
     Dial(cr, active, 68, 165, makeupZeroOne     , DIAL_MODE_NORMAL);
     
