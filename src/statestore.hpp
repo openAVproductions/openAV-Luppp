@@ -29,10 +29,6 @@ class StateStore
     int beatSmash;
     
     float effectValues[8];
-    float makeup;
-    float cutoff;
-    float highCutoff;
-    float release;
     
     int getNumTracks(){return numTracks;}
     int getNumEffects(){return numEffects;}

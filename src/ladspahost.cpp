@@ -267,7 +267,7 @@ void LadspaHost::resetParameters()
   {
     // inputs
     controlBuffer[0] = 1.0;     // RMS = 0, peak = 1
-    controlBuffer[1] = 1.5;     // attack
+    controlBuffer[1] = 5;     // attack
     controlBuffer[2] = 60.0;    // release
     controlBuffer[3] = 0.0;     // threshold
     controlBuffer[4] = 1.0;     // ratio  1 : 1 - 20
@@ -326,7 +326,7 @@ void LadspaHost::process(int nframes, float* buffer)
   else if ( type == EFFECT_LOWPASS )
   {
     // lowpass ports
-    float freq = 200 + (70 * pow( 2.0, ((double)(top->state.cutoff*127) - 69.0) / 12.0 ) * 4);
+    float freq = 200 + (70 * pow( 2.0, ((double)(top->state.effectValues[0]*127) - 69.0) / 12.0 ) * 4);
     controlBuffer[0] = freq;
     descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] );
     descriptor -> connect_port ( pluginHandle , 1, &controlBuffer[1] );
@@ -336,13 +336,14 @@ void LadspaHost::process(int nframes, float* buffer)
   else if ( type == EFFECT_COMPRESSOR )
   {
     // compressor control values
-    float thresh = top->state.cutoff;
-    float ratio  = top->state.highCutoff;
-    float makeup = top->state.makeup;
-    float release= top->state.release;
-    controlBuffer[2] = 4 + release * 400;
-    controlBuffer[4] = 0.1 + (1-thresh) * -30;
-    controlBuffer[5] = 1 + ratio * 9;
+    float thresh = top->state.effectValues[0]; // array slice here = knob on controller
+    float release= top->state.effectValues[1];
+    float ratio  = top->state.effectValues[4];
+    float makeup = top->state.effectValues[5];
+    
+    controlBuffer[2] = 4 + release * 400; // array slice here = which parameter to control
+    controlBuffer[4] = ((1-thresh) * -29) - 1;
+    controlBuffer[5] = 1 + ratio * 19;
     controlBuffer[6] = makeup * 24;
     
     descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] ); // RMS / peak ( 0, 1 )
@@ -360,12 +361,12 @@ void LadspaHost::process(int nframes, float* buffer)
     descriptor -> connect_port ( pluginHandle , 9, buffer );
     descriptor -> connect_port ( pluginHandle ,10, &outputBuffer[0] );
     
-    std::cout << "T = " << controlBuffer[4] << "\tR = " << controlBuffer[5] << "\tM = " << controlBuffer[6] << " Release: " << controlBuffer[2] << " Comp = " << controlBuffer[8] * 100 << "\tamp = " << controlBuffer[7]  << std::endl;
+    std::cout << "T = " << controlBuffer[4] << "\tR = " << controlBuffer[5] << "\tM = " << controlBuffer[6] << " Release: " << controlBuffer[2] << " Comp = " << (int) (controlBuffer[8] / 24.)*100 << "\tamp = " << controlBuffer[7]  << std::endl;
   }
   else if ( type == EFFECT_HIGHPASS )
   {
     // highpass ports
-    float freq = (70 * pow( 2.0, ((double)(top->state.cutoff*127) - 69.0) / 12.0 ) * 3);
+    float freq = (70 * pow( 2.0, ((double)(top->state.effectValues[0]*127) - 69.0) / 12.0 ) * 3);
     controlBuffer[0] = freq;
     
     descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] );
