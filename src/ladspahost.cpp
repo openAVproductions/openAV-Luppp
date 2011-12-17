@@ -3,6 +3,8 @@
 
 #include "top.hpp"
 
+#include "glibmm.h"
+
 using namespace std;
 
 LadspaHost::LadspaHost(Top* t,EffectType et, int s) : Effect(t, et)
@@ -109,6 +111,13 @@ void LadspaHost::loadLibrary( std::string filename )
   // This function loads *one* .so file, and returns a ladspaHandle
   // representing the object.
   cout << "LadspaHost loading " << filename << "..." << endl;
+  
+  bool fileExists = Glib::file_test ( filename, Glib::FILE_TEST_EXISTS);
+  
+  if ( !fileExists )
+  {
+    cout << " <- file does not exist!" << endl;
+  }
   
   libraryHandle = dlopen( &filename[0] , RTLD_NOW );
   

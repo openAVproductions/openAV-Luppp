@@ -31,7 +31,7 @@ def configure(ctx):
   
 
 def build(ctx):
-  print '\nBuilding the sources to objects...'
+  #print '\nBuilding the sources to objects...'
   
   #     ENGINE
   engineList=['src/top.cpp',
@@ -73,11 +73,11 @@ def build(ctx):
   
   engineDepends = 'JACK SNDFILE GTKMM FLUIDSYNTH'
   
-  print 'Building ENGINE'
+  #print 'Building ENGINE'
   buildList = engineList + guiList
   dependList = engineDepends
   
-  print 'Depends list:',dependList
+  #print 'Depends list:',dependList
   
   lib	 = ctx.new_task_gen(
     features	= 'cxx cxxstlib',
