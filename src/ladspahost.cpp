@@ -117,9 +117,10 @@ void LadspaHost::loadLibrary( std::string filename )
   if ( !fileExists )
   {
     cout << " <- file does not exist!" << endl;
+    return;
   }
   
-  libraryHandle = dlopen( &filename[0] , RTLD_NOW );
+  //libraryHandle = dlopen( &filename[0] , RTLD_NOW );
   
   if (libraryHandle == 0)
   {
@@ -129,17 +130,19 @@ void LadspaHost::loadLibrary( std::string filename )
 
 void LadspaHost::loadPlugin(int pluginIdFromLibrary)
 {
+  return;
+  
   descriptor = 0;
   LADSPA_Descriptor_Function descriptorFunction;
   
-  descriptorFunction = (LADSPA_Descriptor_Function) dlsym( libraryHandle, "ladspa_descriptor");
+  // descriptorFunction = (LADSPA_Descriptor_Function) dlsym( libraryHandle, "ladspa_descriptor");
   
   // check that the .so file contains a "ladspa_descriptor" symbol,
   // otherwise it's not a LADSPA plugin, but an .so with a different purpose!
   if (!descriptorFunction)
   {
-    const char * pcError = dlerror();
-    
+    //const char * pcError = dlerror();
+    bool pcError = false;
     if (pcError)
     {
       cout<< "Unable to find ladspa_descriptor() function in plugin library selected file!\n\
@@ -164,8 +167,10 @@ void LadspaHost::instantiatePlugin()
   cout << "LadspaHost::instantiatePlugin   samprate = " << samplerate << endl;
   
   if (descriptor == 0)
+  {
     std::cout << "Descriptor == 0!" << std::endl;
-  
+    return;
+  }
   pluginHandle = 0;
   
   // here we create the actual plugin instance
@@ -204,6 +209,12 @@ void LadspaHost::setPluginByString(std::string inPluginString)
   
   // set default values based on which plugin is being loaded
   resetParameters();
+  
+  if ( !descriptor )
+  {
+    cout << "Descriptor = 0 after instatiation, returning!" << endl;
+    return;
+  }
   
   if ( type == EFFECT_LOWPASS )
   {
@@ -444,7 +455,7 @@ LadspaHost::~LadspaHost()
 {
   descriptor->cleanup(pluginHandle);
   
-  dlclose(libraryHandle);
+  //dlclose(libraryHandle);
   
   std::cout << "~LadspaHost() destroyed" << std::endl;
 }
