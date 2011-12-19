@@ -9,12 +9,10 @@
 
 #include <ladspa.h>
 
-extern "C" {
-#include <dlfcn.h>
-}
-
 class Top;
+
 #include "effect.hpp"
+#include <glibmm/module.h>
 
 // define nice names for LADSPA "components"
 
@@ -68,8 +66,8 @@ class LadspaHost : public Effect
     
     // ladspa handles & functions
     ladspaHandle pluginHandle;
-    ladspaHandle libraryHandle;
-    ladspaDescriptor  descriptor;
+    Glib::Module* ladspaModule;
+    ladspaDescriptor descriptor;
     
     int inputPortL;
     int inputPortR;
@@ -77,12 +75,7 @@ class LadspaHost : public Effect
     int outputPortR;
     int controlInputPort;
     
-    void loadPlugin(int);
     void resetParameters();
-    void instantiatePlugin();
-    void loadLibrary( std::string filename );
-    
-    void setPluginByString(std::string inPluginString);
     
     // buffers to pass in / out control / audio data
     std::vector<float> controlBuffer;

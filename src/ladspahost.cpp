@@ -3,8 +3,6 @@
 
 #include "top.hpp"
 
-#include "glibmm.h"
-
 using namespace std;
 
 LadspaHost::LadspaHost(Top* t,EffectType et, int s) : Effect(t, et)
@@ -17,155 +15,74 @@ LadspaHost::LadspaHost(Top* t,EffectType et, int s) : Effect(t, et)
   
   hasRunAdding = false;
   
-  type = et;
-  active = 1;
-  
-  descriptor = 0; // ladspa_descriptor*
+  outputBuffer.resize(1024);
   
   for (int i = 0; i < 255; i++)
   {
     controlBuffer.push_back(0.0);
   }
   
-  outputBuffer.resize(1024);
+  type = et;
+  active = 1;
   
+  descriptor = 0; // ladspa_descriptor*
+  
+  // setup variables for effect type we've been passed
   switch(et)
   {
-    case EFFECT_REVERB:       setPluginByString("/usr/lib/ladspa/g2reverb.so");         break;
-    case EFFECT_TRANSIENT:    setPluginByString("/usr/lib/ladspa/transient_1206.so");   break;
-    case EFFECT_PARAMETRIC_EQ:setPluginByString("/usr/lib/ladspa/filters.so");          break;
-    case EFFECT_LOWPASS:      setPluginByString("/usr/lib/ladspa/lowpass_iir_1891.so"); break;
-    case EFFECT_HIGHPASS:     setPluginByString("/usr/lib/ladspa/highpass_iir_1890.so");break;
-    case EFFECT_COMPRESSOR:   setPluginByString("/usr/lib/ladspa/sc4m_1916.so");        break;
+    case EFFECT_REVERB:       pluginString = "/usr/lib/ladspa/g2reverb.so";         break;
+    case EFFECT_TRANSIENT:    pluginString = "/usr/lib/ladspa/transient_1206.so";   break;
+    case EFFECT_PARAMETRIC_EQ:pluginString = "/usr/lib/ladspa/filters.so";          break;
+    case EFFECT_LOWPASS:      pluginString = "/usr/lib/ladspa/lowpass_iir_1891.so"; break;
+    case EFFECT_HIGHPASS:     pluginString = "/usr/lib/ladspa/highpass_iir_1890.so";break;
+    case EFFECT_COMPRESSOR:   pluginString = "/usr/lib/ladspa/sc4m_1916.so";        break;
     default: std::cout << "LadspaHost() got unknown effect type!" << std::endl; break;
   }
-}
-
-void LadspaHost::setParameter(int param, float value)
-{
-  //std::cout << "LadspaHost::setParameter()  plugin = " << pluginString << std::endl;
   
-  // HACK! There's a difference between OSC targets & ladspa port indexs,
-  // so we need to convert between the two, right now were just writing
-  // the values to the ports we know they should be
+  cout << "Resetting LADSPA parameters" << endl;
+  resetParameters();
   
-  int inputPortIndex = param;
-  
-  
-  switch(type)
-  {
-    case EFFECT_REVERB: { inputPortIndex += 4; } break;
-    case EFFECT_LOWPASS: break;
-    case EFFECT_HIGHPASS: break;
-    case EFFECT_TRANSIENT:
-    {
-      if ( param == 0 ) inputPortIndex = 2;
-      if ( param == 4 ) inputPortIndex = 3;
-      break;
-    }
-    case EFFECT_PARAMETRIC_EQ:
-    {
-      switch (param)
-      {
-        case 0: inputPortIndex = 7; break; // g1
-        case 1: inputPortIndex =11; break; // g2
-        case 2: inputPortIndex =15; break; // g3
-        case 3: inputPortIndex =19; break; // g4
-        case 4: inputPortIndex = 5; break; // f1
-        case 5: inputPortIndex = 9; break; // f2
-        case 6: inputPortIndex =13; break; // f3
-        case 7: inputPortIndex =17; break; // f4
-        default: break;
-      }
-      break;
-    }
-  }
-  
-  // convert the range for the parameter in question
-  ladspaPortRangeHint hintDescriptor = descriptor->PortRangeHints[inputPortIndex].HintDescriptor;
-  
-  float lowerBound;
-  float upperBound;
-  
-  // Lower bound
-  if (LADSPA_IS_HINT_BOUNDED_BELOW( hintDescriptor ) )
-  {
-    lowerBound = descriptor->PortRangeHints[inputPortIndex].LowerBound;
-    std::cout << " BelowBound: " << lowerBound << std::endl;
-  }
-  // Higher bound
-  if (LADSPA_IS_HINT_BOUNDED_ABOVE( hintDescriptor ) )
-  {
-    upperBound = descriptor->PortRangeHints[inputPortIndex].UpperBound;
-    std::cout << " UpperBound: " << upperBound << std::endl;
-  }
-  
-  float scaledValue = value * (upperBound - lowerBound) + lowerBound;
-  
-  std::cout << "LadspaHost::setParameter() after port check & scale, port = " << inputPortIndex << ":  value" << scaledValue << std::endl;
-  controlBuffer[inputPortIndex] = scaledValue;
-}
-
-void LadspaHost::loadLibrary( std::string filename )
-{
-  // This function loads *one* .so file, and returns a ladspaHandle
-  // representing the object.
-  cout << "LadspaHost loading " << filename << "..." << endl;
-  
-  bool fileExists = Glib::file_test ( filename, Glib::FILE_TEST_EXISTS);
-  
-  if ( !fileExists )
-  {
+  // load the plugin file, using Glib::Module
+  bool fileExists = Glib::file_test ( pluginString, Glib::FILE_TEST_EXISTS);
+  if ( !fileExists ) {
     cout << " <- file does not exist!" << endl;
     return;
   }
   
-  //libraryHandle = dlopen( &filename[0] , RTLD_NOW );
+  ladspaModule = new Glib::Module( pluginString );
   
-  if (libraryHandle == 0)
-  {
-    cout << "LadspaHost: ERROR loading file " << filename << "." << endl;
-  }
-}
-
-void LadspaHost::loadPlugin(int pluginIdFromLibrary)
-{
-  return;
-  
-  descriptor = 0;
-  LADSPA_Descriptor_Function descriptorFunction;
-  
-  // descriptorFunction = (LADSPA_Descriptor_Function) dlsym( libraryHandle, "ladspa_descriptor");
-  
-  // check that the .so file contains a "ladspa_descriptor" symbol,
-  // otherwise it's not a LADSPA plugin, but an .so with a different purpose!
-  if (!descriptorFunction)
-  {
-    //const char * pcError = dlerror();
-    bool pcError = false;
-    if (pcError)
+  if ( ladspaModule ) {
+    cout << "Module loading OK, now getting descriptor function" << endl;
+    
+    LADSPA_Descriptor_Function descriptorFunction;
+    void* tmpFunc;
+    bool found = ladspaModule->get_symbol("ladspa_descriptor", tmpFunc );
+    
+    if ( !found )
     {
-      cout<< "Unable to find ladspa_descriptor() function in plugin library selected file!\n\
-          Are you sure this is a LADSPA plugin file?\n" << endl;
+      cout << "Could not find LADSPA_Descriptor_Function, returning!" <<endl;
       return;
     }
+    
+    descriptorFunction = (LADSPA_Descriptor_Function) tmpFunc;
+    
+    // cycle trough all available plugins in library, printing thier info
+    for (int lIndex = 0; (descriptor = const_cast<ladspaDescriptor>(descriptorFunction(lIndex) ) ) != NULL ; lIndex++)
+    { 
+      std::cout << "All good, plugin info: " << descriptor->Name << " " << descriptor->UniqueID << " " << descriptor->Label << std::endl;
+    }
+    
+    // FIXME set descriptor to 1st plugin by default:
+    descriptor = const_cast<ladspaDescriptor>( descriptorFunction(0) );
+    
+  }
+  else
+  {
+    cout << "LadspaHost: ERROR loading file " << pluginString << ", module not found!" << endl;
+    return;
   }
   
-  // cycle trough all available plugins in library, printing thier info
-  for (int lIndex = 0; (descriptor = const_cast<ladspaDescriptor>(descriptorFunction(lIndex) ) ) != NULL ; lIndex++)
-  { 
-    std::cout << descriptor->Name << " " << descriptor->UniqueID << " " << descriptor->Label << std::endl;
-  }
-  
-  // FIXME set descriptor to 1st plugin by default:
-  descriptor = const_cast<ladspaDescriptor>( descriptorFunction(pluginIdFromLibrary) );
-  
-}
-
-void LadspaHost::instantiatePlugin()
-{
-  cout << "LadspaHost::instantiatePlugin   samprate = " << samplerate << endl;
-  
+  // module is loaded, check descriptor & lets instantiate the plugin
   if (descriptor == 0)
   {
     std::cout << "Descriptor == 0!" << std::endl;
@@ -182,40 +99,8 @@ void LadspaHost::instantiatePlugin()
     return;
   }
   
-  if (!descriptor)
-  {
-    std::cout << "ERROR: LadspaHost::Descriptor == 0" << std::endl;
-    return;
-  }
-}
-
-void LadspaHost::setPluginByString(std::string inPluginString)
-{
-  std::cout << "LadspaHost::setPluginByString() Loading .so file:\n" << std::flush;
-  
-  pluginString = inPluginString;
-  
-  // Here we get a "ladspaHandle" to the selected .so file 
-  loadLibrary ( pluginString );
-  
-  cout << "loaded library" << endl;
-  
-  // the ladspa handle used is a class member. no need to pass around!
-  loadPlugin (0);
-  cout << "loaded plugin" << endl;
-  
-  // instantiate the plugin
-  instantiatePlugin();
-  
-  // set default values based on which plugin is being loaded
-  resetParameters();
-  
-  if ( !descriptor )
-  {
-    cout << "Descriptor = 0 after instatiation, returning!" << endl;
-    return;
-  }
-  
+  // connect ports, this *must* be done *before* activation for some
+  // plugins (Glame HIGH & LOW pass filters)
   if ( type == EFFECT_LOWPASS )
   {
     // lowpass ports
@@ -226,7 +111,7 @@ void LadspaHost::setPluginByString(std::string inPluginString)
   }
   if ( type == EFFECT_HIGHPASS )
   {
-    // lowpass ports
+    // highpass ports
     descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] );
     descriptor -> connect_port ( pluginHandle , 1, &controlBuffer[1] );
     descriptor -> connect_port ( pluginHandle , 2, &outputBuffer[0] );
@@ -242,8 +127,7 @@ void LadspaHost::setPluginByString(std::string inPluginString)
     std::cout << "\t\tDone!" << std::flush;
   }
   
-  // tell the guys what's up
-  std::cout << "Loading LADSPA plugin: " << descriptor->Name << "\tAudioPorts:"<<numAudio<<" ControlPorts:"<< numControl<< std::endl;
+  cout << "LadspaHost() done!" << endl;
 }
 
 void LadspaHost::resetParameters()
@@ -314,12 +198,15 @@ void LadspaHost::setActive(int a)
 
 void LadspaHost::process(int nframes, float* buffer)
 {
-  
-  
   if ( pluginHandle == 0 )
   {
-    std::cout << "PluginHandle == 0!!" << std::endl;
+    //std::cout << "PluginHandle == 0!!" << std::endl;
     return;
+  }
+  
+  if ( descriptor == 0 )
+  {
+    cout << "LadspaHost::descriptor == 0" << endl;
   }
   
   if ( !active )
@@ -454,9 +341,6 @@ void LadspaHost::process(int nframes, float* buffer)
 LadspaHost::~LadspaHost()
 {
   descriptor->cleanup(pluginHandle);
-  
-  //dlclose(libraryHandle);
-  
   std::cout << "~LadspaHost() destroyed" << std::endl;
 }
 
