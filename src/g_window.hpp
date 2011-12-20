@@ -46,6 +46,7 @@ class Window
     GuiStateStore guiState;
     
     int currentEffectsTrack;
+    int previousEffectsTrack;
     void setEffectsBox(int trackID);
     
     // helper functions

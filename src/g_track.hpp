@@ -20,6 +20,8 @@ class GTrack
   public:
     GTrack();
     
+    int selected;
+    
     std::vector<Gtk::Widget*> widgetVector;
     
 };

@@ -5,5 +5,5 @@ using namespace std;
 
 GTrack::GTrack()
 {
-  
+  selected = 0;
 }

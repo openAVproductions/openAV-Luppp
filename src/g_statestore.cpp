@@ -18,6 +18,8 @@ void GuiStateStore::addTrack()
 {
   std::cout << "GuiStateStore::addTrack()" << std::endl;
   
+  // don't store ID for the vector, its indice is the ID, so just access
+  // the array .at(ID) rather than iter over it, and take ( targetID == ID )
   effectState.push_back ( EffectState(-1) );
   
   bufferAudioSourceState.push_back( BufferAudioSourceState() );

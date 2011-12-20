@@ -9,7 +9,11 @@
 #include "top.hpp"
 #include "g_statestore.hpp"
 
-class GCompressor : public Gtk::DrawingArea
+#include "g_widgetbase.hpp"
+
+// inherit from WidgetBase so that we can define the ID of the widget,
+// which tell us which indice of the EffectStateVector to use to redraw
+class GCompressor : public Gtk::DrawingArea, public WidgetBase
 {
   public:
     GCompressor(Top*, GuiStateStore*);

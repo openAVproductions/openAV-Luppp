@@ -25,6 +25,7 @@ Window::Window(Gtk::Main *k, Top* t)
   // initialize variables
   numTracks = 0;
   currentEffectsTrack = 0;
+  previousEffectsTrack= 0;
   
   // load Glade file
   Glib::RefPtr<Gtk::Builder> refBuilder;
@@ -82,14 +83,11 @@ Window::Window(Gtk::Main *k, Top* t)
 
 void Window::addEffect( EffectType et )
 {
+  // create a new effect of Type et, and offlineWorker will create an EE
+  // to tell the JACK thread to insert it into the path. JACK will then
+  // send an EE to tell the GUI where / what Effect to insert
   cout << "Window::addEffect()  type = " << (int) et << endl;
-  // 
   int ret = top->offlineWorker->createNewEffect( 0, 1, et );
-  if ( ret != 0 )
-    return;
-  
-  // load success, so pop new widget into UI for the track, pos combo
-  
 }
 
 int Window::handleEvent()
@@ -157,7 +155,7 @@ int Window::handleEvent()
       
       if ( e->ia < guiState.trackoutputState.size() )
       {
-        guiState.trackoutputState.at(currentEffectsTrack).selected = false;
+        guiState.trackoutputState.at(previousEffectsTrack).selected = false;
         guiState.trackoutputState.at(e->ia).selected = true;
         guiState.trackoutputState.at(e->ia).selectedDevice = e->ib;
         
@@ -173,8 +171,15 @@ int Window::handleEvent()
         std::advance(i,e->ia);
         (*i)->redraw();
         
-        // keep the new currentEffectsTrack
+        // keep the new currentEffectsTrack & previousEffectsTrack
+        previousEffectsTrack = currentEffectsTrack;
         currentEffectsTrack = e->ia;
+        
+        // only redraw the EffectsBox if we have a different track!
+        if ( previousEffectsTrack != currentEffectsTrack )
+        {
+          redrawEffectBox();
+        }
       }
       else
       {
@@ -309,12 +314,21 @@ int Window::handleEvent()
 
 void Window::redrawEffectBox()
 {
-  // iter over each widget in the current track's widget vector, and queue redraw them
+  cout << "Window::redrawEffectBox() currentEffectTrack: " << currentEffectsTrack 
+       << "previousEffectsTrack: " << previousEffectsTrack << std::endl;
+  
+  // hide all elements from the previous track
+  for(int i = 0;  i < trackVector.at(previousEffectsTrack).widgetVector.size(); i++) {
+    trackEffectBox->remove( *trackVector.at(previousEffectsTrack).widgetVector.at(i) );
+  }
+  
+  // add each widget in the current track to the box, and show_all() them
   for(int i = 0;  i < trackVector.at(currentEffectsTrack).widgetVector.size(); i++)
   {
-    // assume "full size" widget, queue it for redraw
-    trackVector.at(currentEffectsTrack).widgetVector.at(i)->queue_draw_area(0,0,250,216);
+    trackEffectBox->add( *trackVector.at(currentEffectsTrack).widgetVector.at(i) );
   }
+  
+  trackEffectBox->show_all();
 }
 
 void Window::setEffectsBox(int trackID)
