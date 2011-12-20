@@ -87,7 +87,7 @@ void Window::addEffect( EffectType et )
   // to tell the JACK thread to insert it into the path. JACK will then
   // send an EE to tell the GUI where / what Effect to insert
   cout << "Window::addEffect()  type = " << (int) et << endl;
-  int ret = top->offlineWorker->createNewEffect( 0, 1, et );
+  int ret = top->offlineWorker->createNewEffect( currentEffectsTrack, 1, et );
 }
 
 int Window::handleEvent()
@@ -262,11 +262,13 @@ int Window::handleEvent()
       int t = e->ia;
       int p = e->ib;
       int et= e->ic;
-      cout << "GUI: New effect! t " << t << ", p " << p << ", EffectType " << et<< endl;
+      //cout << "GUI: New effect! t " << t << ", p " << p << ", EffectType " << et<< endl;
       
       
       if ( t < trackVector.size() ) // check track
       {
+        cout << "EE_STATE_NEW_EFFECT, pushing new widget to trackVector.at( "<<t<<" ) to the back of the widgetVector"<<endl;
+        
         bool newEffect = true;
         switch ( et )
         {
