@@ -64,6 +64,26 @@ EngineEvent* RtQueue::pull()
   return 0;
 }
 
+// this function checks if the GUI thread should push events to the Queue
+// so that the JACK thread will always have blank EE*'s available
+// it should *not* be used for any other purpose!
+int RtQueue::writeSpaceEngineEventAvailable()
+{
+  int availableWriteBytes = jack_ringbuffer_write_space(buffer);
+  int totWriteBytes = availableWriteBytes;
+  
+  int ret = 0;
+  while ( availableWriteBytes > sizeof(EngineEvent) )
+  {
+    ret++;
+    availableWriteBytes -= sizeof(EngineEvent);
+  }
+  // for debugging logic on "queued" blank events for JACK thread
+  //std::cout << "RtQueue::writeSpace = " << ret << " events\t SizeEngineEvent: " << sizeof(EngineEvent) << " bytes: " << totWriteBytes  << std::endl;
+  return ret;
+}
+
+
 RtQueue::~RtQueue()
 {
   std::cout << "~RtQueue()" << std::endl;

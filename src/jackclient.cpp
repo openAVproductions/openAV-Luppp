@@ -131,7 +131,7 @@ int JackClient::processRtQueue()
       if ( ret == 0 ) // success
       {
         cout << "Sending GUI NEW EFFECT event!" << endl;
-        EngineEvent* x = new EngineEvent();
+        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
         x->setStateEffect(e->ia, e->ib, (int)effect->getType(), 0 ); // vPtr = 0, don't give GUI access!
         top->toGuiQueue.push(x);
       }
@@ -241,7 +241,7 @@ int JackClient::processMidi(jack_nframes_t nframes)
       i->speed = value  + 0.5;
       std::cout << "i->speed = " << i->speed << endl;
       
-      EngineEvent* x = new EngineEvent();
+      EngineEvent* x = top->toEngineEmptyEventQueue.pull();
       x->setTrackSpeed(0, value);
       top->toGuiQueue.push(x);
       top->guiDispatcher->emit();
@@ -556,7 +556,7 @@ void JackClient::apcRead( int nframes )
         top->state.effectValues[b2-16] = b3 / 127.f;
         cout << "Param = " << b2 - 16 << " value = " << b3 / 127.f << endl;
         
-        EngineEvent* x = new EngineEvent();
+        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
         x->setPluginParameter(track,
                               device,
                               b2-16,
@@ -646,7 +646,7 @@ void JackClient::apcRead( int nframes )
         int trackID = b1 - 144;
         std::cout << "APC: Mute on track " << trackID << " off!" << std::endl;
         top->state.setMute( trackID, false );
-        EngineEvent* x = new EngineEvent();
+        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
         x->setTrackMute(trackID, false);
         top->toGuiQueue.push(x);
         top->guiDispatcher->emit();
@@ -656,7 +656,7 @@ void JackClient::apcRead( int nframes )
         int trackID = b1 - 128;
         std::cout << "APC: Mute on track " << trackID << " on!" << std::endl;
         top->state.setMute( trackID, true );
-        EngineEvent* x = new EngineEvent();
+        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
         x->setTrackMute(trackID, true);
         top->toGuiQueue.push(x);
         top->guiDispatcher->emit();

@@ -19,6 +19,8 @@ class RtQueue
     
     void push(EngineEvent *);
     EngineEvent* pull();
+    
+    int writeSpaceEngineEventAvailable();
   
   protected:
     jack_ringbuffer_t *buffer;

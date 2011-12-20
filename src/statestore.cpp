@@ -118,7 +118,7 @@ void StateStore::setVolume(int t, float v)
   
   iter->volume = logVolume;
   
-  EngineEvent* x = new EngineEvent();
+  EngineEvent* x = top->toEngineEmptyEventQueue.pull();
   x->setMixerVolume(t, v);
   top->toGuiQueue.push(x);
   top->guiDispatcher->emit();
@@ -136,7 +136,7 @@ void StateStore::setPan(int t, float v)
   iter->pan = v;
   std::cout << "New pan: " << iter->pan << std::endl;
   
-  EngineEvent* x = new EngineEvent();
+  EngineEvent* x = top->toEngineEmptyEventQueue.pull();
   x->setTrackPan(t, v);
   top->toGuiQueue.push(x);
   top->guiDispatcher->emit();
@@ -151,7 +151,7 @@ void StateStore::setMute(int t, int v)
   std::advance(iter, t);
   iter->mute = v;
   
-  EngineEvent* x = new EngineEvent();
+  EngineEvent* x = top->toEngineEmptyEventQueue.pull();
   x->setTrackMute(t, v);
   top->toGuiQueue.push(x);
   top->guiDispatcher->emit();
@@ -166,7 +166,7 @@ void StateStore::setSolo(int t, int v)
   std::advance(iter, t);
   iter->solo = v;
   
-  EngineEvent* x = new EngineEvent();
+  EngineEvent* x = top->toEngineEmptyEventQueue.pull();
   x->setTrackSolo(t, v);
   top->toGuiQueue.push(x);
   top->guiDispatcher->emit();
@@ -181,7 +181,7 @@ void StateStore::setRec(int t, int v)
   std::advance(iter, t);
   iter->rec = v;
   
-  EngineEvent* x = new EngineEvent();
+  EngineEvent* x = top->toEngineEmptyEventQueue.pull();
   x->setTrackRec(t, v);
   top->toGuiQueue.push(x);
   top->guiDispatcher->emit();
@@ -208,7 +208,7 @@ void StateStore::setClipSelectorState(int t,int block, int bufferID)
   (*clipI).bufferID = bufferID;
   
   // bufferID here is used to extrace name from GUI list of AudioBuffer names
-  EngineEvent* x = new EngineEvent();
+  EngineEvent* x = top->toEngineEmptyEventQueue.pull();
   x->looperLoad(t, block, bufferID);
   top->toGuiQueue.push(x);
   top->guiDispatcher->emit();
@@ -225,7 +225,7 @@ void StateStore::clipSelectorQueue(int t, int b)
   iter->playing = b;
   
   // update GUI
-  EngineEvent* x = new EngineEvent();
+  EngineEvent* x = top->toEngineEmptyEventQueue.pull();
   x->looperSelectBuffer(t, b);
   top->toGuiQueue.push(x);
   top->guiDispatcher->emit();

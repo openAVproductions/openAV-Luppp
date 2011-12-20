@@ -36,6 +36,8 @@ class Top
     RtQueue toGuiQueue;
     
     RtQueue toEngineQueue;
+    
+    RtQueue toEngineEmptyEventQueue;
 };
 
 #endif

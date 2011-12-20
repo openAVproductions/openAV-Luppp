@@ -284,7 +284,26 @@ int Window::handleEvent()
         }
       }
     }
+    
+    /*
+    cout << "Deleting engineEvent in GWindow::handleEvent() NOW: " << flush;
+    // we've handled the EngineEvent, but it remains in memory, so we delete it:
+    //delete e;
+    cout << "\tDONE!" << endl;
+    */
   }
+  
+  
+  // we've handled the event, now make sure that Engine still has Event pointers
+  // available so it doesn't have to "new" them itself
+  // this gets called in the GUI timed callback, so it will print details contsantly
+  int numEvents = top->toEngineEmptyEventQueue.writeSpaceEngineEventAvailable();
+  
+  for (int i = 0; i < numEvents; i++ )
+  {
+    top->toEngineEmptyEventQueue.push( new EngineEvent() );
+  }
+  
   return true;
 }
 

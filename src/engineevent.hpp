@@ -64,8 +64,12 @@ class EngineEvent
     void* vPtr;
     
     EngineEvent() {
+      //std::cout << "EngineEvent() CONSTRUCTOR" << std::endl;
       type = EE_INVALID;
       sa = 0;
+    }
+    ~EngineEvent() {
+      //std::cout << "~EngineEvent() DESTRUCTOR" << std::endl;
     }
     
     void looperPlay           (int id);
