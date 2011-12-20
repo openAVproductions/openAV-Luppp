@@ -252,6 +252,7 @@ int Window::handleEvent()
       
       if ( e->ia < guiState.effectState.size() )
       {
+        // here we are writing based on track, but we should be writing ID
         cout << "Parameter " << e->ic << " " << e->fa << endl;
         guiState.effectState.at(e->ia).values[e->ic] = e->fa;
         redrawEffectBox();

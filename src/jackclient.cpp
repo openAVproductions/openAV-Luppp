@@ -562,8 +562,8 @@ void JackClient::apcRead( int nframes )
         //cout << "Param = " << b2 - 16 << " value = " << b3 / 127.f << endl;
         
         EngineEvent* x = top->toEngineEmptyEventQueue.pull();
-        x->setPluginParameter(track,
-                              device,
+        x->setPluginParameter(uid,
+                              -1,
                               b2-16,
                               b3 / 127.);
         top->toGuiQueue.push(x);
