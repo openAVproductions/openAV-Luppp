@@ -6,11 +6,9 @@
 using namespace std;
 using namespace Luppp;
 
-int GHighPass::privateID = 0;
-
 GHighPass::GHighPass(Top* t, GuiStateStore* s)
 {
-  ID = privateID++;
+  ID = WidgetBase::getID();
   
   top = t;
   stateStore = s;
@@ -69,7 +67,8 @@ bool GHighPass::on_expose_event(GdkEventExpose* event)
     setColour(cr, COLOUR_GREY_3 );
     cr->fill();
     
-    float cutoffRangeZeroOne = stateStore->effectState.at(0).values[1];
+    //cout << "HighPass getting state ID " << ID << endl; 
+    float cutoffRangeZeroOne = stateStore->effectState.at(ID).values[0];
     
     cutoff = (48.f / xSize) + (cutoffRangeZeroOne * 0.7541 );
     

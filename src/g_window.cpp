@@ -253,7 +253,7 @@ int Window::handleEvent()
       if ( e->ia < guiState.effectState.size() )
       {
         // here we are writing based on track, but we should be writing ID
-        cout << "Parameter " << e->ic << " " << e->fa << endl;
+        cout << "UniqueID: " << e->ia << "  param: " << e->ic << "  value" << e->fa << endl;
         guiState.effectState.at(e->ia).values[e->ic] = e->fa;
         redrawEffectBox();
       }
@@ -323,15 +323,15 @@ int Window::handleEvent()
 
 void Window::redrawEffectBox()
 {
-  cout << "Window::redrawEffectBox() currentEffectTrack: " << currentEffectsTrack 
-       << "previousEffectsTrack: " << previousEffectsTrack << std::endl;
+  //cout << "Window::redrawEffectBox() currentEffectTrack: " << currentEffectsTrack 
+  //     << "previousEffectsTrack: " << previousEffectsTrack << std::endl;
   
   // hide all elements from the previous track
   for(int i = 0;  i < trackVector.at(previousEffectsTrack).widgetVector.size(); i++) {
     trackEffectBox->remove( *trackVector.at(previousEffectsTrack).widgetVector.at(i) );
   }
   
-  cout << "successfully removed all widgets" << endl;
+  //cout << "successfully removed all widgets" << endl;
   
   // add each widget in the current track to the box, and show_all() them
   for(int i = 0;  i < trackVector.at(currentEffectsTrack).widgetVector.size(); i++)
@@ -339,7 +339,7 @@ void Window::redrawEffectBox()
     trackEffectBox->add( *trackVector.at(currentEffectsTrack).widgetVector.at(i) );
   }
   
-  cout << "successfully added all new widgets" << endl;
+  //cout << "successfully added all new widgets" << endl;
   
   trackEffectBox->show_all();
 }

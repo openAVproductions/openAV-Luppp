@@ -40,7 +40,7 @@ int Mixer::getEffectID(int track, int pos)
   std::list<AudioTrack>::iterator iter =  audiotrackList.begin();
   std::advance(iter, track);
   
-  return iter->getEffectID( pos);
+  return iter->getEffectID( pos );
 }
 
 void Mixer::process(int nframes, float* outBuffer)
