@@ -24,6 +24,7 @@ Window::Window(Gtk::Main *k, Top* t)
   
   // initialize variables
   numTracks = 0;
+  currentEffectsTrack = 0;
   
   // load Glade file
   Glib::RefPtr<Gtk::Builder> refBuilder;
@@ -150,6 +151,35 @@ int Window::handleEvent()
       std::list<TrackOutput*>::iterator i = trackoutputList.begin();
       std::advance(i,e->ia);
       (*i)->redraw();
+    }
+    else if ( e->type == EE_TRACK_SELECT_DEVICE ) {
+      std::cout << "Gui TrackSelect event  t: " << e->ia << " d: " << e->ib << std::endl;
+      
+      if ( e->ia < guiState.trackoutputState.size() )
+      {
+        guiState.trackoutputState.at(currentEffectsTrack).selected = false;
+        guiState.trackoutputState.at(e->ia).selected = true;
+        guiState.trackoutputState.at(e->ia).selectedDevice = e->ib;
+        
+        cout << "set trackOutputState variables, now itering over widget list" << endl;
+        
+        // redraw the "unselected" trackOutput
+        std::list<TrackOutput*>::iterator i = trackoutputList.begin();
+        std::advance(i,currentEffectsTrack);
+        (*i)->redraw();
+        
+        // redraw the "selected" trackOutput
+        i = trackoutputList.begin();
+        std::advance(i,e->ia);
+        (*i)->redraw();
+        
+        // keep the new currentEffectsTrack
+        currentEffectsTrack = e->ia;
+      }
+      else
+      {
+        cout << "EE_TRACK_SELECT_DEVICE out of bounds! " << e->ia << endl;
+      }
     }
     else if ( e->type == EE_TRACK_SET_SPEED )
     {

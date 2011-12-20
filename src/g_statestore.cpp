@@ -46,10 +46,6 @@ void GuiStateStore::addTrack()
   trackoutputState.back().volume = 0.f;
   trackoutputState.back().pan = 0.f;
   
-  if ( numTracks == 1 )
-    trackoutputState.back().selected = true;
-  
-  
   cout << "GuiStateStore::addTrack()  index , speed = " << i->index << ", " << i->speed << endl;
   
   numTracks++;

@@ -17,8 +17,13 @@ Controller::Controller(Top* t)
 
 void Controller::setTrackDevice(int t, int d)
 {
+  // called from JACK thread, to update GUI
   track = t;
   device = d;
+  
+  EngineEvent* x = new EngineEvent();
+  x->setTrackSelectDevice(t, d);
+  top->toGuiQueue.push(x);
 }
 
 int Controller::getTrack()
