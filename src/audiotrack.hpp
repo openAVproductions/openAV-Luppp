@@ -20,7 +20,7 @@ class AudioTrack
     
     void process(int nframes, float* ports, float*,float*,float*,float*);
     
-    void setParameter(int, int ,float);
+    int getEffectID(int pos);
   
   protected:
     int ID;

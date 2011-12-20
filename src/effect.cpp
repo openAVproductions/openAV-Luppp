@@ -8,7 +8,7 @@ int Effect::privateID = 0;
 Effect::Effect(Top* t, EffectType& et)
 {
   ID = privateID++;
-  t->state.addEffectState();
+  t->state.addEffectState(ID);
   
   type = et;
 }

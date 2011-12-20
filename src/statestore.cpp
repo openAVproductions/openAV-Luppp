@@ -73,11 +73,16 @@ AudioBuffer* StateStore::getAudioBuffer(int ID)
   return 0;
 }
 
-void StateStore::addEffectState()
+void StateStore::addEffectState(int ID)
 {
-  effectStateList.push_back ( new EffectState( numEffects ) );
+  cout << "StateStore::addEffectState()  ID = " << ID << endl;
+  // store the new ID in the EffectState, so it can be retrieved later
+  effectStateList.push_back ( new EffectState( ID ) );
 }
 
+// this function takes the UniqueID of the Effect, and returns the corresponding
+// EffectState as a pointer. This way we can shuffle the position of Effects,
+// without having to update the stateStore in the same way (more effort / bugs)
 EffectState* StateStore::getEffectState(int ID)
 {
   std::list<EffectState*>::iterator iter;
@@ -231,7 +236,7 @@ void StateStore::clipSelectorQueue(int t, int b)
   top->guiDispatcher->emit();
 }
 
-void StateStore::setPluginParameter(int t, int pos, int param, float value)
+void StateStore::setPluginParameter(int ID, int param, float value)
 {
   // all "dynamic" elements in engine ( ladspaHosts, lv2host, etc ) all use
   // the same generic "EffectState" as thier settings. Up to 8 floats of control
@@ -239,8 +244,25 @@ void StateStore::setPluginParameter(int t, int pos, int param, float value)
   
   //cout << "StateStore::setPluginParameter() " << t << ", " << pos << ", " << param << ", " << value << endl;
   
-  if ( !trackCheck(t) ) {
-    std::cout << "StateStore::setPluginParameter() track OOB: " << t << std::endl; return;
+  // iter over the list, and 
+  std::list<EffectState*>::iterator iter;
+  for ( iter = effectStateList.begin(); iter != effectStateList.end(); iter++ )
+  {
+    if ( (*iter)->ID == ID )
+    {
+      break;
+    }
+  }
+  
+  if ( iter == effectStateList.end() )
+  {
+    std::cout << "StateStore::setPluginPara() Error, did not find EffectState with ID " << ID << std::endl;
+    return;
+  }
+  else
+  {
+    std::cout << "StateStore::setPluginParam() writing value " << value << " to param " << param << endl;
+    (*iter)->values[param] = value;
   }
   
 }

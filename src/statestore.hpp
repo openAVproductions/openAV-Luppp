@@ -37,7 +37,7 @@ class StateStore
     void addEffect(int t, int p, Effect* e);
     
     // to be called whenever we want a new "EffectState" added to the list
-    void addEffectState();
+    void addEffectState(int ID);
     
     void setMute(int,int);
     void setSolo(int,int);
@@ -46,7 +46,7 @@ class StateStore
     void setPanZ(int,float);
     void setVolume(int,float);
     
-    void setPluginParameter(int,int,int,float);
+    void setPluginParameter(int,int,float);
     
     void setAudioBuffer(AudioBuffer*);
     AudioBuffer* getAudioBuffer(int ID);

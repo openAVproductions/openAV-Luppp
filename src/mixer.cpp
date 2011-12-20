@@ -33,17 +33,13 @@ int Mixer::addEffect(int track, int pos,  Effect* eff )
   return 0;
 }
 
-void Mixer::setParameter(int track, int pos, int param, float val )
+int Mixer::getEffectID(int track, int pos)
 {
-  cout << "Mixer::setParameter() STUB!!!" << endl;
-  return;
-  
-  
-  std::list<AudioTrack>::iterator iter;
+  cout << "Mixer::getEffectID() t: " << track << " pos: " << pos << endl;
+  std::list<AudioTrack>::iterator iter =  audiotrackList.begin();
   std::advance(iter, track);
-  iter->setParameter(pos, param, val);
+  return iter->getEffectID( pos);
 }
-
 
 void Mixer::process(int nframes, float* outBuffer)
 {

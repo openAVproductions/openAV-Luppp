@@ -32,8 +32,8 @@ AudioTrack::AudioTrack( Top* t )
   }
   else if ( ID == 1 )
   {
-    source = new BufferAudioSource(t);
-    addEffect( 1, new LadspaHost(top, EFFECT_PARAMETRIC_EQ, top->samplerate) );
+    source = new FluidSynthAudioSource(t, "example.sf2"); //new BufferAudioSource(t);
+    //addEffect( 1, new LadspaHost(top, EFFECT_PARAMETRIC_EQ, top->samplerate) );
   }
   else
   {
@@ -54,15 +54,11 @@ int AudioTrack::addEffect( int pos,  Effect* eff )
   return 0;
 }
 
-void AudioTrack::setParameter(int pos, int param, float f)
+int AudioTrack::getEffectID(int pos)
 {
-  std::cout << "SetParameter(" << pos << ", " << param << ", " << f << ")    Effects = " << &effects << std::endl;
-  
-  //std::cout << "Effects empty? " << effects.empty() << std::endl;
-  
-  //std::list<Effect*>::iterator iter =  effects.begin();
-  //std::advance(iter, pos);
-  //(*iter)->setParameter(param, f);
+  std::list<Effect*>::iterator iter =  effects.begin();
+  std::advance(iter, pos);
+  return (*iter)->getID();
 }
 
 void AudioTrack::process(int nframes, float* buffer, float* W, float* X, float* Y, float* Z)

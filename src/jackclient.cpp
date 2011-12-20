@@ -149,7 +149,7 @@ int JackClient::processRtQueue()
     else if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER) {
       // send all values on to stateStore, from there we message UI, and
       // we do the logic on which EffectID we need to write to
-      top->state.setPluginParameter(e->ia,e->ib,e->ic,e->fa);
+      //top->state.setPluginParameter(e->ia,e->ib,e->ic,e->fa);
     }
     
   }
@@ -553,8 +553,13 @@ void JackClient::apcRead( int nframes )
           //cout << "State->values 0  " << state->values[0] << endl;
         }
         
-        top->state.effectValues[b2-16] = b3 / 127.f;
-        cout << "Param = " << b2 - 16 << " value = " << b3 / 127.f << endl;
+        cout << "Getting UniqueID:\t" << flush;
+        int uid = mixer.getEffectID(track, device);
+        cout << "\tGot " << uid << endl;
+        top->state.setPluginParameter(uid, b2 - 16, b3 / 127.f);
+        
+        //top->state.effectValues[b2-16] = b3 / 127.f;
+        //cout << "Param = " << b2 - 16 << " value = " << b3 / 127.f << endl;
         
         EngineEvent* x = top->toEngineEmptyEventQueue.pull();
         x->setPluginParameter(track,

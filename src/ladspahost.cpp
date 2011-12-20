@@ -3,6 +3,8 @@
 
 #include "top.hpp"
 
+#include "effectstate.hpp"
+
 using namespace std;
 
 LadspaHost::LadspaHost(Top* t,EffectType et, int s) : Effect(t, et)
@@ -215,6 +217,9 @@ void LadspaHost::process(int nframes, float* buffer)
     return;
   }
   
+  // ID is the Unique Effect ID, so we always get back this instances state
+  EffectState* state = top->state.getEffectState(ID);
+  
   if ( type == EFFECT_REVERB )
   {
     descriptor -> connect_port ( pluginHandle , 0  , buffer );
@@ -233,7 +238,7 @@ void LadspaHost::process(int nframes, float* buffer)
   else if ( type == EFFECT_LOWPASS )
   {
     // lowpass ports
-    float freq = 200 + (70 * pow( 2.0, ((double)(top->state.effectValues[0]*127) - 69.0) / 12.0 ) * 4);
+    float freq = 200 + (70 * pow( 2.0, ((double)(state->values[0]*127) - 69.0) / 12.0 ) * 4);
     controlBuffer[0] = freq;
     descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] );
     descriptor -> connect_port ( pluginHandle , 1, &controlBuffer[1] );
@@ -243,10 +248,10 @@ void LadspaHost::process(int nframes, float* buffer)
   else if ( type == EFFECT_COMPRESSOR )
   {
     // compressor control values
-    float thresh = top->state.effectValues[0]; // array slice here = knob on controller
-    float release= top->state.effectValues[1];
-    float ratio  = top->state.effectValues[4];
-    float makeup = top->state.effectValues[5];
+    float thresh = state->values[0]; // array slice here = knob on controller
+    float release= state->values[1];
+    float ratio  = state->values[4];
+    float makeup = state->values[5];
     
     controlBuffer[2] = 4 + release * 400; // array slice here = which parameter to control
     controlBuffer[4] = ((1-thresh) * -29) - 1;
@@ -273,7 +278,7 @@ void LadspaHost::process(int nframes, float* buffer)
   else if ( type == EFFECT_HIGHPASS )
   {
     // highpass ports
-    float freq = (70 * pow( 2.0, ((double)(top->state.effectValues[0]*127) - 69.0) / 12.0 ) * 3);
+    float freq = (70 * pow( 2.0, ((double)(state->values[0]*127) - 69.0) / 12.0 ) * 3);
     controlBuffer[0] = freq;
     
     descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] );

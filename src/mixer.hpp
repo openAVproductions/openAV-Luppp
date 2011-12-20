@@ -22,7 +22,8 @@ class Mixer
     
     int addEffect(int, int, Effect* );
     
-    void setParameter(int track, int pos, int param, float );
+    // returns the UniqueID of an Effect in an AudioTrack
+    int getEffectID(int track, int pos);
     
     void process( int nframes, float* outBuffer );
     
