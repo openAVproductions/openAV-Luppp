@@ -282,6 +282,10 @@ int Window::handleEvent()
         // only attempt to add the new effect if we added one to the vector
         if ( newEffect )
         {
+          // push new EffectState instance onto the EffectState, its
+          // sliced per ID, so widgets have thier uniqueID as link to state
+          guiState.effectState.push_back( EffectState(-1) );
+          
           // add the new widget to the box
           trackEffectBox->add( *trackVector.at(t).widgetVector.back() );
           trackEffectBox->show_all();
@@ -290,6 +294,8 @@ int Window::handleEvent()
           redrawEffectBox();
         }
       }
+      
+      cout << " EE_STATE_NEW_EFFECT handling done, now processing other Events" << endl;
     }
     
     /*
@@ -324,11 +330,15 @@ void Window::redrawEffectBox()
     trackEffectBox->remove( *trackVector.at(previousEffectsTrack).widgetVector.at(i) );
   }
   
+  cout << "successfully removed all widgets" << endl;
+  
   // add each widget in the current track to the box, and show_all() them
   for(int i = 0;  i < trackVector.at(currentEffectsTrack).widgetVector.size(); i++)
   {
     trackEffectBox->add( *trackVector.at(currentEffectsTrack).widgetVector.at(i) );
   }
+  
+  cout << "successfully added all new widgets" << endl;
   
   trackEffectBox->show_all();
 }

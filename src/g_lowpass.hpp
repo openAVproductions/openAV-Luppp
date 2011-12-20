@@ -8,8 +8,9 @@
 
 #include "top.hpp"
 #include "g_statestore.hpp"
+#include "g_widgetbase.hpp"
 
-class GLowPass : public Gtk::DrawingArea
+class GLowPass : public Gtk::DrawingArea, public WidgetBase
 {
   public:
     GLowPass(Top*, GuiStateStore*);
@@ -19,7 +20,6 @@ class GLowPass : public Gtk::DrawingArea
   
   protected:
     int ID;
-    static int privateID;
     GuiStateStore* stateStore;
     
     Top* top;

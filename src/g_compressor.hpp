@@ -23,7 +23,6 @@ class GCompressor : public Gtk::DrawingArea, public WidgetBase
   
   protected:
     int ID;
-    static int privateID;
     GuiStateStore* stateStore;
     
     Top* top;

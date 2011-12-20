@@ -6,11 +6,9 @@
 using namespace std;
 using namespace Luppp;
 
-int GLowPass::privateID = 0;
-
 GLowPass::GLowPass(Top* t, GuiStateStore* s)
 {
-  ID = privateID++;
+  ID = WidgetBase::getID();
   
   top = t;
   stateStore = s;
@@ -69,7 +67,7 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     cr->fill();
     
     // update value from stateStore
-    float cutoffRangeZeroOne = stateStore->effectState.at(0).values[0];
+    float cutoffRangeZeroOne = stateStore->effectState.at(ID).values[0];
     
     cutoff = (48.f / xSize) + (cutoffRangeZeroOne * 0.7541 );
     

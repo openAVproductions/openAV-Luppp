@@ -6,11 +6,9 @@
 using namespace std;
 using namespace Luppp;
 
-int GCompressor::privateID = 0;
-
 GCompressor::GCompressor(Top* t, GuiStateStore* s)
 {
-  ID = privateID++;
+  ID = WidgetBase::getID();
   
   top = t;
   stateStore = s;
@@ -66,12 +64,18 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     setColour(cr, COLOUR_GREY_3 );
     cr->fill();
     
-    // update value from stateStore
-    float cutoffRangeZeroOne = stateStore->effectState.at(0).values[0];
-    float release = stateStore->effectState.at(0).values[1];
+    if ( ID >= stateStore->effectState.size() )
+    {
+      std::cout << "GCompressor::expose() effectState.size() < ID!! cannot access values!" << std::endl;
+      return true;
+    }
     
-    float ratio = stateStore->effectState.at(0).values[4];
-    float makeupZeroOne = stateStore->effectState.at(0).values[5];
+    // update value from stateStore
+    float cutoffRangeZeroOne = stateStore->effectState.at(ID).values[0];
+    float release = stateStore->effectState.at(ID).values[1];
+    
+    float ratio = stateStore->effectState.at(ID).values[4];
+    float makeupZeroOne = stateStore->effectState.at(ID).values[5];
     
     // invert range, so 0 = most cut on threshold ( -30dB ), 1 = thresh @ 0dB
     float thresh = cutoffRangeZeroOne;
@@ -198,7 +202,7 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     float xArc = x + (xSize * 0.25) + (xSize*0.5) * thresh;
     float yArc = y + (ySize * 0.75)  - makeup;
     
-    cout << " Arc x,y : " << xArc << ", " << yArc <<endl;
+    //cout << " Arc x,y : " << xArc << ", " << yArc <<endl;
     cr->arc(xArc, yArc, 7, 0, 6.2830 );
     cr->stroke();
     
