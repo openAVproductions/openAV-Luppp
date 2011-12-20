@@ -219,6 +219,7 @@ void LadspaHost::process(int nframes, float* buffer)
   
   // ID is the Unique Effect ID, so we always get back this instances state
   EffectState* state = top->state.getEffectState(ID);
+  //cout << "ladspahost got effectstate " << state << " from ID " << ID << " value 0 = " << state->values[0] << endl; 
   
   if ( type == EFFECT_REVERB )
   {

@@ -45,17 +45,18 @@ AudioTrack::AudioTrack( Top* t )
 
 int AudioTrack::addEffect( int pos,  Effect* eff )
 {
-  cout << "AudioTrack::addEffect() " << pos << flush;
-  std::list<Effect*>::iterator iter =  effects.begin();
-  std::advance(iter, pos);
+  cout << "AudioTrack::addEffect() pushing to back " << pos << flush;
+  //std::list<Effect*>::iterator iter =  effects.begin();
+  //std::advance(iter, pos);
   
-  effects.insert( iter , eff);
+  effects.push_back(eff);
   cout << "\tdone!" << endl;
   return 0;
 }
 
 int AudioTrack::getEffectID(int pos)
 {
+  // range check needed
   std::list<Effect*>::iterator iter =  effects.begin();
   std::advance(iter, pos);
   return (*iter)->getID();
