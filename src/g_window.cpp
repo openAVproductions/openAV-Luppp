@@ -46,6 +46,10 @@ Window::Window(Gtk::Main *k, Top* t)
   refBuilder->get_widget("window", window);
   window->set_title("Luppp 2.0");
   
+  refBuilder->get_widget("mainBox", mainBox);
+  mainBox->add( waveview );
+  mainBox->show_all();
+  
   refBuilder->get_widget("mainTable", mainTable);
   refBuilder->get_widget("trackEffectBox", trackEffectBox);
   
@@ -95,6 +99,14 @@ int Window::handleEvent()
   //cout << "Window::handleEvent()" << endl;
   
   bool moreEventsWaiting = true;
+  
+  top->scopeVectorMutex.lock();
+  {
+    waveview.setSample( top->scopeVector );
+  }
+  top->scopeVectorMutex.unlock();
+  waveview.redraw();
+  
   
   // loop over events queue, return when no events to process
   while ( moreEventsWaiting )

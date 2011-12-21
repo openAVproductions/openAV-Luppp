@@ -19,6 +19,7 @@
 
 #include "g_lowpass.hpp"
 #include "g_highpass.hpp"
+#include "g_waveview.hpp"
 #include "g_equalizer.hpp"
 #include "g_compressor.hpp"
 
@@ -31,6 +32,7 @@ class Window
     Top* top;
     Gtk::Main* kit;
     
+    Gtk::HBox* mainBox;
     Gtk::Window* window;
     Gtk::Table* mainTable;
     Gtk::HBox* trackEffectBox;
@@ -49,12 +51,13 @@ class Window
     int previousEffectsTrack;
     void setEffectsBox(int trackID);
     
+    GWaveView waveview;
+    
     // helper functions
     void redrawEffectBox();
     
     int numTracks;
     void addTrack();
-    
     
     int handleEvent();
     void addEffect(EffectType);
