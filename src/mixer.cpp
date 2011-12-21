@@ -35,12 +35,19 @@ int Mixer::addEffect(int track, int pos,  Effect* eff )
 
 int Mixer::getEffectID(int track, int pos)
 {
-  // range check needed
-  //cout << "Mixer::getEffectID() t: " << track << " pos: " << pos << endl;
-  std::list<AudioTrack>::iterator iter =  audiotrackList.begin();
-  std::advance(iter, track);
+  if ( track < audiotrackList.size() )
+  {
+    //cout << "Mixer::getEffectID() t: " << track << " pos: " << pos << endl;
+    std::list<AudioTrack>::iterator iter =  audiotrackList.begin();
+    std::advance(iter, track);
+    return iter->getEffectID( pos );
+  }
+  else
+  {
+    cout << "Mixer::getEffectID() OOB! t: " << track << endl;
+  }
   
-  return iter->getEffectID( pos );
+  return -1;
 }
 
 void Mixer::process(int nframes, float* outBuffer)

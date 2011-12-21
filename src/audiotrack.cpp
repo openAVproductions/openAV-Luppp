@@ -57,10 +57,18 @@ int AudioTrack::addEffect( int pos,  Effect* eff )
 
 int AudioTrack::getEffectID(int pos)
 {
-  // range check needed
-  std::list<Effect*>::iterator iter =  effects.begin();
-  std::advance(iter, pos);
-  return (*iter)->getID();
+  // range check the list
+  if ( pos < effects.size() )
+  {
+    std::list<Effect*>::iterator iter =  effects.begin();
+    std::advance(iter, pos);
+    return (*iter)->getID();
+  }
+  else
+  {
+    cout << "AudioTrack::getEffectID() OOB! p: " << pos << endl;
+  }
+  return -1;
 }
 
 void AudioTrack::process(int nframes, float* buffer, float* W, float* X, float* Y, float* Z)

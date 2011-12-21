@@ -286,6 +286,8 @@ void JackClient::apcSendDeviceControl(int track, int device, void* apcOutputBuff
 {
   // get UID of state
   int uid = mixer.getEffectID(track, device);
+  if ( uid == -1 )
+    return;
   
   // retrieve state
   EffectState* state = top->state.getEffectState(uid);
