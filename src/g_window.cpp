@@ -163,7 +163,7 @@ int Window::handleEvent()
       (*i)->redraw();
     }
     else if ( e->type == EE_TRACK_DEVICE_ACTIVE ) {
-      std::cout << "Gui DEVICE ACTIVE   UID: " << e->ia << e->ic << std::endl; 
+      std::cout << "Gui DEVICE ACTIVE   UID: " << e->ia << " value: " << e->ic << std::endl; 
       
       guiState.effectState.at(e->ia).active = e->ic;
       

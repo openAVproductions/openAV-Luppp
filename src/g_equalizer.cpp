@@ -77,7 +77,7 @@ bool Equalizer::on_expose_event(GdkEventExpose* event)
     
     int dialSize = 30;
     
-    bool active = true;
+    bool active = stateStore->effectState.at(ID).active;
     
     Dial(cr, active, 30 , 150 , low  , DIAL_MODE_PAN);
     Dial(cr, active, 80 , 150 , lmid , DIAL_MODE_PAN);

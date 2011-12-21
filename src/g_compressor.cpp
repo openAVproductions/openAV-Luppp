@@ -81,7 +81,7 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     float thresh = cutoffRangeZeroOne;
     float makeup = makeupZeroOne * (ySize * 0.5);
     
-    bool active = true;
+    bool active = stateStore->effectState.at(ID).active;
     
     int x = 10;
     int y = 22;
@@ -158,7 +158,10 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     cr->line_to(x , y + ySize );
     cr->close_path();
     
-    setColour(cr, COLOUR_BLUE_1, 0.2 );
+    if ( active )
+      setColour(cr, COLOUR_BLUE_1, 0.2 );
+    else
+      setColour(cr, COLOUR_GREY_1, 0.2 );
     cr->close_path();
     cr->fill_preserve();
     
@@ -197,13 +200,16 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     */
     
     // click center ( range = 1/2 the range of the widget
-    setColour(cr, COLOUR_ORANGE_1, 0.9 );
+    if ( active )
+      setColour(cr, COLOUR_ORANGE_1, 0.9 );
+    else
+      setColour(cr, COLOUR_GREY_1, 0.9 );
     
     float xArc = x + (xSize * 0.25) + (xSize*0.5) * thresh;
     float yArc = y + (ySize * 0.75)  - makeup;
     
     //cout << " Arc x,y : " << xArc << ", " << yArc <<endl;
-    cr->arc(xArc, yArc, 7, 0, 6.2830 );
+    cr->arc(xArc, yArc, 6 + 5 * release , 0, 6.2830 );
     cr->stroke();
     
     // dials
@@ -221,7 +227,7 @@ bool GCompressor::on_expose_event(GdkEventExpose* event)
     cr->set_line_width(4);
     cr->stroke();
     
-    TitleBar(cr, 0,0 , 130, 216, "Compressor", true);
+    TitleBar(cr, 0,0 , 130, 216, "Compressor", active);
     
     /*
     if ( state.selected )
