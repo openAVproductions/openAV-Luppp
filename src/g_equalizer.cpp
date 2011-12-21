@@ -12,6 +12,15 @@ Equalizer::Equalizer(GuiStateStore* s)
   
   stateStore = s;
   
+  freqState.active = true;
+  freqState.type = FREQUENCY_GRAPH_TYPE_PARAMETRIC;
+  for(int i = 0; i < 4; i++)
+  {
+    freqState.Q[i] = 1.0;
+    freqState.cutoffFreq[i] = (i/4.f) * 10000;
+    freqState.gain[i] = 0.f;
+  }
+  
   //std::cout << "Enterin Equalizer contructor" << std::endl;
   add_events(Gdk::EXPOSURE_MASK | Gdk::BUTTON_PRESS_MASK);
   signal_button_press_event().connect(sigc::mem_fun(*this, &Equalizer::on_button_press_event) );
@@ -61,6 +70,11 @@ bool Equalizer::on_expose_event(GdkEventExpose* event)
     float hmid = stateStore->effectState.at(ID).values[2] * 2 - 1;
     float high = stateStore->effectState.at(ID).values[3] * 2 - 1;
     
+    freqState.gain[0] = stateStore->effectState.at(ID).values[0];
+    freqState.gain[1] = stateStore->effectState.at(ID).values[1];
+    freqState.gain[2] = stateStore->effectState.at(ID).values[2];
+    freqState.gain[3] = stateStore->effectState.at(ID).values[3];
+    
     int dialSize = 30;
     
     bool active = true;
@@ -70,7 +84,7 @@ bool Equalizer::on_expose_event(GdkEventExpose* event)
     Dial(cr, active, 130, 150 , hmid , DIAL_MODE_PAN);
     Dial(cr, active, 180, 150 , high , DIAL_MODE_PAN);
     
-    //FrequencyGraph(cr, active, 10, 22, 225, 95, *freqState );
+    FrequencyGraph(cr, active, 10, 22, 225, 95, freqState );
     
     TitleBar(cr, 0,0 , 250, 216, "Parametric EQ", active);
     

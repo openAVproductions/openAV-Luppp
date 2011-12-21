@@ -21,6 +21,7 @@ class Equalizer : public Gtk::DrawingArea, public WidgetBase
     int ID;
     GuiStateStore* stateStore;
     
+    EqualizerState freqState;
     
     //Override default signal handler:
     bool on_expose_event			(GdkEventExpose* event);
