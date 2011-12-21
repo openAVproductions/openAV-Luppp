@@ -244,7 +244,7 @@ void LadspaHost::process(int nframes, float* buffer)
   else if ( type == EFFECT_LOWPASS )
   {
     // lowpass ports
-    float freq = 200 + (70 * pow( 2.0, ((double)(state->values[0]*127) - 69.0) / 12.0 ) * 4);
+    float freq = 200 + (70 * pow( 2.0, ((double)(state->values[0]*127) - 69.0) / 12.0 ) * 5);
     controlBuffer[0] = freq;
     descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] );
     descriptor -> connect_port ( pluginHandle , 1, &controlBuffer[1] );
