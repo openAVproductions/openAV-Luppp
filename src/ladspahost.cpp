@@ -221,6 +221,11 @@ void LadspaHost::process(int nframes, float* buffer)
   EffectState* state = top->state.getEffectState(ID);
   //cout << "ladspahost got effectstate " << state << " from ID " << ID << " value 0 = " << state->values[0] << endl; 
   
+  if ( !state->active )
+  {
+    return;
+  }
+  
   if ( type == EFFECT_REVERB )
   {
     descriptor -> connect_port ( pluginHandle , 0  , buffer );
