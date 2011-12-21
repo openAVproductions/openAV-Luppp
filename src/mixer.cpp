@@ -69,7 +69,6 @@ void Mixer::process(int nframes,bool record, float* inBuffer, float* outBuffer)
   
   if ( record ) // we push the audio data to a ringbuffer
   {
-    cout << "writing to recordAudio ringbuffer!" << endl;
     top->recordAudioQueue.push(nframes, inBuffer);
   }
   

@@ -54,7 +54,7 @@ void BufferAudioSource::process (int nframes, float* buffer )
   {
     if ( (int)(index*size) >= size )
     {
-      //std::cout << "Index = 0" << std::endl;
+      cout << "BufferAudioSource:proces()  index*size > size!  vectorSize = " << tmpVector->size() << endl;
       index = 0.f;
     }
     

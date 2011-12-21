@@ -212,7 +212,7 @@ void StateStore::setClipSelectorState(int t,int block, int bufferID)
   (*clipI).state = CLIP_STATE_LOADED;
   (*clipI).bufferID = bufferID;
   
-  // bufferID here is used to extrace name from GUI list of AudioBuffer names
+  // bufferID here is used to extract name from GUI list of AudioBuffer names
   EngineEvent* x = top->toEngineEmptyEventQueue.pull();
   x->looperLoad(t, block, bufferID);
   top->toGuiQueue.push(x);
