@@ -11,6 +11,9 @@ enum EngineEventType
   
   EE_MIXER_VOLUME,
   
+  EE_ADD_TRACK,
+  EE_ADD_TRACK_POINTERS,
+  
   EE_LOOPER_RECORD,
   EE_LOOPER_RETRIGGER,
   EE_LOOPER_SET_BEATS,
@@ -62,6 +65,9 @@ class EngineEvent
     float fa, fb ,fc;
     char* sa;
     void* vPtr;
+    void* vPtr2;
+    void* vPtr3;
+    void* vPtr4;
     
     EngineEvent() {
       //std::cout << "EngineEvent() CONSTRUCTOR" << std::endl;
@@ -71,6 +77,9 @@ class EngineEvent
     ~EngineEvent() {
       //std::cout << "~EngineEvent() DESTRUCTOR" << std::endl;
     }
+    
+    void addTrack             (int newId);
+    void sendAddTrackPointers (void*,void*,void*,void*);
     
     void looperPlay           (int id);
     void looperStop           (int id);

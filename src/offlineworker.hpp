@@ -15,6 +15,8 @@ class OfflineWorker
   public:
     OfflineWorker(Top*);
     
+    int addTrack(int);
+    
     int loadAudioBuffer( int, int, std::string name);
     int createNewEffect( int, int, /*EffectType*/ int type );
   

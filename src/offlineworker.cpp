@@ -5,6 +5,7 @@
 #include "effect.hpp"
 #include "beatsmash.hpp"
 #include "ladspahost.hpp"
+#include "audiotrack.hpp"
 #include "audiobuffer.hpp"
 
 using namespace std;
@@ -47,6 +48,44 @@ int OfflineWorker::createNewEffect(int t, int pos, int typeInt )
     x->setStateEffect(t,pos,typeInt,effect);
     top->toEngineQueue.push(x);
   }
+  
+}
+
+// this function is called by the GUI thread, and will create an AudioTrack
+// instance, as well as all other nessiary Engine components to have a working
+// track. It will then pass pointers to each instance to Engine, which will insert
+// them into the Engine's lists.
+int OfflineWorker::addTrack(int trackID)
+{
+  // to be sent to Mixer
+  AudioTrack* audiotrack = new AudioTrack(top);
+  
+  //BufferAudioSource
+  BufferAudioSourceState* bas = new BufferAudioSourceState();
+  bas->index = 0.f;
+  bas->speed = 1.f;
+  bas->bufferID = -1;
+  
+  // ClipSelector
+  ClipSelectorState* c = new ClipSelectorState();
+  c->ID = -1;
+  for ( int i = 0; i < 10; i++ )
+  {
+    c->clipInfo.push_back( ClipInfo() );
+  }
+  
+  // TrackOutput
+  TrackOutputState* tos = new TrackOutputState();
+  tos->ID = trackID;
+  tos->selected = false;
+  tos->volume = 0.f;
+  tos->pan = 0.f;
+  tos->panZ = 0.f;
+  
+  cout << "OfflineW sending ADD TRACK pointers NOW!" << endl;
+  EngineEvent* x = new EngineEvent();
+  x->sendAddTrackPointers( (void*)audiotrack,(void*)bas,(void*)c,(void*)tos);
+  top->toEngineQueue.push(x);
   
 }
 

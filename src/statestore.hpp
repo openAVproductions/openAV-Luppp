@@ -33,7 +33,9 @@ class StateStore
     int getNumTracks(){return numTracks;}
     int getNumEffects(){return numEffects;}
     
-    void addTrack();
+    // these functions accept pointers to instances and then insert the objects
+    // into the lists that Engine uses for its operation
+    void addTrack(BufferAudioSourceState*, ClipSelectorState*, TrackOutputState*);
     void addEffect(int t, int p, Effect* e);
     
     // to be called whenever we want a new "EffectState" added to the list

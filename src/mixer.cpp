@@ -18,9 +18,10 @@ Mixer::Mixer(Top* t)
   inputBuffer.resize(1024);
 }
 
-void Mixer::addTrack()
+void Mixer::addTrack(AudioTrack* trackPtr)
 {
-  audiotrackList.push_back( *(new AudioTrack(top)) );
+  cout << "Mixer::addTrack() AudioTrack* = " << trackPtr << endl;
+  audiotrackList.push_back( *(trackPtr) );
 }
 
 

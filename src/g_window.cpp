@@ -54,6 +54,9 @@ Window::Window(Gtk::Main *k, Top* t)
   refBuilder->get_widget("mainTable", mainTable);
   refBuilder->get_widget("trackEffectBox", trackEffectBox);
   
+  refBuilder->get_widget("menuFileAddTrack", menuFileAddTrack);
+  menuFileAddTrack->signal_activate().connect ( sigc::mem_fun( *this, &Window::sendAddTrack ) );
+  
   refBuilder->get_widget("menuAddLowpass", menuAddLowpass);
   menuAddLowpass->signal_activate().connect ( sigc::bind (sigc::mem_fun( *this, &Window::addEffect ), EFFECT_LOWPASS ) );
   
@@ -75,15 +78,20 @@ Window::Window(Gtk::Main *k, Top* t)
   refBuilder->get_widget("menuAddCompressor", menuAddCompressor);
   menuAddCompressor->signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &Window::addEffect ), EFFECT_COMPRESSOR));
   
-  addTrack();
-  addTrack();
-  //addTrack();
-  
   // poll the event Queue
   Glib::signal_timeout().connect(sigc::mem_fun(*this, &Window::handleEvent), 50);
   
   // last thing, now we're starting the GUI main loop
   kit->run(*window);
+}
+
+void Window::sendAddTrack()
+{
+  cout << "GUI got AddTrack menu activation, sending ADD_TRACK event to Engine" << endl;
+  EngineEvent* x = new EngineEvent();
+  // -1 has no meaning here
+  x->addTrack(-1);
+  top->toEngineQueue.push(x);
 }
 
 void Window::addEffect( EffectType et )
@@ -137,6 +145,16 @@ int Window::handleEvent()
       advance(iter,e->ia);
       //std::cout << "Redraw Iter = " << &iter << std::endl;
       (*iter)->redraw();
+    }
+    else if ( e->type == EE_ADD_TRACK ) {
+      cout << "GUI got ADD_TRACK event, sending to OfflineWorker  NewID = " << e->ia << endl;
+      int ret = top->offlineWorker->addTrack(e->ia);
+      
+      if ( ret )
+      {
+        addTrack();
+      }
+      
     }
     else if ( e->type == EE_TRACK_SET_MUTE ) {
       //std::cout << "GUI MUTE event: " << e->ib << std::endl;

@@ -64,14 +64,6 @@ JackClient::JackClient( Top* t) :
      cerr << "JackClient::JackClient() Could not set process callback." << endl;
      return;
   }
-
-  mixer.addTrack();
-  mixer.addTrack();
-  //mixer.addTrack();
-
-  top->state.addTrack();
-  top->state.addTrack();
-  //top->state.addTrack();
   
   jack_activate(client);
 }
@@ -152,6 +144,26 @@ int JackClient::processRtQueue()
       // send all values on to stateStore, from there we message UI, and
       // we do the logic on which EffectID we need to write to
       //top->state.setPluginParameter(e->ia,e->ib,e->ic,e->fa);
+    }
+    else if ( e->type == EE_ADD_TRACK) {
+      // GUI / Controller can both add tracks, so we get the ADD_TRACK event here
+      // then bounce it to GUI thread, it creates the nessisary instances non-RT,
+      // and then it bounces the nessisary pointers back to Engine (see EE_ADD_TRACK_POINTERS)
+      cout << "JackC::processRtQ Got Add track event, bouncing to GUI!" << endl;
+      EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+      
+      // tell GUI the ID for the new track
+      x->addTrack( top->state.getNumTracks() + 1 );
+      top->toGuiQueue.push(x);
+    }
+    else if ( e->type == EE_ADD_TRACK_POINTERS) {
+      cout << "JackC::processRtQ Got ADD TRACK POINTERS event, setting in Mixer & State!" << endl;
+      
+      // vPtr is the AudioTrack*, so cast & send to mixer to insert
+      mixer.addTrack( (AudioTrack*) e->vPtr );
+      
+      // vPtr 2, 3 & 4 are BAS, Clip, TrackOutput in that order.
+      top->state.addTrack( (BufferAudioSourceState*) e->vPtr2, (ClipSelectorState*)e->vPtr3, (TrackOutputState*)e->vPtr4 );
     }
     
   }

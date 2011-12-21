@@ -18,7 +18,7 @@ class Mixer
     Mixer(Top*);
     
     // need to pass in pointer, not create
-    void addTrack();
+    void addTrack(AudioTrack*);
     
     int addEffect(int, int, Effect* );
     

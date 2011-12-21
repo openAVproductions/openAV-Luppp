@@ -38,13 +38,14 @@ class Window
     Gtk::Table* mainTable;
     Gtk::HBox* trackEffectBox;
     
+    Gtk::MenuItem* menuAddReverb;
     Gtk::MenuItem* menuAddLowpass;
     Gtk::MenuItem* menuAddHighpass;
-    Gtk::MenuItem* menuAddParametric;
-    Gtk::MenuItem* menuAddBeatsmasher;
-    Gtk::MenuItem* menuAddReverb;
+    Gtk::MenuItem* menuFileAddTrack;
     Gtk::MenuItem* menuAddTransient;
     Gtk::MenuItem* menuAddCompressor;
+    Gtk::MenuItem* menuAddParametric;
+    Gtk::MenuItem* menuAddBeatsmasher;
     
     GuiStateStore guiState;
     
@@ -57,6 +58,8 @@ class Window
     
     // helper functions
     void redrawEffectBox();
+    
+    void sendAddTrack();
     
     int numTracks;
     void addTrack();

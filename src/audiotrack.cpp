@@ -26,20 +26,10 @@ AudioTrack::AudioTrack( Top* t )
   
   trackBuffer.resize(top->bufferSize);
   
-  if ( ID == 0 )
-  {
-    source = new BufferAudioSource(t);
-  }
-  else if ( ID == 1 )
-  {
-    source = new BufferAudioSource(t);
-    //source = new FluidSynthAudioSource(t, "example.sf2"); //new BufferAudioSource(t);
-    //addEffect( 1, new LadspaHost(top, EFFECT_PARAMETRIC_EQ, top->samplerate) );
-  }
-  else
-  {
-    source = new FluidSynthAudioSource(t, "example.sf2");
-  }
+  
+  // default source for a track is the BufferAudioSource, we can exchange
+  // it for a synth, but that's not implemented (at time of writing)
+  source = new BufferAudioSource(t);
   
   sink = new AudioSinkOutput(t);
 }
