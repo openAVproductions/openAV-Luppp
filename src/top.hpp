@@ -21,12 +21,16 @@ class Top
 {
   public:
     Top();
+    void initialize();
     
     void addTrack();
     
     int bufferSize;
     int samplerate;
     int bpm;
+    
+    Glib::Mutex scopeVectorMutex;
+    std::vector<float> scopeVector;
     
     Controller* controller;
     OfflineWorker* offlineWorker;

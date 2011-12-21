@@ -60,16 +60,27 @@ void Mixer::process(int nframes, float* outBuffer)
   
   float* outPointer = &outputW[0];
   
+  bool copyToScopeVector = top->scopeVectorMutex.trylock();
+  
   // now sum up the master output buffers and write them
   for(int i = 0; i < nframes; i++)
   {
     // copy value
     *outBuffer++ = *outPointer;
     
+    if ( copyToScopeVector )
+    {
+      // write master output value to scopeVector, to be shown in GUI
+      top->scopeVector.at(i) = *outPointer;
+    }
+    
     // write 0.f to buffer, and increment
     *outPointer++ = 0.f;
     inputBuffer[i] = 0.f;
     
   }
+  
+  if ( copyToScopeVector )
+    top->scopeVectorMutex.unlock();
   
 }

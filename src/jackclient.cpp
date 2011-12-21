@@ -19,6 +19,8 @@ JackClient::JackClient( Top* t) :
   t->bufferSize = jack_get_buffer_size(client);
   t->samplerate = jack_get_sample_rate(client);
   
+  t->initialize();
+  
   inputPort = jack_port_register ( client,
                                     "input",
                                     JACK_DEFAULT_AUDIO_TYPE,
