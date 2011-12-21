@@ -296,6 +296,12 @@ void JackClient::apcSendDeviceControl(int track, int device, void* apcOutputBuff
     writeMidi(apcOutputBuffer, 176 + track, 16 + i, state->values[i] * 127 );
   }
   
+  int onOff = 128 + track;
+  if ( state->active )
+    onOff = 144 + track;
+  
+  writeMidi(apcOutputBuffer, onOff, 59, 127); // write device On/Off LED
+  
 }
 
 void JackClient::apcRead( int nframes )
