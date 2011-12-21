@@ -10,8 +10,6 @@ GuiStateStore::GuiStateStore()
   numTracks = 0;
   lastUsedDir = Glib::get_home_dir();
   cout << "Last used dir = " << lastUsedDir << endl;
-  
-  cutoff = 0.f;
 }
 
 void GuiStateStore::addTrack()
@@ -32,15 +30,6 @@ void GuiStateStore::addTrack()
   c->ID = -1;
   for ( int i = 0; i < 10; i++ )
     c->clipInfo.push_back( ClipInfo() );
-  
-  eqState.active = true;
-  eqState.type = FREQUENCY_GRAPH_TYPE_PARAMETRIC;
-  for(int i = 0; i < 4; i++)
-  {
-    eqState.Q[i] = 1.0;
-    eqState.cutoffFreq[i] = (i/4.f) * 10000;
-    eqState.gain[i] = 0.f;
-  }
   
   trackoutputState.push_back( TrackOutputState() );
   trackoutputState.back().ID = numTracks;

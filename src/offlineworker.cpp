@@ -31,6 +31,7 @@ int OfflineWorker::createNewEffect(int t, int pos, int typeInt )
     case EFFECT_HIGHPASS:
     case EFFECT_TRANSIENT:
     case EFFECT_COMPRESSOR:
+    case EFFECT_PARAMETRIC_EQ:
       effect = new LadspaHost(top, type, top->samplerate);
       break;
     case EFFECT_BEATSMASH:

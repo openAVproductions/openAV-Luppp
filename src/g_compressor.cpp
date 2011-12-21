@@ -284,6 +284,7 @@ bool GCompressor::on_button_press_event(GdkEventButton* event)
     if ( (event->x > 10) && (event->x < 235) &&
          (event->y > 22) && (event->y < 117 ) )
     {
+      /*
       std::cout << "graph area click!" << std::endl;
       mouseDown = true; // for pointer motion "drag" operations
       
@@ -306,6 +307,7 @@ bool GCompressor::on_button_press_event(GdkEventButton* event)
       x = new EngineEvent();
       x->setPluginParameter(0,0,1, q );
       top->toEngineQueue.push(x);
+      */
     }
     
     if ( event->y < 20 )

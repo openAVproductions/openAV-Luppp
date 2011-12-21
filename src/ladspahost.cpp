@@ -87,7 +87,7 @@ LadspaHost::LadspaHost(Top* t,EffectType et, int s) : Effect(t, et)
   // module is loaded, check descriptor & lets instantiate the plugin
   if (descriptor == 0)
   {
-    std::cout << "Descriptor == 0!" << std::endl;
+    std::cout << "LadspaHost()  Descriptor == 0!" << std::endl;
     return;
   }
   pluginHandle = 0;
@@ -145,9 +145,9 @@ void LadspaHost::resetParameters()
     controlBuffer[3] = 0; // master gain
     
     controlBuffer[4] = 1; // turn on section 1 eq switch
-    controlBuffer[5] = 200;
-    controlBuffer[6] = 1;
-    controlBuffer[7] = 0;
+    controlBuffer[5] = 200; // freq
+    controlBuffer[6] = 1; // bandwidth
+    controlBuffer[7] = 0; // gain
     
     controlBuffer[8] = 1; // turn on section 2 eq switch
     controlBuffer[9] = 400;
@@ -208,7 +208,7 @@ void LadspaHost::process(int nframes, float* buffer)
   
   if ( descriptor == 0 )
   {
-    cout << "LadspaHost::descriptor == 0" << endl;
+    //cout << "LadspaHost::descriptor == 0" << endl;
   }
   
   if ( !active )
@@ -303,6 +303,12 @@ void LadspaHost::process(int nframes, float* buffer)
   else if ( type == EFFECT_PARAMETRIC_EQ )
   {
     // parametric
+    //cout << "LadspaHost Parametric  value 0 = " << state->values[0] << endl; 
+    controlBuffer[07] = (state->values[0]-0.5) * 20; // gains on top 4 knobs
+    controlBuffer[11] = (state->values[1]-0.5) * 20;
+    controlBuffer[15] = (state->values[2]-0.5) * 20;
+    controlBuffer[19] = (state->values[3]-0.5) * 20;
+    
     descriptor -> connect_port ( pluginHandle , 0, buffer );
     descriptor -> connect_port ( pluginHandle , 1, &outputBuffer[0] );
     

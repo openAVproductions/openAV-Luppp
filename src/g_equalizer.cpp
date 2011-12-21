@@ -6,11 +6,9 @@
 using namespace std;
 using namespace Luppp;
 
-int Equalizer::privateID = 0;
-
 Equalizer::Equalizer(GuiStateStore* s)
 {
-  ID = privateID++;
+  ID = WidgetBase::getID();
   
   stateStore = s;
   
@@ -58,30 +56,21 @@ bool Equalizer::on_expose_event(GdkEventExpose* event)
     setColour(cr, COLOUR_GREY_3 );
     cr->fill();
     
-    EqualizerState* freqState = &stateStore->eqState;
+    float low  = stateStore->effectState.at(ID).values[0] * 2 - 1;
+    float lmid = stateStore->effectState.at(ID).values[1] * 2 - 1;
+    float hmid = stateStore->effectState.at(ID).values[2] * 2 - 1;
+    float high = stateStore->effectState.at(ID).values[3] * 2 - 1;
     
     int dialSize = 30;
     
     bool active = true;
     
+    Dial(cr, active, 30 , 150 , low  , DIAL_MODE_PAN);
+    Dial(cr, active, 80 , 150 , lmid , DIAL_MODE_PAN);
+    Dial(cr, active, 130, 150 , hmid , DIAL_MODE_PAN);
+    Dial(cr, active, 180, 150 , high , DIAL_MODE_PAN);
     
-    // setup array of dials
-    for ( int i = 0; i < 4; i++ )
-    {
-      for( int j = 0; j < 2; j++ )
-      {
-        float value = 0.f;
-        if ( j % 2 == 0 )
-          value = (freqState->gain[i] * 2) - 1;
-        else
-        {
-          value = (freqState->cutoffFreq[i] - 0.5)*2;
-        }
-        Dial(cr, active, 30 + ( 50 * i)  , 130 + 40 * j , value , DIAL_MODE_PAN);
-      }
-    }
-    
-    FrequencyGraph(cr, active, 10, 22, 225, 95, *freqState );
+    //FrequencyGraph(cr, active, 10, 22, 225, 95, *freqState );
     
     TitleBar(cr, 0,0 , 250, 216, "Parametric EQ", active);
     

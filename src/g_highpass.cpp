@@ -247,6 +247,7 @@ bool GHighPass::on_button_press_event(GdkEventButton* event)
     if ( (event->x > 10) && (event->x < 235) &&
          (event->y > 22) && (event->y < 117 ) )
     {
+      /*
       std::cout << "graph area click!" << std::endl;
       mouseDown = true; // for pointer motion "drag" operations
       
@@ -270,6 +271,7 @@ bool GHighPass::on_button_press_event(GdkEventButton* event)
       x->setPluginParameter(0,0,1, q );
       top->toEngineQueue.push(x);
       redraw();
+      */
     }
     
     if ( event->y < 20 )

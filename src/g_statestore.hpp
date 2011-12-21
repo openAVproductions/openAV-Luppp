@@ -22,14 +22,10 @@ class GuiStateStore
     
     void addTrack();
     
-    float cutoff;
-    
     std::string getLastDir();
     void setLastDir(std::string s);
     
     void setClipSelectorState(int t,int block, int bufferID);
-    
-    EqualizerState eqState;
     
     // all effects should request state from this vector
     vector<EffectState> effectState;

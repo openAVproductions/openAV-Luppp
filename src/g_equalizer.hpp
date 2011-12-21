@@ -7,10 +7,9 @@
 #include <gtkmm/drawingarea.h>
 
 #include "g_statestore.hpp"
+#include "g_widgetbase.hpp"
 
-//#include "clipselectorstate.hpp"
-
-class Equalizer : public Gtk::DrawingArea
+class Equalizer : public Gtk::DrawingArea, public WidgetBase
 {
   public:
     Equalizer(GuiStateStore*);
@@ -20,7 +19,6 @@ class Equalizer : public Gtk::DrawingArea
   
   protected:
     int ID;
-    static int privateID;
     GuiStateStore* stateStore;
     
     
