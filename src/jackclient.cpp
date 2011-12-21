@@ -161,7 +161,8 @@ int JackClient::processRtQueue()
 
 int JackClient::process(jack_nframes_t nframes)
 {
-  float* outBuffer   = (float*)jack_port_get_buffer (outputPort    , nframes);
+  float* inBuffer  = (float*)jack_port_get_buffer ( inputPort, nframes);
+  float* outBuffer = (float*)jack_port_get_buffer (outputPort, nframes);
   
   processRtQueue();
   
@@ -170,7 +171,7 @@ int JackClient::process(jack_nframes_t nframes)
   // handle incoming midi
   processMidi(nframes);
   
-  mixer.process(nframes, outBuffer);
+  mixer.process(nframes, recordInput, inBuffer, outBuffer);
   
   return true;
 };
@@ -622,13 +623,21 @@ void JackClient::apcRead( int nframes )
       {
         int trackID = b1 - 144;
         std::cout << "APC: REC on track " << trackID << " on!" << std::endl;
-        //lo_send( //lo_address_new(NULL, "14688") , "/luppp/track/record", "ii", trackID, 1 );
+        recordInput = true;
+        
+        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+        x->setLooperRecord(trackID, true);
+        top->toGuiQueue.push(x);
       }
       else if ( b1 >= 128 && b1 < 128 + 16 ) // rec off
       {
         int trackID = b1 - 128;
         std::cout << "APC: REC on track " << trackID << " off!" << std::endl;
-        //lo_send( //lo_address_new(NULL, "14688") , "/luppp/track/record", "ii", trackID, 0 );
+        recordInput = false;
+        
+        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+        x->setLooperRecord(trackID, false);
+        top->toGuiQueue.push(x);
       }
     }
     if ( b2 == 49 )

@@ -7,6 +7,7 @@
 #include <glibmm.h>
 
 #include "rtqueue.hpp"
+#include "audioqueue.hpp"
 
 #include "statestore.hpp"
 
@@ -31,6 +32,7 @@ class Top
     
     Glib::Mutex scopeVectorMutex;
     std::vector<float> scopeVector;
+    std::vector<float> inputScopeVector;
     
     Controller* controller;
     OfflineWorker* offlineWorker;
@@ -42,6 +44,8 @@ class Top
     RtQueue toEngineQueue;
     
     RtQueue toEngineEmptyEventQueue;
+    
+    AudioQueue recordAudioQueue;
 };
 
 #endif

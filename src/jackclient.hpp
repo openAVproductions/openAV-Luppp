@@ -47,6 +47,8 @@ class JackClient
     JPort* apcInputPort;
     JPort* apcOutputPort;
     
+    bool recordInput;
+    
     int trackControlMode;
     void apcRead(int);
     

@@ -47,6 +47,7 @@ Window::Window(Gtk::Main *k, Top* t)
   window->set_title("Luppp 2.0");
   
   refBuilder->get_widget("mainBox", mainBox);
+  mainBox->add( inputWaveview );
   mainBox->add( waveview );
   mainBox->show_all();
   
@@ -102,10 +103,12 @@ int Window::handleEvent()
   
   top->scopeVectorMutex.lock();
   {
+    inputWaveview.setSample( top->inputScopeVector );
     waveview.setSample( top->scopeVector );
   }
   top->scopeVectorMutex.unlock();
   waveview.redraw();
+  inputWaveview.redraw();
   
   
   // loop over events queue, return when no events to process
@@ -154,6 +157,48 @@ int Window::handleEvent()
       std::list<TrackOutput*>::iterator i = trackoutputList.begin();
       std::advance(i,e->ia);
       (*i)->redraw();
+    }
+    else if ( e->type == EE_LOOPER_RECORD ) {
+      cout << "GUI: Looper Record event! t = " << e->ia << "  value = " << e->ib << endl;
+      // we get a "record off" event, and then read *all* the contents of
+      // the ringbuffer into a AudioBuffer, load that into engine same as
+      // a file source, and finally set the BufferAudioSource to play back
+      // that bufferID trough the bufferAudioSourceState list in *engine* statestore
+      if ( e->ib == 0 )
+      {
+        // create new buffer, get pointer, read space, resize buffer
+        AudioBuffer* buffer = new AudioBuffer();
+        vector<float>* pntr = buffer->getPointer();
+        int readSpace = top->recordAudioQueue.readSpaceAvailable();
+        pntr->resize(readSpace);
+        
+        cout << "AudioBuffer size before read: " << pntr->size() << flush;
+        
+        // read from ringbuffer *directly* into AudioBuffer
+        top->recordAudioQueue.writeSamplesTo( &pntr->at(0) );
+        
+        cout << "   and after " << pntr->size() << endl;
+        
+        // send new AudioBuffer event to engine State
+        EngineEvent* x = new EngineEvent();
+        x->setStateAudioBuffer( (void*) buffer);
+        top->toEngineQueue.push(x);
+        
+        // send LooperLoad event
+        x = new EngineEvent();
+        x->looperLoad( e->ia, 0, buffer->getID() );
+        top->toEngineQueue.push(x);
+  
+        
+        cout << "read samples available " << readSpace << endl;
+      }
+      
+      /*
+      guiState.trackoutputState.at(e->ia).rec = e->ib;
+      std::list<TrackOutput*>::iterator i = trackoutputList.begin();
+      std::advance(i,e->ia);
+      (*i)->redraw();
+      */
     }
     else if ( e->type == EE_TRACK_SET_PAN ) {
       std::cout << "Gui got pan " << e->fa << std::endl; 

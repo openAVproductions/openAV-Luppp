@@ -50,7 +50,7 @@ int Mixer::getEffectID(int track, int pos)
   return -1;
 }
 
-void Mixer::process(int nframes, float* outBuffer)
+void Mixer::process(int nframes,bool record, float* inBuffer, float* outBuffer)
 {
   if ( nframes > 1024 )
   {
@@ -67,6 +67,12 @@ void Mixer::process(int nframes, float* outBuffer)
   
   float* outPointer = &outputW[0];
   
+  if ( record ) // we push the audio data to a ringbuffer
+  {
+    cout << "writing to recordAudio ringbuffer!" << endl;
+    top->recordAudioQueue.push(nframes, inBuffer);
+  }
+  
   bool copyToScopeVector = top->scopeVectorMutex.trylock();
   
   // now sum up the master output buffers and write them
@@ -79,6 +85,7 @@ void Mixer::process(int nframes, float* outBuffer)
     {
       // write master output value to scopeVector, to be shown in GUI
       top->scopeVector.at(i) = *outPointer;
+      top->inputScopeVector.at(i) = *inBuffer++;
     }
     
     // write 0.f to buffer, and increment

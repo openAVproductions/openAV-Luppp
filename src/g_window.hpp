@@ -52,6 +52,7 @@ class Window
     void setEffectsBox(int trackID);
     
     GWaveView waveview;
+    GWaveView inputWaveview;
     
     // helper functions
     void redrawEffectBox();

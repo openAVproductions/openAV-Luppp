@@ -25,7 +25,7 @@ class Mixer
     // returns the UniqueID of an Effect in an AudioTrack
     int getEffectID(int track, int pos);
     
-    void process( int nframes, float* outBuffer );
+    void process( int nframes, bool,  float* inBuffer, float* outBuffer );
     
   private:
     Top* top;

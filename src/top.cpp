@@ -22,4 +22,5 @@ Top::Top() :
 void Top::initialize()
 {
   scopeVector.resize(bufferSize);
+  inputScopeVector.resize(bufferSize);
 }
