@@ -49,7 +49,7 @@ int AudioQueue::writeSamplesTo(float *writeBuffer)
   // check if there's anything to read
   int availableRead = jack_ringbuffer_read_space(buffer);
   
-  cout << "AudioQueue::pull() availableRead = " << availableRead << "  writeLocation " << writeBuffer << endl;
+  //cout << "AudioQueue::pull() availableRead = " << availableRead << "  writeLocation " << writeBuffer << endl;
   
   int returnValue = 0;
   
@@ -78,7 +78,7 @@ int AudioQueue::writeSamplesTo(float *writeBuffer)
 int AudioQueue::readSpaceAvailable()
 {
   int availableReadBytes = (int)jack_ringbuffer_read_space(buffer);
-  return availableReadBytes;
+  return availableReadBytes / sizeof(float);
 }
 
 

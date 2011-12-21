@@ -50,6 +50,7 @@ void BufferAudioSource::process (int nframes, float* buffer )
   if ( size == 0 )
     return;
   
+  //cout << "BAS:process() ID = " << ID << "  Size: " << size << " index = " << index << endl;
   for (int i = 0; i < nframes; i++ )
   {
     if ( (int)(index*size) >= size )

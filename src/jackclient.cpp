@@ -140,7 +140,7 @@ int JackClient::processRtQueue()
     }
     else if ( e->type == EE_LOOPER_LOAD ) {
       // insert the correct buffer ID into the list, so we can retrieve by sceneID later
-      cout << "EE_LOOPER_LOAD " << e->ia << ", " << e->ib << "," << e->ic << endl;
+      cout << "JackClient::processRtQueue() EE_LOOPER_LOAD " << e->ia << ", " << e->ib << "," << e->ic << endl;
       top->state.setClipSelectorState( e->ia, e->ib, e->ic );
     }
     else if ( e->type == EE_LOOPER_SELECT_BUFFER) {
