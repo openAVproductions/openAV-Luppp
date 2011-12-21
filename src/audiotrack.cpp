@@ -32,7 +32,8 @@ AudioTrack::AudioTrack( Top* t )
   }
   else if ( ID == 1 )
   {
-    source = new FluidSynthAudioSource(t, "example.sf2"); //new BufferAudioSource(t);
+    source = new BufferAudioSource(t);
+    //source = new FluidSynthAudioSource(t, "example.sf2"); //new BufferAudioSource(t);
     //addEffect( 1, new LadspaHost(top, EFFECT_PARAMETRIC_EQ, top->samplerate) );
   }
   else

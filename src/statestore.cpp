@@ -236,6 +236,27 @@ void StateStore::clipSelectorQueue(int t, int b)
   top->guiDispatcher->emit();
 }
 
+void StateStore::setPluginActive(int UID, int active)
+{
+  std::list<EffectState*>::iterator iter;
+  for ( iter = effectStateList.begin(); iter != effectStateList.end(); iter++ )
+  {
+    if ( (*iter)->ID == UID )
+    {
+      cout << "StateStore::setPluginActive() " << UID << "  " << active << endl;
+      (*iter)->active = active;
+      
+      EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+      x->setTrackDeviceActive(UID,
+                              -1,
+                              active);
+      top->toGuiQueue.push(x);
+      
+      break;
+    }
+  }
+}
+
 void StateStore::setPluginParameter(int ID, int param, float value)
 {
   // all "dynamic" elements in engine ( ladspaHosts, lv2host, etc ) all use
@@ -261,10 +282,9 @@ void StateStore::setPluginParameter(int ID, int param, float value)
   }
   else
   {
-    std::cout << "StateStore::setPluginParam() writing value " << value << " to param " << param << endl;
+    //std::cout << "StateStore::setPluginParam() writing value " << value << " to param " << param << endl;
     (*iter)->values[param] = value;
   }
-  
 }
 
 TrackOutputState* StateStore::getAudioSinkOutput(int t)

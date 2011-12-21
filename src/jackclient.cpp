@@ -355,41 +355,19 @@ void JackClient::apcRead( int nframes )
     }
     */
     
-    /*
+    
     // apc 40 Device Control On / Off
     if( b2 == 59 )
     {
-      if ( b1 >= 144 && b1 < 144 + 16 )
+      bool active = false;
+      if ( b1 >= 144 && b1 < 144 + 16 ) // on
       {
-        if ( b1 - 144 < trackStateVector.size() )
-        {
-          std::cout << "Track ID " << b1 - 144 << " Active = true" << std::flush;
-          int selDev = trackStateVector.at(b1 - 144)->selectedDevice;
-          std::cout << "  SelDev = " << selDev << std::endl;
-          trackStateVector.at(b1 - 144)->deviceState.at(selDev)->active = true;
-          //lo_send( //lo_address_new( NULL,"14688") , "/luppp/track/device/active", "iii", b1 - 144, selDev, 1 );
-        }
-        else
-        {
-          std::cout << "Track ID " << b1 - 144 << " out of range!" << std::endl;
-        }
+        active = true;
       }
-      else if ( b1 >= 128 && b1 < 128 + 16 ) // off
-      {
-        if ( b1 - 128 < trackStateVector.size() )
-        {
-          std::cout << "Track ID " << b1 - 128 << " Active = false" << std::endl;
-          int selDev = trackStateVector.at(b1 - 128)->selectedDevice;
-          trackStateVector.at(b1 - 128)->deviceState.at(trackStateVector.at(b1 - 128)->selectedDevice)->active = true;
-          //lo_send( //lo_address_new( NULL,"14688") , "/luppp/track/device/active", "iii", b1 - 128, selDev, 0 );
-        }
-        else
-        {
-          std::cout << "Track ID " << b1 - 128 << " out of range!" << std::endl;
-        }
-      }
+      // get unique ID of current selected track & device, then setPluginParam that UID
+      int uid = mixer.getEffectID(top->controller->getTrack(), top->controller->getDevice());
+      top->state.setPluginActive(uid, active);
     }
-    */
     
     // APc <- Selected device button
     if( b2 == 60 && ( b1 >= 144 && b1 < 144 + 16 ) )
@@ -508,7 +486,6 @@ void JackClient::apcRead( int nframes )
         std::cout << "SETTING BUFFER FROM APC40! ID:" << id << " val: " << val << std::endl;
         top->state.clipSelectorQueue(id, val);
         
-        
         writeMidi( apcOutBuffer, b1, b2, 127);
       }
     }
@@ -549,15 +526,8 @@ void JackClient::apcRead( int nframes )
         top->controller->setTrackDevice(track, device);
         //std::cout << "APC: Device Control on track " << track << " device " << device << " param " << b2 -16 << std::endl;
         
-        EffectState* state = top->state.getEffectState(track);
-        if ( state )
-        {
-          //cout << "State->values 0  " << state->values[0] << endl;
-        }
-        
-        cout << "Getting UniqueID:\t" << flush;
+        // get unique ID of current selected track, then setPluginParam that UID
         int uid = mixer.getEffectID(track, device);
-        cout << "\tGot " << uid << endl;
         top->state.setPluginParameter(uid, b2 - 16, b3 / 127.f);
         
         //top->state.effectValues[b2-16] = b3 / 127.f;

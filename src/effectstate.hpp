@@ -11,6 +11,7 @@ struct EffectState
       values[i] = 0.f;
   }
   int ID;
+  bool active;
   float values[8];
 };
 
