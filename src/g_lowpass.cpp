@@ -72,7 +72,7 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     
     cutoff = (48.f / xSize) + (cutoffRangeZeroOne * 0.7541 );
     
-    bool active = true;
+    bool active = stateStore->effectState.at(ID).active;
     
     int x = 10;
     int y = 22;
@@ -139,7 +139,10 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
                   xSizeCP2, y+(ySize*0.3), // control point 2
                   xSizeEnd, y+(ySize)   ); // end of curve on floor
     
-    setColour(cr, COLOUR_BLUE_1, 0.2 );
+    if ( active )
+      setColour(cr, COLOUR_BLUE_1, 0.2 );
+    else
+      setColour(cr, COLOUR_GREY_1, 0.2 );
     cr->close_path();
     cr->fill_preserve();
     
@@ -152,7 +155,10 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     cr->stroke();
     
     // click center
-    setColour(cr, COLOUR_ORANGE_1, 0.9 );
+    if ( active )
+      setColour(cr, COLOUR_ORANGE_1, 0.9 );
+    else
+      setColour(cr, COLOUR_GREY_1, 0.9 );
     cr->arc( xSize*cutoff, ySize*q, 7, 0, 6.2830 );
     cr->stroke();
     
@@ -164,14 +170,12 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     setColour(cr, COLOUR_GREY_3 );
     cr->rectangle( x, y , xSize, ySize );
     cr->set_line_width(3);
-    
     if ( active )
       setColour(cr, COLOUR_GREY_2 );
-    else
-      setColour(cr, COLOUR_GREY_3 );
+    
     cr->stroke();
     
-    TitleBar(cr, 0,0 , 250, 216, "Lowpass", true);
+    TitleBar(cr, 0,0 , 250, 216, "Lowpass", active);
     
     /*
     if ( state.selected )
@@ -182,7 +186,6 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
       cr->stroke();
     }
     */
-    
   }
   return true;
 }

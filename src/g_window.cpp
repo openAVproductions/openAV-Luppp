@@ -162,6 +162,13 @@ int Window::handleEvent()
       std::advance(i,e->ia);
       (*i)->redraw();
     }
+    else if ( e->type == EE_TRACK_DEVICE_ACTIVE ) {
+      std::cout << "Gui DEVICE ACTIVE   UID: " << e->ia << e->ic << std::endl; 
+      
+      guiState.effectState.at(e->ia).active = e->ic;
+      
+      redrawEffectBox(); // should be only redrawing current widget
+    }
     else if ( e->type == EE_TRACK_SELECT_DEVICE ) {
       std::cout << "Gui TrackSelect event  t: " << e->ia << " d: " << e->ib << std::endl;
       

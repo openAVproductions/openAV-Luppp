@@ -35,7 +35,10 @@ namespace Luppp
             value = 0.f;
           //std::cout << "Dial NORMAL: value = " << value << std::endl;
           angle = 2.46 + (4.54 * value);
-          setColour(cr, COLOUR_ORANGE_1 );
+          if ( active )
+            setColour(cr, COLOUR_ORANGE_1 );
+          else
+            setColour(cr, COLOUR_GREY_1 );
           cr->arc(xc,yc, 13, 2.46, angle );
           cr->line_to(xc,yc);
           cr->stroke();
