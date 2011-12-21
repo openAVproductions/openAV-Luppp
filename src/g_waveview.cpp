@@ -1,7 +1,12 @@
 #include "g_waveview.hpp"
+
 #include <iostream>
 #include <cairomm/context.h>
 #include <sstream>
+
+#include "g_widgets.hpp"
+
+using namespace Luppp; // for COLOUR_*
 
 GWaveView::GWaveView()
 {
@@ -11,7 +16,7 @@ GWaveView::GWaveView()
   add_events(Gdk::BUTTON_PRESS_MASK );
   
   // set default widget size
-  set_size_request(400,100);
+  set_size_request(300,200);
 }
 
 void GWaveView::setSample(const std::vector<float>& inSample)
@@ -23,7 +28,7 @@ void GWaveView::setSample(const std::vector<float>& inSample)
     sample.push_back(inSample.at(i));
   }
   
-  while ( sample.size() > 15000 )
+  while ( sample.size() > 10000 )
     sample.erase( sample.begin(),sample.begin()+ 128);
 }
 
@@ -54,15 +59,58 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       cr->rectangle(event->area.x, event->area.y,event->area.width, event->area.height);
       cr->clip();
       
-      //cr->move_to( width*(float(index)/sample.size())  , height/2);
+      int x = 10;
+      int y = 22;
+      int xSize = 225;
+      int ySize = 95;
+      
+      // works but a bit simple
+      cr -> move_to( x        , y         );
+      cr -> line_to( x + xSize, y         );
+      cr -> line_to( x + xSize, y + ySize );
+      cr -> line_to( x        , y + ySize );
+      cr -> close_path();
+      
+      // Draw outline shape
+      cr -> set_source_rgb (0.1,0.1,0.1);
+      cr -> fill();
+      
+      // draw "frequency guides"
+      std::valarray< double > dashes(2);
+      dashes[0] = 2.0;
+      dashes[1] = 2.0;
+      cr->set_dash (dashes, 0.0);
+      cr->set_line_width(1.0);
+      cr->set_source_rgb (0.4,0.4,0.4);
+      for ( int i = 0; i < 4; i++ )
+      {
+        cr->move_to( x + ((xSize / 4.f)*i), y );
+        cr->line_to( x + ((xSize / 4.f)*i), y + ySize );
+      }
+      for ( int i = 0; i < 4; i++ )
+      {
+        cr->move_to( x       , y + ((ySize / 4.f)*i) );
+        cr->line_to( x +xSize, y + ((ySize / 4.f)*i) );
+      }
+      cr->stroke();
+      cr->unset_dash();
+      
+      cr->move_to( x, y + ySize*0.5 );
       
       // loop for drawing each Point on the widget.
       for (long index=0; index <(long)sample.size(); index += 50) 
       {
-        cr->line_to( width*(float(index)/sample.size())  ,(height/2)+ (float(sample.at(index)) * height)  );
+        cr->line_to( x + xSize*(float(index)/sample.size())  ,y+ (ySize/2)+ (float(sample.at(index)) * ySize)  );
       }
-      cr->set_source_rgb(1.0,0.4,0.0 );
+      setColour(cr, COLOUR_ORANGE_1 );
       cr->stroke();
+      
+      // outline
+      setColour(cr, COLOUR_GREY_3 );
+      cr->rectangle( x, y , xSize, ySize );
+      cr->set_line_width(3);
+      cr->stroke();
+      
     }
   return true;
 } // on_expose_event()
