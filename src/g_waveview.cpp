@@ -21,7 +21,7 @@ GWaveView::GWaveView()
 
 void GWaveView::setSample(const std::vector<float>& inSample)
 {
-  std::cout << "void setSample() inSamp.size() = " << inSample.size() << std::endl;
+  //std::cout << "void setSample() inSamp.size() = " << inSample.size() << std::endl;
   
   for ( int i = 0; i < inSample.size(); i++ )
   {

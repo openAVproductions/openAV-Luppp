@@ -280,6 +280,24 @@ void JackClient::writeMidi(void* portBuffer, int b1, int b2, int b3)
   }
 }
 
+// this function will update the parameters on the APC in the DEVICE CONTROL
+// section. It should be called when we move between Effects on the same track
+void JackClient::apcSendDeviceControl(int track, int device, void* apcOutputBuffer)
+{
+  // get UID of state
+  int uid = mixer.getEffectID(track, device);
+  
+  // retrieve state
+  EffectState* state = top->state.getEffectState(uid);
+  
+  // write each parameter value
+  for ( int i = 0; i < 8; i++ )
+  {
+    writeMidi(apcOutputBuffer, 176 + track, 16 + i, state->values[i] * 127 );
+  }
+  
+}
+
 void JackClient::apcRead( int nframes )
 {
   void* apcInBuffer = jack_port_get_buffer ( apcInputPort, nframes);
@@ -377,7 +395,9 @@ void JackClient::apcRead( int nframes )
       if ( device > 0 ) // range check
         top->controller->setTrackDevice(trackID, --device);
       std::cout << "APC <- Device button: NOTE ON track " << trackID << " device " << device << std::endl;
-      writeMidi( apcOutBuffer, 128 + trackID, 60, 127 );
+      writeMidi( apcOutBuffer, 128 + trackID, 60, 127 ); // turn off LED again, so next press is ON
+      
+      apcSendDeviceControl(trackID, device, apcOutBuffer);
     }
     
     // Apc -> selected device button
@@ -388,7 +408,9 @@ void JackClient::apcRead( int nframes )
       if ( device < 9 )
         top->controller->setTrackDevice(trackID,++device);
       std::cout << "APC -> Device button: NOTE ON track = " << trackID << " device " << device << std::endl;
-      writeMidi( apcOutBuffer, 128 + trackID, 61, 127 );
+      writeMidi( apcOutBuffer, 128 + trackID, 61, 127 ); // turn off LED again, so next press is ON
+      
+      apcSendDeviceControl(trackID, device, apcOutBuffer);
     }
     
     // apc 40 master fader

@@ -52,6 +52,8 @@ class JackClient
     
     void writeMidi( void*, int,int,int);
     
+    void apcSendDeviceControl(int , int , void*);
+    
     int processRtQueue();
     int process(jack_nframes_t);
     int processMidi(jack_nframes_t);
