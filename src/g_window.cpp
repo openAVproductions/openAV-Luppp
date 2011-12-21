@@ -339,7 +339,8 @@ int Window::handleEvent()
         {
           case EFFECT_LOWPASS: trackVector.at(t).widgetVector.push_back( new GLowPass(top, &guiState) ); break;
           case EFFECT_HIGHPASS: trackVector.at(t).widgetVector.push_back( new GHighPass(top, &guiState) ); break;
-          case EFFECT_COMPRESSOR:trackVector.at(t).widgetVector.push_back( new GCompressor(top, &guiState) ); break;
+          case EFFECT_BEATSMASH:trackVector.at(t).widgetVector.push_back( new GBeatSmash(top, &guiState) ); break;
+          case EFFECT_COMPRESSOR:trackVector.at(t).widgetVector.push_back( new GCompressor(top, &guiState)); break;
           case EFFECT_PARAMETRIC_EQ:trackVector.at(t).widgetVector.push_back( new Equalizer( &guiState) ); break;
           default: newEffect = false; break;
         }

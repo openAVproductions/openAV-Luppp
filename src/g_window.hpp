@@ -21,6 +21,7 @@
 #include "g_highpass.hpp"
 #include "g_waveview.hpp"
 #include "g_equalizer.hpp"
+#include "g_beatsmash.hpp"
 #include "g_compressor.hpp"
 
 class Window
