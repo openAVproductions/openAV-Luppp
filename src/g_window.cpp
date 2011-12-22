@@ -177,6 +177,11 @@ int Window::handleEvent()
       std::advance(i,e->ia);
       (*i)->redraw();
     }
+    else if ( e->type == EE_LOOPER_PROGRESS ) {
+      cout << " Gui LOOPER_PROGRESS " << endl;
+      guiState.bufferAudioSourceState.at(e->ia).progress = e->fa;
+      redrawEffectBox();
+    }
     else if ( e->type == EE_LOOPER_RECORD ) {
       cout << "GUI: Looper Record event! t = " << e->ia << "  value = " << e->ib << endl;
       // we get a "record off" event, and then read *all* the contents of

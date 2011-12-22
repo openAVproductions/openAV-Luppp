@@ -119,12 +119,12 @@ int JackClient::processRtQueue()
       // we get an Effect*, which we need to insert track @ e->ia, pos e->ib
       //cout << "JackClient::processRtQueue() STATE_NEW_EFFECT, ID = " << flush;
       Effect* effect = (Effect*)e->vPtr;
-      cout << effect->getID() << endl;
+      //cout << effect->getID() << endl;
       
       int ret = mixer.addEffect(e->ia, e->ib, effect);
       if ( ret == 0 ) // success
       {
-        cout << "JackClient::processRtQ() Sending GUI NEW EFFECT event! track = " << e->ia << endl;
+        //cout << "JackClient::processRtQ() Sending GUI NEW EFFECT event! track = " << e->ia << endl;
         EngineEvent* x = top->toEngineEmptyEventQueue.pull();
         x->setStateEffect(e->ia, e->ib, (int)effect->getType(), 0 ); // vPtr = 0, don't give GUI access!
         top->toGuiQueue.push(x);

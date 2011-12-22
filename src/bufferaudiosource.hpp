@@ -25,6 +25,8 @@ class BufferAudioSource : public AudioSource
   private:
     Top* top;
     int ID;
+    
+    int guiUpdateCounter;
 };
 
 

@@ -14,7 +14,7 @@
 #include "g_widgets.hpp"
 #include "g_widgetbase.hpp"
 
-class GBufferSource : public Gtk::DrawingArea, public WidgetBase
+class GBufferSource : public Gtk::DrawingArea
 {
 public:
   GBufferSource(Top* t, GuiStateStore* s);
@@ -25,6 +25,7 @@ public:
 
 protected:
   int ID;
+  static int privateID;
   Top* top;
   GuiStateStore* stateStore;
   

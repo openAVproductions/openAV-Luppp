@@ -22,6 +22,7 @@ enum EngineEventType
   EE_LOOPER_WRITE,
   EE_LOOPER_PLAY,
   EE_LOOPER_STOP,
+  EE_LOOPER_PROGRESS,
   EE_LOOPER_SELECT_BUFFER,
   EE_LOOPER_QUANTIZATION,
   
@@ -88,6 +89,7 @@ class EngineEvent
     void looperRetrigger      (int id);
     void setLooperRecord      (int id, int r);
     void looperSetBeats       (int id, int b);
+    void looperProgress       (int id, float);
     void looperSetInputType   (int id, int b);
     void looperSelectBuffer   (int id, int b);
     void looperSetQuantization(int id, int b);

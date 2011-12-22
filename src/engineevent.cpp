@@ -15,6 +15,7 @@ void EngineEvent::looperWrite          (int id, char* s){ia = id, sa = strdup(s)
 void EngineEvent::looperRetrigger      (int id) { ia = id; type = EE_LOOPER_RETRIGGER; }
 void EngineEvent::setLooperRecord      (int id, int r) { ia = id; ib = r; type = EE_LOOPER_RECORD; }
 void EngineEvent::looperSetBeats       (int id, int b) { ia = id; ib = b; type = EE_LOOPER_SET_BEATS; }
+void EngineEvent::looperProgress       (int id, float p) { ia = id; fa = p; type = EE_LOOPER_PROGRESS; }
 void EngineEvent::looperSetInputType   (int id, int b) { ia = id; ib = b; type = EE_LOOPER_SET_INPUT_TYPE; }
 void EngineEvent::looperSelectBuffer   (int id, int b) { ia = id; ib = b; type = EE_LOOPER_SELECT_BUFFER; }
 void EngineEvent::looperSetQuantization(int id, int b) { ia = id; ib = b; type = EE_LOOPER_QUANTIZATION; }

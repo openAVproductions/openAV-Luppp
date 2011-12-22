@@ -7,6 +7,7 @@ struct BufferAudioSourceState
 {
   float index;
   float speed;
+  float progress;
   
   int bufferID;
 };

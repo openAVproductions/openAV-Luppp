@@ -10,6 +10,8 @@ BufferAudioSource::BufferAudioSource(Top* t)
   top = t;
   ID = AudioSource::getID();
   cout << "BufferAudioSource() ID = " << ID << endl;
+  
+  guiUpdateCounter = 0;
 }
 
 void BufferAudioSource::process (int nframes, float* buffer )
@@ -19,7 +21,6 @@ void BufferAudioSource::process (int nframes, float* buffer )
   std::advance(iter, ID);
   float index = iter->index;
   float speed = iter->speed;
-  //int audioBufferID = iter->bufferID;
   
   // get buffer variables
   ClipSelectorState* clipSelState = top->state.getClipSelectorState(ID);
@@ -63,9 +64,19 @@ void BufferAudioSource::process (int nframes, float* buffer )
     index = index + ( speed / size );
   }
   
-  // write values to state
+  // write index to state, so that next time we read the next samples
   iter->index = index;
-  iter->speed = speed;
   
-  //std::cout << "FAS: process() " << index << "  nframes: " << nframes << std::endl;
+  if ( guiUpdateCounter < 0 )
+  {
+    cout << "Pushing " << index << endl;
+    EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+    x->looperProgress(ID, index ); // index is a float 0 -> 1
+    top->toGuiQueue.push(x);
+    guiUpdateCounter = 20;
+  }
+  else
+  {
+    guiUpdateCounter--;
+  }
 }

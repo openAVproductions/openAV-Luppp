@@ -11,9 +11,11 @@ std::string intToStr (int number)
      return buff.str();
 }
 
+int GBufferSource::privateID = 0;
+
 GBufferSource::GBufferSource(Top* t, GuiStateStore* s)
 {
-  ID = WidgetBase::getID();
+  ID = privateID++;
   
   top = t;
   stateStore = s;
@@ -100,21 +102,28 @@ bool GBufferSource::on_expose_event(GdkEventExpose* event)
     int ySize = 95;
     
     // get values from GuiStateStore
-    float angle = stateStore->effectState.at(ID).values[0];
-    bool active = stateStore->effectState.at(ID).active;
+    float angle = stateStore->bufferAudioSourceState.at(ID).progress;
+    bool active = true;
     
+    // background whole
     setColour(cr, COLOUR_GREY_3 );
+    cr->rectangle(0, 0, 130, 216);
+    cr->fill();
+    
+    // inner square
+    setColour(cr, COLOUR_GREY_4 );
     cr->rectangle(x, y, xSize, ySize);
     cr->fill();
     
     float xc = x + (0.5*xSize);
-    float yc = y + (ySize*0.3);
+    float yc = y + (ySize*0.5);
     
     // outer circle
     setColour(cr, COLOUR_GREY_3 );
     cr ->arc(xc, yc, 31, 0, 2 * 3.1415);
     cr ->fill_preserve();
     setColour(cr, COLOUR_GREY_4 );
+    cr->set_line_width(4);
     cr ->stroke();
     
     cr->move_to( xc, yc );
@@ -132,9 +141,19 @@ bool GBufferSource::on_expose_event(GdkEventExpose* event)
       setColour(cr, COLOUR_ORANGE_1 );
     else
       setColour(cr, COLOUR_GREY_1, 0.7 );
+    cr->set_line_width(3);
     cr->stroke();
     
-    TitleBar(cr, 0,0, x + xSize, y + ySize, "Looper", active);
+    // outline
+    if ( active )
+      setColour(cr, COLOUR_GREY_2 );
+    else
+      setColour(cr, COLOUR_GREY_3 );
+    cr->rectangle( x, y , xSize, ySize );
+    cr->set_line_width(4);
+    cr->stroke();
+    
+    TitleBar(cr, 0,0, 130, 216, "Buffer Looper", active);
     
     /*
     if ( selected )

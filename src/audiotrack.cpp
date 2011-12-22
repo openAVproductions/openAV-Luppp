@@ -36,12 +36,12 @@ AudioTrack::AudioTrack( Top* t )
 
 int AudioTrack::addEffect( int pos,  Effect* eff )
 {
-  cout << "AudioTrack::addEffect() pushing to back " << pos << flush;
+  //cout << "AudioTrack::addEffect() pushing to back " << pos << flush;
   //std::list<Effect*>::iterator iter =  effects.begin();
   //std::advance(iter, pos);
   
   effects.push_back(eff);
-  cout << "\tdone!" << endl;
+  //cout << "\tdone!" << endl;
   return 0;
 }
 
