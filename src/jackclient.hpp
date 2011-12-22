@@ -10,11 +10,12 @@
 #include <vector>
 #include <sndfile.hh>
 
+#include "time.hpp"
 #include "mixer.hpp"
 
-#include "top.hpp"
-
 #include "controller.hpp"
+
+class Top;
 
 typedef jack_client_t JClient;
 typedef jack_port_t JPort;
@@ -37,6 +38,7 @@ class JackClient
     Top* top;
     JClient* client;
     
+    Time time;
     Mixer mixer;
     
     JPort* sidechainPort;

@@ -9,7 +9,9 @@ using namespace std;
 Top::Top() :
   state(this)
 {
-  cout << "Top()" << endl;
+  
+  bpm = 160;
+  cout << "Top()  BPM = " << bpm << endl;
   
   controller = new Controller(this);
   offlineWorker = new OfflineWorker(this);

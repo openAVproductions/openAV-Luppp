@@ -7,9 +7,12 @@
 #include "effectstate.hpp"
 #include "audiobuffer.hpp"
 
+#include "top.hpp"
+
 using namespace std;
 
 JackClient::JackClient( Top* t) :
+                        time(t),
                         mixer(t)
 {
   top = t;
@@ -179,6 +182,8 @@ int JackClient::process(jack_nframes_t nframes)
   processRtQueue();
   
   apcRead(nframes);
+  
+  time.process( jack_get_current_transport_frame(client) );
   
   // handle incoming midi
   processMidi(nframes);
@@ -689,6 +694,13 @@ void JackClient::apcRead( int nframes )
         top->toGuiQueue.push(x);
         top->guiDispatcher->emit();
       }
+    }
+    
+    if ( b1 == 176 && b2 == 15 ) // crossfader
+    {
+      int bpm = 120 + (b3 / 127.f) * 60;
+      cout << "XFade " << b3 << "   setting BPM to " << bpm << endl;
+      top->bpm = bpm;
     }
     
     if ( b2 == 91 ) // play
