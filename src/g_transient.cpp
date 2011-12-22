@@ -121,19 +121,19 @@ bool GTransient::on_expose_event(GdkEventExpose* event)
     cr->line_to (x2,y2);
     cr->stroke();
     
-    float dist = sqrt( ((x2 - x1)*(x2 - x1)) + ((y2 - y1)*(y2 - y1)) );
-    float d = dist / 3; // scale for control points for curve
+    float distX = sqrt( ((x2 - x1)*(x2 - x1)) ) / 3.f;
+    float distY = sqrt( ((y2 - y1)*(y2 - y1)) ) / 3.f;
     
-    std::cout << "a = " << a << "  d = " << d << std::endl;
+    std::cout << "a = " << a << "  dX = " << distX << " dY = " << distY << std::endl;
     
     cr->move_to( x1, y1 );
     
-    float tx1 = x1 + d * sin(a);
-    float ty1 = y1 - d * cos(a);
+    float tx1 = x1 + distX * sin(a);
+    float ty1 = y1 - distY * cos(a);
     //std::cout << "tX1 = " << tx1 - x << "  tY1 = " << ty1 - y << std::endl;
     
-    float tx2 = x2 - (d * cos(a));
-    float ty2 = y2 + (d * sin(a));
+    float tx2 = x2 - (distX * cos(a));
+    float ty2 = y2 + (distY * sin(a));
     std::cout << "tX2 = " << tx2 - x << "  tY2 = " << ty2 - y << std::endl;
     
     cr->curve_to( tx1, ty1,
@@ -148,24 +148,23 @@ bool GTransient::on_expose_event(GdkEventExpose* event)
     cr->set_line_width(2);
     cr->stroke();
     
-    cr->arc(tx1-1, ty1-1, 6 , 0, 6.2830 );
-    cr->arc(tx2-1, ty2-1, 6 , 0, 6.2830 );
+    // CP circles
+    cr->arc(tx1*0.9+3, ty1*0.9+3, 3, 0, 6.2830 );
+    cr->arc(tx2*0.9+3, ty2*0.9+3, 3, 0, 6.2830 );
     
     if ( active )
       setColour(cr, COLOUR_ORANGE_1);
     else
       setColour(cr, COLOUR_GREY_1, 0.2 );
+    cr->fill();
+    
+    Dial(cr, active, x + xSize*0.5, 125, attack, DIAL_MODE_PAN);
+    
+    // outline
+    setColour(cr, COLOUR_GREY_2 );
+    cr->rectangle( x, y , xSize, ySize );
+    cr->set_line_width(4);
     cr->stroke();
-    
-    
-    /*
-    cr->curve_to( x + 10    , y + 10 - (20*a),        // control point 1
-                  x + 10 + (xSize / 2.f) , y + 10 + 20 + (20 * a), // control point 2
-                  x + 10 + (xSize / 2.f) , y + 10 + 20);           // end of curve
-    */
-    cr->stroke();
-    
-    //TransientGraph(cr, active, x + 10, y + 22, 225, 95, freqState );
     
     TitleBar(cr, 0, 0, 130, 216, "Transient", active);
     
