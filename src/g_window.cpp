@@ -2,6 +2,7 @@
 #include "g_window.hpp"
 
 #include "offlineworker.hpp"
+#include "g_buffersource.hpp"
 
 using namespace std;
 
@@ -444,6 +445,8 @@ void Window::addTrack()
   guiState.addTrack();
   
   trackVector.push_back( GTrack() );
+  trackVector.back().widgetVector.push_back( new GBufferSource(top, &guiState) );
+  redrawEffectBox();
   
   std::stringstream trackName;
   trackName << numTracks;

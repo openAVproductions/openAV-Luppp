@@ -57,6 +57,7 @@ def build(ctx):
   
   guiList = [ 'src/g_window.cpp',
               'src/g_track.cpp',
+              'src/g_buffersource.cpp',
               'src/g_widgets.cpp',
               'src/g_waveview.cpp',
               'src/g_beatsmash.cpp',
