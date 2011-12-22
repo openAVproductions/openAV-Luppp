@@ -211,12 +211,12 @@ int Window::handleEvent()
         cout << "read samples available " << readSpace << endl;
       }
       
-      /*
+      // update "REC" button in GUI
+      
       guiState.trackoutputState.at(e->ia).rec = e->ib;
       std::list<TrackOutput*>::iterator i = trackoutputList.begin();
       std::advance(i,e->ia);
       (*i)->redraw();
-      */
     }
     else if ( e->type == EE_TRACK_SET_PAN ) {
       std::cout << "Gui got pan " << e->fa << std::endl; 

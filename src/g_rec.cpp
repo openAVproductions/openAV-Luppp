@@ -8,7 +8,7 @@ namespace Luppp
     //std::cout << "Rec() called, ID " << id << "  mode: " << mode << std::endl;
     // main rectangle
     if ( active )
-      setColour(cr, COLOUR_PURPLE_1 );
+      cr->set_source_rgb( 226 / 255.f, 0/255.f , 0/255.f );
     else
       setColour(cr, COLOUR_GREY_1 );
     
