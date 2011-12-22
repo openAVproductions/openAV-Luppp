@@ -145,10 +145,7 @@ bool GBufferSource::on_expose_event(GdkEventExpose* event)
     cr->stroke();
     
     // outline
-    if ( active )
-      setColour(cr, COLOUR_GREY_2 );
-    else
-      setColour(cr, COLOUR_GREY_3 );
+    setColour(cr, COLOUR_GREY_2 );
     cr->rectangle( x, y , xSize, ySize );
     cr->set_line_width(4);
     cr->stroke();

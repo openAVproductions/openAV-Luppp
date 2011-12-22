@@ -1,12 +1,12 @@
 
-#include "g_lowpass.hpp"
+#include "g_reverb.hpp"
 
 #include "g_widgets.hpp"
 
 using namespace std;
 using namespace Luppp;
 
-GLowPass::GLowPass(Top* t, GuiStateStore* s)
+GReverb::GReverb(Top* t, GuiStateStore* s)
 {
   ID = WidgetBase::getID();
   
@@ -18,18 +18,18 @@ GLowPass::GLowPass(Top* t, GuiStateStore* s)
   
   mouseDown = false;
   
-  //std::cout << "Enterin GLowPass contructor" << std::endl;
+  //std::cout << "Enterin GReverb contructor" << std::endl;
   add_events(Gdk::EXPOSURE_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK| Gdk::POINTER_MOTION_MASK);
-  signal_button_press_event().connect(sigc::mem_fun(*this, &GLowPass::on_button_press_event) );
-  signal_button_release_event().connect(sigc::mem_fun(*this, &GLowPass::on_button_release_event) );
-  signal_motion_notify_event().connect( sigc::mem_fun( *this, &GLowPass::onMouseMove ) );
+  signal_button_press_event().connect(sigc::mem_fun(*this, &GReverb::on_button_press_event) );
+  signal_button_release_event().connect(sigc::mem_fun(*this, &GReverb::on_button_release_event) );
+  signal_motion_notify_event().connect( sigc::mem_fun( *this, &GReverb::onMouseMove ) );
   
   xSize = 225;
   
   set_size_request(250, 216);
 }
 
-bool GLowPass::redraw()
+bool GReverb::redraw()
 {
   // force our program to redraw the entire widget.
   Glib::RefPtr<Gdk::Window> win = get_window();
@@ -43,7 +43,7 @@ bool GLowPass::redraw()
 }
 
 
-bool GLowPass::on_expose_event(GdkEventExpose* event)
+bool GReverb::on_expose_event(GdkEventExpose* event)
 {
   // This is where we draw on the window
   Glib::RefPtr<Gdk::Window> window = get_window();
@@ -172,7 +172,7 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     cr->set_line_width(3);
     cr->stroke();
     
-    TitleBar(cr, 0,0 , 250, 216, "Lowpass", active);
+    TitleBar(cr, 0,0 , 250, 216, "Reverb", active);
     
     /*
     if ( state.selected )
@@ -187,17 +187,17 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
   return true;
 }
 
-void GLowPass::on_menu_file_popup_edit()
+void GReverb::on_menu_file_popup_edit()
 {
    std::cout << "The Edit menu item was selected." << std::endl;
 }
 
-void GLowPass::on_menu_file_popup_generic()
+void GReverb::on_menu_file_popup_generic()
 {
    std::cout << "A popup menu item was selected." << std::endl;
 }
 
-bool GLowPass::onMouseMove(GdkEventMotion* event)
+bool GReverb::onMouseMove(GdkEventMotion* event)
 {
   if ( mouseDown )
   {
@@ -218,11 +218,11 @@ bool GLowPass::onMouseMove(GdkEventMotion* event)
       top->toEngineQueue.push(x);
     }
     redraw();
-    std::cout << "GLowPass: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
+    std::cout << "GReverb: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
   }
 }
 
-bool GLowPass::on_button_press_event(GdkEventButton* event)
+bool GReverb::on_button_press_event(GdkEventButton* event)
 {
   if( event->type == GDK_BUTTON_PRESS  ) // && event->button == 3
   {
@@ -264,7 +264,7 @@ bool GLowPass::on_button_press_event(GdkEventButton* event)
     
     if ( event->y < 20 )
     {
-      std::cout << "GLowPass Enable / Disable click event!" << std::endl;
+      std::cout << "GReverb Enable / Disable click event!" << std::endl;
       EngineEvent* x = new EngineEvent();
       x->setTrackDeviceActive(0,0,1 );
       top->toEngineQueue.push(x);
@@ -276,7 +276,7 @@ bool GLowPass::on_button_press_event(GdkEventButton* event)
     return false;
 }
 
-bool GLowPass::on_button_release_event(GdkEventButton* event)
+bool GReverb::on_button_release_event(GdkEventButton* event)
 {
   if( event->type == GDK_BUTTON_RELEASE  ) // && event->button == 3
   {
@@ -288,6 +288,6 @@ bool GLowPass::on_button_release_event(GdkEventButton* event)
     return false;
 }
 
-GLowPass::~GLowPass()
+GReverb::~GReverb()
 {
 }

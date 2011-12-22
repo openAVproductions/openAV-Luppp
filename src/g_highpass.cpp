@@ -183,10 +183,7 @@ bool GHighPass::on_expose_event(GdkEventExpose* event)
     cr->rectangle( x, y , xSize, ySize );
     cr->set_line_width(3);
     
-    if ( active )
-      setColour(cr, COLOUR_GREY_2 );
-    else
-      setColour(cr, COLOUR_GREY_3 );
+    setColour(cr, COLOUR_GREY_2 );
     cr->stroke();
     
     TitleBar(cr, 0,0 , 250, 216, "Highpass", active);

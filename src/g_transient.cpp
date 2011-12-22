@@ -70,7 +70,7 @@ bool GTransient::on_expose_event(GdkEventExpose* event)
     cr->fill();
     
     // update value from stateStore
-    std::cout << "Lowpass ID " << ID << " getting state now" << endl;
+    //std::cout << "Transient ID " << ID << " getting state now" << endl;
     float attack = stateStore->effectState.at(ID).values[0] * 2 - 1;
     float sustain = stateStore->effectState.at(ID).values[4] * 2 - 1;
     
@@ -82,13 +82,6 @@ bool GTransient::on_expose_event(GdkEventExpose* event)
     xSize = 110;
     ySize = 95;
     
-    setColour(cr, COLOUR_GREY_3 );
-    cr->rectangle(x, y, xSize, ySize);
-    cr->fill();
-    
-    Dial(cr, active, x + 30, y + 130, attack , DIAL_MODE_PAN);
-    Dial(cr, active, x + 30, y + 170, sustain, DIAL_MODE_PAN);
-    
     // background whole
     setColour(cr, COLOUR_GREY_3 );
     cr->rectangle(0, 0, 130, 216);
@@ -98,6 +91,29 @@ bool GTransient::on_expose_event(GdkEventExpose* event)
     setColour(cr, COLOUR_GREY_4 );
     cr->rectangle(x, y, xSize, ySize);
     cr->fill();
+    
+    // draw "frequency guides"
+    std::valarray< double > dashes(2);
+    dashes[0] = 2.0;
+    dashes[1] = 2.0;
+    cr->set_dash (dashes, 0.0);
+    cr->set_line_width(1.0);
+    cr->set_source_rgb (0.4,0.4,0.4);
+    for ( int i = 0; i < 4; i++ )
+    {
+      cr->move_to( x + ((xSize / 4.f)*i), y );
+      cr->line_to( x + ((xSize / 4.f)*i), y + ySize );
+    }
+    for ( int i = 0; i < 4; i++ )
+    {
+      cr->move_to( x       , y + ((ySize / 4.f)*i) );
+      cr->line_to( x +xSize, y + ((ySize / 4.f)*i) );
+    }
+    cr->stroke();
+    cr->unset_dash();
+    
+    Dial(cr, active, x + 30, y + 130, attack , DIAL_MODE_PAN);
+    Dial(cr, active, x + 30, y + 170, sustain, DIAL_MODE_PAN);
     
     std::cout << "Attack: " << attack << " Sustain: " << sustain << std::endl;
     

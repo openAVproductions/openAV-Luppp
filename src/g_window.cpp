@@ -8,6 +8,7 @@ using namespace std;
 
 #include "top.hpp"
 
+#include "g_reverb.hpp"
 #include "g_lowpass.hpp"
 #include "g_highpass.hpp"
 #include "g_equalizer.hpp"
@@ -370,10 +371,11 @@ int Window::handleEvent()
         bool newEffect = true;
         switch ( et )
         {
+          case EFFECT_REVERB:       trackVector.at(t).widgetVector.push_back( new GReverb     (top, &guiState) ); break;
           case EFFECT_LOWPASS:      trackVector.at(t).widgetVector.push_back( new GLowPass    (top, &guiState) ); break;
-          case EFFECT_TRANSIENT:    trackVector.at(t).widgetVector.push_back( new GTransient  (top, &guiState) ); break;
           case EFFECT_HIGHPASS:     trackVector.at(t).widgetVector.push_back( new GHighPass   (top, &guiState) ); break;
           case EFFECT_BEATSMASH:    trackVector.at(t).widgetVector.push_back( new GBeatSmash  (top, &guiState) ); break;
+          case EFFECT_TRANSIENT:    trackVector.at(t).widgetVector.push_back( new GTransient  (top, &guiState) ); break;
           case EFFECT_COMPRESSOR:   trackVector.at(t).widgetVector.push_back( new GCompressor (top, &guiState) ); break;
           case EFFECT_PARAMETRIC_EQ:trackVector.at(t).widgetVector.push_back( new Equalizer   (     &guiState) ); break;
           default: newEffect = false; break;
