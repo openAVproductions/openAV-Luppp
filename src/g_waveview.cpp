@@ -97,11 +97,51 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       
       cr->move_to( x, y + ySize*0.5 );
       
+      float previousTop = 0;
+      float previousLow = 0;
+      
+      float currentTop = 0;
+      float currentLow = 0;
+      
+      int sampleCountForDrawing = 0;
+      
       // loop for drawing each Point on the widget.
-      for (long index=0; index <(long)sample.size(); index += 50) 
+      for (long index=0; index <(long)sample.size(); index++ )
       {
-        cr->line_to( x + xSize*(float(index)/sample.size())  ,y+ (ySize/2)+ (float(sample.at(index)) * ySize)  );
+        float currentSample = sample.at(index);
+        
+        if ( currentSample > 0 && currentTop < currentSample ) // top
+        {
+          currentTop = currentSample;
+        }
+        if ( currentSample < 0 && currentLow > currentSample ) // low
+        {
+          currentLow = currentSample;
+        }
+        sampleCountForDrawing--;
+        
+        if ( sampleCountForDrawing < 0 ) // top line
+        {
+          int xCoord = x + xSize*(float(index)/sample.size());
+          //cr->move_to( xCoord,  y+ (ySize/2) - (previousTop * ySize )  ); // top
+          cr->line_to( xCoord,  y+ (ySize/2) - (currentTop  * ySize )  );
+          
+          //cr->move_to( xCoord,  y+ (ySize/2) - (previousLow * ySize )  ); // low
+          //cr->line_to( xCoord,  y+ (ySize/2) - (currentLow  * ySize )  );
+          
+          sampleCountForDrawing = 25;
+          previousTop = currentTop;
+          previousLow = currentLow;
+          currentTop = 0;
+          currentLow = 0;
+        }
       }
+      
+      setColour(cr, COLOUR_GREY_4 );
+      cr->move_to( x + xSize, y + ySize*0.5 );
+      cr->close_path();
+      cr->fill_preserve();
+      
       setColour(cr, COLOUR_ORANGE_1 );
       cr->stroke();
       
