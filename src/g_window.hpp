@@ -6,7 +6,7 @@
 
 #include <gtkmm.h>
 
-#include "top.hpp"
+class Top;
 
 #include "g_statestore.hpp"
 
@@ -16,13 +16,7 @@
 #include "g_clipselector.hpp"
 #include "trackoutputstate.hpp"
 
-
-#include "g_lowpass.hpp"
-#include "g_highpass.hpp"
 #include "g_waveview.hpp"
-#include "g_equalizer.hpp"
-#include "g_beatsmash.hpp"
-#include "g_compressor.hpp"
 
 class Window
 {
