@@ -12,6 +12,7 @@
 #include "statestore.hpp"
 
 class Controller;
+class JackClient;
 class OfflineWorker;
 
 // the Top class is a portal trough which the rest of the program can
@@ -23,8 +24,7 @@ class Top
   public:
     Top();
     void initialize();
-    
-    void addTrack();
+    void setJackPointer(JackClient* j){jackClient = j;};
     
     int bufferSize;
     int samplerate;
@@ -46,6 +46,8 @@ class Top
     RtQueue toEngineEmptyEventQueue;
     
     AudioQueue recordAudioQueue;
+    
+    JackClient* jackClient;
 };
 
 #endif

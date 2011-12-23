@@ -54,7 +54,7 @@ class StateStore
     void setAudioBuffer(AudioBuffer*);
     AudioBuffer* getAudioBuffer(int ID);
     
-    void clipSelectorQueue(int,int);
+    void clipSelectorActivateClip(int,int);
     
     // sets loaded on that clip
     void setClipSelectorState(int t,int block, int bufferID);

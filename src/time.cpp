@@ -114,8 +114,8 @@ void Time::doEngineEvent(EngineEvent* e)
     case EE_LOOPER_PROGRESS: cout << "Time::doEngineEvent() got PROGRESS!!! ERROR!" << endl; break;
     case EE_LOOPER_SELECT_BUFFER:
     {
-      top->state.clipSelectorQueue(e->ia, e->ib);
       cout << "Doing SELECT BUFFER NOW! t=" << e->ia << " clip#: " << e->ib << endl;
+      top->state.clipSelectorActivateClip(e->ia, e->ib);
       break;
     }
     case EE_TRACK_SET_PLUGIN_PARAMETER: top->state.setPluginParameter( e->ia, e->ic, e->fa ); break;

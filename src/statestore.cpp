@@ -3,6 +3,7 @@
 
 #include "top.hpp"
 
+#include "jackclient.hpp"
 #include "effectstate.hpp"
 
 using namespace std;
@@ -218,28 +219,41 @@ void StateStore::setClipSelectorState(int t,int block, int bufferID)
   top->guiDispatcher->emit();
 }
 
-void StateStore::clipSelectorQueue(int t, int b)
+void StateStore::clipSelectorActivateClip(int t, int b)
 {
   // we get a track & scene number, so we set them in the ClipSelectorState
   // later the playback will request the bufferID ClipInfo of the right position in the list
   std::cout << "StateStore::clipSelectorQueue() " << t << ", " << b << endl;
   std::list<ClipSelectorState>::iterator iter = clipSelectorState.begin();
   std::advance(iter, t);
-  iter->playing = b;
   
+  // get info of current Clip & update APC off / loaded for previous block
   std::list<ClipInfo>::iterator infoIter = iter->clipInfo.begin();
-  std::advance(iter, b);
-  iter->playing;
+  std::advance(infoIter, iter->playing);
+  
+  std::cout << "ClipInfo = " << infoIter->state << "  Loaded = " << CLIP_STATE_LOADED << endl;
+  
+  if ( infoIter->state == CLIP_STATE_EMPTY )
+    top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 128 + t, 53 + iter->playing, 0 ); // off
+  if ( infoIter->state == CLIP_STATE_LOADED )
+    top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 5 ); // orange
   
   std::list<BufferAudioSourceState>::iterator iterBASS = bufferAudioSourceState.begin();
   std::advance(iterBASS, t);
   iterBASS->index = 0; // restart sample from beginning
+  
+  // update *actual* Engine value for currently playing Scene
+  iter->playing = b;
   
   // update GUI
   EngineEvent* x = top->toEngineEmptyEventQueue.pull();
   x->looperSelectBuffer(t, b);
   top->toGuiQueue.push(x);
   top->guiDispatcher->emit();
+  
+  // update APC : (concider moving this functionality into a Controller class,
+  // that can then access the MIDI port / OSC / protocolX to update the HW device
+  top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, b + 53, 1 );
 }
 
 void StateStore::setPluginActive(int UID, int active)

@@ -180,8 +180,13 @@ int JackClient::processRtQueue()
 
 int JackClient::process(jack_nframes_t nframes)
 {
+  this->nframes = nframes;
   float* inBuffer  = (float*)jack_port_get_buffer ( inputPort, nframes);
   float* outBuffer = (float*)jack_port_get_buffer (outputPort, nframes);
+  
+  // class variable for buffer
+  apcOutputBuffer = jack_port_get_buffer ( apcOutputPort, nframes);
+  jack_midi_clear_buffer(apcOutputBuffer);
   
   processRtQueue();
   
@@ -296,6 +301,7 @@ void JackClient::writeMidi(void* portBuffer, int b1, int b2, int b3)
   }
   else
   {
+    cout << "JC::writeMidi() " << b1 << ", " << b2 << ", " << b3 << endl; 
     buffer[0] = b1;
     buffer[1] = b2;
     buffer[2] = b3;
@@ -328,12 +334,14 @@ void JackClient::apcSendDeviceControl(int track, int device, void* apcOutputBuff
   
 }
 
+void* JackClient::getApcOutputBuffer()
+{
+  return apcOutputBuffer;
+}
+
 void JackClient::apcRead( int nframes )
 {
   void* apcInBuffer = jack_port_get_buffer ( apcInputPort, nframes);
-  void* apcOutBuffer = jack_port_get_buffer ( apcOutputPort, nframes);
-  
-  jack_midi_clear_buffer(apcOutBuffer);
   
   jack_midi_event_t in_event;
   
@@ -425,9 +433,9 @@ void JackClient::apcRead( int nframes )
       if ( device > 0 ) // range check
         top->controller->setTrackDevice(trackID, --device);
       std::cout << "APC <- Device button: NOTE ON track " << trackID << " device " << device << std::endl;
-      writeMidi( apcOutBuffer, 128 + trackID, 60, 127 ); // turn off LED again, so next press is ON
+      writeMidi( apcOutputBuffer, 128 + trackID, 60, 127 ); // turn off LED again, so next press is ON
       
-      apcSendDeviceControl(trackID, device, apcOutBuffer);
+      apcSendDeviceControl(trackID, device, apcOutputBuffer);
     }
     
     // Apc -> selected device button
@@ -438,9 +446,9 @@ void JackClient::apcRead( int nframes )
       if ( device < 9 )
         top->controller->setTrackDevice(trackID,++device);
       std::cout << "APC -> Device button: NOTE ON track = " << trackID << " device " << device << std::endl;
-      writeMidi( apcOutBuffer, 128 + trackID, 61, 127 ); // turn off LED again, so next press is ON
+      writeMidi( apcOutputBuffer, 128 + trackID, 61, 127 ); // turn off LED again, so next press is ON
       
-      apcSendDeviceControl(trackID, device, apcOutBuffer);
+      apcSendDeviceControl(trackID, device, apcOutputBuffer);
     }
     
     // apc 40 master fader
@@ -483,11 +491,11 @@ void JackClient::apcRead( int nframes )
       if ( b2 == APC_TRACK_CONTROL_MODE_SEND_C){ std::cout << "C" << std::endl; }
       
       std::cout  << "setTrackControlMode()  off = " << trackControlMode << "  on = " << b2 << std::endl;
-      writeMidi( apcOutBuffer, 128, trackControlMode, 0); // turn off previous mode
+      writeMidi( apcOutputBuffer, 128, trackControlMode, 0); // turn off previous mode
       trackControlMode = (ApcTrackControlMode)b2;
       
       // turn on new mode
-      writeMidi( apcOutBuffer, 144, trackControlMode, 127);
+      writeMidi( apcOutputBuffer, 144, trackControlMode, 127);
       
       
     }
@@ -559,7 +567,7 @@ void JackClient::apcRead( int nframes )
         x->looperSelectBuffer(id,val);
         time.processEngineEvent(x);
         
-        writeMidi( apcOutBuffer, b1, b2, 127);
+        //writeMidi( apcOutputBuffer, b1, b2, 127);
       }
     }
     

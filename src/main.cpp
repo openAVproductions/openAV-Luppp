@@ -30,6 +30,8 @@ int main(int argc, char** argv)
   top = new Top();
   jackClient = new JackClient(top);
   
+  top->setJackPointer( jackClient );
+  
   // we pass the GUI the Top* too, its the method of interaction between
   // engine and GUI. We also pass in "kit", and then we run the mainloop
   Window window( &kit, top);

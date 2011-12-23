@@ -32,11 +32,16 @@ class JackClient
   public:
     JackClient(Top*);
     
+    void* getApcOutputBuffer();
+    void writeMidi( void*, int,int,int);
+    
     void deactivate();
     
   private:
     Top* top;
     JClient* client;
+    
+    int nframes;
     
     Time time;
     Mixer mixer;
@@ -52,11 +57,10 @@ class JackClient
     bool recordInput;
     
     int trackControlMode;
-    void apcRead(int);
     
-    void writeMidi( void*, int,int,int);
-    
-    void apcSendDeviceControl(int , int , void*);
+    void* apcOutputBuffer;
+    void  apcRead(int);
+    void  apcSendDeviceControl(int , int , void*);
     
     int processRtQueue();
     int process(jack_nframes_t);
