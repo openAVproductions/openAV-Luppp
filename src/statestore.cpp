@@ -225,8 +225,15 @@ void StateStore::clipSelectorQueue(int t, int b)
   std::cout << "StateStore::clipSelectorQueue() " << t << ", " << b << endl;
   std::list<ClipSelectorState>::iterator iter = clipSelectorState.begin();
   std::advance(iter, t);
-  
   iter->playing = b;
+  
+  std::list<ClipInfo>::iterator infoIter = iter->clipInfo.begin();
+  std::advance(iter, b);
+  iter->playing;
+  
+  std::list<BufferAudioSourceState>::iterator iterBASS = bufferAudioSourceState.begin();
+  std::advance(iterBASS, t);
+  iterBASS->index = 0; // restart sample from beginning
   
   // update GUI
   EngineEvent* x = top->toEngineEmptyEventQueue.pull();
@@ -283,6 +290,11 @@ void StateStore::setPluginParameter(int ID, int param, float value)
   {
     //std::cout << "StateStore::setPluginParam() writing value " << value << " to param " << param << endl;
     (*iter)->values[param] = value;
+    
+    // bounce on to GUI (-1 not used)
+    EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+    x->setPluginParameter(ID, -1, param, value);
+    top->toGuiQueue.push(x);
   }
 }
 

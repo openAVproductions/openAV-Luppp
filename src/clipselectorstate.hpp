@@ -18,9 +18,11 @@ struct ClipInfo {
   {
     state = CLIP_STATE_EMPTY;
     bufferID = -1;
+    numBeats = 8;
   }
   ClipState state;
   int bufferID;
+  int numBeats;
 };
 
 struct ClipSelectorState

@@ -140,8 +140,12 @@ int JackClient::processRtQueue()
     }
     else if ( e->type == EE_LOOPER_SELECT_BUFFER) {
       // tells the AudioSource @ track ia to play scene ib
+      
+      // TIME HACK
       cout << "EE_LOOPER_SELECT_BUFFER " << e->ia << ", " << e->ib << endl;
-      top->state.clipSelectorQueue(e->ia, e->ib);
+      time.processEngineEvent( e );
+      
+      //top->state.clipSelectorQueue(e->ia, e->ib);
     }
     else if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER) {
       // send all values on to stateStore, from there we message UI, and
@@ -532,7 +536,10 @@ void JackClient::apcRead( int nframes )
         int val= b2 - 53; // here we take 53 away, so the clip stop button will result in -1 for buffer ID
         
         std::cout << "SETTING BUFFER FROM APC40! ID:" << id << " val: " << val << std::endl;
-        top->state.clipSelectorQueue(id, val);
+        
+        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+        x->looperSelectBuffer(id,val);
+        time.processEngineEvent(x);
         
         writeMidi( apcOutBuffer, b1, b2, 127);
       }
@@ -572,21 +579,17 @@ void JackClient::apcRead( int nframes )
         int track = b1 - 176;
         int device= top->controller->getDevice();
         top->controller->setTrackDevice(track, device);
-        //std::cout << "APC: Device Control on track " << track << " device " << device << " param " << b2 -16 << std::endl;
+        std::cout << "APC: Device Control on track " << track << " device " << device << " param " << b2 -16 << std::endl;
         
         // get unique ID of current selected track, then setPluginParam that UID
         int uid = mixer.getEffectID(track, device);
-        top->state.setPluginParameter(uid, b2 - 16, b3 / 127.f);
-        
-        //top->state.effectValues[b2-16] = b3 / 127.f;
-        //cout << "Param = " << b2 - 16 << " value = " << b3 / 127.f << endl;
         
         EngineEvent* x = top->toEngineEmptyEventQueue.pull();
         x->setPluginParameter(uid,
                               -1,
                               b2-16,
                               b3 / 127.);
-        top->toGuiQueue.push(x);
+        time.processEngineEvent(x);
         
         /*
         // here we change the OSC param we send based on the track & device selection

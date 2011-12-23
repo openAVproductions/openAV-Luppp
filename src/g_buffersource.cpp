@@ -102,7 +102,7 @@ bool GBufferSource::on_expose_event(GdkEventExpose* event)
     int ySize = 95;
     
     // get values from GuiStateStore
-    float angle = stateStore->bufferAudioSourceState.at(ID).progress;
+    float angle = stateStore->bufferAudioSourceState.at(ID).index;
     bool active = true;
     
     // background whole

@@ -69,7 +69,6 @@ void BufferAudioSource::process (int nframes, float* buffer )
   
   if ( guiUpdateCounter < 0 )
   {
-    cout << "Pushing " << index << endl;
     EngineEvent* x = top->toEngineEmptyEventQueue.pull();
     x->looperProgress(ID, index ); // index is a float 0 -> 1
     top->toGuiQueue.push(x);

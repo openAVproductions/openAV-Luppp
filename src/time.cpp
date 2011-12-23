@@ -2,6 +2,7 @@
 #include "time.hpp"
 
 #include "top.hpp"
+#include "engineevent.hpp"
 
 using namespace std;
 
@@ -27,17 +28,110 @@ void Time::process(int frameNumber)
     beat = newBeat;
     
     
-    
-    if ( newBeat % 16 == 0 )
+    // always process q1 on new beat
+    /*
+    if ( !q1.empty() )
     {
-      cout << "Time:P() 16th beat!" << endl;
+      if ( !q1.empty() ) {
+        cout << "Time:process() doing list 1!" << endl;
+        doEngineEventList(q1);
+        q1.clear();
+      }
     }
+    */
     
     if ( newBeat % 4 == 0 )
     {
-      cout << "Time:P() 4th beat!" << endl;
+      cout << "Time:process() doing 4th list!" << endl;
+      if ( !q4.empty() ) {
+        doEngineEventList(q4);
+      }
     }
     
-  }
+    /*
+    if ( newBeat % 8 == 0 )
+    {
+      cout << "Time:process() doing 8th list!  q8.size() = " << q8.size() << endl;
+      if ( !q8.empty() ) {
+        doEngineEventList(q8);
+      }
+      cout << " done processing 8 list, clearing NOW! " << endl;
+      q8.clear();
+    }
+    
+    if ( newBeat % 16 == 0 )
+    {
+      cout << "Time:process() doing 16th list!  q16.size() = " << q16.size() << endl;
+      if ( !q16.empty() ) {
+        doEngineEventList(q16);
+      }
+      cout << " done processing 16 list, clearing NOW! " << endl;
+    }
+    */
+    
+  } // new beat
   
 }
+
+void Time::processEngineEvent(EngineEvent* e)
+{
+  if ( e->type == EE_LOOPER_SELECT_BUFFER )
+  {
+    cout << "Time::processEE() LOOPER_SELECT_BUFFER queue in 4... type = " << e->type << "  T: " << e->ia << "  clip = " << e->ib << endl;
+    //q4.push_back(e);
+    doEngineEvent(e);
+  }
+  if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER )
+  {
+    cout << "Time::processEE() SET_PLUGIN_PARAM queue in 1" << endl;
+    //q1.push_back(e);
+    doEngineEvent(e);
+  }
+}
+
+// this function will do *all* events in a queue, and then return
+void Time::doEngineEventList(std::list<EngineEvent*>& list)
+{
+  int eventCounter = 0;
+  std::list<EngineEvent*>::iterator iter;
+  for ( iter = list.begin(); iter != list.end(); iter++ )
+  {
+    eventCounter++;
+    doEngineEvent( *iter );
+  }
+  
+  cout << "Time::doEngineEventList() Done " << eventCounter << " events, clearing NOW!" << endl;
+  list.clear();
+  
+  return;
+}
+
+void Time::doEngineEvent(EngineEvent* e)
+{
+  cout << "doEngineEvent()  type = " << e->type << endl;
+  switch ( e->type )
+  {
+    case EE_LOOPER_PROGRESS: cout << "Time::doEngineEvent() got PROGRESS!!! ERROR!" << endl; break;
+    case EE_LOOPER_SELECT_BUFFER:
+    {
+      top->state.clipSelectorQueue(e->ia, e->ib);
+      cout << "Doing SELECT BUFFER NOW! t=" << e->ia << " clip#: " << e->ib << endl;
+      break;
+    }
+    case EE_TRACK_SET_PLUGIN_PARAMETER: top->state.setPluginParameter( e->ia, e->ic, e->fa ); break;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

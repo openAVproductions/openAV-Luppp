@@ -188,8 +188,8 @@ int Window::handleEvent()
       (*i)->redraw();
     }
     else if ( e->type == EE_LOOPER_PROGRESS ) {
-      cout << " Gui LOOPER_PROGRESS " << endl;
-      guiState.bufferAudioSourceState.at(e->ia).progress = e->fa;
+      //cout << " Gui LOOPER_PROGRESS " << endl;
+      guiState.bufferAudioSourceState.at(e->ia).index = e->fa;
       redrawEffectBox();
     }
     else if ( e->type == EE_LOOPER_RECORD ) {

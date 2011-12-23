@@ -21,13 +21,20 @@ class Time
     Time(Top*);
     
     void process(int nframes);
+    void processEngineEvent(EngineEvent* e);
   
   private:
     Top* top;
     
     int beat;
     
+    // helper functions for processing queues
+    void doEngineEvent(EngineEvent* );
+    void doEngineEventList(std::list<EngineEvent*>& list);
+    
+    std::list<EngineEvent*> q1;
     std::list<EngineEvent*> q4;
+    std::list<EngineEvent*> q8;
     std::list<EngineEvent*> q16;
 };
 
