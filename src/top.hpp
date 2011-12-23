@@ -34,7 +34,7 @@ class Top
     std::vector<float> scopeVector;
     std::vector<float> inputScopeVector;
     
-    Controller* controller;
+    Controller* controller; 
     OfflineWorker* offlineWorker;
     StateStore state;
     

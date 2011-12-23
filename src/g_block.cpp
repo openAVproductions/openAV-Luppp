@@ -9,16 +9,19 @@ namespace Luppp
   {
     int blockSize = 17;
     
-    Colour textColour, playColour, bgColour;
+    Colour textColour, playColour, bgColour, recColour;
+    
+    recColour = COLOUR_TRANSPARENT;
     
     if        ( state == CLIP_STATE_EMPTY ) {
      textColour = COLOUR_TRANSPARENT;
      playColour = COLOUR_TRANSPARENT;
+     recColour  = COLOUR_ORANGE_1;
      bgColour   = COLOUR_GREY_4;
     } else if ( state == CLIP_STATE_LOADED ){
      textColour = COLOUR_BLUE_1;
-     playColour = COLOUR_TRANSPARENT;
-     bgColour   = COLOUR_GREY_3;
+     playColour = COLOUR_GREY_3;
+     bgColour   = COLOUR_ORANGE_1;
     } else if ( state == CLIP_STATE_PLAYING ){
      textColour = COLOUR_GREY_4;
      playColour = COLOUR_GREY_4;
@@ -34,6 +37,15 @@ namespace Luppp
     setColour(cr, playColour);
     cr->rectangle (x+1, y+1, 15, 15);
     cr->fill();
+    
+    if ( recColour != COLOUR_TRANSPARENT )
+    {
+        // draw "record circle" on left of block
+        cr->arc(x+8, y+8, 4, 0, 6.28 );
+        setColour(cr, recColour);
+        cr->set_line_width(2.2);
+        cr->stroke();
+    }
     
     cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_NORMAL);
     cr->set_font_size ( 13 );
