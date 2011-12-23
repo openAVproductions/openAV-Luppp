@@ -41,12 +41,12 @@ class StateStore
     // to be called whenever we want a new "EffectState" added to the list
     void addEffectState(int ID);
     
-    void setMute(int,int);
-    void setSolo(int,int);
-    void setRec (int,int);
-    void setPan(int,float);
-    void setPanZ(int,float);
-    void setVolume(int,float);
+    int setMute(int,int);
+    int setSolo(int,int);
+    int setRec (int,int);
+    int setPan(int,float);
+    int setPanZ(int,float);
+    int setVolume(int,float);
     
     void setPluginActive(int, int);
     void setPluginParameter(int,int,float);

@@ -563,6 +563,7 @@ void JackClient::apcRead( int nframes )
         
         std::cout << "SETTING BUFFER FROM APC40! ID:" << id << " val: " << val << std::endl;
         
+        // REACT!! Make engine playback the CLIP!
         EngineEvent* x = top->toEngineEmptyEventQueue.pull();
         x->looperSelectBuffer(id,val);
         time.processEngineEvent(x);
@@ -576,24 +577,9 @@ void JackClient::apcRead( int nframes )
     {
       if ( b2 >= 52 && b2 < 58 ) // the 5 vertial "launch" buttons, AND the clip stop (#52)
       {
-        /*
-        int id = b1 - 128;
-        int val= b2 - 53; // here we take 53 away, so the clip stop button will result in -1 for buffer ID
-        
-        
-        // if based on mode
-        if ( apcMode == APC_MODE_CLIP )
-        {
-          std::cout << "SETTING BUFFER FROM APC40! ID:" << id << " val: " << val << std::endl;
-          //lo_send( //lo_address_new(NULL, "14688") , "/luppp/looper/selectbuffer", "ii", id, val );
-        }
-        else
-        {
-          int sampleNum = -1;
-          std::cout << "SAMPLER STOP B2 == " << b2 << "  ID = " << id << std::endl;
-          //lo_send( //lo_address_new(NULL, "14688") , "/luppp/sampler/stop", "i", ( -((b2 - 57))*4) + id);
-        }
-        */
+        // UPDATE!! Make the APC show the right colour LED now that the release has occured!
+        int track = b1 - 128;
+        top->jackClient->writeMidi( apcOutputBuffer, 144 + track, b2, 1 );
       }
     }
     
@@ -703,25 +689,25 @@ void JackClient::apcRead( int nframes )
     }
     if ( b2 == 50 )
     {
-      if ( b1 >= 144 && b1 < 144 + 16 ) // mute off, ie ACTIVE track (led ON)
+      // LED ON = Active = NOT MUTED
+      bool onOff = true;
+      int trackID = b1 - 128;
+      if ( b1 >= 144 && b1 < 144 + 16 )
       {
-        int trackID = b1 - 144;
-        std::cout << "APC: Mute on track " << trackID << " off!" << std::endl;
-        top->state.setMute( trackID, false );
+        onOff = false;
+        trackID = b1 - 144;
+      }
+      //std::cout << "APC: Mute on track " << trackID << " off!" << std::endl;
+      if ( top->state.setMute( trackID, onOff ) == 0 )
+      {
         EngineEvent* x = top->toEngineEmptyEventQueue.pull();
-        x->setTrackMute(trackID, false);
+        x->setTrackMute(trackID, onOff);
         top->toGuiQueue.push(x);
         top->guiDispatcher->emit();
       }
-      else if ( b1 >= 128 && b1 < 128 + 16 ) // for note off
+      else
       {
-        int trackID = b1 - 128;
-        std::cout << "APC: Mute on track " << trackID << " on!" << std::endl;
-        top->state.setMute( trackID, true );
-        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
-        x->setTrackMute(trackID, true);
-        top->toGuiQueue.push(x);
-        top->guiDispatcher->emit();
+        //cout << "MUTE OUT OF BOUNDS!" << endl;
       }
     }
     

@@ -46,6 +46,9 @@ void StateStore::addTrack(BufferAudioSourceState* bas, ClipSelectorState* css, T
   outputStateIter->pan = 0.f;
   outputStateIter->panZ = 0.f;
   
+  top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + numTracks, 50, 127 ); // mute LED on
+  top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + numTracks, 52, 127 ); // Clip Stop LED on
+  
   numTracks++;
 }
 
@@ -97,10 +100,10 @@ EffectState* StateStore::getEffectState(int ID)
   return 0;
 }
 
-void StateStore::setVolume(int t, float v)
+int StateStore::setVolume(int t, float v)
 {
   if ( !trackCheck(t) ) {
-    std::cout << "StateStore::setVolume() track OOB" << std::endl; return;
+    std::cout << "StateStore::setVolume() track OOB" << std::endl; return -1;
   }
   
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
@@ -128,13 +131,14 @@ void StateStore::setVolume(int t, float v)
   top->toGuiQueue.push(x);
   top->guiDispatcher->emit();
   
+  return 0;
   //std::cout << "StateStore::setVolume() Track: " << t << ", linVol:" << v << "  logVol:" << logVolume << std::endl;
 }
 
-void StateStore::setPan(int t, float v)
+int StateStore::setPan(int t, float v)
 {
   if ( !trackCheck(t) ) {
-    std::cout << "StateStore::setPan() track OOB" << std::endl; return;
+    std::cout << "StateStore::setPan() track OOB" << std::endl; return -1;
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
@@ -145,12 +149,13 @@ void StateStore::setPan(int t, float v)
   x->setTrackPan(t, v);
   top->toGuiQueue.push(x);
   top->guiDispatcher->emit();
+  return 0;
 }
 
-void StateStore::setMute(int t, int v)
+int StateStore::setMute(int t, int v)
 {
   if ( !trackCheck(t) ) {
-    std::cout << "StateStore::setMute() track OOB" << std::endl; return;
+    std::cout << "StateStore::setMute() track OOB" << std::endl; return -1;
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
@@ -160,12 +165,13 @@ void StateStore::setMute(int t, int v)
   x->setTrackMute(t, v);
   top->toGuiQueue.push(x);
   top->guiDispatcher->emit();
+  return 0;
 }
 
-void StateStore::setSolo(int t, int v)
+int StateStore::setSolo(int t, int v)
 {
   if ( !trackCheck(t) ) {
-    std::cout << "StateStore::setSolo() track OOB" << std::endl; return;
+    std::cout << "StateStore::setSolo() track OOB" << std::endl; return -1;
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
@@ -175,12 +181,13 @@ void StateStore::setSolo(int t, int v)
   x->setTrackSolo(t, v);
   top->toGuiQueue.push(x);
   top->guiDispatcher->emit();
+  return 0;
 }
 
-void StateStore::setRec(int t, int v)
+int StateStore::setRec(int t, int v)
 {
   if ( !trackCheck(t) ) {
-    std::cout << "StateStore::setRec() track OOB" << std::endl; return;
+    std::cout << "StateStore::setRec() track OOB" << std::endl; return -1;
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
@@ -190,16 +197,18 @@ void StateStore::setRec(int t, int v)
   x->setTrackRec(t, v);
   top->toGuiQueue.push(x);
   top->guiDispatcher->emit();
+  return 0;
 }
 
-void StateStore::setPanZ(int t, float v)
+int StateStore::setPanZ(int t, float v)
 {
   if ( !trackCheck(t) ) {
-    std::cout << "StateStore::setPanZ() track OOB" << std::endl; return;
+    std::cout << "StateStore::setPanZ() track OOB" << std::endl; return -1;
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
   iter->panZ = v;
+  return 0;
 }
 
 void StateStore::setClipSelectorState(int t,int block, int bufferID)
@@ -251,9 +260,9 @@ void StateStore::clipSelectorActivateClip(int t, int b)
   top->toGuiQueue.push(x);
   top->guiDispatcher->emit();
   
-  // update APC : (concider moving this functionality into a Controller class,
-  // that can then access the MIDI port / OSC / protocolX to update the HW device
-  top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, b + 53, 1 );
+  // APC update: (only for GUI sourced events, APC will send RELEASE event,
+  // and that will trigger the *show* command, as that needs to be done after RELEASE
+  top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + b, 1 );
 }
 
 void StateStore::setPluginActive(int UID, int active)
@@ -339,7 +348,7 @@ ClipSelectorState* StateStore::getClipSelectorState(int t)
 // convinience functions
 bool StateStore::trackCheck(int t)
 {
-  if ( t >= numTracks )
+  if ( t >= numTracks && t >= 0 )
     return false;
   
   return true;
@@ -347,7 +356,7 @@ bool StateStore::trackCheck(int t)
 
 bool StateStore::effectCheck(int t)
 {
-  if ( t >= numEffects )
+  if ( t >= numEffects && t >= 0 )
     return false;
   
   return true;
