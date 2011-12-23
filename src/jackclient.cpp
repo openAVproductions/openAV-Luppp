@@ -497,6 +497,12 @@ void JackClient::apcRead( int nframes )
     {
       int trackID;
       float value;
+      
+      // for send A
+      ClipSelectorState* clipSelectorState;
+      std::list<ClipInfo>::iterator clipIter;
+      int playingScene;
+      
       switch ( trackControlMode )
       {
         case APC_TRACK_CONTROL_MODE_PAN:
@@ -507,9 +513,21 @@ void JackClient::apcRead( int nframes )
           break;
         case APC_TRACK_CONTROL_MODE_SEND_A:
           trackID = b2 - 48;
-          value = (b3 / 63.f) - 1.f;
-          std::cout << "Track Control: SEND A:  trackID: " << -2 << "  value " << value << std::endl;
-          //lo_send( //lo_address_new( NULL,"14688") , "/luppp/track/setpluginparameter", "iiif", -2, 1, b2 - 47, b3 / 127.f );
+          value = b3 / 127.f;
+          std::cout << "Track Control: SEND A:  trackID: " << trackID << "  value " << value << std::endl;
+          
+          // get clipSelectorState for current track
+          clipSelectorState = top->state.getClipSelectorState(trackID);
+          playingScene = clipSelectorState->playing;
+          cout << " clipSelectorState->playing " << playingScene << endl;
+          
+          if ( playingScene < 0 )
+            return;
+          
+          clipIter = clipSelectorState->clipInfo.begin();
+          std::advance(clipIter, playingScene);
+          clipIter->speed = 0.5 + value;
+          
           break;
         case APC_TRACK_CONTROL_MODE_SEND_B:
           trackID = b2 - 48;

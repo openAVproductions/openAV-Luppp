@@ -34,6 +34,7 @@ void BufferAudioSource::process (int nframes, float* buffer )
   std::list<ClipInfo>::iterator clipIter = clipSelState->clipInfo.begin();
   std::advance(clipIter, playingScene);
   int playingBuffer = (*clipIter).bufferID;
+  speed = (*clipIter).speed;
   //std::cout << "FAS:P()   sceneID: " << playingScene << "   bID = " << playingBuffer << endl;
   
   // get AudioBuffer pointer
