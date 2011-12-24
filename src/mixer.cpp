@@ -20,7 +20,7 @@ Mixer::Mixer(Top* t)
 
 void Mixer::addTrack(AudioTrack* trackPtr)
 {
-  cout << "Mixer::addTrack() AudioTrack* = " << trackPtr << endl;
+  //cout << "Mixer::addTrack() AudioTrack* = " << trackPtr << endl;
   audiotrackList.push_back( *(trackPtr) );
 }
 

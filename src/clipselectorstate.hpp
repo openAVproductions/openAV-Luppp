@@ -29,6 +29,11 @@ struct ClipInfo {
 
 struct ClipSelectorState
 {
+  ClipSelectorState()
+  {
+    ID = -1;
+    playing = -1;
+  }
   int ID;
   int playing;
   

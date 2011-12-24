@@ -7,7 +7,7 @@ using namespace std;
 
 Controller::Controller(Top* t)
 {
-  cout << "Controller()" << endl;
+  //cout << "Controller()" << endl;
   
   top = t;
   

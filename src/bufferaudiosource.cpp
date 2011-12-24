@@ -9,7 +9,7 @@ BufferAudioSource::BufferAudioSource(Top* t)
 {
   top = t;
   ID = AudioSource::getID();
-  cout << "BufferAudioSource() ID = " << ID << endl;
+  //cout << "BufferAudioSource() ID = " << ID << endl;
   
   guiUpdateCounter = 0;
 }
@@ -57,7 +57,7 @@ void BufferAudioSource::process (int nframes, float* buffer )
   {
     if ( (int)(index*size) >= size )
     {
-      cout << "BufferAudioSource:proces()  index*size > size!  vectorSize = " << tmpVector->size() << endl;
+      //cout << "BufferAudioSource:proces()  index*size > size!  vectorSize = " << tmpVector->size() << endl;
       index = 0.f;
     }
     

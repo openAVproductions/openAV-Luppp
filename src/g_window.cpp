@@ -92,13 +92,16 @@ Window::Window(Gtk::Main *k, Top* t)
   // poll the event Queue
   Glib::signal_timeout().connect(sigc::mem_fun(*this, &Window::handleEvent), 50);
   
+  // create a track when first idle
+  Glib::signal_idle().connect( sigc::bind_return( sigc::mem_fun(*this, &Window::sendAddTrack ), false ) );
+  
   // last thing, now we're starting the GUI main loop
   kit->run(*window);
 }
 
 void Window::sendAddTrack()
 {
-  cout << "GUI got AddTrack menu activation, sending ADD_TRACK event to Engine" << endl;
+  //cout << "GUI got AddTrack menu activation, sending ADD_TRACK event to Engine" << endl;
   EngineEvent* x = new EngineEvent();
   // -1 has no meaning here
   x->addTrack(-1);
@@ -158,7 +161,7 @@ int Window::handleEvent()
       (*iter)->redraw();
     }
     else if ( e->type == EE_ADD_TRACK ) {
-      cout << "GUI got ADD_TRACK event, sending to OfflineWorker  NewID = " << e->ia << endl;
+      //cout << "GUI got ADD_TRACK event, sending to OfflineWorker  NewID = " << e->ia << endl;
       int ret = top->offlineWorker->addTrack(e->ia);
       
       if ( ret )
@@ -208,23 +211,31 @@ int Window::handleEvent()
         
         cout << "AudioBuffer size before read: " << pntr->size() << flush;
         
-        // read from ringbuffer *directly* into AudioBuffer
-        top->recordAudioQueue.writeSamplesTo( &pntr->at(0) );
+        if ( pntr->size() != 0 ) // if two tracks are recording at the same time, the 2nd will have a size 0
+        {
+          // read from ringbuffer *directly* into AudioBuffer
+          top->recordAudioQueue.writeSamplesTo( &pntr->at(0) );
+          
+          cout << "   and after " << pntr->size() << endl;
+          
+          // send new AudioBuffer event to engine State
+          EngineEvent* x = new EngineEvent();
+          x->setStateAudioBuffer( (void*) buffer);
+          top->toEngineQueue.push(x);
+          
+          // send LooperLoad event
+          x = new EngineEvent();
+          x->looperLoad( e->ia, 0, buffer->getID() );
+          top->toEngineQueue.push(x);
+    
+          
+          cout << "read samples available " << readSpace << endl;
+        }
+        else
+        {
+          cout << "GWindow LOOPER_RECORD: Error, size in record == 0, so something went wrong.\nMost likely you pressed tried to record on two tracks at once. This is not supported yet!" << endl;
+        }
         
-        cout << "   and after " << pntr->size() << endl;
-        
-        // send new AudioBuffer event to engine State
-        EngineEvent* x = new EngineEvent();
-        x->setStateAudioBuffer( (void*) buffer);
-        top->toEngineQueue.push(x);
-        
-        // send LooperLoad event
-        x = new EngineEvent();
-        x->looperLoad( e->ia, 0, buffer->getID() );
-        top->toEngineQueue.push(x);
-  
-        
-        cout << "read samples available " << readSpace << endl;
       }
       
       // update "REC" button in GUI
@@ -457,7 +468,7 @@ void Window::setEffectsBox(int trackID)
 
 void Window::addTrack()
 {
-  std::cout << "Window::addTrack()" << std::endl;
+  //std::cout << "Window::addTrack()" << std::endl;
   
   guiState.addTrack();
   

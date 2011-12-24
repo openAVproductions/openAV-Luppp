@@ -14,7 +14,7 @@ GuiStateStore::GuiStateStore()
 
 void GuiStateStore::addTrack()
 {
-  std::cout << "GuiStateStore::addTrack()" << std::endl;
+  //std::cout << "GuiStateStore::addTrack()" << std::endl;
   
   // don't store ID for the vector, its indice is the ID, so just access
   // the array .at(ID) rather than iter over it, and take ( targetID == ID )
@@ -34,10 +34,16 @@ void GuiStateStore::addTrack()
   trackoutputState.push_back( TrackOutputState() );
   trackoutputState.back().ID = numTracks;
   trackoutputState.back().selected = false;
+  trackoutputState.back().selectedDevice = 0;
   trackoutputState.back().volume = 0.f;
   trackoutputState.back().pan = 0.f;
   
-  cout << "GuiStateStore::addTrack()  index , speed = " << i->index << ", " << i->speed << endl;
+  if ( numTracks == 0 )
+  {
+    trackoutputState.back().selected = true;
+  }
+  
+  //cout << "GuiStateStore::addTrack()  index , speed = " << i->index << ", " << i->speed << endl;
   
   numTracks++;
 }

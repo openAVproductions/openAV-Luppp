@@ -22,9 +22,12 @@ void StateStore::addEffect(int t, int pos, Effect* effect)
 
 void StateStore::addTrack(BufferAudioSourceState* bas, ClipSelectorState* css, TrackOutputState* tos)
 {
+  /*
   cout << "StateStore::addTrack() BuffAudioSource* = " << bas
                               << "  ClipSelectorState "<< css
                               << "  TrackOutputState " << tos << endl;
+  */
+  
   bufferAudioSourceState.push_back( *bas );
   
   // initialize the clipSelectorState for this track

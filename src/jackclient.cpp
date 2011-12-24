@@ -156,7 +156,7 @@ int JackClient::processRtQueue()
       // GUI / Controller can both add tracks, so we get the ADD_TRACK event here
       // then bounce it to GUI thread, it creates the nessisary instances non-RT,
       // and then it bounces the nessisary pointers back to Engine (see EE_ADD_TRACK_POINTERS)
-      cout << "JackC::processRtQ Got Add track event, bouncing to GUI!" << endl;
+      //cout << "JackC::processRtQ Got Add track event, bouncing to GUI!" << endl;
       EngineEvent* x = top->toEngineEmptyEventQueue.pull();
       
       // tell GUI the ID for the new track
@@ -164,7 +164,7 @@ int JackClient::processRtQueue()
       top->toGuiQueue.push(x);
     }
     else if ( e->type == EE_ADD_TRACK_POINTERS) {
-      cout << "JackC::processRtQ Got ADD TRACK POINTERS event, setting in Mixer & State!" << endl;
+      //cout << "JackC::processRtQ Got ADD TRACK POINTERS event, setting in Mixer & State!" << endl;
       
       // vPtr is the AudioTrack*, so cast & send to mixer to insert
       mixer.addTrack( (AudioTrack*) e->vPtr );
@@ -301,7 +301,7 @@ void JackClient::writeMidi(void* portBuffer, int b1, int b2, int b3)
   }
   else
   {
-    cout << "JC::writeMidi() " << b1 << ", " << b2 << ", " << b3 << endl; 
+    //cout << "JC::writeMidi() " << b1 << ", " << b2 << ", " << b3 << endl; 
     buffer[0] = b1;
     buffer[1] = b2;
     buffer[2] = b3;

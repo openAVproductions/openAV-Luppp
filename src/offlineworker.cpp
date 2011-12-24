@@ -43,7 +43,7 @@ int OfflineWorker::createNewEffect(int t, int pos, int typeInt )
   
   if ( effect )
   {
-    cout << "OfflineWorker::createNewEffect() writing EE_STATE_NEW_EFFECT" << endl;
+    //cout << "OfflineWorker::createNewEffect() writing EE_STATE_NEW_EFFECT" << endl;
     EngineEvent* x = new EngineEvent();
     x->setStateEffect(t,pos,typeInt,effect);
     top->toEngineQueue.push(x);
@@ -82,7 +82,7 @@ int OfflineWorker::addTrack(int trackID)
   tos->pan = 0.f;
   tos->panZ = 0.f;
   
-  cout << "OfflineW sending ADD TRACK pointers NOW!" << endl;
+  //cout << "OfflineW sending ADD TRACK pointers NOW!" << endl;
   EngineEvent* x = new EngineEvent();
   x->sendAddTrackPointers( (void*)audiotrack,(void*)bas,(void*)c,(void*)tos);
   top->toEngineQueue.push(x);
