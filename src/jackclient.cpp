@@ -301,7 +301,7 @@ void JackClient::writeMidi(void* portBuffer, int b1, int b2, int b3)
   }
   else
   {
-    //cout << "JC::writeMidi() " << b1 << ", " << b2 << ", " << b3 << endl; 
+    cout << "JC::writeMidi() " << b1 << ", " << b2 << ", " << b3 << endl; 
     buffer[0] = b1;
     buffer[1] = b2;
     buffer[2] = b3;

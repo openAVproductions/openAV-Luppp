@@ -221,6 +221,11 @@ void StateStore::setClipSelectorState(int t,int block, int bufferID)
 
   std::list<ClipInfo>::iterator clipI = iter->clipInfo.begin();
   std::advance(clipI, block);
+    
+  // write APC loaded, if not PLAYING
+  if ( (*clipI).state != CLIP_STATE_PLAYING )
+    top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53+block, 5 );
+  
   (*clipI).state = CLIP_STATE_LOADED;
   (*clipI).bufferID = bufferID;
   
@@ -235,20 +240,31 @@ void StateStore::clipSelectorActivateClip(int t, int b)
 {
   // we get a track & scene number, so we set them in the ClipSelectorState
   // later the playback will request the bufferID ClipInfo of the right position in the list
-  std::cout << "StateStore::clipSelectorQueue() " << t << ", " << b << endl;
+  std::cout << "StateStore::clipSelectorActivateClip() " << t << ", " << b << endl;
   std::list<ClipSelectorState>::iterator iter = clipSelectorState.begin();
   std::advance(iter, t);
   
   // get info of current Clip & update APC off / loaded for previous block
   std::list<ClipInfo>::iterator infoIter = iter->clipInfo.begin();
-  std::advance(infoIter, iter->playing);
   
-  std::cout << "ClipInfo = " << infoIter->state << "  Loaded = " << CLIP_STATE_LOADED << endl;
-  
-  if ( infoIter->state == CLIP_STATE_EMPTY )
-    top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 128 + t, 53 + iter->playing, 0 ); // off
-  if ( infoIter->state == CLIP_STATE_LOADED )
-    top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 5 ); // orange
+  if ( b >= 0 ) // b != stop clip (-1) so safe to access
+  {
+    std::advance(infoIter, iter->playing);
+    
+    std::cout << "ClipInfo = " << infoIter->state << "  Loaded = " << CLIP_STATE_LOADED << endl;
+    
+    if ( infoIter->state == CLIP_STATE_EMPTY )
+      top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 128 + t, 53 + iter->playing, 0 ); // off
+    if ( infoIter->state == CLIP_STATE_LOADED )
+      top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 5 ); // orange
+  }
+  else
+  {
+    cout << "Clip Number = -1, writing Clip Stop LED now " << endl;
+    top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 5 ); // state of old block (no longer playing, so orange)
+    
+    top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 52, 1 ); // Clip Stop Green
+  }
   
   std::list<BufferAudioSourceState>::iterator iterBASS = bufferAudioSourceState.begin();
   std::advance(iterBASS, t);

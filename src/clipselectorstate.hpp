@@ -6,11 +6,11 @@
 #include <vector>
 
 enum ClipState {
-  CLIP_STATE_EMPTY = 0,
-  CLIP_STATE_LOADED,
-  CLIP_STATE_PLAYING,
-  CLIP_STATE_QUEUED,
-  CLIP_STATE_RECORDING,
+  CLIP_STATE_EMPTY          = 1,
+  CLIP_STATE_LOADED         = 2,
+  CLIP_STATE_PLAYING        = 3,
+  CLIP_STATE_QUEUED         = 4,
+  CLIP_STATE_RECORDING      = 5,
 };
 
 struct ClipInfo {
