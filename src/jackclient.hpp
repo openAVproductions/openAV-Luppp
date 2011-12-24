@@ -37,6 +37,8 @@ class JackClient
     
     void deactivate();
     
+    bool recordInput;
+    
   private:
     Top* top;
     JClient* client;
@@ -53,8 +55,6 @@ class JackClient
     
     JPort* apcInputPort;
     JPort* apcOutputPort;
-    
-    bool recordInput;
     
     int trackControlMode;
     

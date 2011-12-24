@@ -104,6 +104,7 @@ int JackClient::processRtQueue()
       top->state.setSolo( e->ia, e->ib );
     }
     else if ( e->type == EE_TRACK_SET_REC ) {
+      cout << "JC:pRTq() SET_REC event" << endl;
       top->state.setRec( e->ia, e->ib );
     }
     else if ( e->type == EE_TRACK_SET_PAN ) {
@@ -655,21 +656,15 @@ void JackClient::apcRead( int nframes )
       {
         int trackID = b1 - 144;
         std::cout << "APC: REC on track " << trackID << " on!" << std::endl;
-        recordInput = true;
         
-        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
-        x->setLooperRecord(trackID, true);
-        top->toGuiQueue.push(x);
+        top->state.setRec( trackID, true );
       }
       else if ( b1 >= 128 && b1 < 128 + 16 ) // rec off
       {
         int trackID = b1 - 128;
         std::cout << "APC: REC on track " << trackID << " off!" << std::endl;
-        recordInput = false;
         
-        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
-        x->setLooperRecord(trackID, false);
-        top->toGuiQueue.push(x);
+        top->state.setRec( trackID, false );
       }
     }
     if ( b2 == 49 )

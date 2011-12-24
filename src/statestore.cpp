@@ -195,6 +195,7 @@ int StateStore::setRec(int t, int v)
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
   iter->recEnable = v;
+  cout << "StateStore::setRec()  Track " << t << " has REC ENABLE = " << v << endl;
   
   EngineEvent* x = top->toEngineEmptyEventQueue.pull();
   x->setTrackRec(t, v);
@@ -236,6 +237,10 @@ void StateStore::setClipSelectorState(int t,int block, int bufferID)
   top->guiDispatcher->emit();
 }
 
+// this function handles the logic in activating / deactivating and otherwise
+// marking every Clip in Engine. It will test if RecordEnable is active on the
+// track, and if it is, will record into a pressed buffer, otherwise it will
+// play it back.
 void StateStore::clipSelectorActivateClip(int t, int b)
 {
   // we get a track & scene number, so we set them in the ClipSelectorState
@@ -244,20 +249,53 @@ void StateStore::clipSelectorActivateClip(int t, int b)
   std::list<ClipSelectorState>::iterator iter = clipSelectorState.begin();
   std::advance(iter, t);
   
-  // get info of current Clip & update APC off / loaded for previous block
-  std::list<ClipInfo>::iterator infoIter = iter->clipInfo.begin();
-  
   if ( b >= 0 ) // b != stop clip (-1) so safe to access
   {
-    std::advance(infoIter, iter->playing);
     
-    std::cout << "ClipInfo = " << infoIter->state << "  Loaded = " << CLIP_STATE_LOADED << endl;
+    std::list<ClipInfo>::iterator currentClipIter = iter->clipInfo.begin();
+    std::advance(currentClipIter, b);
     
-    if ( infoIter->state == CLIP_STATE_EMPTY )
+    TrackOutputState* trackState = getAudioSinkOutput(t);
+    
+    if ( trackState->recEnable && top->jackClient->recordInput == false ) // not currently recording!
+    {
+      cout << "Clip @ " << t << "  block " << b << " pressed while REC ENABLE, starting RECORDING NOW!" << endl;
+      
+      // JACK starts copying the data, and we write RED to buffer
+      top->jackClient->recordInput = true;
+      // get info of current Clip & update APC off / loaded for previous block
+      
+      currentClipIter->state = CLIP_STATE_RECORDING;
+    }
+    else
+    {
+      if ( currentClipIter->state == CLIP_STATE_RECORDING )
+      {
+        // this Clip has been recording ( other clips might be pressed inbetween
+        // record & stop-record presses) so we tell JACK to stop recording, and
+        // tell the GUI thread that we want the recorded buffer loaded to the current
+        // button released block.
+        top->jackClient->recordInput = false; // JACK stops recording
+        
+        // event to GUI to stop recording
+        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+        x->setLooperRecord(t, false);
+        top->toGuiQueue.push(x);
+        
+      }
+    }
+    
+    std::cout << "currentClipIter->state = " << currentClipIter->state << "  Loaded = " << CLIP_STATE_LOADED << endl;
+    
+    if      ( currentClipIter->state == CLIP_STATE_EMPTY )
       top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 128 + t, 53 + iter->playing, 0 ); // off
-    if ( infoIter->state == CLIP_STATE_LOADED )
+    else if ( currentClipIter->state == CLIP_STATE_LOADED )
       top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 5 ); // orange
-  }
+    else if ( currentClipIter->state == CLIP_STATE_RECORDING )
+      top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 3 ); // red
+  
+  
+  } // b > 0
   else
   {
     cout << "Clip Number = -1, writing Clip Stop LED now " << endl;
