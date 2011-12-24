@@ -42,28 +42,6 @@ namespace Luppp
           cr->arc(xc,yc, 13, 2.46, angle );
           cr->line_to(xc,yc);
           cr->stroke();
-          /* angle = 2.46 + (4.54 * value);
-          
-          setColour(cr, COLOUR_BLUE_1 );
-          cr->move_to( xc - radius * 0.5, yc );
-          cr->line_to( xc + radius * 0.5, yc );
-          cr->move_to( xc, yc - (radius*0.5) );
-          cr->line_to( xc, yc + (radius*0.5) );
-          cr->stroke();
-          
-          if ( active )
-            setColour(cr, COLOUR_ORANGE_1 );
-          else
-            setColour(cr, COLOUR_GREY_1 );
-          
-          std::cout << "Dial: value = " << value << "  angle = " << angle << std::endl; 
-          cr->arc(xc,yc, radius, 0, angle );
-          cr->line_to(xc,yc);
-          cr->close_path();
-          cr->fill();
-          setColour(cr, COLOUR_GREY_1 );
-          cr->stroke();
-          */
           break;
         case DIAL_MODE_SEND:
           angle = 2.46 + (4.54 * value);
@@ -76,37 +54,41 @@ namespace Luppp
           cr->stroke();
           break;
         case DIAL_MODE_PAN:
+          // calculate "angle" from value for PAN style display
           angle = -1.57 + (( value ) * (4.54 / 2.f) );
+          
+          // colour & draw arcs for value rings
           if ( active )
             setColour(cr, COLOUR_ORANGE_1 );
           else
             setColour(cr, COLOUR_GREY_1 );
+          cr->set_line_width(2);
           
+          // outer "value" ring
           if ( value > 0.f )
             cr->arc(xc,yc, 17, -1.57, angle );
           else
             cr->arc_negative(xc,yc, 17, -1.57, angle );
           cr->line_to(xc,yc);
-          cr->close_path();
+          cr->move_to(xc,yc);
+          cr->stroke(); // stroke rings seperatly
           
-          // value check, only fill if we need to
-          if ( ( value < -0.1 || value > 0.1 ) && active )
-          {
-            //cr->set_line_width(1.2);
-            cr->fill_preserve();
-          }
-          
-          setColour(cr, COLOUR_GREY_1 );
+          // inner "value" ring
+          if ( value > 0.f )
+            cr->arc(xc,yc, 13, -1.57, angle );
+          else
+            cr->arc_negative(xc,yc, 13, -1.57, angle );
           cr->stroke();
+          
           
           // draw triangle on top
           cr->set_line_width(1.2);
           float triangeX = x + 16;
           float triangeY = y + 8;
           if ( ( value < -0.1 || value > 0.1 ) && active )
-            setColour(cr, COLOUR_ORANGE_1 );
+            setColour(cr, COLOUR_GREY_4 );
           else
-            setColour(cr, COLOUR_GREY_1 );
+            setColour(cr, COLOUR_ORANGE_1 );
             
           cr->move_to( triangeX, triangeY );
           cr->line_to( triangeX - 5.5, triangeY - 10 );
