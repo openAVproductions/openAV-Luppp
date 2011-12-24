@@ -67,7 +67,7 @@ bool GReverb::on_expose_event(GdkEventExpose* event)
     cr->fill();
     
     // update value from stateStore
-    std::cout << "Lowpass ID " << ID << " getting state now" << endl;
+    //std::cout << "GReverb ID " << ID << " getting state now" << endl;
     float cutoffRangeZeroOne = stateStore->effectState.at(ID).values[0];
     
     cutoff = (48.f / xSize) + (cutoffRangeZeroOne * 0.7541 );
