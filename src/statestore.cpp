@@ -287,19 +287,29 @@ void StateStore::clipSelectorActivateClip(int t, int b)
         top->toGuiQueue.push(x);
         
       }
+      else
+      {
+        // set the "Playback" variables here, as we DON'T want to change the
+        // currently playing buffer when we have the track in Record mode!
+        std::list<BufferAudioSourceState>::iterator iterBASS = bufferAudioSourceState.begin();
+        std::advance(iterBASS, t);
+        iterBASS->index = 0; // restart sample from beginning
+        
+        // update *actual* Engine value for currently playing Scene
+        iter->playing = b;
+      }
+      
+      std::cout << "currentClipIter->state = " << currentClipIter->state << endl;
+      if      ( currentClipIter->state == CLIP_STATE_EMPTY )
+        top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 128 + t, 53 + iter->playing, 0 ); // off
+      else if ( currentClipIter->state == CLIP_STATE_LOADED )
+        top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 5 ); // orange
+      else if ( currentClipIter->state == CLIP_STATE_PLAYING )
+        top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 1 ); // green
+      //else if ( currentClipIter->state == CLIP_STATE_RECORDING )
+      //  top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 3 ); // red
+      
     }
-    
-    std::cout << "currentClipIter->state = " << currentClipIter->state << "  Loaded = " << CLIP_STATE_LOADED << endl;
-    
-    if      ( currentClipIter->state == CLIP_STATE_EMPTY )
-      top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 128 + t, 53 + iter->playing, 0 ); // off
-    else if ( currentClipIter->state == CLIP_STATE_LOADED )
-      top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 5 ); // orange
-    else if ( currentClipIter->state == CLIP_STATE_PLAYING )
-      top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 1 ); // green
-    else if ( currentClipIter->state == CLIP_STATE_RECORDING )
-      top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 3 ); // red
-  
   
   } // b > 0
   else
@@ -309,13 +319,6 @@ void StateStore::clipSelectorActivateClip(int t, int b)
     
     top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 52, 1 ); // Clip Stop Green
   }
-  
-  std::list<BufferAudioSourceState>::iterator iterBASS = bufferAudioSourceState.begin();
-  std::advance(iterBASS, t);
-  iterBASS->index = 0; // restart sample from beginning
-  
-  // update *actual* Engine value for currently playing Scene
-  iter->playing = b;
   
   // update GUI
   EngineEvent* x = top->toEngineEmptyEventQueue.pull();
