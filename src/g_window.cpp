@@ -196,12 +196,12 @@ int Window::handleEvent()
       redrawEffectBox();
     }
     else if ( e->type == EE_LOOPER_RECORD ) {
-      cout << "GUI: Looper Record event! t = " << e->ia << "  value = " << e->ib << endl;
+      cout << "GUI: Looper Record event! t = " << e->ia << "  block: " << e->ib << "  rec? = " << e->ic << endl;
       // we get a "record off" event, and then read *all* the contents of
       // the ringbuffer into a AudioBuffer, load that into engine same as
       // a file source, and finally set the BufferAudioSource to play back
       // that bufferID trough the bufferAudioSourceState list in *engine* statestore
-      if ( e->ib == 0 )
+      if ( e->ic == 0 )
       {
         // create new buffer, get pointer, read space, resize buffer
         AudioBuffer* buffer = new AudioBuffer();
@@ -209,27 +209,28 @@ int Window::handleEvent()
         int readSpace = top->recordAudioQueue.readSpaceAvailable();
         pntr->resize(readSpace);
         
-        cout << "AudioBuffer size before read: " << pntr->size() << flush;
+        //cout << "AudioBuffer size before read: " << pntr->size() << flush;
         
         if ( pntr->size() != 0 ) // if two tracks are recording at the same time, the 2nd will have a size 0
         {
           // read from ringbuffer *directly* into AudioBuffer
           top->recordAudioQueue.writeSamplesTo( &pntr->at(0) );
           
-          cout << "   and after " << pntr->size() << endl;
+          //cout << "   and after " << pntr->size() << endl;
           
           // send new AudioBuffer event to engine State
           EngineEvent* x = new EngineEvent();
           x->setStateAudioBuffer( (void*) buffer);
           top->toEngineQueue.push(x);
           
+          cout << "\t\t\tGWindow: LOOPER_RECORD: Sending buffer to " << e->ia << "  " << e->ib << "  " << buffer->getID() << endl;
           // send LooperLoad event
           x = new EngineEvent();
-          x->looperLoad( e->ia, 0, buffer->getID() );
+          x->looperLoad( e->ia, e->ib, buffer->getID() );
           top->toEngineQueue.push(x);
     
           
-          cout << "read samples available " << readSpace << endl;
+          //cout << "read samples available " << readSpace << endl;
         }
         else
         {

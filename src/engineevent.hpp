@@ -87,12 +87,12 @@ class EngineEvent
     void looperLoad           (int id, int slot, int buf);
     void looperWrite          (int id, char* s);
     void looperRetrigger      (int id);
-    void setLooperRecord      (int id, int r);
     void looperSetBeats       (int id, int b);
     void looperProgress       (int id, float);
     void looperSetInputType   (int id, int b);
     void looperSelectBuffer   (int id, int b);
     void looperSetQuantization(int id, int b);
+    void setLooperRecord      (int id, int, int r);
     
     void samplerPlay          (int id);
     void samplerStop          (int id);
