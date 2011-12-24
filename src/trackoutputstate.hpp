@@ -15,7 +15,7 @@ struct TrackOutputState
   float pan;
   float panZ;
   
-  bool mute, solo, rec;
+  bool mute, solo, recEnable;
 };
 
 #endif

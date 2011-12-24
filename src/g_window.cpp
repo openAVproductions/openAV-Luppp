@@ -185,7 +185,7 @@ int Window::handleEvent()
       (*i)->redraw();
     }
     else if ( e->type == EE_TRACK_SET_REC ) {
-      guiState.trackoutputState.at(e->ia).rec = e->ib;
+      guiState.trackoutputState.at(e->ia).recEnable = e->ib;
       std::list<TrackOutput*>::iterator i = trackoutputList.begin();
       std::advance(i,e->ia);
       (*i)->redraw();
@@ -240,7 +240,7 @@ int Window::handleEvent()
       
       // update "REC" button in GUI
       
-      guiState.trackoutputState.at(e->ia).rec = e->ib;
+      guiState.trackoutputState.at(e->ia).recEnable = e->ib;
       std::list<TrackOutput*>::iterator i = trackoutputList.begin();
       std::advance(i,e->ia);
       (*i)->redraw();

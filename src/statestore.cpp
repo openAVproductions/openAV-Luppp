@@ -194,7 +194,7 @@ int StateStore::setRec(int t, int v)
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
-  iter->rec = v;
+  iter->recEnable = v;
   
   EngineEvent* x = top->toEngineEmptyEventQueue.pull();
   x->setTrackRec(t, v);

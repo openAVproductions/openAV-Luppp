@@ -74,7 +74,7 @@ bool TrackOutput::on_expose_event(GdkEventExpose* event)
     Dial(cr,true, 7,4,state->pan,DIAL_MODE_PAN); // pan
     Mute(cr, 9  , 41 , state->ID, state->mute ); // mute button
     Solo(cr, 9  , 68 , state->ID, state->solo ); // solo button
-    Rec (cr, 9  , 85 , state->ID, state->rec  ); // rec button
+    Rec (cr, 9  , 85 , state->ID, state->recEnable); // rec button
     Fader(cr,46 , 4  , state->volume, 0, 0 ); // fader
     
     if ( state->selected )
@@ -132,7 +132,7 @@ bool TrackOutput::on_button_press_event(GdkEventButton* event)
       std::cout << "REC" << std::endl;
       EngineEvent* x = new EngineEvent();
       TrackOutputState* state = &stateStore->trackoutputState.at(ID);
-      x->setTrackRec(ID, !state->rec);
+      x->setTrackRec(ID, !state->recEnable);
       top->toEngineQueue.push(x);
     }
     else if ( event->x > 3 && event->y > 7 && event->y < 37 )
