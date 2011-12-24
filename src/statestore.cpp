@@ -266,6 +266,7 @@ void StateStore::clipSelectorActivateClip(int t, int b)
       // get info of current Clip & update APC off / loaded for previous block
       
       currentClipIter->state = CLIP_STATE_RECORDING;
+      //top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 3 ); // red
     }
     else
     {
@@ -294,8 +295,6 @@ void StateStore::clipSelectorActivateClip(int t, int b)
       top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 128 + t, 53 + iter->playing, 0 ); // off
     else if ( currentClipIter->state == CLIP_STATE_LOADED )
       top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 5 ); // orange
-    else if ( currentClipIter->state == CLIP_STATE_RECORDING )
-      top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 3 ); // red
   
   
   } // b > 0

@@ -568,8 +568,6 @@ void JackClient::apcRead( int nframes )
         EngineEvent* x = top->toEngineEmptyEventQueue.pull();
         x->looperSelectBuffer(id,val);
         time.processEngineEvent(x);
-        
-        //writeMidi( apcOutputBuffer, b1, b2, 127);
       }
     }
     
@@ -580,7 +578,19 @@ void JackClient::apcRead( int nframes )
       {
         // UPDATE!! Make the APC show the right colour LED now that the release has occured!
         int track = b1 - 128;
-        top->jackClient->writeMidi( apcOutputBuffer, 144 + track, b2, 1 );
+        int block = b2 - 53;
+        
+        if ( block >= 0 )
+        {
+          ClipSelectorState* clipSelectorState = top->state.getClipSelectorState(track);
+          std::list<ClipInfo>::iterator clipState =  clipSelectorState->clipInfo.begin();
+          std::advance(clipState, block);
+          
+          if ( clipState->state == CLIP_STATE_RECORDING )
+            writeMidi( apcOutputBuffer, 144 + track, b2, 3 );
+          else
+            writeMidi( apcOutputBuffer, 144 + track, b2, 1 );
+        }
       }
     }
     
