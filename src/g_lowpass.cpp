@@ -266,7 +266,7 @@ bool GLowPass::on_button_press_event(GdkEventButton* event)
     {
       std::cout << "GLowPass Enable / Disable click event!" << std::endl;
       EngineEvent* x = new EngineEvent();
-      x->setTrackDeviceActive(0,0,1 );
+      x->setTrackDeviceActive(ID, !stateStore->effectState.at(ID).active );
       top->toEngineQueue.push(x);
     }
     

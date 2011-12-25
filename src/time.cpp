@@ -24,12 +24,11 @@ void Time::process(int frameNumber)
   // here we handle *all* events that should occur on *a* beat
   if ( newBeat != beat )
   {
-    cout << "Time:P() bpm = " << bpm << "  FPB: " << framesPerBeat << "  beat: " << newBeat << endl;
+    cout << "Time:P() bpm = " << bpm << "  FPB: " << framesPerBeat << "  beat: " << newBeat << " Q1: " << q1.size() << "  Q4: " << q4.size() << endl;
     beat = newBeat;
     
     
     // always process q1 on new beat
-    /*
     if ( !q1.empty() )
     {
       if ( !q1.empty() ) {
@@ -38,7 +37,6 @@ void Time::process(int frameNumber)
         q1.clear();
       }
     }
-    */
     
     if ( newBeat % 4 == 0 )
     {
@@ -87,6 +85,10 @@ void Time::processEngineEvent(EngineEvent* e)
     //q1.push_back(e);
     doEngineEvent(e);
   }
+  if ( e->type == EE_TRACK_DEVICE_ACTIVE )
+  {
+    q1.push_back(e);
+  }
 }
 
 // this function will do *all* events in a queue, and then return
@@ -118,7 +120,9 @@ void Time::doEngineEvent(EngineEvent* e)
       top->state.clipSelectorActivateClip(e->ia, e->ib);
       break;
     }
+    case EE_TRACK_DEVICE_ACTIVE: top->state.setPluginActive(e->ia, e->ib); break;
     case EE_TRACK_SET_PLUGIN_PARAMETER: top->state.setPluginParameter( e->ia, e->ic, e->fa ); break;
+    default: cout << "Time::doEE() Error: got type " << e->type << " which is not handled yet!" << endl;
   }
 }
 

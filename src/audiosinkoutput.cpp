@@ -14,7 +14,7 @@ void AudioSinkOutput::process(int nframes, float* in, float *W, float *X, float 
 {
   TrackOutputState* state = top->state.getAudioSinkOutput(ID);
   
-  std::cout << "AudioSinkOutput::process() vol = " << state->volume << " pan = " << state->pan << std::endl;
+  //std::cout << "AudioSinkOutput::process() vol = " << state->volume << " pan = " << state->pan << std::endl;
   
   float logVolume = state->volume;
   float pan = -1 * state->pan; // invert pan, way the algorithm works!

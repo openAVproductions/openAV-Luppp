@@ -249,13 +249,14 @@ void StateStore::clipSelectorActivateClip(int t, int b)
   std::list<ClipSelectorState>::iterator iter = clipSelectorState.begin();
   std::advance(iter, t);
   
+  TrackOutputState* trackState = getAudioSinkOutput(t);
+  if ( trackState == 0 ) { return; } // grid press on non existent track
+  
   if ( b >= 0 ) // b != stop clip (-1) so safe to access
   {
     
     std::list<ClipInfo>::iterator currentClipIter = iter->clipInfo.begin();
-    std::advance(currentClipIter, b);
-    
-    TrackOutputState* trackState = getAudioSinkOutput(t);
+    std::advance(currentClipIter, b); // Will segfault if B > 10, as we have 10 clips by default
     
     if ( trackState->recEnable && top->jackClient->recordInput == false ) // not currently recording!
     {
@@ -266,11 +267,10 @@ void StateStore::clipSelectorActivateClip(int t, int b)
       // get info of current Clip & update APC off / loaded for previous block
       
       currentClipIter->state = CLIP_STATE_RECORDING;
-      //top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 3 ); // red
     }
     else
     {
-      cout << "Clip @ " << t << "  block " << b << " block pressed while recording!" << endl;
+      cout << "Clip @ " << t << "  block " << b << " block pressed while recording on this track!" << endl;
       
       if ( currentClipIter->state == CLIP_STATE_RECORDING )
       {
@@ -285,29 +285,28 @@ void StateStore::clipSelectorActivateClip(int t, int b)
         EngineEvent* x = top->toEngineEmptyEventQueue.pull();
         x->setLooperRecord(t, b, false);
         top->toGuiQueue.push(x);
-        
       }
       else
       {
+        cout << "its not the clip that *IS* recording!" << endl;
         // set the "Playback" variables here, as we DON'T want to change the
         // currently playing buffer when we have the track in Record mode!
         std::list<BufferAudioSourceState>::iterator iterBASS = bufferAudioSourceState.begin();
         std::advance(iterBASS, t);
         iterBASS->index = 0; // restart sample from beginning
         
+        // write old block as its state tells us it is
+        if ( currentClipIter->state == CLIP_STATE_EMPTY )
+          top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 128 + t, 53 + iter->playing, 0 ); // off
+        else
+          top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 5 ); // orange
+        
         // update *actual* Engine value for currently playing Scene
         iter->playing = b;
-      }
-      
-      std::cout << "currentClipIter->state = " << currentClipIter->state << endl;
-      if      ( currentClipIter->state == CLIP_STATE_EMPTY )
-        top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 128 + t, 53 + iter->playing, 0 ); // off
-      else if ( currentClipIter->state == CLIP_STATE_LOADED )
-        top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 5 ); // orange
-      else if ( currentClipIter->state == CLIP_STATE_PLAYING )
+        
+        std::cout << "currentClipIter->state = " << currentClipIter->state << endl;
         top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 1 ); // green
-      //else if ( currentClipIter->state == CLIP_STATE_RECORDING )
-      //  top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 3 ); // red
+      }
       
     }
   
@@ -316,7 +315,7 @@ void StateStore::clipSelectorActivateClip(int t, int b)
   {
     cout << "Clip Number = -1, writing Clip Stop LED now " << endl;
     top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 5 ); // state of old block (no longer playing, so orange)
-    
+    iter->playing = -1; // write current playing 
     top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 52, 1 ); // Clip Stop Green
   }
   
@@ -342,9 +341,7 @@ void StateStore::setPluginActive(int UID, int active)
       (*iter)->active = active;
       
       EngineEvent* x = top->toEngineEmptyEventQueue.pull();
-      x->setTrackDeviceActive(UID,
-                              -1,
-                              active);
+      x->setTrackDeviceActive(UID, active);
       top->toGuiQueue.push(x);
       
       break;

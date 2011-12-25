@@ -254,9 +254,9 @@ int Window::handleEvent()
       (*i)->redraw();
     }
     else if ( e->type == EE_TRACK_DEVICE_ACTIVE ) {
-      std::cout << "Gui DEVICE ACTIVE   UID: " << e->ia << " value: " << e->ic << std::endl; 
+      std::cout << "Gui DEVICE ACTIVE   UID: " << e->ia << " value: " << e->ib << std::endl; 
       
-      guiState.effectState.at(e->ia).active = e->ic;
+      guiState.effectState.at(e->ia).active = e->ib;
       
       redrawEffectBox(); // should be only redrawing current widget
     }

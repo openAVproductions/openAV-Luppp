@@ -107,7 +107,7 @@ class EngineEvent
     void setPluginParameter   (int i1, int i2, int i3, float f1);
     void setPluginParameterAbsolute(int i1, int i2, int i3, float f1);
     
-    void setTrackDeviceActive (int id, int b, int a);
+    void setTrackDeviceActive (int id, int a);
     void setTrackSetDeviceType(int id, int b, int a);
     
     void setMixerVolume       (int id, float v);

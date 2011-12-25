@@ -224,7 +224,7 @@ bool GTransient::onMouseMove(GdkEventMotion* event)
     {
       q = event->y / float(ySize);
       EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(0,0,1, q );
+      //x->setPluginParameter(0,0,1, q );
       top->toEngineQueue.push(x);
     }
     redraw();
@@ -276,7 +276,7 @@ bool GTransient::on_button_press_event(GdkEventButton* event)
     {
       std::cout << "GTransient Enable / Disable click event!" << std::endl;
       EngineEvent* x = new EngineEvent();
-      x->setTrackDeviceActive(0,0,1 );
+      x->setTrackDeviceActive(ID, !stateStore->effectState.at(ID).active );
       top->toEngineQueue.push(x);
     }
     

@@ -171,6 +171,11 @@ int JackClient::processRtQueue()
       // we do the logic on which EffectID we need to write to
       //top->state.setPluginParameter(e->ia,e->ib,e->ic,e->fa);
     }
+    else if ( e->type == EE_TRACK_DEVICE_ACTIVE) {
+      // send all values on to stateStore, from there we message UI, and
+      // we do the logic on which EffectID we need to write to
+      time.processEngineEvent(e);
+    }
     else if ( e->type == EE_ADD_TRACK) {
       // GUI / Controller can both add tracks, so we get the ADD_TRACK event here
       // then bounce it to GUI thread, it creates the nessisary instances non-RT,
@@ -445,7 +450,11 @@ void JackClient::apcRead( int nframes )
       }
       // get unique ID of current selected track & device, then setPluginParam that UID
       int uid = mixer.getEffectID(top->controller->getTrack(), top->controller->getDevice());
-      top->state.setPluginActive(uid, active);
+      
+      EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+      x->setTrackDeviceActive(uid,active);
+      time.processEngineEvent(x);
+      
     }
     
     // APc <- Selected device button
@@ -605,6 +614,7 @@ void JackClient::apcRead( int nframes )
         if ( block >= 0 )
         {
           ClipSelectorState* clipSelectorState = top->state.getClipSelectorState(track);
+          if ( clipSelectorState == 0 ) return;
           std::list<ClipInfo>::iterator clipState =  clipSelectorState->clipInfo.begin();
           std::advance(clipState, block);
           
