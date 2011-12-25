@@ -518,7 +518,7 @@ void JackClient::apcRead( int nframes )
           trackID = b2 - 48;
           value = (b3 / 63.f) - 1.f;
           std::cout << "Track Control: PAN MODE:  trackID: " << trackID << "  value " << value << std::endl;
-          //lo_send( //lo_address_new( NULL,"14688") , "/luppp/mixer/pan", "if", trackID, value );
+          top->state.setPan( trackID, value );
           break;
         case APC_TRACK_CONTROL_MODE_SEND_A:
           trackID = b2 - 48;
