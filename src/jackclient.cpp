@@ -132,7 +132,7 @@ int JackClient::processRtQueue()
       // sets the unique bufferID into the AudioBuffer list, so we can
       // retrieve the actual AudioBuffer instance with the unique id
       // with a call to   state->getAudioBuffer( bufID );
-      cout << "STATE_SET_AUDIO_BUFFER, buffer id = " << flush;
+      //cout << "STATE_SET_AUDIO_BUFFER, buffer id = " << flush;
       AudioBuffer* buffer = (AudioBuffer*)e->vPtr;
       cout << buffer->getID() << endl;
       top->state.setAudioBuffer( buffer );
@@ -154,14 +154,14 @@ int JackClient::processRtQueue()
     }
     else if ( e->type == EE_LOOPER_LOAD ) {
       // insert the correct buffer ID into the list, so we can retrieve by sceneID later
-      cout << "JackClient::processRtQueue() EE_LOOPER_LOAD " << e->ia << ", " << e->ib << "," << e->ic << endl;
+      //cout << "JackClient::processRtQueue() EE_LOOPER_LOAD " << e->ia << ", " << e->ib << "," << e->ic << endl;
       top->state.setClipSelectorState( e->ia, e->ib, e->ic );
     }
     else if ( e->type == EE_LOOPER_SELECT_BUFFER) {
       // tells the AudioSource @ track ia to play scene ib
       
       // TIME HACK
-      cout << "EE_LOOPER_SELECT_BUFFER " << e->ia << ", " << e->ib << endl;
+      //cout << "EE_LOOPER_SELECT_BUFFER " << e->ia << ", " << e->ib << endl;
       time.processEngineEvent( e );
       
       //top->state.clipSelectorQueue(e->ia, e->ib);
@@ -324,12 +324,12 @@ void JackClient::writeMidi(void* portBuffer, int b1, int b2, int b3)
   unsigned char* buffer = jack_midi_event_reserve( portBuffer, 0, 3);
   if( buffer == 0 )
   {
-    std::cout << "Error: APC writeMidi() write buffer == 0" << std::endl;
+    //std::cout << "Error: APC writeMidi() write buffer == 0" << std::endl;
     return;
   }
   else
   {
-    cout << "JC::writeMidi() " << b1 << ", " << b2 << ", " << b3 << endl; 
+    //cout << "JC::writeMidi() " << b1 << ", " << b2 << ", " << b3 << endl; 
     buffer[0] = b1;
     buffer[1] = b2;
     buffer[2] = b3;

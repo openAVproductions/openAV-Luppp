@@ -57,7 +57,7 @@ void StateStore::addTrack(BufferAudioSourceState* bas, ClipSelectorState* css, T
 
 void StateStore::setAudioBuffer(AudioBuffer* bufPtr)
 {
-  cout << "StateStore::setAudioBuffer() Got AudioBuffer ID " << bufPtr->getID() << endl;
+  //cout << "StateStore::setAudioBuffer() Got AudioBuffer ID " << bufPtr->getID() << endl;
   audiobufferList.push_back( *bufPtr );
 }
 
@@ -245,7 +245,7 @@ void StateStore::clipSelectorActivateClip(int t, int b)
 {
   // we get a track & scene number, so we set them in the ClipSelectorState
   // later the playback will request the bufferID ClipInfo of the right position in the list
-  std::cout << "StateStore::clipSelectorActivateClip() " << t << ", " << b << endl;
+  //std::cout << "StateStore::clipSelectorActivateClip() " << t << ", " << b << endl;
   std::list<ClipSelectorState>::iterator iter = clipSelectorState.begin();
   std::advance(iter, t);
   
@@ -260,7 +260,7 @@ void StateStore::clipSelectorActivateClip(int t, int b)
     
     if ( trackState->recEnable && top->jackClient->recordInput == false ) // not currently recording!
     {
-      cout << "Clip @ " << t << "  block " << b << " pressed while REC ENABLE, starting RECORDING NOW!" << endl;
+      //cout << "Clip @ " << t << "  block " << b << " pressed while REC ENABLE, starting RECORDING NOW!" << endl;
       
       // JACK starts copying the data, and we write RED to buffer
       top->jackClient->recordInput = true;
@@ -270,11 +270,11 @@ void StateStore::clipSelectorActivateClip(int t, int b)
     }
     else
     {
-      cout << "Clip @ " << t << "  block " << b << " block pressed while recording on this track!" << endl;
+      //cout << "Clip @ " << t << "  block " << b << " block pressed while recording on this track!" << endl;
       
       if ( currentClipIter->state == CLIP_STATE_RECORDING )
       {
-        cout << "RECORDING BLOCK PRESSED! STOP RECORD & SEND GUI!" << endl;
+        //cout << "RECORDING BLOCK PRESSED! STOP RECORD & SEND GUI!" << endl;
         // this Clip has been recording ( other clips might be pressed inbetween
         // record & stop-record presses) so we tell JACK to stop recording, and
         // tell the GUI thread that we want the recorded buffer loaded to the current
@@ -288,7 +288,7 @@ void StateStore::clipSelectorActivateClip(int t, int b)
       }
       else
       {
-        cout << "its not the clip that *IS* recording!" << endl;
+        //cout << "its not the clip that *IS* recording!" << endl;
         // set the "Playback" variables here, as we DON'T want to change the
         // currently playing buffer when we have the track in Record mode!
         std::list<BufferAudioSourceState>::iterator iterBASS = bufferAudioSourceState.begin();
@@ -304,7 +304,7 @@ void StateStore::clipSelectorActivateClip(int t, int b)
         // update *actual* Engine value for currently playing Scene
         iter->playing = b;
         
-        std::cout << "currentClipIter->state = " << currentClipIter->state << endl;
+        //std::cout << "currentClipIter->state = " << currentClipIter->state << endl;
         top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 1 ); // green
       }
       
@@ -313,7 +313,7 @@ void StateStore::clipSelectorActivateClip(int t, int b)
   } // b > 0
   else
   {
-    cout << "Clip Number = -1, writing Clip Stop LED now " << endl;
+    //cout << "Clip Number = -1, writing Clip Stop LED now " << endl;
     top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 53 + iter->playing, 5 ); // state of old block (no longer playing, so orange)
     iter->playing = -1; // write current playing 
     top->jackClient->writeMidi( top->jackClient->getApcOutputBuffer(), 144 + t, 52, 1 ); // Clip Stop Green
@@ -337,7 +337,7 @@ void StateStore::setPluginActive(int UID, int active)
   {
     if ( (*iter)->ID == UID )
     {
-      cout << "StateStore::setPluginActive() " << UID << "  " << active << endl;
+      //cout << "StateStore::setPluginActive() " << UID << "  " << active << endl;
       (*iter)->active = active;
       
       EngineEvent* x = top->toEngineEmptyEventQueue.pull();

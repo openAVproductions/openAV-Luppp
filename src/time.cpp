@@ -24,7 +24,7 @@ void Time::process(int frameNumber)
   // here we handle *all* events that should occur on *a* beat
   if ( newBeat != beat )
   {
-    cout << "Time:P() bpm = " << bpm << "  FPB: " << framesPerBeat << "  beat: " << newBeat << " Q1: " << q1.size() << "  Q4: " << q4.size() << endl;
+    //cout << "Time:P() bpm = " << bpm << "  FPB: " << framesPerBeat << "  beat: " << newBeat << " Q1: " << q1.size() << "  Q4: " << q4.size() << endl;
     beat = newBeat;
     
     
@@ -32,7 +32,7 @@ void Time::process(int frameNumber)
     if ( !q1.empty() )
     {
       if ( !q1.empty() ) {
-        cout << "Time:process() doing list 1!" << endl;
+        //cout << "Time:process() doing list 1!" << endl;
         doEngineEventList(q1);
         q1.clear();
       }
@@ -40,7 +40,7 @@ void Time::process(int frameNumber)
     
     if ( newBeat % 4 == 0 )
     {
-      cout << "Time:process() doing 4th list!" << endl;
+      //cout << "Time:process() doing 4th list!" << endl;
       if ( !q4.empty() ) {
         doEngineEventList(q4);
       }
