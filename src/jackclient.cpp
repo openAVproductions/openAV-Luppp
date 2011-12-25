@@ -30,8 +30,26 @@ JackClient::JackClient( Top* t) :
                                     JackPortIsInput,
                                     0 );
   
-  outputPort = jack_port_register ( client,
-                                    "output",
+  outputPortW = jack_port_register ( client,
+                                    "output_w",
+                                    JACK_DEFAULT_AUDIO_TYPE,
+                                    JackPortIsOutput,
+                                    0 );
+  
+  outputPortX = jack_port_register ( client,
+                                    "output_x",
+                                    JACK_DEFAULT_AUDIO_TYPE,
+                                    JackPortIsOutput,
+                                    0 );
+  
+  outputPortY = jack_port_register ( client,
+                                    "output_y",
+                                    JACK_DEFAULT_AUDIO_TYPE,
+                                    JackPortIsOutput,
+                                    0 );
+  
+  outputPortZ = jack_port_register ( client,
+                                    "output_z",
                                     JACK_DEFAULT_AUDIO_TYPE,
                                     JackPortIsOutput,
                                     0 );
@@ -182,8 +200,12 @@ int JackClient::processRtQueue()
 int JackClient::process(jack_nframes_t nframes)
 {
   this->nframes = nframes;
-  float* inBuffer  = (float*)jack_port_get_buffer ( inputPort, nframes);
-  float* outBuffer = (float*)jack_port_get_buffer (outputPort, nframes);
+  portBufferList.inputAudio = (float*)jack_port_get_buffer ( inputPort, nframes);
+  
+  portBufferList.outputW = (float*)jack_port_get_buffer (outputPortW, nframes);
+  portBufferList.outputX = (float*)jack_port_get_buffer (outputPortX, nframes);
+  portBufferList.outputY = (float*)jack_port_get_buffer (outputPortY, nframes);
+  portBufferList.outputZ = (float*)jack_port_get_buffer (outputPortZ, nframes);
   
   // class variable for buffer
   apcOutputBuffer = jack_port_get_buffer ( apcOutputPort, nframes);
@@ -198,7 +220,7 @@ int JackClient::process(jack_nframes_t nframes)
   // handle incoming midi
   processMidi(nframes);
   
-  mixer.process(nframes, recordInput, inBuffer, outBuffer);
+  mixer.process(nframes, recordInput, portBufferList);
   
   return true;
 };

@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "audiotrack.hpp"
+#include "porttypes.hpp"
 
 using std::list;
 
@@ -25,7 +26,7 @@ class Mixer
     // returns the UniqueID of an Effect in an AudioTrack
     int getEffectID(int track, int pos);
     
-    void process( int nframes, bool,  float* inBuffer, float* outBuffer );
+    void process( int nframes, bool,  PortBufferList& portBufferList);
     
   private:
     Top* top;

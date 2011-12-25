@@ -15,6 +15,8 @@
 
 #include "controller.hpp"
 
+#include "porttypes.hpp"
+
 class Top;
 
 typedef jack_client_t JClient;
@@ -45,12 +47,18 @@ class JackClient
     
     int nframes;
     
+    // this PortBufferList represents float*'s that we can use to write audio
+    PortBufferList portBufferList;
+    
     Time time;
     Mixer mixer;
     
     JPort* sidechainPort;
     JPort* inputPort;
-    JPort* outputPort;
+    JPort* outputPortW;
+    JPort* outputPortX;
+    JPort* outputPortY;
+    JPort* outputPortZ;
     JPort* midiInputPort;
     
     JPort* apcInputPort;

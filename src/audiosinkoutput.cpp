@@ -17,7 +17,7 @@ void AudioSinkOutput::process(int nframes, float* in, float *W, float *X, float 
   std::cout << "AudioSinkOutput::process() vol = " << state->volume << " pan = " << state->pan << std::endl;
   
   float logVolume = state->volume;
-  float pan = state->pan;
+  float pan = -1 * state->pan; // invert pan, way the algorithm works!
   float panZ = 0.f;
   
   // azimuth

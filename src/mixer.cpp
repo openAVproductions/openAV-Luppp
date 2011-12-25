@@ -51,11 +51,18 @@ int Mixer::getEffectID(int track, int pos)
   return -1;
 }
 
-void Mixer::process(int nframes,bool record, float* inBuffer, float* outBuffer)
+void Mixer::process(int nframes,bool record, PortBufferList& portBufferList)
 {
   if ( nframes > 1024 )
   {
     std::cout << "Mixer::process() nframes too large for internal buffers, reduce it!!" << std::endl;
+  }
+  
+  // we push the audio data to a ringbuffer, to be recorded by GUI, and
+  // then passed back to Engine as an AudioBuffer*.
+  if ( record )
+  {
+    top->recordAudioQueue.push(nframes, portBufferList.inputAudio);
   }
   
   // process the entire audio chain here
@@ -63,34 +70,39 @@ void Mixer::process(int nframes,bool record, float* inBuffer, float* outBuffer)
   
   for(iter = audiotrackList.begin(); iter != audiotrackList.end(); iter++ )
   {
-    iter->process( nframes, &inputBuffer[0], &outputW[0], &outputX[0], &outputY[0], &outputZ[0] );
+    iter->process( nframes, &portBufferList.inputAudio[0], &outputW[0], &outputX[0], &outputY[0], &outputZ[0]);
   }
   
-  float* outPointer = &outputW[0];
-  
-  if ( record ) // we push the audio data to a ringbuffer
-  {
-    top->recordAudioQueue.push(nframes, inBuffer);
-  }
+  // create a pointer to each *mixer* owned buffer
+  float* outPtrW = &outputW[0];
+  float* outPtrX = &outputX[0];
+  float* outPtrY = &outputY[0];
+  float* outPtrZ = &outputZ[0];
   
   bool copyToScopeVector = top->scopeVectorMutex.trylock();
   
   // now sum up the master output buffers and write them
   for(int i = 0; i < nframes; i++)
   {
-    // copy value
-    *outBuffer++ = *outPointer;
+    // write values to JACK ports
+    *portBufferList.outputW++ = *outPtrW;
+    *portBufferList.outputX++ = *outPtrX;
+    *portBufferList.outputY++ = *outPtrY;
+    *portBufferList.outputZ++ = *outPtrZ;
+    
     
     if ( copyToScopeVector )
     {
       // write master output value to scopeVector, to be shown in GUI
-      top->scopeVector.at(i) = *outPointer;
-      top->inputScopeVector.at(i) = *inBuffer++;
+      top->scopeVector.at(i) = *outPtrW;
+      top->inputScopeVector.at(i) = *portBufferList.inputAudio++;
     }
     
-    // write 0.f to buffer, and increment
-    *outPointer++ = 0.f;
-    inputBuffer[i] = 0.f;
+    // write 0.f to *mixer* buffer, and increment
+    *outPtrW++ = 0.f;
+    *outPtrX++ = 0.f;
+    *outPtrY++ = 0.f;
+    *outPtrZ++ = 0.f;
     
   }
   
