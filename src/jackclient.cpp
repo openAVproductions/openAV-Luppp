@@ -329,7 +329,7 @@ void JackClient::writeMidi(void* portBuffer, int b1, int b2, int b3)
   }
   else
   {
-    //cout << "JC::writeMidi() " << b1 << ", " << b2 << ", " << b3 << endl; 
+    cout << "JC::writeMidi() " << b1 << ", " << b2 << ", " << b3 << endl; 
     buffer[0] = b1;
     buffer[1] = b2;
     buffer[2] = b3;
@@ -365,6 +365,58 @@ void JackClient::apcSendDeviceControl(int track, int device, void* apcOutputBuff
 void* JackClient::getApcOutputBuffer()
 {
   return apcOutputBuffer;
+}
+
+void JackClient::apcWriteGridTrack(int track)
+{
+  
+  ClipSelectorState* clipSelectorState = top->state.getClipSelectorState(track);
+  
+  if ( !clipSelectorState )
+  {
+    return; // out of bounds grid press
+  }
+  
+  // write APC midi commands to make track light up right:
+  int blockCounter = 0;
+  std::list<ClipInfo>::iterator clipIter = clipSelectorState->clipInfo.begin();
+  for ( ; clipIter != clipSelectorState->clipInfo.end() && blockCounter < 5; clipIter++ ) // limit redraws to list size, AND number slots available!
+  {
+    // write the colour of the block based on "state"
+    switch ( clipIter->state )
+    {
+      case CLIP_STATE_EMPTY:    writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 0 ); break; // off
+      case CLIP_STATE_PLAYING:  writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 1 ); break; // green
+      case CLIP_STATE_LOADED:   writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 5 ); break; // orange
+      case CLIP_STATE_RECORDING:writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 3 ); break; // red
+      default: break;
+    }
+    blockCounter++;
+  }
+  
+  
+  // write "playing" block to green, but only if it has something loaded
+  cout << "apcWriteGridTrack() playing = " << clipSelectorState->playing << endl;
+  clipIter = clipSelectorState->clipInfo.begin();
+  if ( clipSelectorState->playing >= 0 )
+  {
+    std::advance( clipIter, clipSelectorState->playing );
+    if ( clipIter->state == CLIP_STATE_LOADED )
+    {
+      cout << "Writing GREEN to " << 53 + clipSelectorState->playing << endl;
+      writeMidi( apcOutputBuffer, 144 + track, 53 + clipSelectorState->playing, 1 ); // clip # playing to green
+      writeMidi( apcOutputBuffer, 144 + track, 52, 0 ); // clip stop off
+    }
+    else
+    {
+      writeMidi( apcOutputBuffer, 144 + track, 52, 1 ); // clip stop to green
+    }
+  }
+  else
+  {
+     writeMidi( apcOutputBuffer, 144 + track, 52, 1 ); // clip stop to green
+  }
+  
 }
 
 void JackClient::apcRead( int nframes )
@@ -605,20 +657,7 @@ void JackClient::apcRead( int nframes )
       {
         // UPDATE!! Make the APC show the right colour LED now that the release has occured!
         int track = b1 - 128;
-        int block = b2 - 53;
-        
-        if ( block >= 0 )
-        {
-          ClipSelectorState* clipSelectorState = top->state.getClipSelectorState(track);
-          if ( clipSelectorState == 0 ) return;
-          std::list<ClipInfo>::iterator clipState =  clipSelectorState->clipInfo.begin();
-          std::advance(clipState, block);
-          
-          if ( clipState->state == CLIP_STATE_RECORDING )
-            writeMidi( apcOutputBuffer, 144 + track, b2, 3 );
-          else
-            writeMidi( apcOutputBuffer, 144 + track, b2, 1 );
-        }
+        apcWriteGridTrack(track);
       }
     }
     

@@ -35,6 +35,8 @@ class JackClient
     JackClient(Top*);
     
     void* getApcOutputBuffer();
+    void  apcWriteGridTrack(int track);
+    
     void writeMidi( void*, int,int,int);
     
     void deactivate();
@@ -69,6 +71,7 @@ class JackClient
     void* apcOutputBuffer;
     void  apcRead(int);
     void  apcSendDeviceControl(int , int , void*);
+    
     
     int processRtQueue();
     int process(jack_nframes_t);
