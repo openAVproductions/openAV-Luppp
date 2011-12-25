@@ -30,6 +30,8 @@ class Top
     int samplerate;
     int bpm;
     
+    float speed;
+    
     Glib::Mutex scopeVectorMutex;
     std::vector<float> scopeVector;
     std::vector<float> inputScopeVector;

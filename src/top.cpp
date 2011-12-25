@@ -16,6 +16,9 @@ Top::Top() :
   controller = new Controller(this);
   offlineWorker = new OfflineWorker(this);
   guiDispatcher = new Glib::Dispatcher();
+  
+  // global speed
+  speed = 1.f;
 }
 
 // this function is called from JackClient(), and serve the purpose of

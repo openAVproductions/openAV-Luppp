@@ -20,7 +20,9 @@ void BufferAudioSource::process (int nframes, float* buffer )
   std::list<BufferAudioSourceState>::iterator iter = top->state.bufferAudioSourceState.begin();
   std::advance(iter, ID);
   float index = iter->index;
-  float speed = iter->speed;
+  float speed;
+  
+  //cout << " topSpeed = " << top->speed << " Final Speed = " << speed << endl;
   
   // get buffer variables
   ClipSelectorState* clipSelState = top->state.getClipSelectorState(ID);
@@ -34,7 +36,7 @@ void BufferAudioSource::process (int nframes, float* buffer )
   std::list<ClipInfo>::iterator clipIter = clipSelState->clipInfo.begin();
   std::advance(clipIter, playingScene);
   int playingBuffer = (*clipIter).bufferID;
-  speed = (*clipIter).speed;
+  speed = (*clipIter).speed * top->speed;
   //std::cout << "FAS:P()   sceneID: " << playingScene << "   bID = " << playingBuffer << endl;
   
   // get AudioBuffer pointer
