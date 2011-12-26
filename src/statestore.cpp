@@ -226,6 +226,9 @@ void StateStore::setClipSelectorState(int t,int block, int bufferID)
   clipI->bufferID = bufferID;
   clipI->hasBuffer= true;
   
+  // update APC
+  top->jackClient->apcWriteGridTrack(t);
+  
   // bufferID here is used to extract name from GUI list of AudioBuffer names
   EngineEvent* x = top->toEngineEmptyEventQueue.pull();
   x->looperLoad(t, block, bufferID);
@@ -295,8 +298,6 @@ void StateStore::clipSelectorActivateClip(int t, int b)
         std::list<BufferAudioSourceState>::iterator iterBASS = bufferAudioSourceState.begin();
         std::advance(iterBASS, t);
         iterBASS->index = 0; // restart sample from beginning
-        
-        iter->playing = b;
       }
       
     }

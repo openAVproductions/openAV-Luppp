@@ -377,6 +377,10 @@ void JackClient::apcWriteGridTrack(int track)
     return; // out of bounds grid press
   }
   
+  cout << "writeGridTrack() play = " << clipSelectorState->playing << ", queued " << clipSelectorState->queued << endl;
+  
+  bool wrotePlaying = false;
+  
   // write APC midi commands to make track light up right:
   int blockCounter = 0;
   std::list<ClipInfo>::iterator clipIter = clipSelectorState->clipInfo.begin();
@@ -387,6 +391,7 @@ void JackClient::apcWriteGridTrack(int track)
       if ( blockCounter == clipSelectorState->playing ) // playing
       {
         writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 1 );
+        wrotePlaying = true;
       }
       else if ( blockCounter == clipSelectorState->recording ) // rec-ing
       {
@@ -407,6 +412,15 @@ void JackClient::apcWriteGridTrack(int track)
     }
     
     blockCounter++;
+  }
+  
+  if ( !wrotePlaying )
+  {
+    writeMidi( apcOutputBuffer, 144 + track, 52, 1 );
+  }
+  else
+  {
+    writeMidi( apcOutputBuffer, 144 + track, 52, 0 );
   }
   
   /*
