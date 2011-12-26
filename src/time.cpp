@@ -76,8 +76,13 @@ void Time::processEngineEvent(EngineEvent* e)
   if ( e->type == EE_LOOPER_SELECT_BUFFER )
   {
     cout << "Time::processEE() LOOPER_SELECT_BUFFER queue in 4... type = " << e->type << "  T: " << e->ia << "  clip = " << e->ib << endl;
-    //q4.push_back(e);
-    doEngineEvent(e);
+    if ( true ) // quantize check here
+    {
+      top->state.clipSelectorQueueClip(e->ia, e->ib);
+      q4.push_back(e);
+    }
+    else
+      doEngineEvent(e);
   }
   if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER )
   {
@@ -113,7 +118,7 @@ void Time::doEngineEvent(EngineEvent* e)
   cout << "doEngineEvent()  type = " << e->type << endl;
   switch ( e->type )
   {
-    case EE_LOOPER_PROGRESS: cout << "Time::doEngineEvent() got PROGRESS!!! ERROR!" << endl; break;
+    case EE_LOOPER_PROGRESS: cout << "Time::doEngineEvent() got PROGRESS!!! ERROR!" << endl;;
     case EE_LOOPER_SELECT_BUFFER:
     {
       cout << "Doing SELECT BUFFER NOW! t=" << e->ia << " clip#: " << e->ib << endl;

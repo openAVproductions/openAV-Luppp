@@ -54,6 +54,9 @@ class StateStore
     void setAudioBuffer(AudioBuffer*);
     AudioBuffer* getAudioBuffer(int ID);
     
+    
+    // for live selecting of buffers
+    void clipSelectorQueueClip(int t, int b);
     void clipSelectorActivateClip(int,int);
     
     // sets loaded on that clip

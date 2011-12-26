@@ -237,6 +237,30 @@ void StateStore::setClipSelectorState(int t,int block, int bufferID)
   top->guiDispatcher->emit();
 }
 
+void StateStore::clipSelectorQueueClip(int t, int b)
+{
+  // marks a clip as queued, and redraws controllers
+  std::list<ClipSelectorState>::iterator iter = clipSelectorState.begin();
+  std::advance(iter, t);
+  
+  cout << "clipSelectorQueueCLip() T = " << t << ", block = " << b << endl;
+  
+  TrackOutputState* trackState = getAudioSinkOutput(t);
+  if ( trackState == 0 ) { return; } // grid press on non existent track
+  
+  if ( b >= 0 ) // b != stop clip (-1) so safe to access
+  {
+    std::list<ClipInfo>::iterator currentClipIter = iter->clipInfo.begin();
+    std::advance(currentClipIter, b); // Will segfault if B > 10, as we have 10 clips by default
+    currentClipIter->state = CLIP_STATE_PLAY_QUEUED;
+  }
+  else
+  {
+    // write queued to store for StopClip
+    iter->stopClipState = CLIP_STATE_PLAY_QUEUED;
+  }
+}
+
 // this function handles the logic in activating / deactivating and otherwise
 // marking every Clip in Engine. It will test if RecordEnable is active on the
 // track, and if it is, will record into a pressed buffer, otherwise it will
@@ -276,6 +300,8 @@ void StateStore::clipSelectorActivateClip(int t, int b)
         // button released block.
         top->jackClient->recordInput = false; // JACK stops recording
         
+        currentClipIter->state == CLIP_STATE_LOADED;
+        
         // event to GUI to stop recording
         EngineEvent* x = top->toEngineEmptyEventQueue.pull();
         x->setLooperRecord(t, b, false);
@@ -289,6 +315,12 @@ void StateStore::clipSelectorActivateClip(int t, int b)
         std::list<BufferAudioSourceState>::iterator iterBASS = bufferAudioSourceState.begin();
         std::advance(iterBASS, t);
         iterBASS->index = 0; // restart sample from beginning
+        
+        // only write green if loaded, otherwise switch off
+        if ( currentClipIter->bufferID != -1 )
+          currentClipIter->state = CLIP_STATE_PLAYING;
+        else
+          currentClipIter->state = CLIP_STATE_EMPTY; // we're writing off, as it could be queued
       }
       
     }

@@ -161,9 +161,9 @@ int JackClient::processRtQueue()
       // tells the AudioSource @ track ia to play scene ib
       
       // TIME HACK
-      //cout << "EE_LOOPER_SELECT_BUFFER " << e->ia << ", " << e->ib << endl;
+      cout << "BEFORE TIME ==== EE_LOOPER_SELECT_BUFFER " << e->ia << ", " << e->ib << endl;
       time.processEngineEvent( e );
-      
+      cout << "AFTER TIME ==== EE_LOOPER_SELECT_BUFFER " << e->ia << ", " << e->ib << endl;
       //top->state.clipSelectorQueue(e->ia, e->ib);
     }
     else if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER) {
@@ -329,7 +329,7 @@ void JackClient::writeMidi(void* portBuffer, int b1, int b2, int b3)
   }
   else
   {
-    cout << "JC::writeMidi() " << b1 << ", " << b2 << ", " << b3 << endl; 
+    //cout << "JC::writeMidi() " << b1 << ", " << b2 << ", " << b3 << endl; 
     buffer[0] = b1;
     buffer[1] = b2;
     buffer[2] = b3;
@@ -385,10 +385,11 @@ void JackClient::apcWriteGridTrack(int track)
     // write the colour of the block based on "state"
     switch ( clipIter->state )
     {
-      case CLIP_STATE_EMPTY:    writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 0 ); break; // off
-      case CLIP_STATE_PLAYING:  writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 1 ); break; // green
-      case CLIP_STATE_LOADED:   writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 5 ); break; // orange
-      case CLIP_STATE_RECORDING:writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 3 ); break; // red
+      case CLIP_STATE_EMPTY:        writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 0 ); break; // off
+      case CLIP_STATE_PLAYING:      writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 1 ); break; // green
+      case CLIP_STATE_PLAY_QUEUED:  writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 2 ); cout << "WRITING QUEUEUEUEUEUEUE" << endl; break; // green blink
+      case CLIP_STATE_RECORDING:    writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 3 ); break; // red
+      case CLIP_STATE_LOADED:       writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 5 ); break; // orange
       default: break;
     }
     blockCounter++;
