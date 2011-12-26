@@ -397,7 +397,7 @@ void JackClient::apcWriteGridTrack(int track)
   
   
   // write "playing" block to green, but only if it has something loaded
-  cout << "apcWriteGridTrack() playing = " << clipSelectorState->playing << endl;
+  //cout << "apcWriteGridTrack() playing = " << clipSelectorState->playing << endl;
   clipIter = clipSelectorState->clipInfo.begin();
   if ( clipSelectorState->playing >= 0 )
   {

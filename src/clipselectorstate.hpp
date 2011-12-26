@@ -23,8 +23,11 @@ struct ClipInfo {
     numBeats = 8;
     speed = 1.f;
   }
+  
   ClipState state;
+  
   int bufferID;
+  bool hasBuffer;
   
   int numBeats;
   float speed;

@@ -229,6 +229,7 @@ void StateStore::setClipSelectorState(int t,int block, int bufferID)
   
   (*clipI).state = CLIP_STATE_LOADED;
   (*clipI).bufferID = bufferID;
+  (*clipI).hasBuffer= true;
   
   // bufferID here is used to extract name from GUI list of AudioBuffer names
   EngineEvent* x = top->toEngineEmptyEventQueue.pull();
@@ -252,7 +253,10 @@ void StateStore::clipSelectorQueueClip(int t, int b)
   {
     std::list<ClipInfo>::iterator currentClipIter = iter->clipInfo.begin();
     std::advance(currentClipIter, b); // Will segfault if B > 10, as we have 10 clips by default
-    currentClipIter->state = CLIP_STATE_PLAY_QUEUED;
+    if ( currentClipIter->hasBuffer )
+      currentClipIter->state = CLIP_STATE_PLAY_QUEUED;
+    else
+      currentClipIter->state = CLIP_STATE_EMPTY;
   }
   else
   {
