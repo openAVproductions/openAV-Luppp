@@ -312,7 +312,7 @@ int Window::handleEvent()
         std::list<ClipInfo>::iterator iter = guiState.clipSelectorState.at(e->ia).clipInfo.begin();
         std::advance(iter, e->ib);
         
-        (*iter).state = CLIP_STATE_LOADED;
+        //(*iter).state = CLIP_STATE_LOADED;
         (*iter).bufferID = e->ic;
         
         // gui widget
@@ -333,7 +333,7 @@ int Window::handleEvent()
         {
           std::list<ClipInfo>::iterator iter = guiState.clipSelectorState.at(e->ia).clipInfo.begin();
           std::advance(iter, playing);
-          (*iter).state = CLIP_STATE_LOADED;
+          //(*iter).state = CLIP_STATE_LOADED;
         }
         
         // playing can = -1 for "nothing playing", so set regardless
@@ -344,7 +344,7 @@ int Window::handleEvent()
         {
           std::list<ClipInfo>::iterator iter = guiState.clipSelectorState.at(e->ia).clipInfo.begin();
           std::advance(iter, e->ib);
-          (*iter).state = CLIP_STATE_PLAYING;
+          //(*iter).state = CLIP_STATE_PLAYING;
         }
         else
           cout << "GUI: LOOPER_SELECT_BUFFER block OOB " << e->ib << endl;

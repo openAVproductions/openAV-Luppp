@@ -18,13 +18,13 @@ enum ClipState {
 struct ClipInfo {
   ClipInfo()
   {
-    state = CLIP_STATE_EMPTY;
     bufferID = -1;
+    
+    hasBuffer = false;
+    
     numBeats = 8;
     speed = 1.f;
   }
-  
-  ClipState state;
   
   int bufferID;
   bool hasBuffer;
@@ -38,13 +38,18 @@ struct ClipSelectorState
   ClipSelectorState()
   {
     ID = -1;
-    playing = -1;
+    
+    // initial values for playback block
+    playing   = -1;
+    queued    = -1;
+    recording = -1;
   }
+  
   int ID;
+  
   int playing;
   int queued;
-  
-  ClipState stopClipState;
+  int recording;
   
   std::list<ClipInfo> clipInfo;
 };

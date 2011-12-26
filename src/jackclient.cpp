@@ -382,27 +382,41 @@ void JackClient::apcWriteGridTrack(int track)
   std::list<ClipInfo>::iterator clipIter = clipSelectorState->clipInfo.begin();
   for ( ; clipIter != clipSelectorState->clipInfo.end() && blockCounter < 5; clipIter++ ) // limit redraws to list size, AND number slots available!
   {
-    // write the colour of the block based on "state"
-    switch ( clipIter->state )
+    if ( clipIter->hasBuffer )
     {
-      case CLIP_STATE_EMPTY:        writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 0 ); break; // off
-      case CLIP_STATE_PLAYING:      writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 1 ); break; // green
-      case CLIP_STATE_PLAY_QUEUED:  writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 2 ); cout << "WRITING QUEUEUEUEUEUEUE" << endl; break; // green blink
-      case CLIP_STATE_RECORDING:    writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 3 ); break; // red
-      case CLIP_STATE_LOADED:       writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 5 ); break; // orange
-      default: break;
+      if ( blockCounter == clipSelectorState->playing ) // playing
+      {
+        writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 1 );
+      }
+      else if ( blockCounter == clipSelectorState->recording ) // rec-ing
+      {
+        writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 3 );
+      }
+      else if ( blockCounter == clipSelectorState->queued ) // queued
+      {
+        writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 2 );
+      }
+      else // loaded, since hasBuffer == true
+      {
+        writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 5 );
+      }
     }
+    else // no buffer
+    {
+      writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 0 );
+    }
+    
     blockCounter++;
   }
   
-  
+  /*
   // write "playing" block to green, but only if it has something loaded
   //cout << "apcWriteGridTrack() playing = " << clipSelectorState->playing << endl;
   clipIter = clipSelectorState->clipInfo.begin();
   if ( clipSelectorState->playing >= 0 )
   {
     std::advance( clipIter, clipSelectorState->playing );
-    if ( clipIter->state == CLIP_STATE_LOADED )
+    if ( clipIter->hasBuffer )
     {
       cout << "Writing GREEN to " << 53 + clipSelectorState->playing << endl;
       writeMidi( apcOutputBuffer, 144 + track, 53 + clipSelectorState->playing, 1 ); // clip # playing to green
@@ -410,13 +424,11 @@ void JackClient::apcWriteGridTrack(int track)
     }
     else
     {
+      writeMidi( apcOutputBuffer, 144 + track, 53 + clipSelectorState->playing, 0 ); // clip # off
       writeMidi( apcOutputBuffer, 144 + track, 52, 1 ); // clip stop to green
     }
   }
-  else
-  {
-     writeMidi( apcOutputBuffer, 144 + track, 52, 1 ); // clip stop to green
-  }
+  */
   
 }
 

@@ -76,7 +76,7 @@ void Time::processEngineEvent(EngineEvent* e)
   if ( e->type == EE_LOOPER_SELECT_BUFFER )
   {
     cout << "Time::processEE() LOOPER_SELECT_BUFFER queue in 4... type = " << e->type << "  T: " << e->ia << "  clip = " << e->ib << endl;
-    if ( true ) // quantize check here
+    if ( false ) // quantize check here
     {
       top->state.clipSelectorQueueClip(e->ia, e->ib);
       q4.push_back(e);
