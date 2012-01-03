@@ -1,6 +1,9 @@
 
 #include "g_buffersource.hpp"
 
+#include "audiosource.hpp"
+#include "offlineworker.hpp"
+
 using namespace std;
 using namespace Luppp;
 
@@ -20,12 +23,37 @@ GBufferSource::GBufferSource(Top* t, GuiStateStore* s)
   top = t;
   stateStore = s;
   
+  //setBufferSource.set_label("Audio Buffer");
+  setLv2Source.set_label("Make LV2 instrument");
+  setFluidSynthSource.set_label("Make Soundfont player");
+  
+  pMenu.add( setLv2Source );
+  pMenu.add( setFluidSynthSource );
+  pMenu.show_all();
+  
+  // connect popup menu items to functions
+  setFluidSynthSource.signal_activate().connect( sigc::mem_fun(*this, &GBufferSource::fluidSynthSource));
+  
   // Gives Button presses to the widget, and connect them to onMouseButtonDown
   add_events(Gdk::BUTTON_PRESS_MASK);
   signal_button_press_event().connect(sigc::mem_fun(*this, &GBufferSource::on_button_press_event) );
   
   // set default widget size
   set_size_request(130,216);
+}
+
+void GBufferSource::fluidSynthSource()
+{
+  // so we ask the user to pick a soundfont, and then make OfflineWorker
+  // load it and send it to Engine
+  cout << "GUI got FluidSynthSource menu activation, sending EE_SET_TRACK_SOURCE event to Engine" << endl;
+  
+  // ask for soundfont path & filename here
+  
+  // ask for soundfont bank / patch number (/ name?) here
+  
+  // tell offlineWorker to do the loading
+  top->offlineWorker->setTrackSource(0, AUDIO_SOURCE_TYPE_FLUIDSYNTH);
 }
 
 bool GBufferSource::redraw()

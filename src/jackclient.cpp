@@ -137,6 +137,10 @@ int JackClient::processRtQueue()
       cout << buffer->getID() << endl;
       top->state.setAudioBuffer( buffer );
     }
+    else if ( e->type == EE_SET_TRACK_SOURCE ) {
+      cout << "JC:RTQ() got SET TRACK SOURCE!" << endl;
+      mixer.setSource(e->ia, (AudioSource*) e->vPtr);
+    }
     else if ( e->type == EE_STATE_NEW_EFFECT ) {
       // we get an Effect*, which we need to insert track @ e->ia, pos e->ib
       //cout << "JackClient::processRtQueue() STATE_NEW_EFFECT, ID = " << flush;

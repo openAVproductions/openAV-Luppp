@@ -21,6 +21,7 @@ class Mixer
     // need to pass in pointer, not create
     void addTrack(AudioTrack*);
     
+    int setSource(int, AudioSource* );
     int addEffect(int, int, Effect* );
     
     // returns the UniqueID of an Effect in an AudioTrack

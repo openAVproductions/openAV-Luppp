@@ -34,6 +34,15 @@ AudioTrack::AudioTrack( Top* t )
   sink = new AudioSinkOutput(t);
 }
 
+int AudioTrack::setSource( AudioSource* newSource )
+{
+  cout << "AudioTrack::setSource() got new source pointer!" << endl;
+  AudioSource* tmpSource = source;
+  source = newSource;
+  // here we should send an EE to GUI thread to de-allocate the
+  // existing source, so we don't leak mem.
+}
+
 int AudioTrack::addEffect( int pos,  Effect* eff )
 {
   //cout << "AudioTrack::addEffect() pushing to back " << pos << flush;

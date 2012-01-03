@@ -1,6 +1,8 @@
 
 #include "fluidsynthaudiosource.hpp"
 
+#include "top.hpp"
+
 using namespace std;
 
 FluidSynthAudioSource::FluidSynthAudioSource(Top* t, std::string name)

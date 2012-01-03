@@ -11,7 +11,7 @@
 
 #include "audiosource.hpp"
 
-#include "top.hpp"
+class Top;
 
 using std::string;
 

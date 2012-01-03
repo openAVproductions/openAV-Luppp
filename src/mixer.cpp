@@ -25,6 +25,15 @@ void Mixer::addTrack(AudioTrack* trackPtr)
 }
 
 
+int Mixer::setSource(int track, AudioSource* source )
+{
+  std::list<AudioTrack>::iterator iter =  audiotrackList.begin();
+  std::advance(iter, track);
+  iter->setSource( source );
+  
+  return 0;
+}
+
 int Mixer::addEffect(int track, int pos,  Effect* eff )
 {
   std::list<AudioTrack>::iterator iter =  audiotrackList.begin();

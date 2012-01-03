@@ -8,6 +8,8 @@
 #include <iostream>
 #include <sndfile.hh>
 
+#include "audiosource.hpp"
+
 class Top;
 
 class OfflineWorker
@@ -16,6 +18,7 @@ class OfflineWorker
     OfflineWorker(Top*);
     
     int addTrack(int);
+    int setTrackSource( int, AudioSourceType type );
     
     int loadAudioBuffer( int, int, std::string name);
     int createNewEffect( int, int, /*EffectType*/ int type );

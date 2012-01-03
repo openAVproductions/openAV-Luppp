@@ -12,6 +12,7 @@ enum EngineEventType
   EE_MIXER_VOLUME,
   
   EE_ADD_TRACK,
+  EE_SET_TRACK_SOURCE,
   EE_ADD_TRACK_POINTERS,
   
   EE_LOOPER_RECORD,
@@ -107,6 +108,7 @@ class EngineEvent
     void setPluginParameter   (int i1, int i2, int i3, float f1);
     void setPluginParameterAbsolute(int i1, int i2, int i3, float f1);
     
+    void setTrackSource       (int id, void* source);
     void setTrackDeviceActive (int id, int a);
     void setTrackSetDeviceType(int id, int b, int a);
     

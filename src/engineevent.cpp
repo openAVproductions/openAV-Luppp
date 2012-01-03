@@ -30,6 +30,7 @@ void EngineEvent::setTrackPan          (int id, float v) { ia = id; fa = v; type
 void EngineEvent::setTrackRec          (int id, int b) { ia = id; ib = b; type = EE_TRACK_SET_REC; }
 void EngineEvent::setTrackSolo         (int id, int b) { ia = id; ib = b; type = EE_TRACK_SET_SOLO; }
 void EngineEvent::setTrackMute         (int id, int b) { ia = id; ib = b; type = EE_TRACK_SET_MUTE; }
+void EngineEvent::setTrackSource       (int id, void* s) { ia = id; vPtr = s; type = EE_SET_TRACK_SOURCE;}
 void EngineEvent::setTrackSelectDevice (int id, int b) { ia = id; ib = b; type = EE_TRACK_SELECT_DEVICE; }
 void EngineEvent::setPluginParameter   (int i1, int i2, int i3, float f1) {ia=i1;ib=i2;ic=i3;fa=f1;type=EE_TRACK_SET_PLUGIN_PARAMETER;}
 void EngineEvent::setPluginParameterAbsolute(int i1, int i2, int i3, float f1) {ia=i1;ib=i2;ic=i3;fa=f1;type=EE_TRACK_SET_PLUGIN_PARAMETER_ABSOLUTE;}

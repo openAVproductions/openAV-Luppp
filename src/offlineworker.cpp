@@ -8,6 +8,8 @@
 #include "audiotrack.hpp"
 #include "audiobuffer.hpp"
 
+#include "fluidsynthaudiosource.hpp"
+
 using namespace std;
 
 OfflineWorker::OfflineWorker(Top* t)
@@ -49,6 +51,27 @@ int OfflineWorker::createNewEffect(int t, int pos, int typeInt )
     top->toEngineQueue.push(x);
   }
   
+}
+
+int OfflineWorker::setTrackSource( int t, AudioSourceType type )
+{
+  cout << "OfflineWorker::setTrackSource() " << t << ", " << type << endl;
+  
+  AudioSource* source = 0;
+  
+  switch ( type )
+  {
+    case AUDIO_SOURCE_TYPE_BUFFER    : break; //source = new BufferAudioSource();
+    case AUDIO_SOURCE_TYPE_LV2       : break; //source = new BufferAudioSource();
+    case AUDIO_SOURCE_TYPE_FLUIDSYNTH: source = new FluidSynthAudioSource(top,"newNameHere"); break;
+    default: cout << "Unknown AudioSourceType recieved!" << endl; break;
+  }
+  
+  EngineEvent* x = new EngineEvent();
+  x->setTrackSource(t,(void*)source);
+  top->toEngineQueue.push(x);
+  
+  return 0;
 }
 
 // this function is called by the GUI thread, and will create an AudioTrack
