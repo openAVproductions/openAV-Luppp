@@ -92,7 +92,8 @@ void Time::processEngineEvent(EngineEvent* e)
   }
   if ( e->type == EE_TRACK_DEVICE_ACTIVE )
   {
-    q1.push_back(e);
+    doEngineEvent(e);
+    //q1.push_back(e);
   }
 }
 

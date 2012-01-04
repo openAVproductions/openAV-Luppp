@@ -203,10 +203,10 @@ bool GLowPass::onMouseMove(GdkEventMotion* event)
   {
     if ( (event->x > 50) && (event->x < 216) )
     {
-      cutoff = event->x / float(xSize);
+      stateStore->effectState.at(ID).values[0] = event->x / float(xSize);
       
       EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(0,0,0, cutoff);
+      x->setPluginParameter(ID,0,0, cutoff);
       top->toEngineQueue.push(x);
     }
     
@@ -235,7 +235,7 @@ bool GLowPass::on_button_press_event(GdkEventButton* event)
     if ( (event->x > 10) && (event->x < 235) &&
          (event->y > 22) && (event->y < 117 ) )
     {
-      /*
+      
       std::cout << "graph area click!" << std::endl;
       mouseDown = true; // for pointer motion "drag" operations
       
@@ -244,8 +244,8 @@ bool GLowPass::on_button_press_event(GdkEventButton* event)
       if ( evX < 50) evX = 50;
       if ( evX > 216)evX = 216;
       
-      stateStore->cutoff = evX / float(xSize);
-      cutoff = stateStore->cutoff;
+      stateStore->effectState.at(ID).values[0] = evX / float(xSize);
+      
       EngineEvent* x = new EngineEvent();
       x->setPluginParameter(0,0,0, cutoff );
       top->toEngineQueue.push(x);
@@ -255,18 +255,17 @@ bool GLowPass::on_button_press_event(GdkEventButton* event)
       if (evY > 103) evY = 103;
       
       q = evY / float(ySize);
-      x = new EngineEvent();
-      x->setPluginParameter(0,0,1, q );
-      top->toEngineQueue.push(x);
+      //x = new EngineEvent();
+      //x->setPluginParameter(0,0,1, q );
+      //top->toEngineQueue.push(x);
       redraw();
-      */
     }
     
     if ( event->y < 20 )
     {
-      std::cout << "GLowPass Enable / Disable click event!" << std::endl;
+      std::cout << "GLowPass Enable / Disable click event, ID = " << ID << std::endl;
       EngineEvent* x = new EngineEvent();
-      x->setTrackDeviceActive(ID, !stateStore->effectState.at(ID).active );
+      x->setTrackDeviceActive( ID, !stateStore->effectState.at(ID).active );
       top->toEngineQueue.push(x);
     }
     
