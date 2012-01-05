@@ -156,6 +156,10 @@ int JackClient::processRtQueue()
         top->toGuiQueue.push(x);
       }
     }
+    else if ( e->type == EE_LOOPER_RECORD ) {
+      std::cout << "jc:rt() EE_LOOPER_RECORD" << std::endl;
+      
+    }
     else if ( e->type == EE_LOOPER_LOAD ) {
       // insert the correct buffer ID into the list, so we can retrieve by sceneID later
       //cout << "JackClient::processRtQueue() EE_LOOPER_LOAD " << e->ia << ", " << e->ib << "," << e->ic << endl;

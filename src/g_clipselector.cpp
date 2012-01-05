@@ -125,7 +125,18 @@ bool ClipSelector::on_button_press_event(GdkEventButton* event)
   
   if( event->type == GDK_BUTTON_PRESS && event->button == 1 ) // left
   {
-    std::cout << "ClipSelector " << ID << ": Button Press on block " << block << std::endl;
+    // so we're gonna play a clip, if the track isn't record enabled:
+    TrackOutputState* state = &stateStore->trackoutputState.at(ID);
+    if ( state->recEnable )
+    {
+      std::cout << "ClipSelector " << ID << ": Record Button Press on block " << block << std::endl;
+    }
+    else
+    {
+      std::cout << "ClipSelector " << ID << ": Play Button Press on block " << block << std::endl;
+    }
+    
+    // 
     EngineEvent* x = new EngineEvent();
     x->looperSelectBuffer(ID,block);
     top->toEngineQueue.push(x);
