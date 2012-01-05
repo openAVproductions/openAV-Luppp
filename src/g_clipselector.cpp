@@ -84,6 +84,9 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
           clipState = CLIP_STATE_PLAYING;
       }
       
+      if ( state.recording == i )
+        clipState = CLIP_STATE_RECORDING;
+      
       std::string name = "";
       
       // retrieve audio buffer name from unique bufferID and audioBufferNameVector
@@ -125,11 +128,18 @@ bool ClipSelector::on_button_press_event(GdkEventButton* event)
   
   if( event->type == GDK_BUTTON_PRESS && event->button == 1 ) // left
   {
-    // so we're gonna play a clip, if the track isn't record enabled:
+    // so we're gonna play a clip, if the track is record enabled, and the
+    // current block is *NOT* recording yet, we set it to record, otherwise
+    // we stop it from recording. If the track isn't record armed: then we
+    // send a play message
     TrackOutputState* state = &stateStore->trackoutputState.at(ID);
-    if ( state->recEnable )
+    if ( state->recEnable && stateStore->trackoutputState.at(ID).recEnable == false )
     {
-      std::cout << "ClipSelector " << ID << ": Record Button Press on block " << block << std::endl;
+      std::cout << "ClipSelector " << ID << ": Record ON Press on block " << block << std::endl;
+    }
+    else if (  state->recEnable && stateStore->trackoutputState.at(ID).recEnable == true )
+    {
+      std::cout << "ClipSelector " << ID << ": Record OFF Press on block " << block << std::endl;
     }
     else
     {

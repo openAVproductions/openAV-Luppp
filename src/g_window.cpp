@@ -206,7 +206,7 @@ int Window::handleEvent()
       // the ringbuffer into a AudioBuffer, load that into engine same as
       // a file source, and finally set the BufferAudioSource to play back
       // that bufferID trough the bufferAudioSourceState list in *engine* statestore
-      if ( e->ic == 0 )
+      if ( e->ic == false )
       {
         // create new buffer, get pointer, read space, resize buffer
         AudioBuffer* buffer = new AudioBuffer();
@@ -234,6 +234,8 @@ int Window::handleEvent()
           x->looperLoad( e->ia, e->ib, buffer->getID() );
           top->toEngineQueue.push(x);
           
+          // set GUI rec state to false, we've jsut stopped recording
+          guiState.trackoutputState.at(e->ia).recEnable = false;
           
           //cout << "read samples available " << readSpace << endl;
         }
@@ -243,10 +245,14 @@ int Window::handleEvent()
         }
         
       }
+      else // record "on" message
+      {
+        std::cout << "record on message in GUI thread" << std::endl;
+        guiState.trackoutputState.at(e->ia).recEnable = true;
+      }
       
       // update "REC" button in GUI
       
-      guiState.trackoutputState.at(e->ia).recEnable = e->ib;
       std::list<TrackOutput*>::iterator i = trackoutputList.begin();
       std::advance(i,e->ia);
       (*i)->redraw();

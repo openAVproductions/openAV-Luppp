@@ -169,9 +169,9 @@ int JackClient::processRtQueue()
       // tells the AudioSource @ track ia to play scene ib
       
       // TIME HACK
-      cout << "BEFORE TIME ==== EE_LOOPER_SELECT_BUFFER " << e->ia << ", " << e->ib << endl;
+      //cout << "BEFORE TIME ==== EE_LOOPER_SELECT_BUFFER " << e->ia << ", " << e->ib << endl;
       time.processEngineEvent( e );
-      cout << "AFTER TIME ==== EE_LOOPER_SELECT_BUFFER " << e->ia << ", " << e->ib << endl;
+      //cout << "AFTER TIME ==== EE_LOOPER_SELECT_BUFFER " << e->ia << ", " << e->ib << endl;
       //top->state.clipSelectorQueue(e->ia, e->ib);
     }
     else if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER) {

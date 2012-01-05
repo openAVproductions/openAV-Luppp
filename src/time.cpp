@@ -108,7 +108,7 @@ void Time::doEngineEventList(std::list<EngineEvent*>& list)
     doEngineEvent( *iter );
   }
   
-  cout << "Time::doEngineEventList() Done " << eventCounter << " events, clearing NOW!" << endl;
+  //cout << "Time::doEngineEventList() Done " << eventCounter << " events, clearing NOW!" << endl;
   list.clear();
   
   return;
@@ -116,13 +116,13 @@ void Time::doEngineEventList(std::list<EngineEvent*>& list)
 
 void Time::doEngineEvent(EngineEvent* e)
 {
-  cout << "doEngineEvent()  type = " << e->type << endl;
+  //cout << "doEngineEvent()  type = " << e->type << endl;
   switch ( e->type )
   {
     case EE_LOOPER_PROGRESS: cout << "Time::doEngineEvent() got PROGRESS!!! ERROR!" << endl;;
     case EE_LOOPER_SELECT_BUFFER:
     {
-      cout << "Doing SELECT BUFFER NOW! t=" << e->ia << " clip#: " << e->ib << endl;
+      //cout << "Doing SELECT BUFFER NOW! t=" << e->ia << " clip#: " << e->ib << endl;
       top->state.clipSelectorActivateClip(e->ia, e->ib);
       break;
     }

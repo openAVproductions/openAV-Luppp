@@ -269,6 +269,11 @@ void StateStore::clipSelectorActivateClip(int t, int b)
       cout << "Clip @ " << t << "  block " << b << " pressed while REC ENABLE, starting RECORDING NOW!" << endl;
       top->jackClient->recordInput = true;
       iter->recording = true;
+      
+      // event to GUI to start recording
+      EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+      x->setLooperRecord(t, b, true);
+      top->toGuiQueue.push(x);
     }
     else
     {
@@ -276,7 +281,7 @@ void StateStore::clipSelectorActivateClip(int t, int b)
       
       if ( iter->recording == b )
       {
-        cout << "RECORDING BLOCK PRESSED! STOP RECORD & SEND GUI!" << endl;
+        cout << "RECORDING BLOCK PRESSED! \t\t\t\tSTOP RECORD & SEND GUI!" << endl;
         // this Clip has been recording ( other clips might be pressed inbetween
         // record & stop-record presses) so we tell JACK to stop recording, and
         // tell the GUI thread that we want the recorded buffer loaded to the current
