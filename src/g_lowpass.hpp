@@ -28,6 +28,9 @@ class GLowPass : public Gtk::DrawingArea, public WidgetBase
     float q;
     int xSize, ySize;
     
+    float mouseDeltaX;
+    float mouseDeltaY;
+    
     bool mouseDown;
     
     

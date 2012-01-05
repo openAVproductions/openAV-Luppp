@@ -201,21 +201,23 @@ bool GLowPass::onMouseMove(GdkEventMotion* event)
 {
   if ( mouseDown )
   {
-    if ( (event->x > 50) && (event->x < 216) )
+    if ( (event->x > 30) && (event->x < 216) )
     {
-      stateStore->effectState.at(ID).values[0] = event->x / float(xSize);
+      float delta =  mouseDeltaX - event->x;
       
       EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(ID,0,0, cutoff);
+      x->setPluginParameter(ID,0,0, event->x /xSize );
       top->toEngineQueue.push(x);
+      
+      mouseDeltaX = 0;
     }
     
     if ( (event->y > 35) && (event->y < 103) )
     {
       q = event->y / float(ySize);
-      EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(0,0,1, q );
-      top->toEngineQueue.push(x);
+      //EngineEvent* x = new EngineEvent();
+      //x->setPluginParameter(0,1,0, q );
+      //top->toEngineQueue.push(x);
     }
     redraw();
     std::cout << "GLowPass: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
@@ -238,16 +240,15 @@ bool GLowPass::on_button_press_event(GdkEventButton* event)
       
       std::cout << "graph area click!" << std::endl;
       mouseDown = true; // for pointer motion "drag" operations
+      mouseDeltaX = event->x;
       
-      int evX = event->x;
+      float evX = event->x;
       // inform engine of "click" and position co-efficents as such
-      if ( evX < 50) evX = 50;
+      if ( evX < 30) evX = 30;
       if ( evX > 216)evX = 216;
       
-      stateStore->effectState.at(ID).values[0] = evX / float(xSize);
-      
       EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(0,0,0, cutoff );
+      x->setPluginParameter(ID,0,0, evX / xSize );
       top->toEngineQueue.push(x);
       
       int evY = event->y;
