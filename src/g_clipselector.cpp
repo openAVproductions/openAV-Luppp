@@ -73,7 +73,17 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
       // prepare values
       std::list<ClipInfo>::iterator iter = state.clipInfo.begin();
       std::advance(iter, i);
-      ClipState clipState = CLIP_STATE_EMPTY; //(*iter).state;
+      
+      ClipState clipState = CLIP_STATE_EMPTY;
+      
+      if ( iter->hasBuffer )
+      {
+        clipState = CLIP_STATE_LOADED;
+        
+        if ( state.playing == i ) // if also playing, make green
+          clipState = CLIP_STATE_PLAYING;
+      }
+      
       std::string name = "";
       
       // retrieve audio buffer name from unique bufferID and audioBufferNameVector

@@ -228,7 +228,7 @@ int Window::handleEvent()
           x = new EngineEvent();
           x->looperLoad( e->ia, e->ib, buffer->getID() );
           top->toEngineQueue.push(x);
-    
+          
           
           //cout << "read samples available " << readSpace << endl;
         }
@@ -311,12 +311,12 @@ int Window::handleEvent()
     {
       cout << "LOOPER_LOAD event in GUI" << endl;
       if ( e->ia < guiState.clipSelectorState.size() ) {
-        // set GuiStateStore value
-        std::list<ClipInfo>::iterator iter = guiState.clipSelectorState.at(e->ia).clipInfo.begin();
+        // now we update the GUI statestore so that we show the slot has been loaded
+        std::list<ClipInfo>::iterator iter = guiState.clipSelectorState.at(e->ia).clipInfo.begin();    
         std::advance(iter, e->ib);
+        iter->hasBuffer = true;
         
-        //(*iter).state = CLIP_STATE_LOADED;
-        (*iter).bufferID = e->ic;
+        //(*iter).bufferID = e->ic;?
         
         // gui widget
         std::list<ClipSelector*>::iterator clipIter = clipselectorList.begin();
