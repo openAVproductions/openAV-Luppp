@@ -218,13 +218,12 @@ bool GHighPass::onMouseMove(GdkEventMotion* event)
   {
     if ( (event->x > 50) && (event->x < 216) )
     {
-      cutoff = event->x / float(xSize);
-      
       EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(0,0,0, cutoff);
+      x->setPluginParameter(ID,0,0, event->x / xSize );
       top->toEngineQueue.push(x);
     }
     
+    /*
     if ( (event->y > 35) && (event->y < 103) )
     {
       q = event->y / float(ySize);
@@ -232,6 +231,7 @@ bool GHighPass::onMouseMove(GdkEventMotion* event)
       x->setPluginParameter(0,0,1, q );
       top->toEngineQueue.push(x);
     }
+    */
     redraw();
     std::cout << "GHighPass: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
   }
@@ -250,7 +250,6 @@ bool GHighPass::on_button_press_event(GdkEventButton* event)
     if ( (event->x > 10) && (event->x < 235) &&
          (event->y > 22) && (event->y < 117 ) )
     {
-      /*
       std::cout << "graph area click!" << std::endl;
       mouseDown = true; // for pointer motion "drag" operations
       
@@ -259,12 +258,11 @@ bool GHighPass::on_button_press_event(GdkEventButton* event)
       if ( evX < 50) evX = 50;
       if ( evX > 216)evX = 216;
       
-      stateStore->cutoff = evX / float(xSize);
-      cutoff = stateStore->cutoff;
       EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(0,0,0, cutoff );
+      x->setPluginParameter(ID,0,0, evX / xSize );
       top->toEngineQueue.push(x);
       
+      /*
       int evY = event->y;
       if (evY < 35 ) evY = 35;
       if (evY > 103) evY = 103;
@@ -273,8 +271,8 @@ bool GHighPass::on_button_press_event(GdkEventButton* event)
       x = new EngineEvent();
       x->setPluginParameter(0,0,1, q );
       top->toEngineQueue.push(x);
-      redraw();
       */
+      redraw();
     }
     
     if ( event->y < 20 )
