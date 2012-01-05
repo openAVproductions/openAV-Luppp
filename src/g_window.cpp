@@ -16,7 +16,8 @@ using namespace std;
 #include "g_transient.hpp"
 #include "g_compressor.hpp"
 
-Window::Window(Gtk::Main *k, Top* t)
+Window::Window(Gtk::Main *k, Top* t) :
+  masterOutput(top, &guiState)
 {
   // store the "kit" instance from main to run it at the end of the
   // constructor.
@@ -64,6 +65,9 @@ Window::Window(Gtk::Main *k, Top* t)
   
   refBuilder->get_widget("mainTable", mainTable);
   refBuilder->get_widget("trackEffectBox", trackEffectBox);
+  refBuilder->get_widget("masterOutputBox", masterOutputBox);
+  masterOutputBox->pack_end( masterOutput, false, true, 0 );
+  masterOutputBox->show_all();
   
   refBuilder->get_widget("menuFileAddTrack", menuFileAddTrack);
   menuFileAddTrack->signal_activate().connect ( sigc::mem_fun( *this, &Window::sendAddTrack ) );

@@ -79,6 +79,7 @@ def build(ctx):
               'src/g_fader.cpp',
               'src/g_dial.cpp',
               'src/g_clipselector.cpp',
+              'src/g_masteroutput.cpp',
               'src/g_trackoutput.cpp']
   
   engineDepends = 'JACK SNDFILE GTKMM FLUIDSYNTH GLIBMM'

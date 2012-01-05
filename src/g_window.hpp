@@ -13,6 +13,7 @@ class Top;
 #include "g_track.hpp"
 
 #include "g_trackoutput.hpp"
+#include "g_masteroutput.hpp"
 #include "g_clipselector.hpp"
 #include "trackoutputstate.hpp"
 
@@ -31,6 +32,7 @@ class Window
     Gtk::Window* window;
     Gtk::Table* mainTable;
     Gtk::HBox* trackEffectBox;
+    Gtk::Box* masterOutputBox;
     
     Gtk::MenuItem* menuAddReverb;
     Gtk::MenuItem* menuAddLowpass;
@@ -49,6 +51,8 @@ class Window
     
     GWaveView waveview;
     GWaveView inputWaveview;
+    
+    GMasterOutput masterOutput;
     
     // helper functions
     void redrawEffectBox();
