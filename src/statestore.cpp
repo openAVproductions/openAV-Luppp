@@ -268,7 +268,7 @@ void StateStore::clipSelectorActivateClip(int t, int b)
     {
       cout << "Clip @ " << t << "  block " << b << " pressed while REC ENABLE, starting RECORDING NOW!" << endl;
       top->jackClient->recordInput = true;
-      iter->recording = true;
+      iter->recording = b;
       
       // event to GUI to start recording
       EngineEvent* x = top->toEngineEmptyEventQueue.pull();
