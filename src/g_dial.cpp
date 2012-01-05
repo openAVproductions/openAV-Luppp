@@ -39,7 +39,11 @@ namespace Luppp
             setColour(cr, COLOUR_ORANGE_1 );
           else
             setColour(cr, COLOUR_GREY_1 );
+          cr->set_line_width(1.7);
           cr->arc(xc,yc, 13, 2.46, angle );
+          cr->line_to(xc,yc);
+          cr->stroke();
+          cr->arc(xc,yc, 17, 2.46, angle );
           cr->line_to(xc,yc);
           cr->stroke();
           break;
@@ -62,7 +66,7 @@ namespace Luppp
             setColour(cr, COLOUR_ORANGE_1 );
           else
             setColour(cr, COLOUR_GREY_1 );
-          cr->set_line_width(2);
+          cr->set_line_width(1.7);
           
           // outer "value" ring
           if ( value > 0.f )

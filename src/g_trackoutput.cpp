@@ -143,6 +143,11 @@ bool TrackOutput::on_button_press_event(GdkEventButton* event)
     
   }
   
+  // update Engine that we have a different track selected:
+  EngineEvent* x = new EngineEvent();
+  x->setTrackSelectDevice(ID, 0);
+  top->toEngineQueue.push(x);
+  
   return true;
 }
 bool TrackOutput::on_button_release_event(GdkEventButton* event)

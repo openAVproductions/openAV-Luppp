@@ -23,7 +23,7 @@ ClipSelector::ClipSelector(Top* t, GuiStateStore* s)
   add_events(Gdk::EXPOSURE_MASK | Gdk::BUTTON_PRESS_MASK);
   signal_button_press_event().connect(sigc::mem_fun(*this, &ClipSelector::on_button_press_event) );
   
-  set_size_request(74,18 * 5);
+  set_size_request(74,18 * 10);
 }
 
 bool ClipSelector::redraw()
@@ -68,12 +68,12 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
     float y = 0.f;
     
     // 5 should be replaced with "max num scenes" from Store
-    for( int i = 0; i < 5; i++)
+    for( int i = 0; i < 10; i++)
     {
       // prepare values
       std::list<ClipInfo>::iterator iter = state.clipInfo.begin();
       std::advance(iter, i);
-      ClipState clipState = CLIP_STATE_LOADED; //(*iter).state;
+      ClipState clipState = CLIP_STATE_EMPTY; //(*iter).state;
       std::string name = "";
       
       // retrieve audio buffer name from unique bufferID and audioBufferNameVector
