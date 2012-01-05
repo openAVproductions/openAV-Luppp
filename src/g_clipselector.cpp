@@ -67,6 +67,9 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
     
     float y = 0.f;
     
+    std::cout << "Redrawing GCLipSelector " << ID << " now...  state.recording = " << stateStore->clipSelectorState.at(ID).recording << std::endl;
+    std::cout << "\t\t CHECK:     stateStore.clipSelectorState.at(e->ia).recording = " << stateStore->clipSelectorState.at(ID).recording << std::endl;
+    
     // 5 should be replaced with "max num scenes" from Store
     for( int i = 0; i < 10; i++)
     {
@@ -85,7 +88,10 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
       }
       
       if ( state.recording == i )
+      {
+        cout << "Setting a RECORDING BLOCK now!! " << endl;
         clipState = CLIP_STATE_RECORDING;
+      }
       
       std::string name = "";
       

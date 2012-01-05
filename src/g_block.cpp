@@ -3,6 +3,8 @@
 
 #include "clipselectorstate.hpp"
 
+#include <iostream>
+
 namespace Luppp
 {
   void Block( Cairo::RefPtr<Cairo::Context> cr, float x, float y, ClipState state, std::string name)
@@ -26,6 +28,11 @@ namespace Luppp
      textColour = COLOUR_GREY_4;
      playColour = COLOUR_GREY_4;
      bgColour   = COLOUR_GREEN_1;
+    } else if ( state == CLIP_STATE_RECORDING ){
+     std::cout << "Doing a RECORD BLOCK NOW!" << std::endl;
+     textColour = COLOUR_TRANSPARENT;
+     playColour = COLOUR_GREY_4;
+     bgColour   = COLOUR_RECORD_RED;
     }
     
     setColour(cr, bgColour);

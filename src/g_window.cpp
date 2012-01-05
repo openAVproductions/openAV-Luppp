@@ -236,7 +236,7 @@ int Window::handleEvent()
           
           // set GUI rec state to false, we've jsut stopped recording
           guiState.trackoutputState.at(e->ia).recEnable = false;
-          
+          guiState.clipSelectorState.at(e->ia).recording = -1; // no recording block
           //cout << "read samples available " << readSpace << endl;
         }
         else
@@ -249,10 +249,15 @@ int Window::handleEvent()
       {
         std::cout << "record on message in GUI thread" << std::endl;
         guiState.trackoutputState.at(e->ia).recEnable = true;
+        guiState.clipSelectorState.at(e->ia).recording = e->ib; // inform the clip selector which block
+        std::cout << " Setting State.recording on track " << e->ia << "  to value " << guiState.clipSelectorState.at(e->ia).recording << endl;
+        
+        std::list<ClipSelector*>::iterator clipIter = clipselectorList.begin();
+        std::advance(clipIter,e->ia);
+        (*clipIter)->redraw();
       }
       
       // update "REC" button in GUI
-      
       std::list<TrackOutput*>::iterator i = trackoutputList.begin();
       std::advance(i,e->ia);
       (*i)->redraw();

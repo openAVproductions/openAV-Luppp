@@ -36,7 +36,9 @@ namespace Luppp
     COLOUR_GREY_2,
     COLOUR_GREY_3,
     COLOUR_GREY_4,
+    // specials
     COLOUR_BACKGROUND,
+    COLOUR_RECORD_RED,
     COLOUR_TRANSPARENT,
   };
   
