@@ -5,6 +5,19 @@
 
 struct TrackOutputState
 {
+  TrackOutputState()
+  {
+    ID = -1;
+    selected = -1;
+    selectedDevice = 0;
+    
+    volume = 0.f;
+    pan    = 0.f;
+    panZ   = 0.f;
+    
+    mute = solo = recEnable = false;
+  }
+  
   int ID;
   
   // for parameter control

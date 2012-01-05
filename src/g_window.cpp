@@ -265,7 +265,10 @@ int Window::handleEvent()
       
       if ( e->ia < guiState.trackoutputState.size() )
       {
-        guiState.trackoutputState.at(previousEffectsTrack).selected = false;
+        // iter over all other tracks, and unset "selected"
+        for ( int i = 0; i < guiState.trackoutputState.size(); i++)
+          guiState.trackoutputState.at(i).selected = false;
+        
         guiState.trackoutputState.at(e->ia).selected = true;
         guiState.trackoutputState.at(e->ia).selectedDevice = e->ib;
         
