@@ -10,13 +10,49 @@ using namespace Luppp; // for COLOUR_*
 
 GWaveView::GWaveView()
 {
+  // initial size for the waveview
+  waveviewSize = 11050;
   
   // Gives Exposure & Button presses to the widget.
   add_events(Gdk::EXPOSURE_MASK);
   add_events(Gdk::BUTTON_PRESS_MASK );
   
+  // add labels to menu, attach them to the right function, and add to menu
+  setSize1Sec.set_label("1 second");
+  setSizeHalfSec.set_label("1/2 second");
+  setSizeQuaterSec.set_label("1/4 second");
+  setSizeEigthSec.set_label("1/8 second");
+  
+  setSize1Sec.signal_activate().connect     ( sigc::bind (sigc::mem_fun(*this, &GWaveView::setSize) , 11050 ) );
+  setSizeHalfSec.signal_activate().connect  ( sigc::bind (sigc::mem_fun(*this, &GWaveView::setSize) ,  5525 ) );
+  setSizeQuaterSec.signal_activate().connect( sigc::bind (sigc::mem_fun(*this, &GWaveView::setSize) ,  2762 ) );
+  setSizeEigthSec.signal_activate().connect ( sigc::bind (sigc::mem_fun(*this, &GWaveView::setSize) ,  2762 ) );
+  
+  pMenu.add( setSize1Sec );
+  pMenu.add( setSizeHalfSec );
+  pMenu.add( setSizeQuaterSec );
+  pMenu.add( setSizeEigthSec );
+  pMenu.show_all();
+  
   // set default widget size
   set_size_request(300,200);
+}
+
+void GWaveView::setSize(int size)
+{
+  std::cout << "GWaveView setting size to " << size << std::endl;
+  waveviewSize = size;
+  
+  if ( waveviewSize > sample.size() )
+  {
+    sample.clear();
+    sample.push_back(0);
+    sample.push_back(0);
+  }
+  
+  redraw();
+  
+  return;
 }
 
 void GWaveView::setSample(const std::vector<float>& inSample)
@@ -28,7 +64,7 @@ void GWaveView::setSample(const std::vector<float>& inSample)
     sample.push_back(inSample.at(i));
   }
   
-  while ( sample.size() > 10000 )
+  while ( sample.size() > waveviewSize )
     sample.erase( sample.begin(),sample.begin()+ 128);
 }
 
@@ -163,19 +199,11 @@ void GWaveView::redraw()
 
 bool GWaveView::on_button_press_event(GdkEventButton* event)
 {
-  //sample.clear();
-  
-  if( event->type == GDK_BUTTON_PRESS  ) // && event->button == 3
+  if( event->type == GDK_BUTTON_PRESS && event->button == 3 )
   {
-    sample.push_back(0);
-    return true; //It's been handled.
+    std::cout << "Event Type: " << event->type << ". Event Button: " << event->button << "." << std::endl;
+    pMenu.popup(event->button, event->time);
   }
-  else
-  {
-    sample.push_back(1);
-  }
-  
-  redraw();
   
   return true;
 }
