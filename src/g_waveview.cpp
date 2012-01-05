@@ -101,9 +101,8 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       float previousLow = 0;
       
       float currentTop = 0;
-      float currentLow = 0;
       
-      int sampleCountForDrawing = 0;
+      int sampleCountForDrawing = 25;
       
       // loop for drawing each Point on the widget.
       for (long index=0; index <(long)sample.size(); index++ )
@@ -114,26 +113,22 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
         {
           currentTop = currentSample;
         }
-        if ( currentSample < 0 && currentLow > currentSample ) // low
-        {
-          currentLow = currentSample;
-        }
         sampleCountForDrawing--;
         
         if ( sampleCountForDrawing < 0 ) // top line
         {
-          int xCoord = x + xSize*(float(index)/sample.size());
-          //cr->move_to( xCoord,  y+ (ySize/2) - (previousTop * ySize )  ); // top
-          cr->line_to( xCoord,  y+ (ySize/2) - (currentTop  * ySize )  );
+          float drawSample = currentTop / 4.f;
           
-          //cr->move_to( xCoord,  y+ (ySize/2) - (previousLow * ySize )  ); // low
-          //cr->line_to( xCoord,  y+ (ySize/2) - (currentLow  * ySize )  );
+          int xCoord = x + xSize*(float(index)/sample.size());
+          cr->move_to( xCoord,  y+ (ySize/2) - (previousTop * ySize )  ); // top
+          cr->line_to( xCoord,  y+ (ySize/2) - (drawSample  * ySize )  );
+          
+          cr->move_to( xCoord,  y+ (ySize/2) + (previousTop * ySize )  ); // same shape as above
+          cr->line_to( xCoord,  y+ (ySize/2) + (drawSample  * ySize )  );
           
           sampleCountForDrawing = 25;
-          previousTop = currentTop;
-          previousLow = currentLow;
+          previousTop = drawSample;
           currentTop = 0;
-          currentLow = 0;
         }
       }
       
@@ -168,7 +163,7 @@ void GWaveView::redraw()
 
 bool GWaveView::on_button_press_event(GdkEventButton* event)
 {
-  sample.clear();
+  //sample.clear();
   
   if( event->type == GDK_BUTTON_PRESS  ) // && event->button == 3
   {
