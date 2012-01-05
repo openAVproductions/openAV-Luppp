@@ -59,13 +59,14 @@ Window::Window(Gtk::Main *k, Top* t) :
   window->set_title("Luppp 2.0");
   
   refBuilder->get_widget("mainBox", mainBox);
-  mainBox->add( inputWaveview );
-  mainBox->add( waveview );
-  mainBox->show_all();
   
   refBuilder->get_widget("mainTable", mainTable);
   refBuilder->get_widget("trackEffectBox", trackEffectBox);
   refBuilder->get_widget("masterOutputBox", masterOutputBox);
+  
+  masterOutputBox->add( inputWaveview );
+  masterOutputBox->add( waveview );
+  
   masterOutputBox->pack_end( masterOutput, false, true, 0 );
   masterOutputBox->show_all();
   
