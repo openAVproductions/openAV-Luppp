@@ -302,19 +302,20 @@ int JackClient::processMidi(jack_nframes_t nframes)
     }
     else if ( b1 >= 176 && b1 < 176 + 16 ) // CC change Device control
     {
-      /*
-      std::list<FileAudioSourceState>::iterator i = top->state.fileAudioSourceState.begin();
-      if ( b2 == 17 )
-        std::advance(i,1);
-      float value = (b3/127.f);
-      i->speed = value  + 0.5;
-      std::cout << "i->speed = " << i->speed << endl;
-      
+      int track = 0; //b1 - 177;
+      int device= top->controller->getDevice();
+      top->controller->setTrackDevice(0, 0);
+      //std::cout << "APC: Device Control on track " << track << " device " << device << " param " << b2 -1 << std::endl;
+
+      // get unique ID of current selected track, then setPluginParam that UID
+      int uid = mixer.getEffectID(track, device);
+
       EngineEvent* x = top->toEngineEmptyEventQueue.pull();
-      x->setTrackSpeed(0, value);
-      top->toGuiQueue.push(x);
-      top->guiDispatcher->emit();
-      */
+      x->setPluginParameter(uid,
+                            -1,
+                            b2-1,
+                            b3 / 127.);
+      time.processEngineEvent(x);
     }
     
     

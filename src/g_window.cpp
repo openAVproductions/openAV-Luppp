@@ -234,8 +234,7 @@ int Window::handleEvent()
           x->looperLoad( e->ia, e->ib, buffer->getID() );
           top->toEngineQueue.push(x);
           
-          // set GUI rec state to false, we've jsut stopped recording
-          guiState.trackoutputState.at(e->ia).recEnable = false;
+          // set recording block to -1, as we're not recording 
           guiState.clipSelectorState.at(e->ia).recording = -1; // no recording block
           //cout << "read samples available " << readSpace << endl;
         }
@@ -277,7 +276,7 @@ int Window::handleEvent()
       redrawEffectBox(); // should be only redrawing current widget
     }
     else if ( e->type == EE_TRACK_SELECT_DEVICE ) {
-      std::cout << "Gui TrackSelect event  t: " << e->ia << " d: " << e->ib << std::endl;
+      //std::cout << "Gui TrackSelect event  t: " << e->ia << " d: " << e->ib << std::endl;
       
       if ( e->ia < guiState.trackoutputState.size() )
       {
@@ -288,7 +287,7 @@ int Window::handleEvent()
         guiState.trackoutputState.at(e->ia).selected = true;
         guiState.trackoutputState.at(e->ia).selectedDevice = e->ib;
         
-        cout << "set trackOutputState variables, now itering over widget list" << endl;
+        //cout << "set trackOutputState variables, now itering over widget list" << endl;
         
         // redraw the "unselected" trackOutput
         std::list<TrackOutput*>::iterator i = trackoutputList.begin();

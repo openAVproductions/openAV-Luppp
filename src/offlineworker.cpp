@@ -55,7 +55,7 @@ int OfflineWorker::createNewEffect(int t, int pos, int typeInt )
 
 int OfflineWorker::setTrackSource( int t, AudioSourceType type )
 {
-  cout << "OfflineWorker::setTrackSource() " << t << ", " << type << endl;
+  cout << "OfflineWorker::setTrackSource() " << t << ", type = " << type << endl;
   
   AudioSource* source = 0;
   

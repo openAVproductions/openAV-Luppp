@@ -53,7 +53,7 @@ void GBufferSource::fluidSynthSource()
   // ask for soundfont bank / patch number (/ name?) here
   
   // tell offlineWorker to do the loading
-  top->offlineWorker->setTrackSource(0, AUDIO_SOURCE_TYPE_FLUIDSYNTH);
+  top->offlineWorker->setTrackSource(ID, AUDIO_SOURCE_TYPE_FLUIDSYNTH);
 }
 
 bool GBufferSource::redraw()
