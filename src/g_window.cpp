@@ -196,7 +196,7 @@ int Window::handleEvent()
       (*i)->redraw();
     }
     else if ( e->type == EE_LOOPER_PROGRESS ) {
-      cout << " Gui LOOPER_PROGRESS UID = " << e->ia  << " value = " << e->fa << endl;
+      //cout << "Gui LOOPER_PROGRESS UID = " << e->ia  << " value = " << e->fa << endl;
       guiState.bufferAudioSourceState.at(e->ia).index = e->fa;
       
       if ( e->ia < progressWidgetVector.size() )
