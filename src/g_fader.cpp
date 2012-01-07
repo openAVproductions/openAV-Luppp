@@ -10,6 +10,8 @@ namespace Luppp
     cr->move_to( x, y );
     cr->stroke();
     
+    x = x + 4; // global move widget relative to positioning
+    
     // Create the linear gradient diagonal
     //Cairo::RefPtr< Cairo::LinearGradient > linGrad = Cairo::LinearGradient::create (x, y, 100, 100);
     
@@ -25,22 +27,37 @@ namespace Luppp
     cr->rectangle   (x, y, 12, 94);
     cairo_set_source(cr->cobj(), pat);
     cairo_fill      (cr->cobj());
-    cairo_pattern_destroy (pat);    
+    cairo_pattern_destroy (pat);
+    
+    // red area on top of fader graphic
+    cr->rectangle ( x, y, 12, 25 );
+    setColour(cr, COLOUR_ORANGE_1 );
+    cr->fill();
     
     // draw fader  <|
     float playheadX = x + 12;
     float playheadY = y + (92 * ( 1.f - value));
     
     setColour(cr, COLOUR_ORANGE_1 );
-    cr->set_line_width(1.0);
+    cr->set_line_width(0.8);
     cr->move_to( playheadX, playheadY );
     cr->line_to( playheadX + 10, playheadY + 5.5 );
     cr->line_to( playheadX + 10, playheadY - 5.5 );
     cr->close_path();
     cr->fill_preserve();
     
-    setColour(cr, COLOUR_GREY_1 );
+    // draw fader |>
+    cr->move_to( x, playheadY );
+    cr->line_to( x - 10, playheadY + 5.5 );
+    cr->line_to( x - 10, playheadY - 5.5 );
+    cr->close_path();
+    cr->fill_preserve();
     cr->stroke();
     
+    setColour(cr, COLOUR_GREY_4 );
+    cr->set_line_width(2);
+    cr->move_to( x, playheadY );
+    cr->line_to( x + 12, playheadY );
+    cr->stroke();
   }
 }

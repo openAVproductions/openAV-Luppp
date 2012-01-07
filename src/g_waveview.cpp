@@ -35,7 +35,7 @@ GWaveView::GWaveView()
   pMenu.show_all();
   
   // set default widget size
-  set_size_request(300,100);
+  set_size_request(300,22 + 95 + 5);
 }
 
 void GWaveView::setSize(int size)

@@ -58,33 +58,67 @@ bool GMasterOutput::on_expose_event(GdkEventExpose* event)
     cr->rectangle(event->area.x, event->area.y,
         event->area.width, event->area.height);
     cr->set_source_rgb(0.1 , 0.1 , 0.1 );
+    setColour(cr, COLOUR_GREY_4 );
     cr->fill();
     
     
     TrackOutputState* state = new TrackOutputState(); // = &stateStore->trackoutputState.at(0);
-    
-    if ( state->selected )
-      setColour(cr, COLOUR_GREY_3 );
-    else
-      setColour(cr, COLOUR_GREY_4 );
-    
-    cr->rectangle(0, 0, 74*2, 104);
-    cr->fill();
     
     //Dial(cr,true, 7,4,state->pan,DIAL_MODE_PAN); // pan
     //Mute(cr, 9  , 41 , state->ID, state->mute ); // mute button
     //Solo(cr, 9  , 68 , state->ID, state->solo ); // solo button
     //Rec (cr, 9  , 85 , state->ID, state->recEnable); // rec button
     
-    Fader(cr,46 , 4  , state->volume, 0, 0 ); // fader
     
-    if ( state->selected )
-    {
-      cr->rectangle(0, -10, 74, 200);
-      setColour( cr, COLOUR_PURPLE_1 );
-      cr->set_line_width(1);
-      cr->stroke();
-    }
+    cr->rectangle   ( 75, 4, 12, 94);
+    cr->rectangle   ( 90, 4, 12, 94);
+    cr->rectangle   (105, 4, 12, 94);
+    cr->rectangle   (120, 4, 12, 94);
+    
+    // setup & paint fader gradient
+    cairo_pattern_t *pat;
+    pat = cairo_pattern_create_linear (0.0, 0.0,  0.0, 400.0);
+    cairo_pattern_add_color_stop_rgb(pat, 0,   0 / 255.f, 153 / 255.f, 255 / 255.f );
+    cairo_pattern_add_color_stop_rgb(pat, 1,  26 / 255.f,  26 / 255.f,  26 / 255.f );
+    cairo_set_source(cr->cobj(), pat);
+    cairo_fill      (cr->cobj());
+    cairo_pattern_destroy (pat);    
+    
+    
+    float value = 1.f; 
+    
+    // draw fader  <|
+    float playheadX = 120 + 12;
+    float playheadY = 4 + (92 * ( 1.f - value));
+    
+    setColour(cr, COLOUR_ORANGE_1 );
+    cr->set_line_width(1.0);
+    cr->move_to( playheadX, playheadY );
+    cr->line_to( playheadX + 10, playheadY + 5.5 );
+    cr->line_to( playheadX + 10, playheadY - 5.5 );
+    cr->close_path();
+    cr->fill_preserve();
+    
+    
+    // draw fader  |>
+    float playheadX2 = 75;
+    
+    setColour(cr, COLOUR_ORANGE_1 );
+    cr->set_line_width(1.0);
+    cr->move_to( playheadX2, playheadY );
+    cr->line_to( playheadX2 - 10, playheadY + 5.5 );
+    cr->line_to( playheadX2 - 10, playheadY - 5.5 );
+    cr->close_path();
+    cr->fill_preserve();
+    
+    setColour(cr, COLOUR_ORANGE_1 );
+    cr->stroke();
+    
+    setColour(cr, COLOUR_ORANGE_1 );
+    cr->move_to( playheadX2, playheadY );
+    cr->line_to( playheadX , playheadY );
+    cr->set_line_width(2.7);
+    cr->stroke();
     
   }
   return true;
