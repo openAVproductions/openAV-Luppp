@@ -11,6 +11,7 @@ class Top;
 #include "g_statestore.hpp"
 
 #include "g_track.hpp"
+#include "g_progress.hpp"
 
 #include "g_trackoutput.hpp"
 #include "g_masteroutput.hpp"
@@ -74,12 +75,11 @@ class Window
     
     std::list<Gtk::Label*> tracklabelList;
     std::list<Gtk::ComboBoxText*> trackinputList;
-    std::list<Gtk::ProgressBar*> trackprogressList;
+    std::vector<GProgress*> progressWidgetVector;
     
     // iters for lists of widgets
     std::list<ClipSelector*>::iterator clipselectorIter;
     std::list<Gtk::ComboBoxText*>::iterator inputIter;
-    std::list<Gtk::ProgressBar*>::iterator progressIter;
     
 };
 

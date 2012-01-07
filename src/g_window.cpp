@@ -199,12 +199,9 @@ int Window::handleEvent()
       cout << " Gui LOOPER_PROGRESS UID = " << e->ia  << " value = " << e->fa << endl;
       guiState.bufferAudioSourceState.at(e->ia).index = e->fa;
       
-      progressIter = trackprogressList.begin();
-      
-      if ( e->ia < trackprogressList.size() )
+      if ( e->ia < progressWidgetVector.size() )
       {
-        std::advance(progressIter,e->ia);
-        (*progressIter)->set_fraction( e->fa );
+        progressWidgetVector.at(e->ia)->setValue( e->fa );
         redrawEffectBox();
       }
     }
@@ -324,11 +321,8 @@ int Window::handleEvent()
     }
     else if ( e->type == EE_TRACK_SET_SPEED )
     {
+      // set BufferAudioSourceState speed value
       guiState.bufferAudioSourceState.at(e->ia).speed = e->fa;
-      
-      std::list<Gtk::ProgressBar*>::iterator progIter = trackprogressList.begin();
-      advance(progIter,e->ia);
-      (*progIter)->set_fraction(e->fa);
     }
     else if ( e->type == EE_LOOPER_LOAD )
     {
@@ -528,11 +522,11 @@ void Window::addTrack()
   mainTable->attach( **clipselectorIter, numTracks, numTracks+1, 2, 3);
   
   // progress bar
-  trackprogressList.push_back( new Gtk::ProgressBar() );
-  progressIter = trackprogressList.begin();
-  std::advance(progressIter,numTracks);
-  (**progressIter).set_fraction( 0.f );
-  mainTable->attach( **progressIter, numTracks, numTracks+1, 3, 4);
+  progressWidgetVector.push_back( new GProgress() );
+  progressWidgetVector.back()->setValue( 0.f );
+  Gtk::Box* tmpVbox = new Gtk::HBox();
+  tmpVbox->add( *progressWidgetVector.back() );
+  mainTable->attach( *tmpVbox, numTracks, numTracks+1, 3, 4);
   
   // fader / pan
   trackoutputList.push_back( new TrackOutput( top, &guiState ) );
