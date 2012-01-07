@@ -196,9 +196,17 @@ int Window::handleEvent()
       (*i)->redraw();
     }
     else if ( e->type == EE_LOOPER_PROGRESS ) {
-      //cout << " Gui LOOPER_PROGRESS " << endl;
+      cout << " Gui LOOPER_PROGRESS UID = " << e->ia  << " value = " << e->fa << endl;
       guiState.bufferAudioSourceState.at(e->ia).index = e->fa;
-      redrawEffectBox();
+      
+      progressIter = trackprogressList.begin();
+      
+      if ( e->ia < trackprogressList.size() )
+      {
+        std::advance(progressIter,e->ia);
+        (*progressIter)->set_fraction( e->fa );
+        redrawEffectBox();
+      }
     }
     else if ( e->type == EE_LOOPER_RECORD ) {
       cout << "GUI: Looper Record event! t = " << e->ia << "  block: " << e->ib << "  rec? = " << e->ic << endl;
@@ -523,8 +531,8 @@ void Window::addTrack()
   trackprogressList.push_back( new Gtk::ProgressBar() );
   progressIter = trackprogressList.begin();
   std::advance(progressIter,numTracks);
-  (**progressIter).set_fraction(numTracks / 8.f);
-  //mainTable->attach( **progressIter, numTracks, numTracks+1, 3, 4);
+  (**progressIter).set_fraction( 0.f );
+  mainTable->attach( **progressIter, numTracks, numTracks+1, 3, 4);
   
   // fader / pan
   trackoutputList.push_back( new TrackOutput( top, &guiState ) );
