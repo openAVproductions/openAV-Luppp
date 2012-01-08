@@ -25,6 +25,8 @@ class OfflineWorker
   
   private:
     Top* top;
+    
+    std::string toString( int in );
 };
 
 

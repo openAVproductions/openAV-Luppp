@@ -8,13 +8,26 @@
 #include "audiotrack.hpp"
 #include "audiobuffer.hpp"
 
+#include <sstream>
+
 #include "fluidsynthaudiosource.hpp"
 
+// for reading sample pack info stuffs
+#include <libconfig.h++>
+
 using namespace std;
+using namespace libconfig;
 
 OfflineWorker::OfflineWorker(Top* t)
 {
   top = t;
+}
+
+std::string OfflineWorker::toString( int in )
+{
+  std::stringstream stream;
+  stream << in;
+  return stream.str();
 }
 
 // called by GUI thread, when we want to create a new Effect instance.
@@ -117,6 +130,78 @@ int OfflineWorker::addTrack(int trackID)
 // use everywhere in Engine
 int OfflineWorker::loadAudioBuffer( int ID, int block, std::string name)
 {
+  // Stage one: Attempt to read the samples "info" from the .cfg file.
+  //  It stores sample lenght (beats) and other info
+  
+  std::string dirName = Glib::path_get_dirname ( name );
+  std::string baseName= Glib::path_get_basename( name );
+  
+  std::string configFileName = Glib::build_filename(dirName, "lupppSamplePack.cfg");
+  
+  //cout << "Looking for samplePack file here: " << configFileName  << endl;
+  int sampleNumBeats = 4;
+  
+  // 1. Check the existence of lupppSamplePack.cfg
+  bool fileExists = Glib::file_test ( configFileName , Glib::FILE_TEST_EXISTS );
+  if ( fileExists )
+  {
+    //cout << "Found Config file, reading now!" << endl;
+    libconfig::Config config;
+    
+    try
+    {
+      config.readFile ( configFileName.c_str() );
+    }
+    catch(const ParseException &pex)
+    {
+      std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine()
+                << " - " << pex.getError() << std::endl;
+    }
+    
+    int numSamples = -1;
+    try
+    {
+      if ( config.lookupValue("luppp.samplePack.numSamples", numSamples) )
+      {
+        int numBeats = -1;
+        std::string sampleName;
+        
+        for ( int i = 0; i < numSamples; i++ )
+        {
+          cout << "Checking sample " << i << "!" << endl;
+          if( config.lookupValue( "luppp.samplePack.s"+ toString(i) +".numBeats" , numBeats) &&
+              config.lookupValue( "luppp.samplePack.s"+ toString(i) +".name"     , sampleName) )
+          {
+            if ( sampleName.compare( baseName ) == 0 ) // we have the same sample filename
+            {
+              cout << "Sample " <<  sampleName << " has " << numBeats << " beats." << endl;
+              sampleNumBeats = numBeats;
+            }
+            else
+            {
+              // sampleName isn't our current one
+            }
+          }
+          else
+          {
+            // error finding samplePack.s<i>.numBeats or .name
+            cout << "Error finding luppp.samplePack.s"+ toString(i) +".name" << endl;
+          }
+        } // for loop
+      }
+    }
+    catch ( ParseException &e )
+    {
+      // some libconfig error, like ParseException, or SettingException
+      cout << "OfflineWorker::loadAudioBuffer() LibConfig Parsing exception... ignoring" << endl; 
+    }
+  }
+  else
+  {
+    cout << "Could not find a 'lupppSamplePack.cfg' file in dir, loading without info!" << endl;
+  }
+  
+  
   SndfileHandle infile( name , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 1 , 44100);
   
   int size  = infile.frames();
@@ -151,6 +236,8 @@ int OfflineWorker::loadAudioBuffer( int ID, int block, std::string name)
   }
   
   AudioBuffer* buffer = new AudioBuffer();
+  
+  buffer->setBeats(sampleNumBeats);
   
   // swap buffer with the loaded one
   sampleBuffer.swap( *buffer->getPointer() );

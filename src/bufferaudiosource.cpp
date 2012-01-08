@@ -22,8 +22,6 @@ void BufferAudioSource::process (int nframes, float* buffer )
   float index = iter->index;
   float speed;
   
-  //cout << " topSpeed = " << top->speed << " Final Speed = " << speed << endl;
-  
   // get buffer variables
   ClipSelectorState* clipSelState = top->state.getClipSelectorState(ID);
   if ( !clipSelState )
@@ -50,6 +48,19 @@ void BufferAudioSource::process (int nframes, float* buffer )
   // playback the sample
   int size = bufPtr->getPointer()->size();
   std::vector<float>* tmpVector = bufPtr->getPointer();
+  
+  int FPB = (int) top->samplerate / (top->bpm / 60.0);
+  
+  //cout << " FPB = " << FPB << "  NumBeats:" << bufPtr->getBeats() << " Playing beat = " << (int)(bufPtr->getBeats() * index) << endl;
+  
+  int totalFramesWanted = bufPtr->getBeats() * FPB;
+  float totalFramesInBuffer = size;
+  
+  speed = totalFramesInBuffer / totalFramesWanted;
+  
+  speed = speed * top->speed;
+  
+  //cout << " Wanted = " << totalFramesWanted << "  Buffer = " << totalFramesInBuffer << "  TopSpeed: " << top->speed <<  "  speed = " << speed << endl;
   
   if ( size == 0 )
     return;

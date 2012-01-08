@@ -26,6 +26,7 @@ def configure(ctx):
   ctx.check_cfg	(package='gtkmm-2.4',at_least_version='2.0.0',args='--cflags --libs',uselib_store='GTKMM')
   ctx.check_cfg	(package='glibmm-2.4',at_least_version='2.0.0',args='--cflags --libs',uselib_store='GLIBMM')
   ctx.check_cfg	(package='fluidsynth',args='--libs',uselib_store='FLUIDSYNTH')
+  ctx.check_cfg	(package='libconfig++',args='--libs',uselib_store='LIBCONFIG')
   #ctx.check_cfg	(package='dl',args='--libs',uselib_store='DL')
   
   # Check for headers:
@@ -83,7 +84,7 @@ def build(ctx):
               'src/g_masteroutput.cpp',
               'src/g_trackoutput.cpp']
   
-  engineDepends = 'JACK SNDFILE GTKMM FLUIDSYNTH GLIBMM'
+  engineDepends = 'JACK SNDFILE GTKMM FLUIDSYNTH GLIBMM LIBCONFIG'
   
   #print 'Building ENGINE'
   buildList = engineList + guiList

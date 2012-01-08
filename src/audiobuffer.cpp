@@ -6,9 +6,11 @@ int AudioBuffer::privateId = 0;
 
 AudioBuffer::AudioBuffer()
 {
-  std::cout << "AudioBuffer::AudioBuffer()" << std::endl;
+  std::cout << "AudioBuffer::AudioBuffer() Setting numBeats to default" << std::endl;
   // Set ID
   ID = privateId++;
+  
+  numBeats = 4;
 }
 
 int AudioBuffer::getID()
@@ -20,7 +22,7 @@ void AudioBuffer::setBeats(int beats)
 {
   numBeats = beats;
   
-  std::cout << "AudioBuffer::setBeats()" << std::endl;
+  std::cout << "AudioBuffer::setBeats(" << beats << ")" << std::endl;
 }
 
 int AudioBuffer::getBeats()
