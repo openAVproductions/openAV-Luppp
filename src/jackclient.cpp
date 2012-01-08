@@ -316,6 +316,14 @@ int JackClient::processMidi(jack_nframes_t nframes)
                             b2-1,
                             b3 / 127.);
       time.processEngineEvent(x);
+      
+      if ( b2 == 8 ) // last CC of the MPK mini
+      {
+        int bpm = 120 + (b3 / 127.f) * 60;
+        top->bpm = bpm;
+        top->speed = 0.5 + (b3 / 127.f);
+        cout << "XFade " << b3 << "   setting BPM to " << bpm << " and top->speed " << top->speed << endl;
+      }
     }
     
     
