@@ -97,6 +97,9 @@ Window::Window(Gtk::Main *k, Top* t) :
   refBuilder->get_widget("menuAddCompressor", menuAddCompressor);
   menuAddCompressor->signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &Window::addEffect ), EFFECT_COMPRESSOR));
   
+  refBuilder->get_widget("menuAddLimiter", menuAddLimiter);
+  menuAddLimiter->signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &Window::addEffect ), EFFECT_LIMITER));
+  
   // poll the event Queue
   Glib::signal_timeout().connect(sigc::mem_fun(*this, &Window::handleEvent), 50);
   
@@ -412,6 +415,7 @@ int Window::handleEvent()
           case EFFECT_BEATSMASH:    trackVector.at(t).widgetVector.push_back( new GBeatSmash  (top, &guiState) ); break;
           case EFFECT_TRANSIENT:    trackVector.at(t).widgetVector.push_back( new GTransient  (top, &guiState) ); break;
           case EFFECT_COMPRESSOR:   trackVector.at(t).widgetVector.push_back( new GCompressor (top, &guiState) ); break;
+          case EFFECT_LIMITER:      trackVector.at(t).widgetVector.push_back( new GCompressor (top, &guiState) ); break;
           case EFFECT_PARAMETRIC_EQ:trackVector.at(t).widgetVector.push_back( new Equalizer   (     &guiState) ); break;
           default: newEffect = false; break;
         }

@@ -41,6 +41,7 @@ LadspaHost::LadspaHost(Top* t,EffectType et, int s) : Effect(t, et)
     case EFFECT_LOWPASS:      pluginString = "/usr/lib/ladspa/lowpass_iir_1891.so"; break;
     case EFFECT_HIGHPASS:     pluginString = "/usr/lib/ladspa/highpass_iir_1890.so";break;
     case EFFECT_COMPRESSOR:   pluginString = "/usr/lib/ladspa/sc4m_1916.so";        break;
+    case EFFECT_LIMITER:      pluginString = "/usr/lib/ladspa/fast_lookahead_limiter_1913.so"; break;
     default: std::cout << "LadspaHost() got unknown effect type!" << std::endl; break;
   }
   
@@ -188,6 +189,13 @@ void LadspaHost::resetParameters()
     controlBuffer[7] = 0.0; // ampli
     controlBuffer[8] = 0.0; // gain reduc
   }
+  else if ( type == EFFECT_LIMITER )
+  {
+    EffectState* state = top->state.getEffectState(ID);
+    state->values[0] = 0.0; // input gain
+    state->values[1] = 1.0; // limit
+    state->values[2] = 0.1; // release (time in seconds)
+  }
   else if ( type == EFFECT_HIGHPASS )
   {
     controlBuffer[0] = 440;
@@ -284,6 +292,31 @@ void LadspaHost::process(int nframes, float* buffer)
     descriptor -> connect_port ( pluginHandle ,10, &controlBuffer[10] );
     descriptor -> connect_port ( pluginHandle ,11, &controlBuffer[11] );
     descriptor -> connect_port ( pluginHandle ,12, &controlBuffer[12] );
+  }
+  else if ( type == EFFECT_LIMITER )
+  {
+    controlBuffer[0] = (state->values[0] * 40) - 20; // input gain
+    controlBuffer[1] = -20 + (state->values[1] * 20); // limit
+    controlBuffer[2] = 0.02; // release (time in seconds, 0.01 -> 2 )
+    
+    cout << "LADSPA Limiter: inputGain " << controlBuffer[0] << "  limit: " << controlBuffer[1]
+         << "  release: " << controlBuffer[2] << "  ReductionAmount " << controlBuffer[3] << " latency " << controlBuffer[8] << endl;
+    
+    descriptor -> connect_port ( pluginHandle ,  0 , &controlBuffer[0] ); // control inputs
+    descriptor -> connect_port ( pluginHandle ,  1 , &controlBuffer[1] );
+    descriptor -> connect_port ( pluginHandle ,  2 , &controlBuffer[2] );
+    
+    descriptor -> connect_port ( pluginHandle ,  3 , &controlBuffer[3] ); // attenuation output
+    
+    descriptor -> connect_port ( pluginHandle ,  4 , buffer ); // audio input
+    descriptor -> connect_port ( pluginHandle ,  5 , buffer ); 
+    descriptor -> connect_port ( pluginHandle ,  6 ,&outputBuffer[0] ); // audio output
+    descriptor -> connect_port ( pluginHandle ,  7 ,&outputBufferR[0] );
+    
+    descriptor -> connect_port ( pluginHandle ,  8 ,&controlBuffer[8] ); // latency control output
+    
+    
+    
   }
   else if ( type == EFFECT_LOWPASS )
   {

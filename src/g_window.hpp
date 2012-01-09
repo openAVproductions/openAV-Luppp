@@ -38,6 +38,7 @@ class Window
     
     Gtk::MenuItem* menuAddReverb;
     Gtk::MenuItem* menuAddLowpass;
+    Gtk::MenuItem* menuAddLimiter;
     Gtk::MenuItem* menuAddHighpass;
     Gtk::MenuItem* menuFileAddTrack;
     Gtk::MenuItem* menuAddTransient;

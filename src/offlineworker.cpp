@@ -45,6 +45,7 @@ int OfflineWorker::createNewEffect(int t, int pos, int typeInt )
     // all Ladspa effects have the same code here
     case EFFECT_REVERB:
     case EFFECT_LOWPASS:
+    case EFFECT_LIMITER:
     case EFFECT_HIGHPASS:
     case EFFECT_TRANSIENT:
     case EFFECT_COMPRESSOR:
