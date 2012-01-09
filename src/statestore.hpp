@@ -26,10 +26,6 @@ class StateStore
     
     int midib1,midib2,midib3;
     
-    int beatSmash;
-    
-    float effectValues[8];
-    
     int getNumTracks(){return numTracks;}
     int getNumEffects(){return numEffects;}
     

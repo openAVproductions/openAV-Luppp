@@ -19,7 +19,7 @@ BeatSmash::BeatSmash(Top* t, EffectType et) : Effect(t,et)
 void BeatSmash::process(int nframes, float *L)
 {
   //std::cout << "Process: queueActive: " << queueActive << "\tActive: " << active << std::endl;
-  active = top->state.beatSmash;
+  //active = top->state.beatSmash;
   
   for( int i = 0; i < nframes; i++)
   {
