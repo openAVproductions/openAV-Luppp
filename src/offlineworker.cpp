@@ -10,6 +10,7 @@
 
 #include <sstream>
 
+#include "whitenoiseaudiosource.hpp"
 #include "fluidsynthaudiosource.hpp"
 
 // for reading sample pack info stuffs
@@ -77,6 +78,7 @@ int OfflineWorker::setTrackSource( int t, AudioSourceType type )
     case AUDIO_SOURCE_TYPE_BUFFER    : break; //source = new BufferAudioSource();
     case AUDIO_SOURCE_TYPE_LV2       : break; //source = new BufferAudioSource();
     case AUDIO_SOURCE_TYPE_FLUIDSYNTH: source = new FluidSynthAudioSource(top,"newNameHere"); break;
+    case AUDIO_SOURCE_TYPE_WHITENOISE: source = new WhiteNoiseAudioSource(top); break;
     default: cout << "Unknown AudioSourceType recieved!" << endl; break;
   }
   

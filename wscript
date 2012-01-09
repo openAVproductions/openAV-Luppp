@@ -46,6 +46,7 @@ def build(ctx):
               'src/ladspahost.cpp',
               'src/bufferaudiosource.cpp',
               'src/fluidsynthaudiosource.cpp',
+              'src/whitenoiseaudiosource.cpp',
               'src/mixer.cpp',
               'src/effect.cpp',
               'src/beatsmash.cpp',

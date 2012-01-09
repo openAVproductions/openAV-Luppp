@@ -33,8 +33,10 @@ protected:
   Gtk::Menu    pMenu;
   Gtk::MenuItem  setLv2Source;
   Gtk::MenuItem  setFluidSynthSource;
+  Gtk::MenuItem  setWhiteNoiseSource;
   
   void fluidSynthSource();
+  void whiteNoiseSource();
   
   // Button & Expose event.
   bool on_button_press_event(GdkEventButton* event);

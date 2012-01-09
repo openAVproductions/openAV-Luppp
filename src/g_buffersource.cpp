@@ -26,13 +26,16 @@ GBufferSource::GBufferSource(Top* t, GuiStateStore* s)
   //setBufferSource.set_label("Audio Buffer");
   setLv2Source.set_label("Make LV2 instrument");
   setFluidSynthSource.set_label("Make Soundfont player");
+  setWhiteNoiseSource.set_label("Make White Noise Gen");
   
   pMenu.add( setLv2Source );
   pMenu.add( setFluidSynthSource );
+  pMenu.add( setWhiteNoiseSource );
   pMenu.show_all();
   
   // connect popup menu items to functions
   setFluidSynthSource.signal_activate().connect( sigc::mem_fun(*this, &GBufferSource::fluidSynthSource));
+  setWhiteNoiseSource.signal_activate().connect( sigc::mem_fun(*this, &GBufferSource::whiteNoiseSource));
   
   // Gives Button presses to the widget, and connect them to onMouseButtonDown
   add_events(Gdk::BUTTON_PRESS_MASK);
@@ -54,6 +57,11 @@ void GBufferSource::fluidSynthSource()
   
   // tell offlineWorker to do the loading
   top->offlineWorker->setTrackSource(ID, AUDIO_SOURCE_TYPE_FLUIDSYNTH);
+}
+
+void GBufferSource::whiteNoiseSource()
+{
+  top->offlineWorker->setTrackSource(ID, AUDIO_SOURCE_TYPE_WHITENOISE);
 }
 
 bool GBufferSource::redraw()
