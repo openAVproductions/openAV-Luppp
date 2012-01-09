@@ -86,7 +86,7 @@ void Time::processEngineEvent(EngineEvent* e)
   }
   if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER )
   {
-    cout << "Time::processEE() SET_PLUGIN_PARAM queue in 1" << endl;
+    //cout << "Time::processEE() SET_PLUGIN_PARAM queue in 1" << endl;
     //q1.push_back(e);
     doEngineEvent(e);
   }

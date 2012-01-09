@@ -18,6 +18,7 @@ LadspaHost::LadspaHost(Top* t,EffectType et, int s) : Effect(t, et)
   hasRunAdding = false;
   
   outputBuffer.resize(1024);
+  outputBufferR.resize(1024);
   
   for (int i = 0; i < 255; i++)
   {
@@ -29,10 +30,12 @@ LadspaHost::LadspaHost(Top* t,EffectType et, int s) : Effect(t, et)
   
   descriptor = 0; // ladspa_descriptor*
   
+  pluginSoIndex = 0;
+  
   // setup variables for effect type we've been passed
   switch(et)
   {
-    case EFFECT_REVERB:       pluginString = "/usr/lib/ladspa/g2reverb.so";         break;
+    case EFFECT_REVERB:       pluginString = "/usr/lib/ladspa/calf.so"; pluginSoIndex = 3;break;
     case EFFECT_TRANSIENT:    pluginString = "/usr/lib/ladspa/transient_1206.so";   break;
     case EFFECT_PARAMETRIC_EQ:pluginString = "/usr/lib/ladspa/filters.so";          break;
     case EFFECT_LOWPASS:      pluginString = "/usr/lib/ladspa/lowpass_iir_1891.so"; break;
@@ -70,12 +73,13 @@ LadspaHost::LadspaHost(Top* t,EffectType et, int s) : Effect(t, et)
     
     // cycle trough all available plugins in library, printing thier info
     for (int lIndex = 0; (descriptor = const_cast<ladspaDescriptor>(descriptorFunction(lIndex) ) ) != NULL ; lIndex++)
-    { 
-      std::cout << "All good, plugin info: " << descriptor->Name << " " << descriptor->UniqueID << " " << descriptor->Label << std::endl;
+    {
+      if ( pluginSoIndex == lIndex )
+        std::cout << "All good, plugin info: " << descriptor->Name << " " << descriptor->UniqueID << " " << descriptor->Label << " PluginSoIndex = " << pluginSoIndex << std::endl;
     }
     
     // FIXME set descriptor to 1st plugin by default:
-    descriptor = const_cast<ladspaDescriptor>( descriptorFunction(0) );
+    descriptor = const_cast<ladspaDescriptor>( descriptorFunction( pluginSoIndex ) );
     
   }
   else
@@ -189,6 +193,29 @@ void LadspaHost::resetParameters()
     controlBuffer[0] = 440;
     controlBuffer[1] = 2;
   }
+  else if ( type == EFFECT_REVERB )
+  {
+    // setting values in effect state will cause the values to be set as
+    // current default until changed, while writing controlbuffer will
+    // result in the value being overwritten. Some values in buffer are
+    // not accessible, hence that it is sometimes nessisary to write to it
+    EffectState* state = top->state.getEffectState(ID);
+    state->values[0] = 0.3; // decay
+    state->values[1] = 0.5; // dry wet
+    state->values[2] = 1.0; // high damp
+    state->values[3] = 0.0; // pre delay
+    
+    // [0-3] are audio in / out
+    controlBuffer[4] = 4.f; // decay time
+    controlBuffer[5] = 19000.f; // high freq damp
+    controlBuffer[6] = (int)3; // room type (int)
+    controlBuffer[7] = 0.2; // diffustion
+    controlBuffer[8] = 1.0; // wet
+    controlBuffer[9] = 1.0; // dry
+    controlBuffer[10]= 0.0; // pre delay
+    controlBuffer[11]= 220.0; // bass cut
+    controlBuffer[12]= 8000.0; // treb cut
+  }
   
 }
 
@@ -228,18 +255,35 @@ void LadspaHost::process(int nframes, float* buffer)
   
   if ( type == EFFECT_REVERB )
   {
+    controlBuffer[4] = 0.4 + state->values[0] * 14.6; // decay
+    
+    float dryWet = state->values[1];
+    
+    controlBuffer[8] = sin(dryWet * (3.1415/2.f)); // wet
+    controlBuffer[9] = cos(dryWet* 1.6); // dry
+    if ( controlBuffer[9] < 0.f )
+      controlBuffer[9] = 0.f;
+    
+    controlBuffer[10]= state->values[2] * 50 ; // pre delay
+    controlBuffer[5] = state->values[3] * 20000; // high damp
+    
+    cout << "Decay: " << controlBuffer[4] << "  Wet: " << controlBuffer[8] << "  Dry: " << controlBuffer[9]
+         << "  preDelay: " << controlBuffer[10] << "  highDamp " << controlBuffer[5] << endl;
+    
     descriptor -> connect_port ( pluginHandle , 0  , buffer );
     descriptor -> connect_port ( pluginHandle , 1  , buffer );
     descriptor -> connect_port ( pluginHandle , 2 , &outputBuffer[0] );
-    descriptor -> connect_port ( pluginHandle , 3 , &outputBuffer[0] );
+    descriptor -> connect_port ( pluginHandle , 3 , &outputBufferR[0] );
     
-    descriptor -> connect_port ( pluginHandle , 4, &controlBuffer[0] );
-    descriptor -> connect_port ( pluginHandle , 5, &controlBuffer[1] );
-    descriptor -> connect_port ( pluginHandle , 6, &controlBuffer[2] );
-    descriptor -> connect_port ( pluginHandle , 7, &controlBuffer[3] );
-    descriptor -> connect_port ( pluginHandle , 8, &controlBuffer[4] );
-    descriptor -> connect_port ( pluginHandle , 9, &controlBuffer[5] );
-    descriptor -> connect_port ( pluginHandle ,10, &controlBuffer[6] );
+    descriptor -> connect_port ( pluginHandle , 4, &controlBuffer[4] );
+    descriptor -> connect_port ( pluginHandle , 5, &controlBuffer[5] );
+    descriptor -> connect_port ( pluginHandle , 6, &controlBuffer[6] );
+    descriptor -> connect_port ( pluginHandle , 7, &controlBuffer[7] );
+    descriptor -> connect_port ( pluginHandle , 8, &controlBuffer[8] );
+    descriptor -> connect_port ( pluginHandle , 9, &controlBuffer[9] );
+    descriptor -> connect_port ( pluginHandle ,10, &controlBuffer[10] );
+    descriptor -> connect_port ( pluginHandle ,11, &controlBuffer[11] );
+    descriptor -> connect_port ( pluginHandle ,12, &controlBuffer[12] );
   }
   else if ( type == EFFECT_LOWPASS )
   {
@@ -337,22 +381,12 @@ void LadspaHost::process(int nframes, float* buffer)
     return;
   }
   
-  /*
-  // run_adding may go wrong for some plugins, check it!
-  if ( hasRunAdding )
+  descriptor->run( pluginHandle , nframes);
+  
+  for ( int i = 0; i < nframes; i++ )
   {
-    std::cout << "RUnadding" << std::endl;
-    descriptor->run_adding( pluginHandle , nframes);
+    buffer[i] = outputBuffer[i];
   }
-  else
-  { */
-    descriptor->run( pluginHandle , nframes);
-    
-    for ( int i = 0; i < nframes; i++ )
-    {
-      buffer[i] = outputBuffer[i];
-    }
-  //}
 }
 
 LadspaHost::~LadspaHost()

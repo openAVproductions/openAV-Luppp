@@ -47,6 +47,8 @@ class LadspaHost : public Effect
     
     int nframes;
     int samplerate;
+    
+    int pluginSoIndex;
     std::string pluginString;
     
     // all port number variables
@@ -82,6 +84,7 @@ class LadspaHost : public Effect
     
     // waste audio buffer
     std::vector<float> outputBuffer;
+    std::vector<float> outputBufferR;
     
     std::vector<int> inputPortIndexVector;
 };
