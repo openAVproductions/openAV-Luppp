@@ -132,8 +132,12 @@ int OfflineWorker::addTrack(int trackID)
 // use everywhere in Engine
 int OfflineWorker::loadAudioBuffer( int ID, int block, std::string name)
 {
-  // Stage one: Attempt to read the samples "info" from the .cfg file.
-  //  It stores sample lenght (beats) and other info
+  // Stage one: Create soundfile handle
+  SndfileHandle infile( name , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 1 , 44100);
+  
+  // Stage two: Attempt to read the samples "info" from the .cfg file.
+  //  It stores sample lenght (beats) and other info, if no config file
+  //  guess the info based on infile.frames() above
   
   std::string dirName = Glib::path_get_dirname ( name );
   std::string baseName= Glib::path_get_basename( name );
@@ -200,11 +204,13 @@ int OfflineWorker::loadAudioBuffer( int ID, int block, std::string name)
   }
   else
   {
-    cout << "Could not find a 'lupppSamplePack.cfg' file in dir, loading without info!" << endl;
+    cout << "Could not find a 'lupppSamplePack.cfg' file in dir, guessing info!" << endl;
+    int FPB = (int) top->samplerate / ( top->bpm / 60.0);
+    int numBeatsByDivision = infile.frames() / FPB;
+    cout << "Frames = " << infile.frames() << " FPB: " << FPB
+         << " numBeats by division: " << numBeatsByDivision << endl;
+    sampleNumBeats = numBeatsByDivision;
   }
-  
-  
-  SndfileHandle infile( name , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 1 , 44100);
   
   int size  = infile.frames();
   

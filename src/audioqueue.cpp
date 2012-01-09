@@ -21,8 +21,6 @@ AudioQueue::AudioQueue()
   {
     std::cout << "AudioQueue() Error locking memory!" << std::endl;
   }
-  
-  tempEvent = new float[100*44100];
 }
 
 void AudioQueue::push(int nframes, float* audioPointer)

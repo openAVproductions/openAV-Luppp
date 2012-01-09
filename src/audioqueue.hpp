@@ -22,7 +22,6 @@ class AudioQueue
   
   protected:
     jack_ringbuffer_t *buffer;
-    float* tempEvent;
 };
 
 #endif
