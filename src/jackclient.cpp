@@ -134,7 +134,7 @@ int JackClient::processRtQueue()
       // with a call to   state->getAudioBuffer( bufID );
       //cout << "STATE_SET_AUDIO_BUFFER, buffer id = " << flush;
       AudioBuffer* buffer = (AudioBuffer*)e->vPtr;
-      cout << buffer->getID() << endl;
+      //cout << buffer->getID() << endl;
       top->state.setAudioBuffer( buffer );
     }
     else if ( e->type == EE_SET_TRACK_SOURCE ) {

@@ -7,6 +7,7 @@
 using namespace std;
 
 #include "top.hpp"
+#include <sstream>
 
 #include "g_reverb.hpp"
 #include "g_lowpass.hpp"
@@ -69,6 +70,8 @@ Window::Window(Gtk::Main *k, Top* t) :
   
   masterOutputBox->pack_end( masterOutput, false, true, 0 );
   masterOutputBox->show_all();
+  
+  refBuilder->get_widget("eeLabel", eeLabel);
   
   refBuilder->get_widget("menuFileAddTrack", menuFileAddTrack);
   menuFileAddTrack->signal_activate().connect ( sigc::mem_fun( *this, &Window::sendAddTrack ) );
@@ -450,6 +453,13 @@ int Window::handleEvent()
   {
     top->toEngineEmptyEventQueue.push( new EngineEvent() );
   }
+  
+  // convert int to string
+  std::stringstream s;
+  int tmp = (int)(((2000 - numEvents) / 2000.f)* 100);
+  if ( tmp > 99 ) tmp = 99;
+  s << tmp << "%";
+  eeLabel->set_label( s.str() );
   
   return true;
 }

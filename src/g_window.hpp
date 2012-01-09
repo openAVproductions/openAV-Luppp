@@ -30,6 +30,7 @@ class Window
     Gtk::Main* kit;
     
     Gtk::HBox* mainBox;
+    Gtk::Label* eeLabel;
     Gtk::Window* window;
     Gtk::Table* mainTable;
     Gtk::HBox* trackEffectBox;
