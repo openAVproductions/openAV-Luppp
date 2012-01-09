@@ -14,7 +14,7 @@ GReverb::GReverb(Top* t, GuiStateStore* s)
   stateStore = s;
   
   cutoff = 0.40;
-  q = 1.0;
+  q = 0.0;
   
   mouseDown = false;
   
@@ -24,9 +24,9 @@ GReverb::GReverb(Top* t, GuiStateStore* s)
   signal_button_release_event().connect(sigc::mem_fun(*this, &GReverb::on_button_release_event) );
   signal_motion_notify_event().connect( sigc::mem_fun( *this, &GReverb::onMouseMove ) );
   
-  xSize = 225;
+  xSize = 110;
   
-  set_size_request(250, 216);
+  set_size_request(130, 216);
 }
 
 bool GReverb::redraw()
@@ -67,16 +67,16 @@ bool GReverb::on_expose_event(GdkEventExpose* event)
     cr->fill();
     
     // update value from stateStore
-    //std::cout << "GReverb ID " << ID << " getting state now" << endl;
-    float cutoffRangeZeroOne = stateStore->effectState.at(ID).values[0];
+    bool active     = stateStore->effectState.at(ID).active;
     
-    cutoff = (48.f / xSize) + (cutoffRangeZeroOne * 0.7541 );
-    
-    bool active = stateStore->effectState.at(ID).active;
+    float decayTime = stateStore->effectState.at(ID).values[0];
+    float dryWet    = stateStore->effectState.at(ID).values[1];
+    float highDamp  = stateStore->effectState.at(ID).values[2];
+    float preDelay  = stateStore->effectState.at(ID).values[3];
     
     int x = 10;
     int y = 22;
-    xSize = 225;
+    xSize = 110;
     ySize = 95;
     
     // works but a bit simple
@@ -90,7 +90,7 @@ bool GReverb::on_expose_event(GdkEventExpose* event)
     cr -> set_source_rgb (0.1,0.1,0.1);
     cr -> fill();
     
-    // draw "frequency guides"
+    // draw "guides"
     std::valarray< double > dashes(2);
     dashes[0] = 2.0;
     dashes[1] = 2.0;
@@ -110,66 +110,60 @@ bool GReverb::on_expose_event(GdkEventExpose* event)
     cr->stroke();
     cr->unset_dash();
     
-    // move to bottom left, draw line to middle left
-    cr->move_to( x , y + ySize );
-    cr->line_to( x , y + (ySize/2));
+    // draw from bottom left up to dryWet point
+    cr->move_to( x, y + ySize );
+    cr->line_to( x, y + (ySize*0.75) );
     
-    int startHorizontalLine = xSize* (cutoff - 0.4)  < 50;
-    if ( startHorizontalLine < 50 )
-      startHorizontalLine = 10;
-      
-    cr->line_to( startHorizontalLine, y + (ySize/2) ); // horizontal line to start of curve
+    // dry wet line
+    cr->line_to( x + (xSize*0.25), y + ySize*0.25 + (ySize*0.5)*(1-dryWet) );
     
-    cr->curve_to( xSize* (cutoff -0.1), y+(ySize*0.5),   // control point 1
-                  xSize* (cutoff - 0.08), y+(ySize*0.3),   // control point 2
-                  xSize* cutoff        , y+(ySize*0.3));  // end of curve 1, start curve 2
+    // decay line
+    cr->line_to( x + (xSize*0.4) + (xSize*0.6)*decayTime, y + (ySize*0.75) );
     
-    int xSizeCP1 = xSize* (cutoff + 0.03);
-    int xSizeCP2 = xSize* (cutoff + 0.08);
-    int xSizeEnd = xSize* (cutoff + 0.15);
+    // bottom right
+    cr->line_to( x + xSize, y + (ySize*0.75) );
+    cr->line_to( x + xSize, y + ySize );
     
-    if ( xSizeCP1 > 234 )
-      xSizeCP1 = 234;
-    if ( xSizeCP2 > 234 )
-      xSizeCP2 = 234;
-    if ( xSizeEnd > 234 )
-      xSizeEnd = 234;
-    
-    cr->curve_to( xSizeCP1, y+(ySize*0.3),  // control point 1
-                  xSizeCP2, y+(ySize*0.3), // control point 2
-                  xSizeEnd, y+(ySize)   ); // end of curve on floor
+    cr->close_path();
     
     if ( active )
       setColour(cr, COLOUR_BLUE_1, 0.2 );
     else
       setColour(cr, COLOUR_GREY_1, 0.2 );
-    cr->close_path();
+    cr->set_line_width(2.5);
     cr->fill_preserve();
     
-    // stroke cutoff line
-    cr->set_line_width(2.5);
     if ( active )
       setColour(cr, COLOUR_BLUE_1 );
     else
       setColour(cr, COLOUR_GREY_1 );
     cr->stroke();
     
-    // click center
+    
+    // click center (range = 1/2 the range of the widget)
     if ( active )
       setColour(cr, COLOUR_ORANGE_1, 0.9 );
     else
       setColour(cr, COLOUR_GREY_1, 0.9 );
-    cr->arc( xSize*cutoff, ySize*q, 7, 0, 6.2830 );
+    
+    float xArc = x + (xSize * 0.25) + (xSize*0.5) * decayTime;
+    float yArc = y + (ySize * 0.75) - (ySize*0.5) * dryWet;
+    
+    //cout << " Arc x,y : " << xArc << ", " << yArc <<endl;
+    cr->arc(xArc, yArc, 6 + 5 * preDelay , 0, 6.2830 );
     cr->stroke();
     
+    
     // dials
-    Dial(cr, active, 70, 140, cutoffRangeZeroOne, DIAL_MODE_NORMAL);
-    Dial(cr, active, 150,140, q                 , DIAL_MODE_NORMAL);
+    Dial(cr, active, 22, 125, decayTime         , DIAL_MODE_NORMAL);
+    Dial(cr, active, 68, 125, dryWet            , DIAL_MODE_NORMAL);
+    Dial(cr, active, 22, 165, preDelay          , DIAL_MODE_NORMAL);
+    Dial(cr, active, 68, 165, highDamp          , DIAL_MODE_NORMAL);
     
     // outline
     setColour(cr, COLOUR_GREY_2 );
     cr->rectangle( x, y , xSize, ySize );
-    cr->set_line_width(3);
+    cr->set_line_width(4);
     cr->stroke();
     
     TitleBar(cr, 0,0 , 250, 216, "Reverb", active);
@@ -264,10 +258,11 @@ bool GReverb::on_button_press_event(GdkEventButton* event)
     
     if ( event->y < 20 )
     {
-      std::cout << "GReverb Enable / Disable click event!" << std::endl;
+      std::cout << "GReverb Enable / Disable click event!" << std::flush;
       EngineEvent* x = new EngineEvent();
       x->setTrackDeviceActive(ID, !stateStore->effectState.at(ID).active );
       top->toEngineQueue.push(x);
+      cout << " Done!" << endl;
     }
     
     return true; //It's been handled.
