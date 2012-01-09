@@ -141,12 +141,7 @@ bool GLimiter::on_expose_event(GdkEventExpose* event)
     cr->set_line_cap(Cairo::LINE_CAP_ROUND);
     cr->move_to( x , y + ySize - makeup );
     cr->line_to( startx, starty - makeup );
-    
-    // draw curve
-    cr->curve_to( cp1x, cp1y, cp2x, cp2y, endx, endy );
-    
-    cr->line_to(x + xSize, y + (ySize/4)*ratio + (ySize)*(1-thresh)*(0.5*ratio) - makeup );
-    
+    cr->line_to(x + xSize, y - makeup );
     cr->line_to(x + xSize, y + ySize );
     cr->line_to(x , y + ySize );
     cr->close_path();
@@ -162,6 +157,16 @@ bool GLimiter::on_expose_event(GdkEventExpose* event)
     cr->set_line_width(2.5);
     if ( active )
       setColour(cr, COLOUR_BLUE_1 );
+    else
+      setColour(cr, COLOUR_GREY_1 );
+    cr->stroke();
+    
+    // draw threshold as red line across widget
+    cr->move_to(x, y+ ySize*0.25 + ySize*0.5*(1-thresh));
+    cr->line_to(x + xSize, y+ ySize*0.25 + ySize*0.5 * (1-thresh) );
+    
+    if ( active )
+      setColour(cr, COLOUR_ORANGE_1 );
     else
       setColour(cr, COLOUR_GREY_1 );
     cr->stroke();
@@ -192,6 +197,7 @@ bool GLimiter::on_expose_event(GdkEventExpose* event)
     cr->fill();
     */
     
+    /*
     // click center ( range = 1/2 the range of the widget
     if ( active )
       setColour(cr, COLOUR_ORANGE_1, 0.9 );
@@ -204,9 +210,10 @@ bool GLimiter::on_expose_event(GdkEventExpose* event)
     //cout << " Arc x,y : " << xArc << ", " << yArc <<endl;
     cr->arc(xArc, yArc, 7, 0, 6.2830 );
     cr->stroke();
+    */
     
     // dials
-    Dial(cr, active, 48, 125, makeupZeroOne, DIAL_MODE_PAN);
+    Dial(cr, active, 48, 125, makeupZeroOne, DIAL_MODE_NORMAL);
     Dial(cr, active, 48, 165, thresh       , DIAL_MODE_NORMAL);
     
     // outline

@@ -89,7 +89,7 @@ namespace Luppp
           cr->set_line_width(1.2);
           float triangeX = x + 16;
           float triangeY = y + 8;
-          if ( ( value < -0.1 || value > 0.1 ) && active )
+          if ( ( value < -0.1 || value > 0.1 ) && !active )
             setColour(cr, COLOUR_GREY_4 );
           else
             setColour(cr, COLOUR_ORANGE_1 );
