@@ -70,6 +70,7 @@ def build(ctx):
               'src/g_equalizer.cpp',
               'src/g_transient.cpp',
               'src/g_progress.cpp',
+              'src/g_limiter.cpp',
               'src/g_compressor.cpp',
               'src/g_frequencygraph.cpp',
               'src/g_titlebar.cpp',

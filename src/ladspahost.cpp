@@ -295,7 +295,7 @@ void LadspaHost::process(int nframes, float* buffer)
   }
   else if ( type == EFFECT_LIMITER )
   {
-    controlBuffer[0] = (state->values[0] * 40) - 20; // input gain
+    controlBuffer[0] = state->values[0] * 20; // input gain
     controlBuffer[1] = -20 + (state->values[1] * 20); // limit
     controlBuffer[2] = 0.02; // release (time in seconds, 0.01 -> 2 )
     

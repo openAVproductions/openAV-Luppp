@@ -11,6 +11,7 @@ using namespace std;
 
 #include "g_reverb.hpp"
 #include "g_lowpass.hpp"
+#include "g_limiter.hpp"
 #include "g_highpass.hpp"
 #include "g_equalizer.hpp"
 #include "g_beatsmash.hpp"
@@ -415,7 +416,7 @@ int Window::handleEvent()
           case EFFECT_BEATSMASH:    trackVector.at(t).widgetVector.push_back( new GBeatSmash  (top, &guiState) ); break;
           case EFFECT_TRANSIENT:    trackVector.at(t).widgetVector.push_back( new GTransient  (top, &guiState) ); break;
           case EFFECT_COMPRESSOR:   trackVector.at(t).widgetVector.push_back( new GCompressor (top, &guiState) ); break;
-          case EFFECT_LIMITER:      trackVector.at(t).widgetVector.push_back( new GCompressor (top, &guiState) ); break;
+          case EFFECT_LIMITER:      trackVector.at(t).widgetVector.push_back( new GLimiter    (top, &guiState) ); break;
           case EFFECT_PARAMETRIC_EQ:trackVector.at(t).widgetVector.push_back( new Equalizer   (     &guiState) ); break;
           default: newEffect = false; break;
         }
