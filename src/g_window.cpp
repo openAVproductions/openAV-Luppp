@@ -527,7 +527,13 @@ void Window::addTrack()
   tracklabelList.push_back( new Gtk::Label( trackName.str() ) );
   std::list<Gtk::Label*>::iterator labelIter = tracklabelList.begin();
   std::advance(labelIter,numTracks);
-  mainTable->attach( **labelIter, numTracks, numTracks+1, 0, 1);
+  
+  Gtk::EventBox* tmpBox = new Gtk::EventBox();
+  tmpBox->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("green"));
+  
+  tmpBox->add(**labelIter);
+  
+  mainTable->attach( *tmpBox, numTracks, numTracks+1, 0, 1);
   
   // input selector
   trackinputList.push_back( new Gtk::ComboBoxText() );
@@ -535,7 +541,7 @@ void Window::addTrack()
   std::advance(inputIter,numTracks);
   (**inputIter).append_text("input");
   (**inputIter).set_active(0);
-  mainTable->attach( **inputIter, numTracks, numTracks+1, 1, 2);
+  //mainTable->attach( **inputIter, numTracks, numTracks+1, 1, 2);
   
   // clip selector
   clipselectorList.push_back( new ClipSelector( top, &guiState ) );
