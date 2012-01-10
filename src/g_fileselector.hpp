@@ -21,10 +21,15 @@ class FileSelector : public Gtk::DrawingArea
     Top* top;
     GuiStateStore* stateStore;
     
+    int widgetSizeX;
+    
     int block;
     
     std::string currentDir;
     std::list<std::string> fileList;
+    
+    // helper functions
+    void setWidgetSizeFromList();
     
     //Override default signal handler:
     bool on_expose_event			(GdkEventExpose* event);

@@ -28,7 +28,12 @@ InstrumentSelector::InstrumentSelector(Top* t, GuiStateStore* s)
   // drag function connect
   signal_drag_data_get().connect(sigc::mem_fun(*this, &InstrumentSelector::dragFunction ));
   
-  set_size_request(200,450);
+  // add these effect strings to the "selectable" list
+  fileList.push_back( "Buffer player" );
+  fileList.push_back( "White Noise gen" );
+  fileList.push_back( "Fluidsynth player" );
+  
+  set_size_request(200,18 * fileList.size() );
 }
 
 bool InstrumentSelector::redraw()
@@ -68,50 +73,32 @@ bool InstrumentSelector::on_expose_event(GdkEventExpose* event)
     setColour(cr, COLOUR_GREY_3);
     cr->fill();
     
-    /*
-    currentDir = stateStore->getLastDir();
-    Glib::Dir dir ( currentDir );
-    */
-    list<string> tmpList;
-    
-    // swap contents of tmpList & class List
-    fileList.clear();
-    
-    std::list<std::string>::iterator i = tmpList.begin();
+    // instruments available are hard coded in constructor
+    std::list<std::string>::iterator i = fileList.begin();
     
     int x = 0;
     int y = 0;
-    for(; i != tmpList.end(); i++ )
+    for(; i != fileList.end(); i++ )
     {
-      int found = i->find(".wav");
+      // background colour
+      setColour(cr, COLOUR_GREY_4);
+      cr->set_line_width(0.9);
+      cr->rectangle (x,y, event->area.width, 17);
+      cr->fill();
       
-      if (found != string::npos )
-      {
-        cout << "found wav @ " << found << ", contents =  " << *i << endl;
-        
-        // add the file to the "real" list of samples
-        fileList.push_back( *i );
-        
-        // background colour
-        setColour(cr, COLOUR_GREY_4);
-        cr->set_line_width(0.9);
-        cr->rectangle (x,y, event->area.width, 17);
-        cr->fill();
-        
-        // draw "play square" on left of block
-        setColour(cr, COLOUR_GREY_3);
-        cr->rectangle (x+1, y+1, 15, 15);
-        cr->fill();
-        
-        cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_NORMAL);
-        cr->set_font_size ( 13 );
-        cr->move_to ( x + 22, (y + 13) );
-        setColour(cr, COLOUR_GREY_1);
-        cr->show_text ( *i );
-        
-        
-        y += 18;
-      }
+      // draw "play square" on left of block
+      setColour(cr, COLOUR_GREY_3);
+      cr->rectangle (x+1, y+1, 15, 15);
+      cr->fill();
+      
+      cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_NORMAL);
+      cr->set_font_size ( 13 );
+      cr->move_to ( x + 22, (y + 13) );
+      setColour(cr, COLOUR_GREY_1);
+      cr->show_text ( *i );
+      
+      
+      y += 18;
     }
     
     

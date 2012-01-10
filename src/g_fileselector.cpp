@@ -28,7 +28,7 @@ FileSelector::FileSelector(Top* t, GuiStateStore* s)
   // drag function connect
   signal_drag_data_get().connect(sigc::mem_fun(*this, &FileSelector::dragFunction ));
   
-  set_size_request(200,450);
+  widgetSizeX = 200;
 }
 
 bool FileSelector::redraw()
@@ -42,6 +42,11 @@ bool FileSelector::redraw()
       win->invalidate_rect(r, false);
   }
   return true;
+}
+
+void FileSelector::setWidgetSizeFromList()
+{
+  set_size_request(200, 18 * fileList.size() );
 }
 
 
@@ -68,48 +73,57 @@ bool FileSelector::on_expose_event(GdkEventExpose* event)
     setColour(cr, COLOUR_GREY_3);
     cr->fill();
     
-    currentDir = stateStore->getLastDir();
-    Glib::Dir dir ( currentDir );
-    list<string> tmpList(dir.begin(), dir.end());
+    // update contents of lists only when dir changed
+    if ( currentDir != stateStore->getLastDir() )
+    {
+      currentDir = stateStore->getLastDir();
+      Glib::Dir dir ( currentDir );
+      list<string> tmpList(dir.begin(), dir.end());
+      
+      // empty current contents
+      fileList.clear();
+      
+      std::list<std::string>::iterator i = tmpList.begin();
+      for(; i != tmpList.end(); i++ )
+      {
+        int found = i->find(".wav");
+        
+        if (found != string::npos )
+        {
+          cout << "found wav @ " << found << ", contents =  " << *i << endl;
+          // add the filename to the .wav fileList
+          fileList.push_back( *i );
+        }
+      }
+      // finally resize widget based on new list size
+      setWidgetSizeFromList();
+    }
     
-    // swap contents of tmpList & class List
-    fileList.clear();
-    
-    std::list<std::string>::iterator i = tmpList.begin();
+    std::list<std::string>::iterator i = fileList.begin();
     
     int x = 0;
     int y = 0;
-    for(; i != tmpList.end(); i++ )
+    for(; i != fileList.end(); i++ )
     {
-      int found = i->find(".wav");
+      // background colour
+      setColour(cr, COLOUR_GREY_4);
+      cr->set_line_width(0.9);
+      cr->rectangle (x,y, event->area.width, 17);
+      cr->fill();
       
-      if (found != string::npos )
-      {
-        cout << "found wav @ " << found << ", contents =  " << *i << endl;
-        
-        // add the file to the "real" list of samples
-        fileList.push_back( *i );
-        
-        // background colour
-        setColour(cr, COLOUR_GREY_4);
-        cr->set_line_width(0.9);
-        cr->rectangle (x,y, event->area.width, 17);
-        cr->fill();
-        
-        // draw "play square" on left of block
-        setColour(cr, COLOUR_GREY_3);
-        cr->rectangle (x+1, y+1, 15, 15);
-        cr->fill();
-        
-        cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_NORMAL);
-        cr->set_font_size ( 13 );
-        cr->move_to ( x + 22, (y + 13) );
-        setColour(cr, COLOUR_GREY_1);
-        cr->show_text ( *i );
-        
-        
-        y += 18;
-      }
+      // draw "play square" on left of block
+      setColour(cr, COLOUR_GREY_3);
+      cr->rectangle (x+1, y+1, 15, 15);
+      cr->fill();
+      
+      cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_NORMAL);
+      cr->set_font_size ( 13 );
+      cr->move_to ( x + 22, (y + 13) );
+      setColour(cr, COLOUR_GREY_1);
+      cr->show_text ( *i );
+      
+      
+      y += 18;
     }
     
     

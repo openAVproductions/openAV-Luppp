@@ -39,7 +39,7 @@ EffectSelector::EffectSelector(Top* t, GuiStateStore* s)
   fileList.push_back( "Limiter" );
   fileList.push_back( "Trance Gate" );
   
-  set_size_request(200,450);
+  set_size_request(200,18 * fileList.size() );
 }
 
 bool EffectSelector::redraw()
