@@ -20,7 +20,9 @@ using namespace std;
 
 Window::Window(Gtk::Main *k, Top* t) :
   masterOutput(t, &guiState),
-  fileSelector(t, &guiState)
+  fileSelector(t, &guiState),
+  effectSelector(t, &guiState),
+  instrumentSelector(t, &guiState)
 {
   // store the "kit" instance from main to run it at the end of the
   // constructor.
@@ -63,14 +65,20 @@ Window::Window(Gtk::Main *k, Top* t) :
   
   refBuilder->get_widget("mainBox", mainBox);
   
-  refBuilder->get_widget("fileChooserBox", fileChooserBox);
   refBuilder->get_widget("fileChooserPane", fileChooserPane);
+  
+  // left pane selection widgets
+  refBuilder->get_widget("fileChooserBox", fileChooserBox);
   fileChooserBox->pack_start( fileSelector, true, true );
   fileSelector.show();
   
-  audioFileFilter = new Gtk::FileFilter();
-  audioFileFilter->set_name("Wav files");
-  audioFileFilter->add_mime_type("audio/x-wav");
+  refBuilder->get_widget("effectChooserBox", effectChooserBox);
+  effectChooserBox->pack_start( effectSelector, true, true );
+  effectSelector.show();
+  
+  refBuilder->get_widget("instrumentChooserBox", instrumentChooserBox);
+  instrumentChooserBox->pack_start( instrumentSelector, true, true );
+  instrumentSelector.show();
   
   refBuilder->get_widget("fileBrowserToggle", fileBrowserToggle);
   fileBrowserToggle->signal_clicked().connect ( sigc::mem_fun( *this, &Window::setFileChooserPane ) );

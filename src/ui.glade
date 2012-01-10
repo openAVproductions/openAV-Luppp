@@ -445,12 +445,24 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <child>
-                          <object class="GtkBox" id="fileChooserBox1">
+                          <object class="GtkBox" id="instrumentChooserBo">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="orientation">vertical</property>
                             <child>
-                              <placeholder/>
+                              <object class="GtkBox" id="instrumentChooserBox">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="orientation">vertical</property>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
                             </child>
                           </object>
                         </child>
@@ -473,7 +485,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <child>
-                          <object class="GtkBox" id="fileChooserBox2">
+                          <object class="GtkBox" id="effectChooserBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="orientation">vertical</property>

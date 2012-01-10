@@ -17,7 +17,9 @@ class Top;
 #include "g_fileselector.hpp"
 #include "g_masteroutput.hpp"
 #include "g_clipselector.hpp"
+#include "g_effectselector.hpp"
 #include "trackoutputstate.hpp"
+#include "g_instrumentselector.hpp"
 
 #include "g_waveview.hpp"
 
@@ -38,8 +40,10 @@ class Window
     Gtk::Box* masterOutputBox;
     
     Gtk::Box* fileChooserBox;
+    Gtk::Box* effectChooserBox;
+    Gtk::Box* instrumentChooserBox;
+    
     Gtk::Paned* fileChooserPane;
-    Gtk::FileFilter* audioFileFilter;
     Gtk::ToggleButton* fileBrowserToggle;
     
     Gtk::MenuItem* menuFileAddTrack;
@@ -62,6 +66,8 @@ class Window
     void setEffectsBox(int trackID);
     
     FileSelector fileSelector;
+    EffectSelector effectSelector;
+    InstrumentSelector instrumentSelector;
     
     GWaveView waveview;
     GWaveView inputWaveview;

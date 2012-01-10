@@ -66,6 +66,8 @@ def build(ctx):
               'src/g_waveview.cpp',
               'src/g_reverb.cpp',
               'src/g_fileselector.cpp',
+              'src/g_effectselector.cpp',
+              'src/g_instrumentselector.cpp',
               'src/g_beatsmash.cpp',
               'src/g_widgetbase.cpp',
               'src/g_statestore.cpp',
