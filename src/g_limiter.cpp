@@ -68,11 +68,13 @@ bool GLimiter::on_expose_event(GdkEventExpose* event)
     }
     
     // update value from stateStore
-    float makeupZeroOne = stateStore->effectState.at(ID).values[0];
+    float makeupZeroOne = 1 - stateStore->effectState.at(ID).values[0];
     float thresh = stateStore->effectState.at(ID).values[1];
     
+    cout << "Limiter effectState[0] = " << stateStore->effectState.at(ID).values[0] << endl;
+    
     float ratio = 1.f; // hack on compressor code, will be "inf" compression
-    float makeup = makeupZeroOne * (ySize * 0.5);
+    float makeup = (makeupZeroOne) * (ySize * 0.5);
     
     bool active = stateStore->effectState.at(ID).active;
     
@@ -161,15 +163,21 @@ bool GLimiter::on_expose_event(GdkEventExpose* event)
       setColour(cr, COLOUR_GREY_1 );
     cr->stroke();
     
-    // draw threshold as red line across widget
+    // draw threshold as dotted orange line across widget
     cr->move_to(x, y+ ySize*0.25 + ySize*0.5*(1-thresh));
     cr->line_to(x + xSize, y+ ySize*0.25 + ySize*0.5 * (1-thresh) );
     
     if ( active )
-      setColour(cr, COLOUR_ORANGE_1 );
+      setColour(cr, COLOUR_RECORD_RED );
     else
       setColour(cr, COLOUR_GREY_1 );
+    
+    dashes[0] = 10;
+    dashes[1] = 4;
+    cr->set_dash (dashes, 0.0);
+    cr->set_line_width(1.7);
     cr->stroke();
+    cr->unset_dash();
     
     // gain line can go beyond the "graph area", and it would be hard to
     // clip values the right amout with the curve. Instead just cover it
@@ -179,38 +187,18 @@ bool GLimiter::on_expose_event(GdkEventExpose* event)
     cr->fill();
     
     
-    /*
-    // debug rectangles of CP's
-    setColour(cr, COLOUR_ORANGE_1);
-    cr->rectangle(cp1x,cp1y,3,3);
-    cr->rectangle(cp2x,cp2y,3,3);
-    cr->fill();
-    // start & end
-    setColour(cr, COLOUR_GREEN_1);
-    cr->rectangle(startx,starty,3,3);
-    cr->rectangle(endx  ,endy  ,3,3);
-    cr->fill();
-    
-    // threshold point
-    setColour(cr, COLOUR_PURPLE_1);
-    cr->rectangle( xThresh, yThresh,3,3);
-    cr->fill();
-    */
-    
-    /*
     // click center ( range = 1/2 the range of the widget
     if ( active )
       setColour(cr, COLOUR_ORANGE_1, 0.9 );
     else
       setColour(cr, COLOUR_GREY_1, 0.9 );
-    
     float xArc = x + (xSize * 0.25) + (xSize*0.5) * thresh;
-    float yArc = y + (ySize * 0.75)  - makeup;
+    float yArc = y + (ySize * 0.75)  - ySize*0.5* makeupZeroOne;
     
     //cout << " Arc x,y : " << xArc << ", " << yArc <<endl;
+    cr->set_line_width(2.7);
     cr->arc(xArc, yArc, 7, 0, 6.2830 );
     cr->stroke();
-    */
     
     // dials
     Dial(cr, active, 48, 125, makeupZeroOne, DIAL_MODE_NORMAL);
@@ -252,25 +240,29 @@ bool GLimiter::onMouseMove(GdkEventMotion* event)
 {
   if ( mouseDown )
   {
-    if ( (event->x > 50) && (event->x < 216) )
+    int x = 10;
+    int y = 22;
+    if ( (event->x > x + xSize*0.25) && (event->x < x + xSize*0.75) )
     {
-      /*
-      cutoff = event->x / float(xSize);
+      
+      float gain = (event->x - (x + xSize*0.25)) / float(xSize*0.5);
+      
+      cout << "Limiter Gain : " << gain << endl;
       
       EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(0,0,0, cutoff);
+      x->setPluginParameter(ID, 1, 1, gain);
       top->toEngineQueue.push(x);
-      */
     }
     
-    if ( (event->y > 35) && (event->y < 103) )
+    if ( (event->y > y + ySize*0.25) && (event->y < y+ySize*0.75) )
     {
-      /*
-      q = event->y / float(ySize);
+      float limit = (event->y - (y + ySize*0.25)) / float(ySize*0.5);
+      
+      cout << "Limiter limit : " << limit << endl;
+      
       EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(0,0,1, q );
+      x->setPluginParameter(ID, 0, 0, limit);
       top->toEngineQueue.push(x);
-      */
     }
     //std::cout << "GLimiter: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
   }
@@ -282,37 +274,48 @@ bool GLimiter::on_button_press_event(GdkEventButton* event)
   {
     int x = 10;
     int y = 22;
-    xSize = 225;
-    ySize = 95;
     
     // graph area
-    if ( (event->x > 10) && (event->x < 235) &&
-         (event->y > 22) && (event->y < 117 ) )
+    if ( (event->x > x) && (event->x < x + xSize) &&
+         (event->y > y) && (event->y < y + ySize ) )
     {
-      /*
-      std::cout << "graph area click!" << std::endl;
+      
+      std::cout << "graph area click!" << std::flush;
       mouseDown = true; // for pointer motion "drag" operations
       
-      int evX = event->x;
-      // inform engine of "click" and position co-efficents as such
-      if ( evX < 50) evX = 50;
-      if ( evX > 216)evX = 216;
+      cout << " x before = " << event->x;
       
-      stateStore->cutoff = evX / float(xSize);
-      cutoff = stateStore->cutoff;
+      // clamp click coords to acceptable grid, then send EE
+      if ( event->x < x + (xSize*0.25)){
+        cout << "  X smaller than! Clipping  ";
+        event->x = x + xSize*0.25;
+      }
+      else if (event->x > x + xSize*0.75) {
+        event->x = x + xSize*0.75;
+      }
+      
+      cout << "  x afterClip = " << event->x;
+      
+      float gain = (event->x - (x + xSize*0.25)) / float(xSize*0.5);
+      cout << "  final Limiter Clicked Gain : " << gain << endl;
       EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(0,0,0, cutoff );
+      x->setPluginParameter(ID, 1, 1, gain);
       top->toEngineQueue.push(x);
       
-      int evY = event->y;
-      if (evY < 35 ) evY = 35;
-      if (evY > 103) evY = 103;
       
-      q = evY / float(ySize);
+      if (event->y < y + ySize*0.25) {
+        event->y = y + ySize*0.25;
+      }
+      else if (event->y > y+ySize*0.75 ) {
+        event->y = y + ySize*0.75;
+      }
+    
+      float limit = (event->y - (y + ySize*0.25)) / float(ySize*0.5);
+      cout << "Limiter Clicked limit : " << limit << endl;
       x = new EngineEvent();
-      x->setPluginParameter(0,0,1, q );
+      x->setPluginParameter(ID, 0, 0, limit);
       top->toEngineQueue.push(x);
-      */
+      
     }
     
     if ( event->y < 20 )

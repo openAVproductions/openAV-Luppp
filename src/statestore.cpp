@@ -371,6 +371,9 @@ void StateStore::setPluginParameter(int ID, int param, float value)
   else
   {
     //std::cout << "StateStore::setPluginParam() writing value " << value << " to param " << param << endl;
+    if ( value > 1.f ) value = 1.f;
+    if ( value < 0.f ) value = 0.f;
+    
     (*iter)->values[param] = value;
     
     // bounce on to GUI (-1 not used)
