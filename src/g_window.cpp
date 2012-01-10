@@ -110,6 +110,9 @@ Window::Window(Gtk::Main *k, Top* t) :
   // create a track when first idle
   Glib::signal_idle().connect( sigc::bind_return( sigc::mem_fun(*this, &Window::sendAddTrack ), false ) );
   
+  window->set_default_icon_from_file( "lupppIcon.png" );
+  window->set_default_size( 1000, 350 );
+  
   // last thing, now we're starting the GUI main loop
   kit->run(*window);
 }
