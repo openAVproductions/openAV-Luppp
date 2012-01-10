@@ -28,7 +28,7 @@ FileSelector::FileSelector(Top* t, GuiStateStore* s)
   // drag function connect
   signal_drag_data_get().connect(sigc::mem_fun(*this, &FileSelector::dragFunction ));
   
-  set_size_request(200,-1);
+  set_size_request(200,450);
 }
 
 bool FileSelector::redraw()
