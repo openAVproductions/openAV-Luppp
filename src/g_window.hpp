@@ -35,6 +35,10 @@ class Window
     Gtk::Table* mainTable;
     Gtk::HBox* trackEffectBox;
     Gtk::Box* masterOutputBox;
+    Gtk::Paned* fileChooserPane;
+    
+    Gtk::FileFilter* audioFileFilter;
+    Gtk::ToggleButton* fileBrowserToggle;
     
     Gtk::MenuItem* menuAddReverb;
     Gtk::MenuItem* menuAddLowpass;
@@ -60,6 +64,7 @@ class Window
     
     // helper functions
     void redrawEffectBox();
+    void setFileChooserPane();
     
     void sendAddTrack();
     

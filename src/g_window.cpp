@@ -62,6 +62,15 @@ Window::Window(Gtk::Main *k, Top* t) :
   
   refBuilder->get_widget("mainBox", mainBox);
   
+  refBuilder->get_widget("fileChooserPane", fileChooserPane);
+  
+  audioFileFilter = new Gtk::FileFilter();
+  audioFileFilter->set_name("Wav files");
+  audioFileFilter->add_mime_type("audio/x-wav");
+  
+  refBuilder->get_widget("fileBrowserToggle", fileBrowserToggle);
+  fileBrowserToggle->signal_clicked().connect ( sigc::mem_fun( *this, &Window::setFileChooserPane ) );
+  
   refBuilder->get_widget("mainTable", mainTable);
   refBuilder->get_widget("trackEffectBox", trackEffectBox);
   refBuilder->get_widget("masterOutputBox", masterOutputBox);
@@ -116,6 +125,21 @@ Window::Window(Gtk::Main *k, Top* t) :
   // last thing, now we're starting the GUI main loop
   kit->run(*window);
 }
+
+void Window::setFileChooserPane()
+{
+  if ( fileBrowserToggle->get_active() )
+  {
+    //cout << "FileBrowserToggle active, px = 200" << endl;
+    fileChooserPane->set_position( 200 );
+  }
+  else
+  {
+    //cout << "FileBrowserToggle disabled, px = 0" << endl;
+    fileChooserPane->set_position( 0 );
+  }
+}
+
 
 void Window::sendAddTrack()
 {

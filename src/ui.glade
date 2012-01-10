@@ -398,9 +398,10 @@
           </packing>
         </child>
         <child>
-          <object class="GtkPaned" id="paned2">
+          <object class="GtkPaned" id="fileChooserPane">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="position_set">True</property>
             <child>
               <object class="GtkRecentChooserWidget" id="recentchooser1">
                 <property name="visible">True</property>
