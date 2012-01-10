@@ -80,19 +80,22 @@ bool FileSelector::on_expose_event(GdkEventExpose* event)
     list<string> tmpList(dir.begin(), dir.end());
     
     // swap contents of tmpList & class List
-    fileList.swap( tmpList );
+    fileList.clear();
     
-    std::list<std::string>::iterator i = fileList.begin();
+    std::list<std::string>::iterator i = tmpList.begin();
     
     int x = 0;
     int y = 0;
-    for(; i != fileList.end(); i++ )
+    for(; i != tmpList.end(); i++ )
     {
-      bool found = i->find("wav");
+      int found = i->find(".wav");
       
-      if (found != string::npos)
+      if (found != string::npos )
       {
         cout << "found wav @ " << found << ", contents =  " << *i << endl;
+        
+        // add the file to the "real" list of samples
+        fileList.push_back( *i );
         
         // background colour
         setColour(cr, COLOUR_GREY_4);
