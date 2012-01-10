@@ -90,6 +90,9 @@ Window::Window(Gtk::Main *k, Top* t) :
   refBuilder->get_widget("menuFileAddTrack", menuFileAddTrack);
   menuFileAddTrack->signal_activate().connect ( sigc::mem_fun( *this, &Window::sendAddTrack ) );
   
+  refBuilder->get_widget("menuFileQuit", menuFileQuit);
+  menuFileQuit->signal_activate().connect ( sigc::mem_fun( *this, &Window::quit ) );
+  
   refBuilder->get_widget("menuAddLowpass", menuAddLowpass);
   menuAddLowpass->signal_activate().connect ( sigc::bind (sigc::mem_fun( *this, &Window::addEffect ), EFFECT_LOWPASS ) );
   
@@ -144,6 +147,12 @@ void Window::setFileChooserPane()
   }
 }
 
+
+void Window::quit()
+{
+  cout << "menuFileQuit clicked, exiting now!" << endl;
+  kit->quit();
+}
 
 void Window::sendAddTrack()
 {

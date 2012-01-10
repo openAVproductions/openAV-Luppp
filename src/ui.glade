@@ -126,7 +126,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkImageMenuItem" id="imagemenuitem5">
+                          <object class="GtkImageMenuItem" id="menuFileQuit">
                             <property name="label">gtk-quit</property>
                             <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>

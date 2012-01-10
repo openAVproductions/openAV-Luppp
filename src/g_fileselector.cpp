@@ -20,7 +20,7 @@ FileSelector::FileSelector(Top* t, GuiStateStore* s)
   
   // drag target types
   std::list<Gtk::TargetEntry> listTargets;
-  listTargets.push_back( Gtk::TargetEntry("STRING") );
+  listTargets.push_back( Gtk::TargetEntry("AUDIO_FILE_STRING") );
   
   // drag source
   drag_source_set(listTargets);
@@ -67,13 +67,6 @@ bool FileSelector::on_expose_event(GdkEventExpose* event)
         event->area.width, event->area.height);
     setColour(cr, COLOUR_GREY_3);
     cr->fill();
-    
-    
-    cr->move_to(event->area.x, event->area.y);
-    cr->line_to(event->area.width, event->area.height);
-    setColour(cr, COLOUR_ORANGE_1 );
-    cr->stroke();
-    
     
     currentDir = stateStore->getLastDir();
     Glib::Dir dir ( currentDir );

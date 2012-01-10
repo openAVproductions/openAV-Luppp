@@ -25,7 +25,7 @@ ClipSelector::ClipSelector(Top* t, GuiStateStore* s)
   
   // drop target types
   std::list<Gtk::TargetEntry> listTargets;
-  listTargets.push_back( Gtk::TargetEntry("STRING") );
+  listTargets.push_back( Gtk::TargetEntry("AUDIO_FILE_STRING") );
   
   // make drop destination
   drag_dest_set(listTargets);

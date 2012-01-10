@@ -42,11 +42,13 @@ class Window
     Gtk::FileFilter* audioFileFilter;
     Gtk::ToggleButton* fileBrowserToggle;
     
+    Gtk::MenuItem* menuFileAddTrack;
+    Gtk::MenuItem* menuFileQuit;
+    
     Gtk::MenuItem* menuAddReverb;
     Gtk::MenuItem* menuAddLowpass;
     Gtk::MenuItem* menuAddLimiter;
     Gtk::MenuItem* menuAddHighpass;
-    Gtk::MenuItem* menuFileAddTrack;
     Gtk::MenuItem* menuAddTransient;
     Gtk::MenuItem* menuAddCompressor;
     Gtk::MenuItem* menuAddParametric;
@@ -71,6 +73,8 @@ class Window
     void setFileChooserPane();
     
     void sendAddTrack();
+    
+    void quit();
     
     int numTracks;
     void addTrack();
