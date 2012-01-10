@@ -23,6 +23,17 @@ ClipSelector::ClipSelector(Top* t, GuiStateStore* s)
   add_events(Gdk::EXPOSURE_MASK | Gdk::BUTTON_PRESS_MASK);
   signal_button_press_event().connect(sigc::mem_fun(*this, &ClipSelector::on_button_press_event) );
   
+  // drop target types
+  std::list<Gtk::TargetEntry> listTargets;
+  listTargets.push_back( Gtk::TargetEntry("STRING") );
+  
+  // make drop destination
+  drag_dest_set(listTargets);
+  
+  // connect drop signal
+  signal_drag_data_received().connect(sigc::mem_fun(*this, &ClipSelector::dropFunction) );
+  
+  
   set_size_request(74,18 * 10);
 }
 
@@ -164,6 +175,32 @@ bool ClipSelector::on_button_press_event(GdkEventButton* event)
   }
   
   return true;
+}
+
+void ClipSelector::dropFunction( const Glib::RefPtr<Gdk::DragContext>& context, int x, int y,
+                       const Gtk::SelectionData& selection_data, guint info, guint time)
+{
+  // drop target is of string type, load that sample
+  
+  int block = y / 18;
+  cout << "DROP on block " << block << endl;
+  
+  const int length = selection_data.get_length();
+  if( (length >= 0) ) // && (selection_data.get_format() == 8)
+  {
+    std::string filename = selection_data.get_data_as_string();
+    std::cout << "Received " << filename << " in ClipSelector, loading now! " << std::endl;
+    
+  // audioFileLoader informs engine & updates StateStore
+  int ret = top->offlineWorker->loadAudioBuffer( ID, block, filename );
+  
+  if ( ret == 0 ) // successful load, so store filename in vector
+  {
+    stateStore->audioBufferNameVector.push_back( Glib::path_get_basename(filename) );
+  }
+  }
+
+  context->drag_finish(false, false, time);
 }
 
 // loadsample has access to ID, so we know the track already

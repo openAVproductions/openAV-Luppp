@@ -19,7 +19,8 @@ using namespace std;
 #include "g_compressor.hpp"
 
 Window::Window(Gtk::Main *k, Top* t) :
-  masterOutput(top, &guiState)
+  masterOutput(t, &guiState),
+  fileSelector(t, &guiState)
 {
   // store the "kit" instance from main to run it at the end of the
   // constructor.
@@ -62,7 +63,10 @@ Window::Window(Gtk::Main *k, Top* t) :
   
   refBuilder->get_widget("mainBox", mainBox);
   
+  refBuilder->get_widget("fileChooserBox", fileChooserBox);
   refBuilder->get_widget("fileChooserPane", fileChooserPane);
+  fileChooserBox->pack_start( fileSelector, true, true );
+  fileSelector.show();
   
   audioFileFilter = new Gtk::FileFilter();
   audioFileFilter->set_name("Wav files");

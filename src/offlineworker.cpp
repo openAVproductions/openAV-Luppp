@@ -221,7 +221,7 @@ int OfflineWorker::loadAudioBuffer( int ID, int block, std::string name)
   
   if ( size == 0 )
   {
-    std::cout << "OfflineWorker() Could not load sound file, or empty file detected!" << std::endl;
+    std::cout << "OfflineWorker() Could not load sound file, or empty file detected! Check that " << name << " exists!" << std::endl;
     return -1;
   }
   

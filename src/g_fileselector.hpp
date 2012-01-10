@@ -1,5 +1,5 @@
-#ifndef LUPPP_CLIPSELECTOR
-#define LUPPP_CLIPSELECTOR
+#ifndef LUPPP_FILESELECTOR
+#define LUPPP_FILESELECTOR
 
 #include <vector>
 #include <iostream>
@@ -10,21 +10,21 @@
 #include "g_statestore.hpp"
 #include "clipselectorstate.hpp"
 
-class ClipSelector : public Gtk::DrawingArea
+class FileSelector : public Gtk::DrawingArea
 {
   public:
-    ClipSelector(Top*,GuiStateStore*);
-    ~ClipSelector();
+    FileSelector(Top*,GuiStateStore*);
     
     bool redraw();
   
   protected:
-    int ID;
-    static int privateID;
-    
     Top* top;
     GuiStateStore* stateStore;
     
+    int block;
+    
+    std::string currentDir;
+    std::list<std::string> fileList;
     
     //Override default signal handler:
     bool on_expose_event			(GdkEventExpose* event);
@@ -34,12 +34,12 @@ class ClipSelector : public Gtk::DrawingArea
     void dropFunction( const Glib::RefPtr<Gdk::DragContext>& context, int x, int y,
                        const Gtk::SelectionData& selection_data, guint info, guint time);
     
+    void dragFunction( const Glib::RefPtr<Gdk::DragContext>& context,
+                       Gtk::SelectionData& selection_data, guint info, guint time);
+    
     // For Right-Click Actions
     void on_menu_file_popup_edit();
     void on_menu_file_popup_generic();
-    
-    // action functions
-    void loadSample(int);
 };
 
 #endif // SCENE_SELECTOR

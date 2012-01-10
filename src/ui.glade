@@ -403,11 +403,13 @@
             <property name="can_focus">True</property>
             <property name="position_set">True</property>
             <child>
-              <object class="GtkRecentChooserWidget" id="recentchooser1">
+              <object class="GtkBox" id="fileChooserBox">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
-                <property name="limit">50</property>
+                <child>
+                  <placeholder/>
+                </child>
               </object>
               <packing>
                 <property name="resize">False</property>
