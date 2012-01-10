@@ -29,6 +29,7 @@ class Top
     int bufferSize;
     int samplerate;
     int bpm;
+    int frameNumber;
     
     float speed;
     

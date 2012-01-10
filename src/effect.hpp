@@ -17,6 +17,7 @@ enum EffectType
   EFFECT_HIGHPASS,
   EFFECT_BEATSMASH,
   EFFECT_LIMITER,
+  EFFECT_TRANCEGATE,
 };
 
 class Effect

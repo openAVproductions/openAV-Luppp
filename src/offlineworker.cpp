@@ -4,6 +4,7 @@
 #include "top.hpp"
 #include "effect.hpp"
 #include "beatsmash.hpp"
+#include "trancegate.hpp"
 #include "ladspahost.hpp"
 #include "audiotrack.hpp"
 #include "audiobuffer.hpp"
@@ -54,6 +55,9 @@ int OfflineWorker::createNewEffect(int t, int pos, int typeInt )
       break;
     case EFFECT_BEATSMASH:
       effect = new BeatSmash(top, type);
+      break;
+    case EFFECT_TRANCEGATE:
+      effect = new TranceGate(top, type);
       break;
     default: return -1;
   }

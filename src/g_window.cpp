@@ -101,6 +101,9 @@ Window::Window(Gtk::Main *k, Top* t) :
   refBuilder->get_widget("menuAddLimiter", menuAddLimiter);
   menuAddLimiter->signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &Window::addEffect ), EFFECT_LIMITER));
   
+  refBuilder->get_widget("menuAddTrancegate", menuAddTrancegate);
+  menuAddTrancegate->signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &Window::addEffect ), EFFECT_TRANCEGATE));
+  
   // poll the event Queue
   Glib::signal_timeout().connect(sigc::mem_fun(*this, &Window::handleEvent), 50);
   
@@ -414,6 +417,7 @@ int Window::handleEvent()
           case EFFECT_LOWPASS:      trackVector.at(t).widgetVector.push_back( new GLowPass    (top, &guiState) ); break;
           case EFFECT_HIGHPASS:     trackVector.at(t).widgetVector.push_back( new GHighPass   (top, &guiState) ); break;
           case EFFECT_BEATSMASH:    trackVector.at(t).widgetVector.push_back( new GBeatSmash  (top, &guiState) ); break;
+          case EFFECT_TRANCEGATE:   trackVector.at(t).widgetVector.push_back( new GBeatSmash  (top, &guiState) ); break;
           case EFFECT_TRANSIENT:    trackVector.at(t).widgetVector.push_back( new GTransient  (top, &guiState) ); break;
           case EFFECT_COMPRESSOR:   trackVector.at(t).widgetVector.push_back( new GCompressor (top, &guiState) ); break;
           case EFFECT_LIMITER:      trackVector.at(t).widgetVector.push_back( new GLimiter    (top, &guiState) ); break;

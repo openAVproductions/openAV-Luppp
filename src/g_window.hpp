@@ -44,6 +44,7 @@ class Window
     Gtk::MenuItem* menuAddTransient;
     Gtk::MenuItem* menuAddCompressor;
     Gtk::MenuItem* menuAddParametric;
+    Gtk::MenuItem* menuAddTrancegate;
     Gtk::MenuItem* menuAddBeatsmasher;
     
     GuiStateStore guiState;

@@ -47,6 +47,7 @@ def build(ctx):
               'src/bufferaudiosource.cpp',
               'src/fluidsynthaudiosource.cpp',
               'src/whitenoiseaudiosource.cpp',
+              'src/trancegate.cpp',
               'src/mixer.cpp',
               'src/effect.cpp',
               'src/beatsmash.cpp',

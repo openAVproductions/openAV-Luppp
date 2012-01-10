@@ -46,6 +46,11 @@
     <property name="can_focus">False</property>
     <property name="stock">gtk-add</property>
   </object>
+  <object class="GtkImage" id="image9">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-execute</property>
+  </object>
   <object class="GtkWindow" id="window">
     <property name="can_focus">False</property>
     <child>
@@ -221,6 +226,16 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="image">image11</property>
+                            <property name="use_stock">False</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkImageMenuItem" id="menuAddTrancegate">
+                            <property name="label">Trance Gate</property>
+                            <property name="use_action_appearance">False</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="image">image9</property>
                             <property name="use_stock">False</property>
                           </object>
                         </child>

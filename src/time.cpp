@@ -21,6 +21,8 @@ void Time::process(int frameNumber)
   
   int newBeat = frameNumber / framesPerBeat;
   
+  top->frameNumber = frameNumber;
+  
   // here we handle *all* events that should occur on *a* beat
   if ( newBeat != beat )
   {
