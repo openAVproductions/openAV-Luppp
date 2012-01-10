@@ -275,8 +275,8 @@ void LadspaHost::process(int nframes, float* buffer)
     controlBuffer[10]= state->values[2] * 50 ; // pre delay
     controlBuffer[5] = state->values[3] * 20000; // high damp
     
-    cout << "Decay: " << controlBuffer[4] << "  Wet: " << controlBuffer[8] << "  Dry: " << controlBuffer[9]
-         << "  preDelay: " << controlBuffer[10] << "  highDamp " << controlBuffer[5] << endl;
+    //cout << "Decay: " << controlBuffer[4] << "  Wet: " << controlBuffer[8] << "  Dry: " << controlBuffer[9]
+    //     << "  preDelay: " << controlBuffer[10] << "  highDamp " << controlBuffer[5] << endl;
     
     descriptor -> connect_port ( pluginHandle , 0  , buffer );
     descriptor -> connect_port ( pluginHandle , 1  , buffer );
@@ -299,8 +299,8 @@ void LadspaHost::process(int nframes, float* buffer)
     controlBuffer[1] = -20 + (state->values[1] * 20); // limit
     controlBuffer[2] = 0.02; // release (time in seconds, 0.01 -> 2 )
     
-    cout << "LADSPA Limiter: inputGain " << controlBuffer[0] << "  limit: " << controlBuffer[1]
-         << "  release: " << controlBuffer[2] << "  ReductionAmount " << controlBuffer[3] << " latency " << controlBuffer[8] << endl;
+    //cout << "LADSPA Limiter: inputGain " << controlBuffer[0] << "  limit: " << controlBuffer[1]
+    //     << "  release: " << controlBuffer[2] << "  ReductionAmount " << controlBuffer[3] << " latency " << controlBuffer[8] << endl;
     
     descriptor -> connect_port ( pluginHandle ,  0 , &controlBuffer[0] ); // control inputs
     descriptor -> connect_port ( pluginHandle ,  1 , &controlBuffer[1] );
