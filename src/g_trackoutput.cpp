@@ -111,6 +111,12 @@ bool TrackOutput::on_button_press_event(GdkEventButton* event)
       clickedWidget = CLICKED_WIDGET_FADER;
       mouseX = event->x;
       mouseY = event->y;
+      
+      float volume = 1 - ((event->y-4) / 94.f);
+      EngineEvent* x = new EngineEvent();
+      x->setMixerVolume(ID, volume);
+      top->toEngineQueue.push(x);
+      
     }
     else if ( event->x > 5 && event->y > 39 && event->y < 39 + 23 ) // mute
     {
@@ -169,13 +175,15 @@ bool TrackOutput::onMouseMove(GdkEventMotion* event)
   {
     TrackOutputState* state = &stateStore->trackoutputState.at(ID);
     
-    float mouseYdelta = (mouseY - event->y) / 25.f;
+    float volume = 1 - ((event->y-4) / 94.f);
+    
+    //float mouseYdelta = (mouseY - event->y) / 25.f;
     //std::cout << "MouseYdelta: " << mouseYdelta << std::endl;
     
     EngineEvent* x = new EngineEvent();
     
     // move volume relative to current value
-    x->setMixerVolume(ID, mouseYdelta + state->volume);
+    x->setMixerVolume(ID, volume);
     top->toEngineQueue.push(x);
     
     // reset mouseY
@@ -185,13 +193,18 @@ bool TrackOutput::onMouseMove(GdkEventMotion* event)
   {
     TrackOutputState* state = &stateStore->trackoutputState.at(ID);
     
-    float mouseYdelta = (mouseY - event->y) / 225.f;
+    float mouseYdelta = (mouseY - event->y) / 94.f;
     std::cout << "MouseYdelta: " << mouseYdelta << std::endl;
     
-    EngineEvent* x = new EngineEvent();
+    float tmpPan = mouseYdelta + state->pan;
     
-    // move volume relative to current value
-    x->setTrackPan(ID, mouseYdelta + state->pan);
+    if ( tmpPan > 1.f )
+      tmpPan = 1.f;
+    else if ( tmpPan < -1.f )
+      tmpPan = -1.f;
+    
+    EngineEvent* x = new EngineEvent();
+    x->setTrackPan(ID, tmpPan);
     top->toEngineQueue.push(x);
     
     // reset mouseY
