@@ -11,6 +11,7 @@ enum ClipState {
   CLIP_STATE_PLAYING        = 3,
   CLIP_STATE_PLAY_QUEUED    = 4,
   CLIP_STATE_RECORDING      = 5,
+  CLIP_STATE_MASTER_TRACK   = 6,
 };
 
 // this struct should contain *all* information needed for buffer playback,
@@ -43,6 +44,9 @@ struct ClipSelectorState
     playing   = -1;
     queued    = -1;
     recording = -1;
+    
+    for(int i = 0; i < 10; i++)
+      clipInfo.push_back( ClipInfo() );
   }
   
   int ID;

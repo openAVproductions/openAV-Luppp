@@ -14,6 +14,7 @@ class Top;
 #include "g_progress.hpp"
 
 #include "g_trackoutput.hpp"
+#include "g_clipselector.hpp"
 #include "g_fileselector.hpp"
 #include "g_masteroutput.hpp"
 #include "g_clipselector.hpp"
@@ -75,6 +76,7 @@ class Window
     GWaveView waveview;
     GWaveView inputWaveview;
     
+    ClipSelector* masterClipSelector;
     GMasterOutput masterOutput;
     
     // helper functions

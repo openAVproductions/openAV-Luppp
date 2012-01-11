@@ -33,6 +33,23 @@ ClipSelector::ClipSelector(Top* t, GuiStateStore* s)
   // connect drop signal
   signal_drag_data_received().connect(sigc::mem_fun(*this, &ClipSelector::dropFunction) );
   
+  masterClipSelector = false;
+  
+  set_size_request(74,18 * 10);
+}
+
+ClipSelector::ClipSelector(Top* t, GuiStateStore* s, bool masterConstructor)
+{
+  cout << "ClipSelector MASTER constructor called!" << endl;
+  top = t;
+  stateStore = s;
+  
+  masterClipSelector = true;
+  
+  add_events(Gdk::EXPOSURE_MASK | Gdk::BUTTON_PRESS_MASK);
+  signal_button_press_event().connect(sigc::mem_fun(*this, &ClipSelector::on_button_press_event) );
+  
+  ID = -1;
   
   set_size_request(74,18 * 10);
 }
@@ -71,12 +88,25 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
     
     cr->rectangle(event->area.x, event->area.y,
         event->area.width, event->area.height);
-    setColour(cr, COLOUR_GREY_3);
+    if ( masterClipSelector )
+      setColour(cr, COLOUR_GREY_4);
+    else
+      setColour(cr, COLOUR_GREY_3);
     cr->fill();
     
-    ClipSelectorState state = stateStore->clipSelectorState.at(ID);
+    ClipSelectorState* state;
     
     float y = 0.f;
+    
+    if ( masterClipSelector )
+    {
+      state = new ClipSelectorState;
+      y += 2; // align master track due to emtpy VBox for input selector in tracks
+    }
+    else
+    {
+      state = &stateStore->clipSelectorState.at(ID);
+    }
     
     //std::cout << "Redrawing GCLipSelector " << ID << " now...  state.recording = " << stateStore->clipSelectorState.at(ID).recording << std::endl;
     //std::cout << "\t\t CHECK:     stateStore.clipSelectorState.at(e->ia).recording = " << stateStore->clipSelectorState.at(ID).recording << std::endl;
@@ -85,7 +115,7 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
     for( int i = 0; i < 10; i++)
     {
       // prepare values
-      std::list<ClipInfo>::iterator iter = state.clipInfo.begin();
+      std::list<ClipInfo>::iterator iter = state->clipInfo.begin();
       std::advance(iter, i);
       
       ClipState clipState = CLIP_STATE_EMPTY;
@@ -94,11 +124,11 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
       {
         clipState = CLIP_STATE_LOADED;
         
-        if ( state.playing == i ) // if also playing, make green
+        if ( state->playing == i ) // if also playing, make green
           clipState = CLIP_STATE_PLAYING;
       }
       
-      if ( state.recording == i )
+      if ( state->recording == i )
       {
         cout << "Setting a RECORDING BLOCK now!! " << endl;
         clipState = CLIP_STATE_RECORDING;
@@ -110,10 +140,12 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
       if ( (*iter).bufferID < stateStore->audioBufferNameVector.size() )
         name = stateStore->audioBufferNameVector.at( (*iter).bufferID );
       
+      if ( masterClipSelector )
+        clipState = CLIP_STATE_MASTER_TRACK;
+      
       Block(cr, 0, y, clipState, name );
       y += 18;
     }
-    
     
     /*
     if ( state.selected )
@@ -142,6 +174,18 @@ void ClipSelector::on_menu_file_popup_generic()
 bool ClipSelector::on_button_press_event(GdkEventButton* event)
 {
   int block = ((int)event->y) / 18;
+  
+  if ( masterClipSelector )
+  {
+    // send clip activate on all tracks, and return
+    for ( int i = 0; i < 20; i++ )
+    {
+      EngineEvent* x = new EngineEvent();
+      x->looperSelectBuffer(i,block);
+      top->toEngineQueue.push(x);
+    }
+    return true;
+  }
   
   if( event->type == GDK_BUTTON_PRESS && event->button == 1 ) // left
   {

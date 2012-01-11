@@ -60,7 +60,7 @@ bool GMasterOutput::on_expose_event(GdkEventExpose* event)
     cr->clip();
     
     cr->rectangle(event->area.x, event->area.y,
-        event->area.width, event->area.height);
+        event->area.width, 104);
     cr->set_source_rgb(0.1 , 0.1 , 0.1 );
     setColour(cr, COLOUR_GREY_4 );
     cr->fill();

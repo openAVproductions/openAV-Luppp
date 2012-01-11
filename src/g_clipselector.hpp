@@ -14,6 +14,7 @@ class ClipSelector : public Gtk::DrawingArea
 {
   public:
     ClipSelector(Top*,GuiStateStore*);
+    ClipSelector(Top*,GuiStateStore*, bool); // masterClipSelector
     ~ClipSelector();
     
     bool redraw();
@@ -21,6 +22,8 @@ class ClipSelector : public Gtk::DrawingArea
   protected:
     int ID;
     static int privateID;
+    
+    bool masterClipSelector;
     
     Top* top;
     GuiStateStore* stateStore;

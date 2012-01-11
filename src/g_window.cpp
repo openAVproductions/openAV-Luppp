@@ -85,7 +85,22 @@ Window::Window(Gtk::Main *k, Top* t) :
   fileBrowserToggle->signal_clicked().connect ( sigc::mem_fun( *this, &Window::setFileChooserPane ) );
   
   refBuilder->get_widget("mainTable", mainTable);
+  
   refBuilder->get_widget("masterOutputBox", masterOutputBox);
+  
+  // master track widgets
+  Gtk::VBox* tmpVbox = new Gtk::VBox();
+  
+  Gtk::EventBox* tmpBox = new Gtk::EventBox();
+  Gtk::Label* tmpLabel = new Gtk::Label( "Master" );
+  tmpBox->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("green"));
+  tmpBox->add( *tmpLabel );
+  
+  ClipSelector* masterClipSelector = new ClipSelector(top, &guiState, true);
+  tmpVbox->pack_end( *masterClipSelector, true, true );
+  
+  tmpVbox->add( *tmpBox );
+  masterOutputBox->add( *tmpVbox );
   
   // grab widgets & connect signal handlers for DnD
   refBuilder->get_widget("trackEffectBox", trackEffectBox);
@@ -102,8 +117,8 @@ Window::Window(Gtk::Main *k, Top* t) :
   //trackEffectEventBox->set_events(Gdk::BUTTON_PRESS_MASK);
   //trackEffectEventBox->signal_button_press_event().connect( sigc::mem_fun(*this, &Window::on_eventbox_button_press) );
   
-  masterOutputBox->add( inputWaveview );
-  masterOutputBox->add( waveview );
+  //masterOutputBox->add( inputWaveview );
+  //masterOutputBox->add( waveview );
   
   masterOutputBox->pack_end( masterOutput, false, true, 0 );
   masterOutputBox->show_all();

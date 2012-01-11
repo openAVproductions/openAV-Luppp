@@ -629,9 +629,6 @@
                                 <child>
                                   <placeholder/>
                                 </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
                               </object>
                               <packing>
                                 <property name="expand">False</property>

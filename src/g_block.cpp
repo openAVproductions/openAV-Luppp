@@ -33,6 +33,10 @@ namespace Luppp
      textColour = COLOUR_TRANSPARENT;
      playColour = COLOUR_GREY_4;
      bgColour   = COLOUR_RECORD_RED;
+    } else if ( state == CLIP_STATE_MASTER_TRACK ){
+     textColour = COLOUR_GREY_1;
+     playColour = COLOUR_GREY_4;
+     bgColour   = COLOUR_GREY_3;
     }
     
     setColour(cr, bgColour);
