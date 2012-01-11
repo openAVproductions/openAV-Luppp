@@ -42,6 +42,7 @@ Lv2Host::Lv2Host(Top* t, EffectType et, int inNframes, int inSamplerate) :
   switch ( et )
   {
     case EFFECT_TESTTONES: loadString = "http://invadarecords.com/plugins/lv2/testtone"; break;
+    //case EFFECT_TESTTONES: loadString = "http://invadarecords.com/plugins/lv2/testtone"; break;
   }
   
   loadPlugin( loadString );

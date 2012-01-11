@@ -3,11 +3,13 @@
 #define LUPPP_LVTWODISPLAY
 
 #include "engineevent.hpp"
+#include "g_widgetbase.hpp"
 
 #include "g_statestore.hpp"
 
 #include <iostream>
 #include <sstream>
+#include <gtkmm/drawingarea.h>
 #include <gtkmm/button.h>
 #include <gtkmm/box.h>
 #include <gtkmm.h>
@@ -16,13 +18,15 @@
 
 class Top;
 
-class Lv2Display : public Gtk::ToggleButton
+class Lv2Display : public Gtk::DrawingArea, public WidgetBase
 {
   public:
     Lv2Display(Top*, GuiStateStore*);
     ~Lv2Display();
     void portEvent(EngineEvent* ev);
     void loadPlugin(std::string);
+    
+    bool redraw();
   
   protected:
     int ID;
@@ -33,6 +37,9 @@ class Lv2Display : public Gtk::ToggleButton
     
     Gtk::Window   *window;
     GtkWidget     *widget;
+    
+    bool active;
+    bool showUI;
     
     void toggleWindow();
     
@@ -51,6 +58,9 @@ class Lv2Display : public Gtk::ToggleButton
     static unsigned int subscribeFunc(SuilController controller,uint32_t port_index,uint32_t protocol,const LV2_Feature* const* features);
     static unsigned int unsubscribeFunc(SuilController controller,uint32_t port_index,uint32_t protocol,const LV2_Feature* const* features);
     
+    // gtkmm drawingarea functions
+    bool on_expose_event			(GdkEventExpose* event);
+    bool on_button_press_event(GdkEventButton* event);
 };
 
 #endif // CSOUND_DISPLAY
