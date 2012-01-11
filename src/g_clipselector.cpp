@@ -3,6 +3,9 @@
 
 #include "g_widgets.hpp"
 
+#include <sstream>
+
+#include "gtkmm.h"
 #include "gtkmm/filechooserdialog.h"
 
 #include "offlineworker.hpp"
@@ -51,6 +54,12 @@ ClipSelector::ClipSelector(Top* t, GuiStateStore* s, bool masterConstructor)
   
   ID = -1;
   
+  for ( int i = 0; i < 10; i++ )
+  {
+    stringstream s;
+    s << i;
+    nameList.push_back( s.str() );
+  }
   set_size_request(74,18 * 10);
 }
 
@@ -141,8 +150,12 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
         name = stateStore->audioBufferNameVector.at( (*iter).bufferID );
       
       if ( masterClipSelector )
+      {
+        list<string>::iterator iter = nameList.begin();
+        advance(iter, i);
+        name = *iter;
         clipState = CLIP_STATE_MASTER_TRACK;
-      
+      }
       Block(cr, 0, y, clipState, name );
       y += 18;
     }
@@ -177,13 +190,47 @@ bool ClipSelector::on_button_press_event(GdkEventButton* event)
   
   if ( masterClipSelector )
   {
-    // send clip activate on all tracks, and return
-    for ( int i = 0; i < 20; i++ )
+    if ( event->button == 1 )
     {
-      EngineEvent* x = new EngineEvent();
-      x->looperSelectBuffer(i,block);
-      top->toEngineQueue.push(x);
+      // send clip activate on all tracks, and return
+      for ( int i = 0; i < 20; i++ )
+      {
+        EngineEvent* x = new EngineEvent();
+        x->looperSelectBuffer(i,block);
+        top->toEngineQueue.push(x);
+      }
     }
+    else // rename scene
+    {
+      Gtk::Dialog dialog("Rename Scene", false); // not modal, leave program update!
+      
+      Gtk::Entry* entry = new Gtk::Entry();
+      entry->set_activates_default (true);
+      
+      dialog.add_button( Gtk::Stock::OK, Gtk::RESPONSE_OK );
+      dialog.add_button( Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL );
+      
+      dialog.set_default_response( Gtk::RESPONSE_OK );
+      dialog.get_vbox()->add( *entry );
+      dialog.get_vbox()->show_all();
+      
+      list<string>::iterator iter = nameList.begin();
+      string name;
+      
+      switch ( dialog.run() )
+      {
+        case Gtk::RESPONSE_OK:
+          name = entry->get_buffer()->get_text();
+          cout << " Dialog OK clicked, entry contains: " << name << endl;
+          advance(iter, block);
+          *iter = name;
+          redraw();
+          break;
+        default: break;
+      }
+      
+    }
+    
     return true;
   }
   

@@ -28,6 +28,7 @@ class ClipSelector : public Gtk::DrawingArea
     Top* top;
     GuiStateStore* stateStore;
     
+    std::list<std::string> nameList;
     
     //Override default signal handler:
     bool on_expose_event			(GdkEventExpose* event);
