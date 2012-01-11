@@ -401,6 +401,7 @@
           <object class="GtkPaned" id="fileChooserPane">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="position">131</property>
             <property name="position_set">True</property>
             <child>
               <object class="GtkBox" id="box1">
@@ -417,12 +418,23 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <child>
-                          <object class="GtkBox" id="fileChooserBox">
+                          <object class="GtkScrolledWindow" id="fileChooserScrollWindow">
+                            <property name="height_request">450</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="orientation">vertical</property>
+                            <property name="can_focus">True</property>
+                            <property name="hscrollbar_policy">never</property>
+                            <property name="window_placement_set">True</property>
+                            <property name="shadow_type">in</property>
                             <child>
-                              <placeholder/>
+                              <object class="GtkViewport" id="fileChooserViewport">
+                                <property name="height_request">450</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="vscroll_policy">natural</property>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
                             </child>
                           </object>
                         </child>

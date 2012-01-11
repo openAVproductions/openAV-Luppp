@@ -46,7 +46,10 @@ bool FileSelector::redraw()
 
 void FileSelector::setWidgetSizeFromList()
 {
-  set_size_request(200, 18 * fileList.size() );
+  
+  int widgetY = 18 * fileList.size();
+  cout << "FileSelector::setWidgetSizeFromList() setting widget size to " << widgetY << endl;
+  set_size_request(200, widgetY );
 }
 
 

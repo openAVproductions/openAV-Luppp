@@ -66,10 +66,11 @@ Window::Window(Gtk::Main *k, Top* t) :
   refBuilder->get_widget("mainBox", mainBox);
   
   refBuilder->get_widget("fileChooserPane", fileChooserPane);
+  fileChooserPane->set_position(0);
   
   // left pane selection widgets
-  refBuilder->get_widget("fileChooserBox", fileChooserBox);
-  fileChooserBox->pack_start( fileSelector, true, true );
+  refBuilder->get_widget("fileChooserViewport", fileChooserViewport);
+  fileChooserViewport->add( fileSelector );
   fileSelector.show();
   
   refBuilder->get_widget("effectChooserBox", effectChooserBox);

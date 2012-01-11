@@ -68,7 +68,7 @@ bool GLimiter::on_expose_event(GdkEventExpose* event)
     }
     
     // update value from stateStore
-    float makeupZeroOne = 1 - stateStore->effectState.at(ID).values[0];
+    float makeupZeroOne = stateStore->effectState.at(ID).values[0];
     float thresh = stateStore->effectState.at(ID).values[1];
     
     cout << "Limiter effectState[0] = " << stateStore->effectState.at(ID).values[0] << endl;
@@ -256,7 +256,7 @@ bool GLimiter::onMouseMove(GdkEventMotion* event)
     
     if ( (event->y > y + ySize*0.25) && (event->y < y+ySize*0.75) )
     {
-      float limit = (event->y - (y + ySize*0.25)) / float(ySize*0.5);
+      float limit = 1 - (event->y - (y + ySize*0.25)) / float(ySize*0.5);
       
       cout << "Limiter limit : " << limit << endl;
       
@@ -296,10 +296,10 @@ bool GLimiter::on_button_press_event(GdkEventButton* event)
       
       cout << "  x afterClip = " << event->x;
       
-      float gain = (event->x - (x + xSize*0.25)) / float(xSize*0.5);
-      cout << "  final Limiter Clicked Gain : " << gain << endl;
+      float limit = ((event->x - (x + xSize*0.25)) / float(xSize*0.5));
+      cout << "  final Limiter Clicked Limit : " << limit << endl;
       EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(ID, 1, 1, gain);
+      x->setPluginParameter(ID, 1, 1, limit );
       top->toEngineQueue.push(x);
       
       
@@ -310,10 +310,10 @@ bool GLimiter::on_button_press_event(GdkEventButton* event)
         event->y = y + ySize*0.75;
       }
     
-      float limit = (event->y - (y + ySize*0.25)) / float(ySize*0.5);
-      cout << "Limiter Clicked limit : " << limit << endl;
+      float gain = 1 - (event->y - (y + ySize*0.25)) / float(ySize*0.5);
+      cout << "Limiter Clicked gain : " << gain << endl;
       x = new EngineEvent();
-      x->setPluginParameter(ID, 0, 0, limit);
+      x->setPluginParameter(ID, 0, 0, gain);
       top->toEngineQueue.push(x);
       
     }

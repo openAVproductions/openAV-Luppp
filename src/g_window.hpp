@@ -39,7 +39,8 @@ class Window
     Gtk::HBox* trackEffectBox;
     Gtk::Box* masterOutputBox;
     
-    Gtk::Box* fileChooserBox;
+    Gtk::Viewport* fileChooserViewport;
+    
     Gtk::Box* effectChooserBox;
     Gtk::Box* instrumentChooserBox;
     
