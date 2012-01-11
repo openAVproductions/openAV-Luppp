@@ -121,7 +121,7 @@ bool GMasterOutput::on_expose_event(GdkEventExpose* event)
     cr->stroke();
     
     // draw rotation widget
-    elevation = 0.5f;
+    elevation = headphonesVolume;
     float rotation  = pan;
     
     // dashed cross lines
@@ -161,6 +161,8 @@ bool GMasterOutput::on_expose_event(GdkEventExpose* event)
     cr->set_line_width(3);
     cr->stroke();
     
+    rotation = volume;
+    
     // rotation line
     cr->move_to(45 + 7, 45 + 7);
     float tmpRot = 6.282 * rotation - 3.1415/2.f;
@@ -169,12 +171,18 @@ bool GMasterOutput::on_expose_event(GdkEventExpose* event)
     cr->set_line_width(2.8);
     cr->stroke();
     
-    // rotation head
-    float tmpX = sin ( tmpRot ) * 90;
-    float tmpY = cos ( tmpRot ) * 90;
+    tmpRot = 6.282 * rotation;
     
-    cr->rectangle ( 7 + tmpX, 7 + tmpY , 4, 4 );
+    // rotation head
+    float tmpX = sin ( tmpRot ) * 45;
+    float tmpY = cos ( tmpRot ) * -45;
+    
+    cout << "Rotation = " << rotation << "  Arc @ " << tmpX + 7 << ", " << tmpY + 7 << endl;
+    
+    cr->arc( 7 + 45 + tmpX, 7 + 45 + tmpY, 7, 0, 6.282);
     setColour(cr, COLOUR_BLUE_1);
+    cr->fill_preserve();
+    setColour(cr, COLOUR_GREY_3);
     cr->stroke();
     
     // inner circle grey
