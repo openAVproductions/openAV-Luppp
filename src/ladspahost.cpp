@@ -299,8 +299,8 @@ void LadspaHost::process(int nframes, float* buffer)
     controlBuffer[1] = -20 + (state->values[1] * 20); // limit
     controlBuffer[2] = 0.02; // release (time in seconds, 0.01 -> 2 )
     
-    cout << "LADSPA Limiter: inputGain " << controlBuffer[0] << "  limit: " << controlBuffer[1]
-         << "  release: " << controlBuffer[2] << "  ReductionAmount " << controlBuffer[3] << " latency " << controlBuffer[8] << endl;
+    //cout << "LADSPA Limiter: inputGain " << controlBuffer[0] << "  limit: " << controlBuffer[1]
+    //     << "  release: " << controlBuffer[2] << "  ReductionAmount " << controlBuffer[3] << " latency " << controlBuffer[8] << endl;
     
     descriptor -> connect_port ( pluginHandle ,  0 , &controlBuffer[0] ); // control inputs
     descriptor -> connect_port ( pluginHandle ,  1 , &controlBuffer[1] );

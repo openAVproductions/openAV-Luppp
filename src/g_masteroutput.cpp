@@ -3,6 +3,8 @@
 
 #include "g_widgets.hpp"
 
+#include <cmath>
+
 using namespace std;
 using namespace Luppp;
 
@@ -24,7 +26,7 @@ GMasterOutput::GMasterOutput(Top* t, GuiStateStore* s)
   signal_button_release_event().connect(sigc::mem_fun(*this, &GMasterOutput::on_button_release_event) );
   signal_motion_notify_event().connect( sigc::mem_fun( *this, &GMasterOutput::onMouseMove ) );
   
-  set_size_request(74*2,106);
+  set_size_request(74*3,104);
 }
 
 bool GMasterOutput::redraw()
@@ -64,16 +66,10 @@ bool GMasterOutput::on_expose_event(GdkEventExpose* event)
     
     TrackOutputState* state = new TrackOutputState(); // = &stateStore->trackoutputState.at(0);
     
-    //Dial(cr,true, 7,4,state->pan,DIAL_MODE_PAN); // pan
-    //Mute(cr, 9  , 41 , state->ID, state->mute ); // mute button
-    //Solo(cr, 9  , 68 , state->ID, state->solo ); // solo button
-    //Rec (cr, 9  , 85 , state->ID, state->recEnable); // rec button
-    
-    
-    cr->rectangle   ( 75, 4, 12, 94);
-    cr->rectangle   ( 90, 4, 12, 94);
-    cr->rectangle   (105, 4, 12, 94);
-    cr->rectangle   (120, 4, 12, 94);
+    cr->rectangle   (155, 4, 12, 94);
+    cr->rectangle   (170, 4, 12, 94);
+    cr->rectangle   (185, 4, 12, 94);
+    cr->rectangle   (200, 4, 12, 94);
     
     // setup & paint fader gradient
     cairo_pattern_t *pat;
@@ -85,10 +81,10 @@ bool GMasterOutput::on_expose_event(GdkEventExpose* event)
     cairo_pattern_destroy (pat);    
     
     
-    float value = 1.f; 
+    float value = 0.7f;
     
     // draw fader  <|
-    float playheadX = 120 + 12;
+    float playheadX = 195 + 12;
     float playheadY = 4 + (92 * ( 1.f - value));
     
     setColour(cr, COLOUR_ORANGE_1 );
@@ -101,8 +97,7 @@ bool GMasterOutput::on_expose_event(GdkEventExpose* event)
     
     
     // draw fader  |>
-    float playheadX2 = 75;
-    
+    float playheadX2 = 160;
     setColour(cr, COLOUR_ORANGE_1 );
     cr->set_line_width(1.0);
     cr->move_to( playheadX2, playheadY );
@@ -110,15 +105,128 @@ bool GMasterOutput::on_expose_event(GdkEventExpose* event)
     cr->line_to( playheadX2 - 10, playheadY - 5.5 );
     cr->close_path();
     cr->fill_preserve();
-    
     setColour(cr, COLOUR_ORANGE_1 );
     cr->stroke();
     
-    setColour(cr, COLOUR_ORANGE_1 );
+    // line between faders
     cr->move_to( playheadX2, playheadY );
     cr->line_to( playheadX , playheadY );
     cr->set_line_width(2.7);
     cr->stroke();
+    
+    // draw rotation widget
+    float elevation = 0.5f;
+    float rotation  = 0.f;
+    
+    // dashed cross lines
+    std::valarray< double > dashes(2);
+    dashes[0] = 3.0;
+    dashes[1] = 3.0;
+    cr->set_dash (dashes, 0.0);
+    cr->set_line_width(2);
+    setColour(cr, COLOUR_GREY_3);
+    cr->move_to(7   ,7   );
+    cr->line_to(7+90,7+90);
+    cr->move_to(7   ,7+90);
+    cr->line_to(7+90,7   );
+    cr->stroke();
+    cr->unset_dash();
+    
+    // elevation line
+    cr->move_to( 7, 7 + 90 );
+    cr->line_to( 7, 7 + 90 * (1-elevation) );
+    cr->line_to( 95 + 7, 7 + 90 * (1-elevation));
+    cr->line_to( 90 + 7, 7 + 90);
+    cr->close_path();
+    setColour(cr, COLOUR_BLUE_1, 0.2);
+    cr->fill_preserve();
+    setColour(cr, COLOUR_BLUE_1);
+    cr->stroke();
+    
+    // blanking circle background colour
+    cr->arc( 45 + 7, 45 + 7, 57, 0, 6.282);
+    setColour(cr, COLOUR_GREY_4);
+    cr->set_line_width(25);
+    cr->stroke();
+    
+    // whole circle grey
+    cr->arc( 45 + 7, 45 + 7, 45, 0, 6.282);
+    setColour(cr, COLOUR_GREY_3);
+    cr->set_line_width(3);
+    cr->stroke();
+    
+    // rotation line
+    cr->move_to(45 + 7, 45 + 7);
+    float tmpRot = 6.282 * rotation - 3.1415/2.f;
+    cr->arc( 45 + 7, 45 + 7, 45, tmpRot, tmpRot + 0.00001);
+    setColour(cr, COLOUR_GREY_1);
+    cr->set_line_width(2.8);
+    cr->stroke();
+    
+    // rotation head
+    float tmpX = sin ( tmpRot ) * 90;
+    float tmpY = cos ( tmpRot ) * 90;
+    
+    cr->rectangle ( 7 + tmpX, 7 + tmpY , 4, 4 );
+    setColour(cr, COLOUR_BLUE_1);
+    cr->stroke();
+    
+    // inner circle grey
+    cr->arc( 45 + 7, 45 + 7, 4, 0, 6.282);
+    setColour(cr, COLOUR_GREY_4);
+    cr->fill_preserve();
+    cr->set_line_width(2);
+    setColour(cr, COLOUR_GREY_3);
+    cr->stroke();
+    
+    bool pfl = true;
+    
+    // headphone monitoring system
+    Solo(cr, 114, 60, 0,  pfl ); // solo button
+    Solo(cr, 114, 82, 0, !pfl ); // solo button
+    
+    // PFL custom output dial
+    bool active = true;
+    
+    int xc = 110 + 16;
+    int yc = 14 + 22;
+    
+    float radius = 14;
+    
+    cr->set_line_cap( Cairo::LINE_CAP_ROUND );
+    cr->set_line_join( Cairo::LINE_JOIN_ROUND);
+    cr->set_line_width(2.8);
+    
+    // Arc Angle Value
+    cr->set_line_width(2.4);
+    cr->move_to(xc,yc);
+    cr->set_source_rgba( 0,0,0,0 );
+    cr->stroke();
+    
+      setColour(cr, COLOUR_GREY_3 );
+    cr->arc(xc,yc, radius, 2.46, 0.75 );
+    cr->move_to(xc,yc);
+    cr->stroke();
+    
+    cr->set_line_width(2.8);
+    float angle;
+    if ( value < 0 )
+      value = 0.f;
+    //std::cout << "Dial NORMAL: value = " << value << std::endl;
+    angle = 2.46 + (4.54 * value);
+    if ( active )
+      setColour(cr, COLOUR_ORANGE_1 );
+    else
+      setColour(cr, COLOUR_GREY_1 );
+    cr->set_line_width(1.7);
+    cr->arc(xc,yc, 13, 2.46, angle );
+    cr->line_to(xc,yc);
+    cr->stroke();
+    cr->arc(xc,yc, 17, 2.46, angle );
+    cr->line_to(xc,yc);
+    cr->stroke();
+    
+    
     
   }
   return true;

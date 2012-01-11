@@ -21,7 +21,10 @@ namespace Luppp
       cr->stroke();
       
       // main arc
-      setColour(cr, COLOUR_GREY_4 );
+      if ( active )
+        setColour(cr, COLOUR_GREY_4 );
+      else
+        setColour(cr, COLOUR_GREY_3 );
       cr->arc(xc,yc, radius, 2.46, 0.75 );
       cr->move_to(xc,yc);
       cr->stroke();
