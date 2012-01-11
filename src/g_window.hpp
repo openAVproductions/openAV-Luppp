@@ -36,8 +36,10 @@ class Window
     Gtk::Label* eeLabel;
     Gtk::Window* window;
     Gtk::Table* mainTable;
-    Gtk::HBox* trackEffectBox;
     Gtk::Box* masterOutputBox;
+    
+    Gtk::HBox* trackEffectBox;
+    Gtk::EventBox* trackEffectEventBox;
     
     Gtk::Viewport* fileChooserViewport;
     
@@ -78,6 +80,8 @@ class Window
     // helper functions
     void redrawEffectBox();
     void setFileChooserPane();
+    void trackEffectDragDrop(const Glib::RefPtr<Gdk::DragContext>& context, int, int,
+                             const Gtk::SelectionData& selection_data, guint, guint time);
     
     void sendAddTrack();
     

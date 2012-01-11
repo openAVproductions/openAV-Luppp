@@ -85,8 +85,22 @@ Window::Window(Gtk::Main *k, Top* t) :
   fileBrowserToggle->signal_clicked().connect ( sigc::mem_fun( *this, &Window::setFileChooserPane ) );
   
   refBuilder->get_widget("mainTable", mainTable);
-  refBuilder->get_widget("trackEffectBox", trackEffectBox);
   refBuilder->get_widget("masterOutputBox", masterOutputBox);
+  
+  // grab widgets & connect signal handlers for DnD
+  refBuilder->get_widget("trackEffectBox", trackEffectBox);
+  refBuilder->get_widget("trackEffectEventBox", trackEffectEventBox);
+  
+  // drop destination
+  std::vector<Gtk::TargetEntry> listTargets;
+  listTargets.push_back( Gtk::TargetEntry("INSTRUMENT_STRING") );
+  listTargets.push_back( Gtk::TargetEntry( "EFFECT_STRING" ) );
+  trackEffectEventBox->drag_dest_set(listTargets);
+  
+  trackEffectEventBox->signal_drag_data_received().connect(sigc::mem_fun(*this, &Window::trackEffectDragDrop) );
+  
+  //trackEffectEventBox->set_events(Gdk::BUTTON_PRESS_MASK);
+  //trackEffectEventBox->signal_button_press_event().connect( sigc::mem_fun(*this, &Window::on_eventbox_button_press) );
   
   masterOutputBox->add( inputWaveview );
   masterOutputBox->add( waveview );
@@ -156,6 +170,11 @@ void Window::setFileChooserPane()
   }
 }
 
+void Window::trackEffectDragDrop(const Glib::RefPtr<Gdk::DragContext>& context, int, int,
+                                 const Gtk::SelectionData& selection_data, guint, guint time)
+{
+  cout << "Window::trackEffectDragDrop() called!" << endl;
+}
 
 void Window::quit()
 {
