@@ -33,6 +33,8 @@ class GMasterOutput : public Gtk::DrawingArea
     
     Top* top;
     
+    Glib::RefPtr<Gdk::Pixbuf> headphoneImage;
+    
     int mouseX, mouseY;
     
     //Override default signal handler:

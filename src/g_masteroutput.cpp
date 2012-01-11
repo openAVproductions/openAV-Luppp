@@ -20,6 +20,8 @@ GMasterOutput::GMasterOutput(Top* t, GuiStateStore* s)
   mouseX = -1;
   mouseY = -1;
   
+  headphoneImage = Gdk::Pixbuf::create_from_file("headphones.png");
+  
   //std::cout << "Enterin GMasterOutput contructor" << std::endl;
   add_events(Gdk::EXPOSURE_MASK | Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK);
   signal_button_press_event().connect(sigc::mem_fun(*this, &GMasterOutput::on_button_press_event) );
@@ -182,14 +184,21 @@ bool GMasterOutput::on_expose_event(GdkEventExpose* event)
     bool pfl = true;
     
     // headphone monitoring system
-    Solo(cr, 114, 60, 0,  pfl ); // solo button
-    Solo(cr, 114, 82, 0, !pfl ); // solo button
+    Solo(cr, 100, 80, 0,  pfl ); // solo button
+    Solo(cr, 125, 80, 0, !pfl ); // solo button
+    
+    headphoneImage->render_to_drawable(	get_window() ,
+                                        get_style()->get_black_gc(),
+                                        0, 0,
+                                        108, 7,
+                                        -1, -1,
+                                        Gdk::RGB_DITHER_NONE, 0, 0);
     
     // PFL custom output dial
     bool active = true;
     
-    int xc = 110 + 16;
-    int yc = 14 + 22;
+    int xc = 108 + 18;
+    int yc = 14 + 46;
     
     float radius = 14;
     
