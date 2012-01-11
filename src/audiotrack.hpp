@@ -15,6 +15,7 @@ class AudioTrack
 {
   public:
     AudioTrack(Top*);
+    AudioTrack(Top*,bool);//for master track
     
     int setSource( AudioSource* );
     int addEffect( int, Effect* );

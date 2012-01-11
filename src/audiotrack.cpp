@@ -34,6 +34,24 @@ AudioTrack::AudioTrack( Top* t )
   sink = new AudioSinkOutput(t);
 }
 
+AudioTrack::AudioTrack( Top* t, bool masterTrack )
+{
+  top = t;
+  
+  ID = -1;
+  
+  std::cout << "Creating MASTER AudioTrack ID: " << ID << std::endl;
+  
+  trackBuffer.resize(top->bufferSize);
+  
+  
+  // default source for a track is the BufferAudioSource, we can exchange
+  // it for a synth, but that's not implemented (at time of writing)
+  //source = new BufferAudioSource(t);
+  
+  //sink = new AudioSinkOutput(t);
+}
+
 int AudioTrack::setSource( AudioSource* newSource )
 {
   cout << "AudioTrack::setSource() got new source pointer!" << endl;

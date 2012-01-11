@@ -5,7 +5,8 @@
 
 using namespace std;
 
-Mixer::Mixer(Top* t)
+Mixer::Mixer(Top* t) :
+            masterTrack(t,true)
 {
   top = t;
   
@@ -84,13 +85,18 @@ void Mixer::process(int nframes,bool record, PortBufferList& portBufferList)
     iter->process( nframes, &portBufferList.inputAudio[0], &outputW[0], &outputX[0], &outputY[0], &outputZ[0]);
   }
   
+  // process master effects
+  
+  
   // create a pointer to each *mixer* owned buffer
   float* outPtrW = &outputW[0];
   float* outPtrX = &outputX[0];
   float* outPtrY = &outputY[0];
   float* outPtrZ = &outputZ[0];
   
+  /*
   bool copyToScopeVector = top->scopeVectorMutex.trylock();
+  */
   
   // now sum up the master output buffers and write them
   for(int i = 0; i < nframes; i++)
@@ -102,12 +108,14 @@ void Mixer::process(int nframes,bool record, PortBufferList& portBufferList)
     *portBufferList.outputZ++ = *outPtrZ;
     
     
+    /*
     if ( copyToScopeVector )
     {
       // write master output value to scopeVector, to be shown in GUI
       top->scopeVector.at(i) = *outPtrW;
       top->inputScopeVector.at(i) = *portBufferList.inputAudio++;
     }
+    */
     
     // write 0.f to *mixer* buffer, and increment
     *outPtrW++ = 0.f;
@@ -117,7 +125,9 @@ void Mixer::process(int nframes,bool record, PortBufferList& portBufferList)
     
   }
   
+  /*
   if ( copyToScopeVector )
     top->scopeVectorMutex.unlock();
+  */
   
 }

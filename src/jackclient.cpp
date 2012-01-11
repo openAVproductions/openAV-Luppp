@@ -274,6 +274,19 @@ int JackClient::processMidi(jack_nframes_t nframes)
     
     if ( b1 >= 144 && b1 < 144 + 16 ) // note on
     {
+      
+      if ( b2 >= 36 && b1 == 145 )
+      {
+        // MPK drum pads
+        
+        for(int i = 0; i < 10; i++ )
+        {
+          EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+          x->looperSelectBuffer(i ,b2 - 36);
+          top->toEngineQueue.push(x);
+        }
+      }
+      
       /*
       std::list<FileAudioSourceState>::iterator i = top->state.fileAudioSourceState.begin();
       std::advance(i,1);

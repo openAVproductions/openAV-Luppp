@@ -32,6 +32,8 @@ class Mixer
   private:
     Top* top;
     
+    // create named instance for master AudioTrack
+    AudioTrack masterTrack;
     list<AudioTrack> audiotrackList;
     
     std::vector<float> inputBuffer;

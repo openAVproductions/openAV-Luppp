@@ -156,6 +156,9 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
         name = *iter;
         clipState = CLIP_STATE_MASTER_TRACK;
       }
+      
+      cr->rectangle(0,y,event->area.width,17);
+      
       Block(cr, 0, y, clipState, name );
       y += 18;
     }
