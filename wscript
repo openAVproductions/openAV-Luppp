@@ -28,6 +28,7 @@ def configure(ctx):
   ctx.check_cfg	(package='fluidsynth',args='--libs',uselib_store='FLUIDSYNTH')
   ctx.check_cfg	(package='libconfig++',args='--libs',uselib_store='LIBCONFIG')
   ctx.check_cfg	(package='lilv-0',args='--cflags --libs',uselib_store='LILV')
+  ctx.check_cfg	(package='suil-0',args='--cflags --libs',uselib_store='SUIL')
   
   # Check for headers:
   ctx.check(header_name="lv2.h",mandatory=True,uselib_store='LV2.H')
@@ -67,6 +68,7 @@ def build(ctx):
               'src/g_widgets.cpp',
               'src/g_waveview.cpp',
               'src/g_reverb.cpp',
+              'src/g_lvtwodisplay.cpp',
               'src/g_fileselector.cpp',
               'src/g_effectselector.cpp',
               'src/g_instrumentselector.cpp',
@@ -92,7 +94,7 @@ def build(ctx):
               'src/g_masteroutput.cpp',
               'src/g_trackoutput.cpp']
   
-  engineDepends = 'JACK SNDFILE GTKMM FLUIDSYNTH GLIBMM LIBCONFIG LILV Lv2.H LADSPA.H'
+  engineDepends = 'JACK SNDFILE GTKMM FLUIDSYNTH GLIBMM LIBCONFIG LILV Lv2.H LADSPA.H SUIL'
   
   #print 'Building ENGINE'
   buildList = engineList + guiList
