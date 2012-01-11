@@ -24,6 +24,8 @@ class ClipSelector : public Gtk::DrawingArea
     static int privateID;
     
     bool masterClipSelector;
+    int  masterClipPlaying;
+    int  masterClipQueued;
     
     Top* top;
     GuiStateStore* stateStore;

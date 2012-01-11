@@ -24,6 +24,8 @@ class GMasterOutput : public Gtk::DrawingArea
       CLICKED_WIDGET_DIAL,
       CLICKED_WIDGET_FADER,
       CLICKED_WIDGET_HEADPHONE_SELECT,
+      CLICKED_WIDGET_ROTATE_PAN,
+      CLICKED_WIDGET_ROTATE_ELEVATION,
     };
     
     ClickedWidget clickedWidget;

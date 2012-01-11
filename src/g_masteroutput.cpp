@@ -30,10 +30,12 @@ GMasterOutput::GMasterOutput(Top* t, GuiStateStore* s)
   
   volume    = 0.707;
   pan       = 0.f;
-  elevation = 0.f;
+  elevation = 0.5f;
   
   headphonePflSelect = false;
   headphonesVolume = 0.f;
+  
+  clickedWidget = CLICKED_WIDGET_NONE;
   
   set_size_request(74*3,104);
 }
@@ -121,7 +123,6 @@ bool GMasterOutput::on_expose_event(GdkEventExpose* event)
     cr->stroke();
     
     // draw rotation widget
-    elevation = headphonesVolume;
     float rotation  = pan;
     
     // dashed cross lines
@@ -160,8 +161,6 @@ bool GMasterOutput::on_expose_event(GdkEventExpose* event)
     setColour(cr, COLOUR_GREY_3);
     cr->set_line_width(3);
     cr->stroke();
-    
-    rotation = volume;
     
     // rotation line
     cr->move_to(45 + 7, 45 + 7);
@@ -263,71 +262,62 @@ void GMasterOutput::on_menu_file_popup_generic()
 
 bool GMasterOutput::on_button_press_event(GdkEventButton* event)
 {
-  if( event->type == GDK_BUTTON_PRESS && event->button == 1 )
+  // reset click, will be set again if needed
+  clickedWidget = CLICKED_WIDGET_NONE;
+  
+  if ( event->x > 152 ) // faders
   {
-    // reset click, will be set again if needed
+    clickedWidget = CLICKED_WIDGET_FADER;
+    mouseX = event->x;
+    mouseY = event->y;
+    
+    volume = 1 - ((event->y-4) / 94.f);
+    cout << "Click volume : " << volume << endl;
+    redraw();
+  }
+  else if ( event->x > 100 && event->x < 150 &&
+            event->y >  80 && event->y <  95 )
+  {
+    cout << "HEADPHONE_SELECT clicked" << endl;
+    clickedWidget = CLICKED_WIDGET_HEADPHONE_SELECT;
+    headphonePflSelect = !headphonePflSelect;
+    redraw();
+  }
+  else if ( event->x >   7 && event->x <  97 &&
+            event->y >   7 && event->y <  97 )
+  {
+    if( event->button == 1 ) {
+      clickedWidget = CLICKED_WIDGET_ROTATE_PAN;
+      pan = 1 - ((event->y-4) / 94.f);
+      cout << "Clicked ROTATE_PAN " << pan << endl;
+      redraw();
+    }
+    else if ( event->button == 3 ) {
+      clickedWidget = CLICKED_WIDGET_ROTATE_ELEVATION;
+      elevation = 1 - ((event->y-4) / 94.f);
+      cout << "Clicked ROTATE_ELEVATION " << elevation << endl;
+      redraw();
+    }
+  }
+  else if ( event->x > 110 && event->x < 145 &&
+            event->y > 40  && event->y < 75 )
+  {
+    cout << "DIAL CLICKED!!" << endl;
+    clickedWidget = CLICKED_WIDGET_DIAL;
+    
+    headphonesDialClickOffset = event->y;
+    
+    headphonesDialClickVolume = headphonesVolume;
+    
+    cout << "headphonesDialClickOffset: " << headphonesDialClickOffset << ", headphonesVolume: "
+         << headphonesVolume << endl;
+          
+    
+    redraw();
+  }
+  else
+  {
     clickedWidget = CLICKED_WIDGET_NONE;
-    
-    if ( event->x > 152 ) // faders
-    {
-      clickedWidget = CLICKED_WIDGET_FADER;
-      mouseX = event->x;
-      mouseY = event->y;
-      
-      volume = 1 - ((event->y-4) / 94.f);
-      cout << "Click volume : " << volume << endl;
-      redraw();
-    }
-    else if ( event->x > 100 && event->x < 150 &&
-              event->y >  80 && event->y <  95 )
-    {
-      cout << "HEADPHONE_SELECT clicked" << endl;
-      clickedWidget = CLICKED_WIDGET_HEADPHONE_SELECT;
-      headphonePflSelect = !headphonePflSelect;
-      redraw();
-    }
-    /*
-    else if ( event->x > 5 && event->y > 39 && event->y < 39 + 23 ) // mute
-    {
-      EngineEvent* x = new EngineEvent();
-      TrackOutputState* state = new TrackOutputState(); //  = &stateStore->trackoutputState.at(0);
-      x->setTrackMute(ID, !state->mute);
-      top->toEngineQueue.push(x);
-    }
-    else if ( event->x > 5 && event->y > 67 && event->y < 67 + 13 ) // solo
-    {
-      std::cout << "SOLO" << std::endl;
-      EngineEvent* x = new EngineEvent();
-      TrackOutputState* state = new TrackOutputState(); //  = &stateStore->trackoutputState.at(0);
-      x->setTrackSolo(ID, !state->solo);
-      top->toEngineQueue.push(x);
-    }
-    else if ( event->x > 5 && event->y > 85 && event->y < 85 + 13 ) // rec
-    {
-      std::cout << "REC" << std::endl;
-      EngineEvent* x = new EngineEvent();
-      TrackOutputState* state = new TrackOutputState(); //  = &stateStore->trackoutputState.at(0);
-      x->setTrackRec(ID, !state->recEnable);
-      top->toEngineQueue.push(x);
-    }
-    */
-    else if ( event->x > 110 && event->x < 145 &&
-              event->y > 40  && event->y < 75 )
-    {
-      cout << "DIAL CLICKED!!" << endl;
-      clickedWidget = CLICKED_WIDGET_DIAL;
-      
-      headphonesDialClickOffset = event->y;
-      
-      headphonesDialClickVolume = headphonesVolume;
-      
-      cout << "headphonesDialClickOffset: " << headphonesDialClickOffset << ", headphonesVolume: "
-           << headphonesVolume << endl;
-            
-      
-      redraw();
-    }
-    
   }
   
   /*
@@ -389,22 +379,23 @@ bool GMasterOutput::onMouseMove(GdkEventMotion* event)
       headphonesVolume = 0.f;
     
     redraw();
-    
-    /*
-    TrackOutputState* state = new TrackOutputState(); //  = &stateStore->trackoutputState.at(0);
-    
-    float mouseYdelta = (mouseY - event->y) / 225.f;
-    std::cout << "MouseYdelta: " << mouseYdelta << std::endl;
-    
-    EngineEvent* x = new EngineEvent();
-    
-    // move volume relative to current value
-    x->setTrackPan(ID, mouseYdelta + state->pan);
-    top->toEngineQueue.push(x);
-    
-    // reset mouseY
-    mouseY = event->y;
-    */
+  }
+  else if ( clickedWidget == CLICKED_WIDGET_ROTATE_PAN )
+  {
+    pan = 1 - ((event->y-4) / 94.f);
+    pan = pan - ((int)pan); // remove anything above 1
+    cout << "move ROTATE_PAN " << pan << endl;
+    redraw();
+  }
+  else if (clickedWidget == CLICKED_WIDGET_ROTATE_ELEVATION)
+  {
+    elevation = 1 - ((event->y-4) / 94.f);
+    if ( elevation > 1.f )
+      elevation = 1.f;
+    else if ( elevation < 0.f )
+      elevation = 0.f;
+    cout << "move ROTATE_ELEVATION " << elevation << endl;
+    redraw();
   }
   
   return true;
