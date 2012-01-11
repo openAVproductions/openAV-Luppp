@@ -18,6 +18,8 @@ Lv2Host::Lv2Host(Top* t, EffectType et, int inNframes, int inSamplerate) :
   nframes = inNframes;
   samplerate = inSamplerate;
   
+  outputBuffer.resize(inNframes);
+  
   numPorts = 0;
   numControlInputs = 0;
   numControlOutputs= 0;
@@ -35,6 +37,14 @@ Lv2Host::Lv2Host(Top* t, EffectType et, int inNframes, int inSamplerate) :
     pushChangesToUI = 1;
   
   initialized = false;
+  
+  std::string loadString;
+  switch ( et )
+  {
+    case EFFECT_TESTTONES: loadString = "http://invadarecords.com/plugins/lv2/testtone"; break;
+  }
+  
+  loadPlugin( loadString );
   
 }
 
@@ -371,11 +381,6 @@ void Lv2Host::setParameterAbsolute(int param, float value)
     std::cout << "Lv2Host::setParameter() accesing out of bounds, param:" << param << std::endl;
 }
 
-void Lv2Host::passAudio(float *L, float *R, int nframes)
-{
-  // do nothing, its not needed
-}
-
 void Lv2Host::connectPorts(float* audioOutput)
 {
   int controlBufCount = 0;
@@ -414,36 +419,33 @@ void Lv2Host::connectPorts(float* audioOutput)
   }
 }
 
-void Lv2Host::process(float* L, float* R, int nframes)
+void Lv2Host::process(int nframes, float* buffer)
 {
   if( initialized != 1 )
   {
-    //print ("Lv2Host::process(): Warning: Running uninitialized plugin!");
+    std::cout << "Lv2Host::process(): Warning: Running uninitialized plugin!" << std::endl;
     return;
   }
   
-  //print ("Lv2Host::process(): running NOW!");
+  //std::cout << "Lv2Host::process(): running NOW!"  << std::endl;
   
-  connectPorts(L);
+  controlBuffer[0] = 0.f; // active
+  controlBuffer[1] = 220.f; // freq
+  controlBuffer[2] = 0.f; // trim
+  
+  instance->connect_port( 0, &controlBuffer[0] );
+  instance->connect_port( 1, &controlBuffer[1] );
+  instance->connect_port( 2, &controlBuffer[2] );
+  instance->connect_port( 3, &outputBuffer[0]  );
+  instance->connect_port( 4, &controlBuffer[4] );
+  
+  //connectPorts(buffer);
   
   instance->run(nframes);
   
-  // osc update the UI if were gone enough nframes without (lessen traffic)
-  if ( oscNframeCounter < 0 )
+  for ( int i = 0; i < nframes; i++ )
   {
-    for (int i = 0; i < numPorts; i++)
-    {
-      if( portDetails.at(i)->control && portDetails.at(i)->output )
-      {
-      }
-        //rh->sendOsc(Osc::PATH_TRACK_SET_PLUGIN_PARAMETER_ABSOLUTE, -2, ID, i, controlOutputBuffer.at(i) );
-    }
-    // resolution of the UI updates, measure is number of process() calls per sec
-    oscNframeCounter = (samplerate / nframes) / 25;
-  }
-  else
-  {
-    oscNframeCounter--;
+    *buffer++ = outputBuffer[i];
   }
   
   //print ("Lv2Host::process(): Warning: Running uninitialized plugin!");

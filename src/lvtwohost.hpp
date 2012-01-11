@@ -72,8 +72,7 @@ class Lv2Host : public Effect
     
     void loadPlugin(std::string);
     
-    void process(float *L, float *R, int nframes);
-    void passAudio(float *L, float *R, int nframes);
+    void process( int nframes, float *buffer);
   
   protected:
     
@@ -138,6 +137,8 @@ class Lv2Host : public Effect
     // buffers to pass in / out control / audio data
     std::vector<float> controlBuffer;
     std::vector<float> controlOutputBuffer;
+    
+    std::vector<float> outputBuffer;
     
     std::vector< RefPtr<PortDetails> > portDetails;
     

@@ -195,7 +195,7 @@ void Window::trackEffectDragDrop(const Glib::RefPtr<Gdk::DragContext>& context, 
   {
     std::string filename = selection_data.get_data_as_string();
     std::cout << "Received " << filename << " in trackEffectDragDrop! " << std::endl;
-    
+    int ret = top->offlineWorker->createNewEffect( currentEffectsTrack, 1, EFFECT_TESTTONES );
   }
   
 }
