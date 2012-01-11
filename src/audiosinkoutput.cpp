@@ -7,6 +7,8 @@ AudioSinkOutput::AudioSinkOutput(Top* t)
 {
   ID = privateID++;
   
+  std::cout << "AudioSinkOutput() ID = " << ID << std::endl;
+  
   top = t;
 }
 
@@ -44,15 +46,36 @@ void AudioSinkOutput::process(int nframes, float* in, float *W, float *X, float 
   aw = a5 * 0.707
   */
   
+  float tmp;
+  
   for( int i = 0; i < nframes; i++)
   {
     // += so we don't overwrite the previous tracks!
-    W[i] += in[i] * 0.707 * logVolume;
+    tmp = in[i] * 0.707 * logVolume;
+    W[i] += tmp;
     X[i] += in[i] * cosAzimuth * cosElevation * logVolume;
     Y[i] += in[i] * sinAzimuth * cosElevation * logVolume;
     Z[i] += in[i] * sinElevation * logVolume;
     
     // clear the internal track buffer
     in[i] = 0.f;
+    
+    if ( maxAmplitude < tmp )
+      maxAmplitude = tmp;
+  }
+  
+  amplitudeSendCounter -= nframes;
+  
+  std::cout << "SinkOutput " << ID << " processing now" << std::endl;
+  
+  if ( amplitudeSendCounter < 0 )
+  {
+    std::cout << "sending track RMS now on track " << ID << std::endl;
+    EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+    x->setTrackRms( ID, maxAmplitude );
+    top->toGuiQueue.push(x);
+    
+    maxAmplitude = 0.f;
+    amplitudeSendCounter = top->samplerate / 10;
   }
 }

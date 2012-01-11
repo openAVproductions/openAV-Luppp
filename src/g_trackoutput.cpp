@@ -75,7 +75,7 @@ bool TrackOutput::on_expose_event(GdkEventExpose* event)
     Mute(cr, 9  , 41 , state->ID, state->mute ); // mute button
     Solo(cr, 9  , 68 , state->ID, state->solo ); // solo button
     Rec (cr, 9  , 85 , state->ID, state->recEnable); // rec button
-    Fader(cr,46 , 4  , state->volume, 0, 0 ); // fader
+    Fader(cr,46 , 4  , state->volume, state->rms, state->falloff ); // fader
     
     if ( state->selected )
     {

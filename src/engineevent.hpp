@@ -31,6 +31,8 @@ enum EngineEventType
   EE_SAMPLER_STOP,
   EE_SAMPLER_SET_MODE,
   
+  EE_TRACK_RMS,
+  
   EE_TRACK_SET_SPEED,
   EE_TRACK_SET_PAN,
   EE_TRACK_SET_REC,
@@ -108,6 +110,7 @@ class EngineEvent
     void setPluginParameter   (int i1, int i2, int i3, float f1);
     void setPluginParameterAbsolute(int i1, int i2, int i3, float f1);
     
+    void setTrackRms          (int id, float rms);
     void setTrackSource       (int id, void* source);
     void setTrackDeviceActive (int id, int a);
     void setTrackSetDeviceType(int id, int b, int a);

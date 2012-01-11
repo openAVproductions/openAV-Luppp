@@ -22,6 +22,9 @@ class AudioSinkOutput : public AudioSink
     static int privateID;
     
     Top* top;
+    
+    int amplitudeSendCounter;
+    float maxAmplitude;
 };
 
 #endif

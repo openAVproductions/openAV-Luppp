@@ -277,6 +277,13 @@ int Window::handleEvent()
       }
       
     }
+    else if ( e->type == EE_TRACK_RMS ) {
+      cout << "Track " << e->ia << "  RMS: " << e->fa << endl;
+      guiState.trackoutputState.at(e->ia).rms = e->fa;
+      std::list<TrackOutput*>::iterator i = trackoutputList.begin();
+      std::advance(i,e->ia);
+      (*i)->redraw();
+    }
     else if ( e->type == EE_TRACK_SET_MUTE ) {
       //std::cout << "GUI MUTE event: " << e->ib << std::endl;
       guiState.trackoutputState.at(e->ia).mute = e->ib;
@@ -455,21 +462,22 @@ int Window::handleEvent()
         {
           std::list<ClipInfo>::iterator iter = guiState.clipSelectorState.at(e->ia).clipInfo.begin();
           std::advance(iter, playing);
-          //(*iter).state = CLIP_STATE_LOADED;
         }
         
         // playing can = -1 for "nothing playing", so set regardless
         guiState.clipSelectorState.at(e->ia).playing = e->ib;
-        
-        // update currently playing, and set item to playing state
-        if ( e->ib >= 0 ) // range check
+        list<ClipInfo>::iterator iter = guiState.clipSelectorState.at(e->ia).clipInfo.begin();
+        advance(iter, e->ib);
+        if ( !iter->hasBuffer )
         {
-          std::list<ClipInfo>::iterator iter = guiState.clipSelectorState.at(e->ia).clipInfo.begin();
-          std::advance(iter, e->ib);
-          //(*iter).state = CLIP_STATE_PLAYING;
+          // if the clip doesn't have a buffer, set "stop" clip to play
+          guiState.clipSelectorState.at(e->ia).playing = -1;
         }
+        
+        if ( guiState.clipSelectorState.at(e->ia).playing == -1 )
+          tracklabelBoxList.back()->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("green"));
         else
-          cout << "GUI: LOOPER_SELECT_BUFFER block OOB " << e->ib << endl;
+          tracklabelBoxList.back()->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("FF6800"));
         
         std::list<ClipSelector*>::iterator clipIter = clipselectorList.begin();
         advance(clipIter,e->ia);
@@ -617,12 +625,12 @@ void Window::addTrack()
   std::list<Gtk::Label*>::iterator labelIter = tracklabelList.begin();
   std::advance(labelIter,numTracks);
   
-  Gtk::EventBox* tmpBox = new Gtk::EventBox();
-  tmpBox->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("green"));
+  tracklabelBoxList.push_back( new Gtk::EventBox() );
+  tracklabelBoxList.back()->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("green"));
   
-  tmpBox->add(**labelIter);
+  tracklabelBoxList.back()->add(**labelIter);
   
-  mainTable->attach( *tmpBox, numTracks, numTracks+1, 0, 1);
+  mainTable->attach( *tracklabelBoxList.back(), numTracks, numTracks+1, 0, 1);
   
   // input selector
   trackinputList.push_back( new Gtk::ComboBoxText() );

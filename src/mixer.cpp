@@ -77,8 +77,10 @@ void Mixer::process(int nframes,bool record, PortBufferList& portBufferList)
   // process the entire audio chain here
   std::list<AudioTrack>::iterator iter;
   
+  //int c = 0;
   for(iter = audiotrackList.begin(); iter != audiotrackList.end(); iter++ )
   {
+    //std::cout << "Mixer:processing  Audiotrack " << c++ << std::endl;
     iter->process( nframes, &portBufferList.inputAudio[0], &outputW[0], &outputX[0], &outputY[0], &outputZ[0]);
   }
   

@@ -15,6 +15,9 @@ struct TrackOutputState
     pan    = 0.f;
     panZ   = 0.f;
     
+    rms = 0.f;
+    falloff = 0.f;
+    
     mute = solo = recEnable = false;
   }
   
@@ -27,6 +30,9 @@ struct TrackOutputState
   float volume;
   float pan;
   float panZ;
+  
+  float rms;
+  float falloff;
   
   bool mute, solo, recEnable;
 };

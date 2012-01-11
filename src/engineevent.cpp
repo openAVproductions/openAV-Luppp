@@ -27,6 +27,7 @@ void EngineEvent::samplerSetMode       (int id, int b) { ia = id; ib = b; type =
 void EngineEvent::setTrackSpeed        (int id, float v) { ia = id; fa = v; type = EE_TRACK_SET_SPEED;}
 void EngineEvent::setTrackPan          (int id, float v) { ia = id; fa = v; type = EE_TRACK_SET_PAN;  }
 
+void EngineEvent::setTrackRms          (int id, float rms) { ia = id; fa = rms; type = EE_TRACK_RMS; }
 void EngineEvent::setTrackRec          (int id, int b) { ia = id; ib = b; type = EE_TRACK_SET_REC; }
 void EngineEvent::setTrackSolo         (int id, int b) { ia = id; ib = b; type = EE_TRACK_SET_SOLO; }
 void EngineEvent::setTrackMute         (int id, int b) { ia = id; ib = b; type = EE_TRACK_SET_MUTE; }

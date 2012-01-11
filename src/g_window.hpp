@@ -103,6 +103,7 @@ class Window
     std::list<ClipSelector*>clipselectorList;
     
     std::list<Gtk::Label*> tracklabelList;
+    std::list<Gtk::EventBox*> tracklabelBoxList;
     std::list<Gtk::ComboBoxText*> trackinputList;
     std::vector<GProgress*> progressWidgetVector;
     

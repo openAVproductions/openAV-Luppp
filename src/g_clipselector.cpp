@@ -192,8 +192,8 @@ bool ClipSelector::on_button_press_event(GdkEventButton* event)
   {
     if ( event->button == 1 )
     {
-      // send clip activate on all tracks, and return
-      for ( int i = 0; i < 20; i++ )
+      // send clip activate on all tracks ( counted trough hack on static int) and return
+      for ( int i = 0; i < privateID; i++ )
       {
         EngineEvent* x = new EngineEvent();
         x->looperSelectBuffer(i,block);

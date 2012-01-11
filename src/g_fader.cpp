@@ -3,7 +3,7 @@
 
 namespace Luppp
 {
-  void Fader(Cairo::RefPtr<Cairo::Context> cr, float x, float y, float value, float rms, float peak)
+  void Fader(Cairo::RefPtr<Cairo::Context> cr, float x, float y, float value, float rms, float falloff)
   {
     // draw invisible from the last widget
     cr->set_source_rgba(0,0,0,0);
@@ -34,6 +34,22 @@ namespace Luppp
     setColour(cr, COLOUR_ORANGE_1 );
     cr->fill();
     
+    float tmpRms = (1-rms);
+    
+    if ( falloff > rms )
+    {
+      tmpRms = (1-falloff);
+      falloff -= 0.02;
+    }
+    else
+    {
+      falloff = rms;
+    }
+    
+    cr->rectangle ( x, y, 12, 94 * tmpRms );
+    setColour(cr, COLOUR_GREY_4 );
+    cr->fill();
+    
     // draw fader  <|
     float playheadX = x + 12;
     float playheadY = y + (92 * ( 1.f - value));
@@ -54,6 +70,7 @@ namespace Luppp
     cr->fill_preserve();
     cr->stroke();
     
+    // line between fader markers |> --- <|
     setColour(cr, COLOUR_GREY_4 );
     cr->set_line_width(2);
     cr->move_to( x, playheadY );
