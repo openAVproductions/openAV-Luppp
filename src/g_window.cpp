@@ -174,6 +174,15 @@ void Window::trackEffectDragDrop(const Glib::RefPtr<Gdk::DragContext>& context, 
                                  const Gtk::SelectionData& selection_data, guint, guint time)
 {
   cout << "Window::trackEffectDragDrop() called!" << endl;
+  
+  const int length = selection_data.get_length();
+  if( (length >= 0) )
+  {
+    std::string filename = selection_data.get_data_as_string();
+    std::cout << "Received " << filename << " in trackEffectDragDrop! " << std::endl;
+    
+  }
+  
 }
 
 void Window::quit()

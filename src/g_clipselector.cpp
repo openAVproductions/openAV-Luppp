@@ -191,13 +191,13 @@ void ClipSelector::dropFunction( const Glib::RefPtr<Gdk::DragContext>& context, 
     std::string filename = selection_data.get_data_as_string();
     std::cout << "Received " << filename << " in ClipSelector, loading now! " << std::endl;
     
-  // audioFileLoader informs engine & updates StateStore
-  int ret = top->offlineWorker->loadAudioBuffer( ID, block, filename );
-  
-  if ( ret == 0 ) // successful load, so store filename in vector
-  {
-    stateStore->audioBufferNameVector.push_back( Glib::path_get_basename(filename) );
-  }
+    // audioFileLoader informs engine & updates StateStore
+    int ret = top->offlineWorker->loadAudioBuffer( ID, block, filename );
+    
+    if ( ret == 0 ) // successful load, so store filename in vector
+    {
+      stateStore->audioBufferNameVector.push_back( Glib::path_get_basename(filename) );
+    }
   }
 
   context->drag_finish(false, false, time);

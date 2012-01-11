@@ -677,17 +677,31 @@
                       <object class="GtkEventBox" id="trackEffectEventBox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="visible_window">False</property>
+                        <property name="above_child">True</property>
                         <child>
-                          <object class="GtkHBox" id="trackEffectBox">
+                          <object class="GtkBox" id="box4">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="spacing">2</property>
                             <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
+                              <object class="GtkHBox" id="trackEffectBox">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="spacing">2</property>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
                             </child>
                             <child>
                               <placeholder/>
