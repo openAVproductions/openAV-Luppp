@@ -22,11 +22,11 @@ namespace Luppp
     cr->stroke();
     
     // id text
-    cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_NORMAL);
-    cr->set_font_size ( 13 );
-    cr->move_to ( x + 8, y + 11 );
+    cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_BOLD);
+    cr->set_font_size ( 11 );
+    cr->move_to ( x + 1, y + 11 );
     cr->set_source_rgb( 0 / 255.f, 0/255.f , 0/255.f );
     
-    cr->show_text ( "s" );
+    cr->show_text ( "PFL" );
   }
 }

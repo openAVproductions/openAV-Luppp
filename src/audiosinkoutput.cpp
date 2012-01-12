@@ -65,11 +65,14 @@ void AudioSinkOutput::process(int nframes, float* in, float *W, float *X, float 
   {
     // += so we don't overwrite the previous tracks!
     tmp = in[i] * 0.707 * logVolume;
-    W[i] += tmp;
-    X[i] += in[i] * cosAzimuth * cosElevation * logVolume;
-    Y[i] += in[i] * sinAzimuth * cosElevation * logVolume;
-    Z[i] += in[i] * sinElevation * logVolume;
     
+    if ( !state->mute ) // only write when not muted
+    {
+      W[i] += tmp;
+      X[i] += in[i] * cosAzimuth * cosElevation * logVolume;
+      Y[i] += in[i] * sinAzimuth * cosElevation * logVolume;
+      Z[i] += in[i] * sinElevation * logVolume;
+    }
     // write to postFaderSend buffer
     *postFaderSend++ += tmp;
     

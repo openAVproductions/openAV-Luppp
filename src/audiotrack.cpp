@@ -92,9 +92,6 @@ void AudioTrack::process(int nframes, float* buffer, float* W, float* X, float* 
 {
   //std::cout << "AudioTrack::process()" << std::endl;
   
-  TrackOutputState* state = top->state.getAudioSinkOutput(ID);
-  if ( state->mute ) { return; }
-  
   // get audio from source
   source->process(nframes, &trackBuffer[0]);
   
