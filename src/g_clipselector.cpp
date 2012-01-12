@@ -37,6 +37,8 @@ ClipSelector::ClipSelector(Top* t, GuiStateStore* s)
   signal_drag_data_received().connect(sigc::mem_fun(*this, &ClipSelector::dropFunction) );
   
   masterClipSelector = false;
+  masterClipPlaying  = -1;
+  masterClipQueued   = -1;
   
   set_size_request(74,18 * 10);
 }
@@ -155,6 +157,10 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
         advance(iter, i);
         name = *iter;
         clipState = CLIP_STATE_MASTER_TRACK;
+        if ( i == masterClipPlaying )
+        {
+          clipState = CLIP_STATE_PLAYING;
+        }
       }
       
       cr->rectangle(0,y,event->area.width,17);
@@ -202,6 +208,8 @@ bool ClipSelector::on_button_press_event(GdkEventButton* event)
         x->looperSelectBuffer(i,block);
         top->toEngineQueue.push(x);
       }
+      masterClipPlaying = block;
+      redraw();
     }
     else // rename scene
     {

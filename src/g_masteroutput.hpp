@@ -23,15 +23,27 @@ class GMasterOutput : public Gtk::DrawingArea
       CLICKED_WIDGET_NONE,
       CLICKED_WIDGET_DIAL,
       CLICKED_WIDGET_FADER,
+      CLICKED_WIDGET_HEADPHONE_SELECT,
+      CLICKED_WIDGET_ROTATE_PAN,
+      CLICKED_WIDGET_ROTATE_ELEVATION,
     };
     
     ClickedWidget clickedWidget;
     
     int ID;
     static int privateID;
-    GuiStateStore* stateStore;
     
     Top* top;
+    GuiStateStore* stateStore;
+    
+    bool  headphonePflSelect;
+    float headphonesVolume;
+    float headphonesDialClickOffset;
+    float headphonesDialClickVolume;
+    
+    float volume;
+    float pan;
+    float elevation;
     
     Glib::RefPtr<Gdk::Pixbuf> headphoneImage;
     

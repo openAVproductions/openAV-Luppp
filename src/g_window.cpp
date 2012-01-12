@@ -17,6 +17,7 @@ using namespace std;
 #include "g_beatsmash.hpp"
 #include "g_transient.hpp"
 #include "g_compressor.hpp"
+#include "g_lvtwodisplay.hpp"
 
 Window::Window(Gtk::Main *k, Top* t) :
   masterOutput(t, &guiState),
@@ -195,6 +196,8 @@ void Window::trackEffectDragDrop(const Glib::RefPtr<Gdk::DragContext>& context, 
   {
     std::string filename = selection_data.get_data_as_string();
     std::cout << "Received " << filename << " in trackEffectDragDrop! " << std::endl;
+    int ret = top->offlineWorker->createNewEffect( currentEffectsTrack, 1, EFFECT_TESTTONES );
+    
     
   }
   
@@ -522,6 +525,7 @@ int Window::handleEvent()
           case EFFECT_COMPRESSOR:   trackVector.at(t).widgetVector.push_back( new GCompressor (top, &guiState) ); break;
           case EFFECT_LIMITER:      trackVector.at(t).widgetVector.push_back( new GLimiter    (top, &guiState) ); break;
           case EFFECT_PARAMETRIC_EQ:trackVector.at(t).widgetVector.push_back( new Equalizer   (     &guiState) ); break;
+          case EFFECT_TESTTONES:    trackVector.at(t).widgetVector.push_back( new Lv2Display  (top, &guiState) ); cout << "creating Lv2Display now" << endl; break;
           default: newEffect = false; break;
         }
         

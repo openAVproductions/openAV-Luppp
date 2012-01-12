@@ -175,7 +175,8 @@ int JackClient::processRtQueue()
       top->state.setRec( e->ia, e->ib );
     }
     else if ( e->type == EE_TRACK_SET_PAN ) {
-      top->state.setPan( e->ia, e->ib );
+      cout << "JC:RTQ() SET_PAN event  " << e->ia << ", " << e->fa << endl;
+      top->state.setPan( e->ia, e->fa );
     }
     else if ( e->type == EE_STATE_SET_AUDIO_BUFFER ) {
       // sets the unique bufferID into the AudioBuffer list, so we can

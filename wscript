@@ -18,7 +18,7 @@ def configure(ctx):
   
   ctx.check_tool ('compiler_cxx')
   
-  ctx.env.CXXFLAGS = ['-pg','-g','-ldl','-Wall','-Wextra']
+  ctx.env.CXXFLAGS = ['-pg','-g','-ldl','-Wall','-Wextra','-fpermissive']
   
   #   Engine Depends
   ctx.check_cfg	(package='jack',at_least_version='0.118',args='--cflags --libs',uselib_store='JACK')
@@ -27,11 +27,13 @@ def configure(ctx):
   ctx.check_cfg	(package='glibmm-2.4',at_least_version='2.0.0',args='--cflags --libs',uselib_store='GLIBMM')
   ctx.check_cfg	(package='fluidsynth',args='--libs',uselib_store='FLUIDSYNTH')
   ctx.check_cfg	(package='libconfig++',args='--libs',uselib_store='LIBCONFIG')
-  #ctx.check_cfg	(package='dl',args='--libs',uselib_store='DL')
+  ctx.check_cfg	(package='lilv-0',args='--cflags --libs',uselib_store='LILV')
+  ctx.check_cfg	(package='suil-0',args='--cflags --libs',uselib_store='SUIL')
   
   # Check for headers:
-  #ctx.check(header_name="ladspa.h",mandatory=False,uselib_store='LADSPA.H')
-  
+  ctx.check(header_name="lv2.h",mandatory=True,uselib_store='LV2.H')
+  ctx.check(header_name="ladspa.h",mandatory=True,uselib_store='LADSPA.H')
+
 
 def build(ctx):
   #print '\nBuilding the sources to objects...'
@@ -39,6 +41,7 @@ def build(ctx):
   #     ENGINE
   engineList=['src/top.cpp',
               'src/rtqueue.cpp',
+              'src/lvtwohost.cpp',
               'src/audioqueue.cpp',
               'src/audiosource.cpp',
               'src/audiobuffer.cpp',
@@ -65,6 +68,7 @@ def build(ctx):
               'src/g_widgets.cpp',
               'src/g_waveview.cpp',
               'src/g_reverb.cpp',
+              'src/g_lvtwodisplay.cpp',
               'src/g_fileselector.cpp',
               'src/g_effectselector.cpp',
               'src/g_instrumentselector.cpp',
@@ -90,7 +94,7 @@ def build(ctx):
               'src/g_masteroutput.cpp',
               'src/g_trackoutput.cpp']
   
-  engineDepends = 'JACK SNDFILE GTKMM FLUIDSYNTH GLIBMM LIBCONFIG'
+  engineDepends = 'JACK SNDFILE GTKMM FLUIDSYNTH GLIBMM LIBCONFIG LILV Lv2.H LADSPA.H SUIL'
   
   #print 'Building ENGINE'
   buildList = engineList + guiList

@@ -3,6 +3,7 @@
 
 #include "top.hpp"
 #include "effect.hpp"
+#include "lvtwohost.hpp"
 #include "beatsmash.hpp"
 #include "trancegate.hpp"
 #include "ladspahost.hpp"
@@ -58,6 +59,9 @@ int OfflineWorker::createNewEffect(int t, int pos, int typeInt )
       break;
     case EFFECT_TRANCEGATE:
       effect = new TranceGate(top, type);
+      break;
+    case EFFECT_TESTTONES:
+      effect = new Lv2Host(top, type, top->bufferSize, top->samplerate);
       break;
     default: return -1;
   }
