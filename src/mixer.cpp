@@ -37,9 +37,12 @@ int Mixer::setSource(int track, AudioSource* source )
 
 int Mixer::addEffect(int track, int pos,  Effect* eff )
 {
-  std::list<AudioTrack>::iterator iter =  audiotrackList.begin();
-  std::advance(iter, track);
-  iter->addEffect( pos , eff);
+  if ( track > 0 && track < audiotrackList.size() )
+  {
+    std::list<AudioTrack>::iterator iter =  audiotrackList.begin();
+    std::advance(iter, track);
+    iter->addEffect( pos , eff);
+  }
   
   return 0;
 }
@@ -61,7 +64,7 @@ int Mixer::getEffectID(int track, int pos)
   return -1;
 }
 
-void Mixer::process(int nframes,bool record, PortBufferList& portBufferList)
+void Mixer::process(int nframes,bool record, PortBufferList& portBufferList, CopyBufferList& copyBufferList)
 {
   if ( nframes > 1024 )
   {
@@ -94,6 +97,14 @@ void Mixer::process(int nframes,bool record, PortBufferList& portBufferList)
   float* outPtrY = &outputY[0];
   float* outPtrZ = &outputZ[0];
   
+  // JACK output port buffers
+  float* headphonePort = portBufferList.headphonePfl;
+  float* postFaderSendPort = portBufferList.postFaderSend;
+  
+  // Luppp "extra" output buffers, headphones, postFaderSend
+  float* headphonePflBuffer = copyBufferList.headphonePfl;
+  float* postFaderSendBuffer = copyBufferList.postFaderSend;
+  
   /*
   bool copyToScopeVector = top->scopeVectorMutex.trylock();
   */
@@ -107,6 +118,9 @@ void Mixer::process(int nframes,bool record, PortBufferList& portBufferList)
     *portBufferList.outputY++ = *outPtrY;
     *portBufferList.outputZ++ = *outPtrZ;
     
+    // write headphone & postSend buffers into JACK ports
+    *headphonePort++     = *headphonePflBuffer++;
+    *postFaderSendPort++ = *postFaderSendBuffer++;
     
     /*
     if ( copyToScopeVector )

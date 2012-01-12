@@ -24,6 +24,9 @@ JackClient::JackClient( Top* t) :
   
   t->initialize();
   
+  headphonePflVector.resize(t->bufferSize);
+  postFaderSendVector.resize(t->bufferSize);
+  
   inputPort = jack_port_register ( client,
                                     "input",
                                     JACK_DEFAULT_AUDIO_TYPE,
@@ -52,6 +55,42 @@ JackClient::JackClient( Top* t) :
                                     "output_z",
                                     JACK_DEFAULT_AUDIO_TYPE,
                                     JackPortIsOutput,
+                                    0 );
+  
+  monoPostFaderSend = jack_port_register ( client,
+                                    "post_fader_send",
+                                    JACK_DEFAULT_AUDIO_TYPE,
+                                    JackPortIsOutput,
+                                    0 );
+  
+  headphonePflPort = jack_port_register ( client,
+                                    "headphone_pfl",
+                                    JACK_DEFAULT_AUDIO_TYPE,
+                                    JackPortIsOutput,
+                                    0 );
+  
+  bformatEffectReturnW = jack_port_register ( client,
+                                    "master_return_w",
+                                    JACK_DEFAULT_AUDIO_TYPE,
+                                    JackPortIsInput,
+                                    0 );
+  
+  bformatEffectReturnX = jack_port_register ( client,
+                                    "master_return_x",
+                                    JACK_DEFAULT_AUDIO_TYPE,
+                                    JackPortIsInput,
+                                    0 );
+  
+  bformatEffectReturnY = jack_port_register ( client,
+                                    "master_return_y",
+                                    JACK_DEFAULT_AUDIO_TYPE,
+                                    JackPortIsInput,
+                                    0 );
+  
+  bformatEffectReturnZ = jack_port_register ( client,
+                                    "master_return_z",
+                                    JACK_DEFAULT_AUDIO_TYPE,
+                                    JackPortIsInput,
                                     0 );
   
   midiInputPort = jack_port_register ( client,
@@ -87,6 +126,16 @@ JackClient::JackClient( Top* t) :
   }
   
   jack_activate(client);
+}
+
+float* JackClient::getHeadphonePflVector()
+{
+   return &headphonePflVector[0];
+}
+
+float* JackClient::getPostFaderSendVector()
+{
+   return &postFaderSendVector[0];
 }
 
 int JackClient::static_process(jack_nframes_t nframes, void* thisPointer)
@@ -224,6 +273,9 @@ int JackClient::process(jack_nframes_t nframes)
   portBufferList.outputY = (float*)jack_port_get_buffer (outputPortY, nframes);
   portBufferList.outputZ = (float*)jack_port_get_buffer (outputPortZ, nframes);
   
+  portBufferList.headphonePfl = (float*)jack_port_get_buffer (headphonePflPort, nframes);
+  portBufferList.postFaderSend= (float*)jack_port_get_buffer (monoPostFaderSend, nframes);
+  
   // class variable for buffer
   apcOutputBuffer = jack_port_get_buffer ( apcOutputPort, nframes);
   jack_midi_clear_buffer(apcOutputBuffer);
@@ -237,7 +289,10 @@ int JackClient::process(jack_nframes_t nframes)
   // handle incoming midi
   processMidi(nframes);
   
-  mixer.process(nframes, recordInput, portBufferList);
+  copyBufferList.headphonePfl  = &headphonePflVector[0];
+  copyBufferList.postFaderSend = &postFaderSendVector[0];
+  
+  mixer.process(nframes, recordInput, portBufferList, copyBufferList);
   
   return true;
 };

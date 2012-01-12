@@ -37,6 +37,9 @@ class JackClient
     void* getApcOutputBuffer();
     void  apcWriteGridTrack(int track);
     
+    float* getHeadphonePflVector();
+    float* getPostFaderSendVector();
+    
     void writeMidi( void*, int,int,int);
     
     void deactivate();
@@ -51,6 +54,7 @@ class JackClient
     
     // this PortBufferList represents float*'s that we can use to write audio
     PortBufferList portBufferList;
+    CopyBufferList copyBufferList;
     
     Time time;
     Mixer mixer;
@@ -63,10 +67,24 @@ class JackClient
     JPort* outputPortZ;
     JPort* midiInputPort;
     
+    JPort* headphonePflPort;
+    
+    JPort* monoPostFaderSend;
+    JPort* bformatEffectReturnW;
+    JPort* bformatEffectReturnX;
+    JPort* bformatEffectReturnY;
+    JPort* bformatEffectReturnZ;
+    
     JPort* apcInputPort;
     JPort* apcOutputPort;
     
     int trackControlMode;
+    
+    float* headphonePflBuffer;
+    float* postFaderSendBuffer;
+    
+    std::vector<float> headphonePflVector;
+    std::vector<float> postFaderSendVector;
     
     void* apcOutputBuffer;
     void  apcRead(int);

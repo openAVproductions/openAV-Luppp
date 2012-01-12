@@ -1,6 +1,8 @@
 
 #include "audiosinkoutput.hpp"
 
+#include "jackclient.hpp"
+
 int AudioSinkOutput::privateID = 0;
 
 AudioSinkOutput::AudioSinkOutput(Top* t)
@@ -48,6 +50,12 @@ void AudioSinkOutput::process(int nframes, float* in, float *W, float *X, float 
   
   float tmp;
   
+  // write to the reverb send JACK port
+  // this is to cater for effects like the zita-rev1 ambisonic reverb:
+  // it sends a mono *post fader* signal, and the returned B-format
+  // gets mixed into the master bus return.
+  float* postFaderSend = top->jackClient->getPostFaderSendVector();
+  
   for( int i = 0; i < nframes; i++)
   {
     // += so we don't overwrite the previous tracks!
@@ -56,6 +64,9 @@ void AudioSinkOutput::process(int nframes, float* in, float *W, float *X, float 
     X[i] += in[i] * cosAzimuth * cosElevation * logVolume;
     Y[i] += in[i] * sinAzimuth * cosElevation * logVolume;
     Z[i] += in[i] * sinElevation * logVolume;
+    
+    // write to postFaderSend buffer
+    *postFaderSend++ = tmp;
     
     // clear the internal track buffer
     in[i] = 0.f;
