@@ -11,6 +11,8 @@ AudioSinkOutput::AudioSinkOutput(Top* t)
   
   std::cout << "AudioSinkOutput() ID = " << ID << std::endl;
   
+  amplitudeSendCounter = 0;
+  
   top = t;
 }
 
@@ -89,7 +91,6 @@ void AudioSinkOutput::process(int nframes, float* in, float *W, float *X, float 
   
   if ( amplitudeSendCounter < 0 )
   {
-    //std::cout << "sending track RMS now on track " << ID << std::endl;
     EngineEvent* x = top->toEngineEmptyEventQueue.pull();
     x->setTrackRms( ID, maxAmplitude );
     top->toGuiQueue.push(x);
