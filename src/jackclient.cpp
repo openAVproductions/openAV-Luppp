@@ -168,6 +168,7 @@ int JackClient::processRtQueue()
       top->state.setMute( e->ia, e->ib );
     }
     else if ( e->type == EE_TRACK_SET_SOLO ) {
+      cout << "JC:RTQ() SET_SOLO event: Hacked to provide PFL functionality" << endl;
       top->state.setSolo( e->ia, e->ib );
     }
     else if ( e->type == EE_TRACK_SET_REC ) {

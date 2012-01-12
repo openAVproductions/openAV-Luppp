@@ -178,7 +178,7 @@ int StateStore::setSolo(int t, int v)
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
-  iter->solo = v;
+  iter->pflEnable = v;
   
   EngineEvent* x = top->toEngineEmptyEventQueue.pull();
   x->setTrackSolo(t, v);

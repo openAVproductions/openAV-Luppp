@@ -281,7 +281,7 @@ int Window::handleEvent()
       
     }
     else if ( e->type == EE_TRACK_RMS ) {
-      cout << "Track " << e->ia << "  RMS: " << e->fa << endl;
+      //cout << "Track " << e->ia << "  RMS: " << e->fa << endl;
       guiState.trackoutputState.at(e->ia).rms = e->fa;
       std::list<TrackOutput*>::iterator i = trackoutputList.begin();
       std::advance(i,e->ia);
