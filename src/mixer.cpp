@@ -119,8 +119,8 @@ void Mixer::process(int nframes,bool record, PortBufferList& portBufferList, Cop
     *portBufferList.outputZ++ = *outPtrZ;
     
     // write headphone & postSend buffers into JACK ports
-    *headphonePort++     = *headphonePflBuffer++;
-    *postFaderSendPort++ = *postFaderSendBuffer++;
+    *headphonePort++     = *headphonePflBuffer;
+    *postFaderSendPort++ = *postFaderSendBuffer;
     
     /*
     if ( copyToScopeVector )
@@ -136,6 +136,10 @@ void Mixer::process(int nframes,bool record, PortBufferList& portBufferList, Cop
     *outPtrX++ = 0.f;
     *outPtrY++ = 0.f;
     *outPtrZ++ = 0.f;
+    
+    // clear headphones & postFaderSend *internal* buffers
+    *headphonePflBuffer++  = 0.f;
+    *postFaderSendBuffer++ = 0.f;
     
   }
   

@@ -56,6 +56,9 @@ void AudioSinkOutput::process(int nframes, float* in, float *W, float *X, float 
   // gets mixed into the master bus return.
   float* postFaderSend = top->jackClient->getPostFaderSendVector();
   
+  // get headphones PFL buffer
+  float* headphonePfl = top->jackClient->getHeadphonePflVector();
+  
   for( int i = 0; i < nframes; i++)
   {
     // += so we don't overwrite the previous tracks!
@@ -66,9 +69,14 @@ void AudioSinkOutput::process(int nframes, float* in, float *W, float *X, float 
     Z[i] += in[i] * sinElevation * logVolume;
     
     // write to postFaderSend buffer
-    *postFaderSend++ = tmp;
+    *postFaderSend++ += tmp;
     
-    // clear the internal track buffer
+    if ( state->pflEnable )
+    {
+      *headphonePfl++ += tmp;
+    }
+    
+    // clear the internal track buffer, postFaderSend & headphonePfl
     in[i] = 0.f;
     
     if ( maxAmplitude < tmp )

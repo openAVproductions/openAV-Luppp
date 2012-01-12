@@ -18,6 +18,8 @@ struct TrackOutputState
     rms = 0.f;
     falloff = 0.f;
     
+    pflEnable = false;
+    
     mute = solo = recEnable = false;
   }
   
@@ -35,6 +37,7 @@ struct TrackOutputState
   float falloff;
   
   bool mute, solo, recEnable;
+  bool pflEnable;
 };
 
 #endif
