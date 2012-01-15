@@ -9,6 +9,8 @@ using namespace std;
 Time::Time(Top* t)
 {
   top = t;
+  
+  beat = -1;
 }
 
 // this function gets called by JACK before processing any audio for
@@ -42,7 +44,7 @@ void Time::process(int frameNumber)
     
     if ( newBeat % 4 == 0 )
     {
-      //cout << "Time:process() doing 4th list!" << endl;
+      cout << "Time:process() doing 4th list!" << endl;
       if ( !q4.empty() ) {
         doEngineEventList(q4);
       }
@@ -78,7 +80,7 @@ void Time::processEngineEvent(EngineEvent* e)
   if ( e->type == EE_LOOPER_SELECT_BUFFER )
   {
     cout << "Time::processEE() LOOPER_SELECT_BUFFER queue in 4... type = " << e->type << "  T: " << e->ia << "  clip = " << e->ib << endl;
-    if ( false ) // quantize check here
+    if ( true ) // quantize check here?
     {
       top->state.clipSelectorQueueClip(e->ia, e->ib);
       q4.push_back(e);
@@ -124,7 +126,7 @@ void Time::doEngineEvent(EngineEvent* e)
     case EE_LOOPER_PROGRESS: cout << "Time::doEngineEvent() got PROGRESS!!! ERROR!" << endl;;
     case EE_LOOPER_SELECT_BUFFER:
     {
-      //cout << "Doing SELECT BUFFER NOW! t=" << e->ia << " clip#: " << e->ib << endl;
+      cout << "Doing SELECT BUFFER NOW! t=" << e->ia << " clip#: " << e->ib << endl;
       top->state.clipSelectorActivateClip(e->ia, e->ib);
       break;
     }
