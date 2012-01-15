@@ -26,7 +26,7 @@ def configure(ctx):
   ctx.check_cfg	(package='gtkmm-2.4',at_least_version='2.0.0',args='--cflags --libs',uselib_store='GTKMM')
   ctx.check_cfg	(package='glibmm-2.4',at_least_version='2.0.0',args='--cflags --libs',uselib_store='GLIBMM')
   ctx.check_cfg	(package='fluidsynth',args='--libs',uselib_store='FLUIDSYNTH')
-  ctx.check_cfg	(package='libconfig++',args='--libs',uselib_store='LIBCONFIG')
+  ctx.check_cfg	(package='libconfig++',at_least_version='1.4.8',args='--libs',uselib_store='LIBCONFIG')
   ctx.check_cfg	(package='lilv-0',args='--cflags --libs',uselib_store='LILV')
   ctx.check_cfg	(package='suil-0',args='--cflags --libs',uselib_store='SUIL')
   
