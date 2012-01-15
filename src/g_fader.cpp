@@ -21,7 +21,7 @@
 
 namespace Luppp
 {
-  void Fader(Cairo::RefPtr<Cairo::Context> cr, float x, float y, float value, float rms, float falloff)
+  void Fader(Cairo::RefPtr<Cairo::Context> cr, float x, float y, float value, float rms, float& falloff)
   {
     // draw invisible from the last widget
     cr->set_source_rgba(0,0,0,0);
@@ -54,18 +54,23 @@ namespace Luppp
     
     float tmpRms = (1-rms);
     
+    //std::cout << "Falloff: " << falloff << " RMS " << rms << std::endl;
+    
     if ( falloff > rms )
     {
+      //std::cout << "Falloff > RMS" << std::endl;
       tmpRms = (1-falloff);
-      falloff -= 0.02;
+      falloff -= 0.1;
     }
     else
     {
       falloff = rms;
     }
     
+    //std::cout << " tmpRms " << tmpRms << "  drawPx:  " << tmpRms * 94 << std::endl;
+    
     cr->rectangle ( x, y, 12, 94 * tmpRms );
-    setColour(cr, COLOUR_GREY_4 );
+    setColour(cr, COLOUR_GREY_2 );
     cr->fill();
     
     // draw fader  <|

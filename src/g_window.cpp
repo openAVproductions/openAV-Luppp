@@ -610,7 +610,7 @@ void Window::redrawEffectBox()
   // add each widget in the current track to the box, and show_all() them
   for(int i = 0;  i < trackVector.at(currentEffectsTrack).widgetVector.size(); i++)
   {
-    //trackEffectBox->remove( *trackVector.at(currentEffectsTrack).widgetVector.at(i) );
+    trackEffectBox->remove( *trackVector.at(currentEffectsTrack).widgetVector.at(i) );
     trackEffectBox->add( *trackVector.at(currentEffectsTrack).widgetVector.at(i) );
   }
   
