@@ -133,4 +133,4 @@ def copyResources(ctx):
   # print ( os.getcwd() )
   for currentFilename in sourceList:
     print ( 'Copying ' + currentFilename + ' to ' + destination )
-    shutil.copy( os.path.join( os.getcwd(), currentFilename ), os.path.join( os.getcwd(),  ) )
+    shutil.copy( os.path.join( os.getcwd(), currentFilename ), os.path.join( os.getcwd(), destination ) )
