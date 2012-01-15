@@ -1,0 +1,11 @@
+
+To build this sofware:
+
+./waf configure
+./waf
+
+To run the program:
+./run
+
+To debug (ie: run in gdb)
+./debug
