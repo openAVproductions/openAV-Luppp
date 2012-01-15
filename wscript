@@ -34,9 +34,9 @@ def configure(ctx):
   ctx.check(header_name="lv2.h",mandatory=True,uselib_store='LV2.H')
   ctx.check(header_name="ladspa.h",mandatory=True,uselib_store='LADSPA.H')
 
-
 def build(ctx):
-  #print '\nBuilding the sources to objects...'
+  # copy the needed materials to the build folder
+  ctx.add_post_fun(copyResources)
   
   #     ENGINE
   engineList=['src/top.cpp',
@@ -116,3 +116,21 @@ def build(ctx):
     use       = 'engine_gui',
     uselib    = engineDepends,
     target		= 'luppp' )
+
+
+
+
+def copyResources(ctx):
+  print ( 'Copying resources...' )
+  import shutil, os
+  
+  sourceList = ['src/ui.glade',
+                'src/headphones.png',
+                'src/lupppIcon.png' ]
+  
+  destination = '.build/'
+  
+  # print ( os.getcwd() )
+  for currentFilename in sourceList:
+    print ( 'Copying ' + currentFilename + ' to ' + destination )
+    shutil.copy( os.path.join( os.getcwd(), currentFilename ), os.path.join( os.getcwd(),  ) )
