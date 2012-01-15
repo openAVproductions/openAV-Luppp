@@ -35,6 +35,8 @@ class GMasterOutput : public Gtk::DrawingArea
     GMasterOutput(Top*,GuiStateStore*);
     ~GMasterOutput();
     
+    void 
+    
     bool redraw();
   
   protected:

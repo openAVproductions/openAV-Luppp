@@ -31,9 +31,6 @@ GBeatSmash::GBeatSmash(Top* t, GuiStateStore* s)
   top = t;
   stateStore = s;
   
-  cutoff = 0.40;
-  q = 1.0;
-  
   mouseDown = false;
   
   //std::cout << "Enterin GBeatSmash contructor" << std::endl;
@@ -42,9 +39,7 @@ GBeatSmash::GBeatSmash(Top* t, GuiStateStore* s)
   signal_button_release_event().connect(sigc::mem_fun(*this, &GBeatSmash::on_button_release_event) );
   signal_motion_notify_event().connect( sigc::mem_fun( *this, &GBeatSmash::onMouseMove ) );
   
-  xSize = 225;
-  
-  set_size_request(250, 216);
+  set_size_request(130, 216);
 }
 
 bool GBeatSmash::redraw()
@@ -84,17 +79,20 @@ bool GBeatSmash::on_expose_event(GdkEventExpose* event)
     setColour(cr, COLOUR_GREY_3 );
     cr->fill();
     
-    // update value from stateStore
-    //std::cout << "BeatSmash ID " << ID << " getting state now" << endl;
-    float cutoffRangeZeroOne = stateStore->effectState.at(ID).values[0];
+    if ( ID >= stateStore->effectState.size() )
+    {
+      std::cout << "GBeatSmash::expose() effectState.size() < ID!! cannot access values!" << std::endl;
+      return true;
+    }
     
-    cutoff = (48.f / xSize) + (cutoffRangeZeroOne * 0.7541 );
+    // update value from stateStore
+    float delayTime = stateStore->effectState.at(ID).values[0];
     
     bool active = stateStore->effectState.at(ID).active;
     
     int x = 10;
     int y = 22;
-    xSize = 225;
+    xSize = 110;
     ySize = 95;
     
     // works but a bit simple
@@ -108,7 +106,7 @@ bool GBeatSmash::on_expose_event(GdkEventExpose* event)
     cr -> set_source_rgb (0.1,0.1,0.1);
     cr -> fill();
     
-    // draw "frequency guides"
+    // draw "guides"
     std::valarray< double > dashes(2);
     dashes[0] = 2.0;
     dashes[1] = 2.0;
@@ -128,72 +126,41 @@ bool GBeatSmash::on_expose_event(GdkEventExpose* event)
     cr->stroke();
     cr->unset_dash();
     
-    // move to bottom left, draw line to middle left
-    cr->move_to( x , y + ySize );
-    cr->line_to( x , y + (ySize/2));
-    
-    int startHorizontalLine = xSize* (cutoff - 0.4)  < 50;
-    if ( startHorizontalLine < 50 )
-      startHorizontalLine = 10;
-      
-    cr->line_to( startHorizontalLine, y + (ySize/2) ); // horizontal line to start of curve
-    
-    cr->curve_to( xSize* (cutoff -0.1), y+(ySize*0.5),   // control point 1
-                  xSize* (cutoff - 0.08), y+(ySize*0.3),   // control point 2
-                  xSize* cutoff        , y+(ySize*0.3));  // end of curve 1, start curve 2
-    
-    int xSizeCP1 = xSize* (cutoff + 0.03);
-    int xSizeCP2 = xSize* (cutoff + 0.08);
-    int xSizeEnd = xSize* (cutoff + 0.15);
-    
-    if ( xSizeCP1 > 234 )
-      xSizeCP1 = 234;
-    if ( xSizeCP2 > 234 )
-      xSizeCP2 = 234;
-    if ( xSizeEnd > 234 )
-      xSizeEnd = 234;
-    
-    cr->curve_to( xSizeCP1, y+(ySize*0.3),  // control point 1
-                  xSizeCP2, y+(ySize*0.3), // control point 2
-                  xSizeEnd, y+(ySize)   ); // end of curve on floor
-    
+    // set colours for text
     if ( active )
       setColour(cr, COLOUR_BLUE_1, 0.2 );
     else
       setColour(cr, COLOUR_GREY_1, 0.2 );
     cr->close_path();
     cr->fill_preserve();
-    
-    // stroke cutoff line
-    cr->set_line_width(2.5);
-    if ( active )
-      setColour(cr, COLOUR_PURPLE_1 );
-    else
-      setColour(cr, COLOUR_GREY_1 );
     cr->stroke();
     
-    // click center
+    /*
+    // click center ( range = 1/2 the range of the widget
     if ( active )
       setColour(cr, COLOUR_ORANGE_1, 0.9 );
     else
       setColour(cr, COLOUR_GREY_1, 0.9 );
-    cr->arc( xSize*cutoff, ySize*q, 7, 0, 6.2830 );
+    float xArc = x + (xSize * 0.25) + (xSize*0.5) * thresh;
+    float yArc = y + (ySize * 0.75)  - ySize*0.5* makeupZeroOne;
+    
+    //cout << " Arc x,y : " << xArc << ", " << yArc <<endl;
+    cr->set_line_width(2.7);
+    cr->arc(xArc, yArc, 7, 0, 6.2830 );
     cr->stroke();
+    */
     
     // dials
-    Dial(cr, active, 70, 140, cutoffRangeZeroOne, DIAL_MODE_NORMAL);
-    Dial(cr, active, 150,140, q                 , DIAL_MODE_NORMAL);
+    Dial(cr, active, 48, 125, delayTime, DIAL_MODE_NORMAL);
+    //Dial(cr, active, 48, 165, thresh       , DIAL_MODE_NORMAL);
     
     // outline
-    setColour(cr, COLOUR_GREY_3 );
+    setColour(cr, COLOUR_GREY_2 );
     cr->rectangle( x, y , xSize, ySize );
-    cr->set_line_width(3);
-    if ( active )
-      setColour(cr, COLOUR_GREY_2 );
-    
+    cr->set_line_width(4);
     cr->stroke();
     
-    TitleBar(cr, 0,0 , 250, 216, "Beat Smasher", active);
+    TitleBar(cr, 0,0 , 130, 216, "Beat Smasher", active);
     
     /*
     if ( state.selected )
@@ -204,6 +171,7 @@ bool GBeatSmash::on_expose_event(GdkEventExpose* event)
       cr->stroke();
     }
     */
+    
   }
   return true;
 }
@@ -222,24 +190,31 @@ bool GBeatSmash::onMouseMove(GdkEventMotion* event)
 {
   if ( mouseDown )
   {
-    if ( (event->x > 50) && (event->x < 216) )
+    int x = 10;
+    int y = 22;
+    if ( (event->x > x + xSize*0.25) && (event->x < x + xSize*0.75) )
     {
-      cutoff = event->x / float(xSize);
+      
+      float gain = (event->x - (x + xSize*0.25)) / float(xSize*0.5);
+      
+      cout << "Limiter Gain : " << gain << endl;
       
       EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(0,0,0, cutoff);
+      x->setPluginParameter(ID, 1, 1, gain);
       top->toEngineQueue.push(x);
     }
     
-    if ( (event->y > 35) && (event->y < 103) )
+    if ( (event->y > y + ySize*0.25) && (event->y < y+ySize*0.75) )
     {
-      q = event->y / float(ySize);
+      float limit = 1 - (event->y - (y + ySize*0.25)) / float(ySize*0.5);
+      
+      cout << "Limiter limit : " << limit << endl;
+      
       EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(0,0,1, q );
+      x->setPluginParameter(ID, 0, 0, limit);
       top->toEngineQueue.push(x);
     }
-    redraw();
-    std::cout << "GBeatSmash: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
+    //std::cout << "GBeatSmash: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
   }
 }
 
@@ -249,38 +224,48 @@ bool GBeatSmash::on_button_press_event(GdkEventButton* event)
   {
     int x = 10;
     int y = 22;
-    xSize = 225;
-    ySize = 95;
     
     // graph area
-    if ( (event->x > 10) && (event->x < 235) &&
-         (event->y > 22) && (event->y < 117 ) )
+    if ( (event->x > x) && (event->x < x + xSize) &&
+         (event->y > y) && (event->y < y + ySize ) )
     {
-      /*
-      std::cout << "graph area click!" << std::endl;
+      
+      std::cout << "graph area click!" << std::flush;
       mouseDown = true; // for pointer motion "drag" operations
       
-      int evX = event->x;
-      // inform engine of "click" and position co-efficents as such
-      if ( evX < 50) evX = 50;
-      if ( evX > 216)evX = 216;
+      cout << " x before = " << event->x;
       
-      stateStore->cutoff = evX / float(xSize);
-      cutoff = stateStore->cutoff;
+      // clamp click coords to acceptable grid, then send EE
+      if ( event->x < x + (xSize*0.25)){
+        cout << "  X smaller than! Clipping  ";
+        event->x = x + xSize*0.25;
+      }
+      else if (event->x > x + xSize*0.75) {
+        event->x = x + xSize*0.75;
+      }
+      
+      cout << "  x afterClip = " << event->x;
+      
+      float limit = ((event->x - (x + xSize*0.25)) / float(xSize*0.5));
+      cout << "  final Limiter Clicked Limit : " << limit << endl;
       EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(0,0,0, cutoff );
+      x->setPluginParameter(ID, 1, 1, limit );
       top->toEngineQueue.push(x);
       
-      int evY = event->y;
-      if (evY < 35 ) evY = 35;
-      if (evY > 103) evY = 103;
       
-      q = evY / float(ySize);
+      if (event->y < y + ySize*0.25) {
+        event->y = y + ySize*0.25;
+      }
+      else if (event->y > y+ySize*0.75 ) {
+        event->y = y + ySize*0.75;
+      }
+    
+      float gain = 1 - (event->y - (y + ySize*0.25)) / float(ySize*0.5);
+      cout << "Limiter Clicked gain : " << gain << endl;
       x = new EngineEvent();
-      x->setPluginParameter(0,0,1, q );
+      x->setPluginParameter(ID, 0, 0, gain);
       top->toEngineQueue.push(x);
-      redraw();
-      */
+      
     }
     
     if ( event->y < 20 )
