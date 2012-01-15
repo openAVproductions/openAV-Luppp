@@ -71,6 +71,13 @@ bool GMasterOutput::redraw()
   return true;
 }
 
+void GMasterOutput::setVolume(float vol)
+{
+  cout << "GMasterOutput::setVolume() " << endl;
+  volume = vol;
+  redraw();
+}
+
 
 bool GMasterOutput::on_expose_event(GdkEventExpose* event)
 {
@@ -372,9 +379,10 @@ bool GMasterOutput::onMouseMove(GdkEventMotion* event)
       volume = 0.f;
     
     redraw();
-    //EngineEvent* x = new EngineEvent();
-    //x->setMixerVolume( -1, volume);
-    //top->toEngineQueue.push(x);
+    
+    EngineEvent* x = new EngineEvent();
+    x->setMixerVolume( -1, volume);
+    top->toEngineQueue.push(x);
   }
   else if ( clickedWidget == CLICKED_WIDGET_DIAL )
   {
