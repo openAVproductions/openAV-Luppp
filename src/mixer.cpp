@@ -28,6 +28,10 @@ Mixer::Mixer(Top* t) :
 {
   top = t;
   
+  // initialize volume levels
+  masterVolume     = 0.707f;
+  headphonesVolume = 0.707f;
+  
   // Top isn't initialized yet, so we just initialize all buffers to 1024
   outputW.resize(1024);
   outputX.resize(1024);
@@ -82,6 +86,20 @@ int Mixer::getEffectID(int track, int pos)
   return -1;
 }
 
+void Mixer::setMasterVolume(float vol)
+{
+  if ( vol > 1.0 ) vol = 1.0;
+  if ( vol < 0.0 ) vol = 0.0;
+  masterVolume = vol;
+}
+
+void Mixer::setMasterRotation(float rot)
+{
+  // masterRotation = decimal part of float, regardless of size of int part
+  masterRotation = rot - ((int)rot);
+}
+
+
 void Mixer::process(int nframes,bool record, PortBufferList& portBufferList, CopyBufferList& copyBufferList)
 {
   if ( nframes > 1024 )
@@ -123,31 +141,28 @@ void Mixer::process(int nframes,bool record, PortBufferList& portBufferList, Cop
   float* headphonePflBuffer = copyBufferList.headphonePfl;
   float* postFaderSendBuffer = copyBufferList.postFaderSend;
   
-  /*
+  
   bool copyToScopeVector = top->scopeVectorMutex.trylock();
-  */
   
   // now sum up the master output buffers and write them
   for(int i = 0; i < nframes; i++)
   {
     // write values to JACK ports
-    *portBufferList.outputW++ = *outPtrW;
-    *portBufferList.outputX++ = *outPtrX;
-    *portBufferList.outputY++ = *outPtrY;
-    *portBufferList.outputZ++ = *outPtrZ;
+    *portBufferList.outputW++ = *outPtrW * masterVolume;
+    *portBufferList.outputX++ = *outPtrX * masterVolume;
+    *portBufferList.outputY++ = *outPtrY * masterVolume;
+    *portBufferList.outputZ++ = *outPtrZ * masterVolume;
     
     // write headphone & postSend buffers into JACK ports
-    *headphonePort++     = *headphonePflBuffer;
+    *headphonePort++     = *headphonePflBuffer * headphonesVolume;
     *postFaderSendPort++ = *postFaderSendBuffer;
     
-    /*
     if ( copyToScopeVector )
     {
       // write master output value to scopeVector, to be shown in GUI
-      top->scopeVector.at(i) = *outPtrW;
+      top->scopeVector.at(i) = *outPtrW * masterVolume;
       top->inputScopeVector.at(i) = *portBufferList.inputAudio++;
     }
-    */
     
     // write 0.f to *mixer* buffer, and increment
     *outPtrW++ = 0.f;
@@ -161,9 +176,7 @@ void Mixer::process(int nframes,bool record, PortBufferList& portBufferList, Cop
     
   }
   
-  /*
   if ( copyToScopeVector )
     top->scopeVectorMutex.unlock();
-  */
   
 }
