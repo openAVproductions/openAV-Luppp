@@ -35,6 +35,8 @@ class GMasterOutput : public Gtk::DrawingArea
     GMasterOutput(Top*,GuiStateStore*);
     ~GMasterOutput();
     
+    void setVolume(float);
+    
     bool redraw();
   
   protected:
@@ -63,6 +65,8 @@ class GMasterOutput : public Gtk::DrawingArea
     float volume;
     float pan;
     float elevation;
+    
+    float volumeFalloff;
     
     Glib::RefPtr<Gdk::Pixbuf> headphoneImage;
     

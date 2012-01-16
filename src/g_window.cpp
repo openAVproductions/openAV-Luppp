@@ -279,14 +279,20 @@ int Window::handleEvent()
     if ( e->type == EE_MIXER_VOLUME )
     {
       if ( e->ia >= numTracks ) { cout << "MIXER_VOLUME: Out of bounds" << endl; return true; }
-      //cout << "MixerVolume: " << e->ia << ", " << e->fa << endl;
-      guiState.trackoutputState.at(e->ia).volume = e->fa;
+      cout << "MixerVolume: " << e->ia << ", " << e->fa << endl;
       
-      // manually update GUI
-      std::list<TrackOutput*>::iterator iter = trackoutputList.begin();
-      advance(iter,e->ia);
-      //std::cout << "Redraw Iter = " << &iter << std::endl;
-      (*iter)->redraw();
+      if ( e->ia == -1 ) // master track
+      {
+        masterOutput.setVolume(e->fa);
+      }
+      else
+      {
+        guiState.trackoutputState.at(e->ia).volume = e->fa;
+        
+        std::list<TrackOutput*>::iterator iter = trackoutputList.begin();
+        advance(iter,e->ia);
+        (*iter)->redraw();
+      }
     }
     else if ( e->type == EE_ADD_TRACK ) {
       //cout << "GUI got ADD_TRACK event, sending to OfflineWorker  NewID = " << e->ia << endl;

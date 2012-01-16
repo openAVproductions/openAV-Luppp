@@ -42,6 +42,9 @@ class Mixer
     int setSource(int, AudioSource* );
     int addEffect(int, int, Effect* );
     
+    void setMasterVolume(float);
+    void setMasterRotation(float);
+    
     // returns the UniqueID of an Effect in an AudioTrack
     int getEffectID(int track, int pos);
     
@@ -49,6 +52,11 @@ class Mixer
     
   private:
     Top* top;
+    
+    // volume variables
+    float masterVolume;
+    float masterRotation;
+    float headphonesVolume;
     
     // create named instance for master AudioTrack
     AudioTrack masterTrack;

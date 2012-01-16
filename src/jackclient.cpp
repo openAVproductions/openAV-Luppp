@@ -180,7 +180,14 @@ int JackClient::processRtQueue()
     
     if ( e->type == EE_MIXER_VOLUME )
     {
-      top->state.setVolume( e->ia, e->fa );
+      if ( e->ia == -1 )
+      {
+        mixer.setMasterVolume(e->fa);
+      }
+      else
+      {
+        top->state.setVolume( e->ia, e->fa );
+      }
     }
     else if ( e->type == EE_TRACK_SET_MUTE ) {
       top->state.setMute( e->ia, e->ib );
