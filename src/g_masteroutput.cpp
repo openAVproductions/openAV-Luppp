@@ -38,7 +38,13 @@ GMasterOutput::GMasterOutput(Top* t, GuiStateStore* s)
   mouseX = -1;
   mouseY = -1;
   
-  headphoneImage = Gdk::Pixbuf::create_from_file("headphones.png");
+  try {
+    headphoneImage = Gdk::Pixbuf::create_from_file("headphones.png");
+  }
+  catch (Glib::FileError e) {
+    std::cout << "Gtk::FileError loading headphones file: " << e.what() << std::endl;
+    exit(1);
+  }
   
   //std::cout << "Enterin GMasterOutput contructor" << std::endl;
   add_events(Gdk::EXPOSURE_MASK | Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK);
