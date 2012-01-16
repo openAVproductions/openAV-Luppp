@@ -491,20 +491,26 @@ int Window::handleEvent()
           std::advance(iter, playing);
         }
         
-        // playing can = -1 for "nothing playing", so set regardless
+        // playing can = -1 for "nothing playing", so set regardless of value
         guiState.clipSelectorState.at(e->ia).playing = e->ib;
         list<ClipInfo>::iterator iter = guiState.clipSelectorState.at(e->ia).clipInfo.begin();
         advance(iter, e->ib);
+        
+        std::list<Gtk::EventBox*>::iterator evBoxIter = tracklabelBoxList.begin();
+        std::advance(evBoxIter, e->ia);
+        
+        cout << "LooperSelectBuffer Event, track = " << e->ia << endl;
+        
         if ( !iter->hasBuffer )
         {
           // if the clip doesn't have a buffer, set "stop" clip to play
           guiState.clipSelectorState.at(e->ia).playing = -1;
+          (*evBoxIter)->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("green"));
         }
-        
-        if ( guiState.clipSelectorState.at(e->ia).playing == -1 )
-          tracklabelBoxList.back()->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("green"));
         else
-          tracklabelBoxList.back()->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("FF6800"));
+        {
+          (*evBoxIter)->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("FF6800"));
+        }
         
         std::list<ClipSelector*>::iterator clipIter = clipselectorList.begin();
         advance(clipIter,e->ia);
