@@ -485,12 +485,6 @@ int Window::handleEvent()
         // set previous playing to just "loaded"
         int playing = guiState.clipSelectorState.at(e->ia).playing;
         
-        if ( playing >= 0 ) // check list access here
-        {
-          std::list<ClipInfo>::iterator iter = guiState.clipSelectorState.at(e->ia).clipInfo.begin();
-          std::advance(iter, playing);
-        }
-        
         // playing can = -1 for "nothing playing", so set regardless of value
         guiState.clipSelectorState.at(e->ia).playing = e->ib;
         list<ClipInfo>::iterator iter = guiState.clipSelectorState.at(e->ia).clipInfo.begin();
@@ -512,6 +506,7 @@ int Window::handleEvent()
           (*evBoxIter)->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("FF6800"));
         }
         
+        cout << "redrawing ClipSelector widget ID : " << e->ia << endl;
         std::list<ClipSelector*>::iterator clipIter = clipselectorList.begin();
         advance(clipIter,e->ia);
         (*clipIter)->redraw();
