@@ -500,6 +500,9 @@ int Window::handleEvent()
           // if the clip doesn't have a buffer, set "stop" clip to play
           guiState.clipSelectorState.at(e->ia).playing = -1;
           (*evBoxIter)->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("green"));
+          
+          // set progress bar to 0, as its not playing anything
+          progressWidgetVector.at(e->ia)->setValue( 0.f );
         }
         else
         {
