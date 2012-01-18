@@ -36,6 +36,7 @@ class Top;
 #include "g_fileselector.hpp"
 #include "g_masteroutput.hpp"
 #include "g_clipselector.hpp"
+#include "g_masterprogress.hpp"
 #include "g_effectselector.hpp"
 #include "trackoutputstate.hpp"
 #include "g_instrumentselector.hpp"
@@ -94,8 +95,9 @@ class Window
     GWaveView waveview;
     GWaveView inputWaveview;
     
-    ClipSelector* masterClipSelector;
     GMasterOutput masterOutput;
+    GMasterProgress masterProgress;
+    ClipSelector* masterClipSelector;
     
     // helper functions
     void redrawEffectBox();

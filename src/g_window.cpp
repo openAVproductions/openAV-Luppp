@@ -116,9 +116,10 @@ Window::Window(Gtk::Main *k, Top* t) :
   tmpBox->add( *tmpLabel );
   
   ClipSelector* masterClipSelector = new ClipSelector(top, &guiState, true);
-  tmpVbox->pack_end( *masterClipSelector, true, true );
-  
   tmpVbox->add( *tmpBox );
+  tmpVbox->add( *masterClipSelector);
+  tmpVbox->pack_end( masterProgress, true, false );
+  
   masterOutputBox->add( *tmpVbox );
   
   // grab widgets & connect signal handlers for DnD
@@ -334,6 +335,9 @@ int Window::handleEvent()
     else if ( e->type == EE_LOOPER_PROGRESS ) {
       //cout << "Gui LOOPER_PROGRESS UID = " << e->ia  << " value = " << e->fa << endl;
       guiState.bufferAudioSourceState.at(e->ia).index = e->fa;
+      
+      // HACK, master progress should be updated independant of any looper
+      masterProgress.setProgress(e->fa);
       
       if ( e->ia < progressWidgetVector.size() )
       {

@@ -27,7 +27,8 @@ using namespace Luppp;
 
 GMasterProgress::GMasterProgress()
 {
-  set_size_request(74, 20);
+  set_size_request(74, 18);
+  bpm = 160;
 }
 
 bool GMasterProgress::redraw()
@@ -77,10 +78,20 @@ bool GMasterProgress::on_expose_event(GdkEventExpose* event)
     setColour(cr, COLOUR_GREY_3 );
     cr->fill();
     
+    int stage = (int)(progress * 4);
     
-    cr->rectangle(event->area.x, event->area.y,
-        progress * event->area.width, event->area.height);
-    setColour(cr, COLOUR_BLUE_1 );
+    switch (stage)
+    {
+      case 0:
+      case 1: { setColour(cr, COLOUR_GREEN_1 ); break; }
+      case 2: { setColour(cr, COLOUR_ORANGE_1 ); break; }
+      case 3: { setColour(cr, COLOUR_RECORD_RED ); break; }
+    }
+    
+    int quaterWidth = event->area.width/4.f;
+    
+    cr->rectangle( quaterWidth * stage, event->area.y,
+                   quaterWidth, event->area.height);
     cr->fill();
     
     
@@ -90,7 +101,7 @@ bool GMasterProgress::on_expose_event(GdkEventExpose* event)
     cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_NORMAL);
     cr->set_font_size ( 13 );
     cr->move_to ( x + 22, (y + 13) );
-    setColour(cr, COLOUR_BLUE_1);
+    setColour(cr, COLOUR_GREY_1);
     
     stringstream s;
     s << bpm;
