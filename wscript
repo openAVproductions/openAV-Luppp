@@ -33,6 +33,9 @@ def configure(ctx):
   # Check for headers:
   ctx.check(header_name="lv2.h",mandatory=True,uselib_store='LV2.H')
   ctx.check(header_name="ladspa.h",mandatory=True,uselib_store='LADSPA.H')
+  ctx.check(header_name="lv2/lv2plug.in/ns/ext/event/event.h",mandatory=True,uselib_store='EVENT.H')
+  ctx.check(header_name="lv2/lv2plug.in/ns/ext/uri-map/uri-map.h",mandatory=True,uselib_store='URIMAP.H')
+  ctx.check(header_name="lv2/lv2plug.in/ns/ext/event/event-helpers.h",mandatory=True,uselib_store='EVENTHELPERS.H')
 
 def build(ctx):
   # copy the needed materials to the build folder
@@ -95,7 +98,7 @@ def build(ctx):
               'src/g_masteroutput.cpp',
               'src/g_trackoutput.cpp']
   
-  engineDepends = 'JACK SNDFILE GTKMM FLUIDSYNTH GLIBMM LIBCONFIG LILV Lv2.H LADSPA.H SUIL'
+  engineDepends = 'JACK SNDFILE GTKMM FLUIDSYNTH GLIBMM LIBCONFIG LILV LV2.H LADSPA.H SUIL EVENT.H URIMAP.H EVENTHELPERS.H'
   
   #print 'Building ENGINE'
   buildList = engineList + guiList
