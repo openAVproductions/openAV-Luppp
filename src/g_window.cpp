@@ -362,6 +362,9 @@ int Window::handleEvent()
           // read from ringbuffer *directly* into AudioBuffer
           top->recordAudioQueue.writeSamplesTo( &pntr->at(0) );
           
+          // set AudioBuffer numBeats to size / framesPerBeat:
+          buffer->setBeats( pntr->size() / ( (int) top->samplerate / ( top->bpm / 60.0) ) );
+          
           //cout << "   and after " << pntr->size() << endl;
           
           // send new AudioBuffer event to engine State

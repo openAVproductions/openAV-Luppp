@@ -38,6 +38,9 @@ int AudioBuffer::getID()
 
 void AudioBuffer::setBeats(int beats)
 {
+  if ( beats < 1 )
+    beats = 1;
+  
   numBeats = beats;
   
   std::cout << "AudioBuffer::setBeats(" << beats << ")" << std::endl;
