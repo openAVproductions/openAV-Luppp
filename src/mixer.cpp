@@ -24,7 +24,7 @@
 using namespace std;
 
 Mixer::Mixer(Top* t) :
-            masterTrack(t,true)
+  masterTrack(t,true)
 {
   top = t;
   
@@ -59,11 +59,15 @@ int Mixer::setSource(int track, AudioSource* source )
 
 int Mixer::addEffect(int track, int pos,  Effect* eff )
 {
-  if ( track > 0 && track < audiotrackList.size() )
+  if ( track >= 0 && track < audiotrackList.size() )
   {
     std::list<AudioTrack>::iterator iter =  audiotrackList.begin();
     std::advance(iter, track);
     iter->addEffect( pos , eff);
+  }
+  else
+  {
+    cout << "Mixer::addEffect() error, track is out of bounds!" << endl;
   }
   
   return 0;
