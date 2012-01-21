@@ -20,6 +20,7 @@
 #include "beatsmash.hpp"
 
 #include "top.hpp"
+#include "effectstate.hpp"
 
 BeatSmash::BeatSmash(Top* t, EffectType et) : Effect(t,et)
 {
@@ -37,7 +38,11 @@ BeatSmash::BeatSmash(Top* t, EffectType et) : Effect(t,et)
 void BeatSmash::process(int nframes, float *L)
 {
   //std::cout << "Process: queueActive: " << queueActive << "\tActive: " << active << std::endl;
-  //active = top->state.beatSmash;
+  EffectState* state = top->state.getEffectState(ID);
+  
+  bool active = state->active;
+  int numDelays = (int)(state->values[0] * 3);
+  float delayTime = state->values[1];
   
   for( int i = 0; i < nframes; i++)
   {
@@ -56,7 +61,10 @@ void BeatSmash::process(int nframes, float *L)
       //   0         audioBuffer.size() / 2             audioBuffer.size()
       
       // iter over number of taps
-      L[i] += audioBuffer.at( 9000 * (float(active)/7.f) );
+      for ( int delayCounter = 0; delayCounter < numDelays; delayCounter++)
+      {
+        L[i] += audioBuffer.at( 9000 * delayTime * delayCounter );
+      }
     }
     
     // always pop front

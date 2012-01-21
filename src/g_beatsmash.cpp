@@ -195,23 +195,23 @@ bool GBeatSmash::onMouseMove(GdkEventMotion* event)
     if ( (event->x > x + xSize*0.25) && (event->x < x + xSize*0.75) )
     {
       
-      float gain = (event->x - (x + xSize*0.25)) / float(xSize*0.5);
+      float value = (event->x - (x + xSize*0.25)) / float(xSize*0.5);
       
-      cout << "Limiter Gain : " << gain << endl;
+      cout << "Beatsmash Param 1 : " << value << endl;
       
       EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(ID, 1, 1, gain);
+      x->setPluginParameter(ID, 1, 1, value);
       top->toEngineQueue.push(x);
     }
     
     if ( (event->y > y + ySize*0.25) && (event->y < y+ySize*0.75) )
     {
-      float limit = 1 - (event->y - (y + ySize*0.25)) / float(ySize*0.5);
+      float value = 1 - (event->y - (y + ySize*0.25)) / float(ySize*0.5);
       
-      cout << "Limiter limit : " << limit << endl;
+      cout << "Beatsmash Param 0 : " << value << endl;
       
       EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(ID, 0, 0, limit);
+      x->setPluginParameter(ID, 0, 0, value);
       top->toEngineQueue.push(x);
     }
     //std::cout << "GBeatSmash: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
