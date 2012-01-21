@@ -23,7 +23,7 @@ def configure(ctx):
   #   Engine Depends
   ctx.check_cfg	(package='jack',at_least_version='0.118',args='--cflags --libs',uselib_store='JACK')
   ctx.check_cfg	(package='sndfile',args='--cflags --libs',uselib_store='SNDFILE')
-  ctx.check_cfg	(package='gtkmm-2.4',at_least_version='2.0.0',args='--cflags --libs',uselib_store='GTKMM')
+  ctx.check_cfg	(package='gtkmm-2.4',at_least_version='2.4.0',args='--cflags --libs',uselib_store='GTKMM')
   ctx.check_cfg	(package='glibmm-2.4',at_least_version='2.0.0',args='--cflags --libs',uselib_store='GLIBMM')
   ctx.check_cfg	(package='fluidsynth',args='--libs',uselib_store='FLUIDSYNTH')
   ctx.check_cfg	(package='libconfig++',at_least_version='1.4.8',args='--libs',uselib_store='LIBCONFIG')
