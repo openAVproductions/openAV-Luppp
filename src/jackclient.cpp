@@ -681,15 +681,13 @@ void JackClient::apcRead( int nframes )
     // apc 40 master fader
     if ( (int)in_event.buffer[0] == 176 && (int)in_event.buffer[1] == 14 )
     {
-      /*
-      top->state.beatSmash = ((b3/127.f) * 10);
-      if ( top->state.beatSmash < 3 )
-        top->state.beatSmash = false;
-      else
-        top->state.beatSmash -= 3;
+      float v = b3 / 127.f;
+      mixer.setMasterVolume( v );
       
-      std::cout << "BeatSmash = " << top->state.beatSmash  << std::endl;
-      */
+      EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+      x->setMixerVolume(-1, v); // -1 = master track
+      top->toGuiQueue.push(x);
+      
     }
     // apc 40 rest of the faders
     if ( (int)in_event.buffer[1] == 7 )
