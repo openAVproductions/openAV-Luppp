@@ -864,9 +864,12 @@ void JackClient::apcRead( int nframes )
       int sceneID = b2 - 82;
       std::cout << "APC: Scene Launch on Scene " << sceneID << std::endl;
       
-      for (int i = 0; i < 8; i++ )
+      for (int i = 0; i < top->state.getNumTracks(); i++ )
       {
-        //lo_send( //lo_address_new(NULL, "14688") , "/luppp/looper/selectbuffer", "ii", i, sceneID );
+        // write the new scene event to every track
+        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+        x->looperSelectBuffer(i,sceneID);
+        time.processEngineEvent(x);
       }
     }
     
