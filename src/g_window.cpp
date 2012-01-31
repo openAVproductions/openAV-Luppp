@@ -622,8 +622,8 @@ int Window::handleEvent()
           guiState.effectState.push_back( EffectState(-1) );
           
           // add the new widget to the box
-          smallEffectBoxVector.back()->add( *trackVector.at(t).widgetVector.back() );
-          smallEffectBoxVector.back()->show_all();
+          smallEffectBoxVector.at(t)->add( *trackVector.at(t).widgetVector.back() );
+          smallEffectBoxVector.at(t)->show_all();
           
           currentEffectsTrack = e->ia;
           //redrawEffectBox();

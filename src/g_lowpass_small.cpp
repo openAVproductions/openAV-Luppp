@@ -42,7 +42,9 @@ GLowPassSmall::GLowPassSmall(Top* t, GuiStateStore* s)
   signal_button_release_event().connect(sigc::mem_fun(*this, &GLowPassSmall::on_button_release_event) );
   signal_motion_notify_event().connect( sigc::mem_fun( *this, &GLowPassSmall::onMouseMove ) );
   
-  set_size_request(74, 37);
+  xSize = 75;
+  
+  set_size_request(75, 37);
 }
 
 bool GLowPassSmall::redraw()
@@ -188,7 +190,7 @@ bool GLowPassSmall::on_expose_event(GdkEventExpose* event)
     cr->set_line_width(3);
     cr->stroke();
     
-    TitleBar(cr, 0,0 , 250, 216, "Lowpass", active);
+    //TitleBar(cr, 0,0 , 250, 216, "Lowpass", active);
     
     /*
     if ( state.selected )
@@ -217,7 +219,7 @@ bool GLowPassSmall::onMouseMove(GdkEventMotion* event)
 {
   if ( mouseDown )
   {
-    if ( (event->x > 30) && (event->x < 216) )
+    if ( (event->x > 1) && (event->x < 75) )
     {
       float delta =  mouseDeltaX - event->x;
       
@@ -228,15 +230,7 @@ bool GLowPassSmall::onMouseMove(GdkEventMotion* event)
       mouseDeltaX = 0;
     }
     
-    if ( (event->y > 35) && (event->y < 103) )
-    {
-      q = event->y / float(ySize);
-      //EngineEvent* x = new EngineEvent();
-      //x->setPluginParameter(0,1,0, q );
-      //top->toEngineQueue.push(x);
-    }
     redraw();
-    std::cout << "GLowPassSmall: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
   }
 }
 
