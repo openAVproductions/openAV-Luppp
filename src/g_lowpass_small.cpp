@@ -17,14 +17,14 @@
   along with Luppp.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "g_lowpass.hpp"
+#include "g_lowpass_small.hpp"
 
 #include "g_widgets.hpp"
 
 using namespace std;
 using namespace Luppp;
 
-GLowPass::GLowPass(Top* t, GuiStateStore* s)
+GLowPassSmall::GLowPassSmall(Top* t, GuiStateStore* s)
 {
   ID = WidgetBase::getID();
   
@@ -36,18 +36,16 @@ GLowPass::GLowPass(Top* t, GuiStateStore* s)
   
   mouseDown = false;
   
-  //std::cout << "Enterin GLowPass contructor" << std::endl;
+  //std::cout << "Enterin GLowPassSmall contructor" << std::endl;
   add_events(Gdk::EXPOSURE_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK| Gdk::POINTER_MOTION_MASK);
-  signal_button_press_event().connect(sigc::mem_fun(*this, &GLowPass::on_button_press_event) );
-  signal_button_release_event().connect(sigc::mem_fun(*this, &GLowPass::on_button_release_event) );
-  signal_motion_notify_event().connect( sigc::mem_fun( *this, &GLowPass::onMouseMove ) );
+  signal_button_press_event().connect(sigc::mem_fun(*this, &GLowPassSmall::on_button_press_event) );
+  signal_button_release_event().connect(sigc::mem_fun(*this, &GLowPassSmall::on_button_release_event) );
+  signal_motion_notify_event().connect( sigc::mem_fun( *this, &GLowPassSmall::onMouseMove ) );
   
-  xSize = 225;
-  
-  set_size_request(250, 216);
+  set_size_request(74, 37);
 }
 
-bool GLowPass::redraw()
+bool GLowPassSmall::redraw()
 {
   // force our program to redraw the entire widget.
   Glib::RefPtr<Gdk::Window> win = get_window();
@@ -61,7 +59,7 @@ bool GLowPass::redraw()
 }
 
 
-bool GLowPass::on_expose_event(GdkEventExpose* event)
+bool GLowPassSmall::on_expose_event(GdkEventExpose* event)
 {
   // This is where we draw on the window
   Glib::RefPtr<Gdk::Window> window = get_window();
@@ -92,10 +90,10 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
     
     bool active = stateStore->effectState.at(ID).active;
     
-    int x = 10;
-    int y = 22;
-    xSize = 225;
-    ySize = 95;
+    int x = 1;
+    int y = 1;
+    xSize = 72;
+    ySize = 36;
     
     // works but a bit simple
     cr -> move_to( x        , y         );
@@ -205,17 +203,17 @@ bool GLowPass::on_expose_event(GdkEventExpose* event)
   return true;
 }
 
-void GLowPass::on_menu_file_popup_edit()
+void GLowPassSmall::on_menu_file_popup_edit()
 {
    std::cout << "The Edit menu item was selected." << std::endl;
 }
 
-void GLowPass::on_menu_file_popup_generic()
+void GLowPassSmall::on_menu_file_popup_generic()
 {
    std::cout << "A popup menu item was selected." << std::endl;
 }
 
-bool GLowPass::onMouseMove(GdkEventMotion* event)
+bool GLowPassSmall::onMouseMove(GdkEventMotion* event)
 {
   if ( mouseDown )
   {
@@ -238,11 +236,11 @@ bool GLowPass::onMouseMove(GdkEventMotion* event)
       //top->toEngineQueue.push(x);
     }
     redraw();
-    std::cout << "GLowPass: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
+    std::cout << "GLowPassSmall: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
   }
 }
 
-bool GLowPass::on_button_press_event(GdkEventButton* event)
+bool GLowPassSmall::on_button_press_event(GdkEventButton* event)
 {
   if( event->type == GDK_BUTTON_PRESS  ) // && event->button == 3
   {
@@ -282,7 +280,7 @@ bool GLowPass::on_button_press_event(GdkEventButton* event)
     
     if ( event->y < 20 )
     {
-      std::cout << "GLowPass Enable / Disable click event, ID = " << ID << std::endl;
+      std::cout << "GLowPassSmall Enable / Disable click event, ID = " << ID << std::endl;
       EngineEvent* x = new EngineEvent();
       x->setTrackDeviceActive( ID, !stateStore->effectState.at(ID).active );
       top->toEngineQueue.push(x);
@@ -294,7 +292,7 @@ bool GLowPass::on_button_press_event(GdkEventButton* event)
     return false;
 }
 
-bool GLowPass::on_button_release_event(GdkEventButton* event)
+bool GLowPassSmall::on_button_release_event(GdkEventButton* event)
 {
   if( event->type == GDK_BUTTON_RELEASE  ) // && event->button == 3
   {
@@ -306,6 +304,6 @@ bool GLowPass::on_button_release_event(GdkEventButton* event)
     return false;
 }
 
-GLowPass::~GLowPass()
+GLowPassSmall::~GLowPassSmall()
 {
 }

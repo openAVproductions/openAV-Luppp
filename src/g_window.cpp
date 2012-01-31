@@ -29,6 +29,8 @@ using namespace std;
 #include "top.hpp"
 #include <sstream>
 
+#include "g_lowpass_small.hpp"
+
 #include "g_reverb.hpp"
 #include "g_lowpass.hpp"
 #include "g_limiter.hpp"
@@ -593,7 +595,7 @@ int Window::handleEvent()
         switch ( et )
         {
           case EFFECT_REVERB:       trackVector.at(t).widgetVector.push_back( new GReverb     (top, &guiState) ); break;
-          case EFFECT_LOWPASS:      trackVector.at(t).widgetVector.push_back( new GLowPass    (top, &guiState) ); break;
+          case EFFECT_LOWPASS:      trackVector.at(t).widgetVector.push_back( new GLowPassSmall(top, &guiState) ); break;
           case EFFECT_HIGHPASS:     trackVector.at(t).widgetVector.push_back( new GHighPass   (top, &guiState) ); break;
           case EFFECT_BEATSMASH:    trackVector.at(t).widgetVector.push_back( new GBeatSmash  (top, &guiState) ); break;
           case EFFECT_TRANCEGATE:   trackVector.at(t).widgetVector.push_back( new GBeatSmash  (top, &guiState) ); break;
@@ -614,8 +616,11 @@ int Window::handleEvent()
           guiState.effectState.push_back( EffectState(-1) );
           
           // add the new widget to the box
-          trackEffectBox->add( *trackVector.at(t).widgetVector.back() );
-          trackEffectBox->show_all();
+          //trackEffectBox->add( *trackVector.at(t).widgetVector.back() );
+          //trackEffectBox->show_all();
+          
+          smallEffectBoxList.back()->add( *trackVector.at(t).widgetVector.back() );
+          smallEffectBoxList.back()->show_all();
           
           currentEffectsTrack = e->ia;
           redrawEffectBox();
@@ -733,11 +738,15 @@ void Window::addTrack()
   tmpVbox->add( *progressWidgetVector.back() );
   mainTable->attach( *tmpVbox, numTracks, numTracks+1, 3, 4);
   
+  // insert box for adding effects into later
+  smallEffectBoxList.push_back( new Gtk::VBox() );
+  mainTable->attach( *smallEffectBoxList.back(), numTracks, numTracks+1, 4, 5);
+  
   // fader / pan
   trackoutputList.push_back( new TrackOutput( top, &guiState ) );
   std::list<TrackOutput*>::iterator i = trackoutputList.begin();
   std::advance(i,numTracks);
-  mainTable->attach( **i, numTracks, numTracks+1, 4, 5);
+  mainTable->attach( **i, numTracks, numTracks+1, 5, 6);
   
   mainTable->show_all();
   numTracks++;

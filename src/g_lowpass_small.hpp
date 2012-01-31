@@ -17,8 +17,8 @@
   along with Luppp.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LUPPP_LOWPASS
-#define LUPPP_LOWPASS
+#ifndef LUPPP_LOWPASS_SMALL
+#define LUPPP_LOWPASS_SMALL
 
 #include <vector>
 #include <iostream>
@@ -29,11 +29,11 @@
 #include "g_statestore.hpp"
 #include "g_widgetbase.hpp"
 
-class GLowPass : public Gtk::DrawingArea, public WidgetBase
+class GLowPassSmall : public Gtk::DrawingArea, public WidgetBase
 {
   public:
-    GLowPass(Top*, GuiStateStore*);
-    ~GLowPass();
+    GLowPassSmall(Top*, GuiStateStore*);
+    ~GLowPassSmall();
     
     bool redraw();
   
