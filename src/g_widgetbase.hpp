@@ -27,6 +27,8 @@ class WidgetBase
     
     // used to get the EffectState* from the vector
     int  getID();
+    
+    virtual bool redraw() = 0;
   
   private:
     int ID;

@@ -453,8 +453,8 @@ int Window::handleEvent()
       std::cout << "Gui DEVICE ACTIVE   UID: " << e->ia << " value: " << e->ib << std::endl; 
       
       guiState.effectState.at(e->ia).active = e->ib;
+      smallEffectBoxVector.at(e->ia)->queue_draw();
       
-      redrawEffectBox(); // should be only redrawing current widget
     }
     else if ( e->type == EE_TRACK_SELECT_DEVICE ) {
       //std::cout << "Gui TrackSelect event  t: " << e->ia << " d: " << e->ib << std::endl;
@@ -571,12 +571,18 @@ int Window::handleEvent()
     {
       //std::cout << "PLUGIN PARAM t " << e->ia << " pos " << e->ib << " param " << e->ic << " val " << e->fa << std::endl;
       
-      if ( e->ia < guiState.effectState.size() )
+      if ( e->ia < trackVector.at(currentEffectsTrack).widgetVector.size() )
       {
         // here we are writing based on track, but we should be writing ID
         cout << "UniqueID: " << e->ia << "  param: " << e->ic << "  value" << e->fa << endl;
         guiState.effectState.at(e->ia).values[e->ic] = e->fa;
-        redrawEffectBox();
+        
+        // mark widget for redrawing
+        smallEffectBoxVector.at(e->ia)->queue_draw();
+      }
+      else
+      {
+        cout << "GWindow::handleEvent() PLUGIN_PARAM ERROR, effect position not in vector!" << endl;
       }
     }
     else if ( e->type == EE_STATE_NEW_EFFECT )
@@ -616,14 +622,11 @@ int Window::handleEvent()
           guiState.effectState.push_back( EffectState(-1) );
           
           // add the new widget to the box
-          //trackEffectBox->add( *trackVector.at(t).widgetVector.back() );
-          //trackEffectBox->show_all();
-          
-          smallEffectBoxList.back()->add( *trackVector.at(t).widgetVector.back() );
-          smallEffectBoxList.back()->show_all();
+          smallEffectBoxVector.back()->add( *trackVector.at(t).widgetVector.back() );
+          smallEffectBoxVector.back()->show_all();
           
           currentEffectsTrack = e->ia;
-          redrawEffectBox();
+          //redrawEffectBox();
         }
       }
       
@@ -665,7 +668,6 @@ void Window::redrawEffectBox()
   // so they're always visible. Also This area is reserved for editing
   // and displaying waveforms / etc
   return;
-  
   /*
   //cout << "Window::redrawEffectBox() currentEffectTrack: " << currentEffectsTrack 
   //     << "previousEffectsTrack: " << previousEffectsTrack << std::endl;
@@ -739,8 +741,8 @@ void Window::addTrack()
   mainTable->attach( *tmpVbox, numTracks, numTracks+1, 3, 4);
   
   // insert box for adding effects into later
-  smallEffectBoxList.push_back( new Gtk::VBox() );
-  mainTable->attach( *smallEffectBoxList.back(), numTracks, numTracks+1, 4, 5);
+  smallEffectBoxVector.push_back( new Gtk::VBox() );
+  mainTable->attach( *smallEffectBoxVector.back(), numTracks, numTracks+1, 4, 5);
   
   // fader / pan
   trackoutputList.push_back( new TrackOutput( top, &guiState ) );
