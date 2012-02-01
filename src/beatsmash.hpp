@@ -40,6 +40,8 @@ class BeatSmash : public Effect
     int active;
     int queueActive;
     
+    int smashIndex;
+    
     int nframeBeatCounter;
     
     // like a vector, but access from front & back is equally fast

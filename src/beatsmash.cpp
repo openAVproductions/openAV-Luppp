@@ -27,12 +27,14 @@ BeatSmash::BeatSmash(Top* t, EffectType et) : Effect(t,et)
   top = t;
   ID = Effect::getID();
   
-  std::cout << "BeatSmash() ID = " << ID << std::endl;
+  //std::cout << "BeatSmash() ID = " << ID << std::endl;
   
   active = false;
   queueActive = false;
   
-  audioBuffer.resize(22050, 0.f);
+  smashIndex = 0;
+  
+  //audioBuffer.resize(22050, 0.f);
 }
 
 void BeatSmash::process(int nframes, float *L)
@@ -46,10 +48,7 @@ void BeatSmash::process(int nframes, float *L)
   
   for( int i = 0; i < nframes; i++)
   {
-    // always push back new
-    audioBuffer.push_back( L[i] );
     
-    // if needed playback delays... :-)
     if (active)
     {
       // audioBuffer contains the last beat of samples
@@ -60,14 +59,23 @@ void BeatSmash::process(int nframes, float *L)
       //   |                      |                     |
       //   0         audioBuffer.size() / 2             audioBuffer.size()
       
-      // iter over number of taps
-      for ( int delayCounter = 0; delayCounter < numDelays; delayCounter++)
+      if ( smashIndex > audioBuffer.size() || smashIndex > 2048 )
       {
-        L[i] += audioBuffer.at( 9000 * delayTime * delayCounter );
+        smashIndex = 0;
+      }
+      
+      // write smash loop into buffer
+      L[i] += audioBuffer.at(smashIndex++);
+      
+    }
+    else
+    {
+      // update contents
+      audioBuffer.push_back( L[i] );
+      if ( audioBuffer.size() > 2048 )
+      {
+        audioBuffer.pop_front();
       }
     }
-    
-    // always pop front
-    audioBuffer.pop_front();
   }
 }
