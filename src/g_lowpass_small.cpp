@@ -88,7 +88,9 @@ bool GLowPassSmall::on_expose_event(GdkEventExpose* event)
     std::cout << "LowpassSmall  ID " << ID << " getting state now" << endl;
     float cutoffRangeZeroOne = stateStore->effectState.at(ID).values[0];
     
-    cutoff = (48.f / xSize) + (cutoffRangeZeroOne * 0.7541 );
+    cutoff = (xSize * cutoffRangeZeroOne) / xSize;
+    
+    q = 0.35;
     
     bool active = stateStore->effectState.at(ID).active;
     
@@ -115,15 +117,15 @@ bool GLowPassSmall::on_expose_event(GdkEventExpose* event)
     cr->set_dash (dashes, 0.0);
     cr->set_line_width(1.0);
     cr->set_source_rgb (0.4,0.4,0.4);
-    for ( int i = 0; i < 4; i++ )
+    for ( int i = 0; i < 3; i++ )
     {
-      cr->move_to( x + ((xSize / 4.f)*i), y );
-      cr->line_to( x + ((xSize / 4.f)*i), y + ySize );
+      cr->move_to( x + ((xSize / 3.f)*i), y );
+      cr->line_to( x + ((xSize / 3.f)*i), y + ySize );
     }
-    for ( int i = 0; i < 4; i++ )
+    for ( int i = 0; i < 3; i++ )
     {
-      cr->move_to( x       , y + ((ySize / 4.f)*i) );
-      cr->line_to( x +xSize, y + ((ySize / 4.f)*i) );
+      cr->move_to( x       , y + ((ySize / 3.f)*i) );
+      cr->line_to( x +xSize, y + ((ySize / 3.f)*i) );
     }
     cr->stroke();
     cr->unset_dash();
@@ -132,9 +134,7 @@ bool GLowPassSmall::on_expose_event(GdkEventExpose* event)
     cr->move_to( x , y + ySize );
     cr->line_to( x , y + (ySize/2));
     
-    int startHorizontalLine = xSize* (cutoff - 0.4)  < 50;
-    if ( startHorizontalLine < 50 )
-      startHorizontalLine = 10;
+    int startHorizontalLine = 1;
       
     cr->line_to( startHorizontalLine, y + (ySize/2) ); // horizontal line to start of curve
     
@@ -146,12 +146,12 @@ bool GLowPassSmall::on_expose_event(GdkEventExpose* event)
     int xSizeCP2 = xSize* (cutoff + 0.08);
     int xSizeEnd = xSize* (cutoff + 0.15);
     
-    if ( xSizeCP1 > 234 )
-      xSizeCP1 = 234;
-    if ( xSizeCP2 > 234 )
-      xSizeCP2 = 234;
-    if ( xSizeEnd > 234 )
-      xSizeEnd = 234;
+    if ( xSizeCP1 > 74 )
+      xSizeCP1 = 74;
+    if ( xSizeCP2 > 74 )
+      xSizeCP2 = 74;
+    if ( xSizeEnd > 74 )
+      xSizeEnd = 74;
     
     cr->curve_to( xSizeCP1, y+(ySize*0.3),  // control point 1
                   xSizeCP2, y+(ySize*0.3), // control point 2
@@ -181,14 +181,16 @@ bool GLowPassSmall::on_expose_event(GdkEventExpose* event)
     cr->stroke();
     
     // dials
-    Dial(cr, active, 70, 140, cutoffRangeZeroOne, DIAL_MODE_NORMAL);
-    Dial(cr, active, 150,140, q                 , DIAL_MODE_NORMAL);
+    //Dial(cr, active, 70, 140, cutoffRangeZeroOne, DIAL_MODE_NORMAL);
+    //Dial(cr, active, 150,140, q                 , DIAL_MODE_NORMAL);
     
+    /*
     // outline
     setColour(cr, COLOUR_GREY_2 );
     cr->rectangle( x, y , xSize, ySize );
     cr->set_line_width(3);
     cr->stroke();
+    */
     
     //TitleBar(cr, 0,0 , 250, 216, "Lowpass", active);
     
@@ -240,11 +242,11 @@ bool GLowPassSmall::on_button_press_event(GdkEventButton* event)
   {
     int x = 10;
     int y = 22;
-    xSize = 225;
-    ySize = 95;
+    xSize = 74;
+    ySize = 38;
     
     // graph area
-    if ( (event->x > 10) && (event->x < 235) &&
+    if ( (event->x > 1) && (event->x < 74) &&
          (event->y > 22) && (event->y < 117 ) )
     {
       
@@ -255,7 +257,7 @@ bool GLowPassSmall::on_button_press_event(GdkEventButton* event)
       float evX = event->x;
       // inform engine of "click" and position co-efficents as such
       if ( evX < 30) evX = 30;
-      if ( evX > 216)evX = 216;
+      if ( evX > 72)evX = 72;
       
       EngineEvent* x = new EngineEvent();
       x->setPluginParameter(ID,0,0, evX / xSize );
