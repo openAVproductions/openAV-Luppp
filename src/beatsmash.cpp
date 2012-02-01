@@ -34,7 +34,7 @@ BeatSmash::BeatSmash(Top* t, EffectType et) : Effect(t,et)
   
   smashIndex = 0;
   
-  //audioBuffer.resize(22050, 0.f);
+  audioBuffer.resize(22050, 0.f);
 }
 
 void BeatSmash::process(int nframes, float *L)
@@ -43,8 +43,15 @@ void BeatSmash::process(int nframes, float *L)
   EffectState* state = top->state.getEffectState(ID);
   
   bool active = state->active;
-  int numDelays = (int)(state->values[0] * 3);
-  float delayTime = state->values[1];
+  int delaySize = (int)(state->values[0] * 8);
+  float wetDry = state->values[1];
+  
+  // work out delay lengths for beat, quater beat, half beat etc
+  int framesPerBeat = (int) top->samplerate / (top->bpm / 60.0);
+  
+  int smashLoopSize = (1 + delaySize) * (framesPerBeat / 8.f);
+  
+  float* buffer = L;
   
   for( int i = 0; i < nframes; i++)
   {
@@ -59,20 +66,20 @@ void BeatSmash::process(int nframes, float *L)
       //   |                      |                     |
       //   0         audioBuffer.size() / 2             audioBuffer.size()
       
-      if ( smashIndex > audioBuffer.size() || smashIndex > 2048 )
+      if ( smashIndex > audioBuffer.size() || smashIndex > smashLoopSize )
       {
         smashIndex = 0;
       }
       
       // write smash loop into buffer
-      L[i] += audioBuffer.at(smashIndex++);
-      
+      *buffer = (*buffer * wetDry) + (1-wetDry) * audioBuffer.at(smashIndex++);
+      buffer++;
     }
     else
     {
       // update contents
       audioBuffer.push_back( L[i] );
-      if ( audioBuffer.size() > 2048 )
+      if ( audioBuffer.size() > smashLoopSize )
       {
         audioBuffer.pop_front();
       }
