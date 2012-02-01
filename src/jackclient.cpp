@@ -321,7 +321,7 @@ int JackClient::process(jack_nframes_t nframes)
   
   mixer.process(nframes, recordInput, portBufferList, copyBufferList);
   
-  return true;
+  return false;
 };
 
 int JackClient::processMidi(jack_nframes_t nframes)
