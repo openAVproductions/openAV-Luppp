@@ -83,6 +83,8 @@ void BufferAudioSource::process (int nframes, float* buffer )
   if ( size == 0 )
     return;
   
+  float attackRelease = 1.f;
+  
   //cout << "BAS:process() ID = " << ID << "  Size: " << size << " index = " << index << endl;
   for (int i = 0; i < nframes; i++ )
   {
@@ -92,9 +94,22 @@ void BufferAudioSource::process (int nframes, float* buffer )
       index = 0.f;
     }
     
-    *buffer++  += tmpVector->at( (int)(index * size) );
+    if ( index * size < 100 )
+    {
+      attackRelease = (index * size) / 100.f;
+    }
+    else if ( index * size > size - 100 )
+    {
+      attackRelease = 1 +   ((size-100) - (index * size))  / 100.f;
+    }
+    
+    // here we multiply in by attackRelease to remove any non-zero endings
+    // to make the join over the loop smooth, without a click
+    *buffer++  += attackRelease * tmpVector->at( (int)(index * size) );
     index = index + ( speed / size );
   }
+  
+  cout << "BAS proc() attackRelease = " << attackRelease << endl;
   
   // write index to state, so that next time we read the next samples
   iter->index = index;
