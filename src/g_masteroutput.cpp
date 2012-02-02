@@ -52,7 +52,7 @@ GMasterOutput::GMasterOutput(Top* t, GuiStateStore* s)
   signal_button_release_event().connect(sigc::mem_fun(*this, &GMasterOutput::on_button_release_event) );
   signal_motion_notify_event().connect( sigc::mem_fun( *this, &GMasterOutput::onMouseMove ) );
   
-  volume    = 0.707;
+  volume    = 0.000;
   pan       = 0.f;
   elevation = 0.5f;
   
@@ -226,8 +226,8 @@ bool GMasterOutput::on_expose_event(GdkEventExpose* event)
     bool pfl = headphonePflSelect;
     
     // headphone monitoring system
-    Solo(cr, 100, 80, 0,  pfl ); // solo button
-    Solo(cr, 125, 80, 0, !pfl ); // solo button
+    //Solo(cr, 100, 80, 0,  pfl ); // solo button
+    //Solo(cr, 125, 80, 0, !pfl ); // solo button
     
     headphoneImage->render_to_drawable(	get_window() ,
                                         get_style()->get_black_gc(),
@@ -409,6 +409,10 @@ bool GMasterOutput::onMouseMove(GdkEventMotion* event)
       headphonesVolume = 1.f;
     else if ( headphonesVolume < 0.f )
       headphonesVolume = 0.f;
+    
+    EngineEvent* x = new EngineEvent();
+    x->setMixerVolume( -2, headphonesVolume);
+    top->toEngineQueue.push(x);
     
     redraw();
   }

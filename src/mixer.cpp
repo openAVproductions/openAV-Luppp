@@ -29,8 +29,8 @@ Mixer::Mixer(Top* t) :
   top = t;
   
   // initialize volume levels
-  masterVolume     = 0.707f;
-  headphonesVolume = 0.707f;
+  masterVolume     = 0.000f;
+  headphonesVolume = 0.000f;
   
   // Top isn't initialized yet, so we just initialize all buffers to 1024
   outputW.resize(1024);
@@ -95,6 +95,13 @@ void Mixer::setMasterVolume(float vol)
   if ( vol > 1.0 ) vol = 1.0;
   if ( vol < 0.0 ) vol = 0.0;
   masterVolume = vol;
+}
+
+void Mixer::setHeadphonesVolume(float vol)
+{
+  if ( vol > 1.0 ) vol = 1.0;
+  if ( vol < 0.0 ) vol = 0.0;
+  headphonesVolume = vol;
 }
 
 void Mixer::setMasterRotation(float rot)

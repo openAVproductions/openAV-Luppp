@@ -44,6 +44,7 @@ class Mixer
     
     void setMasterVolume(float);
     void setMasterRotation(float);
+    void setHeadphonesVolume(float);
     
     // returns the UniqueID of an Effect in an AudioTrack
     int getEffectID(int track, int pos);

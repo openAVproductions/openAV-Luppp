@@ -184,6 +184,10 @@ int JackClient::processRtQueue()
       {
         mixer.setMasterVolume(e->fa);
       }
+      else if ( e->ia == -2 )
+      {
+        mixer.setHeadphonesVolume(e->fa);
+      }
       else
       {
         top->state.setVolume( e->ia, e->fa );
