@@ -109,8 +109,6 @@ void BufferAudioSource::process (int nframes, float* buffer )
     index = index + ( speed / size );
   }
   
-  cout << "BAS proc() attackRelease = " << attackRelease << endl;
-  
   // write index to state, so that next time we read the next samples
   iter->index = index;
   
