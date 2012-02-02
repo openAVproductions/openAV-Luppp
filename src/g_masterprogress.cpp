@@ -53,6 +53,7 @@ void GMasterProgress::setProgress(float p)
 void GMasterProgress::setBpm(int inBpm)
 {
   bpm = inBpm;
+  redraw();
 }
 
 bool GMasterProgress::on_expose_event(GdkEventExpose* event)
@@ -98,10 +99,10 @@ bool GMasterProgress::on_expose_event(GdkEventExpose* event)
     int x = 2;
     int y = 2;
     
-    cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_NORMAL);
-    cr->set_font_size ( 13 );
-    cr->move_to ( x + 22, (y + 13) );
-    setColour(cr, COLOUR_GREY_1);
+    cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_BOLD);
+    cr->set_font_size ( 15 );
+    cr->move_to ( x + 20, (y + 10) );
+    setColour(cr, COLOUR_GREY_4);
     
     stringstream s;
     s << bpm;

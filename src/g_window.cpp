@@ -295,6 +295,10 @@ int Window::handleEvent()
         (*iter)->redraw();
       }
     }
+    else if ( e->type == EE_BPM ) {
+      cout << "GUI new BPM: " << e->ia << endl;
+      masterProgress.setBpm(e->ia);
+    }
     else if ( e->type == EE_ADD_TRACK ) {
       //cout << "GUI got ADD_TRACK event, sending to OfflineWorker  NewID = " << e->ia << endl;
       int ret = top->offlineWorker->addTrack(e->ia);

@@ -27,6 +27,8 @@ enum EngineEventType
 {
   EE_INVALID = 0,
   
+  EE_BPM,
+  
   EE_MIXER_VOLUME,
   
   EE_ADD_TRACK,
@@ -101,6 +103,8 @@ class EngineEvent
     }
     
     void addTrack             (int newId);
+    void setBpm               (int bpm);
+    
     void sendAddTrackPointers (void*,void*,void*,void*);
     
     void looperPlay           (int id);
