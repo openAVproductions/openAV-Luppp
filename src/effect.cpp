@@ -26,6 +26,10 @@ int Effect::privateID = 0;
 Effect::Effect(Top* t, EffectType& et)
 {
   ID = privateID++;
+  
+  // this code will be run by the GUI, while it is calling into state
+  // which is owned by Engine. This could cause a segfault! Need to
+  // update this mechanism to run trough a ringbuffer
   t->state.addEffectState(ID);
   
   type = et;
