@@ -28,6 +28,8 @@
 #include "audiotrack.hpp"
 #include "audiobuffer.hpp"
 
+#include "g_statestore.hpp"
+
 #include <sstream>
 
 #include "whitenoiseaudiosource.hpp"
@@ -246,6 +248,10 @@ int OfflineWorker::loadAudioBuffer( int ID, int block, std::string name)
     std::cout << "OfflineWorker() Could not load sound file, or empty file detected! Check that " << name << " exists!" << std::endl;
     return -1;
   }
+  
+  // set the samples name to the GUI state, so GUI shows the sample name
+  // in the clip selector
+  top->guiState->addAudioBufferName( ID, Glib::path_get_basename(name) );
   
   int tmpChan= infile.channels();
   int tmpSR  = infile.samplerate();

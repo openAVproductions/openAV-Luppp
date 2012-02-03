@@ -53,6 +53,9 @@ Window::Window(Gtk::Main *k, Top* t) :
   // we call "redraw()" on the nessiary widgets to refresh the GUI.
   top = t;
   
+  // give top a pointer to the GUI state, it is needed to push information
+  // there when loading files from disk etc.
+  top->guiState = &guiState;
   
   // connect here if we want to provide "events" from engine, and only update
   // the GUI when the emit() is triggered, polling might serve better..?
@@ -139,6 +142,9 @@ Window::Window(Gtk::Main *k, Top* t) :
   
   //masterOutputBox->add( inputWaveview );
   //masterOutputBox->add( waveview );
+  
+  trackEffectBox->add(waveview);
+  trackEffectBox->show_all();
   
   masterOutputBox->pack_end( masterOutput, false, true, 0 );
   masterOutputBox->show_all();
@@ -480,7 +486,9 @@ int Window::handleEvent()
         std::advance(iter, e->ib);
         iter->hasBuffer = true;
         
-        //(*iter).bufferID = e->ic;?
+        // set the ClipInfo bufferID, used later to lookup the name of the
+        // file it got loaded from
+        (*iter).bufferID = e->ic;
         
         // gui widget
         std::list<ClipSelector*>::iterator clipIter = clipselectorList.begin();

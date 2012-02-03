@@ -165,9 +165,19 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
       
       std::string name = "";
       
-      // retrieve audio buffer name from unique bufferID and audioBufferNameVector
       if ( (*iter).bufferID < stateStore->audioBufferNameVector.size() )
         name = stateStore->audioBufferNameVector.at( (*iter).bufferID );
+      else
+        name = "inv";
+      
+      cout << "Clip " << (*iter).bufferID << " has name " << name << endl;
+      
+      // retrieve audio buffer name from unique bufferID and audioBufferNameVector
+      if ( (*iter).bufferID < stateStore->audioBufferNameVector.size() )
+      {
+        name = stateStore->audioBufferNameVector.at( (*iter).bufferID );
+        cout << "AudioClip @ " << (*iter).bufferID << " got name " << name << endl;
+      }
       
       if ( masterClipSelector )
       {

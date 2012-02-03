@@ -40,6 +40,8 @@ class GuiStateStore
     
     void addTrack();
     
+    void addAudioBufferName(int ID, std::string name);
+    
     std::string getLastDir();
     void setLastDir(std::string s);
     

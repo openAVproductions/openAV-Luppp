@@ -31,6 +31,7 @@
 
 class Controller;
 class JackClient;
+class GuiStateStore;
 class OfflineWorker;
 
 // the Top class is a portal trough which the rest of the program can
@@ -55,6 +56,7 @@ class Top
     std::vector<float> scopeVector;
     std::vector<float> inputScopeVector;
     
+    GuiStateStore* guiState;
     Controller* controller; 
     OfflineWorker* offlineWorker;
     StateStore state;
