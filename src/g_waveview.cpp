@@ -220,10 +220,20 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       
       int sampleCountForDrawing = 25;
       
-      
       sample = *( waveviewCache->getPointer() );
       
-      cout << "Got waveviewCache for ID " << sampleID << " sample size = " << sample.size() << " num beats: " << waveviewCache->getBeats() << endl;
+      // get the current "playing" beat of the loop
+      float progress = top->guiState->bufferAudioSourceState.at(sampleID).index;
+      int numBeats = waveviewCache->getBeats();
+      
+      cout << "Got waveviewCache for ID " << sampleID << " sample size = " << sample.size() << " num beats: " << numBeats << "  progress = " << progress << endl;
+      
+      int beat = (int)(numBeats * progress);
+      
+      setColour( cr, COLOUR_GREEN_1, 0.3 );
+      int beatStart = x + beat * (float(width-x*2) / numBeats);
+      cr->rectangle( beatStart , y, float(width-x*2) / numBeats, ySize );
+      cr->fill();
       
       // loop for drawing each Point on the widget.
       for (long index=0; index <(long)sample.size(); index++ )
@@ -261,9 +271,13 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       cr->stroke();
       
       std::string name = "Start";
+      std::string mid = "Middle";
       std::string nameStop = "Stop";
       
       drawMarker(cr, 0.f, COLOUR_GREEN_1, MARKER_START, name);
+      
+      drawMarker(cr, 0.5f, COLOUR_PURPLE_2, MARKER_MIDDLE, mid);
+      
       drawMarker(cr, 1.f, COLOUR_RECORD_RED, MARKER_END, nameStop );
     }
   return true;
