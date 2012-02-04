@@ -226,7 +226,7 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       float progress = top->guiState->bufferAudioSourceState.at(sampleID).index;
       int numBeats = waveviewCache->getBeats();
       
-      cout << "Got waveviewCache for ID " << sampleID << " sample size = " << sample.size() << " num beats: " << numBeats << "  progress = " << progress << endl;
+      //cout << "Got waveviewCache for ID " << sampleID << " sample size = " << sample.size() << " num beats: " << numBeats << "  progress = " << progress << endl;
       
       int beat = (int)(numBeats * progress);
       
@@ -276,7 +276,7 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       
       drawMarker(cr, 0.f, COLOUR_GREEN_1, MARKER_START, name);
       
-      drawMarker(cr, 0.5f, COLOUR_PURPLE_2, MARKER_MIDDLE, mid);
+      //drawMarker(cr, 0.5f, COLOUR_PURPLE_2, MARKER_MIDDLE, mid);
       
       drawMarker(cr, 1.f, COLOUR_RECORD_RED, MARKER_END, nameStop );
     }
