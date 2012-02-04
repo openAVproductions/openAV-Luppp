@@ -29,9 +29,10 @@ namespace Luppp
   {
     int blockSize = 17;
     
-    Colour textColour, playColour, bgColour, recColour;
+    Colour textColour, playColour, bgColour, recColour, playheadCol;
     
     recColour = COLOUR_TRANSPARENT;
+    playheadCol= COLOUR_TRANSPARENT;
     
     if        ( state == CLIP_STATE_EMPTY ) {
      textColour = COLOUR_TRANSPARENT;
@@ -46,6 +47,7 @@ namespace Luppp
      textColour = COLOUR_GREY_4;
      playColour = COLOUR_GREY_4;
      bgColour   = COLOUR_GREEN_1;
+     playheadCol= COLOUR_GREEN_1;
     } else if ( state == CLIP_STATE_RECORDING ){
      textColour = COLOUR_TRANSPARENT;
      playColour = COLOUR_GREY_4;
@@ -64,6 +66,13 @@ namespace Luppp
     // draw "play square" on left of block
     setColour(cr, playColour);
     cr->rectangle (x+1, y+1, 15, 15);
+    cr->fill();
+  
+    setColour(cr, playheadCol);
+    cr->move_to ( x+ 4, y+4 );
+    cr->line_to ( x+ 4 + 10, y+9 );
+    cr->line_to ( x+ 4, y+13 );
+    cr->close_path();
     cr->fill();
     
     if ( recColour != COLOUR_TRANSPARENT )

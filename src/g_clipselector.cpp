@@ -284,7 +284,7 @@ bool ClipSelector::on_button_press_event(GdkEventButton* event)
     return true;
   }
   
-  if( event->type == GDK_BUTTON_PRESS && event->button == 1 ) // left
+  if( event->type == GDK_BUTTON_PRESS && event->button == 1 && event-> x < 20 ) // left
   {
     // so we're gonna play a clip, if the track is record enabled, and the
     // current block is *NOT* recording yet, we set it to record, otherwise
@@ -309,7 +309,15 @@ bool ClipSelector::on_button_press_event(GdkEventButton* event)
     x->looperSelectBuffer(ID,block);
     top->toEngineQueue.push(x);
   }
-  else if( event->type == GDK_BUTTON_PRESS && event->button == 3 ) // right
+  else
+  {
+    // its a click in the block, but probably for "drag drop" functionality,
+    // *dont* set the block to play, jsut storke the block number that we've
+    // clicked on so we can send it later (this is done @ top of function already)
+  }
+  
+  
+  if( event->type == GDK_BUTTON_PRESS && event->button == 3 ) // right
   {
     std::cout << "ClipSelector " << ID << ": Load event on block " << block << std::endl; 
     loadSample(block);
