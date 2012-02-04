@@ -50,10 +50,10 @@ GWaveView::GWaveView(Top* t)
   setSizeQuaterSec.set_label("1/4 second");
   setSizeEigthSec.set_label("1/8 second");
   
-  setSize1Sec.signal_activate().connect     ( sigc::bind (sigc::mem_fun(*this, &GWaveView::setSize) , 11050 ) );
-  setSizeHalfSec.signal_activate().connect  ( sigc::bind (sigc::mem_fun(*this, &GWaveView::setSize) ,  5525 ) );
-  setSizeQuaterSec.signal_activate().connect( sigc::bind (sigc::mem_fun(*this, &GWaveView::setSize) ,  2762 ) );
-  setSizeEigthSec.signal_activate().connect ( sigc::bind (sigc::mem_fun(*this, &GWaveView::setSize) ,  2762 ) );
+  setSize1Sec.signal_activate().connect     ( sigc::bind (sigc::mem_fun(*this, &GWaveView::setSampleID) , 0 ) );
+  setSizeHalfSec.signal_activate().connect  ( sigc::bind (sigc::mem_fun(*this, &GWaveView::setSampleID) , 1 ) );
+  setSizeQuaterSec.signal_activate().connect( sigc::bind (sigc::mem_fun(*this, &GWaveView::setSampleID) , 2 ) );
+  setSizeEigthSec.signal_activate().connect ( sigc::bind (sigc::mem_fun(*this, &GWaveView::setSampleID) , 3 ) );
   
   pMenu.add( setSize1Sec );
   pMenu.add( setSizeHalfSec );
@@ -79,6 +79,14 @@ void GWaveView::setSize(int size)
   
   redraw();
   
+  return;
+}
+
+void GWaveView::setSampleID(int id)
+{
+  std::cout << "GWaveView setting sample ID to " << id << std::endl;
+  sampleID = id;
+  redraw();
   return;
 }
 
@@ -108,8 +116,8 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
     if(window)    // Only run if Window does exist
     {
       Gtk::Allocation allocation = get_allocation();
-      const int width = allocation.get_width();
-      const int height = allocation.get_height();
+      width = allocation.get_width();
+      height = allocation.get_height();
       
       // coordinates for the center of the window
       int xc, yc;
@@ -232,22 +240,18 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
         {
           float drawSample = currentTop / 4.f;
           
-          int xCoord = x + xSize*(float(index)/sample.size());
+          int xCoord = x + ( xSize * ( float(index) / sample.size() ) );
           
-          cr->move_to( xCoord,  y+ (ySize/2) - (previousTop * ySize )  ); // top
-          cr->line_to( xCoord,  y+ (ySize/2) + (drawSample  * ySize )  ); // bottom
+          cr->move_to( xCoord, y + (ySize/2) - (previousTop * ySize )  ); // top
+          cr->line_to( xCoord, y + (ySize/2) + (drawSample  * ySize )  ); // bottom
           
-          sampleCountForDrawing = 10;
+          sampleCountForDrawing = 15;
           previousTop = drawSample;
           currentTop = 0;
         }
       }
       
-      setColour(cr, COLOUR_GREY_2 );
-      cr->line_to( x + xSize, y + ySize*0.5 );
-      //cr->close_path();
-      //cr->fill_preserve();
-      
+      setColour(cr, COLOUR_GREY_1 );
       cr->stroke();
       
       // outline
@@ -256,9 +260,61 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       cr->set_line_width(3);
       cr->stroke();
       
+      std::string name = "Start";
+      std::string nameStop = "Stop";
+      
+      drawMarker(cr, 0.f, COLOUR_GREEN_1, MARKER_START, name);
+      drawMarker(cr, 1.f, COLOUR_RECORD_RED, MARKER_END, nameStop );
     }
   return true;
 } // on_expose_event()
+
+void GWaveView::drawMarker(Cairo::RefPtr<Cairo::Context> cr, float position, Colour col, MarkerType type, std::string& name)
+{
+  int x = 10;
+  int y = 22;
+  
+  // marks for start
+  int markXsize = 40;
+  int markX = x + position * ((width-markXsize) - x * 2);
+  int markY = y / 2;
+  
+  int markYsize = y - 6;
+  
+  setColour(cr, col);
+  if ( type == MARKER_START || type == MARKER_MIDDLE )
+    cr->rectangle( markX, markY, 1, height);
+  else
+    cr->rectangle( markX + markXsize, markY, 1, height);
+  cr->fill();
+  
+  setColour(cr, col);
+  cr->rectangle( markX, markY, markXsize, markYsize );
+  cr->fill();
+  
+  if ( type == MARKER_START || type == MARKER_MIDDLE )
+  {
+    cr->move_to( markX + markXsize, markY );
+    cr->line_to( markX + markXsize + 9, markY + markYsize/2 );
+    cr->line_to( markX + markXsize, markY + markYsize );
+    cr->close_path();
+    cr->fill();
+  }
+  else
+  {
+    cr->move_to( markX    , markY               );
+    cr->line_to( markX - 9, markY + markYsize/2 );
+    cr->line_to( markX    , markY + markYsize   );
+    cr->close_path();
+    cr->fill();
+  }
+  
+  cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_BOLD);
+  cr->set_font_size ( 13 );
+  cr->move_to ( markX + 3, y + 2 );
+  setColour(cr, COLOUR_GREY_4);
+  cr->show_text ( name );
+}
 
 void GWaveView::redraw()
 {

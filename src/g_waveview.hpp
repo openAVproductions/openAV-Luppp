@@ -23,6 +23,10 @@
 #include <gtkmm/drawingarea.h>
 #include <gtkmm.h>
 
+#include "g_widgets.hpp"
+
+using namespace Luppp;
+
 class Top;
 
 class GWaveView : public Gtk::DrawingArea
@@ -38,17 +42,28 @@ class GWaveView : public Gtk::DrawingArea
   protected:
     Top* top;
     
+    enum MarkerType {
+      MARKER_START = 0,
+      MARKER_MIDDLE,
+      MARKER_END,
+    };
+    
+    int width;
+    int height;
+    
     // the sample "loaded" is the real one. NOT a copy (ie: ByRef)
     std::vector<float> sample;
     
     // zoom stuffs
     int waveviewSize;
     void setSize(int);
+    void setSampleID(int);
+    
+    // marker drawing function
+    void drawMarker(Cairo::RefPtr<Cairo::Context> cr, float position, Colour col, MarkerType type, std::string& name);
     
     // selects which buffer ID we want to edit
     int sampleID;
-    
-    
     
     // popup menu stuff:
     Gtk::Menu      pMenu;
