@@ -41,12 +41,33 @@ AudioBuffer* GuiStateStore::getNewAudioBuffer()
   return audioBufferVector.back().get();
 }
 
-AudioBuffer* GuiStateStore::getWaveformCache(int ID)
+AudioBuffer* GuiStateStore::getAudioBufferPointer(int ID)
 {
   if ( ID >= 0 && ID < audioBufferVector.size() )
   {
     // return the new AudioBuffer* (raw pointer, needs to be a shared_ptr eventually)
     return audioBufferVector.at(ID).get();
+  }
+  
+  return 0;
+}
+
+WaveformCache* GuiStateStore::getNewWaveformCache()
+{
+  waveformCacheVector.push_back( std::make_shared<WaveformCache>() );
+  
+  return waveformCacheVector.back().get();
+}
+
+WaveformCache* GuiStateStore::getWaveformCache(int ID)
+{
+  // check if we have a generated waveform of the buffer here
+  for ( int i = 0; i < waveformCacheVector.size(); i++ )
+  {
+    if ( ID == waveformCacheVector.at(i)->getID() )
+    {
+      return waveformCacheVector.at(i).get();
+    }
   }
   
   return 0;

@@ -28,6 +28,7 @@
 #include <memory>
 
 #include "audiobuffer.hpp"
+#include "waveformcache.hpp"
 #include "effectstate.hpp"
 
 #include "g_equalizerstate.hpp"
@@ -45,7 +46,10 @@ class GuiStateStore
     void addTrack();
     
     AudioBuffer* getNewAudioBuffer();
-    AudioBuffer* getWaveformCache(int ID);
+    AudioBuffer* getAudioBufferPointer(int ID);
+    
+    WaveformCache* getNewWaveformCache();
+    WaveformCache* getWaveformCache(int ID);
     
     void addAudioBufferName(int ID, std::string name);
     
@@ -69,6 +73,8 @@ class GuiStateStore
     int numTracks;
     
     std::string lastUsedDir;
+    
+    std::vector< std::shared_ptr<WaveformCache> > waveformCacheVector;
     
     std::vector< std::shared_ptr<AudioBuffer> > audioBufferVector;
     

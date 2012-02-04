@@ -27,6 +27,7 @@
 #include "top.hpp"
 #include "g_statestore.hpp"
 
+using namespace std;
 using namespace Luppp; // for COLOUR_*
 
 GWaveView::GWaveView(Top* t)
@@ -35,6 +36,9 @@ GWaveView::GWaveView(Top* t)
   
   // initial size for the waveview
   waveviewSize = 11050;
+  
+  // initial sample to start editing
+  sampleID = 0;
   
   // Gives Exposure & Button presses to the widget.
   add_events(Gdk::EXPOSURE_MASK);
@@ -140,17 +144,31 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       dashes[0] = 2.0;
       dashes[1] = 2.0;
       cr->set_dash (dashes, 0.0);
-      cr->set_line_width(1.0);
-      cr->set_source_rgb (0.4,0.4,0.4);
+      cr->set_line_width(1.5);
+      cr->set_source_rgb (0.7,0.7,0.7);
+      
+      // horizontal lines
+      for ( int i = 0; i < 2; i++ )
+      {
+        cr->move_to( x       , y + ((ySize / 2.f)*i) );
+        cr->line_to( x +xSize, y + ((ySize / 2.f)*i) );
+      }
+      
+      // vertical lines
       for ( int i = 0; i < 4; i++ )
       {
         cr->move_to( x + ((xSize / 4.f)*i), y );
         cr->line_to( x + ((xSize / 4.f)*i), y + ySize );
       }
-      for ( int i = 0; i < 4; i++ )
+      cr->stroke();
+      
+      // 8th lines
+      cr->set_line_width(1.0);
+      cr->set_source_rgb (0.2,0.2,0.2);
+      for ( int i = 0; i < 8; i++ )
       {
-        cr->move_to( x       , y + ((ySize / 4.f)*i) );
-        cr->line_to( x +xSize, y + ((ySize / 4.f)*i) );
+        cr->move_to( x + ((xSize / 8.f)*i), y );
+        cr->line_to( x + ((xSize / 8.f)*i), y + ySize );
       }
       cr->stroke();
       cr->unset_dash();
@@ -164,18 +182,18 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       
       int sampleCountForDrawing = 25;
       
-      
-      AudioBuffer* waveviewCache = top->guiState->getWaveformCache(0);
+      WaveformCache* waveviewCache = top->guiState->getWaveformCache(sampleID);
       if ( waveviewCache == 0 )
       {
         // no cache generated for this waveform yet!
+        std::cout << "No waveview cache exists for ID " << sampleID << endl;
         return;
       }
       
-      // get the ID of the AudioBuffer, and check if we have a cahce of
-      //int audioBufferID = tmpAudioBuffer->getID();
       
-      //sample = *(tmpAudioBuffer->getPointer() );
+      sample = *( waveviewCache->getPointer() );
+      
+      cout << "Got waveviewCache for ID " << sampleID << " sample size = " << sample.size() << endl;
       
       // loop for drawing each Point on the widget.
       for (long index=0; index <(long)sample.size(); index++ )

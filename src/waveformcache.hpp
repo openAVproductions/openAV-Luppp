@@ -17,37 +17,41 @@
   along with Luppp.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LUPPP_OFFLINEWORKER
-#define LUPPP_OFFLINEWORKER
+#ifndef LUPPP_WAVEFORMCACHE
+#define LUPPP_WAVEFORMCACHE
 
-#include <list>
-#include <string>
-#include <vector>
 #include <iostream>
-#include <sndfile.hh>
+#include <vector>
+#include <glibmm.h>
 
-#include "audiosource.hpp"
+// essentailly a waveform cache is just a vector of points, equidistant
+// (roughly anway), and it can be plotted on the GUI without sample accurate
+// reading, so its much faster.
 
-class Top;
-
-class OfflineWorker
+class WaveformCache
 {
   public:
-    OfflineWorker(Top*);
     
-    int addTrack(int);
-    int setTrackSource( int, AudioSourceType type );
+    WaveformCache();
+    ~WaveformCache();
     
-    void analyseBuffer( int ID );
+    int getID();
+    void setID(int);
     
-    int loadAudioBuffer( int, int, std::string name);
-    int createNewEffect( int, int, /*EffectType*/ int type );
+    int  getBeats();
+    void setBeats(int);
+    
+    std::vector<float>* getPointer();
   
-  private:
-    Top* top;
+  protected:
     
-    std::string toString( int in );
+    static int privateId;
+    int ID;
+    
+    int numBeats;
+    
+    std::vector<float> buffer;
 };
 
-
 #endif
+

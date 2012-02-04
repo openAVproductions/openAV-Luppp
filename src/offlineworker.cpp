@@ -27,6 +27,7 @@
 #include "ladspahost.hpp"
 #include "audiotrack.hpp"
 #include "audiobuffer.hpp"
+#include "waveformcache.hpp"
 
 #include "g_statestore.hpp"
 
@@ -305,6 +306,58 @@ int OfflineWorker::loadAudioBuffer( int ID, int block, std::string name)
   x->looperLoad( ID, block, buffer->getID() );
   top->toEngineQueue.push(x);
   
+  // analyse the loaded sample, and write a "waveform cache" audioBuffer.
+  analyseBuffer( buffer->getID() );
+  
   return 0;
 }
+
+
+void OfflineWorker::analyseBuffer(int ID)
+{
+  cout << "OfflineWorker::analyseBuffer() ID = " << ID << endl;
+  
+  // get the relevant AudioBuffer and vector pointer
+  AudioBuffer* buffer = top->guiState->getAudioBufferPointer(ID);
+  if ( buffer == 0 ) {
+    cout << "OfflineWorker::analyseBuffer() ID not valid!" << endl;
+    return;
+  }
+  std::vector<float>* bufferPointer = buffer->getPointer();
+  
+  // get a new ( or existing ) WaveformCache
+  WaveformCache* waveformCache = top->guiState->getWaveformCache(ID);
+  if ( waveformCache == 0 ) {
+    cout << "Creating new WaveformCache with id " << ID << endl;
+    waveformCache = top->guiState->getNewWaveformCache();
+    waveformCache->setID(ID);
+  }
+  
+  float currentMax = 0.f;
+  bool aboveZero = false;
+  
+  for (long index=0; index <(long)bufferPointer->size(); index++ )
+  {
+    float currentSample = bufferPointer->at(index);
+    
+    if ( currentSample > 0 && currentMax < currentSample ) // top
+    {
+      currentMax = currentSample;
+      aboveZero = true;
+    }
+    
+    // if we cross to below 0, we push back the previous MAX
+    if ( currentSample < 0.f && aboveZero == true )
+    {
+      waveformCache->getPointer()->push_back( currentMax );
+      aboveZero = false;
+    }
+    
+  }
+  
+  
+}
+
+
+
 
