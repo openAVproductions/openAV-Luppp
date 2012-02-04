@@ -30,6 +30,28 @@ GuiStateStore::GuiStateStore()
   cout << "Last used dir = " << lastUsedDir << endl;
 }
 
+AudioBuffer* GuiStateStore::getNewAudioBuffer()
+{
+  cout << "GuiStateStore::getNewAudioBuffer() called!" << endl;
+  
+  // create an AudioBuffer object that's shared, and keep push it to the vector
+  audioBufferVector.push_back( std::make_shared<AudioBuffer>() );
+  
+  // return the new AudioBuffer* (raw pointer, needs to be a shared_ptr eventually)
+  return audioBufferVector.back().get();
+}
+
+AudioBuffer* GuiStateStore::getWaveformCache(int ID)
+{
+  if ( ID >= 0 && ID < audioBufferVector.size() )
+  {
+    // return the new AudioBuffer* (raw pointer, needs to be a shared_ptr eventually)
+    return audioBufferVector.at(ID).get();
+  }
+  
+  return 0;
+}
+
 void GuiStateStore::addTrack()
 {
   //std::cout << "GuiStateStore::addTrack()" << std::endl;

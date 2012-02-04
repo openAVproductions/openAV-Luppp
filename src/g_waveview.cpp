@@ -24,10 +24,15 @@
 
 #include "g_widgets.hpp"
 
+#include "top.hpp"
+#include "g_statestore.hpp"
+
 using namespace Luppp; // for COLOUR_*
 
-GWaveView::GWaveView()
+GWaveView::GWaveView(Top* t)
 {
+  top = t;
+  
   // initial size for the waveview
   waveviewSize = 11050;
   
@@ -73,6 +78,7 @@ void GWaveView::setSize(int size)
   return;
 }
 
+
 void GWaveView::setSample(const std::vector<float>& inSample)
 {
   //std::cout << "void setSample() inSamp.size() = " << inSample.size() << std::endl;
@@ -115,8 +121,8 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       
       int x = 10;
       int y = 22;
-      int xSize = 225;
-      int ySize = 95;
+      int xSize = width - 20;
+      int ySize = height - 20;
       
       // works but a bit simple
       cr -> move_to( x        , y         );
@@ -157,6 +163,19 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       float currentTop = 0;
       
       int sampleCountForDrawing = 25;
+      
+      
+      AudioBuffer* waveviewCache = top->guiState->getWaveformCache(0);
+      if ( waveviewCache == 0 )
+      {
+        // no cache generated for this waveform yet!
+        return;
+      }
+      
+      // get the ID of the AudioBuffer, and check if we have a cahce of
+      //int audioBufferID = tmpAudioBuffer->getID();
+      
+      //sample = *(tmpAudioBuffer->getPointer() );
       
       // loop for drawing each Point on the widget.
       for (long index=0; index <(long)sample.size(); index++ )

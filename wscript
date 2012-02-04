@@ -18,7 +18,7 @@ def configure(ctx):
   
   ctx.check_tool ('compiler_cxx')
   
-  ctx.env.CXXFLAGS = ['-pg','-g','-ldl','-Wall','-Wextra','-fpermissive']
+  ctx.env.CXXFLAGS = ['-pg','-g','-ldl','-Wall','-std=gnu++0x','-Wextra','-fpermissive']
   
   #   Engine Depends
   ctx.check_cfg	(package='jack',at_least_version='0.118',args='--cflags --libs',uselib_store='JACK')

@@ -276,7 +276,16 @@ int OfflineWorker::loadAudioBuffer( int ID, int block, std::string name)
     sampleBuffer.swap( tmpVec );
   }
   
-  AudioBuffer* buffer = new AudioBuffer();
+  
+  // here we request a shared_ptr to a new AudioBuffer instance from
+  // the GUI statestore. Basically the current thread creates the instance
+  // over in the GuiStateStore class, and in doing so it gets registered
+  // automatically in the GUI part of the engine.
+  //
+  // When we send the pointer to the Engine, it will set the use count to 2
+  // and that will make GUI not delete it. When Engine loses its link to the
+  // buffer, the use count will drop and GUI thread will remove it from memory.
+  AudioBuffer* buffer = top->guiState->getNewAudioBuffer();
   
   buffer->setBeats(sampleNumBeats);
   

@@ -41,7 +41,10 @@ Window::Window(Gtk::Main *k, Top* t) :
   masterOutput(t, &guiState),
   fileSelector(t, &guiState),
   effectSelector(t, &guiState),
-  instrumentSelector(t, &guiState)
+  instrumentSelector(t, &guiState),
+  
+  waveview(t),
+  inputWaveview(t)
 {
   // store the "kit" instance from main to run it at the end of the
   // constructor.
@@ -626,6 +629,12 @@ int Window::handleEvent()
 
 void Window::redrawEffectBox()
 {
+  // don't use the trackEffectsBox, need to move the widgets to the track
+  // so they're always visible. Also This area is reserved for editing
+  // and displaying waveforms / etc
+  return;
+  
+  /*
   //cout << "Window::redrawEffectBox() currentEffectTrack: " << currentEffectsTrack 
   //     << "previousEffectsTrack: " << previousEffectsTrack << std::endl;
   
@@ -646,6 +655,7 @@ void Window::redrawEffectBox()
   //cout << "successfully added all new widgets" << endl;
   
   trackEffectBox->show_all();
+  */
 }
 
 void Window::setEffectsBox(int trackID)
