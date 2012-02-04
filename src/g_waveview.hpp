@@ -62,6 +62,10 @@ class GWaveView : public Gtk::DrawingArea
     // marker drawing function
     void drawMarker(Cairo::RefPtr<Cairo::Context> cr, float position, Colour col, MarkerType type, std::string& name);
     
+    // drop function
+    void dropFunction(const Glib::RefPtr<Gdk::DragContext>& context, int, int,
+                      const Gtk::SelectionData& selection_data, guint, guint time);
+    
     // selects which buffer ID we want to edit
     int sampleID;
     

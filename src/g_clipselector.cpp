@@ -360,10 +360,11 @@ void ClipSelector::dragFunction( const Glib::RefPtr<Gdk::DragContext>& context,
   std::list<ClipInfo>::iterator iter = state->clipInfo.begin();
   std::advance(iter, block);
   
-  int bufferID = (*iter).bufferID;
+  stringstream s;
+  s << (*iter).bufferID;
   
   // send data to drop
-  selection_data.set( selection_data.get_target(), 8 /* 8 bits format */, (guchar*) bufferID, sizeof(int) );
+  selection_data.set( selection_data.get_target(), 8, (guchar*) s.str().c_str(), s.str().size() );
   
 }
 

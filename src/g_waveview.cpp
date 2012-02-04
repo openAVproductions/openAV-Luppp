@@ -61,6 +61,16 @@ GWaveView::GWaveView(Top* t)
   pMenu.add( setSizeEigthSec );
   pMenu.show_all();
   
+  
+  // drop destination
+  std::vector<Gtk::TargetEntry> dropTargets;
+  dropTargets.push_back( Gtk::TargetEntry("AUDIO_BUFFER_ID") );
+  
+  drag_dest_set(dropTargets);
+  
+  signal_drag_data_received().connect(sigc::mem_fun(*this, &GWaveView::dropFunction) );
+  
+  
   // set default widget size
   set_size_request(148 + 74,22 + 95 + 2);
 }
@@ -147,6 +157,8 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       cr -> set_source_rgb (0.1,0.1,0.1);
       cr -> fill();
       
+      cout << "Getting waveformCache for id " << sampleID << endl;
+      
       // get waveform details
       WaveformCache* waveviewCache = top->guiState->getWaveformCache(sampleID);
       if ( waveviewCache == 0 )
@@ -220,10 +232,26 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       
       int sampleCountForDrawing = 25;
       
-      sample = *( waveviewCache->getPointer() );
+      std::vector<float>* tmp = waveviewCache->getPointer();
+      
+      if ( tmp == 0 )
+      {
+        cout << "GWaveView::expose() Sample == 0!" << endl;
+        return;
+      }
+      else
+      {
+        cout << "GWaveView::expose() Sample is ok... drawing beat next" << endl;
+      }
+      
+      sample = *( tmp );
       
       // get the current "playing" beat of the loop
-      float progress = top->guiState->bufferAudioSourceState.at(sampleID).index;
+      
+      // this 
+      float progress = 0; // top->guiState->bufferAudioSourceState.at(sampleID).index;
+      
+      
       int numBeats = waveviewCache->getBeats();
       
       //cout << "Got waveviewCache for ID " << sampleID << " sample size = " << sample.size() << " num beats: " << numBeats << "  progress = " << progress << endl;
@@ -328,6 +356,29 @@ void GWaveView::drawMarker(Cairo::RefPtr<Cairo::Context> cr, float position, Col
   cr->move_to ( markX + 3, y + 2 );
   setColour(cr, COLOUR_GREY_4);
   cr->show_text ( name );
+}
+
+
+void GWaveView::dropFunction(const Glib::RefPtr<Gdk::DragContext>& context, int, int,
+                                 const Gtk::SelectionData& selection_data, guint, guint time)
+{
+  cout << "GWaveView::dropFunction() called!" << endl;
+  
+  const int length = selection_data.get_length();
+  if( (length >= 0) )
+  {
+    std::string strBufferID = selection_data.get_data_as_string();
+    std::cout << "Received " << strBufferID << " in waveview drop!! " << std::endl;
+    
+    // convert from the string to the bufferID we want
+    stringstream ss (stringstream::in | stringstream::out);
+    ss << strBufferID;
+    ss >> sampleID;
+    
+    redraw();
+  }
+  
+  context->drag_finish(false, false, time);
 }
 
 void GWaveView::redraw()
