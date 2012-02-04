@@ -159,6 +159,27 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       
       cout << "Getting waveformCache for id " << sampleID << endl;
       
+      
+      float progress = -1;
+      bool foundProgress = false;
+      
+      for(int i = 0; i < top->guiState->bufferAudioSourceState.size(); i++)
+      {
+        if ( sampleID == top->guiState->bufferAudioSourceState.at(i).bufferID )
+        {
+          progress = top->guiState->bufferAudioSourceState.at(i).index;
+          cout << "Waveview sampleID = " << sampleID << " found ID @ " << i << " with progress " << progress << endl;
+          foundProgress = true;
+          break;
+        }
+      }
+      
+      if ( !foundProgress )
+      {
+        cout << "Waveview SampleID: " << sampleID << " cannot find relevant BufferAudioSource playin bufferID."
+             << "BufferAudioSource state .size() = " << top->guiState->bufferAudioSourceState.size() << endl;
+      }
+      
       // get waveform details
       WaveformCache* waveviewCache = top->guiState->getWaveformCache(sampleID);
       if ( waveviewCache == 0 )
@@ -247,10 +268,6 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       sample = *( tmp );
       
       // get the current "playing" beat of the loop
-      
-      // this 
-      float progress = 0; // top->guiState->bufferAudioSourceState.at(sampleID).index;
-      
       
       int numBeats = waveviewCache->getBeats();
       
@@ -353,7 +370,7 @@ void GWaveView::drawMarker(Cairo::RefPtr<Cairo::Context> cr, float position, Col
   
   cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_BOLD);
   cr->set_font_size ( 13 );
-  cr->move_to ( markX + 3, y + 2 );
+  cr->move_to ( markX + 3, y + 1 );
   setColour(cr, COLOUR_GREY_4);
   cr->show_text ( name );
 }

@@ -83,7 +83,8 @@ void GuiStateStore::addTrack()
   
   bufferAudioSourceState.push_back( BufferAudioSourceState() );
   BufferAudioSourceState* i = &bufferAudioSourceState.back();
-  i->index = 0.f;
+  
+  i->index = -1.f; // sets waveview playhead off screen
   i->speed = 1.f;
   
   clipSelectorState.push_back( ClipSelectorState() );

@@ -525,9 +525,18 @@ int Window::handleEvent()
           
           // set progress bar to 0, as its not playing anything
           progressWidgetVector.at(e->ia)->setValue( 0.f );
+          
+          // here we set the index to -1, which will make the playhead be
+          // hidden on the waveview if its being watched.
+          guiState.bufferAudioSourceState.at(e->ia).index = -1.f;
         }
         else
         {
+          guiState.bufferAudioSourceState.at(e->ia).index = 0.f;
+          
+          guiState.bufferAudioSourceState.at(e->ia).bufferID = (*iter).bufferID; // set bufferID, from the clipInfo, for use by GWaveview
+          cout << "Select buffer, setting buffer ID " << (*iter).bufferID << " bufferAudioSourceState ID " << e->ia << endl;
+          
           (*evBoxIter)->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("FF6800"));
         }
         
