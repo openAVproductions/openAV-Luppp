@@ -139,7 +139,34 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       cr -> set_source_rgb (0.1,0.1,0.1);
       cr -> fill();
       
-      // draw "frequency guides"
+      // get waveform details
+      WaveformCache* waveviewCache = top->guiState->getWaveformCache(sampleID);
+      if ( waveviewCache == 0 )
+      {
+        // no cache generated for this waveform yet!
+        //std::cout << "No waveview cache exists for ID " << sampleID << endl;
+        
+        //draw X shape over full widget graph size:
+        cr->move_to( x        , y         );
+        cr->line_to( x + xSize, y + ySize );
+        
+        cr->move_to( x        , y + ySize );
+        cr->line_to( x + xSize, y         );
+        
+        setColour(cr, COLOUR_GREY_2 );
+        cr->stroke();
+        
+        // outline
+        setColour(cr, COLOUR_GREY_3 );
+        cr->rectangle( x, y , xSize, ySize );
+        cr->set_line_width(3);
+        cr->stroke();
+        
+        return;
+      }
+      
+      
+      // draw guides
       std::valarray< double > dashes(2);
       dashes[0] = 2.0;
       dashes[1] = 2.0;
@@ -154,11 +181,14 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
         cr->line_to( x +xSize, y + ((ySize / 2.f)*i) );
       }
       
+      // float type for divides later
+      float verticals = waveviewCache->getBeats();
+      
       // vertical lines
-      for ( int i = 0; i < 4; i++ )
+      for ( int i = 0; i < verticals; i++ )
       {
-        cr->move_to( x + ((xSize / 4.f)*i), y );
-        cr->line_to( x + ((xSize / 4.f)*i), y + ySize );
+        cr->move_to( x + ((xSize / verticals)*i), y );
+        cr->line_to( x + ((xSize / verticals)*i), y + ySize );
       }
       cr->stroke();
       
@@ -182,18 +212,10 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       
       int sampleCountForDrawing = 25;
       
-      WaveformCache* waveviewCache = top->guiState->getWaveformCache(sampleID);
-      if ( waveviewCache == 0 )
-      {
-        // no cache generated for this waveform yet!
-        std::cout << "No waveview cache exists for ID " << sampleID << endl;
-        return;
-      }
-      
       
       sample = *( waveviewCache->getPointer() );
       
-      cout << "Got waveviewCache for ID " << sampleID << " sample size = " << sample.size() << endl;
+      cout << "Got waveviewCache for ID " << sampleID << " sample size = " << sample.size() << " num beats: " << waveviewCache->getBeats() << endl;
       
       // loop for drawing each Point on the widget.
       for (long index=0; index <(long)sample.size(); index++ )
@@ -211,24 +233,21 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
           float drawSample = currentTop / 4.f;
           
           int xCoord = x + xSize*(float(index)/sample.size());
+          
           cr->move_to( xCoord,  y+ (ySize/2) - (previousTop * ySize )  ); // top
-          cr->line_to( xCoord,  y+ (ySize/2) - (drawSample  * ySize )  );
+          cr->line_to( xCoord,  y+ (ySize/2) + (drawSample  * ySize )  ); // bottom
           
-          cr->move_to( xCoord,  y+ (ySize/2) + (previousTop * ySize )  ); // same shape as above
-          cr->line_to( xCoord,  y+ (ySize/2) + (drawSample  * ySize )  );
-          
-          sampleCountForDrawing = 25;
+          sampleCountForDrawing = 10;
           previousTop = drawSample;
           currentTop = 0;
         }
       }
       
-      setColour(cr, COLOUR_GREY_4 );
-      cr->move_to( x + xSize, y + ySize*0.5 );
-      cr->close_path();
-      cr->fill_preserve();
+      setColour(cr, COLOUR_GREY_2 );
+      cr->line_to( x + xSize, y + ySize*0.5 );
+      //cr->close_path();
+      //cr->fill_preserve();
       
-      setColour(cr, COLOUR_ORANGE_1 );
       cr->stroke();
       
       // outline

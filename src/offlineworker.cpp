@@ -331,7 +331,10 @@ void OfflineWorker::analyseBuffer(int ID)
     cout << "Creating new WaveformCache with id " << ID << endl;
     waveformCache = top->guiState->getNewWaveformCache();
     waveformCache->setID(ID);
+    waveformCache->setBeats( buffer->getBeats() );
   }
+  
+  cout << "Input audioBuffer.size() " << bufferPointer->size() << endl;
   
   float currentMax = 0.f;
   bool aboveZero = false;
@@ -351,9 +354,13 @@ void OfflineWorker::analyseBuffer(int ID)
     {
       waveformCache->getPointer()->push_back( currentMax );
       aboveZero = false;
+      currentMax = 0.f;
     }
     
   }
+  
+  // hack to make all the audio data appear in the waveformCache
+  // *waveformCache->getPointer() = *bufferPointer;
   
   
 }
