@@ -45,6 +45,9 @@ class ClipSelector : public Gtk::DrawingArea
     int  masterClipPlaying;
     int  masterClipQueued;
     
+    // for drag block source
+    int block;
+    
     Top* top;
     GuiStateStore* stateStore;
     
@@ -57,6 +60,9 @@ class ClipSelector : public Gtk::DrawingArea
     // drop functions
     void dropFunction( const Glib::RefPtr<Gdk::DragContext>& context, int x, int y,
                        const Gtk::SelectionData& selection_data, guint info, guint time);
+    
+    void dragFunction( const Glib::RefPtr<Gdk::DragContext>& context,
+                       Gtk::SelectionData& selection_data, guint info, guint time);
     
     // For Right-Click Actions
     void on_menu_file_popup_edit();

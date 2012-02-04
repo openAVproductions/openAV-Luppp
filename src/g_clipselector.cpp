@@ -45,14 +45,25 @@ ClipSelector::ClipSelector(Top* t, GuiStateStore* s)
   signal_button_press_event().connect(sigc::mem_fun(*this, &ClipSelector::on_button_press_event) );
   
   // drop target types
-  std::list<Gtk::TargetEntry> listTargets;
-  listTargets.push_back( Gtk::TargetEntry("AUDIO_FILE_STRING") );
+  std::list<Gtk::TargetEntry> dropTargets;
+  dropTargets.push_back( Gtk::TargetEntry("AUDIO_FILE_STRING") );
   
   // make drop destination
-  drag_dest_set(listTargets);
+  drag_dest_set(dropTargets);
   
   // connect drop signal
   signal_drag_data_received().connect(sigc::mem_fun(*this, &ClipSelector::dropFunction) );
+  
+  // drag buffer UID out of clipselector
+  std::list<Gtk::TargetEntry> dragTargets;
+  dragTargets.push_back( Gtk::TargetEntry("AUDIO_BUFFER_ID") );
+  
+  // drag source
+  drag_source_set(dragTargets);
+  
+  // drag function connect
+  signal_drag_data_get().connect(sigc::mem_fun(*this, &ClipSelector::dragFunction )); 
+  
   
   masterClipSelector = false;
   masterClipPlaying  = -1;
@@ -223,7 +234,7 @@ void ClipSelector::on_menu_file_popup_generic()
 
 bool ClipSelector::on_button_press_event(GdkEventButton* event)
 {
-  int block = ((int)event->y) / 18;
+  block = ((int)event->y) / 18;
   
   if ( masterClipSelector )
   {
@@ -332,6 +343,30 @@ void ClipSelector::dropFunction( const Glib::RefPtr<Gdk::DragContext>& context, 
 
   context->drag_finish(false, false, time);
 }
+
+
+void ClipSelector::dragFunction( const Glib::RefPtr<Gdk::DragContext>& context,
+                       Gtk::SelectionData& selection_data, guint info, guint time)
+{
+  cout << "ClipSelector::dragFunction() called!" << endl;
+  
+  // drag target is of string type, send
+  cout << "DRAG from block " << block << endl;
+  
+  // get state of clip selector
+  ClipSelectorState* state = &stateStore->clipSelectorState.at(ID);
+  
+  // get block info, to retrieve its bufferID
+  std::list<ClipInfo>::iterator iter = state->clipInfo.begin();
+  std::advance(iter, block);
+  
+  int bufferID = (*iter).bufferID;
+  
+  // send data to drop
+  selection_data.set( selection_data.get_target(), 8 /* 8 bits format */, (guchar*) bufferID, sizeof(int) );
+  
+}
+
 
 // loadsample has access to ID, so we know the track already
 void ClipSelector::loadSample(int block)
