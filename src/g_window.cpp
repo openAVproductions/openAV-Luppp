@@ -367,7 +367,7 @@ int Window::handleEvent()
       if ( e->ic == false )
       {
         // create new buffer, get pointer, read space, resize buffer
-        AudioBuffer* buffer = new AudioBuffer();
+        AudioBuffer* buffer = guiState.getNewAudioBuffer();
         vector<float>* pntr = buffer->getPointer();
         int readSpace = top->recordAudioQueue.readSpaceAvailable();
         pntr->resize(readSpace);
@@ -398,6 +398,9 @@ int Window::handleEvent()
           // set recording block to -1, as we're not recording 
           guiState.clipSelectorState.at(e->ia).recording = -1; // no recording block
           //cout << "read samples available " << readSpace << endl;
+          
+          // make offline worker analyse the buffer for a waveform
+          top->offlineWorker->analyseBuffer( buffer->getID() );
         }
         else
         {

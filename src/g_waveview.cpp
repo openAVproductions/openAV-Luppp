@@ -25,6 +25,7 @@
 #include "g_widgets.hpp"
 
 #include "top.hpp"
+#include "offlineworker.hpp"
 #include "g_statestore.hpp"
 
 using namespace std;
@@ -38,7 +39,7 @@ GWaveView::GWaveView(Top* t)
   waveviewSize = 11050;
   
   // initial sample to start editing
-  sampleID = 0;
+  sampleID = -1;
   
   // Gives Exposure & Button presses to the widget.
   add_events(Gdk::EXPOSURE_MASK);
@@ -157,6 +158,13 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       cr -> set_source_rgb (0.1,0.1,0.1);
       cr -> fill();
       
+      if ( sampleID == -1 )
+      {
+        // no sample to show
+        drawNoBuffer(cr);
+        return;
+      }
+      
       cout << "Getting waveformCache for id " << sampleID << endl;
       
       
@@ -184,24 +192,11 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       WaveformCache* waveviewCache = top->guiState->getWaveformCache(sampleID);
       if ( waveviewCache == 0 )
       {
+        // attempt to analyse that bufferID
+        top->offlineWorker->analyseBuffer(sampleID);
+        
         // no cache generated for this waveform yet!
         //std::cout << "No waveview cache exists for ID " << sampleID << endl;
-        
-        //draw X shape over full widget graph size:
-        cr->move_to( x        , y         );
-        cr->line_to( x + xSize, y + ySize );
-        
-        cr->move_to( x        , y + ySize );
-        cr->line_to( x + xSize, y         );
-        
-        setColour(cr, COLOUR_GREY_2 );
-        cr->stroke();
-        
-        // outline
-        setColour(cr, COLOUR_GREY_3 );
-        cr->rectangle( x, y , xSize, ySize );
-        cr->set_line_width(3);
-        cr->stroke();
         
         return;
       }
@@ -327,6 +322,31 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
     }
   return true;
 } // on_expose_event()
+
+void GWaveView::drawNoBuffer( Cairo::RefPtr<Cairo::Context> cr )
+{
+  int x = 10;
+  int y = 22;
+  
+  int xSize = width - 2*x;
+  int ySize = height - y;
+  
+  //draw X shape over full widget graph size:
+  cr->move_to( x        , y         );
+  cr->line_to( x + xSize, y + ySize );
+  
+  cr->move_to( x        , y + ySize );
+  cr->line_to( x + xSize, y         );
+  
+  setColour(cr, COLOUR_GREY_2 );
+  cr->stroke();
+  
+  // outline
+  setColour(cr, COLOUR_GREY_3 );
+  cr->rectangle( x, y , xSize, ySize );
+  cr->set_line_width(3);
+  cr->stroke();
+}
 
 void GWaveView::drawMarker(Cairo::RefPtr<Cairo::Context> cr, float position, Colour col, MarkerType type, std::string& name)
 {

@@ -59,6 +59,9 @@ class GWaveView : public Gtk::DrawingArea
     void setSize(int);
     void setSampleID(int);
     
+    // helper draw functions
+    void drawNoBuffer(Cairo::RefPtr<Cairo::Context>);
+    
     // marker drawing function
     void drawMarker(Cairo::RefPtr<Cairo::Context> cr, float position, Colour col, MarkerType type, std::string& name);
     

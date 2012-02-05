@@ -23,6 +23,14 @@
 
 struct BufferAudioSourceState
 {
+  BufferAudioSourceState()
+  {
+    index = 0;
+    speed = 1;
+    
+    bufferID = -1;
+  }
+  
   float index;
   float speed;
   
