@@ -176,7 +176,7 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
         if ( sampleID == top->guiState->bufferAudioSourceState.at(i).bufferID )
         {
           progress = top->guiState->bufferAudioSourceState.at(i).index;
-          cout << "Waveview sampleID = " << sampleID << " found ID @ " << i << " with progress " << progress << endl;
+          //cout << "Waveview sampleID = " << sampleID << " found ID @ " << i << " with progress " << progress << endl;
           foundProgress = true;
           break;
         }
@@ -184,8 +184,8 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       
       if ( !foundProgress )
       {
-        cout << "Waveview SampleID: " << sampleID << " cannot find relevant BufferAudioSource playin bufferID."
-             << "BufferAudioSource state .size() = " << top->guiState->bufferAudioSourceState.size() << endl;
+        //cout << "Waveview SampleID: " << sampleID << " cannot find relevant BufferAudioSource playin bufferID."
+        //     << "BufferAudioSource state .size() = " << top->guiState->bufferAudioSourceState.size() << endl;
       }
       
       // get waveform details
@@ -250,14 +250,11 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       
       std::vector<float>* tmp = waveviewCache->getPointer();
       
+      
       if ( tmp == 0 )
       {
         cout << "GWaveView::expose() Sample == 0!" << endl;
         return;
-      }
-      else
-      {
-        cout << "GWaveView::expose() Sample is ok... drawing beat next" << endl;
       }
       
       sample = *( tmp );
