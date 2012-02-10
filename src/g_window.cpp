@@ -699,16 +699,8 @@ void Window::addTrack()
   trackName << numTracks;
   
   // label
-  tracklabelList.push_back( new Gtk::Label( trackName.str() ) );
-  std::list<Gtk::Label*>::iterator labelIter = tracklabelList.begin();
-  std::advance(labelIter,numTracks);
-  
-  tracklabelBoxList.push_back( new Gtk::EventBox() );
-  tracklabelBoxList.back()->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("green"));
-  
-  tracklabelBoxList.back()->add(**labelIter);
-  
-  mainTable->attach( *tracklabelBoxList.back(), numTracks, numTracks+1, 0, 1);
+  audioSourceVector.push_back( new GAudioSource(top) );
+  mainTable->attach( *audioSourceVector.back(), numTracks, numTracks+1, 0, 1);
   
   // input selector
   trackinputList.push_back( new Gtk::ComboBoxText() );

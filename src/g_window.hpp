@@ -31,6 +31,7 @@ class Top;
 #include "g_track.hpp"
 #include "g_progress.hpp"
 
+#include "g_audiosource.hpp"
 #include "g_trackoutput.hpp"
 #include "g_clipselector.hpp"
 #include "g_fileselector.hpp"
@@ -123,7 +124,7 @@ class Window
     std::list<TrackOutput*> trackoutputList;
     std::list<ClipSelector*>clipselectorList;
     
-    std::list<Gtk::Label*> tracklabelList;
+    std::vector<GAudioSource*> audioSourceVector;
     std::list<Gtk::EventBox*> tracklabelBoxList;
     std::list<Gtk::ComboBoxText*> trackinputList;
     std::vector<GProgress*> progressWidgetVector;
