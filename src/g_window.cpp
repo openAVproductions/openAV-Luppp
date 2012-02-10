@@ -519,8 +519,8 @@ int Window::handleEvent()
         list<ClipInfo>::iterator iter = guiState.clipSelectorState.at(e->ia).clipInfo.begin();
         advance(iter, e->ib);
         
-        std::list<Gtk::EventBox*>::iterator evBoxIter = tracklabelBoxList.begin();
-        std::advance(evBoxIter, e->ia);
+        //std::list<Gtk::EventBox*>::iterator evBoxIter = tracklabelBoxList.begin();
+        //std::advance(evBoxIter, e->ia);
         
         cout << "LooperSelectBuffer Event, track = " << e->ia << endl;
         
@@ -528,7 +528,7 @@ int Window::handleEvent()
         {
           // if the clip doesn't have a buffer, set "stop" clip to play
           guiState.clipSelectorState.at(e->ia).playing = -1;
-          (*evBoxIter)->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("green"));
+          //(*evBoxIter)->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("green"));
           
           // set progress bar to 0, as its not playing anything
           progressWidgetVector.at(e->ia)->setValue( 0.f );
@@ -542,9 +542,9 @@ int Window::handleEvent()
           guiState.bufferAudioSourceState.at(e->ia).index = 0.f;
           
           guiState.bufferAudioSourceState.at(e->ia).bufferID = (*iter).bufferID; // set bufferID, from the clipInfo, for use by GWaveview
-          cout << "Select buffer, setting buffer ID " << (*iter).bufferID << " bufferAudioSourceState ID " << e->ia << endl;
+          //cout << "Select buffer, setting buffer ID " << (*iter).bufferID << " bufferAudioSourceState ID " << e->ia << endl;
           
-          (*evBoxIter)->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("FF6800"));
+          //(*evBoxIter)->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("FF6800"));
         }
         
         cout << "redrawing ClipSelector widget ID : " << e->ia << endl;
