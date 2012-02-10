@@ -36,6 +36,7 @@ using namespace std;
 #include "g_transient.hpp"
 #include "g_compressor.hpp"
 #include "g_lvtwodisplay.hpp"
+#include "g_ampitchshift.hpp"
 
 Window::Window(Gtk::Main *k, Top* t) :
   masterOutput(t, &guiState),
@@ -186,6 +187,9 @@ Window::Window(Gtk::Main *k, Top* t) :
   
   refBuilder->get_widget("menuAddTrancegate", menuAddTrancegate);
   menuAddTrancegate->signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &Window::addEffect ), EFFECT_TRANCEGATE));
+  
+  refBuilder->get_widget("menuAddAmPitchshifter", menuAddAmPitchshifter);
+  menuAddAmPitchshifter->signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &Window::addEffect ), EFFECT_AM_PITCHSHIFT));
   
   // poll the event Queue
   Glib::signal_timeout().connect(sigc::mem_fun(*this, &Window::handleEvent), 50);
@@ -587,6 +591,7 @@ int Window::handleEvent()
           case EFFECT_COMPRESSOR:   trackVector.at(t).widgetVector.push_back( new GCompressor (top, &guiState) ); break;
           case EFFECT_LIMITER:      trackVector.at(t).widgetVector.push_back( new GLimiter    (top, &guiState) ); break;
           case EFFECT_PARAMETRIC_EQ:trackVector.at(t).widgetVector.push_back( new Equalizer   (     &guiState) ); break;
+          case EFFECT_AM_PITCHSHIFT:trackVector.at(t).widgetVector.push_back( new GAmPitchShift(top,&guiState) ); break;
           case EFFECT_TESTTONES:    trackVector.at(t).widgetVector.push_back( new Lv2Display  (top, &guiState) ); cout << "creating Lv2Display now" << endl; break;
           default: newEffect = false; break;
         }

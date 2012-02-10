@@ -53,6 +53,7 @@ LadspaHost::LadspaHost(Top* t,EffectType et, int s) : Effect(t, et)
   // setup variables for effect type we've been passed
   switch(et)
   {
+    case EFFECT_AM_PITCHSHIFT:pluginString = "/usr/lib/ladspa/am_pitchshift_1433.so";break;
     case EFFECT_REVERB:       pluginString = "/usr/lib/ladspa/calf.so"; pluginSoIndex = 3;break;
     case EFFECT_TRANSIENT:    pluginString = "/usr/lib/ladspa/transient_1206.so";   break;
     case EFFECT_PARAMETRIC_EQ:pluginString = "/usr/lib/ladspa/filters.so";          break;
@@ -187,6 +188,14 @@ void LadspaHost::resetParameters()
     controlBuffer[18] = 1;
     controlBuffer[19] = 0;
   }
+  else if ( type == EFFECT_AM_PITCHSHIFT )
+  {
+    controlBuffer[0] = 1; // pitch shift, log
+    controlBuffer[1] = 4; // buffer size
+    // input audio
+    // output audio
+    // controlBuffer[4] is latency 
+  }
   else if ( type == EFFECT_LOWPASS )
   {
     controlBuffer[0] = 440;
@@ -310,6 +319,15 @@ void LadspaHost::process(int nframes, float* buffer)
     descriptor -> connect_port ( pluginHandle ,10, &controlBuffer[10] );
     descriptor -> connect_port ( pluginHandle ,11, &controlBuffer[11] );
     descriptor -> connect_port ( pluginHandle ,12, &controlBuffer[12] );
+  }
+  else if ( type == EFFECT_AM_PITCHSHIFT )
+  {
+    controlBuffer[0] = 0.25 + state->values[0] * 3.75;
+    descriptor -> connect_port ( pluginHandle , 0 , &controlBuffer[0] ); // pitch
+    descriptor -> connect_port ( pluginHandle , 1 , &controlBuffer[1] ); // buffer size
+    descriptor -> connect_port ( pluginHandle , 2 , buffer );
+    descriptor -> connect_port ( pluginHandle , 3 , &outputBuffer[0] );
+    descriptor -> connect_port ( pluginHandle , 4 , &controlBuffer[4] ); // out latency
   }
   else if ( type == EFFECT_LIMITER )
   {

@@ -240,6 +240,16 @@
                             <property name="use_stock">False</property>
                           </object>
                         </child>
+                        <child>
+                          <object class="GtkImageMenuItem" id="menuAddAmPitchshifter">
+                            <property name="label">Pitch Shifter</property>
+                            <property name="use_action_appearance">False</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="image">image10</property>
+                            <property name="use_stock">False</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>

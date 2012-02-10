@@ -78,6 +78,7 @@ def build(ctx):
               'src/g_effectselector.cpp',
               'src/g_instrumentselector.cpp',
               'src/g_beatsmash.cpp',
+              'src/g_ampitchshift.cpp',
               'src/g_widgetbase.cpp',
               'src/g_statestore.cpp',
               'src/g_equalizer.cpp',
