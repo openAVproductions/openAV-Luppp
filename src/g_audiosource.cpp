@@ -34,6 +34,8 @@ GAudioSource::GAudioSource(Top* t)
   
   ID = privateID++;
   
+  playing = true;
+  
   //setBufferSource.set_label("Audio Buffer");
   setLv2Source.set_label("Make LV2 instrument");
   setFluidSynthSource.set_label("Make Soundfont player");
@@ -46,6 +48,11 @@ GAudioSource::GAudioSource(Top* t)
   
   add_events(Gdk::BUTTON_PRESS_MASK);
   signal_button_press_event().connect(sigc::mem_fun(*this, &GAudioSource::on_button_press_event) );
+  
+  // popup signals
+  setFluidSynthSource.signal_activate().connect( sigc::mem_fun(*this, &GAudioSource::fluidSynthSource));
+  setWhiteNoiseSource.signal_activate().connect( sigc::mem_fun(*this, &GAudioSource::whiteNoiseSource));
+  
   
   set_size_request(74, 20);
 }
@@ -63,6 +70,11 @@ bool GAudioSource::redraw()
   return true;
 }
 
+void GAudioSource::setPlaying(bool p )
+{
+  playing = p;
+  redraw();
+}
 void GAudioSource::fluidSynthSource()
 {
   // so we ask the user to pick a soundfont, and then make OfflineWorker
@@ -139,14 +151,17 @@ bool GAudioSource::on_expose_event(GdkEventExpose* event)
     
     cr->rectangle(event->area.x, event->area.y,
        event->area.width, event->area.height);
-    setColour(cr, COLOUR_BLUE_1 );
+    if ( playing )
+      setColour(cr, COLOUR_GREEN_1 );
     cr->fill();
     
-    cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_NORMAL);
+    cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_BOLD);
     cr->set_font_size ( 13 );
-    cr->move_to ( 6 , 13 );
+    cr->move_to ( 11 , 15 );
     setColour(cr, COLOUR_ORANGE_1 );
-    cr->show_text ( "AudioSource" );
+    if ( playing )
+      setColour(cr, COLOUR_GREY_3 );
+    cr->show_text ( "Source" );
     
   }
   return true;

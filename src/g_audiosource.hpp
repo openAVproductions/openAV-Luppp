@@ -34,12 +34,15 @@ class GAudioSource : public Gtk::DrawingArea
     GAudioSource(Top*);
     
     bool redraw();
+    void setPlaying(bool);
   
   protected:
     Top* top;
     
     int ID;
     static int privateID;
+    
+    bool playing;
     
     // popup menu stuff:
     Gtk::Menu    pMenu;

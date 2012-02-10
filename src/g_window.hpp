@@ -125,7 +125,6 @@ class Window
     std::list<ClipSelector*>clipselectorList;
     
     std::vector<GAudioSource*> audioSourceVector;
-    std::list<Gtk::EventBox*> tracklabelBoxList;
     std::list<Gtk::ComboBoxText*> trackinputList;
     std::vector<GProgress*> progressWidgetVector;
     
