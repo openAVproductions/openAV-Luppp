@@ -53,6 +53,8 @@ class JackClient
     JackClient(Top*);
     
     void* getApcOutputBuffer();
+    
+    void  apcWriteOutput(int track);
     void  apcWriteGridTrack(int track);
     
     float* getHeadphonePflVector();

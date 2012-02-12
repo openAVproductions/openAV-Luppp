@@ -587,6 +587,16 @@ void JackClient::apcWriteGridTrack(int track)
   
 }
 
+void JackClient::apcWriteOutput(int track)
+{
+  TrackOutputState* state = top->state.getAudioSinkOutput(track);
+  
+  writeMidi( apcOutputBuffer, 144 + track, 50, 127 * !state->mute     );
+  writeMidi( apcOutputBuffer, 144 + track, 49, 127 *  state->pflEnable);
+  writeMidi( apcOutputBuffer, 144 + track, 48, 127 *  state->recEnable);
+  
+}
+
 void JackClient::apcRead( int nframes )
 {
   void* apcInBuffer = jack_port_get_buffer ( apcInputPort, nframes);
@@ -921,13 +931,18 @@ void JackClient::apcRead( int nframes )
       {
         int trackID = b1 - 144;
         std::cout << "APC: SOLO on track " << trackID << " on!" << std::endl;
-        //lo_send( //lo_address_new(NULL, "14688") , "/luppp/track/solo", "ii", trackID, 1 );
+        
+        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+        x->setTrackSolo(trackID, true);
+        top->toGuiQueue.push(x);
       }
       else if ( b1 >= 128 && b1 < 128 + 16 ) // solo off
       {
         int trackID = b1 - 128;
         std::cout << "APC: SOLO on track " << trackID << " off!" << std::endl;
-        //lo_send( //lo_address_new(NULL, "14688") , "/luppp/track/solo", "ii", trackID, 0 );
+        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+        x->setTrackSolo(trackID, false);
+        top->toGuiQueue.push(x);
       }
     }
     if ( b2 == 50 )

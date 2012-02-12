@@ -186,6 +186,9 @@ int StateStore::setMute(int t, int v)
   x->setTrackMute(t, v);
   top->toGuiQueue.push(x);
   top->guiDispatcher->emit();
+  
+  top->jackClient->apcWriteOutput(t);
+  
   return 0;
 }
 
@@ -202,6 +205,9 @@ int StateStore::setSolo(int t, int v)
   x->setTrackSolo(t, v);
   top->toGuiQueue.push(x);
   top->guiDispatcher->emit();
+  
+  top->jackClient->apcWriteOutput(t);
+  
   return 0;
 }
 
@@ -219,6 +225,9 @@ int StateStore::setRec(int t, int v)
   x->setTrackRec(t, v);
   top->toGuiQueue.push(x);
   top->guiDispatcher->emit();
+  
+  top->jackClient->apcWriteOutput(t);
+  
   return 0;
 }
 
