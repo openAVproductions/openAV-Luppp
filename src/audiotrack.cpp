@@ -21,6 +21,7 @@
 
 #include "top.hpp"
 
+#include "jackaudiosource.hpp"
 #include "bufferaudiosource.hpp"
 #include "fluidsynthaudiosource.hpp"
 

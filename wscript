@@ -50,6 +50,7 @@ def build(ctx):
               'src/audiobuffer.cpp',
               'src/offlineworker.cpp',
               'src/ladspahost.cpp',
+              'src/jackaudiosource.cpp',
               'src/bufferaudiosource.cpp',
               'src/fluidsynthaudiosource.cpp',
               'src/whitenoiseaudiosource.cpp',

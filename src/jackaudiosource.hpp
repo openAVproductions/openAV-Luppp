@@ -17,49 +17,34 @@
   along with Luppp.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LUPPP_PORTTYPES
-#define LUPPP_PORTTYPES
+#ifndef LUPPP_JACKAUDIOSOURCE
+#define LUPPP_JACKAUDIOSOURCE
 
-struct PortBufferList
+#include <list>
+#include <string>
+#include <vector>
+#include <iostream>
+
+#include "audiosource.hpp"
+
+class Top;
+
+using std::string;
+
+class JackAudioSource : public AudioSource
 {
-  PortBufferList()
-  {
-    outputW = 0;
-    outputX = 0;
-    outputY = 0;
-    outputZ = 0;
+  public:
+    JackAudioSource(Top*);
     
-    headphonePfl  = 0;
-    postFaderSend = 0;
+    void process (int, float* );
+  
+  private:
+    Top* top;
+    int ID;
     
-    inputAudio = 0;
-  }
-  // audio outputs
-  float* outputW;
-  float* outputX;
-  float* outputY;
-  float* outputZ;
-  
-  float* headphonePfl;
-  float* postFaderSend;
-  
-  // audio inputs
-  float* inputAudio; // for recording
-  
-  // for processing JACK input per track
-  float* trackInputs[8];
+    static int privateInputPort;
+    int inputPortNumber;
 };
 
-struct CopyBufferList
-{
-  CopyBufferList()
-  {
-    headphonePfl  = 0;
-    postFaderSend = 0;
-  }
-  
-  float* headphonePfl;
-  float* postFaderSend;
-};
 
 #endif

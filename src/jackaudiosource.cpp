@@ -17,49 +17,40 @@
   along with Luppp.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LUPPP_PORTTYPES
-#define LUPPP_PORTTYPES
+#include "jackaudiosource.hpp"
 
-struct PortBufferList
+#include "top.hpp"
+
+using namespace std;
+
+int JackAudioSource::privateInputPort = 0;
+
+JackAudioSource::JackAudioSource(Top* t)
 {
-  PortBufferList()
-  {
-    outputW = 0;
-    outputX = 0;
-    outputY = 0;
-    outputZ = 0;
-    
-    headphonePfl  = 0;
-    postFaderSend = 0;
-    
-    inputAudio = 0;
-  }
-  // audio outputs
-  float* outputW;
-  float* outputX;
-  float* outputY;
-  float* outputZ;
+  top = t;
   
-  float* headphonePfl;
-  float* postFaderSend;
+  ID = AudioSource::getID();
   
-  // audio inputs
-  float* inputAudio; // for recording
+  inputPortNumber = privateInputPort++;
   
-  // for processing JACK input per track
-  float* trackInputs[8];
-};
+  std::cout << "JackAudioSource() ID = " << ID << std::endl;
+  
+}
 
-struct CopyBufferList
+void JackAudioSource::process (int nframes, float* buffer )
 {
-  CopyBufferList()
+  if ( inputPortNumber < 8 )
   {
-    headphonePfl  = 0;
-    postFaderSend = 0;
+    float* tmp = top->state.portBufferList.trackInputs[inputPortNumber];
+    
+    for ( int i = 0; i < nframes; i++ )
+    {
+      *buffer++ += *tmp++;
+    }
   }
-  
-  float* headphonePfl;
-  float* postFaderSend;
-};
+  else
+  {
+    cout << "JackAudioSource inputPortNumber invalid!" << endl;
+  }
+}
 
-#endif

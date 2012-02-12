@@ -71,7 +71,6 @@ class JackClient
     int nframes;
     
     // this PortBufferList represents float*'s that we can use to write audio
-    PortBufferList portBufferList;
     CopyBufferList copyBufferList;
     
     Time time;
@@ -84,6 +83,8 @@ class JackClient
     JPort* outputPortY;
     JPort* outputPortZ;
     JPort* midiInputPort;
+    
+    JPort* trackInputPorts[8];
     
     JPort* headphonePflPort;
     

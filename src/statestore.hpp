@@ -37,10 +37,16 @@ struct EffectState;
 
 #include "bufferaudiosourcestate.hpp"
 
+#include "porttypes.hpp"
+
 class StateStore
 {
   public:
     StateStore(Top*);
+    
+    // current buffers in the engine: in statestore to allow eg JackAudioSource to
+    // select JACK port input without it passing trough Mixer & AudioTrack
+    PortBufferList portBufferList;
     
     int midib1,midib2,midib3;
     

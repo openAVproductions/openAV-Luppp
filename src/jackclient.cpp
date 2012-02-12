@@ -20,6 +20,7 @@
 #include "jackclient.hpp"
 
 #include <cmath>
+#include <sstream>
 #include <iostream>
 
 #include "effectstate.hpp"
@@ -50,6 +51,20 @@ JackClient::JackClient( Top* t) :
                                     JACK_DEFAULT_AUDIO_TYPE,
                                     JackPortIsInput,
                                     0 );
+  
+  // create 8 "track" inputs
+  for ( int i = 0; i < 8; i++ )
+  {
+    stringstream s;
+    s << "track_in_" << i;
+    
+    
+    trackInputPorts[i] = jack_port_register ( client,
+                                    s.str().c_str(),
+                                    JACK_DEFAULT_AUDIO_TYPE,
+                                    JackPortIsInput,
+                                    0 );
+  }
   
   outputPortW = jack_port_register ( client,
                                     "output_w",
@@ -297,15 +312,21 @@ int JackClient::processRtQueue()
 int JackClient::process(jack_nframes_t nframes)
 {
   this->nframes = nframes;
-  portBufferList.inputAudio = (float*)jack_port_get_buffer ( inputPort, nframes);
+  top->state.portBufferList.inputAudio = (float*)jack_port_get_buffer ( inputPort, nframes);
   
-  portBufferList.outputW = (float*)jack_port_get_buffer (outputPortW, nframes);
-  portBufferList.outputX = (float*)jack_port_get_buffer (outputPortX, nframes);
-  portBufferList.outputY = (float*)jack_port_get_buffer (outputPortY, nframes);
-  portBufferList.outputZ = (float*)jack_port_get_buffer (outputPortZ, nframes);
+  top->state.portBufferList.outputW = (float*)jack_port_get_buffer (outputPortW, nframes);
+  top->state.portBufferList.outputX = (float*)jack_port_get_buffer (outputPortX, nframes);
+  top->state.portBufferList.outputY = (float*)jack_port_get_buffer (outputPortY, nframes);
+  top->state.portBufferList.outputZ = (float*)jack_port_get_buffer (outputPortZ, nframes);
   
-  portBufferList.headphonePfl = (float*)jack_port_get_buffer (headphonePflPort, nframes);
-  portBufferList.postFaderSend= (float*)jack_port_get_buffer (monoPostFaderSend, nframes);
+  top->state.portBufferList.headphonePfl = (float*)jack_port_get_buffer (headphonePflPort, nframes);
+  top->state.portBufferList.postFaderSend= (float*)jack_port_get_buffer (monoPostFaderSend, nframes);
+  
+  // get port buffers for each track, put into top->state.portBufferList
+  for ( int i = 0; i < 8; i++ )
+  {
+    top->state.portBufferList.trackInputs[i] = (float*)jack_port_get_buffer ( trackInputPorts[i], nframes);
+  }
   
   // class variable for buffer
   apcOutputBuffer = jack_port_get_buffer ( apcOutputPort, nframes);
@@ -323,7 +344,7 @@ int JackClient::process(jack_nframes_t nframes)
   copyBufferList.headphonePfl  = &headphonePflVector[0];
   copyBufferList.postFaderSend = &postFaderSendVector[0];
   
-  mixer.process(nframes, recordInput, portBufferList, copyBufferList);
+  mixer.process(nframes, recordInput, top->state.portBufferList, copyBufferList);
   
   return false;
 };
