@@ -47,9 +47,11 @@ class GAudioSource : public Gtk::DrawingArea
     // popup menu stuff:
     Gtk::Menu    pMenu;
     Gtk::MenuItem  setLv2Source;
+    Gtk::MenuItem  setJackSource;
     Gtk::MenuItem  setFluidSynthSource;
     Gtk::MenuItem  setWhiteNoiseSource;
     
+    void jackSource();
     void fluidSynthSource();
     void whiteNoiseSource();
     

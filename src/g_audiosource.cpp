@@ -38,10 +38,12 @@ GAudioSource::GAudioSource(Top* t)
   
   //setBufferSource.set_label("Audio Buffer");
   setLv2Source.set_label("Make LV2 instrument");
+  setJackSource.set_label("Make JACK source");
   setFluidSynthSource.set_label("Make Soundfont player");
   setWhiteNoiseSource.set_label("Make White Noise Gen");
   
   pMenu.add( setLv2Source );
+  pMenu.add( setJackSource );
   pMenu.add( setFluidSynthSource );
   pMenu.add( setWhiteNoiseSource );
   pMenu.show_all();
@@ -50,6 +52,7 @@ GAudioSource::GAudioSource(Top* t)
   signal_button_press_event().connect(sigc::mem_fun(*this, &GAudioSource::on_button_press_event) );
   
   // popup signals
+  setJackSource.signal_activate().connect      ( sigc::mem_fun(*this, &GAudioSource::jackSource      ));
   setFluidSynthSource.signal_activate().connect( sigc::mem_fun(*this, &GAudioSource::fluidSynthSource));
   setWhiteNoiseSource.signal_activate().connect( sigc::mem_fun(*this, &GAudioSource::whiteNoiseSource));
   
@@ -75,6 +78,17 @@ void GAudioSource::setPlaying(bool p )
   playing = p;
   redraw();
 }
+
+void GAudioSource::jackSource()
+{
+  // so we ask the user to pick a soundfont, and then make OfflineWorker
+  // load it and send it to Engine
+  cout << "GUI got JackSource menu activation, sending EE_SET_TRACK_SOURCE event to Engine" << endl;
+  
+  // tell offlineWorker to do the loading
+  top->offlineWorker->setTrackSource(ID, AUDIO_SOURCE_TYPE_JACK);
+}
+
 void GAudioSource::fluidSynthSource()
 {
   // so we ask the user to pick a soundfont, and then make OfflineWorker
