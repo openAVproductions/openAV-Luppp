@@ -525,6 +525,7 @@ void JackClient::apcWriteGridTrack(int track)
   // write APC midi commands to make track light up right:
   int blockCounter = 0;
   std::list<ClipInfo>::iterator clipIter = clipSelectorState->clipInfo.begin();
+  
   for ( ; clipIter != clipSelectorState->clipInfo.end() && blockCounter < 5; clipIter++ ) // limit redraws to list size, AND number slots available!
   {
     if ( clipIter->hasBuffer )
@@ -546,6 +547,12 @@ void JackClient::apcWriteGridTrack(int track)
       {
         writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 5 );
       }
+    }
+    // recording into looper that currently has no buffer
+    else if ( clipSelectorState->recording == blockCounter )
+    {
+      cout << "APC clip recording writing block # " << blockCounter << endl;
+      writeMidi( apcOutputBuffer, 144 + track, 53 + blockCounter, 3 );
     }
     else // no buffer
     {
