@@ -25,6 +25,8 @@
 void EngineEvent::addTrack             (int newId){ ia = newId; type = EE_ADD_TRACK;}
 void EngineEvent::setBpm               (int bpm){ ia = bpm; type = EE_BPM;}
 
+void EngineEvent::setSceneNumber       (int scene){ ia = scene; type = EE_SCENE_NUMBER;}
+
 void EngineEvent::sendAddTrackPointers (void* p1,void* p2,void* p3,void* p4){ vPtr = p1;vPtr2=p2;vPtr3= p3;vPtr4= p4; type = EE_ADD_TRACK_POINTERS;}
 
 void EngineEvent::looperPlay           (int id){ia = id; type = EE_LOOPER_PLAY;}

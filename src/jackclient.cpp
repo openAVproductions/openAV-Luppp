@@ -208,6 +208,19 @@ int JackClient::processRtQueue()
         top->state.setVolume( e->ia, e->fa );
       }
     }
+    else if ( e->type == EE_SCENE_NUMBER ) {
+      // bounce scene number on to the GUI
+      EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+      x->setSceneNumber(e->ia);
+      top->toGuiQueue.push(x);
+      
+      int numTracks = top->state.getNumTracks();
+      for ( int i = 0; i < numTracks; i++)
+      {
+        top->state.clipSelectorActivateClip( i , e->ia);
+      }
+      
+    }
     else if ( e->type == EE_TRACK_SET_MUTE ) {
       top->state.setMute( e->ia, e->ib );
     }

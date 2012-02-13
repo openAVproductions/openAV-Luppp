@@ -29,6 +29,8 @@ enum EngineEventType
   
   EE_BPM,
   
+  EE_SCENE_NUMBER,
+  
   EE_MIXER_VOLUME,
   
   EE_ADD_TRACK,
@@ -104,6 +106,8 @@ class EngineEvent
     
     void addTrack             (int newId);
     void setBpm               (int bpm);
+    
+    void setSceneNumber       (int scene);
     
     void sendAddTrackPointers (void*,void*,void*,void*);
     

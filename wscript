@@ -29,6 +29,7 @@ def configure(ctx):
   ctx.check_cfg	(package='libconfig++',at_least_version='1.4.8',args='--libs',uselib_store='LIBCONFIG')
   ctx.check_cfg	(package='lilv-0',args='--cflags --libs',uselib_store='LILV')
   ctx.check_cfg	(package='suil-0',args='--cflags --libs',uselib_store='SUIL')
+  ctx.check_cfg	(package='liblo',at_least_version='1.0.0',args='--cflags --libs',uselib_store='LIBLO') # harmonySeq integration
   
   # Check for headers:
   ctx.check(header_name="lv2.h",mandatory=True,uselib_store='LV2.H')
@@ -102,7 +103,7 @@ def build(ctx):
               'src/g_masteroutput.cpp',
               'src/g_trackoutput.cpp']
   
-  engineDepends = 'JACK SNDFILE GTKMM FLUIDSYNTH GLIBMM LIBCONFIG LILV LV2.H LADSPA.H SUIL EVENT.H URIMAP.H EVENTHELPERS.H'
+  engineDepends = 'JACK SNDFILE GTKMM FLUIDSYNTH GLIBMM LIBCONFIG LILV LV2.H LADSPA.H SUIL EVENT.H URIMAP.H EVENTHELPERS.H LIBLO'
   
   #print 'Building ENGINE'
   buildList = engineList + guiList

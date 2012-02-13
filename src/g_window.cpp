@@ -19,6 +19,8 @@
 
 #include "g_window.hpp"
 
+#include <lo/lo.h>
+
 #include "offlineworker.hpp"
 #include "g_buffersource.hpp"
 
@@ -311,6 +313,7 @@ int Window::handleEvent()
     else if ( e->type == EE_BPM ) {
       cout << "GUI new BPM: " << e->ia << endl;
       masterProgress.setBpm(e->ia);
+      lo_send( lo_address_new( NULL, "7773") , "/harmonyseq/tempo","f", (float)e->ia);
     }
     else if ( e->type == EE_ADD_TRACK ) {
       //cout << "GUI got ADD_TRACK event, sending to OfflineWorker  NewID = " << e->ia << endl;
@@ -320,6 +323,14 @@ int Window::handleEvent()
       {
         addTrack();
       }
+      
+    }
+    else if ( e->type == EE_SCENE_NUMBER ) {
+      
+      // harmonySeq integration: send it the scene id OSC tag
+      cout << "ClipSelector: HarmonySeq integration: Sending OSC tag # " << e->ia << " now!" << endl;
+      lo_send( lo_address_new(NULL, "7773") , "/harmonyseq/event", "i", e->ia );
+      lo_send( lo_address_new(NULL, "7773") , "/harmonyseq/sync", "" );
       
     }
     else if ( e->type == EE_TRACK_RMS ) {

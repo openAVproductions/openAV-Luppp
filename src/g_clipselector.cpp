@@ -23,6 +23,8 @@
 
 #include <sstream>
 
+#include <lo/lo.h>
+
 #include "gtkmm.h"
 #include "gtkmm/filechooserdialog.h"
 
@@ -240,15 +242,17 @@ bool ClipSelector::on_button_press_event(GdkEventButton* event)
   {
     if ( event->button == 1 )
     {
-      // send clip activate on all tracks ( counted trough hack on static int) and return
-      for ( int i = 0; i < privateID; i++ )
-      {
-        EngineEvent* x = new EngineEvent();
-        x->looperSelectBuffer(i,block);
-        top->toEngineQueue.push(x);
-      }
+      // tell the engine to play a scene
+      EngineEvent* x = new EngineEvent();
+      x->setSceneNumber(block);
+      top->toEngineQueue.push(x);
+      
       masterClipPlaying = block;
       redraw();
+      
+      // harmonySeq integration: send it the scene id OSC tag
+      cout << "ClipSelector: HarmonySeq integration: Sending OSC tag # " << block << " now!" << endl;
+      lo_send( lo_address_new(NULL, "7773") , "/harmonyseq/event", "i", block );
     }
     else // rename scene
     {
