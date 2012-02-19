@@ -452,9 +452,17 @@ int Window::handleEvent()
     else if ( e->type == EE_TRACK_DEVICE_ACTIVE ) {
       std::cout << "Gui DEVICE ACTIVE   UID: " << e->ia << " value: " << e->ib << std::endl; 
       
-      guiState.effectState.at(e->ia).active = e->ib;
-      smallEffectBoxVector.at(e->ia)->queue_draw();
+      if ( e->ia < guiState.effectState.size() )
+      {
+        guiState.effectState.at(e->ia).active = e->ib;
+        effectTrackBoxVector.at(e->ia)->queue_draw();
+      }
+      else
+      {
+        cout << "GWindow TrackActive event OOB" << endl;
+      }
       
+      std::cout << "Done track device" << endl;
     }
     else if ( e->type == EE_TRACK_SELECT_DEVICE ) {
       //std::cout << "Gui TrackSelect event  t: " << e->ia << " d: " << e->ib << std::endl;
@@ -569,16 +577,19 @@ int Window::handleEvent()
     }
     else if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER )
     {
-      //std::cout << "PLUGIN PARAM t " << e->ia << " pos " << e->ib << " param " << e->ic << " val " << e->fa << std::endl;
+      // values here seem strance (not using ib) but this is due to legacy code
+      std::cout << "PLUGIN PARAM  UID " << e->ia  << " param " << e->ic << " val " << e->fa << std::endl;
       
-      cout << "UniqueID: " << e->ia << "  param: " << e->ic << "  value" << e->fa << endl;
+      //cout << "UniqueID: " << e->ia << "  param: " << e->ic << "  value" << e->fa << endl;
       guiState.effectState.at(e->ia).values[e->ic] = e->fa;
       
-      smallEffectBoxVector.at(e->ia)->queue_draw();
+      effectTrackBoxVector.at(e->ia)->queue_draw();
+      
+      std::cout << "Plugin Param done" << endl;
     }
     else if ( e->type == EE_STATE_NEW_EFFECT )
     {
-      int t = e->ia;
+      int UID = e->ia;
       int p = e->ib;
       int et= e->ic;
       
@@ -606,14 +617,16 @@ int Window::handleEvent()
       {
         // push new EffectState instance onto the EffectState, its
         // sliced per ID, so widgets have thier uniqueID as link to state
-        guiState.effectState.push_back( EffectState(-1) );
+        guiState.effectState.push_back( EffectState( effectVector.size() - 1 ) );
+        
+        cout << " EE_STATE_NEW_EFFECT  new effect ID = " << effectVector.size() << endl;
         
         // add the new widget to the box
-        smallEffectBoxVector.at(t)->add( *effectVector.back() );
-        smallEffectBoxVector.at(t)->show_all();
+        FIXME: we're using UID as Track parameter, we can't do this!
+        smallEffectBoxVector.at(UID)->add( *effectVector.back() );
+        smallEffectBoxVector.at(UID)->show_all();
         
         currentEffectsTrack = e->ia;
-        //redrawEffectBox();
       }
       
       cout << " EE_STATE_NEW_EFFECT handling done, now processing other Events" << endl;
@@ -727,8 +740,8 @@ void Window::addTrack()
   mainTable->attach( *tmpVbox, numTracks, numTracks+1, 3, 4);
   
   // insert box for adding effects into later
-  smallEffectBoxVector.push_back( new Gtk::VBox() );
-  mainTable->attach( *smallEffectBoxVector.back(), numTracks, numTracks+1, 4, 5);
+  effectTrackBoxVector.push_back( new Gtk::VBox() );
+  mainTable->attach( *effectTrackBoxVector.back(), numTracks, numTracks+1, 4, 5);
   
   // fader / pan
   trackoutputList.push_back( new TrackOutput( top, &guiState ) );

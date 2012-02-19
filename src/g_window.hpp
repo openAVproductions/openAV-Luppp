@@ -127,7 +127,7 @@ class Window
     std::list<ClipSelector*>clipselectorList;
     
     std::list<Gtk::Label*> tracklabelList;
-    std::vector<Gtk::Box*> smallEffectBoxVector;
+    std::vector<Gtk::Box*> effectTrackBoxVector;
     std::vector<GAudioSource*> audioSourceVector;
     
     std::list<Gtk::EventBox*> tracklabelBoxList;
