@@ -571,63 +571,49 @@ int Window::handleEvent()
     {
       //std::cout << "PLUGIN PARAM t " << e->ia << " pos " << e->ib << " param " << e->ic << " val " << e->fa << std::endl;
       
-      if ( e->ia < trackVector.at(currentEffectsTrack).widgetVector.size() )
-      {
-        // here we are writing based on track, but we should be writing ID
-        cout << "UniqueID: " << e->ia << "  param: " << e->ic << "  value" << e->fa << endl;
-        guiState.effectState.at(e->ia).values[e->ic] = e->fa;
-        
-        // mark widget for redrawing
-        smallEffectBoxVector.at(e->ia)->queue_draw();
-      }
-      else
-      {
-        cout << "GWindow::handleEvent() PLUGIN_PARAM ERROR, effect position not in vector!" << endl;
-      }
+      cout << "UniqueID: " << e->ia << "  param: " << e->ic << "  value" << e->fa << endl;
+      guiState.effectState.at(e->ia).values[e->ic] = e->fa;
+      
+      smallEffectBoxVector.at(e->ia)->queue_draw();
     }
     else if ( e->type == EE_STATE_NEW_EFFECT )
     {
       int t = e->ia;
       int p = e->ib;
       int et= e->ic;
-      //cout << "GUI: New effect! t " << t << ", p " << p << ", EffectType " << et<< endl;
       
+      cout << "EE_STATE_NEW_EFFECT, pushing new widget to trackVector.at( "<<t<<" ) to the back of the widgetVector"<<endl;
       
-      if ( t < trackVector.size() ) // check track
+      bool newEffect = true;
+      switch ( et )
       {
-        cout << "EE_STATE_NEW_EFFECT, pushing new widget to trackVector.at( "<<t<<" ) to the back of the widgetVector"<<endl;
+        case EFFECT_REVERB:       effectVector.push_back( new GReverb      (top, &guiState) ); break;
+        case EFFECT_LOWPASS:      effectVector.push_back( new GLowPassSmall(top, &guiState) ); break;
+        case EFFECT_HIGHPASS:     effectVector.push_back( new GHighPass    (top, &guiState) ); break;
+        case EFFECT_BEATSMASH:    effectVector.push_back( new GBeatSmash   (top, &guiState) ); break;
+        case EFFECT_TRANCEGATE:   effectVector.push_back( new GBeatSmash   (top, &guiState) ); break;
+        case EFFECT_TRANSIENT:    effectVector.push_back( new GTransient   (top, &guiState) ); break;
+        case EFFECT_COMPRESSOR:   effectVector.push_back( new GCompressor  (top, &guiState) ); break;
+        case EFFECT_LIMITER:      effectVector.push_back( new GLimiter     (top, &guiState) ); break;
+        case EFFECT_PARAMETRIC_EQ:effectVector.push_back( new Equalizer    (     &guiState) ); break;
+        case EFFECT_AM_PITCHSHIFT:effectVector.push_back( new GAmPitchShift(top, &guiState) ); break;
+        case EFFECT_TESTTONES:    effectVector.push_back( new Lv2Display   (top, &guiState) ); cout << "creating Lv2Display now" << endl; break;
+        default: newEffect = false; break;
+      }
+      
+      // only attempt to add the new effect if we added one to the vector
+      if ( newEffect )
+      {
+        // push new EffectState instance onto the EffectState, its
+        // sliced per ID, so widgets have thier uniqueID as link to state
+        guiState.effectState.push_back( EffectState(-1) );
         
-        bool newEffect = true;
-        switch ( et )
-        {
-          case EFFECT_REVERB:       trackVector.at(t).widgetVector.push_back( new GReverb     (top, &guiState) ); break;
-          case EFFECT_LOWPASS:      trackVector.at(t).widgetVector.push_back( new GLowPassSmall(top, &guiState) ); break;
-          case EFFECT_HIGHPASS:     trackVector.at(t).widgetVector.push_back( new GHighPass   (top, &guiState) ); break;
-          case EFFECT_BEATSMASH:    trackVector.at(t).widgetVector.push_back( new GBeatSmash  (top, &guiState) ); break;
-          case EFFECT_TRANCEGATE:   trackVector.at(t).widgetVector.push_back( new GBeatSmash  (top, &guiState) ); break;
-          case EFFECT_TRANSIENT:    trackVector.at(t).widgetVector.push_back( new GTransient  (top, &guiState) ); break;
-          case EFFECT_COMPRESSOR:   trackVector.at(t).widgetVector.push_back( new GCompressor (top, &guiState) ); break;
-          case EFFECT_LIMITER:      trackVector.at(t).widgetVector.push_back( new GLimiter    (top, &guiState) ); break;
-          case EFFECT_PARAMETRIC_EQ:trackVector.at(t).widgetVector.push_back( new Equalizer   (     &guiState) ); break;
-          case EFFECT_AM_PITCHSHIFT:trackVector.at(t).widgetVector.push_back( new GAmPitchShift(top,&guiState) ); break;
-          case EFFECT_TESTTONES:    trackVector.at(t).widgetVector.push_back( new Lv2Display  (top, &guiState) ); cout << "creating Lv2Display now" << endl; break;
-          default: newEffect = false; break;
-        }
+        // add the new widget to the box
+        smallEffectBoxVector.at(t)->add( *effectVector.back() );
+        smallEffectBoxVector.at(t)->show_all();
         
-        // only attempt to add the new effect if we added one to the vector
-        if ( newEffect )
-        {
-          // push new EffectState instance onto the EffectState, its
-          // sliced per ID, so widgets have thier uniqueID as link to state
-          guiState.effectState.push_back( EffectState(-1) );
-          
-          // add the new widget to the box
-          smallEffectBoxVector.at(t)->add( *trackVector.at(t).widgetVector.back() );
-          smallEffectBoxVector.at(t)->show_all();
-          
-          currentEffectsTrack = e->ia;
-          //redrawEffectBox();
-        }
+        currentEffectsTrack = e->ia;
+        //redrawEffectBox();
       }
       
       cout << " EE_STATE_NEW_EFFECT handling done, now processing other Events" << endl;
@@ -708,9 +694,9 @@ void Window::addTrack()
   
   guiState.addTrack();
   
-  trackVector.push_back( GTrack() );
-  trackVector.back().widgetVector.push_back( new GBufferSource(top, &guiState) );
-  redrawEffectBox();
+  //trackVector.push_back( GTrack() );
+  //trackVector.back().widgetVector.push_back( new GBufferSource(top, &guiState) );
+  //redrawEffectBox();
   
   std::stringstream trackName;
   trackName << numTracks;

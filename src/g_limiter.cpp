@@ -39,7 +39,7 @@ GLimiter::GLimiter(Top* t, GuiStateStore* s)
   signal_button_release_event().connect(sigc::mem_fun(*this, &GLimiter::on_button_release_event) );
   signal_motion_notify_event().connect( sigc::mem_fun( *this, &GLimiter::onMouseMove ) );
   
-  set_size_request(130, 216);
+  set_size_request(75, 37);
 }
 
 bool GLimiter::redraw()
