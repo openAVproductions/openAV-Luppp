@@ -158,11 +158,11 @@ void Mixer::process(int nframes,bool record, PortBufferList& portBufferList, Cop
   // now sum up the master output buffers and write them
   for(int i = 0; i < nframes; i++)
   {
-    // write values to JACK ports
-    *portBufferList.outputW++ = *outPtrW * masterVolume;
-    *portBufferList.outputX++ = *outPtrX * masterVolume;
-    *portBufferList.outputY++ = *outPtrY * masterVolume;
-    *portBufferList.outputZ++ = *outPtrZ * masterVolume;
+    // write values to JACK ports, including the return from the JACK ports
+    *portBufferList.outputW++ = (*outPtrW + *portBufferList.masterReturn[0]++ ) * masterVolume;
+    *portBufferList.outputX++ = (*outPtrX + *portBufferList.masterReturn[1]++ ) * masterVolume;
+    *portBufferList.outputY++ = (*outPtrY + *portBufferList.masterReturn[2]++ ) * masterVolume;
+    *portBufferList.outputZ++ = (*outPtrZ + *portBufferList.masterReturn[3]++ ) * masterVolume;
     
     // write headphone & postSend buffers into JACK ports
     *headphonePort++     = *headphonePflBuffer * headphonesVolume;

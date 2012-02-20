@@ -48,6 +48,9 @@ struct PortBufferList
   
   // for processing JACK input per track
   float* trackInputs[8];
+  
+  // for master return
+  float* masterReturn[4];
 };
 
 struct CopyBufferList

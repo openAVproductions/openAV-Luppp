@@ -341,6 +341,12 @@ int JackClient::process(jack_nframes_t nframes)
     top->state.portBufferList.trackInputs[i] = (float*)jack_port_get_buffer ( trackInputPorts[i], nframes);
   }
   
+  // get master return buffers
+  top->state.portBufferList.masterReturn[0] = (float*)jack_port_get_buffer (bformatEffectReturnW, nframes);
+  top->state.portBufferList.masterReturn[1] = (float*)jack_port_get_buffer (bformatEffectReturnX, nframes);
+  top->state.portBufferList.masterReturn[2] = (float*)jack_port_get_buffer (bformatEffectReturnY, nframes);
+  top->state.portBufferList.masterReturn[3] = (float*)jack_port_get_buffer (bformatEffectReturnZ, nframes);
+  
   // class variable for buffer
   apcOutputBuffer = jack_port_get_buffer ( apcOutputPort, nframes);
   jack_midi_clear_buffer(apcOutputBuffer);
