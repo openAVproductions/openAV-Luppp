@@ -125,14 +125,18 @@ void Mixer::process(int nframes,bool record, PortBufferList& portBufferList, Cop
     top->recordAudioQueue.push(nframes, portBufferList.inputAudio);
   }
   
+  // setup the copyBuffer list to include the Mixer owned buffers
+  copyBufferList.W = &outputW[0];
+  copyBufferList.X = &outputX[0];
+  copyBufferList.Y = &outputY[0];
+  copyBufferList.Z = &outputZ[0];
+  
   // process the entire audio chain here
   std::list<AudioTrack>::iterator iter;
   
-  //int c = 0;
   for(iter = audiotrackList.begin(); iter != audiotrackList.end(); iter++ )
   {
-    //std::cout << "Mixer:processing  Audiotrack " << c++ << std::endl;
-    iter->process( nframes, &portBufferList.inputAudio[0], &outputW[0], &outputX[0], &outputY[0], &outputZ[0]);
+    iter->process( nframes, portBufferList, copyBufferList );
   }
   
   // process master effects

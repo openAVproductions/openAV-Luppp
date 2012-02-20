@@ -59,10 +59,20 @@ struct CopyBufferList
   {
     headphonePfl  = 0;
     postFaderSend = 0;
+    
+    W = 0;
+    X = 0;
+    Y = 0;
+    Z = 0;
   }
   
   float* headphonePfl;
   float* postFaderSend;
+  
+  float* W;
+  float* X;
+  float* Y;
+  float* Z;
 };
 
 #endif

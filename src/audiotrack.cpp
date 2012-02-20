@@ -107,7 +107,7 @@ int AudioTrack::getEffectID(int pos)
   return -1;
 }
 
-void AudioTrack::process(int nframes, float* buffer, float* W, float* X, float* Y, float* Z)
+void AudioTrack::process(int nframes, PortBufferList& pbl, CopyBufferList& cbl)
 {
   //std::cout << "AudioTrack::process()" << std::endl;
   
@@ -120,7 +120,7 @@ void AudioTrack::process(int nframes, float* buffer, float* W, float* X, float* 
   }
   
   // do volume & panning
-  sink->process(nframes, &trackBuffer[0], W, X, Y, Z);
+  sink->process(nframes, &trackBuffer[0], cbl.W, cbl.X, cbl.Y, cbl.Z);
   
 }
 
