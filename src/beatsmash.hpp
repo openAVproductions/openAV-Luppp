@@ -40,6 +40,8 @@ class BeatSmash : public Effect
     int active;
     int queueActive;
     
+    int writeIndex;
+    
     int smashIndex;
     
     int nframeBeatCounter;
