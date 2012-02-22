@@ -327,9 +327,14 @@ int Window::handleEvent()
     }
     else if ( e->type == EE_SCENE_NUMBER ) {
       
+      int scene = e->ia;
       // harmonySeq integration: send it the scene id OSC tag
-      cout << "ClipSelector: HarmonySeq integration: Sending OSC tag # " << e->ia << " now!" << endl;
-      lo_send( lo_address_new(NULL, "7773") , "/harmonyseq/event", "i", e->ia );
+      cout << "ClipSelector: HarmonySeq integration: Sending OSC tag # " << scene << " now!" << endl;
+      
+      guiState.masterClipPlaying = scene;
+      //masterClipSelector->queue_draw();
+      
+      lo_send( lo_address_new(NULL, "7773") , "/harmonyseq/event", "i", scene );
       lo_send( lo_address_new(NULL, "7773") , "/harmonyseq/sync", "" );
       
     }

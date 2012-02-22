@@ -81,6 +81,8 @@ ClipSelector::ClipSelector(Top* t, GuiStateStore* s, bool masterConstructor)
   stateStore = s;
   
   masterClipSelector = true;
+  masterClipPlaying = 0;
+  masterClipQueued = 0;
   
   add_events(Gdk::EXPOSURE_MASK | Gdk::BUTTON_PRESS_MASK);
   signal_button_press_event().connect(sigc::mem_fun(*this, &ClipSelector::on_button_press_event) );
@@ -108,7 +110,6 @@ bool ClipSelector::redraw()
   }
   return true;
 }
-
 
 bool ClipSelector::on_expose_event(GdkEventExpose* event)
 {
@@ -181,7 +182,7 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
       if ( (*iter).bufferID < stateStore->audioBufferNameVector.size() )
         name = stateStore->audioBufferNameVector.at( (*iter).bufferID );
       else
-        name = "inv";
+        name = "invalid";
       
       //cout << "Clip " << (*iter).bufferID << " has name " << name << endl;
       
@@ -198,7 +199,7 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
         advance(iter, i);
         name = *iter;
         clipState = CLIP_STATE_MASTER_TRACK;
-        if ( i == masterClipPlaying )
+        if ( i == stateStore->masterClipPlaying )
         {
           clipState = CLIP_STATE_PLAYING;
         }
