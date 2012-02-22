@@ -183,7 +183,7 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
       else
         name = "inv";
       
-      cout << "Clip " << (*iter).bufferID << " has name " << name << endl;
+      //cout << "Clip " << (*iter).bufferID << " has name " << name << endl;
       
       // retrieve audio buffer name from unique bufferID and audioBufferNameVector
       if ( (*iter).bufferID < stateStore->audioBufferNameVector.size() )

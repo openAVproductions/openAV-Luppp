@@ -209,17 +209,17 @@ int JackClient::processRtQueue()
       }
     }
     else if ( e->type == EE_SCENE_NUMBER ) {
+      
+      cout << "EE_SCENE_NUMBER " << e->ia << endl; 
+      
       // bounce scene number on to the GUI
       EngineEvent* x = top->toEngineEmptyEventQueue.pull();
       x->setSceneNumber(e->ia);
       top->toGuiQueue.push(x);
       
-      int numTracks = top->state.getNumTracks();
-      for ( int i = 0; i < numTracks; i++)
-      {
-        top->state.clipSelectorActivateClip( i , e->ia);
-      }
-      
+      // time handles the event
+      cout << "processEngineEvent SCENE NUMBER" << endl;
+      time.processEngineEvent( e );
     }
     else if ( e->type == EE_TRACK_SET_MUTE ) {
       top->state.setMute( e->ia, e->ib );
@@ -396,7 +396,32 @@ int JackClient::processMidi(jack_nframes_t nframes)
     top->state.midib2 = b2;
     top->state.midib3 = b3;
     
-    cout << "JACK MIDI IN" << b1 << "  " << b2 << "  " << b3 << endl;
+    cout << "JACK MIDI IN:  " << b1 << "  " << b2 << "  " << b3 << endl;
+    
+    if ( b1 == 176 && b2 == 10 )
+    {
+      EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+      x->setPluginParameter(0,
+                            -1,
+                            0,
+                            b3 / 127.f );
+      time.processEngineEvent(x);
+    }
+    
+    
+    // FCB1010: Scene change
+    if ( b1 == 192 && ( b2 >= 0 && b2 < 10 ) )
+    {
+      int sceneID = b2;
+      std::cout << "FCB launch: Scene Launch on ID " << sceneID << std::endl;
+      
+      // write the new scene event
+      EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+      x->setSceneNumber(sceneID);
+      time.processEngineEvent(x);
+    }
+    
+    
     
     if ( b1 >= 144 && b1 < 144 + 16 ) // note on
     {
@@ -696,23 +721,33 @@ void JackClient::apcRead( int nframes )
     */
     
     
-    // apc 40 Device Control On / Off
-    if( b2 == 59 )
+    // apc 40 "Device Control" buttons, with the 4 buttons under it too!
+    if( b2 >= 58 && b2 < 58 + 8 )
     {
+      // track ID from controller channel, button number definces device
+      int trackID = b1 - 128;
+      int deviceNumber = b2 - 58;
+      
       bool active = false;
+      
       if ( b1 >= 144 && b1 < 144 + 16 ) // on
       {
         active = true;
+        trackID = b1 - 144;
       }
-      // get unique ID of current selected track & device, then setPluginParam that UID
-      int uid = mixer.getEffectID(top->controller->getTrack(), top->controller->getDevice());
+      
+      // get unique ID of Controller's Track, device from which button pressed!
+      int uid = mixer.getEffectID( trackID, deviceNumber );
       
       EngineEvent* x = top->toEngineEmptyEventQueue.pull();
       x->setTrackDeviceActive(uid,active);
       time.processEngineEvent(x);
-      
     }
     
+    
+    // Removed when interface changed to control over essential parameter
+    // of each device, rather than all parameters of one device.
+    /*
     // APc <- Selected device button
     if( b2 == 60 && ( b1 >= 144 && b1 < 144 + 16 ) )
     {
@@ -738,6 +773,7 @@ void JackClient::apcRead( int nframes )
       
       apcSendDeviceControl(trackID, device, apcOutputBuffer);
     }
+    */
     
     // apc 40 master fader
     if ( (int)in_event.buffer[0] == 176 && (int)in_event.buffer[1] == 14 )
@@ -871,51 +907,19 @@ void JackClient::apcRead( int nframes )
       if ( b2 >= 16 && b2 < 24 && b1 != 184 ) // all controllers, excluding master track
       {
         int track = b1 - 176;
-        int device= top->controller->getDevice();
-        top->controller->setTrackDevice(track, device);
-        std::cout << "APC: Device Control on track " << track << " device " << device << " param " << b2 -16 << std::endl;
+        int device= b2 - 16;
+        
+        std::cout << "APC: Device Control on track " << track << " device " << device << std::endl;
         
         // get unique ID of current selected track, then setPluginParam that UID
         int uid = mixer.getEffectID(track, device);
         
         EngineEvent* x = top->toEngineEmptyEventQueue.pull();
         x->setPluginParameter(uid,
-                              -1,
-                              b2-16,
+                              -1, // legacy
+                              0,  // always first param, its the "unit" param
                               b3 / 127.);
         time.processEngineEvent(x);
-        
-        /*
-        // here we change the OSC param we send based on the track & device selection
-        if ( trackID < trackStateVector.size() )
-        {
-          int selDev = trackStateVector.at(trackID)->selectedDevice;
-          std::cout << "Track ID " << trackID << " selDev = " << selDev << " param = " << b2 - 16 << " value " << b3 / 127.f << std::endl;
-          
-          //lo_send( //lo_address_new( NULL,"14688") , "/luppp/track/setpluginparameter", "iiif", trackID, selDev, b2 - 16, b3 / 127.f );
-        }
-        */
-      }
-      
-      if ( b1 == 184 ) // master track
-      {
-        if ( b2 == 16 ) // pure data Delay wet
-        {
-          //((Mixer*)(rh->mixer))->setPluginParameter( -2, -1, 2, b3 / 127.f); // delay dry/wet
-          //lo_send( //lo_address_new( NULL,"14688") , "/luppp/track/setpluginparameter", "iiif", -2, -1, 2, b3 / 127.f );
-        }
-        if ( b2 == 19 ) // pure data LPF
-        {
-          //lo_send( //lo_address_new( NULL,"14688") , "/luppp/track/setpluginparameter", "iiif", -2, -1, 0, b3 / 127.f );
-        }
-        if ( b2 == 20 ) // pure data Delay time
-        {
-          //lo_send( //lo_address_new( NULL,"14688") , "/luppp/track/setpluginparameter", "iiif", -2, -1, 3, b3 / 127.f );
-        }
-        if ( b2 == 23 ) // pure data HPF
-        {
-          //lo_send( //lo_address_new( NULL,"14688") , "/luppp/track/setpluginparameter", "iiif", -2, -1, 1, b3 / 127.f );
-        }
       }
     }
     
@@ -925,13 +929,10 @@ void JackClient::apcRead( int nframes )
       int sceneID = b2 - 82;
       std::cout << "APC: Scene Launch on Scene " << sceneID << std::endl;
       
-      for (int i = 0; i < top->state.getNumTracks(); i++ )
-      {
-        // write the new scene event to every track
-        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
-        x->looperSelectBuffer(i,sceneID);
-        time.processEngineEvent(x);
-      }
+      // write the new scene event
+      EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+      x->setSceneNumber(sceneID);
+      time.processEngineEvent(x);
     }
     
     if ( b2 == 48 )

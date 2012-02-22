@@ -280,6 +280,7 @@ void StateStore::clipSelectorQueueClip(int t, int b)
 // play it back.
 void StateStore::clipSelectorActivateClip(int t, int b)
 {
+  cout << " clipSElectorActivateClip() track: " << t << "   block " << b << endl;
   // we get a track & scene number, so we set them in the ClipSelectorState
   // later the playback will request the bufferID ClipInfo of the right position in the list
   //std::cout << "StateStore::clipSelectorActivateClip() " << t << ", " << b << endl;
