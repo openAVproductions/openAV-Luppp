@@ -72,6 +72,7 @@ def build(ctx):
               'src/g_buffersource.cpp',
               'src/waveformcache.cpp',
               'src/g_widgets.cpp',
+              'src/g_sends.cpp',
               'src/g_waveview.cpp',
               'src/g_masterprogress.cpp',
               'src/g_reverb.cpp',

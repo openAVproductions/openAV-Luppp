@@ -29,6 +29,7 @@ class Top;
 #include "g_statestore.hpp"
 
 #include "g_track.hpp"
+#include "g_sends.hpp"
 #include "g_progress.hpp"
 
 #include "g_audiosource.hpp"
@@ -121,6 +122,7 @@ class Window
     std::vector<GTrack> trackVector;
     
     // lists of widgets
+    std::vector<GSends*> sendsList;
     std::list<TrackOutput*> trackoutputList;
     std::list<ClipSelector*>clipselectorList;
     

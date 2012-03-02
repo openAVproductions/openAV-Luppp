@@ -32,6 +32,8 @@ struct TrackOutputState
     pan    = 0.f;
     panZ   = 0.f;
     
+    sends = 0.f;
+    
     rms = 0.f;
     falloff = 0.f;
     
@@ -45,6 +47,8 @@ struct TrackOutputState
   // for parameter control
   bool selected;
   int selectedDevice;
+  
+  float sends;
   
   float volume;
   float pan;

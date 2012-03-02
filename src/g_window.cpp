@@ -738,11 +738,15 @@ void Window::addTrack()
   tmpVbox->add( *progressWidgetVector.back() );
   mainTable->attach( *tmpVbox, numTracks, numTracks+1, 3, 4);
   
+  // sends
+  sendsList.push_back( new GSends( top, &guiState ) );
+  mainTable->attach( *sendsList.back(), numTracks, numTracks+1, 4, 5 );
+  
   // fader / pan
   trackoutputList.push_back( new TrackOutput( top, &guiState ) );
   std::list<TrackOutput*>::iterator i = trackoutputList.begin();
   std::advance(i,numTracks);
-  mainTable->attach( **i, numTracks, numTracks+1, 4, 5);
+  mainTable->attach( **i, numTracks, numTracks+1, 5, 6);
   
   mainTable->show_all();
   numTracks++;

@@ -221,6 +221,9 @@ int JackClient::processRtQueue()
       cout << "processEngineEvent SCENE NUMBER" << endl;
       time.processEngineEvent( e );
     }
+    else if ( e->type == EE_TRACK_SET_SEND_VOLUME ) {
+      cout << "JC::RTQ() Got send volume! Send: " << e->ia << "  Vol: " << e->ib << endl;
+    }
     else if ( e->type == EE_TRACK_SET_MUTE ) {
       top->state.setMute( e->ia, e->ib );
     }
