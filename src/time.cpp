@@ -49,7 +49,6 @@ void Time::process(int frameNumber)
     //cout << "Time:P() bpm = " << bpm << "  FPB: " << framesPerBeat << "  beat: " << newBeat << " Q1: " << q1.size() << "  Q4: " << q4.size() << endl;
     beat = newBeat;
     
-    
     // always process q1 on new beat
     if ( !q1.empty() )
     {

@@ -116,7 +116,10 @@ class JackClient
     int process(jack_nframes_t);
     int processMidi(jack_nframes_t);
     
+    int timebase(jack_transport_state_t state, jack_nframes_t nframes, jack_position_t *pos, int new_pos, void *arg);
+    
     static int static_process(jack_nframes_t, void *);
+    static int static_timebase(jack_transport_state_t state, jack_nframes_t nframes, jack_position_t *pos, int new_pos, void* thisPointer);
     
     int framesPerBeat;
     int nframeCounter;

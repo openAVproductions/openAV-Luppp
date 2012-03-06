@@ -158,7 +158,55 @@ JackClient::JackClient( Top* t) :
      return;
   }
   
+  retval = jack_set_timebase_callback( client,
+                              0,
+                              static_timebase,
+                              static_cast<void*>(this));
+  
+    
+  if(retval) {
+     cerr << "JackClient::JackClient() Could not set timebase callback." << endl;
+     return;
+  }
+  
   jack_activate(client);
+  
+  jack_transport_start(client);
+  
+}
+
+int JackClient::timebase(jack_transport_state_t state, jack_nframes_t nframes, jack_position_t *pos, int new_pos, void *arg)
+{
+  
+  int frameNumber = jack_get_current_transport_frame(client);
+  
+  float bpm = top->bpm;
+  
+  int framesPerBeat = (int) top->samplerate / (bpm / 60.0);
+  
+  int newBeat = frameNumber / framesPerBeat;
+  
+  int bar = newBeat / 4;
+  int beat = newBeat % 4;
+  
+  // set position info
+  pos->bar = bar;
+  pos->beat = beat;
+  pos->tick = 0;
+  
+  // set time signature
+  pos->beats_per_bar = 4;
+  pos->beat_type = 4;
+  
+  // set dynamic global info
+  pos->beats_per_minute = bpm;
+  
+  // set valid info
+  pos->valid = JackPositionBBT;
+  
+  cout << "timebase  " << bar << "  " << beat << endl;
+  
+  return 0;
 }
 
 float* JackClient::getHeadphonePflVector()
@@ -169,6 +217,11 @@ float* JackClient::getHeadphonePflVector()
 float* JackClient::getPostFaderSendVector()
 {
    return &postFaderSendVector[0];
+}
+
+int JackClient::static_timebase(jack_transport_state_t state, jack_nframes_t nframes, jack_position_t *pos, int new_pos, void* thisPointer)
+{
+  return static_cast<JackClient*>(thisPointer)->timebase(state, nframes, pos, new_pos, 0 );
 }
 
 int JackClient::static_process(jack_nframes_t nframes, void* thisPointer)
