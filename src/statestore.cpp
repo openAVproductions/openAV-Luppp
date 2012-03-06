@@ -156,6 +156,24 @@ int StateStore::setVolume(int t, float v)
   //std::cout << "StateStore::setVolume() Track: " << t << ", linVol:" << v << "  logVol:" << logVolume << std::endl;
 }
 
+int StateStore::setSend(int t, int send, float value)
+{
+  if ( !trackCheck(t) ) {
+    std::cout << "StateStore::setSend() track OOB" << std::endl; return -1;
+  }
+  std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
+  std::advance(iter, t);
+  iter->sends = value;
+  std::cout << "New send level: " << iter->sends << "  on track " << t << std::endl;
+  
+  // FIXME
+  //EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+  //x->setTrackPan(t, v);
+  //top->toGuiQueue.push(x);
+  
+  return 0;
+}
+
 int StateStore::setPan(int t, float v)
 {
   if ( !trackCheck(t) ) {
