@@ -42,7 +42,7 @@ GSends::GSends(Top* t, GuiStateStore* s)
   signal_button_release_event().connect(sigc::mem_fun(*this, &GSends::on_button_release_event) );
   signal_motion_notify_event().connect( sigc::mem_fun( *this, &GSends::onMouseMove ) );
   
-  set_size_request(74,102);
+  set_size_request(74,39);
 }
 
 bool GSends::redraw()
@@ -89,7 +89,13 @@ bool GSends::on_expose_event(GdkEventExpose* event)
     cr->rectangle(0, 0, 74, 102);
     cr->fill();
     
-    Dial(cr, true, 7, 4, state->sends, DIAL_MODE_SEND);
+    Dial(cr, true, 7, 0, state->sends, DIAL_MODE_SEND);
+    
+    // Dial text "A"
+    cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_NORMAL);
+    cr->set_font_size ( 23 );
+    cr->move_to ( 49, 28);
+    cr->show_text ( "A" );
     
     if ( state->selected )
     {
