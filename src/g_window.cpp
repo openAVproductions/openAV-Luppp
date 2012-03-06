@@ -345,6 +345,11 @@ int Window::handleEvent()
       std::advance(i,e->ia);
       (*i)->redraw();
     }
+    else if ( e->type == EE_TRACK_SET_SEND_VOLUME ) {
+      cout << "GUI got SEND" << endl;
+      guiState.trackoutputState.at(e->ia).sends = e->fa;
+      sendsList.at( e->ia )->queue_draw();
+    }
     else if ( e->type == EE_TRACK_SET_MUTE ) {
       //std::cout << "GUI MUTE event: " << e->ib << std::endl;
       guiState.trackoutputState.at(e->ia).mute = e->ib;

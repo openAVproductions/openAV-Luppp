@@ -223,6 +223,7 @@ int JackClient::processRtQueue()
     }
     else if ( e->type == EE_TRACK_SET_SEND_VOLUME ) {
       cout << "JC::RTQ() Got send volume! Send: " << e->ia << "  Vol: " << e->ib << endl;
+      top->state.setSend( e->ia, 0, e->fa );
     }
     else if ( e->type == EE_TRACK_SET_MUTE ) {
       top->state.setMute( e->ia, e->ib );
@@ -851,12 +852,7 @@ void JackClient::apcRead( int nframes )
           case APC_TRACK_CONTROL_MODE_SEND_A:
             value = b3 / 127.f;
             std::cout << "Track Control: SEND A:  trackID: " << trackID << "  value " << value << std::endl;
-            
-            cout << " clipSelectorState->playing " << playingScene << endl;
-            if ( playingScene < 0 )
-              return;
-            
-            clipIter->speed = 0.5 + value;
+            top->state.setSend( trackID, 0, value ); // 0 = send A
             
             break;
           case APC_TRACK_CONTROL_MODE_SEND_B:

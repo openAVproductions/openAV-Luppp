@@ -164,12 +164,12 @@ int StateStore::setSend(int t, int send, float value)
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
   iter->sends = value;
-  std::cout << "New send level: " << iter->sends << "  on track " << t << std::endl;
+  //std::cout << "New send level: " << iter->sends << "  on track " << t << std::endl;
   
-  // FIXME
-  //EngineEvent* x = top->toEngineEmptyEventQueue.pull();
-  //x->setTrackPan(t, v);
-  //top->toGuiQueue.push(x);
+  // to GUI
+  EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+  x->setTrackSend(t, send, value);
+  top->toGuiQueue.push(x);
   
   return 0;
 }
