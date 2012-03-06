@@ -92,8 +92,8 @@ bool GSends::on_expose_event(GdkEventExpose* event)
     Dial(cr, true, 7, 0, state->sends, DIAL_MODE_SEND);
     
     // Dial text "A"
-    cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_NORMAL);
-    cr->set_font_size ( 23 );
+    cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_BOLD);
+    cr->set_font_size ( 20 );
     cr->move_to ( 49, 28);
     cr->show_text ( "A" );
     
@@ -128,11 +128,12 @@ bool GSends::on_button_press_event(GdkEventButton* event)
       mouseX = event->x;
       mouseY = event->y;
       
+      /*
       float volume = 1 - ((event->y-4) / 94.f);
       EngineEvent* x = new EngineEvent();
       x->setMixerVolume(ID, volume);
       top->toEngineQueue.push(x);
-      
+      */
     }
   }
   

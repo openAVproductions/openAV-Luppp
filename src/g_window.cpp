@@ -469,9 +469,17 @@ int Window::handleEvent()
       
       if ( e->ia < guiState.trackoutputState.size() )
       {
+        int oldSelectedTrack = 0;
+        
         // iter over all other tracks, and unset "selected"
         for ( int i = 0; i < guiState.trackoutputState.size(); i++)
-          guiState.trackoutputState.at(i).selected = false;
+        {
+          if ( guiState.trackoutputState.at(i).selected )
+          {
+            guiState.trackoutputState.at(i).selected = false;
+            oldSelectedTrack = i;
+          }
+        }
         
         guiState.trackoutputState.at(e->ia).selected = true;
         guiState.trackoutputState.at(e->ia).selectedDevice = e->ib;
@@ -487,6 +495,9 @@ int Window::handleEvent()
         i = trackoutputList.begin();
         std::advance(i,e->ia);
         (*i)->redraw();
+        
+        sendsList.at(oldSelectedTrack)->queue_draw();
+        sendsList.at(e->ia)->queue_draw();
         
         // keep the new currentEffectsTrack & previousEffectsTrack
         previousEffectsTrack = currentEffectsTrack;

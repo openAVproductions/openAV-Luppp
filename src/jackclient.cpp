@@ -812,9 +812,21 @@ void JackClient::apcRead( int nframes )
     // apc 40 track control mode buttons
     if ( b1 == 144 && (b2 >= 87 && b2 < 91) )
     {
+      int trackID = b1 - 144;
+      
       std::cout << "Apc Track Control Mode = " << b2 << "\t";
-      if ( b2 == APC_TRACK_CONTROL_MODE_PAN)   { std::cout << "PAN" << std::endl; }
-      if ( b2 == APC_TRACK_CONTROL_MODE_SEND_A){ std::cout << "A" << std::endl; }
+      if ( b2 == APC_TRACK_CONTROL_MODE_PAN )
+      {
+        std::cout << "PAN" << std::endl;
+        TrackOutputState* state = top->state.getAudioSinkOutput(trackID);
+        writeMidi( apcOutputBuffer, 176, 48 + trackID, ( ((state->pan + 1) / 2.f ) * 127.f ) );
+      }
+      if ( b2 == APC_TRACK_CONTROL_MODE_SEND_A)
+      {
+        std::cout << "A" << std::endl;
+        TrackOutputState* state = top->state.getAudioSinkOutput(trackID);
+        writeMidi( apcOutputBuffer, 176, 48 + trackID, (state->sends * 127.f) );
+      }
       if ( b2 == APC_TRACK_CONTROL_MODE_SEND_B){ std::cout << "B" << std::endl; }
       if ( b2 == APC_TRACK_CONTROL_MODE_SEND_C){ std::cout << "C" << std::endl; }
       
