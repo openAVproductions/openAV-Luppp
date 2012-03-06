@@ -173,6 +173,8 @@ JackClient::JackClient( Top* t) :
   
   jack_transport_start(client);
   
+  jack_transport_locate( client, 0);
+  
 }
 
 int JackClient::timebase(jack_transport_state_t state, jack_nframes_t nframes, jack_position_t *pos, int new_pos, void *arg)
