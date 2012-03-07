@@ -133,7 +133,7 @@ JackClient::JackClient( Top* t) :
                                     0 );
   
   
-  trackControlMode = -1;
+  trackControlMode = APC_TRACK_CONTROL_MODE_SEND_A;
   apcInputPort = jack_port_register ( client,
                                     "apc_input",
                                     JACK_DEFAULT_MIDI_TYPE,
@@ -873,14 +873,22 @@ void JackClient::apcRead( int nframes )
       if ( b2 == APC_TRACK_CONTROL_MODE_PAN )
       {
         std::cout << "PAN" << std::endl;
-        TrackOutputState* state = top->state.getAudioSinkOutput(trackID);
-        writeMidi( apcOutputBuffer, 176, 48 + trackID, ( ((state->pan + 1) / 2.f ) * 127.f ) );
+        
+        // loop over 8 controls
+        for ( int i = 0; i < 8; i++ )
+        {
+          TrackOutputState* state = top->state.getAudioSinkOutput(i);
+          writeMidi( apcOutputBuffer, 176, 48 + i, ( ((state->pan + 1) / 2.f ) * 127.f ) );
+        }
       }
       if ( b2 == APC_TRACK_CONTROL_MODE_SEND_A)
       {
-        std::cout << "A" << std::endl;
-        TrackOutputState* state = top->state.getAudioSinkOutput(trackID);
-        writeMidi( apcOutputBuffer, 176, 48 + trackID, (state->sends * 127.f) );
+        // loop over 8 controls
+        for ( int i = 0; i < 8; i++ )
+        {
+          TrackOutputState* state = top->state.getAudioSinkOutput(i);
+          writeMidi( apcOutputBuffer, 176, 48 + i, (state->sends * 127.f) );
+        }
       }
       if ( b2 == APC_TRACK_CONTROL_MODE_SEND_B){ std::cout << "B" << std::endl; }
       if ( b2 == APC_TRACK_CONTROL_MODE_SEND_C){ std::cout << "C" << std::endl; }
