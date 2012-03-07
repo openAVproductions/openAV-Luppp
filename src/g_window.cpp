@@ -608,7 +608,6 @@ int Window::handleEvent()
       
       cout << "Set new VALUE widget UID = " << UID << endl;
       guiState.effectState.at(UID).values[e->ic] = e->fa;
-      
       effectVector.at(UID)->queue_draw();
       
       std::cout << "Plugin Param done" << endl;
@@ -651,8 +650,6 @@ int Window::handleEvent()
         // add the new widget to the box
         effectTrackBoxVector.at(track)->add( *effectVector.back() );
         effectTrackBoxVector.at(track)->show_all();
-        
-        currentEffectsTrack = e->ia;
       }
       
       cout << " EE_STATE_NEW_EFFECT handling done, now processing other Events" << endl;
