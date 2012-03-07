@@ -120,7 +120,6 @@ class Window
     
     // holder for other elements
     //std::vector<GTrack> trackVector;
-    
     std::vector<Gtk::Widget*> effectVector;
     
     // lists of widgets

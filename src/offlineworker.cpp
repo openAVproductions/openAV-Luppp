@@ -91,9 +91,9 @@ int OfflineWorker::createNewEffect(int t, int pos, int typeInt )
   
   if ( effect )
   {
-    //cout << "OfflineWorker::createNewEffect() writing EE_STATE_NEW_EFFECT" << endl;
+    cout << "OfflineWorker::createNewEffect() writing EE_STATE_NEW_EFFECT" << endl;
     EngineEvent* x = new EngineEvent();
-    x->setStateEffect(t,pos,typeInt,effect);
+    x->setStateEffect( effect->getID(),  t,pos,typeInt,effect);
     top->toEngineQueue.push(x);
   }
   
