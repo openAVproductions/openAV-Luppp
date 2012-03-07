@@ -29,6 +29,9 @@ class Top;
 #include "audiosink.hpp"
 #include "audiosource.hpp"
 
+// for processing multiple ins / outs
+#include "porttypes.hpp"
+
 class AudioTrack
 {
   public:
@@ -38,7 +41,7 @@ class AudioTrack
     int setSource( AudioSource* );
     int addEffect( int, Effect* );
     
-    void process(int nframes, float* ports, float*,float*,float*,float*);
+    void process(int nframes, PortBufferList&, CopyBufferList& );
     
     int getEffectID(int pos);
   

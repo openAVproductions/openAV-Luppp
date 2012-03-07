@@ -207,10 +207,11 @@ int OfflineWorker::loadAudioBuffer( int ID, int block, std::string name)
         
         for ( int i = 0; i < numSamples; i++ )
         {
-          cout << "Checking sample " << i << "!" << endl;
+          
           if( config.lookupValue( "luppp.samplePack.s"+ toString(i) +".numBeats" , numBeats) &&
               config.lookupValue( "luppp.samplePack.s"+ toString(i) +".name"     , sampleName) )
           {
+            cout << "Checking sample " << i << "  name = " << sampleName << endl;
             if ( sampleName.compare( baseName ) == 0 ) // we have the same sample filename
             {
               cout << "Sample " <<  sampleName << " has " << numBeats << " beats." << endl;

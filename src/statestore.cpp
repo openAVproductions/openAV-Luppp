@@ -156,6 +156,24 @@ int StateStore::setVolume(int t, float v)
   //std::cout << "StateStore::setVolume() Track: " << t << ", linVol:" << v << "  logVol:" << logVolume << std::endl;
 }
 
+int StateStore::setSend(int t, int send, float value)
+{
+  if ( !trackCheck(t) ) {
+    std::cout << "StateStore::setSend() track OOB" << std::endl; return -1;
+  }
+  std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
+  std::advance(iter, t);
+  iter->sends = value;
+  //std::cout << "New send level: " << iter->sends << "  on track " << t << std::endl;
+  
+  // to GUI
+  EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+  x->setTrackSend(t, send, value);
+  top->toGuiQueue.push(x);
+  
+  return 0;
+}
+
 int StateStore::setPan(int t, float v)
 {
   if ( !trackCheck(t) ) {
@@ -280,6 +298,7 @@ void StateStore::clipSelectorQueueClip(int t, int b)
 // play it back.
 void StateStore::clipSelectorActivateClip(int t, int b)
 {
+  cout << " clipSElectorActivateClip() track: " << t << "   block " << b << endl;
   // we get a track & scene number, so we set them in the ClipSelectorState
   // later the playback will request the bufferID ClipInfo of the right position in the list
   //std::cout << "StateStore::clipSelectorActivateClip() " << t << ", " << b << endl;

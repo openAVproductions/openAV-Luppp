@@ -55,6 +55,7 @@ enum EngineEventType
   
   EE_TRACK_RMS,
   
+  EE_TRACK_SET_SEND_VOLUME,
   EE_TRACK_SET_SPEED,
   EE_TRACK_SET_PAN,
   EE_TRACK_SET_REC,
@@ -127,6 +128,7 @@ class EngineEvent
     void samplerStop          (int id);
     void samplerSetMode       (int id, int b);
     
+    void setTrackSend         (int id, int send, float v);
     void setTrackSpeed        (int id, float s);
     void setTrackPan          (int id, float p);
     void setTrackRec          (int id, int b);

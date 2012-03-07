@@ -17,39 +17,44 @@
   along with Luppp.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LUPPP_BEATSMASH
-#define LUPPP_BEATSMASH
+#ifndef LUPPP_GSENDS
+#define LUPPP_GSENDS
 
+#include <vector>
 #include <iostream>
-#include <deque>
 
-class Top;
-#include "effect.hpp"
+#include <gtkmm/drawingarea.h>
 
-class BeatSmash : public Effect
+#include "top.hpp"
+#include "g_statestore.hpp"
+#include "trackoutputstate.hpp"
+
+class GSends : public Gtk::DrawingArea
 {
   public:
-    BeatSmash(Top*, EffectType);
+    GSends(Top*,GuiStateStore*);
+    ~GSends();
     
-    void process(int nframes, float *L);
+    bool redraw();
   
   protected:
     int ID;
+    static int privateID;
+    GuiStateStore* stateStore;
+    
     Top* top;
     
-    int active;
-    int queueActive;
+    int mouseX, mouseY;
     
-    int writeIndex;
+    //Override default signal handler:
+    bool on_expose_event			(GdkEventExpose* event);
+    bool on_button_press_event(GdkEventButton* event);
+    bool on_button_release_event(GdkEventButton* event);
+    bool onMouseMove(GdkEventMotion* event);
     
-    int smashIndex;
-    
-    int nframeBeatCounter;
-    
-    // like a vector, but access from front & back is equally fast
-    std::deque<float> audioBuffer;
-    
+    // For Right-Click Actions
+    void on_menu_file_popup_edit();
+    void on_menu_file_popup_generic();
 };
 
-#endif
-
+#endif // SCENE_SELECTOR

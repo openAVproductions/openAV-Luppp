@@ -49,7 +49,6 @@ void Time::process(int frameNumber)
     //cout << "Time:P() bpm = " << bpm << "  FPB: " << framesPerBeat << "  beat: " << newBeat << " Q1: " << q1.size() << "  Q4: " << q4.size() << endl;
     beat = newBeat;
     
-    
     // always process q1 on new beat
     if ( !q1.empty() )
     {
@@ -117,6 +116,10 @@ void Time::processEngineEvent(EngineEvent* e)
     doEngineEvent(e);
     //q1.push_back(e);
   }
+  if ( e->type == EE_SCENE_NUMBER )
+  {
+    doEngineEvent(e);
+  }
 }
 
 // this function will do *all* events in a queue, and then return
@@ -138,7 +141,7 @@ void Time::doEngineEventList(std::list<EngineEvent*>& list)
 
 void Time::doEngineEvent(EngineEvent* e)
 {
-  //cout << "doEngineEvent()  type = " << e->type << endl;
+  cout << "doEngineEvent()  type = " << e->type << endl;
   switch ( e->type )
   {
     case EE_LOOPER_PROGRESS: cout << "Time::doEngineEvent() got PROGRESS!!! ERROR!" << endl;;
@@ -146,6 +149,18 @@ void Time::doEngineEvent(EngineEvent* e)
     {
       cout << "Doing SELECT BUFFER NOW! t=" << e->ia << " clip#: " << e->ib << endl;
       top->state.clipSelectorActivateClip(e->ia, e->ib);
+      break;
+    }
+    case EE_SCENE_NUMBER:
+    {
+      cout << "Doing EE_SCENE_NUMBER NOW! scene = " << e->ia << endl;
+      int block = e->ia;
+      int numTracks = top->state.getNumTracks();
+      for ( int i = 0; i < numTracks; i++)
+      {
+        cout << "EE_SCENE_NUMBER " << block << " on track " << i << endl; 
+        top->state.clipSelectorActivateClip(i, block);
+      }
       break;
     }
     case EE_TRACK_DEVICE_ACTIVE: top->state.setPluginActive(e->ia, e->ib); break;

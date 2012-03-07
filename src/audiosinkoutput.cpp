@@ -92,7 +92,7 @@ void AudioSinkOutput::process(int nframes, float* in, float *W, float *X, float 
       Z[i] += in[i] * sinElevation * logVolume;
     }
     // write to postFaderSend buffer
-    *postFaderSend++ += tmp;
+    *postFaderSend++ += tmp * state->sends;
     
     if ( state->pflEnable )
     {

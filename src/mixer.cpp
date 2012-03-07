@@ -125,14 +125,18 @@ void Mixer::process(int nframes,bool record, PortBufferList& portBufferList, Cop
     top->recordAudioQueue.push(nframes, portBufferList.inputAudio);
   }
   
+  // setup the copyBuffer list to include the Mixer owned buffers
+  copyBufferList.W = &outputW[0];
+  copyBufferList.X = &outputX[0];
+  copyBufferList.Y = &outputY[0];
+  copyBufferList.Z = &outputZ[0];
+  
   // process the entire audio chain here
   std::list<AudioTrack>::iterator iter;
   
-  //int c = 0;
   for(iter = audiotrackList.begin(); iter != audiotrackList.end(); iter++ )
   {
-    //std::cout << "Mixer:processing  Audiotrack " << c++ << std::endl;
-    iter->process( nframes, &portBufferList.inputAudio[0], &outputW[0], &outputX[0], &outputY[0], &outputZ[0]);
+    iter->process( nframes, portBufferList, copyBufferList );
   }
   
   // process master effects
@@ -158,11 +162,11 @@ void Mixer::process(int nframes,bool record, PortBufferList& portBufferList, Cop
   // now sum up the master output buffers and write them
   for(int i = 0; i < nframes; i++)
   {
-    // write values to JACK ports
-    *portBufferList.outputW++ = *outPtrW * masterVolume;
-    *portBufferList.outputX++ = *outPtrX * masterVolume;
-    *portBufferList.outputY++ = *outPtrY * masterVolume;
-    *portBufferList.outputZ++ = *outPtrZ * masterVolume;
+    // write values to JACK ports, including the return from the JACK ports
+    *portBufferList.outputW++ = (*outPtrW + *portBufferList.masterReturn[0]++ ) * masterVolume;
+    *portBufferList.outputX++ = (*outPtrX + *portBufferList.masterReturn[1]++ ) * masterVolume;
+    *portBufferList.outputY++ = (*outPtrY + *portBufferList.masterReturn[2]++ ) * masterVolume;
+    *portBufferList.outputZ++ = (*outPtrZ + *portBufferList.masterReturn[3]++ ) * masterVolume;
     
     // write headphone & postSend buffers into JACK ports
     *headphonePort++     = *headphonePflBuffer * headphonesVolume;

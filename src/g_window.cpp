@@ -329,9 +329,14 @@ int Window::handleEvent()
     }
     else if ( e->type == EE_SCENE_NUMBER ) {
       
+      int scene = e->ia;
       // harmonySeq integration: send it the scene id OSC tag
-      cout << "ClipSelector: HarmonySeq integration: Sending OSC tag # " << e->ia << " now!" << endl;
-      lo_send( lo_address_new(NULL, "7773") , "/harmonyseq/event", "i", e->ia );
+      cout << "ClipSelector: HarmonySeq integration: Sending OSC tag # " << scene << " now!" << endl;
+      
+      guiState.masterClipPlaying = scene;
+      //masterClipSelector->queue_draw();
+      
+      lo_send( lo_address_new(NULL, "7773") , "/harmonyseq/event", "i", scene );
       lo_send( lo_address_new(NULL, "7773") , "/harmonyseq/sync", "" );
       
     }
@@ -341,6 +346,11 @@ int Window::handleEvent()
       std::list<TrackOutput*>::iterator i = trackoutputList.begin();
       std::advance(i,e->ia);
       (*i)->redraw();
+    }
+    else if ( e->type == EE_TRACK_SET_SEND_VOLUME ) {
+      cout << "GUI got SEND" << endl;
+      guiState.trackoutputState.at(e->ia).sends = e->fa;
+      sendsList.at( e->ia )->queue_draw();
     }
     else if ( e->type == EE_TRACK_SET_MUTE ) {
       //std::cout << "GUI MUTE event: " << e->ib << std::endl;
@@ -469,9 +479,17 @@ int Window::handleEvent()
       
       if ( e->ia < guiState.trackoutputState.size() )
       {
+        int oldSelectedTrack = 0;
+        
         // iter over all other tracks, and unset "selected"
         for ( int i = 0; i < guiState.trackoutputState.size(); i++)
-          guiState.trackoutputState.at(i).selected = false;
+        {
+          if ( guiState.trackoutputState.at(i).selected )
+          {
+            guiState.trackoutputState.at(i).selected = false;
+            oldSelectedTrack = i;
+          }
+        }
         
         guiState.trackoutputState.at(e->ia).selected = true;
         guiState.trackoutputState.at(e->ia).selectedDevice = e->ib;
@@ -487,6 +505,9 @@ int Window::handleEvent()
         i = trackoutputList.begin();
         std::advance(i,e->ia);
         (*i)->redraw();
+        
+        sendsList.at(oldSelectedTrack)->queue_draw();
+        sendsList.at(e->ia)->queue_draw();
         
         // keep the new currentEffectsTrack & previousEffectsTrack
         previousEffectsTrack = currentEffectsTrack;
@@ -743,11 +764,15 @@ void Window::addTrack()
   effectTrackBoxVector.push_back( new Gtk::VBox() );
   mainTable->attach( *effectTrackBoxVector.back(), numTracks, numTracks+1, 4, 5);
   
+  // sends
+  sendsList.push_back( new GSends( top, &guiState ) );
+  mainTable->attach( *sendsList.back(), numTracks, numTracks+1, 5, 6 );
+  
   // fader / pan
   trackoutputList.push_back( new TrackOutput( top, &guiState ) );
   std::list<TrackOutput*>::iterator i = trackoutputList.begin();
   std::advance(i,numTracks);
-  mainTable->attach( **i, numTracks, numTracks+1, 5, 6);
+  mainTable->attach( **i, numTracks, numTracks+1, 6, 7);
   
   mainTable->show_all();
   numTracks++;

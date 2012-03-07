@@ -67,6 +67,7 @@ class StateStore
     int setPan(int,float);
     int setPanZ(int,float);
     int setVolume(int,float);
+    int setSend(int t, int send, float value);
     
     void setPluginActive(int, int);
     void setPluginParameter(int,int,float);

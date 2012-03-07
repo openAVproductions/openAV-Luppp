@@ -53,7 +53,7 @@ class GuiStateStore
     
     void addAudioBufferName(int ID, std::string name);
     
-    
+    int masterClipPlaying;
     
     std::string getLastDir();
     void setLastDir(std::string s);
