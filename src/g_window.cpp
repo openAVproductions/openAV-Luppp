@@ -460,13 +460,14 @@ int Window::handleEvent()
       (*i)->redraw();
     }
     else if ( e->type == EE_TRACK_DEVICE_ACTIVE ) {
-      std::cout << "Gui DEVICE ACTIVE   UID: " << e->ia << " value: " << e->ib << std::endl; 
+      int UID = e->ia;
+      std::cout << "Gui DEVICE ACTIVE   UID: " << UID << " value: " << e->ib << std::endl; 
       
-      if ( e->ia < guiState.effectState.size() )
+      if ( UID < guiState.effectState.size() )
       {
-        // FIXME, UID can't be used as TRACK index
-        guiState.effectState.at(e->ia).active = e->ib;
-        effectTrackBoxVector.at(e->ia)->queue_draw();
+        cout << "Set new VALUE widget UID = " << UID << endl;
+        guiState.effectState.at(UID).active = e->ib;
+        effectVector.at(UID)->queue_draw();
       }
       else
       {
