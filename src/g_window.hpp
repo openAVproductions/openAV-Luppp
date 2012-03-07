@@ -119,14 +119,20 @@ class Window
     void addEffect(EffectType);
     
     // holder for other elements
-    std::vector<GTrack> trackVector;
+    //std::vector<GTrack> trackVector;
+    std::vector<Gtk::Widget*> effectVector;
     
     // lists of widgets
     std::vector<GSends*> sendsList;
     std::list<TrackOutput*> trackoutputList;
     std::list<ClipSelector*>clipselectorList;
     
+    std::list<Gtk::Label*> tracklabelList;
+    std::vector<Gtk::Box*> effectTrackBoxVector;
     std::vector<GAudioSource*> audioSourceVector;
+    
+    std::list<Gtk::EventBox*> tracklabelBoxList;
+    
     std::list<Gtk::ComboBoxText*> trackinputList;
     std::vector<GProgress*> progressWidgetVector;
     

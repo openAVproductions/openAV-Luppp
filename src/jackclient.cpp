@@ -206,7 +206,8 @@ int JackClient::timebase(jack_transport_state_t state, jack_nframes_t nframes, j
   // set valid info
   pos->valid = JackPositionBBT;
   
-  cout << "timebase  " << bar << "  " << beat << endl;
+  //cout << "timebase  " << bar << "  " << beat << endl;
+
   
   return 0;
 }
@@ -310,16 +311,16 @@ int JackClient::processRtQueue()
     }
     else if ( e->type == EE_STATE_NEW_EFFECT ) {
       // we get an Effect*, which we need to insert track @ e->ia, pos e->ib
-      //cout << "JackClient::processRtQueue() STATE_NEW_EFFECT, ID = " << flush;
+      cout << "JackClient::processRtQueue() STATE_NEW_EFFECT, ID = " << flush;
       Effect* effect = (Effect*)e->vPtr;
-      //cout << effect->getID() << endl;
+      cout << effect->getID() << endl;
       
-      int ret = mixer.addEffect(e->ia, e->ib, effect);
+      int ret = mixer.addEffect(e->ib, e->ic, effect);
       if ( ret == 0 ) // success
       {
         //cout << "JackClient::processRtQ() Sending GUI NEW EFFECT event! track = " << e->ia << endl;
         EngineEvent* x = top->toEngineEmptyEventQueue.pull();
-        x->setStateEffect(e->ia, e->ib, (int)effect->getType(), 0 ); // vPtr = 0, don't give GUI access!
+        x->setStateEffect( e->ia, e->ib, e->ic, (int)e->fa, 0 ); // vPtr = 0, don't give GUI access!
         top->toGuiQueue.push(x);
       }
     }
@@ -867,7 +868,12 @@ void JackClient::apcRead( int nframes )
     // apc 40 track control mode buttons
     if ( b1 == 144 && (b2 >= 87 && b2 < 91) )
     {
-      int trackID = b1 - 144;
+      int numTracks = 8;
+      int stateNumTracks = top->state.getNumTracks();
+      if ( stateNumTracks < 8 )
+      {
+        numTracks = stateNumTracks;
+      }
       
       std::cout << "Apc Track Control Mode = " << b2 << "\t";
       if ( b2 == APC_TRACK_CONTROL_MODE_PAN )
@@ -875,7 +881,7 @@ void JackClient::apcRead( int nframes )
         std::cout << "PAN" << std::endl;
         
         // loop over 8 controls
-        for ( int i = 0; i < 8; i++ )
+        for ( int i = 0; i < numTracks; i++ )
         {
           TrackOutputState* state = top->state.getAudioSinkOutput(i);
           writeMidi( apcOutputBuffer, 176, 48 + i, ( ((state->pan + 1) / 2.f ) * 127.f ) );
@@ -884,7 +890,7 @@ void JackClient::apcRead( int nframes )
       if ( b2 == APC_TRACK_CONTROL_MODE_SEND_A)
       {
         // loop over 8 controls
-        for ( int i = 0; i < 8; i++ )
+        for ( int i = 0; i < numTracks; i++ )
         {
           TrackOutputState* state = top->state.getAudioSinkOutput(i);
           writeMidi( apcOutputBuffer, 176, 48 + i, (state->sends * 127.f) );
