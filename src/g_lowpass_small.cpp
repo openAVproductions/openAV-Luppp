@@ -238,51 +238,34 @@ bool GLowPassSmall::onMouseMove(GdkEventMotion* event)
 
 bool GLowPassSmall::on_button_press_event(GdkEventButton* event)
 {
-  if( event->type == GDK_BUTTON_PRESS  ) // && event->button == 3
+  if( event->type == GDK_BUTTON_PRESS && event->button == 1 )
   {
     int x = 10;
     int y = 22;
     xSize = 74;
     ySize = 38;
+  
+    std::cout << "graph area click!" << std::endl;
+    mouseDown = true; // for pointer motion "drag" operations
+    mouseDeltaX = event->x;
     
-    // graph area
-    if ( (event->x > 1) && (event->x < 74) &&
-         (event->y > 22) && (event->y < 117 ) )
-    {
-      
-      std::cout << "graph area click!" << std::endl;
-      mouseDown = true; // for pointer motion "drag" operations
-      mouseDeltaX = event->x;
-      
-      float evX = event->x;
-      // inform engine of "click" and position co-efficents as such
-      if ( evX < 30) evX = 30;
-      if ( evX > 72)evX = 72;
-      
-      EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(ID,0,0, evX / xSize );
-      top->toEngineQueue.push(x);
-      
-      int evY = event->y;
-      if (evY < 35 ) evY = 35;
-      if (evY > 103) evY = 103;
-      
-      q = evY / float(ySize);
-      //x = new EngineEvent();
-      //x->setPluginParameter(0,0,1, q );
-      //top->toEngineQueue.push(x);
-      redraw();
-    }
+    float evX = event->x;
+    // inform engine of "click" and position co-efficents as such
+    if ( evX < 30) evX = 30;
+    if ( evX > 72)evX = 72;
     
-    if ( event->y < 20 )
-    {
-      std::cout << "GLowPassSmall Enable / Disable click event, ID = " << ID << std::endl;
-      EngineEvent* x = new EngineEvent();
-      x->setTrackDeviceActive( ID, !stateStore->effectState.at(ID).active );
-      top->toEngineQueue.push(x);
-    }
+    EngineEvent* ee = new EngineEvent();
+    ee->setPluginParameter(ID,0,0, evX / xSize );
+    top->toEngineQueue.push(ee);
     
     return true; //It's been handled.
+  }
+  else if ( event->button == 3 )
+  {
+    std::cout << "GLowPassSmall Enable / Disable click event, ID = " << ID << std::endl;
+    EngineEvent* x = new EngineEvent();
+    x->setTrackDeviceActive( ID, !stateStore->effectState.at(ID).active );
+    top->toEngineQueue.push(x);
   }
   else
     return false;
