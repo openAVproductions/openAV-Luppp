@@ -42,8 +42,8 @@ GHighPass::GHighPass(Top* t, GuiStateStore* s)
   signal_button_release_event().connect(sigc::mem_fun(*this, &GHighPass::on_button_release_event) );
   signal_motion_notify_event().connect( sigc::mem_fun( *this, &GHighPass::onMouseMove ) );
   
-  set_size_request(250, 216);
-  xSize = 225;
+  set_size_request(75, 37);
+  xSize = 75;
   
   redraw();
 }
@@ -88,14 +88,14 @@ bool GHighPass::on_expose_event(GdkEventExpose* event)
     //cout << "HighPass getting state ID " << ID << endl; 
     float cutoffRangeZeroOne = stateStore->effectState.at(ID).values[0];
     
-    cutoff = (48.f / xSize) + (cutoffRangeZeroOne * 0.7541 );
+    cutoff = cutoffRangeZeroOne;
     
     bool active = stateStore->effectState.at(ID).active;
     
-    int x = 10;
-    int y = 22;
-    xSize = 225;
-    ySize = 95;
+    int x = 0;
+    int y = 0;
+    xSize = 75;
+    ySize = 37;
     
     // works but a bit simple
     cr -> move_to( x        , y         );
@@ -134,8 +134,8 @@ bool GHighPass::on_expose_event(GdkEventExpose* event)
     
     
     int startHorizontalLine = xSize* (cutoff + 0.4);
-    if ( startHorizontalLine > 235 )
-      startHorizontalLine = 235;
+    if ( startHorizontalLine > 75 )
+      startHorizontalLine = 75;
       
     cr->line_to( startHorizontalLine, y + (ySize/2) ); // horizontal line to start of curve
     
@@ -143,12 +143,12 @@ bool GHighPass::on_expose_event(GdkEventExpose* event)
     int xSize1CP2 = xSize* (cutoff +0.08);
     int xSize1End = xSize* cutoff;
     
-    if ( xSize1CP1 > 235 )
-      xSize1CP1 = 235;
-    if ( xSize1CP2 > 235 )
-      xSize1CP2 = 235;
-    if ( xSize1End > 235 )
-      xSize1End = 235;
+    if ( xSize1CP1 > 75 )
+      xSize1CP1 = 75;
+    if ( xSize1CP2 > 75 )
+      xSize1CP2 = 75;
+    if ( xSize1End > 75 )
+      xSize1End = 75;
     
     cr->curve_to( xSize1CP1, y+(ySize*0.5),   // control point 1
                   xSize1CP2, y+(ySize*0.3),   // control point 2
@@ -158,12 +158,12 @@ bool GHighPass::on_expose_event(GdkEventExpose* event)
     int xSize2CP2 = xSize* (cutoff - 0.08);
     int xSize2End = xSize* (cutoff - 0.15);
     
-    if ( xSize2CP1 > 234 )
-      xSize2CP1 = 234;
-    if ( xSize2CP2 > 234 )
-      xSize2CP2 = 234;
-    if ( xSize2End > 234 )
-      xSize2End = 234;
+    if ( xSize2CP1 > 75 )
+      xSize2CP1 = 75;
+    if ( xSize2CP2 > 75 )
+      xSize2CP2 = 75;
+    if ( xSize2End > 75 )
+      xSize2End = 75;
     
     cr->curve_to( xSize2CP1, y+(ySize*0.3),  // control point 1
                   xSize2CP2, y+(ySize*0.3), // control point 2
@@ -189,7 +189,7 @@ bool GHighPass::on_expose_event(GdkEventExpose* event)
       setColour(cr, COLOUR_ORANGE_1, 0.9 );
     else
       setColour(cr, COLOUR_GREY_1, 0.9 );
-    cr->arc( xSize*cutoff, ySize*q, 7, 0, 6.2830 );
+    cr->arc( xSize*cutoff, ySize*0.33, 7, 0, 6.2830 );
     cr->stroke();
     
     // dials
@@ -203,8 +203,6 @@ bool GHighPass::on_expose_event(GdkEventExpose* event)
     
     setColour(cr, COLOUR_GREY_2 );
     cr->stroke();
-    
-    TitleBar(cr, 0,0 , 250, 216, "Highpass", active);
     
     /*
     if ( state.selected )
@@ -234,47 +232,33 @@ bool GHighPass::onMouseMove(GdkEventMotion* event)
 {
   if ( mouseDown )
   {
-    if ( (event->x > 50) && (event->x < 216) )
+    if ( (event->x > 2) && (event->x < 73) )
     {
       EngineEvent* x = new EngineEvent();
       x->setPluginParameter(ID,0,0, event->x / xSize );
       top->toEngineQueue.push(x);
+      std::cout << "GHighPass: New cutoffFreq = " << event->x / xSize << std::endl;
     }
-    
-    /*
-    if ( (event->y > 35) && (event->y < 103) )
-    {
-      q = event->y / float(ySize);
-      EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(0,0,1, q );
-      top->toEngineQueue.push(x);
-    }
-    */
-    redraw();
-    std::cout << "GHighPass: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
   }
 }
 
 bool GHighPass::on_button_press_event(GdkEventButton* event)
 {
-  if( event->type == GDK_BUTTON_PRESS  ) // && event->button == 3
+  if( event->type == GDK_BUTTON_PRESS && event->button == 1 ) // normal click
   {
     int x = 10;
     int y = 22;
-    xSize = 225;
-    ySize = 95;
+    xSize = 75;
+    ySize = 37;
     
     // graph area
-    if ( (event->x > 10) && (event->x < 235) &&
-         (event->y > 22) && (event->y < 117 ) )
+    if ( (event->x > 0) && (event->x < 75) &&
+         (event->y > 0) && (event->y < 37 ) )
     {
       std::cout << "graph area click!" << std::endl;
       mouseDown = true; // for pointer motion "drag" operations
       
       int evX = event->x;
-      // inform engine of "click" and position co-efficents as such
-      if ( evX < 50) evX = 50;
-      if ( evX > 216)evX = 216;
       
       EngineEvent* x = new EngineEvent();
       x->setPluginParameter(ID,0,0, evX / xSize );
@@ -290,21 +274,21 @@ bool GHighPass::on_button_press_event(GdkEventButton* event)
       x->setPluginParameter(0,0,1, q );
       top->toEngineQueue.push(x);
       */
-      redraw();
-    }
-    
-    if ( event->y < 20 )
-    {
-      std::cout << "GHighPass Enable / Disable click event!" << std::endl;
-      EngineEvent* x = new EngineEvent();
-      x->setTrackDeviceActive(ID, !stateStore->effectState.at(ID).active );
-      top->toEngineQueue.push(x);
     }
     
     return true; //It's been handled.
   }
+  else if ( event->button == 3 ) // right click to enable disable
+  {
+    std::cout << "GHighPass Enable / Disable click event!" << std::endl;
+    EngineEvent* x = new EngineEvent();
+    x->setTrackDeviceActive(ID, !stateStore->effectState.at(ID).active );
+    top->toEngineQueue.push(x);
+  }
   else
+  {
     return false;
+  }
 }
 
 bool GHighPass::on_button_release_event(GdkEventButton* event)
