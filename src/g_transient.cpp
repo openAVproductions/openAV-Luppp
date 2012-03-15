@@ -47,7 +47,7 @@ GTransient::GTransient(Top* t, GuiStateStore* s)
   
   xSize = 225;
   
-  set_size_request(130, 216);
+  set_size_request(75, 37);
 }
 
 bool GTransient::redraw()

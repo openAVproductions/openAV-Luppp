@@ -20,6 +20,7 @@
 #include "g_equalizer.hpp"
 
 #include "g_widgets.hpp"
+#include "top.hpp"
 
 using namespace std;
 using namespace Luppp;
@@ -43,7 +44,7 @@ Equalizer::Equalizer(GuiStateStore* s)
   add_events(Gdk::EXPOSURE_MASK | Gdk::BUTTON_PRESS_MASK);
   signal_button_press_event().connect(sigc::mem_fun(*this, &Equalizer::on_button_press_event) );
   
-  set_size_request(250, 216);
+  set_size_request(75, 37);
 }
 
 bool Equalizer::redraw()
@@ -134,8 +135,17 @@ bool Equalizer::on_button_press_event(GdkEventButton* event)
 {
   if( event->type == GDK_BUTTON_PRESS  ) // && event->button == 3
   {
-    
-    return true; //It's been handled.
+    if ( event->button == 3 )
+    {
+      // doesn't have TOP yet
+      /*
+      std::cout << "GAmPitchShift Enable / Disable click event!" << std::endl;
+      EngineEvent* x = new EngineEvent();
+      x->setTrackDeviceActive(ID, !stateStore->effectState.at(ID).active );
+      top->toEngineQueue.push(x);
+      */
+      return true;
+    }
   }
   else
     return false;

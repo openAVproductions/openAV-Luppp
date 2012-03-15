@@ -44,7 +44,7 @@ GReverb::GReverb(Top* t, GuiStateStore* s)
   
   xSize = 110;
   
-  set_size_request(130, 216);
+  set_size_request(75, 37);
 }
 
 bool GReverb::redraw()

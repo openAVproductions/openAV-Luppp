@@ -51,7 +51,7 @@ Lv2Display::Lv2Display(Top* t, GuiStateStore* s)
   
   // for this drawingarea widget
   add_events(Gdk::EXPOSURE_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK| Gdk::POINTER_MOTION_MASK);
-  set_size_request(130, 216);
+  set_size_request(74, 37);
 }
 
 void Lv2Display::loadPlugin(std::string pluginUri)

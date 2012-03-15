@@ -40,7 +40,7 @@ namespace Luppp
      recColour  = COLOUR_ORANGE_1;
      bgColour   = COLOUR_GREY_4;
     } else if ( state == CLIP_STATE_LOADED ){
-     textColour = COLOUR_BLUE_1;
+     textColour = COLOUR_GREY_4;
      playColour = COLOUR_GREY_3;
      bgColour   = COLOUR_ORANGE_1;
     } else if ( state == CLIP_STATE_PLAYING ){
