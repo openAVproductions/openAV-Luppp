@@ -94,7 +94,7 @@ bool GHighPass::on_expose_event(GdkEventExpose* event)
     
     int x = 0;
     int y = 0;
-    xSize = 75;
+    xSize = 73;
     ySize = 37;
     
     // works but a bit simple
@@ -115,22 +115,22 @@ bool GHighPass::on_expose_event(GdkEventExpose* event)
     cr->set_dash (dashes, 0.0);
     cr->set_line_width(1.0);
     cr->set_source_rgb (0.4,0.4,0.4);
-    for ( int i = 0; i < 4; i++ )
+    for ( int i = 0; i < 3; i++ )
     {
-      cr->move_to( x + ((xSize / 4.f)*i), y );
-      cr->line_to( x + ((xSize / 4.f)*i), y + ySize );
+      cr->move_to( x + ((xSize / 3.f)*i), y );
+      cr->line_to( x + ((xSize / 3.f)*i), y + ySize );
     }
-    for ( int i = 0; i < 4; i++ )
+    for ( int i = 0; i < 3; i++ )
     {
-      cr->move_to( x       , y + ((ySize / 4.f)*i) );
-      cr->line_to( x +xSize, y + ((ySize / 4.f)*i) );
+      cr->move_to( x       , y + ((ySize / 3.f)*i) );
+      cr->line_to( x +xSize, y + ((ySize / 3.f)*i) );
     }
     cr->stroke();
     cr->unset_dash();
     
     // move to bottom left, draw line to middle left
-    cr->move_to( x + xSize , y + ySize );
-    cr->line_to( x + xSize , y + (ySize/2));
+    cr->move_to( x + xSize-2 , y + ySize );
+    cr->line_to( x + xSize-2 , y + (ySize/2));
     
     
     int startHorizontalLine = xSize* (cutoff + 0.4);
@@ -250,31 +250,15 @@ bool GHighPass::on_button_press_event(GdkEventButton* event)
     int y = 22;
     xSize = 75;
     ySize = 37;
+  
+    std::cout << "graph area click!" << std::endl;
+    mouseDown = true; // for pointer motion "drag" operations
     
-    // graph area
-    if ( (event->x > 0) && (event->x < 75) &&
-         (event->y > 0) && (event->y < 37 ) )
-    {
-      std::cout << "graph area click!" << std::endl;
-      mouseDown = true; // for pointer motion "drag" operations
-      
-      int evX = event->x;
-      
-      EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(ID,0,0, evX / xSize );
-      top->toEngineQueue.push(x);
-      
-      /*
-      int evY = event->y;
-      if (evY < 35 ) evY = 35;
-      if (evY > 103) evY = 103;
-      
-      q = evY / float(ySize);
-      x = new EngineEvent();
-      x->setPluginParameter(0,0,1, q );
-      top->toEngineQueue.push(x);
-      */
-    }
+    int evX = event->x;
+    
+    EngineEvent* ee = new EngineEvent();
+    ee->setPluginParameter(ID,0,0, evX / xSize );
+    top->toEngineQueue.push(ee);
     
     return true; //It's been handled.
   }
