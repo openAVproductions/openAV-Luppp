@@ -142,8 +142,11 @@ int StateStore::setVolume(int t, float v)
   // http://www.dr-lex.be/info-stuff/logVolumecontrols.html for info
   float volMultiplier = (float)pow( v , 3);
   
-  // apply scaling to volMultiplier, so we can amplify to +50%
-  float logVolume = volMultiplier * 2;
+  // here we can apply scaling if we want to amplify the signal, not only
+  // attenuate it. This may be a useful feature for quiet recordings, but
+  // its also quite irritating when using a control surface where the faders
+  // move swift & we just want the "full" volume, no amplification.
+  float logVolume = volMultiplier;
   
   iter->volume = logVolume;
   
