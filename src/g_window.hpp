@@ -68,6 +68,7 @@ class Window
     
     Gtk::Box* scopeBox;
     Gtk::Box* automoveBox;
+    Gtk::ComboBox* bpmBox;
     Gtk::HBox* bottomWidgetBox;
     Gtk::Box* masterClipSelectorBox;
     Gtk::EventBox* trackEffectEventBox;

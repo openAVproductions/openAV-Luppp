@@ -121,6 +121,10 @@ Window::Window(Gtk::Main *k, Top* t) :
   effectChooserBox->pack_start( effectSelector, true, true );
   effectSelector.show();
   
+  refBuilder->get_widget("bpmBox", bpmBox);
+  //bpmBox->append("Dubstep");
+  //effectSelector.show();
+  
   refBuilder->get_widget("instrumentChooserBox", instrumentChooserBox);
   instrumentChooserBox->pack_start( instrumentSelector, true, true );
   instrumentSelector.show();
