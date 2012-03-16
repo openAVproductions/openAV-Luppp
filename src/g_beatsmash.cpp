@@ -21,6 +21,8 @@
 
 #include "g_widgets.hpp"
 
+#include <sstream>
+
 using namespace std;
 using namespace Luppp;
 
@@ -40,6 +42,7 @@ GBeatSmash::GBeatSmash(Top* t, GuiStateStore* s)
   signal_motion_notify_event().connect( sigc::mem_fun( *this, &GBeatSmash::onMouseMove ) );
   
   set_size_request(74, 37);
+  xSize = 74;
 }
 
 bool GBeatSmash::redraw()
@@ -87,91 +90,61 @@ bool GBeatSmash::on_expose_event(GdkEventExpose* event)
     
     // update value from stateStore
     float delayTime = stateStore->effectState.at(ID).values[0];
-    
     bool active = stateStore->effectState.at(ID).active;
     
-    int x = 10;
-    int y = 22;
-    xSize = 110;
-    ySize = 95;
+    int x = 0;
+    int y = 0;
+    xSize = 75;
+    ySize = 35;
     
-    // works but a bit simple
+    // fill bg
     cr -> move_to( x        , y         );
     cr -> line_to( x + xSize, y         );
     cr -> line_to( x + xSize, y + ySize );
     cr -> line_to( x        , y + ySize );
     cr -> close_path();
-    
-    // Draw outline shape
     cr -> set_source_rgb (0.1,0.1,0.1);
     cr -> fill();
+    
+    // draw bar, depending on delayTime
+    if ( active )
+      setColour(cr, COLOUR_ORANGE_1 );
+    else
+      setColour(cr, COLOUR_GREY_1 );
+    cr->rectangle( 0, 8, delayTime * xSize, ySize - 16 );
+    cr->fill();
     
     // draw "guides"
     std::valarray< double > dashes(2);
     dashes[0] = 2.0;
     dashes[1] = 2.0;
     cr->set_dash (dashes, 0.0);
-    cr->set_line_width(1.0);
-    cr->set_source_rgb (0.4,0.4,0.4);
+    cr->set_line_width(2.0);
+    setColour(cr, COLOUR_GREY_4 ); // first line bg colour
+    
     for ( int i = 0; i < 4; i++ )
     {
+      setColour(cr, COLOUR_GREY_3 );
       cr->move_to( x + ((xSize / 4.f)*i), y );
       cr->line_to( x + ((xSize / 4.f)*i), y + ySize );
-    }
-    for ( int i = 0; i < 4; i++ )
-    {
-      cr->move_to( x       , y + ((ySize / 4.f)*i) );
-      cr->line_to( x +xSize, y + ((ySize / 4.f)*i) );
-    }
-    cr->stroke();
-    cr->unset_dash();
-    
-    // set colours for text
-    if ( active )
-      setColour(cr, COLOUR_BLUE_1, 0.2 );
-    else
-      setColour(cr, COLOUR_GREY_1, 0.2 );
-    cr->close_path();
-    cr->fill_preserve();
-    cr->stroke();
-    
-    /*
-    // click center ( range = 1/2 the range of the widget
-    if ( active )
-      setColour(cr, COLOUR_ORANGE_1, 0.9 );
-    else
-      setColour(cr, COLOUR_GREY_1, 0.9 );
-    float xArc = x + (xSize * 0.25) + (xSize*0.5) * thresh;
-    float yArc = y + (ySize * 0.75)  - ySize*0.5* makeupZeroOne;
-    
-    //cout << " Arc x,y : " << xArc << ", " << yArc <<endl;
-    cr->set_line_width(2.7);
-    cr->arc(xArc, yArc, 7, 0, 6.2830 );
-    cr->stroke();
-    */
-    
-    // dials
-    Dial(cr, active, 48, 125, delayTime, DIAL_MODE_NORMAL);
-    //Dial(cr, active, 48, 165, thresh       , DIAL_MODE_NORMAL);
-    
-    // outline
-    setColour(cr, COLOUR_GREY_2 );
-    cr->rectangle( x, y , xSize, ySize );
-    cr->set_line_width(4);
-    cr->stroke();
-    
-    TitleBar(cr, 0,0 , 130, 216, "Beat Smasher", active);
-    
-    /*
-    if ( state.selected )
-    {
-      cr->rectangle(0, 0, 74, 216);
-      setColour( cr, COLOUR_PURPLE_1 );
-      cr->set_line_width(1);
       cr->stroke();
+      
+      // show number of delay
+      cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_BOLD);
+      cr->set_font_size ( 12 );
+      cr->move_to ( x + 5 + ((xSize / 4.f)*i) , 4 + ySize / 2. );
+      setColour(cr, COLOUR_GREY_3 );
+      if ( active )
+        setColour(cr, COLOUR_BLUE_1 );
+      
+      stringstream s;
+      s << i + 1;
+      
+      cr->show_text ( s.str() );
+      cr->stroke();
+      setColour(cr, COLOUR_GREY_3 );
     }
-    */
-    
+    cr->unset_dash();
   }
   return true;
 }
@@ -190,96 +163,33 @@ bool GBeatSmash::onMouseMove(GdkEventMotion* event)
 {
   if ( mouseDown )
   {
-    int x = 10;
-    int y = 22;
-    if ( (event->x > x + xSize*0.25) && (event->x < x + xSize*0.75) )
-    {
-      
-      float value = (event->x - (x + xSize*0.25)) / float(xSize*0.5);
-      
-      cout << "Beatsmash Param 1 : " << value << endl;
-      
-      EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(ID, 1, 1, value);
-      top->toEngineQueue.push(x);
-    }
-    
-    if ( (event->y > y + ySize*0.25) && (event->y < y+ySize*0.75) )
-    {
-      float value = 1 - (event->y - (y + ySize*0.25)) / float(ySize*0.5);
-      
-      cout << "Beatsmash Param 0 : " << value << endl;
-      
-      EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(ID, 0, 0, value);
-      top->toEngineQueue.push(x);
-    }
-    //std::cout << "GBeatSmash: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
+    EngineEvent* ee = new EngineEvent();
+    ee->setPluginParameter(ID,0,0, event->x / xSize );
+    top->toEngineQueue.push(ee);
+    std::cout << "GBeatSmahs: New delayTime = " << event->x / xSize << std::endl;
   }
 }
 
 bool GBeatSmash::on_button_press_event(GdkEventButton* event)
 {
-  if( event->type == GDK_BUTTON_PRESS  ) // && event->button == 3
+  if( event->button == 1 )
   {
-    int x = 10;
-    int y = 22;
-    
-    // graph area
-    if ( (event->x > x) && (event->x < x + xSize) &&
-         (event->y > y) && (event->y < y + ySize ) )
-    {
-      
-      std::cout << "graph area click!" << std::flush;
-      mouseDown = true; // for pointer motion "drag" operations
-      
-      cout << " x before = " << event->x;
-      
-      // clamp click coords to acceptable grid, then send EE
-      if ( event->x < x + (xSize*0.25)){
-        cout << "  X smaller than! Clipping  ";
-        event->x = x + xSize*0.25;
-      }
-      else if (event->x > x + xSize*0.75) {
-        event->x = x + xSize*0.75;
-      }
-      
-      cout << "  x afterClip = " << event->x;
-      
-      float limit = ((event->x - (x + xSize*0.25)) / float(xSize*0.5));
-      cout << "  final Limiter Clicked Limit : " << limit << endl;
+      float gain = event->x / xSize;
+      cout << "GBeatsmash Clicked level: " << gain << endl;
       EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(ID, 1, 1, limit );
-      top->toEngineQueue.push(x);
-      
-      
-      if (event->y < y + ySize*0.25) {
-        event->y = y + ySize*0.25;
-      }
-      else if (event->y > y+ySize*0.75 ) {
-        event->y = y + ySize*0.75;
-      }
-    
-      float gain = 1 - (event->y - (y + ySize*0.25)) / float(ySize*0.5);
-      cout << "Limiter Clicked gain : " << gain << endl;
-      x = new EngineEvent();
       x->setPluginParameter(ID, 0, 0, gain);
       top->toEngineQueue.push(x);
-      
-    }
-    
-    if ( event->y < 20 )
-    {
-      std::cout << "GBeatSmash Enable / Disable click event!" << std::endl;
-      EngineEvent* x = new EngineEvent();
-      x->setTrackDeviceActive(ID, !stateStore->effectState.at(ID).active );
-      top->toEngineQueue.push(x);
-    }
-    
-    return true; //It's been handled.
+      mouseDown = true;
   }
-  else
-    return false;
+  else if ( event->button == 3 ) // right click to enable disable
+  {
+    std::cout << "GBeatsmash Enable / Disable click event!" << std::endl;
+    EngineEvent* x = new EngineEvent();
+    x->setTrackDeviceActive(ID, !stateStore->effectState.at(ID).active );
+    top->toEngineQueue.push(x);
+  }
+  
+  return false;
 }
 
 bool GBeatSmash::on_button_release_event(GdkEventButton* event)
