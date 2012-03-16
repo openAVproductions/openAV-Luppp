@@ -59,7 +59,7 @@ class StateStore
     void addEffect(int t, int p, Effect* e);
     
     // to be called whenever we want a new "EffectState" added to the list
-    void addEffectState(int ID);
+    void addEffectState(EffectState*);
     
     int setMute(int,int);
     int setSolo(int,int);

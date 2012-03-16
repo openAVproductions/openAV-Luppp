@@ -148,7 +148,7 @@ class EngineEvent
     void sendAllPan           ();
     
     void setStateAudioBuffer  (void*);
-    void setStateEffect       (int UID, int track, int pos, int type, void* efctPtr);
+    void setStateEffect       (int UID, int track, int pos, int type, void* efctPtr, void* efctStatePtr);
 
     
     // never called from a RT context, so strdup is safe

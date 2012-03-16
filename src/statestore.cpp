@@ -97,11 +97,11 @@ AudioBuffer* StateStore::getAudioBuffer(int ID)
   return 0;
 }
 
-void StateStore::addEffectState(int ID)
+void StateStore::addEffectState(EffectState* newEffectState)
 {
-  cout << "StateStore::addEffectState()  ID = " << ID << endl;
+  cout << "StateStore::addEffectState()  ID = " << newEffectState->ID << endl;
   // store the new ID in the EffectState, so it can be retrieved later
-  effectStateList.push_back ( new EffectState( ID ) );
+  effectStateList.push_back( newEffectState );
 }
 
 // this function takes the UniqueID of the Effect, and returns the corresponding

@@ -66,7 +66,7 @@ void EngineEvent::setMixerVolume       (int id, float v) { ia = id; fa = v; type
 void EngineEvent::sendAllPan           () { type = EE_SEND_ALL_PAN; }
 
 
-void EngineEvent::setStateEffect       (int UID, int track, int pos, int et, void* efctPtr){ ia = UID; ib = track; ic = pos; fa = et; vPtr = efctPtr; type = EE_STATE_NEW_EFFECT; }
+void EngineEvent::setStateEffect       (int UID, int track, int pos, int et, void* efctPtr, void* efctStatePtr){ ia = UID; ib = track; ic = pos; fa = et; vPtr = efctPtr; vPtr2 = efctStatePtr; type = EE_STATE_NEW_EFFECT; }
 void EngineEvent::setStateAudioBuffer  (void* bufPtr) { vPtr = (void*) bufPtr; type = EE_STATE_SET_AUDIO_BUFFER; }
 
 // never called from a RT context, so strdup is safe
