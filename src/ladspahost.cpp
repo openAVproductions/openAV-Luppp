@@ -46,6 +46,8 @@ LadspaHost::LadspaHost(Top* t,EffectType et, int s) : Effect(t, et)
   type = et;
   active = 1;
   
+  queueResetParameters = true;
+  
   descriptor = 0; // ladspa_descriptor*
   
   pluginSoIndex = 0;
@@ -64,8 +66,6 @@ LadspaHost::LadspaHost(Top* t,EffectType et, int s) : Effect(t, et)
     default: std::cout << "LadspaHost() got unknown effect type!" << std::endl; break;
   }
   
-  cout << "Resetting LADSPA parameters" << endl;
-  resetParameters();
   
   // load the plugin file, using Glib::Module
   bool fileExists = Glib::file_test ( pluginString, Glib::FILE_TEST_EXISTS);
@@ -271,6 +271,14 @@ void LadspaHost::process(int nframes, float* buffer)
   if ( descriptor == 0 )
   {
     //cout << "LadspaHost::descriptor == 0" << endl;
+  }
+  
+  if ( queueResetParameters )
+  {
+    // needed as when we create an effect we can't call into the
+    // engine statestore, because we're in the GUI thread 
+    resetParameters();
+    queueResetParameters = false;
   }
   
   if ( !active )

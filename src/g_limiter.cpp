@@ -40,6 +40,7 @@ GLimiter::GLimiter(Top* t, GuiStateStore* s)
   signal_motion_notify_event().connect( sigc::mem_fun( *this, &GLimiter::onMouseMove ) );
   
   set_size_request(75, 37);
+  xSize = 75;
 }
 
 bool GLimiter::redraw()
@@ -88,18 +89,15 @@ bool GLimiter::on_expose_event(GdkEventExpose* event)
     // update value from stateStore
     float makeupZeroOne = stateStore->effectState.at(ID).values[0];
     float thresh = stateStore->effectState.at(ID).values[1];
-    
-    cout << "Limiter effectState[0] = " << stateStore->effectState.at(ID).values[0] << endl;
-    
     float ratio = 1.f; // hack on compressor code, will be "inf" compression
     float makeup = (makeupZeroOne) * (ySize * 0.5);
     
     bool active = stateStore->effectState.at(ID).active;
     
-    int x = 10;
-    int y = 22;
-    xSize = 110;
-    ySize = 95;
+    int x = 0;
+    int y = 0;
+    xSize = 75;
+    ySize = 37;
     
     // works but a bit simple
     cr -> move_to( x        , y         );
@@ -119,15 +117,15 @@ bool GLimiter::on_expose_event(GdkEventExpose* event)
     cr->set_dash (dashes, 0.0);
     cr->set_line_width(1.0);
     cr->set_source_rgb (0.4,0.4,0.4);
-    for ( int i = 0; i < 4; i++ )
+    for ( int i = 0; i < 3; i++ )
     {
-      cr->move_to( x + ((xSize / 4.f)*i), y );
-      cr->line_to( x + ((xSize / 4.f)*i), y + ySize );
+      cr->move_to( x + ((xSize / 3.f)*i), y );
+      cr->line_to( x + ((xSize / 3.f)*i), y + ySize );
     }
-    for ( int i = 0; i < 4; i++ )
+    for ( int i = 0; i < 3; i++ )
     {
-      cr->move_to( x       , y + ((ySize / 4.f)*i) );
-      cr->line_to( x +xSize, y + ((ySize / 4.f)*i) );
+      cr->move_to( x       , y + ((ySize / 3.f)*i) );
+      cr->line_to( x +xSize, y + ((ySize / 3.f)*i) );
     }
     cr->stroke();
     cr->unset_dash();
@@ -181,6 +179,8 @@ bool GLimiter::on_expose_event(GdkEventExpose* event)
       setColour(cr, COLOUR_GREY_1 );
     cr->stroke();
     
+    // the following draws the "threshold" as a red dotted line across the widget
+    /*
     // draw threshold as dotted orange line across widget
     cr->move_to(x, y+ ySize*0.25 + ySize*0.5*(1-thresh));
     cr->line_to(x + xSize, y+ ySize*0.25 + ySize*0.5 * (1-thresh) );
@@ -196,6 +196,7 @@ bool GLimiter::on_expose_event(GdkEventExpose* event)
     cr->set_line_width(1.7);
     cr->stroke();
     cr->unset_dash();
+    */
     
     // gain line can go beyond the "graph area", and it would be hard to
     // clip values the right amout with the curve. Instead just cover it
@@ -210,14 +211,11 @@ bool GLimiter::on_expose_event(GdkEventExpose* event)
       setColour(cr, COLOUR_ORANGE_1, 0.9 );
     else
       setColour(cr, COLOUR_GREY_1, 0.9 );
-    float xArc = x + (xSize * 0.25) + (xSize*0.5) * thresh;
-    float yArc = y + (ySize * 0.75)  - ySize*0.5* makeupZeroOne;
-    
-    //cout << " Arc x,y : " << xArc << ", " << yArc <<endl;
     cr->set_line_width(2.7);
-    cr->arc(xArc, yArc, 7, 0, 6.2830 );
+    cr->arc( makeupZeroOne * xSize , ySize / 2.f, 7, 0, 6.2830 );
     cr->stroke();
     
+    /*
     // dials
     Dial(cr, active, 48, 125, makeupZeroOne, DIAL_MODE_NORMAL);
     Dial(cr, active, 48, 165, thresh       , DIAL_MODE_NORMAL);
@@ -227,8 +225,9 @@ bool GLimiter::on_expose_event(GdkEventExpose* event)
     cr->rectangle( x, y , xSize, ySize );
     cr->set_line_width(4);
     cr->stroke();
+    */
     
-    TitleBar(cr, 0,0 , 130, 216, "Limiter", active);
+    //TitleBar(cr, 0,0 , 130, 216, "Limiter", active);
     
     /*
     if ( state.selected )
@@ -258,96 +257,35 @@ bool GLimiter::onMouseMove(GdkEventMotion* event)
 {
   if ( mouseDown )
   {
-    int x = 10;
-    int y = 22;
-    if ( (event->x > x + xSize*0.25) && (event->x < x + xSize*0.75) )
-    {
-      
-      float gain = (event->x - (x + xSize*0.25)) / float(xSize*0.5);
-      
-      cout << "Limiter Gain : " << gain << endl;
-      
-      EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(ID, 1, 1, gain);
-      top->toEngineQueue.push(x);
-    }
-    
-    if ( (event->y > y + ySize*0.25) && (event->y < y+ySize*0.75) )
-    {
-      float limit = 1 - (event->y - (y + ySize*0.25)) / float(ySize*0.5);
-      
-      cout << "Limiter limit : " << limit << endl;
-      
-      EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(ID, 0, 0, limit);
-      top->toEngineQueue.push(x);
-    }
+    float gain = event->x / xSize;
+    cout << "GLimiter moved gain : " << gain << endl;
+    EngineEvent* x = new EngineEvent();
+    x->setPluginParameter(ID, 0, 0, gain);
+    top->toEngineQueue.push(x);
     //std::cout << "GLimiter: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
   }
 }
 
 bool GLimiter::on_button_press_event(GdkEventButton* event)
 {
-  if( event->type == GDK_BUTTON_PRESS  ) // && event->button == 3
+  if( event->button == 1 )
   {
-    int x = 10;
-    int y = 22;
-    
-    // graph area
-    if ( (event->x > x) && (event->x < x + xSize) &&
-         (event->y > y) && (event->y < y + ySize ) )
-    {
-      
-      std::cout << "graph area click!" << std::flush;
-      mouseDown = true; // for pointer motion "drag" operations
-      
-      cout << " x before = " << event->x;
-      
-      // clamp click coords to acceptable grid, then send EE
-      if ( event->x < x + (xSize*0.25)){
-        cout << "  X smaller than! Clipping  ";
-        event->x = x + xSize*0.25;
-      }
-      else if (event->x > x + xSize*0.75) {
-        event->x = x + xSize*0.75;
-      }
-      
-      cout << "  x afterClip = " << event->x;
-      
-      float limit = ((event->x - (x + xSize*0.25)) / float(xSize*0.5));
-      cout << "  final Limiter Clicked Limit : " << limit << endl;
-      EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(ID, 1, 1, limit );
-      top->toEngineQueue.push(x);
-      
-      
-      if (event->y < y + ySize*0.25) {
-        event->y = y + ySize*0.25;
-      }
-      else if (event->y > y+ySize*0.75 ) {
-        event->y = y + ySize*0.75;
-      }
-    
-      float gain = 1 - (event->y - (y + ySize*0.25)) / float(ySize*0.5);
-      cout << "Limiter Clicked gain : " << gain << endl;
-      x = new EngineEvent();
-      x->setPluginParameter(ID, 0, 0, gain);
-      top->toEngineQueue.push(x);
-      
-    }
-    
-    if ( event->y < 20 )
-    {
-      std::cout << "GLimiter Enable / Disable click event!" << std::endl;
-      EngineEvent* x = new EngineEvent();
-      x->setTrackDeviceActive(ID, !stateStore->effectState.at(ID).active );
-      top->toEngineQueue.push(x);
-    }
-    
-    return true; //It's been handled.
+    float gain = event->x / xSize;
+    cout << "GLimiter Clicked gain : " << gain << endl;
+    EngineEvent* x = new EngineEvent();
+    x->setPluginParameter(ID, 0, 0, gain);
+    top->toEngineQueue.push(x);
+    mouseDown = true;
   }
-  else
-    return false;
+  else if ( event->button == 3 )
+  {
+    std::cout << "GLimiter Enable / Disable click event!" << std::endl;
+    EngineEvent* x = new EngineEvent();
+    x->setTrackDeviceActive(ID, !stateStore->effectState.at(ID).active );
+    top->toEngineQueue.push(x);
+  }
+  
+  return true;
 }
 
 bool GLimiter::on_button_release_event(GdkEventButton* event)

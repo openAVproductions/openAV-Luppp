@@ -60,6 +60,7 @@ class LadspaHost : public Effect
     EffectType type;
     
     bool hasRunAdding;
+    bool queueResetParameters;
     
     int active;
     
