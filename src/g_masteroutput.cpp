@@ -226,8 +226,29 @@ bool GMasterOutput::on_expose_event(GdkEventExpose* event)
     bool pfl = headphonePflSelect;
     
     // headphone monitoring system
-    Solo(cr, 100, 80, 0,  pfl ); // solo button
-    Solo(cr, 125, 80, 0, !pfl ); // solo button
+    
+    setColour(cr, COLOUR_BLUE_1, 0.2);
+    cr->rectangle( 100, 75, 20, 20 );
+    cr->fill_preserve();
+    setColour(cr, COLOUR_BLUE_1);
+    cr->stroke();
+    
+    cr->move_to( 105, 80 );
+    cr->line_to( 115, 85 );
+    cr->line_to( 105, 90 );
+    cr->close_path();
+    cr->fill();
+    
+    setColour(cr, COLOUR_RECORD_RED, 0.2);
+    cr->rectangle( 125, 75, 20, 20 );
+    cr->fill_preserve();
+    setColour(cr, COLOUR_RECORD_RED);
+    cr->stroke();
+    
+    //setColour(cr, COLOUR_BACKGROUND );
+    cr->arc( 135, 85, 5, 0, 6.282);
+    cr->fill();
+    
     
     headphoneImage->render_to_drawable(	get_window() ,
                                         get_style()->get_black_gc(),
@@ -306,31 +327,22 @@ bool GMasterOutput::on_button_press_event(GdkEventButton* event)
     cout << "Click volume : " << volume << endl;
     redraw();
   }
-  else if ( event->x > 100 && event->x < 150 &&
-            event->y >  80 && event->y <  95 )
+  else if ( event->x > 100 && event->x < 120 &&
+            event->y >  75 && event->y <  95 )
   {
-    cout << "HEADPHONE_SELECT clicked" << endl;
-    clickedWidget = CLICKED_WIDGET_HEADPHONE_SELECT;
-    headphonePflSelect = !headphonePflSelect;
-    
-    
-    // take snapshot of track
-    if ( headphonePflSelect )
-    {
-      cout << "SNAPSHOT TAKE" << endl;
-      EngineEvent* x = new EngineEvent();
-      x->setTrackBacktrackTake(0);
-      top->toEngineQueue.push(x);
-    }
-    else // restore snapshot of track
-    {
-      cout << "SNAPSHOT RESTORE" << endl;
-      EngineEvent* x = new EngineEvent();
-      x->setTrackBacktrackRestore(0);
-      top->toEngineQueue.push(x);
-    }
-    
-    redraw();
+    cout << "SNAPSHOT RESTORE" << endl;
+    EngineEvent* x = new EngineEvent();
+    x->setTrackBacktrackRestore(0);
+    top->toEngineQueue.push(x);
+  }
+  else if ( event->x > 125 && event->x < 145 &&
+            event->y >  75 && event->y <  95 )
+  {
+    // Restore snapshot button clicked
+    cout << "Restore Snapshot clicked" << endl;
+    EngineEvent* x = new EngineEvent();
+    x->setTrackBacktrackTake(0);
+    top->toEngineQueue.push(x);
   }
   else if ( event->x >   7 && event->x <  97 &&
             event->y >   7 && event->y <  97 )
