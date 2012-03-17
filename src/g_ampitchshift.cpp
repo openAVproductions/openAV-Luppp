@@ -86,14 +86,15 @@ bool GAmPitchShift::on_expose_event(GdkEventExpose* event)
     }
     
     // update value from stateStore
-    float delayTime = stateStore->effectState.at(ID).values[0];
+    float shift = 1 - stateStore->effectState.at(ID).values[0];
+    
     
     bool active = stateStore->effectState.at(ID).active;
     
-    int x = 10;
-    int y = 22;
-    xSize = 110;
-    ySize = 95;
+    int x = 0;
+    int y = 0;
+    xSize = 75;
+    ySize = 37;
     
     // works but a bit simple
     cr -> move_to( x        , y         );
@@ -113,54 +114,72 @@ bool GAmPitchShift::on_expose_event(GdkEventExpose* event)
     cr->set_dash (dashes, 0.0);
     cr->set_line_width(1.0);
     cr->set_source_rgb (0.4,0.4,0.4);
-    for ( int i = 0; i < 4; i++ )
+    for ( int i = 0; i < 3; i++ )
     {
-      cr->move_to( x + ((xSize / 4.f)*i), y );
-      cr->line_to( x + ((xSize / 4.f)*i), y + ySize );
+      cr->move_to( x + ((xSize / 3.f)*i), y );
+      cr->line_to( x + ((xSize / 3.f)*i), y + ySize );
     }
-    for ( int i = 0; i < 4; i++ )
+    for ( int i = 0; i < 3; i++ )
     {
-      cr->move_to( x       , y + ((ySize / 4.f)*i) );
-      cr->line_to( x +xSize, y + ((ySize / 4.f)*i) );
+      cr->move_to( x       , y + ((ySize / 3.f)*i) );
+      cr->line_to( x +xSize, y + ((ySize / 3.f)*i) );
     }
     cr->stroke();
     cr->unset_dash();
     
-    // set colours for text
+    // vertical pitch change blocks
+    cr->set_line_width(1.8);
     if ( active )
       setColour(cr, COLOUR_BLUE_1, 0.2 );
     else
       setColour(cr, COLOUR_GREY_1, 0.2 );
+    
+    // left block
+    cr->move_to(           0, ySize / 2.f );
+    cr->line_to( xSize / 2.f, ySize / 2.f );
+    cr->line_to( xSize / 2.f, ySize / 2.f + ((0.5-shift)*ySize) );
+    cr->line_to(           0, ySize / 2.f + ((0.5-shift)*ySize) );
     cr->close_path();
+    
+    // right block
+    cr->move_to( xSize / 2.f, ySize / 2.f );
+    cr->line_to( xSize      , ySize / 2.f );
+    cr->line_to( xSize      , ySize / 2.f - ((0.5-shift)*ySize) );
+    cr->line_to( xSize / 2.f, ySize / 2.f - ((0.5-shift)*ySize) );
+    cr->close_path();
+    
+    //cr->rectangle( xSize/4.f, ySize/2.f, xSize / 2.f, shift*ySize/2.f);
     cr->fill_preserve();
+    if ( active )
+      setColour(cr, COLOUR_BLUE_1 );
+    else
+      setColour(cr, COLOUR_GREY_1 );
     cr->stroke();
     
-    /*
-    // click center ( range = 1/2 the range of the widget
+    // click center
     if ( active )
       setColour(cr, COLOUR_ORANGE_1, 0.9 );
     else
       setColour(cr, COLOUR_GREY_1, 0.9 );
-    float xArc = x + (xSize * 0.25) + (xSize*0.5) * thresh;
-    float yArc = y + (ySize * 0.75)  - ySize*0.5* makeupZeroOne;
     
-    //cout << " Arc x,y : " << xArc << ", " << yArc <<endl;
     cr->set_line_width(2.7);
-    cr->arc(xArc, yArc, 7, 0, 6.2830 );
+    cr->arc( (xSize/2.f) + ((0.5-shift) * xSize)  , ySize / 2.f, 7, 0, 6.2830 );
     cr->stroke();
-    */
+    
     
     // dials
-    Dial(cr, active, 48, 125, delayTime, DIAL_MODE_NORMAL);
+    //Dial(cr, active, 48, 125, delayTime, DIAL_MODE_NORMAL);
     //Dial(cr, active, 48, 165, thresh       , DIAL_MODE_NORMAL);
     
     // outline
+    /*
     setColour(cr, COLOUR_GREY_2 );
     cr->rectangle( x, y , xSize, ySize );
     cr->set_line_width(4);
     cr->stroke();
+    */
     
-    TitleBar(cr, 0,0 , 130, 216, "Pitch Shifter", active);
+    //TitleBar(cr, 0,0 , 130, 216, "Pitch Shifter", active);
     
     /*
     if ( state.selected )
@@ -190,96 +209,35 @@ bool GAmPitchShift::onMouseMove(GdkEventMotion* event)
 {
   if ( mouseDown )
   {
-    int x = 10;
-    int y = 22;
-    if ( (event->x > x + xSize*0.25) && (event->x < x + xSize*0.75) )
-    {
-      
-      float value = (event->x - (x + xSize*0.25)) / float(xSize*0.5);
-      
-      cout << "AmPitchShift Param 1 : " << value << endl;
-      
-      EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(ID, 1, 1, value);
-      top->toEngineQueue.push(x);
-    }
+    float value = event->x / xSize;
+    cout << "AmPitchShift Param 0 : " << value << endl;
     
-    if ( (event->y > y + ySize*0.25) && (event->y < y+ySize*0.75) )
-    {
-      float value = 1 - (event->y - (y + ySize*0.25)) / float(ySize*0.5);
-      
-      cout << "AmPitchShift Param 0 : " << value << endl;
-      
-      EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(ID, 0, 0, value);
-      top->toEngineQueue.push(x);
-    }
-    //std::cout << "GAmPitchShift: Cutoff = " << cutoff << "  Q: " << q << "  X, Y: " << event->x << ", " << event->y << std::endl;
+    EngineEvent* x = new EngineEvent();
+    x->setPluginParameter(ID, 0, 0, value);
+    top->toEngineQueue.push(x);
   }
 }
 
 bool GAmPitchShift::on_button_press_event(GdkEventButton* event)
 {
-  if( event->type == GDK_BUTTON_PRESS  ) // && event->button == 3
+  if( event->button == 1 )
   {
-    int x = 10;
-    int y = 22;
-    
-    // graph area
-    if ( (event->x > x) && (event->x < x + xSize) &&
-         (event->y > y) && (event->y < y + ySize ) )
-    {
-      
-      std::cout << "graph area click!" << std::flush;
       mouseDown = true; // for pointer motion "drag" operations
       
-      cout << " x before = " << event->x;
-      
-      // clamp click coords to acceptable grid, then send EE
-      if ( event->x < x + (xSize*0.25)){
-        cout << "  X smaller than! Clipping  ";
-        event->x = x + xSize*0.25;
-      }
-      else if (event->x > x + xSize*0.75) {
-        event->x = x + xSize*0.75;
-      }
-      
-      cout << "  x afterClip = " << event->x;
-      
-      float limit = ((event->x - (x + xSize*0.25)) / float(xSize*0.5));
-      cout << "  final Limiter Clicked Limit : " << limit << endl;
+      float value = event->x / xSize;
       EngineEvent* x = new EngineEvent();
-      x->setPluginParameter(ID, 1, 1, limit );
+      x->setPluginParameter(ID, 0, 0, value);
       top->toEngineQueue.push(x);
-      
-      
-      if (event->y < y + ySize*0.25) {
-        event->y = y + ySize*0.25;
-      }
-      else if (event->y > y+ySize*0.75 ) {
-        event->y = y + ySize*0.75;
-      }
-    
-      float gain = 1 - (event->y - (y + ySize*0.25)) / float(ySize*0.5);
-      cout << "Limiter Clicked gain : " << gain << endl;
-      x = new EngineEvent();
-      x->setPluginParameter(ID, 0, 0, gain);
-      top->toEngineQueue.push(x);
-      
-    }
-    
-    if ( event->y < 20 )
-    {
-      std::cout << "GAmPitchShift Enable / Disable click event!" << std::endl;
-      EngineEvent* x = new EngineEvent();
-      x->setTrackDeviceActive(ID, !stateStore->effectState.at(ID).active );
-      top->toEngineQueue.push(x);
-    }
-    
-    return true; //It's been handled.
   }
-  else
-    return false;
+  else if ( event->button == 3 )
+  {
+    //std::cout << "GAmPitchShift Enable / Disable click event!" << std::endl;
+    EngineEvent* x = new EngineEvent();
+    x->setTrackDeviceActive(ID, !stateStore->effectState.at(ID).active );
+    top->toEngineQueue.push(x);
+  }
+  
+  return true; //It's been handled.
 }
 
 bool GAmPitchShift::on_button_release_event(GdkEventButton* event)
