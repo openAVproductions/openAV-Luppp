@@ -277,6 +277,24 @@ int JackClient::processRtQueue()
       cout << "processEngineEvent SCENE NUMBER" << endl;
       time.processEngineEvent( e );
     }
+    else if ( e->type == EE_TRACK_BACKTRACK_TAKE_SNAPSHOT ) {
+      cout << "processEngineEvent TAKE SNAPSHOT" << endl;
+      int nTracks = top->state.getNumTracks();
+      
+      for (int i = 0; i < nTracks; i++ )
+      {
+        mixer.getAudioTrack(i)->backtrackTakeSnapshot();
+      }
+    }
+    else if ( e->type == EE_TRACK_BACKTRACK_RESTORE_SNAPSHOT ) {
+      cout << "processEngineEvent RESTORE SNAPSHOT" << endl;
+      int nTracks = top->state.getNumTracks();
+      
+      for (int i = 0; i < nTracks; i++ )
+      {
+        mixer.getAudioTrack(i)->backtrackRestoreSnapshot();
+      }
+    }
     else if ( e->type == EE_TRACK_SET_SEND_VOLUME ) {
       cout << "JC::RTQ() Got send volume! Send: " << e->ia << "  Vol: " << e->ib << endl;
       top->state.setSend( e->ia, 0, e->fa );

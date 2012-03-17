@@ -158,6 +158,10 @@ int AudioTrack::backtrackRestoreSnapshot()
     x->setPluginParameter(effectID, -1, 0, backtrack.values[i]);
     top->toGuiQueue.push(x);
     
+    x = top->toEngineEmptyEventQueue.pull();
+    x->setTrackDeviceActive(effectID, backtrack.active[i]);
+    top->toGuiQueue.push(x);
+    
     i++;
   }
   

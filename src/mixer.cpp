@@ -73,6 +73,22 @@ int Mixer::addEffect(int track, int pos,  Effect* eff )
   return 0;
 }
 
+AudioTrack* Mixer::getAudioTrack(int track)
+{
+  if ( track >= 0 && track < audiotrackList.size() )
+  {
+    std::list<AudioTrack>::iterator iter =  audiotrackList.begin();
+    std::advance(iter, track);
+    return &(*iter);
+  }
+  else
+  {
+    cout << "Mixer::addEffect() error, track is out of bounds!" << endl;
+  }
+  
+  return 0;
+}
+
 int Mixer::getEffectID(int track, int pos)
 {
   if ( track < audiotrackList.size() )
