@@ -49,6 +49,9 @@ void EngineEvent::setTrackSend         (int id, int send, float v) { ia = id; ib
 void EngineEvent::setTrackSpeed        (int id, float v) { ia = id; fa = v; type = EE_TRACK_SET_SPEED;}
 void EngineEvent::setTrackPan          (int id, float v) { ia = id; fa = v; type = EE_TRACK_SET_PAN;  }
 
+void EngineEvent::setTrackBacktrackTake(int id) { ia = id; type = EE_TRACK_BACKTRACK_TAKE_SNAPSHOT; }
+void EngineEvent::setTrackBacktrackRestore(int id) { ia = id; type = EE_TRACK_BACKTRACK_RESTORE_SNAPSHOT; }
+
 void EngineEvent::setTrackRms          (int id, float rms) { ia = id; fa = rms; type = EE_TRACK_RMS; }
 void EngineEvent::setTrackRec          (int id, int b) { ia = id; ib = b; type = EE_TRACK_SET_REC; }
 void EngineEvent::setTrackSolo         (int id, int b) { ia = id; ib = b; type = EE_TRACK_SET_SOLO; }

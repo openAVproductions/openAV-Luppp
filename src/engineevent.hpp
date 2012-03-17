@@ -68,6 +68,9 @@ enum EngineEventType
   
   EE_TRACK_DEVICE_ACTIVE,
   
+  EE_TRACK_BACKTRACK_TAKE_SNAPSHOT,
+  EE_TRACK_BACKTRACK_RESTORE_SNAPSHOT,
+  
   EE_SEND_OSC,
   
   EE_SEND_ALL_PAN,
@@ -135,6 +138,8 @@ class EngineEvent
     void setTrackSolo         (int id, int b);
     void setTrackMute         (int id, int b);
     void setTrackSelectDevice (int id, int b);
+    void setTrackBacktrackTake(int id);
+    void setTrackBacktrackRestore(int id);
     void setPluginParameter   (int i1, int i2, int i3, float f1);
     void setPluginParameterAbsolute(int i1, int i2, int i3, float f1);
     
