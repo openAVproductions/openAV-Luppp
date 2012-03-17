@@ -146,6 +146,12 @@ JackClient::JackClient( Top* t) :
                                     JackPortIsOutput,
                                     0 );
   
+  seq24outputPort = jack_port_register ( client,
+                                    "seq24_output",
+                                    JACK_DEFAULT_MIDI_TYPE,
+                                    JackPortIsOutput,
+                                    0 );
+  
   
   //jack_set_process_callback  (client, process , 0);
   
@@ -265,13 +271,22 @@ int JackClient::processRtQueue()
       }
     }
     else if ( e->type == EE_SCENE_NUMBER ) {
-      
-      cout << "EE_SCENE_NUMBER " << e->ia << endl; 
+      int sceneNum = e->ia;
+      cout << "EE_SCENE_NUMBER " << sceneNum << endl; 
       
       // bounce scene number on to the GUI
       EngineEvent* x = top->toEngineEmptyEventQueue.pull();
-      x->setSceneNumber(e->ia);
+      x->setSceneNumber(sceneNum);
       top->toGuiQueue.push(x);
+      
+      // SEQ24 integration
+      // turn off all scenes on Seq24
+      for ( int i = 0; i < 5; i++ )
+      {
+        writeMidi( seq24outputBuffer, 128, i, 127 );
+      }
+      // turn on relevant scene
+      writeMidi( seq24outputBuffer, 144, sceneNum, 127 );
       
       // time handles the event
       cout << "processEngineEvent SCENE NUMBER" << endl;
@@ -429,6 +444,9 @@ int JackClient::process(jack_nframes_t nframes)
   top->state.portBufferList.masterReturn[3] = (float*)jack_port_get_buffer (bformatEffectReturnZ, nframes);
   
   // class variable for buffer
+  seq24outputBuffer = jack_port_get_buffer ( seq24outputPort, nframes);
+  jack_midi_clear_buffer(seq24outputBuffer);
+  
   apcOutputBuffer = jack_port_get_buffer ( apcOutputPort, nframes);
   jack_midi_clear_buffer(apcOutputBuffer);
   

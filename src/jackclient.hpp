@@ -99,6 +99,8 @@ class JackClient
     JPort* apcInputPort;
     JPort* apcOutputPort;
     
+    JPort* seq24outputPort;
+    
     int trackControlMode;
     
     float* headphonePflBuffer;
@@ -107,6 +109,7 @@ class JackClient
     std::vector<float> headphonePflVector;
     std::vector<float> postFaderSendVector;
     
+    void* seq24outputBuffer;
     void* apcOutputBuffer;
     void  apcRead(int);
     void  apcSendDeviceControl(int , int , void*);
