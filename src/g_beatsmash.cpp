@@ -108,17 +108,21 @@ bool GBeatSmash::on_expose_event(GdkEventExpose* event)
     
     // draw bar, depending on delayTime
     if ( active )
-      setColour(cr, COLOUR_ORANGE_1 );
+      setColour(cr, COLOUR_BLUE_1, 0.2 );
     else
       setColour(cr, COLOUR_GREY_1 );
     cr->rectangle( 0, 8, delayTime * xSize, ySize - 16 );
-    cr->fill();
+    cr->fill_preserve();
+    if ( active )
+      setColour(cr, COLOUR_BLUE_1 );
+    else
+      setColour(cr, COLOUR_GREY_1 );
+    cr->stroke();
     
     // draw "guides"
     std::valarray< double > dashes(2);
     dashes[0] = 2.0;
     dashes[1] = 2.0;
-    cr->set_dash (dashes, 0.0);
     cr->set_line_width(2.0);
     setColour(cr, COLOUR_GREY_4 ); // first line bg colour
     
@@ -127,7 +131,9 @@ bool GBeatSmash::on_expose_event(GdkEventExpose* event)
       setColour(cr, COLOUR_GREY_3 );
       cr->move_to( x + ((xSize / 4.f)*i), y );
       cr->line_to( x + ((xSize / 4.f)*i), y + ySize );
+      cr->set_dash (dashes, 0.0);
       cr->stroke();
+      cr->unset_dash();
       
       // show number of delay
       cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_BOLD);
@@ -135,13 +141,12 @@ bool GBeatSmash::on_expose_event(GdkEventExpose* event)
       cr->move_to ( x + 5 + ((xSize / 4.f)*i) , 4 + ySize / 2. );
       setColour(cr, COLOUR_GREY_3 );
       if ( active )
-        setColour(cr, COLOUR_BLUE_1 );
-      
+        setColour(cr, COLOUR_ORANGE_1 );
       stringstream s;
       s << i + 1;
-      
       cr->show_text ( s.str() );
       cr->stroke();
+      
       setColour(cr, COLOUR_GREY_3 );
     }
     cr->unset_dash();
