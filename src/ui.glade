@@ -125,10 +125,11 @@ Author: Harry van Haaren &lt;harryhaaren@gmail.com&gt;</property>
                         <property name="can_focus">False</property>
                         <child>
                           <object class="GtkImageMenuItem" id="menuFileAddTrack">
-                            <property name="label">New Track</property>
+                            <property name="label">_New Audio Track</property>
                             <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="use_underline">True</property>
                             <property name="image">image8</property>
                             <property name="use_stock">False</property>
                           </object>
@@ -137,7 +138,6 @@ Author: Harry van Haaren &lt;harryhaaren@gmail.com&gt;</property>
                           <object class="GtkImageMenuItem" id="imagemenuitem2">
                             <property name="label">gtk-open</property>
                             <property name="use_action_appearance">False</property>
-                            <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="use_underline">True</property>
                             <property name="use_stock">True</property>
@@ -147,7 +147,6 @@ Author: Harry van Haaren &lt;harryhaaren@gmail.com&gt;</property>
                           <object class="GtkImageMenuItem" id="imagemenuitem3">
                             <property name="label">gtk-save</property>
                             <property name="use_action_appearance">False</property>
-                            <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="use_underline">True</property>
                             <property name="use_stock">True</property>
@@ -157,7 +156,6 @@ Author: Harry van Haaren &lt;harryhaaren@gmail.com&gt;</property>
                           <object class="GtkImageMenuItem" id="imagemenuitem4">
                             <property name="label">gtk-save-as</property>
                             <property name="use_action_appearance">False</property>
-                            <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="use_underline">True</property>
                             <property name="use_stock">True</property>
@@ -228,7 +226,6 @@ Author: Harry van Haaren &lt;harryhaaren@gmail.com&gt;</property>
                           <object class="GtkImageMenuItem" id="menuAddParametric">
                             <property name="label">Parametric</property>
                             <property name="use_action_appearance">False</property>
-                            <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="image">image4</property>
                             <property name="use_stock">False</property>
@@ -238,7 +235,6 @@ Author: Harry van Haaren &lt;harryhaaren@gmail.com&gt;</property>
                           <object class="GtkImageMenuItem" id="menuAddReverb">
                             <property name="label">Reverb</property>
                             <property name="use_action_appearance">False</property>
-                            <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="image">image5</property>
                             <property name="use_stock">False</property>
@@ -248,7 +244,6 @@ Author: Harry van Haaren &lt;harryhaaren@gmail.com&gt;</property>
                           <object class="GtkImageMenuItem" id="menuAddTransient">
                             <property name="label">Transient</property>
                             <property name="use_action_appearance">False</property>
-                            <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="image">image6</property>
                             <property name="use_stock">False</property>
@@ -258,7 +253,6 @@ Author: Harry van Haaren &lt;harryhaaren@gmail.com&gt;</property>
                           <object class="GtkImageMenuItem" id="menuAddCompressor">
                             <property name="label">Compressor</property>
                             <property name="use_action_appearance">False</property>
-                            <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="image">image7</property>
                             <property name="use_stock">False</property>
@@ -278,7 +272,6 @@ Author: Harry van Haaren &lt;harryhaaren@gmail.com&gt;</property>
                           <object class="GtkImageMenuItem" id="menuAddTrancegate">
                             <property name="label">Trance Gate</property>
                             <property name="use_action_appearance">False</property>
-                            <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="image">image9</property>
                             <property name="use_stock">False</property>
@@ -296,15 +289,6 @@ Author: Harry van Haaren &lt;harryhaaren@gmail.com&gt;</property>
                         </child>
                       </object>
                     </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkMenuItem" id="menuitem3">
-                    <property name="use_action_appearance">False</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">_View</property>
-                    <property name="use_underline">True</property>
                   </object>
                 </child>
                 <child>
