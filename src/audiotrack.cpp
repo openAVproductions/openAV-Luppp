@@ -107,6 +107,68 @@ int AudioTrack::getEffectID(int pos)
   return -1;
 }
 
+int AudioTrack::backtrackTakeSnapshot()
+{
+  // for each effect in this track, we want to save the primary & active
+  // status into this instances "backtrack" struct.
+  
+  cout << "AudioTrack::backtrackTakeSnapshot()" << endl;
+  
+  // iter the list of effects
+  int i = 0;
+  for(std::list<Effect*>::iterator iter = effects.begin(); iter != effects.end(); iter++ )
+  {
+    // collect effect ID
+    int effectID = (*iter)->getID();
+    
+    // get the EffectState* from statestore
+    EffectState* effectStatePtr = top->state.getEffectState(effectID);
+    
+    // copy data to the track
+    backtrack.active[i] = effectStatePtr->active;
+    backtrack.values[i] = effectStatePtr->values[0];
+    
+    i++;
+  }
+  
+  // get this track's sink output, and save the send amount.
+  backtrack.sends[0] = top->state.getAudioSinkOutput(ID)->sends;
+}
+
+int AudioTrack::backtrackRestoreSnapshot()
+{
+  cout << "AudioTrack::backtrackRestoreSnapshot()" << endl;
+  
+  // iter the list of effects
+  int i = 0;
+  for(std::list<Effect*>::iterator iter = effects.begin(); iter != effects.end(); iter++ )
+  {
+    // collect effect ID
+    int effectID = (*iter)->getID();
+    
+    // get the EffectState* from statestore
+    EffectState* effectStatePtr = top->state.getEffectState(effectID);
+    
+    // copy data to statestore
+    effectStatePtr->active = backtrack.active[i];
+    effectStatePtr->values[0] = backtrack.values[i];
+    
+    // update GUI to new values
+    EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+    x->setPluginParameter(effectID, -1, 0, backtrack.values[i]);
+    top->toGuiQueue.push(x);
+    
+    i++;
+  }
+  
+  // get this track's sink output, and restore the send amount.
+  top->state.getAudioSinkOutput(ID)->sends = backtrack.sends[0];
+  
+  EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+  x->setTrackSend(ID, 0, backtrack.sends[0]);
+  top->toGuiQueue.push(x);
+}
+
 void AudioTrack::process(int nframes, PortBufferList& pbl, CopyBufferList& cbl)
 {
   //std::cout << "AudioTrack::process()" << std::endl;

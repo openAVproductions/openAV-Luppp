@@ -32,6 +32,9 @@ class Top;
 // for processing multiple ins / outs
 #include "porttypes.hpp"
 
+#include "backtrack.hpp"
+#include "effectstate.hpp"
+
 class AudioTrack
 {
   public:
@@ -40,6 +43,9 @@ class AudioTrack
     
     int setSource( AudioSource* );
     int addEffect( int, Effect* );
+    
+    int backtrackTakeSnapshot();
+    int backtrackRestoreSnapshot();
     
     void process(int nframes, PortBufferList&, CopyBufferList& );
     
@@ -50,6 +56,9 @@ class AudioTrack
     static int privateID;
     
     Top* top;
+    
+    // backtrack feature
+    BackTrack backtrack;
     
     // Audio elements
     AudioSink*    sink;
