@@ -38,6 +38,7 @@ enum EffectType
   EFFECT_TRANCEGATE,
   EFFECT_TESTTONES,
   EFFECT_AM_PITCHSHIFT,
+  EFFECT_DELAY,
 };
 
 class Effect

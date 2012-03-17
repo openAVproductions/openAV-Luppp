@@ -67,6 +67,7 @@ int OfflineWorker::createNewEffect(int t, int pos, int typeInt )
   switch ( type )
   {
     // all Ladspa effects have the same code here
+    case EFFECT_DELAY:
     case EFFECT_REVERB:
     case EFFECT_LOWPASS:
     case EFFECT_LIMITER:

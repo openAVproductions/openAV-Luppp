@@ -87,6 +87,7 @@ class Window
     Gtk::MenuItem* menuAddTrancegate;
     Gtk::MenuItem* menuAddBeatsmasher;
     Gtk::MenuItem* menuAddAmPitchshifter;
+    Gtk::MenuItem* menuAddDelay;
     
     GuiStateStore guiState;
     

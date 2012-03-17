@@ -55,6 +55,11 @@ Author: Harry van Haaren &lt;harryhaaren@gmail.com&gt;</property>
     <property name="can_focus">False</property>
     <property name="stock">gtk-execute</property>
   </object>
+  <object class="GtkImage" id="image12">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-execute</property>
+  </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -284,6 +289,16 @@ Author: Harry van Haaren &lt;harryhaaren@gmail.com&gt;</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="image">image10</property>
+                            <property name="use_stock">False</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkImageMenuItem" id="menuAddDelay">
+                            <property name="label">Delay</property>
+                            <property name="use_action_appearance">False</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="image">image12</property>
                             <property name="use_stock">False</property>
                           </object>
                         </child>

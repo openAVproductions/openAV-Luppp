@@ -31,6 +31,7 @@ using namespace std;
 
 #include "g_lowpass_small.hpp"
 
+#include "g_delay.hpp"
 #include "g_reverb.hpp"
 #include "g_lowpass.hpp"
 #include "g_limiter.hpp"
@@ -200,6 +201,9 @@ Window::Window(Gtk::Main *k, Top* t) :
   
   refBuilder->get_widget("menuAddAmPitchshifter", menuAddAmPitchshifter);
   menuAddAmPitchshifter->signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &Window::addEffect ), EFFECT_AM_PITCHSHIFT));
+  
+  refBuilder->get_widget("menuAddDelay", menuAddDelay);
+  menuAddDelay->signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &Window::addEffect ), EFFECT_DELAY));
   
   // poll the event Queue
   Glib::signal_timeout().connect(sigc::mem_fun(*this, &Window::handleEvent), 50);
@@ -636,6 +640,7 @@ int Window::handleEvent()
       bool newEffect = true;
       switch ( et )
       {
+        case EFFECT_DELAY:        effectVector.push_back( new GDelay       (top, &guiState) ); break;
         case EFFECT_REVERB:       effectVector.push_back( new GReverb      (top, &guiState) ); break;
         case EFFECT_LOWPASS:      effectVector.push_back( new GLowPassSmall(top, &guiState) ); break;
         case EFFECT_HIGHPASS:     effectVector.push_back( new GHighPass    (top, &guiState) ); break;

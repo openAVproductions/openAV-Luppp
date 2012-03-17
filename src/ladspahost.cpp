@@ -63,6 +63,7 @@ LadspaHost::LadspaHost(Top* t,EffectType et, int s) : Effect(t, et)
     case EFFECT_HIGHPASS:     pluginString = "/usr/lib/ladspa/highpass_iir_1890.so";break;
     case EFFECT_COMPRESSOR:   pluginString = "/usr/lib/ladspa/sc4m_1916.so";        break;
     case EFFECT_LIMITER:      pluginString = "/usr/lib/ladspa/fast_lookahead_limiter_1913.so"; break;
+    case EFFECT_DELAY:        pluginString = "/usr/lib/ladspa/calf.so"; pluginSoIndex = 4; break;
     default: std::cout << "LadspaHost() got unknown effect type!" << std::endl; break;
   }
   
@@ -187,6 +188,23 @@ void LadspaHost::resetParameters()
     controlBuffer[17] = 2000;
     controlBuffer[18] = 1;
     controlBuffer[19] = 0;
+  }
+  else if ( type == EFFECT_DELAY )
+  {
+    // stereo in, stereo out
+    controlBuffer[4] = top->bpm;    // tempo
+    controlBuffer[5] = 2;           // subdivide <- primary
+    controlBuffer[6] = 1;           // time L
+    controlBuffer[7] = 1;           // time R
+    
+    controlBuffer[8] = 0.9;         // feedback, 0-1, def 0.5
+    controlBuffer[9] = 0.8;         // amount
+    
+    controlBuffer[10] = 0;          // mix mode: 0 = normal, 1 = ping pong
+    controlBuffer[11] = 0;          // medium (for delay): 0 = plain, 1 = tape, 2 = old tape
+    
+    controlBuffer[12] = 1;          // dry amount
+    
   }
   else if ( type == EFFECT_AM_PITCHSHIFT )
   {
@@ -328,6 +346,41 @@ void LadspaHost::process(int nframes, float* buffer)
     descriptor -> connect_port ( pluginHandle ,11, &controlBuffer[11] );
     descriptor -> connect_port ( pluginHandle ,12, &controlBuffer[12] );
   }
+  else if ( type == EFFECT_DELAY )
+  {
+    controlBuffer[4] = top->bpm; // update controls
+    controlBuffer[5] = (int)1 + state->values[0] * 7; // primary control = subdivision
+    
+    controlBuffer[6] = 1;           // time L
+    controlBuffer[7] = 1;           // time R
+    
+    controlBuffer[8] = 0.9;         // feedback, 0-1, def 0.5
+    controlBuffer[9] = 0.8;         // amount
+    
+    controlBuffer[10] = 0;          // mix mode: 0 = normal, 1 = ping pong
+    controlBuffer[11] = 0;          // medium (for delay): 0 = plain, 1 = tape, 2 = old tape
+    
+    controlBuffer[12] = 1;          // dry amount
+    
+    
+    
+    cout << "Delay sub = " << controlBuffer[5] << endl;
+    
+    descriptor -> connect_port ( pluginHandle , 0 , buffer );
+    descriptor -> connect_port ( pluginHandle , 1 , buffer );
+    descriptor -> connect_port ( pluginHandle , 2 , &outputBuffer[0]  );
+    descriptor -> connect_port ( pluginHandle , 3 , &outputBufferR[0] );
+    
+    descriptor -> connect_port ( pluginHandle , 4, &controlBuffer[4]  );
+    descriptor -> connect_port ( pluginHandle , 5, &controlBuffer[5]  );
+    descriptor -> connect_port ( pluginHandle , 6, &controlBuffer[6]  );
+    descriptor -> connect_port ( pluginHandle , 7, &controlBuffer[7]  );
+    descriptor -> connect_port ( pluginHandle , 8, &controlBuffer[8]  );
+    descriptor -> connect_port ( pluginHandle , 9, &controlBuffer[9]  );
+    descriptor -> connect_port ( pluginHandle ,10, &controlBuffer[10] );
+    descriptor -> connect_port ( pluginHandle ,11, &controlBuffer[11] );
+    descriptor -> connect_port ( pluginHandle ,12, &controlBuffer[12] );
+  }
   else if ( type == EFFECT_AM_PITCHSHIFT )
   {
     controlBuffer[0] = 0.25 + state->values[0] * 3.75;
@@ -358,9 +411,6 @@ void LadspaHost::process(int nframes, float* buffer)
     descriptor -> connect_port ( pluginHandle ,  7 ,&outputBufferR[0] );
     
     descriptor -> connect_port ( pluginHandle ,  8 ,&controlBuffer[8] ); // latency control output
-    
-    
-    
   }
   else if ( type == EFFECT_LOWPASS )
   {
