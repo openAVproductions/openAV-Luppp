@@ -93,6 +93,8 @@ Window::Window(Gtk::Main *k, Top* t) :
   refBuilder->get_widget("window", window);
   window->set_title("Luppp 2.0");
   
+  refBuilder->get_widget("aboutDialog", aboutDialog);
+  
   refBuilder->get_widget("mainBox", mainBox);
   
   refBuilder->get_widget("fileChooserPane", fileChooserPane);
@@ -113,6 +115,10 @@ Window::Window(Gtk::Main *k, Top* t) :
   
   refBuilder->get_widget("fileBrowserToggle", fileBrowserToggle);
   fileBrowserToggle->signal_clicked().connect ( sigc::mem_fun( *this, &Window::setFileChooserPane ) );
+  
+  refBuilder->get_widget("menuHelpAbout", menuHelpAbout);
+  menuHelpAbout->signal_activate().connect ( sigc::mem_fun( *this, &Window::showAboutDialog ) );
+
   
   refBuilder->get_widget("mainTable", mainTable);
   
@@ -206,6 +212,11 @@ Window::Window(Gtk::Main *k, Top* t) :
   
   // last thing, now we're starting the GUI main loop
   kit->run(*window);
+}
+
+void Window::showAboutDialog()
+{
+  aboutDialog->show();
 }
 
 void Window::setFileChooserPane()

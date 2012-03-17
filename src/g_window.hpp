@@ -57,6 +57,7 @@ class Window
     Gtk::HBox* mainBox;
     Gtk::Label* eeLabel;
     Gtk::Window* window;
+    Gtk::Dialog* aboutDialog;
     Gtk::Table* mainTable;
     Gtk::Box* masterOutputBox;
     
@@ -70,6 +71,8 @@ class Window
     
     Gtk::Paned* fileChooserPane;
     Gtk::ToggleButton* fileBrowserToggle;
+    
+    Gtk::MenuItem* menuHelpAbout;
     
     Gtk::MenuItem* menuFileAddTrack;
     Gtk::MenuItem* menuFileQuit;
@@ -109,6 +112,7 @@ class Window
                              const Gtk::SelectionData& selection_data, guint, guint time);
     
     void sendAddTrack();
+    void showAboutDialog();
     
     void quit();
     
