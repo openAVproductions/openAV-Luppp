@@ -226,8 +226,8 @@ bool GMasterOutput::on_expose_event(GdkEventExpose* event)
     bool pfl = headphonePflSelect;
     
     // headphone monitoring system
-    //Solo(cr, 100, 80, 0,  pfl ); // solo button
-    //Solo(cr, 125, 80, 0, !pfl ); // solo button
+    Solo(cr, 100, 80, 0,  pfl ); // solo button
+    Solo(cr, 125, 80, 0, !pfl ); // solo button
     
     headphoneImage->render_to_drawable(	get_window() ,
                                         get_style()->get_black_gc(),
@@ -312,6 +312,24 @@ bool GMasterOutput::on_button_press_event(GdkEventButton* event)
     cout << "HEADPHONE_SELECT clicked" << endl;
     clickedWidget = CLICKED_WIDGET_HEADPHONE_SELECT;
     headphonePflSelect = !headphonePflSelect;
+    
+    
+    // take snapshot of track
+    if ( headphonePflSelect )
+    {
+      cout << "SNAPSHOT TAKE" << endl;
+      EngineEvent* x = new EngineEvent();
+      x->setTrackBacktrackTake(0);
+      top->toEngineQueue.push(x);
+    }
+    else // restore snapshot of track
+    {
+      cout << "SNAPSHOT RESTORE" << endl;
+      EngineEvent* x = new EngineEvent();
+      x->setTrackBacktrackRestore(0);
+      top->toEngineQueue.push(x);
+    }
+    
     redraw();
   }
   else if ( event->x >   7 && event->x <  97 &&
