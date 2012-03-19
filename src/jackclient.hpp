@@ -56,6 +56,7 @@ class JackClient
     
     void  apcWriteOutput(int track);
     void  apcWriteGridTrack(int track);
+    void  apcWriteEffectParams(int track, int pos, bool active, float value);
     
     float* getHeadphonePflVector();
     float* getPostFaderSendVector();

@@ -744,7 +744,20 @@ void JackClient::apcWriteOutput(int track)
   writeMidi( apcOutputBuffer, 144 + track, 50, 127 * !state->mute     );
   writeMidi( apcOutputBuffer, 144 + track, 49, 127 *  state->pflEnable);
   writeMidi( apcOutputBuffer, 144 + track, 48, 127 *  state->recEnable);
+}
+
+void JackClient::apcWriteEffectParams(int track, int pos, bool active, float value)
+{
+  // write on / off status to LED
+  int trackNoteMessage = 128;
   
+  if ( active )
+    trackNoteMessage = 144;
+  
+  writeMidi( apcOutputBuffer, trackNoteMessage, 58 + pos, 127);
+  
+  // write value to dial
+  writeMidi( apcOutputBuffer, 176 + track, 16 + pos, 127 * value);
 }
 
 void JackClient::apcRead( int nframes )
@@ -1127,18 +1140,28 @@ void JackClient::apcRead( int nframes )
       top->toGuiQueue.push(x);
     }
     
-    if ( b2 == 91 ) // play
+    if ( b2 == 91 && b1 == 144 ) // play
     {
-      //lo_send( //lo_address_new(NULL, "14688") , "/luppp/play", "" );
+      // here we iter over the tracks, and restore the snapshots
+      int nTracks = top->state.getNumTracks();
+      for (int i = 0; i < nTracks; i++ )
+      {
+        mixer.getAudioTrack(i)->backtrackRestoreSnapshot();
+      }
     }
     if ( b2 == 92 ) // stop
     {
-      //lo_send( //lo_address_new(NULL, "14688") , "/luppp/stop", "" );
+      
     }
     if ( b2 == 93 && b1 == 144 ) // rec
     {
-      std::cout << "Record pressed!" << std::endl;
-      //lo_send( //lo_address_new(NULL, "14688") , "/luppp/mixer/addtrack", "" );
+      // here we iter over the tracks, and take the snapshots
+      int nTracks = top->state.getNumTracks();
+      for (int i = 0; i < nTracks; i++ )
+      {
+        mixer.getAudioTrack(i)->backtrackTakeSnapshot();
+      }
+      
     }
     
     index++;

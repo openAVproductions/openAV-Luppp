@@ -27,6 +27,7 @@
 
 #include "beatsmash.hpp"
 #include "ladspahost.hpp"
+#include "jackclient.hpp"
 
 #include "trackoutputstate.hpp"
 #include "audiosinkoutput.hpp"
@@ -161,6 +162,9 @@ int AudioTrack::backtrackRestoreSnapshot()
     x = top->toEngineEmptyEventQueue.pull();
     x->setTrackDeviceActive(effectID, backtrack.active[i]);
     top->toGuiQueue.push(x);
+    
+    // bounce details on to APC
+    top->jackClient->apcWriteEffectParams( ID, i, backtrack.active[i], backtrack.values[i] );
     
     i++;
   }
