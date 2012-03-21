@@ -32,6 +32,7 @@ class Top;
 #include "g_sends.hpp"
 #include "g_progress.hpp"
 
+#include "g_automove.hpp"
 #include "g_audiosource.hpp"
 #include "g_trackoutput.hpp"
 #include "g_clipselector.hpp"
@@ -101,6 +102,8 @@ class Window
     
     GWaveView waveview;
     GWaveView inputWaveview;
+    
+    GAutoMove automove;
     
     GMasterOutput masterOutput;
     GMasterProgress masterProgress;

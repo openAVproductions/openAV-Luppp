@@ -48,6 +48,7 @@ Window::Window(Gtk::Main *k, Top* t) :
   fileSelector(t, &guiState),
   effectSelector(t, &guiState),
   instrumentSelector(t, &guiState),
+  automove(t),
   
   waveview(t),
   inputWaveview(t)
@@ -159,6 +160,7 @@ Window::Window(Gtk::Main *k, Top* t) :
   //masterOutputBox->add( waveview );
   
   bottomWidgetBox->add(waveview);
+  bottomWidgetBox->add(automove);
   bottomWidgetBox->show_all();
   
   masterOutputBox->pack_end( masterOutput, false, true, 0 );
