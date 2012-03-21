@@ -33,6 +33,9 @@ enum EngineEventType
   
   EE_MIXER_VOLUME,
   
+  EE_AUTOMOVE_TYPE,
+  EE_AUTOMOVE_PROGRESS,
+  
   EE_ADD_TRACK,
   EE_SET_TRACK_SOURCE,
   EE_ADD_TRACK_POINTERS,
@@ -112,6 +115,9 @@ class EngineEvent
     void setBpm               (int bpm);
     
     void setSceneNumber       (int scene);
+    
+    void setAutomoveType      (int track, int type);
+    void setAutomoveProgress  (int track, float progress);
     
     void sendAddTrackPointers (void*,void*,void*,void*);
     

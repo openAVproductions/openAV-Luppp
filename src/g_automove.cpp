@@ -39,6 +39,8 @@ GAutoMove::GAutoMove(Top* t)
   add_events(Gdk::EXPOSURE_MASK);
   add_events(Gdk::BUTTON_PRESS_MASK );
   
+  progress = 0;
+  
   /*
   // add labels to menu, attach them to the right function, and add to menu
   setSize1Sec.set_label("1 second");
@@ -71,6 +73,18 @@ GAutoMove::GAutoMove(Top* t)
   
   // set default widget size
   set_size_request(230, 130);
+}
+
+void GAutoMove::setType(int type)
+{
+  type = static_cast<AutoMoveType>(type);
+  redraw();
+}
+
+void GAutoMove::setProgress(float p)
+{
+  progress = p;
+  redraw();
 }
 
 bool GAutoMove::on_expose_event(GdkEventExpose* event)
@@ -176,7 +190,6 @@ bool GAutoMove::on_expose_event(GdkEventExpose* event)
       setColour( cr, COLOUR_GREY_2 );
       cr->set_line_width(2.2);
       cr->stroke();
-      
       
       setColour( cr, COLOUR_GREEN_1, 0.3 );
       setColour(cr, COLOUR_GREY_1 );

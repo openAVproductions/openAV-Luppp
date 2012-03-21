@@ -25,6 +25,8 @@
 
 #include "g_widgets.hpp"
 
+#include "automove.hpp"
+
 using namespace Luppp;
 
 class Top;
@@ -35,12 +37,18 @@ class GAutoMove : public Gtk::DrawingArea
     GAutoMove(Top*);
     
     void redraw();
+    
+    void setType(int);
+    void setProgress(float);
 
   protected:
     Top* top;
     
     int width;
     int height;
+    
+    float progress;
+    AutoMoveType type;
     
     // helper draw functions
     void drawNoBuffer(Cairo::RefPtr<Cairo::Context>);
