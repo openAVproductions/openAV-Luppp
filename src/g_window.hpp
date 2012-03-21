@@ -61,7 +61,7 @@ class Window
     Gtk::Table* mainTable;
     Gtk::Box* masterOutputBox;
     
-    Gtk::HBox* trackEffectBox;
+    Gtk::HBox* bottomWidgetBox;
     Gtk::EventBox* trackEffectEventBox;
     
     Gtk::Viewport* fileChooserViewport;

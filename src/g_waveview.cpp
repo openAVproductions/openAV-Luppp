@@ -165,7 +165,7 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
         return;
       }
       
-      cout << "Getting waveformCache for id " << sampleID << endl;
+      //cout << "Getting waveformCache for id " << sampleID << endl;
       
       
       float progress = -1;

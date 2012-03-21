@@ -141,7 +141,7 @@ Window::Window(Gtk::Main *k, Top* t) :
   masterOutputBox->add( *tmpVbox );
   
   // grab widgets & connect signal handlers for DnD
-  refBuilder->get_widget("trackEffectBox", trackEffectBox);
+  refBuilder->get_widget("bottomWidgetBox", bottomWidgetBox);
   //refBuilder->get_widget("trackEffectEventBox", trackEffectEventBox);
   
   // drop destination
@@ -158,8 +158,8 @@ Window::Window(Gtk::Main *k, Top* t) :
   //masterOutputBox->add( inputWaveview );
   //masterOutputBox->add( waveview );
   
-  trackEffectBox->add(waveview);
-  trackEffectBox->show_all();
+  bottomWidgetBox->add(waveview);
+  bottomWidgetBox->show_all();
   
   masterOutputBox->pack_end( masterOutput, false, true, 0 );
   masterOutputBox->show_all();
@@ -713,7 +713,7 @@ void Window::redrawEffectBox()
   
   // hide all elements from the previous track
   for(int i = 0;  i < trackVector.at(previousEffectsTrack).widgetVector.size(); i++) {
-    trackEffectBox->remove( *trackVector.at(previousEffectsTrack).widgetVector.at(i) );
+    bottomWidgetBox->remove( *trackVector.at(previousEffectsTrack).widgetVector.at(i) );
   }
   
   //cout << "successfully removed all widgets" << endl;
@@ -721,13 +721,13 @@ void Window::redrawEffectBox()
   // add each widget in the current track to the box, and show_all() them
   for(int i = 0;  i < trackVector.at(currentEffectsTrack).widgetVector.size(); i++)
   {
-    trackEffectBox->remove( *trackVector.at(currentEffectsTrack).widgetVector.at(i) );
-    trackEffectBox->add( *trackVector.at(currentEffectsTrack).widgetVector.at(i) );
+    bottomWidgetBox->remove( *trackVector.at(currentEffectsTrack).widgetVector.at(i) );
+    bottomWidgetBox->add( *trackVector.at(currentEffectsTrack).widgetVector.at(i) );
   }
   
   //cout << "successfully added all new widgets" << endl;
   
-  trackEffectBox->show_all();
+  bottomWidgetBox->show_all();
   */
 }
 
