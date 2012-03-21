@@ -309,6 +309,16 @@ void LadspaHost::process(int nframes, float* buffer)
   EffectState* state = top->state.getEffectState(ID);
   //cout << "ladspahost got effectstate " << state << " from ID " << ID << " value 0 = " << state->values[0] << endl; 
   
+  // AutoMove feature, range scale the unit's value here
+  float globalChange = 0.f;
+  
+  switch ( top->state.globalUnitType )
+  {
+    case AUTOMOVE_TYPE_UP:        globalChange = 1 - state->values[0]; break;
+    case AUTOMOVE_TYPE_DOWN:      globalChange =     state->values[0]; break;
+    default: break;
+  }
+  
   if ( !state->active )
   {
     return;
@@ -416,7 +426,7 @@ void LadspaHost::process(int nframes, float* buffer)
   {
     // lowpass ports
     //cout << "Lowpass globalUnit = " << top->state.globalUnit << endl;
-    float finalValue = state->values[0] + top->state.globalUnit;
+    float finalValue = state->values[0] + globalChange * top->state.globalUnit;
     //cout << "Lowpass finalValue = " << finalValue << endl;
     
     if ( finalValue > 1 )

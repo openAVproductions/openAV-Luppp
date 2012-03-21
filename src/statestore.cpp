@@ -32,6 +32,7 @@ StateStore::StateStore(Top* t)
   top = t;
   
   globalUnit = 0.f;
+  globalUnitType = AUTOMOVE_TYPE_NONE;
   
 }
 

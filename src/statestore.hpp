@@ -29,6 +29,7 @@ class Top;
 #include "audiobuffer.hpp"
 
 #include "effect.hpp"
+#include "automove.hpp"
 
 struct EffectState;
 
@@ -51,6 +52,7 @@ class StateStore
     int midib1,midib2,midib3;
     
     float globalUnit;
+    AutoMoveType globalUnitType;
     
     int getNumTracks(){return numTracks;}
     int getNumEffects(){return numEffects;}

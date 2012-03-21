@@ -20,6 +20,7 @@
 #include "time.hpp"
 
 #include "top.hpp"
+#include "automove.hpp"
 #include "engineevent.hpp"
 #include "jackclient.hpp"
 
@@ -41,6 +42,8 @@ void Time::startAutomoveType(int type)
   
   automoveQueue = true;
   automoveType = type;
+  
+  top->state.globalUnitType = static_cast<AutoMoveType>(type);
   
   EngineEvent* x = top->toEngineEmptyEventQueue.pull();
   x->setAutomoveType( -1, type);
