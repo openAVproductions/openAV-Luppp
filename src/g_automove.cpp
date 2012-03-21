@@ -77,8 +77,21 @@ GAutoMove::GAutoMove(Top* t)
 
 void GAutoMove::setType(int type)
 {
+  cout << "GAutoMove::setType() type = " << type << endl;
   type = static_cast<AutoMoveType>(type);
+  
+  if ( type == AUTOMOVE_TYPE_NONE )
+  {
+    cout << "TYPE == NONE!" << endl;
+    progress = 0.f;
+  }
+  
   redraw();
+  
+  if ( type == AUTOMOVE_TYPE_NONE )
+  {
+    cout << "After REDRAW! TYPE == NONE!" << endl;
+  }
 }
 
 void GAutoMove::setProgress(float p)
@@ -97,11 +110,6 @@ bool GAutoMove::on_expose_event(GdkEventExpose* event)
       Gtk::Allocation allocation = get_allocation();
       width = allocation.get_width();
       height = allocation.get_height();
-      
-      // coordinates for the center of the window
-      int xc, yc;
-      xc = width / 2;
-      yc = height / 2;
       
       Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();
       
@@ -191,9 +199,20 @@ bool GAutoMove::on_expose_event(GdkEventExpose* event)
       cr->set_line_width(2.2);
       cr->stroke();
       
-      setColour( cr, COLOUR_GREEN_1, 0.3 );
-      setColour(cr, COLOUR_GREY_1 );
-      cr->stroke();
+      if ( type == AUTOMOVE_TYPE_UP && progress != 0.f )
+      {
+        cr->rectangle(  7,  7, 50, 42 );
+        setColour( cr, COLOUR_ORANGE_1 );
+        cr->set_line_width(3.2);
+        cr->stroke();
+      }
+      else if ( type == AUTOMOVE_TYPE_DOWN && progress != 0.f )
+      {
+        cr->rectangle(  7, 55, 50, 42 );
+        setColour( cr, COLOUR_ORANGE_1 );
+        cr->set_line_width(3.2);
+        cr->stroke();
+      }
       
       /*
       // outline
@@ -306,19 +325,23 @@ bool GAutoMove::on_button_press_event(GdkEventButton* event)
   if ( event->x > 7  && event->y > 7 &&
        event->x < 57 && event->y < 49 )
   {
-    cout << "CLICK on UP!!" << endl;
-    EngineEvent* x = new EngineEvent();
-    x->setAutomoveType( -1, AUTOMOVE_TYPE_UP );
-    top->toEngineQueue.push(x);
-    
+    type = AUTOMOVE_TYPE_UP;
+  }
+  else if ( event->x > 7  && event->y > 55 &&
+       event->x < 57 && event->y < 91 )
+  {
+    type = AUTOMOVE_TYPE_DOWN;
   }
   else
   {
-    cout << "CLICK on OFFFFF!!" << endl;
-    EngineEvent* x = new EngineEvent();
-    x->setAutomoveType( -1, AUTOMOVE_TYPE_NONE );
-    top->toEngineQueue.push(x);
+    type = AUTOMOVE_TYPE_NONE;
   }
+  
+  EngineEvent* x = new EngineEvent();
+  x->setAutomoveType( -1, type );
+  top->toEngineQueue.push(x);
+  
+  redraw();
   
   /*
   if( event->button == 3 )

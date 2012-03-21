@@ -38,6 +38,10 @@ void Time::startAutomoveType(int type)
   cout << "starting Automove type " << type << " now!" << endl;
   automoveType = type;
   automoveStartFrame = top->frameNumber;
+  
+  EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+  x->setAutomoveType( -1, type);
+  top->toGuiQueue.push(x);
 }
 
 // this function gets called by JACK before processing any audio for
@@ -63,20 +67,26 @@ void Time::process(int frameNumber)
     
     switch ( automoveType )
     {
-      case AUTOMOVE_TYPE_UP: top->state.globalUnit = automoveProgress / automoveDuration; break;
+      case AUTOMOVE_TYPE_UP:        top->state.globalUnit = automoveProgress / automoveDuration; break;
+      case AUTOMOVE_TYPE_DOWN:      top->state.globalUnit = -(automoveProgress / automoveDuration); break;
       default: break;
     }
-    
-    EngineEvent* x = top->toEngineEmptyEventQueue.pull();
-    x->setAutomoveProgress( -1, automoveProgress/automoveDuration);
-    top->toGuiQueue.push(x);
     
     // line done, now turn off!
     if ( automoveProgress > automoveDuration )
     {
       top->state.globalUnit = 0.f;
       automoveType = AUTOMOVE_TYPE_NONE;
+      automoveProgress = 0.f;
+      
+      EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+      x->setAutomoveType( -1, AUTOMOVE_TYPE_NONE);
+      top->toGuiQueue.push(x);
     }
+    
+    EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+    x->setAutomoveProgress( -1, automoveProgress/automoveDuration);
+    top->toGuiQueue.push(x);
   }
   
   // here we handle *all* events that should occur on *a* beat

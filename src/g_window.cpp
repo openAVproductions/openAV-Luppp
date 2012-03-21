@@ -347,6 +347,9 @@ int Window::handleEvent()
     else if ( e->type == EE_AUTOMOVE_PROGRESS ) {
       automove.setProgress(e->fa);
     }
+    else if ( e->type == EE_AUTOMOVE_TYPE ) {
+      automove.setType(e->ib);
+    }
     else if ( e->type == EE_SCENE_NUMBER ) {
       
       int scene = e->ia;
