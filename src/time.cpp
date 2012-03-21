@@ -51,6 +51,18 @@ void Time::startAutomoveType(int type)
     case AUTOMOVE_TYPE_DOWN:      top->jackClient->writeMidi( top->jackClient->getLpdOutputBuffer(), 144, 60, 127 ); break;
     case AUTOMOVE_TYPE_NONE:
     {
+      // reset all variables, and let GUI & LPD know
+      top->state.globalUnit = 0.f;
+      automoveType = AUTOMOVE_TYPE_NONE;
+      
+      EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+      x->setAutomoveType( -1, AUTOMOVE_TYPE_NONE);
+      top->toGuiQueue.push(x);
+      
+      x = top->toEngineEmptyEventQueue.pull();
+      x->setAutomoveProgress( -1, 0.f );
+      top->toGuiQueue.push(x);
+      
       for ( int i = 0; i < 8; i++ )
       {
         top->jackClient->writeMidi( top->jackClient->getLpdOutputBuffer(), 128, 60 + i, 127 );
@@ -92,13 +104,7 @@ void Time::process(int frameNumber)
     // line done, now turn off!
     if ( automoveProgress > automoveDuration )
     {
-      top->state.globalUnit = 0.f;
-      automoveType = AUTOMOVE_TYPE_NONE;
-      automoveProgress = 0.f;
-      
-      EngineEvent* x = top->toEngineEmptyEventQueue.pull();
-      x->setAutomoveType( -1, AUTOMOVE_TYPE_NONE);
-      top->toGuiQueue.push(x);
+      startAutomoveType( AUTOMOVE_TYPE_NONE );
     }
     
     EngineEvent* x = top->toEngineEmptyEventQueue.pull();

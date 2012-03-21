@@ -29,7 +29,7 @@ void EngineEvent::setSceneNumber       (int scene){ ia = scene; type = EE_SCENE_
 
 void EngineEvent::sendAddTrackPointers (void* p1,void* p2,void* p3,void* p4){ vPtr = p1;vPtr2=p2;vPtr3= p3;vPtr4= p4; type = EE_ADD_TRACK_POINTERS;}
 
-void EngineEvent::setAutomoveType      (int track, int typ){ia = track; ib = typ; type = EE_AUTOMOVE_TYPE;}
+void EngineEvent::setAutomoveType      (int track, int automovetype){ia = track; ib = automovetype; type = EE_AUTOMOVE_TYPE;}
 void EngineEvent::setAutomoveProgress  (int track, float prog){ia = track; fa = prog; type = EE_AUTOMOVE_PROGRESS;}
 
 void EngineEvent::looperPlay           (int id){ia = id; type = EE_LOOPER_PLAY;}

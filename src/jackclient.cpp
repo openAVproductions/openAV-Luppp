@@ -518,6 +518,14 @@ int JackClient::processMidi(jack_nframes_t nframes)
       time.processEngineEvent(x);
     }
     
+    if ( b1 == 144 && b2 == 60 )
+    {
+      time.startAutomoveType( AUTOMOVE_TYPE_DOWN );
+    }
+    if ( b1 == 144 && b2 == 64 )
+    {
+      time.startAutomoveType( AUTOMOVE_TYPE_UP );
+    }
     
     // FCB1010: Scene change
     if ( b1 == 192 && ( b2 >= 0 && b2 < 10 ) )
