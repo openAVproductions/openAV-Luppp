@@ -21,6 +21,7 @@
 
 #include "top.hpp"
 #include "engineevent.hpp"
+#include "jackclient.hpp"
 
 using namespace std;
 
@@ -36,12 +37,28 @@ Time::Time(Top* t)
 void Time::startAutomoveType(int type)
 {
   cout << "starting Automove type " << type << " now!" << endl;
+  
   automoveType = type;
   automoveStartFrame = top->frameNumber;
   
   EngineEvent* x = top->toEngineEmptyEventQueue.pull();
   x->setAutomoveType( -1, type);
   top->toGuiQueue.push(x);
+  
+  switch ( type )
+  {
+    case AUTOMOVE_TYPE_UP:        top->jackClient->writeMidi( top->jackClient->getLpdOutputBuffer(), 144, 64, 127 ); break;
+    case AUTOMOVE_TYPE_DOWN:      top->jackClient->writeMidi( top->jackClient->getLpdOutputBuffer(), 144, 60, 127 ); break;
+    case AUTOMOVE_TYPE_NONE:
+    {
+      for ( int i = 0; i < 8; i++ )
+      {
+        top->jackClient->writeMidi( top->jackClient->getLpdOutputBuffer(), 128, 60 + i, 127 );
+      }
+    }
+  }
+
+  
 }
 
 // this function gets called by JACK before processing any audio for

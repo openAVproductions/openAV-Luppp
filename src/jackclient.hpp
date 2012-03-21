@@ -53,6 +53,7 @@ class JackClient
     JackClient(Top*);
     
     void* getApcOutputBuffer();
+    void* getLpdOutputBuffer();
     
     void  apcWriteOutput(int track);
     void  apcWriteGridTrack(int track);
@@ -102,6 +103,8 @@ class JackClient
     
     JPort* seq24outputPort;
     
+    JPort* lpdOutputPort;
+    
     int trackControlMode;
     
     float* headphonePflBuffer;
@@ -112,6 +115,7 @@ class JackClient
     
     void* seq24outputBuffer;
     void* apcOutputBuffer;
+    void* lpdOutputBuffer;
     void  apcRead(int);
     void  apcSendDeviceControl(int , int , void*);
     

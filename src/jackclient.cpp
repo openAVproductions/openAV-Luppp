@@ -152,8 +152,11 @@ JackClient::JackClient( Top* t) :
                                     JackPortIsOutput,
                                     0 );
   
-  
-  //jack_set_process_callback  (client, process , 0);
+  lpdOutputPort = jack_port_register ( client,
+                                    "lpd8_output",
+                                    JACK_DEFAULT_MIDI_TYPE,
+                                    JackPortIsOutput,
+                                    0 );
   
   int retval = jack_set_process_callback( client,
                                   static_process,
@@ -455,6 +458,9 @@ int JackClient::process(jack_nframes_t nframes)
   apcOutputBuffer = jack_port_get_buffer ( apcOutputPort, nframes);
   jack_midi_clear_buffer(apcOutputBuffer);
   
+  lpdOutputBuffer = jack_port_get_buffer ( lpdOutputPort, nframes);
+  jack_midi_clear_buffer(lpdOutputBuffer);
+  
   processRtQueue();
   
   apcRead(nframes);
@@ -654,6 +660,11 @@ void JackClient::apcSendDeviceControl(int track, int device, void* apcOutputBuff
 void* JackClient::getApcOutputBuffer()
 {
   return apcOutputBuffer;
+}
+
+void* JackClient::getLpdOutputBuffer()
+{
+  return lpdOutputBuffer;
 }
 
 void JackClient::apcWriteGridTrack(int track)
