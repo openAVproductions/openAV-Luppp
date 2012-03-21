@@ -303,11 +303,30 @@ void GAutoMove::redraw()
 
 bool GAutoMove::on_button_press_event(GdkEventButton* event)
 {
-  if( event->type == GDK_BUTTON_PRESS && event->button == 3 )
+  if ( event->x > 7  && event->y > 7 &&
+       event->x < 57 && event->y < 49 )
+  {
+    cout << "CLICK on UP!!" << endl;
+    EngineEvent* x = new EngineEvent();
+    x->setAutomoveType( -1, AUTOMOVE_TYPE_UP );
+    top->toEngineQueue.push(x);
+    
+  }
+  else
+  {
+    cout << "CLICK on OFFFFF!!" << endl;
+    EngineEvent* x = new EngineEvent();
+    x->setAutomoveType( -1, AUTOMOVE_TYPE_NONE );
+    top->toEngineQueue.push(x);
+  }
+  
+  /*
+  if( event->button == 3 )
   {
     std::cout << "Event Type: " << event->type << ". Event Button: " << event->button << "." << std::endl;
     pMenu.popup(event->button, event->time);
   }
+  */
   
   return true;
 }

@@ -29,6 +29,15 @@ Time::Time(Top* t)
   top = t;
   
   beat = -1;
+  
+  automoveDuration = 4;
+}
+
+void Time::startAutomoveType(int type)
+{
+  cout << "starting Automove type " << type << " now!" << endl;
+  automoveType = type;
+  automoveStartFrame = top->frameNumber;
 }
 
 // this function gets called by JACK before processing any audio for
@@ -42,6 +51,29 @@ void Time::process(int frameNumber)
   int newBeat = frameNumber / framesPerBeat;
   
   top->frameNumber = frameNumber;
+  
+  
+  if ( automoveType != AUTOMOVE_TYPE_NONE )
+  {
+    // work out the current progress & value, then send that to statestore
+    int automoveProgressFrames = frameNumber - automoveStartFrame;
+    
+    float automoveProgress = float(automoveProgressFrames) / ( automoveDuration * framesPerBeat );
+    //cout << "Time::process() Automove progress = " << automoveProgress << " automoveProgressFrames: " << automoveProgressFrames << endl;
+    
+    switch ( automoveType )
+    {
+      case AUTOMOVE_TYPE_UP: top->state.globalUnit = automoveProgress / automoveDuration; break;
+      default: break;
+    }
+    
+    // line done, now turn off!
+    if ( automoveProgress > automoveDuration )
+    {
+      top->state.globalUnit = 0.f;
+      automoveType = AUTOMOVE_TYPE_NONE;
+    }
+  }
   
   // here we handle *all* events that should occur on *a* beat
   if ( newBeat != beat )

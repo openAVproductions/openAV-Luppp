@@ -270,6 +270,11 @@ int JackClient::processRtQueue()
         top->state.setVolume( e->ia, e->fa );
       }
     }
+    else if ( e->type == EE_AUTOMOVE_TYPE ) {
+      int type = e->ib;
+      cout << "Automove type : " << type << endl;
+      time.startAutomoveType(type);
+    }
     else if ( e->type == EE_SCENE_NUMBER ) {
       int sceneNum = e->ia;
       cout << "EE_SCENE_NUMBER " << sceneNum << endl; 

@@ -415,7 +415,20 @@ void LadspaHost::process(int nframes, float* buffer)
   else if ( type == EFFECT_LOWPASS )
   {
     // lowpass ports
+    //cout << "Lowpass globalUnit = " << top->state.globalUnit << endl;
     float finalValue = state->values[0] + top->state.globalUnit;
+    //cout << "Lowpass finalValue = " << finalValue << endl;
+    
+    if ( finalValue > 1 )
+      finalValue = 1;
+    if ( finalValue < 0 )
+      finalValue = 0.f;
+    
+    // update GUI
+    EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+    x->setPluginParameter(ID, -1, 0, finalValue);
+    top->toGuiQueue.push(x);
+    
     float freq = 200 + (70 * pow( 2.0, ((double)( finalValue*127) - 69.0) / 12.0 ) * 5);
     controlBuffer[0] = freq;
     descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] );

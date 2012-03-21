@@ -24,6 +24,7 @@
 
 #include <glibmm.h>
 
+#include "automove.hpp"
 #include "statestore.hpp"
 #include "engineevent.hpp"
 
@@ -38,6 +39,8 @@ class Time
   public:
     Time(Top*);
     
+    void startAutomoveType(int);
+    
     void process(int nframes);
     void processEngineEvent(EngineEvent* e);
   
@@ -45,6 +48,10 @@ class Time
     Top* top;
     
     int beat;
+    
+    int automoveStartFrame;
+    int automoveDuration;
+    AutoMoveType automoveType;
     
     // helper functions for processing queues
     void doEngineEvent(EngineEvent* );
