@@ -163,7 +163,7 @@ bool GAutoMove::on_expose_event(GdkEventExpose* event)
       setColour( cr, COLOUR_BLUE_1 );
       cr->stroke();
       
-      float progressPx = 215 * 0.75;
+      float progressPx = 215 * progress;
       
       // progress
       cr->rectangle( 7, 103, progressPx, 20 );

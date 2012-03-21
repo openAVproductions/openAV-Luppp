@@ -67,6 +67,10 @@ void Time::process(int frameNumber)
       default: break;
     }
     
+    EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+    x->setAutomoveProgress( -1, automoveProgress/automoveDuration);
+    top->toGuiQueue.push(x);
+    
     // line done, now turn off!
     if ( automoveProgress > automoveDuration )
     {
