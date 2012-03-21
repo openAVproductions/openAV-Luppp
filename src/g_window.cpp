@@ -478,7 +478,7 @@ int Window::handleEvent()
     }
     else if ( e->type == EE_TRACK_DEVICE_ACTIVE ) {
       int UID = e->ia;
-      std::cout << "Gui DEVICE ACTIVE   UID: " << UID << " value: " << e->ib << std::endl; 
+      //std::cout << "Gui DEVICE ACTIVE   UID: " << UID << " value: " << e->ib << std::endl; 
       
       if ( UID < guiState.effectState.size() )
       {
@@ -491,7 +491,7 @@ int Window::handleEvent()
         cout << "GWindow TrackActive event OOB" << endl;
       }
       
-      std::cout << "Done track device" << endl;
+      //std::cout << "Done track device" << endl;
     }
     else if ( e->type == EE_TRACK_SELECT_DEVICE ) {
       //std::cout << "Gui TrackSelect event  t: " << e->ia << " d: " << e->ib << std::endl;
@@ -583,7 +583,7 @@ int Window::handleEvent()
         //std::list<Gtk::EventBox*>::iterator evBoxIter = tracklabelBoxList.begin();
         //std::advance(evBoxIter, e->ia);
         
-        cout << "LooperSelectBuffer Event, track = " << e->ia << endl;
+        //cout << "LooperSelectBuffer Event, track = " << e->ia << endl;
         
         if ( !iter->hasBuffer )
         {
@@ -607,7 +607,7 @@ int Window::handleEvent()
           audioSourceVector.at(e->ia)->setPlaying(false);
         }
         
-        cout << "redrawing ClipSelector widget ID : " << e->ia << endl;
+        //cout << "redrawing ClipSelector widget ID : " << e->ia << endl;
         std::list<ClipSelector*>::iterator clipIter = clipselectorList.begin();
         advance(clipIter,e->ia);
         (*clipIter)->redraw();
@@ -619,16 +619,16 @@ int Window::handleEvent()
     {
       int UID = e->ia;
       // values here seem strance (not using ib) but this is due to legacy code
-      std::cout << "PLUGIN PARAM  UID " << UID  << " param " << e->ic << " val " << e->fa << std::endl;
+      //std::cout << "PLUGIN PARAM  UID " << UID  << " param " << e->ic << " val " << e->fa << std::endl;
       
       // here we get a UID, whose corresponding widget is in the GUI somewhere in a track,
       // at some slot number.
       
-      cout << "Set new VALUE widget UID = " << UID << endl;
+      //cout << "Set new VALUE widget UID = " << UID << endl;
       guiState.effectState.at(UID).values[e->ic] = e->fa;
       effectVector.at(UID)->queue_draw();
       
-      std::cout << "Plugin Param done" << endl;
+      //std::cout << "Plugin Param done" << endl;
     }
     else if ( e->type == EE_STATE_NEW_EFFECT )
     {

@@ -85,7 +85,7 @@ bool GLowPassSmall::on_expose_event(GdkEventExpose* event)
     cr->fill();
     
     // update value from stateStore
-    std::cout << "LowpassSmall  ID " << ID << " getting state now" << endl;
+    //std::cout << "LowpassSmall  ID " << ID << " getting state now" << endl;
     float cutoffRangeZeroOne = stateStore->effectState.at(ID).values[0];
     
     cutoff = (xSize * cutoffRangeZeroOne) / xSize;
