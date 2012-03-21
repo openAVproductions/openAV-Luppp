@@ -49,6 +49,7 @@ class Time
     
     int beat;
     
+    bool automoveQueue;
     int automoveStartFrame;
     int automoveDuration;
     AutoMoveType automoveType;

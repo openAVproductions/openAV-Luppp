@@ -31,6 +31,7 @@ Time::Time(Top* t)
   
   beat = -1;
   
+  automoveQueue = false;
   automoveDuration = 4;
 }
 
@@ -38,8 +39,8 @@ void Time::startAutomoveType(int type)
 {
   cout << "starting Automove type " << type << " now!" << endl;
   
+  automoveQueue = true;
   automoveType = type;
-  automoveStartFrame = top->frameNumber;
   
   EngineEvent* x = top->toEngineEmptyEventQueue.pull();
   x->setAutomoveType( -1, type);
@@ -86,7 +87,7 @@ void Time::process(int frameNumber)
   top->frameNumber = frameNumber;
   
   
-  if ( automoveType != AUTOMOVE_TYPE_NONE )
+  if ( automoveType != AUTOMOVE_TYPE_NONE && automoveQueue == false ) // queue false means playing = true!
   {
     // work out the current progress & value, then send that to statestore
     int automoveProgressFrames = frameNumber - automoveStartFrame;
@@ -133,6 +134,13 @@ void Time::process(int frameNumber)
       cout << "Time:process() doing 4th list!" << endl;
       if ( !q4.empty() ) {
         doEngineEventList(q4);
+      }
+      
+      if ( automoveQueue )
+      {
+        // autoMove feature
+        automoveStartFrame = top->frameNumber;
+        automoveQueue = false;
       }
     }
     
