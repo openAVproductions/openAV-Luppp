@@ -30,6 +30,9 @@ StateStore::StateStore(Top* t)
 {
   numTracks = 0;
   top = t;
+  
+  globalUnit = 0.f;
+  
 }
 
 void StateStore::addEffect(int t, int pos, Effect* effect)

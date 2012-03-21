@@ -50,6 +50,8 @@ class StateStore
     
     int midib1,midib2,midib3;
     
+    float globalUnit;
+    
     int getNumTracks(){return numTracks;}
     int getNumEffects(){return numEffects;}
     
