@@ -141,9 +141,11 @@ Window::Window(Gtk::Main *k, Top* t) :
   
   masterOutputBox->add( *tmpVbox );
   
-  // grab widgets & connect signal handlers for DnD
+  // AutoMove & Waveform boxs & widgets
   refBuilder->get_widget("bottomWidgetBox", bottomWidgetBox);
-  //refBuilder->get_widget("trackEffectEventBox", trackEffectEventBox);
+  bottomWidgetBox->pack_start(waveview, true, true);
+  bottomWidgetBox->pack_end(automove, false, true);
+  bottomWidgetBox->show_all();
   
   // drop destination
   std::vector<Gtk::TargetEntry> listTargets;
@@ -158,10 +160,6 @@ Window::Window(Gtk::Main *k, Top* t) :
   
   //masterOutputBox->add( inputWaveview );
   //masterOutputBox->add( waveview );
-  
-  bottomWidgetBox->add(waveview);
-  bottomWidgetBox->add(automove);
-  bottomWidgetBox->show_all();
   
   masterOutputBox->pack_end( masterOutput, false, true, 0 );
   masterOutputBox->show_all();

@@ -62,6 +62,7 @@ class Window
     Gtk::Table* mainTable;
     Gtk::Box* masterOutputBox;
     
+    Gtk::Box* automoveBox;
     Gtk::HBox* bottomWidgetBox;
     Gtk::EventBox* trackEffectEventBox;
     
