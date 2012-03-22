@@ -330,7 +330,7 @@ int Window::handleEvent()
     else if ( e->type == EE_BPM ) {
       cout << "GUI new BPM: " << e->ia << endl;
       masterProgress.setBpm(e->ia);
-      lo_send( lo_address_new( NULL, "7773") , "/harmonyseq/tempo","f", (float)e->ia);
+      //lo_send( lo_address_new( NULL, "7773") , "/harmonyseq/tempo","f", (float)e->ia);
     }
     else if ( e->type == EE_ADD_TRACK ) {
       //cout << "GUI got ADD_TRACK event, sending to OfflineWorker  NewID = " << e->ia << endl;
