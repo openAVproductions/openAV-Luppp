@@ -220,7 +220,15 @@ Window::Window(Gtk::Main *k, Top* t) :
 
 void Window::showAboutDialog()
 {
-  aboutDialog->show();
+  int response = aboutDialog->run();
+  
+  // unnecessary, really:
+  if ( (response == Gtk::RESPONSE_DELETE_EVENT) ||
+       (response == Gtk::RESPONSE_CANCEL) )
+  {
+    aboutDialog->hide();
+  }
+  
 }
 
 void Window::setFileChooserPane()
