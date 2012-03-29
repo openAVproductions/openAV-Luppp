@@ -8,11 +8,13 @@ struct EffectState
   {
     ID = id;
     active = false;
+    globalUnit = false;
     for(int i = 0; i < 8; i++)
       values[i] = 0.f;
   }
   int ID;
   bool active;
+  bool globalUnit;
   float values[8];
 };
 

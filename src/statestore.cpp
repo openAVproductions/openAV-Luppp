@@ -436,6 +436,41 @@ void StateStore::setPluginParameter(int ID, int param, float value)
   }
 }
 
+void StateStore::setPluginGlobalUnit(int ID, int onOff)
+{
+  // all "dynamic" elements in engine ( ladspaHosts, lv2host, etc ) all use
+  // the same generic "EffectState" as thier settings. Up to 8 floats of control
+  // for now, more is *not* suitable for RT LIVE performance.
+  
+  //cout << "StateStore::setPluginGlobalUnit() " << t << ", " << param << ", " << onOff << endl;
+  
+  // iter over the list, and 
+  std::list<EffectState*>::iterator iter;
+  for ( iter = effectStateList.begin(); iter != effectStateList.end(); iter++ )
+  {
+    if ( (*iter)->ID == ID )
+    {
+      break;
+    }
+  }
+  
+  if ( iter == effectStateList.end() )
+  {
+    std::cout << "StateStore::setPluginGlobalUnit() Error, did not find EffectState with ID " << ID << std::endl;
+    return;
+  }
+  else
+  {
+    std::cout << "StateStore::setPluginGlobalUnit() writing value " << onOff << endl;
+    (*iter)->globalUnit = (int)onOff;
+    
+    // bounce on to GUI (-1 not used)
+    EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+    x->setPluginGlobalUnit(ID, onOff);
+    top->toGuiQueue.push(x);
+  }
+}
+
 TrackOutputState* StateStore::getAudioSinkOutput(int t)
 {
   if ( !trackCheck(t) ) {

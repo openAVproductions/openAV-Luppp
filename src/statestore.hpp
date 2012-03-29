@@ -76,6 +76,8 @@ class StateStore
     void setPluginActive(int, int);
     void setPluginParameter(int,int,float);
     
+    void setPluginGlobalUnit(int ID, int onOff);
+    
     void setAudioBuffer(AudioBuffer*);
     AudioBuffer* getAudioBuffer(int ID);
     

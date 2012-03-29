@@ -64,6 +64,8 @@ void EngineEvent::setTrackSelectDevice (int id, int b) { ia = id; ib = b; type =
 void EngineEvent::setPluginParameter   (int i1, int i2, int i3, float f1) {ia=i1;ib=i2;ic=i3;fa=f1;type=EE_TRACK_SET_PLUGIN_PARAMETER;}
 void EngineEvent::setPluginParameterAbsolute(int i1, int i2, int i3, float f1) {ia=i1;ib=i2;ic=i3;fa=f1;type=EE_TRACK_SET_PLUGIN_PARAMETER_ABSOLUTE;}
 
+void EngineEvent::setPluginGlobalUnit  (int UID, int onOff){ia=UID;ib=onOff;type=EE_TRACK_SET_PLUGIN_GLOBAL_UNIT;}
+
 void EngineEvent::setTrackDeviceActive (int id, int a) { ia = id; ib = a; type = EE_TRACK_DEVICE_ACTIVE; }
 void EngineEvent::setTrackSetDeviceType(int id, int b, int a) { ia = id; ib = b; ic = a; type = EE_TRACK_SET_DEVICE_TYPE; }
 

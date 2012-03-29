@@ -67,6 +67,7 @@ enum EngineEventType
   EE_TRACK_SELECT_DEVICE,
   EE_TRACK_SET_DEVICE_TYPE,
   EE_TRACK_SET_PLUGIN_PARAMETER,
+  EE_TRACK_SET_PLUGIN_GLOBAL_UNIT,
   EE_TRACK_SET_PLUGIN_PARAMETER_ABSOLUTE,
   
   EE_TRACK_DEVICE_ACTIVE,
@@ -148,6 +149,8 @@ class EngineEvent
     void setTrackBacktrackRestore(int id);
     void setPluginParameter   (int i1, int i2, int i3, float f1);
     void setPluginParameterAbsolute(int i1, int i2, int i3, float f1);
+    
+    void setPluginGlobalUnit  (int UID, int onOff);
     
     void setTrackRms          (int id, float rms);
     void setTrackSource       (int id, void* source);

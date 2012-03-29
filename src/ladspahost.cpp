@@ -425,9 +425,12 @@ void LadspaHost::process(int nframes, float* buffer)
   else if ( type == EFFECT_LOWPASS )
   {
     // lowpass ports
-    //cout << "Lowpass globalUnit = " << top->state.globalUnit << endl;
-    float finalValue = state->values[0] + globalChange * top->state.globalUnit;
-    //cout << "Lowpass finalValue = " << finalValue << endl;
+    float finalValue = state->values[0];
+    
+    if ( state->globalUnit ) // overwrite old value with globalUnit effected one
+    {
+      finalValue = state->values[0] + globalChange * top->state.globalUnit;
+    }
     
     if ( finalValue > 1 )
       finalValue = 1;
