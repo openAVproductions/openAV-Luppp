@@ -202,14 +202,14 @@ bool GAutoMove::on_expose_event(GdkEventExpose* event)
       if ( type == AUTOMOVE_TYPE_UP && progress != 0.f )
       {
         cr->rectangle(  7,  7, 50, 42 );
-        setColour( cr, COLOUR_ORANGE_1 );
+        setColour( cr, COLOUR_GREEN_1 );
         cr->set_line_width(3.2);
         cr->stroke();
       }
       else if ( type == AUTOMOVE_TYPE_DOWN && progress != 0.f )
       {
         cr->rectangle(  7, 55, 50, 42 );
-        setColour( cr, COLOUR_ORANGE_1 );
+        setColour( cr, COLOUR_GREEN_1 );
         cr->set_line_width(3.2);
         cr->stroke();
       }
