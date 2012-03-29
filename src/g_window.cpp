@@ -350,6 +350,10 @@ int Window::handleEvent()
       }
       
     }
+    else if ( e->type == EE_TRACK_SET_PLUGIN_GLOBAL_UNIT ) {
+      guiState.effectState.at(e->ia).globalUnit = e->ib;
+      effectVector.at(e->ia)->queue_draw();
+    }
     else if ( e->type == EE_AUTOMOVE_PROGRESS ) {
       automove.setProgress(e->fa);
     }

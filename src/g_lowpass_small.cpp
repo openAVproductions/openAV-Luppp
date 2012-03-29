@@ -87,6 +87,7 @@ bool GLowPassSmall::on_expose_event(GdkEventExpose* event)
     // update value from stateStore
     //std::cout << "LowpassSmall  ID " << ID << " getting state now" << endl;
     float cutoffRangeZeroOne = stateStore->effectState.at(ID).values[0];
+    bool globalUnit = stateStore->effectState.at(ID).globalUnit;
     
     cutoff = (xSize * cutoffRangeZeroOne) / xSize;
     
@@ -173,12 +174,24 @@ bool GLowPassSmall::on_expose_event(GdkEventExpose* event)
     cr->stroke();
     
     // click center
-    if ( active )
-      setColour(cr, COLOUR_ORANGE_1, 0.9 );
+    if ( globalUnit )
+    {
+      setColour(cr, COLOUR_GREEN_1, 0.9 );
+      cr->move_to( xSize * cutoff - 5, ySize*q - 5 );
+      cr->line_to( xSize * cutoff + 5, ySize*q + 5 );
+      cr->move_to( xSize * cutoff - 5, ySize*q + 5 );
+      cr->line_to( xSize * cutoff + 5, ySize*q - 5 );
+      cr->stroke();
+    }
     else
-      setColour(cr, COLOUR_GREY_1, 0.9 );
-    cr->arc( xSize*cutoff, ySize*q, 7, 0, 6.2830 );
-    cr->stroke();
+    {
+      if ( active )
+        setColour(cr, COLOUR_ORANGE_1, 0.9 );
+      else
+        setColour(cr, COLOUR_GREY_1, 0.9 );
+      cr->arc( xSize*cutoff, ySize*q, 7, 0, 6.2830 );
+      cr->stroke();
+    }
     
     // dials
     //Dial(cr, active, 70, 140, cutoffRangeZeroOne, DIAL_MODE_NORMAL);
