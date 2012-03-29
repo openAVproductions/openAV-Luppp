@@ -260,6 +260,13 @@ bool GLowPassSmall::on_button_press_event(GdkEventButton* event)
     
     return true; //It's been handled.
   }
+  else if ( event->type == GDK_2BUTTON_PRESS && event->button == 1 ) // double left click
+  {
+    //cout << "DOUBLE CLICK LOWPASS!!" << endl;
+    EngineEvent* x = new EngineEvent();
+    x->setPluginGlobalUnit( ID, !stateStore->effectState.at(ID).globalUnit );
+    top->toEngineQueue.push(x);
+  }
   else if ( event->button == 3 )
   {
     std::cout << "GLowPassSmall Enable / Disable click event, ID = " << ID << std::endl;
