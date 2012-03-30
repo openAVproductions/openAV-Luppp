@@ -1043,10 +1043,13 @@ void JackClient::apcRead( int nframes )
         
         std::cout << "SETTING BUFFER FROM APC40! ID:" << id << " val: " << val << std::endl;
         
-        // REACT!! Make engine playback the CLIP!
-        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
-        x->looperSelectBuffer(id,val);
-        time.processEngineEvent(x);
+        if ( id >= 0 && id < top->state.getNumTracks() )
+        {
+          // REACT!! Make engine playback the CLIP!
+          EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+          x->looperSelectBuffer(id,val);
+          time.processEngineEvent(x);
+        }
       }
     }
     
@@ -1128,17 +1131,24 @@ void JackClient::apcRead( int nframes )
         int trackID = b1 - 144;
         std::cout << "APC: SOLO on track " << trackID << " on!" << std::endl;
         
-        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
-        x->setTrackSolo(trackID, true);
-        top->toGuiQueue.push(x);
+        if ( trackID >= 0 && trackID < top->state.getNumTracks() )
+        {
+          EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+          x->setTrackSolo(trackID, true);
+          top->toGuiQueue.push(x);
+        }
       }
       else if ( b1 >= 128 && b1 < 128 + 16 ) // solo off
       {
         int trackID = b1 - 128;
-        std::cout << "APC: SOLO on track " << trackID << " off!" << std::endl;
-        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
-        x->setTrackSolo(trackID, false);
-        top->toGuiQueue.push(x);
+        if ( trackID >= 0 && trackID < top->state.getNumTracks() )
+        {
+          int trackID = b1 - 128;
+          std::cout << "APC: SOLO on track " << trackID << " off!" << std::endl;
+          EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+          x->setTrackSolo(trackID, false);
+          top->toGuiQueue.push(x);
+        }
       }
     }
     if ( b2 == 50 )
