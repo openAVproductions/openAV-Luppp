@@ -91,6 +91,7 @@ bool GBeatSmash::on_expose_event(GdkEventExpose* event)
     // update value from stateStore
     float delayTime = stateStore->effectState.at(ID).values[0];
     bool active = stateStore->effectState.at(ID).active;
+    bool globalUnit = stateStore->effectState.at(ID).globalUnit;
     
     int x = 0;
     int y = 0;
@@ -110,7 +111,7 @@ bool GBeatSmash::on_expose_event(GdkEventExpose* event)
     if ( active )
       setColour(cr, COLOUR_BLUE_1, 0.2 );
     else
-      setColour(cr, COLOUR_GREY_1 );
+      setColour(cr, COLOUR_GREY_1, 0.2 );
     cr->rectangle( 0, 8, delayTime * xSize, ySize - 16 );
     cr->fill_preserve();
     if ( active )
@@ -118,6 +119,29 @@ bool GBeatSmash::on_expose_event(GdkEventExpose* event)
     else
       setColour(cr, COLOUR_GREY_1 );
     cr->stroke();
+    
+    // click center
+    if ( globalUnit )
+    {
+      if ( active )
+        setColour(cr, COLOUR_GREEN_1, 0.9 );
+      else
+        setColour(cr, COLOUR_GREY_1,0.9 );
+      cr->move_to( xSize * delayTime - 5, ySize*0.5 - 5 );
+      cr->line_to( xSize * delayTime + 5, ySize*0.5 + 5 );
+      cr->move_to( xSize * delayTime - 5, ySize*0.5 + 5 );
+      cr->line_to( xSize * delayTime + 5, ySize*0.5 - 5 );
+      cr->stroke();
+    }
+    else
+    {
+      if ( active )
+        setColour(cr, COLOUR_ORANGE_1, 0.9 );
+      else
+        setColour(cr, COLOUR_GREY_1, 0.9 );
+      cr->arc( xSize*delayTime, ySize*0.5, 7, 0, 6.2830 );
+      cr->stroke();
+    }
     
     // draw "guides"
     std::valarray< double > dashes(2);
@@ -191,6 +215,13 @@ bool GBeatSmash::on_button_press_event(GdkEventButton* event)
     std::cout << "GBeatsmash Enable / Disable click event!" << std::endl;
     EngineEvent* x = new EngineEvent();
     x->setTrackDeviceActive(ID, !stateStore->effectState.at(ID).active );
+    top->toEngineQueue.push(x);
+  }
+  
+  if ( event->type == GDK_2BUTTON_PRESS && event->button == 1 ) // double left click
+  {
+    EngineEvent* x = new EngineEvent();
+    x->setPluginGlobalUnit( ID, !stateStore->effectState.at(ID).globalUnit );
     top->toEngineQueue.push(x);
   }
   

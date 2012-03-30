@@ -46,9 +46,29 @@ void BeatSmash::process(int nframes, float* buffer)
   //std::cout << "Process: queueActive: " << queueActive << "\tActive: " << active << std::endl;
   EffectState* state = top->state.getEffectState(ID);
   
+  // AutoMove feature, range scale the unit's value here
+  float globalChange = 0.f;
+  switch ( top->state.globalUnitType )
+  {
+    case AUTOMOVE_TYPE_UP:        globalChange = 1 - state->values[0]; break;
+    case AUTOMOVE_TYPE_DOWN:      globalChange =     state->values[0]; break;
+    default: break;
+  }
+  
   bool active = state->active;
   
-  int delaySize = 1 + (int)(state->values[0] * 3.8);
+  float finalValue = state->values[0];
+  if ( state->globalUnit ) // overwrite old value with globalUnit effected one
+  {
+    finalValue = state->values[0] + globalChange * top->state.globalUnit;
+  }
+  
+  // update GUI
+  EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+  x->setPluginParameter(ID, -1, 0, finalValue);
+  top->toGuiQueue.push(x);
+  
+  int delaySize = 1 + (int)(finalValue * 3.8);
   
   // scale the delaySize to a musically meaningful number
   if      ( delaySize == 1 )

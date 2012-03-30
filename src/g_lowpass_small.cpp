@@ -176,7 +176,10 @@ bool GLowPassSmall::on_expose_event(GdkEventExpose* event)
     // click center
     if ( globalUnit )
     {
-      setColour(cr, COLOUR_GREEN_1, 0.9 );
+      if ( active )
+        setColour(cr, COLOUR_GREEN_1, 0.9 );
+      else
+        setColour(cr, COLOUR_GREY_1,0.9 );
       cr->move_to( xSize * cutoff - 5, ySize*q - 5 );
       cr->line_to( xSize * cutoff + 5, ySize*q + 5 );
       cr->move_to( xSize * cutoff - 5, ySize*q + 5 );
