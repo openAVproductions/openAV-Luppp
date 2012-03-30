@@ -47,6 +47,9 @@ FileSelector::FileSelector(Top* t, GuiStateStore* s)
   signal_drag_data_get().connect(sigc::mem_fun(*this, &FileSelector::dragFunction ));
   
   widgetSizeX = 200;
+  widgetSizeY = 18;
+    
+  set_size_request( widgetSizeX, widgetSizeY );
 }
 
 bool FileSelector::redraw()
@@ -55,8 +58,7 @@ bool FileSelector::redraw()
   Glib::RefPtr<Gdk::Window> win = get_window();
   if (win)
   {
-      Gdk::Rectangle r(0, 0, get_allocation().get_width(),
-              get_allocation().get_height());
+      Gdk::Rectangle r(0, 0, widgetSizeX, widgetSizeY);
       win->invalidate_rect(r, false);
   }
   return true;
@@ -64,10 +66,9 @@ bool FileSelector::redraw()
 
 void FileSelector::setWidgetSizeFromList()
 {
-  
-  int widgetY = 18 * fileList.size();
-  cout << "FileSelector::setWidgetSizeFromList() setting widget size to " << widgetY << endl;
-  set_size_request(200, widgetY );
+  widgetSizeY = 18 * fileList.size();
+  cout << "FileSelector::setWidgetSizeFromList() setting widget size to " << widgetSizeY << endl;
+  set_size_request( widgetSizeX, widgetSizeY );
 }
 
 

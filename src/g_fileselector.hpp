@@ -40,6 +40,7 @@ class FileSelector : public Gtk::DrawingArea
     GuiStateStore* stateStore;
     
     int widgetSizeX;
+    int widgetSizeY;
     
     int block;
     
