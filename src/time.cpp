@@ -241,6 +241,12 @@ void Time::doEngineEvent(EngineEvent* e)
         cout << "EE_SCENE_NUMBER " << block << " on track " << i << endl; 
         top->state.clipSelectorActivateClip(i, block);
       }
+      
+      // bounce scene number on to the GUI
+      EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+      x->setSceneNumber(block);
+      top->toGuiQueue.push(x);
+      
       break;
     }
     case EE_TRACK_DEVICE_ACTIVE: top->state.setPluginActive(e->ia, e->ib); break;

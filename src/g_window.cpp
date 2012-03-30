@@ -125,21 +125,24 @@ Window::Window(Gtk::Main *k, Top* t) :
   refBuilder->get_widget("mainTable", mainTable);
   
   refBuilder->get_widget("masterOutputBox", masterOutputBox);
+  refBuilder->get_widget("masterClipSelectorBox", masterClipSelectorBox);
   
   // master track widgets
   Gtk::VBox* tmpVbox = new Gtk::VBox();
   
-  Gtk::EventBox* tmpBox = new Gtk::EventBox();
+  masterClipEventBox = new Gtk::EventBox();
   Gtk::Label* tmpLabel = new Gtk::Label( "Master" );
-  tmpBox->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("green"));
-  tmpBox->add( *tmpLabel );
+  masterClipEventBox->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("green"));
+  masterClipEventBox->add( *tmpLabel );
   
-  ClipSelector* masterClipSelector = new ClipSelector(top, &guiState, true);
-  tmpVbox->add( *tmpBox );
-  tmpVbox->add( *masterClipSelector);
-  tmpVbox->pack_end( masterProgress, true, false );
+  masterClipSelector = new ClipSelector(top, &guiState, true);
+  tmpVbox->add( *masterClipEventBox );
+  tmpVbox->add( *masterClipSelector);  
+  masterClipSelectorBox->add( *tmpVbox );
+  masterClipSelectorBox->show_all();
   
-  masterOutputBox->add( *tmpVbox );
+  // master output widget
+  masterOutputBox->add( masterProgress );
   
   // AutoMove & Waveform boxs & widgets
   refBuilder->get_widget("bottomWidgetBox", bottomWidgetBox);
@@ -364,13 +367,18 @@ int Window::handleEvent()
       
       int scene = e->ia;
       // harmonySeq integration: send it the scene id OSC tag
-      cout << "ClipSelector: HarmonySeq integration: Sending OSC tag # " << scene << " now!" << endl;
+      cout << "GWindow SCENE NUMBER: " << scene << endl;
       
       guiState.masterClipPlaying = scene;
-      //masterClipSelector->queue_draw();
+      masterClipSelector->queue_draw();
       
-      lo_send( lo_address_new(NULL, "7773") , "/harmonyseq/event", "i", scene );
-      lo_send( lo_address_new(NULL, "7773") , "/harmonyseq/sync", "" );
+      if ( scene != -1 )
+        masterClipEventBox->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("black"));
+      else
+        masterClipEventBox->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("green"));
+      
+      //lo_send( lo_address_new(NULL, "7773") , "/harmonyseq/event", "i", scene );
+      //lo_send( lo_address_new(NULL, "7773") , "/harmonyseq/sync", "" );
       
     }
     else if ( e->type == EE_TRACK_RMS ) {

@@ -284,7 +284,7 @@ int JackClient::processRtQueue()
     }
     else if ( e->type == EE_SCENE_NUMBER ) {
       int sceneNum = e->ia;
-      cout << "EE_SCENE_NUMBER " << sceneNum << endl; 
+      //cout << "EE_SCENE_NUMBER " << sceneNum << endl; 
       
       // bounce scene number on to the GUI
       EngineEvent* x = top->toEngineEmptyEventQueue.pull();

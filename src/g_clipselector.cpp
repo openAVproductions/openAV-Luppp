@@ -95,7 +95,7 @@ ClipSelector::ClipSelector(Top* t, GuiStateStore* s, bool masterConstructor)
     s << i;
     nameList.push_back( s.str() );
   }
-  set_size_request(74,18 * 10);
+  set_size_request(74*3,18 * 10);
 }
 
 bool ClipSelector::redraw()
@@ -252,8 +252,9 @@ bool ClipSelector::on_button_press_event(GdkEventButton* event)
       redraw();
       
       // harmonySeq integration: send it the scene id OSC tag
-      cout << "ClipSelector: HarmonySeq integration: Sending OSC tag # " << block << " now!" << endl;
-      lo_send( lo_address_new(NULL, "7773") , "/harmonyseq/event", "i", block );
+      //cout << "ClipSelector: HarmonySeq integration: Sending OSC tag # " << block << " now!" << endl;
+      //lo_send( lo_address_new(NULL, "7773") , "/harmonyseq/event", "i", block );
+      return true;
     }
     else // rename scene
     {

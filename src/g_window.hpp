@@ -64,6 +64,8 @@ class Window
     
     Gtk::Box* automoveBox;
     Gtk::HBox* bottomWidgetBox;
+    Gtk::Box* masterClipSelectorBox;
+    Gtk::EventBox* masterClipEventBox;
     Gtk::EventBox* trackEffectEventBox;
     
     Gtk::Viewport* fileChooserViewport;

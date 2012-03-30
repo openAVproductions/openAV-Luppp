@@ -672,7 +672,7 @@ Author: Harry van Haaren &lt;harryhaaren@gmail.com&gt;</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkBox" id="masterOutputBox">
+                              <object class="GtkBox" id="masterClipSelectorBox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="orientation">vertical</property>
@@ -788,6 +788,22 @@ Author: Harry van Haaren &lt;harryhaaren@gmail.com&gt;</property>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox" id="masterOutputBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="pack_type">end</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
               </object>
