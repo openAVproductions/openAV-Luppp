@@ -32,7 +32,7 @@ GHighPass::GHighPass(Top* t, GuiStateStore* s)
   stateStore = s;
   
   cutoff = 0.0;
-  q = 1.0;
+  q = 0.5;
   
   mouseDown = false;
   
@@ -91,6 +91,7 @@ bool GHighPass::on_expose_event(GdkEventExpose* event)
     cutoff = cutoffRangeZeroOne;
     
     bool active = stateStore->effectState.at(ID).active;
+    bool globalUnit = stateStore->effectState.at(ID).globalUnit;
     
     int x = 0;
     int y = 0;
@@ -185,12 +186,27 @@ bool GHighPass::on_expose_event(GdkEventExpose* event)
     cr->stroke();
     
     // click center
-    if ( active )
-      setColour(cr, COLOUR_ORANGE_1, 0.9 );
+    if ( globalUnit )
+    {
+      if ( active )
+        setColour(cr, COLOUR_GREEN_1, 0.9 );
+      else
+        setColour(cr, COLOUR_GREY_1,0.9 );
+      cr->move_to( xSize * cutoff - 5, ySize*q - 5 );
+      cr->line_to( xSize * cutoff + 5, ySize*q + 5 );
+      cr->move_to( xSize * cutoff - 5, ySize*q + 5 );
+      cr->line_to( xSize * cutoff + 5, ySize*q - 5 );
+      cr->stroke();
+    }
     else
-      setColour(cr, COLOUR_GREY_1, 0.9 );
-    cr->arc( xSize*cutoff, ySize*0.33, 7, 0, 6.2830 );
-    cr->stroke();
+    {
+      if ( active )
+        setColour(cr, COLOUR_ORANGE_1, 0.9 );
+      else
+        setColour(cr, COLOUR_GREY_1, 0.9 );
+      cr->arc( xSize*cutoff, ySize*q, 7, 0, 6.2830 );
+      cr->stroke();
+    }
     
     // dials
     Dial(cr, active, 70, 140, cutoffRangeZeroOne, DIAL_MODE_NORMAL);
@@ -257,10 +273,8 @@ bool GHighPass::on_button_press_event(GdkEventButton* event)
     int evX = event->x;
     
     EngineEvent* ee = new EngineEvent();
-    ee->setPluginParameter(ID,0,0, evX / xSize );
+    ee->setPluginParameter(ID,0,0, evX / float(xSize) );
     top->toEngineQueue.push(ee);
-    
-    return true; //It's been handled.
   }
   else if ( event->button == 3 ) // right click to enable disable
   {
@@ -269,10 +283,15 @@ bool GHighPass::on_button_press_event(GdkEventButton* event)
     x->setTrackDeviceActive(ID, !stateStore->effectState.at(ID).active );
     top->toEngineQueue.push(x);
   }
-  else
+  
+  if ( event->type == GDK_2BUTTON_PRESS && event->button == 1 ) // double left click
   {
-    return false;
+    EngineEvent* x = new EngineEvent();
+    x->setPluginGlobalUnit( ID, !stateStore->effectState.at(ID).globalUnit );
+    top->toEngineQueue.push(x);
   }
+  
+  return true;
 }
 
 bool GHighPass::on_button_release_event(GdkEventButton* event)

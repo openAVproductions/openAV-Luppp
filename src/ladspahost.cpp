@@ -482,7 +482,23 @@ void LadspaHost::process(int nframes, float* buffer)
   else if ( type == EFFECT_HIGHPASS )
   {
     // highpass ports
-    float freq = (70 * pow( 2.0, ((double)(state->values[0]*127) - 69.0) / 12.0 ) * 3);
+    float finalValue = state->values[0];
+    if ( state->globalUnit ) // overwrite old value with globalUnit effected one
+    {
+      finalValue = state->values[0] + globalChange * top->state.globalUnit;
+    }
+    
+    if ( finalValue > 1 )
+      finalValue = 1;
+    if ( finalValue < 0 )
+      finalValue = 0.f;
+    
+    // update GUI
+    EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+    x->setPluginParameter(ID, -1, 0, finalValue);
+    top->toGuiQueue.push(x);
+    
+    float freq = (70 * pow( 2.0, ((double)(finalValue*127) - 69.0) / 12.0 ) * 3);
     controlBuffer[0] = freq;
     
     descriptor -> connect_port ( pluginHandle , 0, &controlBuffer[0] );
