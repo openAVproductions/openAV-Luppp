@@ -142,10 +142,10 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
       cr->rectangle(event->area.x, event->area.y,event->area.width, event->area.height);
       cr->clip();
       
-      int x = 10;
-      int y = 22;
-      int xSize = width - 20;
-      int ySize = height - 20;
+      int x = 0;
+      int y = 0;
+      int xSize = width;
+      int ySize = height;
       
       // works but a bit simple
       cr -> move_to( x        , y         );
@@ -322,8 +322,8 @@ bool GWaveView::on_expose_event(GdkEventExpose* event)
 
 void GWaveView::drawNoBuffer( Cairo::RefPtr<Cairo::Context> cr )
 {
-  int x = 10;
-  int y = 22;
+  int x = 0;
+  int y = 0;
   
   int xSize = width - 2*x;
   int ySize = height - y;
@@ -338,6 +338,13 @@ void GWaveView::drawNoBuffer( Cairo::RefPtr<Cairo::Context> cr )
   setColour(cr, COLOUR_GREY_2 );
   cr->stroke();
   
+  // draw text
+  cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_BOLD);
+  cr->set_font_size ( 15 );
+  cr->move_to ( xSize * 0.3, ySize * 0.5 );
+  setColour(cr, COLOUR_ORANGE_1, 0.7 );
+  cr->show_text ( "Drop Audiobuffer here..." );
+  
   // outline
   setColour(cr, COLOUR_GREY_3 );
   cr->rectangle( x, y , xSize, ySize );
@@ -347,15 +354,15 @@ void GWaveView::drawNoBuffer( Cairo::RefPtr<Cairo::Context> cr )
 
 void GWaveView::drawMarker(Cairo::RefPtr<Cairo::Context> cr, float position, Colour col, MarkerType type, std::string& name)
 {
-  int x = 10;
-  int y = 22;
+  int x = 0;
+  int y = 0;
   
   // marks for start
   int markXsize = 40;
   int markX = x + position * ((width-markXsize) - x * 2);
   int markY = y / 2;
   
-  int markYsize = y - 6;
+  int markYsize = 18;
   
   setColour(cr, col);
   if ( type == MARKER_START || type == MARKER_MIDDLE )
@@ -387,7 +394,7 @@ void GWaveView::drawMarker(Cairo::RefPtr<Cairo::Context> cr, float position, Col
   
   cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_BOLD);
   cr->set_font_size ( 13 );
-  cr->move_to ( markX + 3, y + 1 );
+  cr->move_to ( markX + 3, 12 );
   setColour(cr, COLOUR_GREY_4);
   cr->show_text ( name );
 }
