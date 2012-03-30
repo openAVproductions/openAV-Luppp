@@ -1089,6 +1089,15 @@ void JackClient::apcRead( int nframes )
       int sceneID = b2 - 82;
       std::cout << "APC: Scene Launch on Scene " << sceneID << std::endl;
       
+      // SEQ24 integration
+      // turn off all scenes on Seq24
+      for ( int i = 0; i < 5; i++ )
+      {
+        writeMidi( seq24outputBuffer, 128, i, 127 );
+      }
+      // turn on relevant scene
+      writeMidi( seq24outputBuffer, 144, sceneID, 127 );
+      
       // write the new scene event
       EngineEvent* x = top->toEngineEmptyEventQueue.pull();
       x->setSceneNumber(sceneID);

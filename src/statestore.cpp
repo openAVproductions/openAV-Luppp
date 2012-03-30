@@ -456,12 +456,12 @@ void StateStore::setPluginGlobalUnit(int ID, int onOff)
   
   if ( iter == effectStateList.end() )
   {
-    std::cout << "StateStore::setPluginGlobalUnit() Error, did not find EffectState with ID " << ID << std::endl;
+    //std::cout << "StateStore::setPluginGlobalUnit() Error, did not find EffectState with ID " << ID << std::endl;
     return;
   }
   else
   {
-    std::cout << "StateStore::setPluginGlobalUnit() writing value " << onOff << endl;
+    //std::cout << "StateStore::setPluginGlobalUnit() writing value " << onOff << endl;
     (*iter)->globalUnit = (int)onOff;
     
     // bounce on to GUI (-1 not used)
@@ -474,7 +474,7 @@ void StateStore::setPluginGlobalUnit(int ID, int onOff)
 TrackOutputState* StateStore::getAudioSinkOutput(int t)
 {
   if ( !trackCheck(t) ) {
-    std::cout << "StateStore::getAudioSinkOutput() track OOB: " << t << std::endl; return 0;
+    //std::cout << "StateStore::getAudioSinkOutput() track OOB: " << t << std::endl; return 0;
   }
   
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
@@ -486,7 +486,7 @@ TrackOutputState* StateStore::getAudioSinkOutput(int t)
 ClipSelectorState* StateStore::getClipSelectorState(int t)
 {
   if ( !trackCheck(t) ) {
-    std::cout << "StateStore::getClipSelectorState() track OOB: " << t << std::endl; return 0;
+    //std::cout << "StateStore::getClipSelectorState() track OOB: " << t << std::endl; return 0;
   }
   
   std::list<ClipSelectorState>::iterator iter = clipSelectorState.begin();
