@@ -61,7 +61,7 @@ GMasterOutput::GMasterOutput(Top* t, GuiStateStore* s)
   
   clickedWidget = CLICKED_WIDGET_NONE;
   
-  set_size_request(74*3,104);
+  set_size_request(74*3,130);
 }
 
 bool GMasterOutput::redraw()
@@ -100,7 +100,7 @@ bool GMasterOutput::on_expose_event(GdkEventExpose* event)
     cr->clip();
     
     cr->rectangle(event->area.x, event->area.y,
-        event->area.width, 104);
+        event->area.width, 130);
     cr->set_source_rgb(0.1 , 0.1 , 0.1 );
     setColour(cr, COLOUR_GREY_4 );
     cr->fill();

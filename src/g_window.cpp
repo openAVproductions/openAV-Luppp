@@ -51,6 +51,8 @@ Window::Window(Gtk::Main *k, Top* t) :
   automove(t),
   masterSource(t),
   masterReturnA(t, &guiState),
+  masterReturnB(t, &guiState),
+  masterReturnC(t, &guiState),
   
   waveview(t),
   inputWaveview(t)
@@ -141,6 +143,8 @@ Window::Window(Gtk::Main *k, Top* t) :
   
   // master return widgets
   masterReturnBox->add( masterReturnA );
+  masterReturnBox->add( masterReturnB );
+  masterReturnBox->add( masterReturnC );
   masterReturnBox->show_all();
   
   

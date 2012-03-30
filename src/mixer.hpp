@@ -63,7 +63,7 @@ class Mixer
     float masterRotation;
     float headphonesVolume;
     
-    float returnVolume[1];
+    float returnVolume[3];
     
     // create named instance for master AudioTrack
     AudioTrack masterTrack;

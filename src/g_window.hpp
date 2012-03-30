@@ -113,6 +113,8 @@ class Window
     GMasterSource masterSource;
     GMasterOutput masterOutput;
     GMasterReturn masterReturnA;
+    GMasterReturn masterReturnB;
+    GMasterReturn masterReturnC;
     GMasterProgress masterProgress;
     ClipSelector* masterClipSelector;
     

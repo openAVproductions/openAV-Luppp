@@ -97,6 +97,17 @@ bool GMasterReturn::on_expose_event(GdkEventExpose* event)
     
     Fader(cr,46 , 4  , 0.7, 0.6, 0.8 ); // fader
     
+    // Dial text "A"
+    cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_BOLD);
+    cr->set_font_size ( 20 );
+    cr->move_to ( 10, 28);
+    switch ( ID )
+    {
+      case 0: setColour(cr, COLOUR_BLUE_1 ); cr->show_text ( "A" ); break;
+      case 1: setColour(cr, COLOUR_BLUE_1 ); cr->show_text ( "B" ); break;
+      case 2: setColour(cr, COLOUR_BLUE_1 ); cr->show_text ( "C" ); break;
+    }
+    
   }
   return true;
 }
