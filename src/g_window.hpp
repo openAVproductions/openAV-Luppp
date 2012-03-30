@@ -35,6 +35,7 @@ class Top;
 #include "g_automove.hpp"
 #include "g_audiosource.hpp"
 #include "g_trackoutput.hpp"
+#include "g_mastersource.hpp"
 #include "g_clipselector.hpp"
 #include "g_fileselector.hpp"
 #include "g_masteroutput.hpp"
@@ -65,7 +66,6 @@ class Window
     Gtk::Box* automoveBox;
     Gtk::HBox* bottomWidgetBox;
     Gtk::Box* masterClipSelectorBox;
-    Gtk::EventBox* masterClipEventBox;
     Gtk::EventBox* trackEffectEventBox;
     
     Gtk::Viewport* fileChooserViewport;
@@ -108,6 +108,7 @@ class Window
     
     GAutoMove automove;
     
+    GMasterSource masterSource;
     GMasterOutput masterOutput;
     GMasterProgress masterProgress;
     ClipSelector* masterClipSelector;

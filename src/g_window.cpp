@@ -49,6 +49,7 @@ Window::Window(Gtk::Main *k, Top* t) :
   effectSelector(t, &guiState),
   instrumentSelector(t, &guiState),
   automove(t),
+  masterSource(t),
   
   waveview(t),
   inputWaveview(t)
@@ -127,22 +128,18 @@ Window::Window(Gtk::Main *k, Top* t) :
   refBuilder->get_widget("masterOutputBox", masterOutputBox);
   refBuilder->get_widget("masterClipSelectorBox", masterClipSelectorBox);
   
-  // master track widgets
+  // master source & clip selector widgets
   Gtk::VBox* tmpVbox = new Gtk::VBox();
-  
-  masterClipEventBox = new Gtk::EventBox();
-  Gtk::Label* tmpLabel = new Gtk::Label( "Master" );
-  masterClipEventBox->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("green"));
-  masterClipEventBox->add( *tmpLabel );
-  
   masterClipSelector = new ClipSelector(top, &guiState, true);
-  tmpVbox->add( *masterClipEventBox );
+  tmpVbox->add( masterSource );
   tmpVbox->add( *masterClipSelector);  
   masterClipSelectorBox->add( *tmpVbox );
+  masterClipSelectorBox->add( masterProgress );
   masterClipSelectorBox->show_all();
   
   // master output widget
-  masterOutputBox->add( masterProgress );
+  masterOutputBox->pack_end( masterOutput, false, true, 0 );
+  masterOutputBox->show_all();
   
   // AutoMove & Waveform boxs & widgets
   refBuilder->get_widget("bottomWidgetBox", bottomWidgetBox);
@@ -163,9 +160,6 @@ Window::Window(Gtk::Main *k, Top* t) :
   
   //masterOutputBox->add( inputWaveview );
   //masterOutputBox->add( waveview );
-  
-  masterOutputBox->pack_end( masterOutput, false, true, 0 );
-  masterOutputBox->show_all();
   
   refBuilder->get_widget("eeLabel", eeLabel);
   
@@ -372,10 +366,10 @@ int Window::handleEvent()
       guiState.masterClipPlaying = scene;
       masterClipSelector->queue_draw();
       
-      if ( scene != -1 )
-        masterClipEventBox->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("black"));
+      if ( scene == -1 )
+        masterSource.setPlaying( true );
       else
-        masterClipEventBox->modify_bg(Gtk::STATE_NORMAL, Gdk::Color("green"));
+        masterSource.setPlaying( false );
       
       //lo_send( lo_address_new(NULL, "7773") , "/harmonyseq/event", "i", scene );
       //lo_send( lo_address_new(NULL, "7773") , "/harmonyseq/sync", "" );
