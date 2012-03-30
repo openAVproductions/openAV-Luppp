@@ -21,7 +21,7 @@
 
 namespace Luppp
 {
-  void Fader(Cairo::RefPtr<Cairo::Context> cr, float x, float y, float value, float rms, float& falloff)
+  void Fader(Cairo::RefPtr<Cairo::Context> cr, float x, float y, float value, float rms, float falloff)
   {
     // draw invisible from the last widget
     cr->set_source_rgba(0,0,0,0);

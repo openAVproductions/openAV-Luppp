@@ -32,6 +32,8 @@ Mixer::Mixer(Top* t) :
   masterVolume     = 0.000f;
   headphonesVolume = 0.000f;
   
+  returnVolume[0] = 1.f;
+  
   // Top isn't initialized yet, so we just initialize all buffers to 1024
   outputW.resize(1024);
   outputX.resize(1024);
@@ -126,6 +128,10 @@ void Mixer::setMasterRotation(float rot)
   masterRotation = rot - ((int)rot);
 }
 
+void setReturnVolume(int returnNum, float vol)
+{
+  
+}
 
 void Mixer::process(int nframes,bool record, PortBufferList& portBufferList, CopyBufferList& copyBufferList)
 {
@@ -178,11 +184,11 @@ void Mixer::process(int nframes,bool record, PortBufferList& portBufferList, Cop
   // now sum up the master output buffers and write them
   for(int i = 0; i < nframes; i++)
   {
-    // write values to JACK ports, including the return from the JACK ports
-    *portBufferList.outputW++ = (*outPtrW + *portBufferList.masterReturn[0]++ ) * masterVolume;
-    *portBufferList.outputX++ = (*outPtrX + *portBufferList.masterReturn[1]++ ) * masterVolume;
-    *portBufferList.outputY++ = (*outPtrY + *portBufferList.masterReturn[2]++ ) * masterVolume;
-    *portBufferList.outputZ++ = (*outPtrZ + *portBufferList.masterReturn[3]++ ) * masterVolume;
+    // write values to JACK ports, including the volume scaled return from the JACK ports
+    *portBufferList.outputW++ = (*outPtrW + returnVolume[0] * *portBufferList.masterReturn[0]++ ) * masterVolume;
+    *portBufferList.outputX++ = (*outPtrX + returnVolume[0] * *portBufferList.masterReturn[1]++ ) * masterVolume;
+    *portBufferList.outputY++ = (*outPtrY + returnVolume[0] * *portBufferList.masterReturn[2]++ ) * masterVolume;
+    *portBufferList.outputZ++ = (*outPtrZ + returnVolume[0] * *portBufferList.masterReturn[3]++ ) * masterVolume;
     
     // write headphone & postSend buffers into JACK ports
     *headphonePort++     = *headphonePflBuffer * headphonesVolume;

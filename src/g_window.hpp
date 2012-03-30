@@ -36,6 +36,7 @@ class Top;
 #include "g_audiosource.hpp"
 #include "g_trackoutput.hpp"
 #include "g_mastersource.hpp"
+#include "g_masterreturn.hpp"
 #include "g_clipselector.hpp"
 #include "g_fileselector.hpp"
 #include "g_masteroutput.hpp"
@@ -62,6 +63,7 @@ class Window
     Gtk::Dialog* aboutDialog;
     Gtk::Table* mainTable;
     Gtk::Box* masterOutputBox;
+    Gtk::Box* masterReturnBox;
     
     Gtk::Box* automoveBox;
     Gtk::HBox* bottomWidgetBox;
@@ -110,6 +112,7 @@ class Window
     
     GMasterSource masterSource;
     GMasterOutput masterOutput;
+    GMasterReturn masterReturnA;
     GMasterProgress masterProgress;
     ClipSelector* masterClipSelector;
     

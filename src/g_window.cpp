@@ -50,6 +50,7 @@ Window::Window(Gtk::Main *k, Top* t) :
   instrumentSelector(t, &guiState),
   automove(t),
   masterSource(t),
+  masterReturnA(t, &guiState),
   
   waveview(t),
   inputWaveview(t)
@@ -126,6 +127,7 @@ Window::Window(Gtk::Main *k, Top* t) :
   refBuilder->get_widget("mainTable", mainTable);
   
   refBuilder->get_widget("masterOutputBox", masterOutputBox);
+  refBuilder->get_widget("masterReturnBox", masterReturnBox);
   refBuilder->get_widget("masterClipSelectorBox", masterClipSelectorBox);
   
   // master source & clip selector widgets
@@ -137,9 +139,15 @@ Window::Window(Gtk::Main *k, Top* t) :
   masterClipSelectorBox->add( masterProgress );
   masterClipSelectorBox->show_all();
   
+  // master return widgets
+  masterReturnBox->add( masterReturnA );
+  masterReturnBox->show_all();
+  
+  
   // master output widget
   masterOutputBox->pack_end( masterOutput, false, true, 0 );
   masterOutputBox->show_all();
+  
   
   // AutoMove & Waveform boxs & widgets
   refBuilder->get_widget("bottomWidgetBox", bottomWidgetBox);

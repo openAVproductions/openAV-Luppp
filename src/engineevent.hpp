@@ -32,6 +32,7 @@ enum EngineEventType
   EE_SCENE_NUMBER,
   
   EE_MIXER_VOLUME,
+  EE_MIXER_RETURN_VOLUME,
   
   EE_AUTOMOVE_TYPE,
   EE_AUTOMOVE_PROGRESS,
@@ -158,6 +159,7 @@ class EngineEvent
     void setTrackSetDeviceType(int id, int b, int a);
     
     void setMixerVolume       (int id, float v);
+    void setMixerReturnVolume (int id, float v);
     
     void sendAllPan           ();
     

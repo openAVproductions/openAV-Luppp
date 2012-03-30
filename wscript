@@ -93,6 +93,7 @@ def build(ctx):
               'src/g_compressor.cpp',
               'src/g_audiosource.cpp',
               'src/g_mastersource.cpp',
+              'src/g_masterreturn.cpp',
               'src/g_frequencygraph.cpp',
               'src/g_titlebar.cpp',
               'src/g_block.cpp',

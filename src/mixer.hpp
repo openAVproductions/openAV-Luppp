@@ -46,6 +46,8 @@ class Mixer
     void setMasterRotation(float);
     void setHeadphonesVolume(float);
     
+    void setReturnVolume(int returnNum, float vol);
+    
     // returns the UniqueID of an Effect in an AudioTrack
     int getEffectID(int track, int pos);
     
@@ -60,6 +62,8 @@ class Mixer
     float masterVolume;
     float masterRotation;
     float headphonesVolume;
+    
+    float returnVolume[1];
     
     // create named instance for master AudioTrack
     AudioTrack masterTrack;

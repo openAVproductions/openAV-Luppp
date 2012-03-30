@@ -70,6 +70,7 @@ void EngineEvent::setTrackDeviceActive (int id, int a) { ia = id; ib = a; type =
 void EngineEvent::setTrackSetDeviceType(int id, int b, int a) { ia = id; ib = b; ic = a; type = EE_TRACK_SET_DEVICE_TYPE; }
 
 void EngineEvent::setMixerVolume       (int id, float v) { ia = id; fa = v; type = EE_MIXER_VOLUME; }
+void EngineEvent::setMixerReturnVolume (int id, float v) { ia = id; fa = v; type = EE_MIXER_RETURN_VOLUME; }
 
 void EngineEvent::sendAllPan           () { type = EE_SEND_ALL_PAN; }
 
