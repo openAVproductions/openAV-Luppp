@@ -34,6 +34,15 @@ Time::Time(Top* t)
   
   automoveQueue = false;
   automoveDuration = 4;
+  
+  // queued clips hack
+  for(int i = 0; i < 16; i++)
+  {
+    queueClip[i] = -1;
+  } 
+  
+  queueClipMaster = -1;
+  
 }
 
 void Time::startAutomoveType(int type)
@@ -145,6 +154,35 @@ void Time::process(int frameNumber)
         automoveStartFrame = top->frameNumber;
         automoveQueue = false;
       }
+      
+      // autoQueue clips
+      for ( int i = 0; i < 16; i++ )
+      {
+        if ( queueClip[i] != -1 )
+        {
+          // set block to playing, and reset queue
+          top->state.clipSelectorActivateClip( i, queueClip[i] );
+          queueClip[i] = -1;
+        }
+      }
+      
+      // master queue clips
+      if( queueClipMaster != -1 )
+      {
+        int numTracks = top->state.getNumTracks();
+        for ( int i = 0; i < numTracks; i++)
+        {
+          cout << "EE_SCENE_NUMBER " << queueClipMaster << " on track " << i << endl; 
+          top->state.clipSelectorActivateClip(i, queueClipMaster);
+        }
+        
+        // bounce scene number on to the GUI
+        EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+        x->setSceneNumber(queueClipMaster);
+        top->toGuiQueue.push(x);
+        
+        queueClipMaster = -1;
+      }
     }
     
     /*
@@ -177,28 +215,32 @@ void Time::processEngineEvent(EngineEvent* e)
   if ( e->type == EE_LOOPER_SELECT_BUFFER )
   {
     cout << "Time::processEE() LOOPER_SELECT_BUFFER queue in 4... type = " << e->type << "  T: " << e->ia << "  clip = " << e->ib << endl;
-    if ( false ) // quantize check here?
+    if ( true ) // quantize check here?
     {
-      top->state.clipSelectorQueueClip(e->ia, e->ib);
-      q4.push_back(e);
+      //top->state.clipSelectorQueueClip(e->ia, e->ib);
+      //q4.push_back(e);
+      
+      queueClip[e->ia] = e->ib;
     }
-    else
-      doEngineEvent(e);
   }
+  
   if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER )
   {
     //cout << "Time::processEE() SET_PLUGIN_PARAM queue in 1" << endl;
     //q1.push_back(e);
     doEngineEvent(e);
   }
+  
   if ( e->type == EE_TRACK_DEVICE_ACTIVE )
   {
     doEngineEvent(e);
     //q1.push_back(e);
   }
+  
   if ( e->type == EE_SCENE_NUMBER )
   {
-    doEngineEvent(e);
+    queueClipMaster = e->ia;
+    //doEngineEvent(e);
   }
 }
 

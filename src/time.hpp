@@ -49,6 +49,9 @@ class Time
     
     int beat;
     
+    int queueClipMaster;
+    int queueClip[16];
+    
     bool automoveQueue;
     int automoveStartFrame;
     int automoveDuration;
