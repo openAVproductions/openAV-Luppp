@@ -431,7 +431,7 @@ bool GMasterOutput::onMouseMove(GdkEventMotion* event)
     else if ( headphonesDialClickVolume < 0.f )
       headphonesDialClickVolume = 0.f;
     
-    headphonesVolume = headphonesDialClickVolume + currentDrag ;
+    headphonesVolume = headphonesDialClickVolume - currentDrag;
     
     cout << "  final vol " << headphonesVolume << endl;
     
