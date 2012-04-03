@@ -29,3 +29,18 @@ Effect::Effect(Top* t, EffectType& et)
   
   type = et;
 }
+
+int Effect::getID()
+{ 
+  return ID;
+}
+
+EffectType Effect::getType()
+{
+  return type;
+}
+
+void Effect::process(int, float*)
+{
+  //virtual
+}

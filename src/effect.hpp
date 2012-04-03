@@ -46,10 +46,9 @@ class Effect
   public:
     Effect(Top*, EffectType& t);
     
-    int  getID(){ return ID; }
-    EffectType getType(){return type;}
-    
-    virtual void process(int, float*){};
+    int  getID();
+    EffectType getType();
+    virtual void process(int, float*);
   
   private:
     int ID;
