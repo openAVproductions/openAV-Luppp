@@ -172,7 +172,7 @@ void Time::process(int frameNumber)
         int numTracks = top->state.getNumTracks();
         for ( int i = 0; i < numTracks; i++)
         {
-          cout << "EE_SCENE_NUMBER " << queueClipMaster << " on track " << i << endl; 
+          cout << "4th BEAT MASTER CLIP QEUEU " << queueClipMaster << " on SCENE " << i << endl; 
           top->state.clipSelectorActivateClip(i, queueClipMaster);
         }
         
