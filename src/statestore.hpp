@@ -51,6 +51,8 @@ class StateStore
     
     int midib1,midib2,midib3;
     
+    bool queueClips;
+    
     float globalUnit;
     AutoMoveType globalUnitType;
     

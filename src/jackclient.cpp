@@ -301,11 +301,11 @@ int JackClient::processRtQueue()
       writeMidi( seq24outputBuffer, 144, sceneNum, 127 );
       
       // time handles the event
-      cout << "processEngineEvent SCENE NUMBER" << endl;
+      //cout << "processEngineEvent SCENE NUMBER" << endl;
       time.processEngineEvent( e );
     }
     else if ( e->type == EE_TRACK_BACKTRACK_TAKE_SNAPSHOT ) {
-      cout << "processEngineEvent TAKE SNAPSHOT" << endl;
+      //cout << "processEngineEvent TAKE SNAPSHOT" << endl;
       int nTracks = top->state.getNumTracks();
       
       for (int i = 0; i < nTracks; i++ )
@@ -314,7 +314,7 @@ int JackClient::processRtQueue()
       }
     }
     else if ( e->type == EE_TRACK_BACKTRACK_RESTORE_SNAPSHOT ) {
-      cout << "processEngineEvent RESTORE SNAPSHOT" << endl;
+      //cout << "processEngineEvent RESTORE SNAPSHOT" << endl;
       int nTracks = top->state.getNumTracks();
       
       for (int i = 0; i < nTracks; i++ )
@@ -323,14 +323,14 @@ int JackClient::processRtQueue()
       }
     }
     else if ( e->type == EE_TRACK_SET_SEND_VOLUME ) {
-      cout << "JC::RTQ() Got send volume! Send: " << e->ia << "  Vol: " << e->ib << endl;
+      //cout << "JC::RTQ() Got send volume! Send: " << e->ia << "  Vol: " << e->ib << endl;
       top->state.setSend( e->ia, 0, e->fa );
     }
     else if ( e->type == EE_TRACK_SET_MUTE ) {
       top->state.setMute( e->ia, e->ib );
     }
     else if ( e->type == EE_TRACK_SET_SOLO ) {
-      cout << "JC:RTQ() SET_SOLO event: Hacked to provide PFL functionality" << endl;
+      //cout << "JC:RTQ() SET_SOLO event: Hacked to provide PFL functionality" << endl;
       top->state.setSolo( e->ia, e->ib );
     }
     else if ( e->type == EE_TRACK_SET_REC ) {
@@ -338,7 +338,7 @@ int JackClient::processRtQueue()
       top->state.setRec( e->ia, e->ib );
     }
     else if ( e->type == EE_TRACK_SET_PAN ) {
-      cout << "JC:RTQ() SET_PAN event  " << e->ia << ", " << e->fa << endl;
+      //cout << "JC:RTQ() SET_PAN event  " << e->ia << ", " << e->fa << endl;
       top->state.setPan( e->ia, e->fa );
     }
     else if ( e->type == EE_STATE_SET_AUDIO_BUFFER ) {
@@ -351,7 +351,7 @@ int JackClient::processRtQueue()
       top->state.setAudioBuffer( buffer );
     }
     else if ( e->type == EE_SET_TRACK_SOURCE ) {
-      cout << "JC:RTQ() got SET TRACK SOURCE!" << endl;
+      //cout << "JC:RTQ() got SET TRACK SOURCE!" << endl;
       mixer.setSource(e->ia, (AudioSource*) e->vPtr);
     }
     else if ( e->type == EE_STATE_NEW_EFFECT ) {
@@ -373,7 +373,7 @@ int JackClient::processRtQueue()
       }
     }
     else if ( e->type == EE_LOOPER_RECORD ) {
-      std::cout << "jc:rt() EE_LOOPER_RECORD" << std::endl;
+      //std::cout << "jc:rt() EE_LOOPER_RECORD" << std::endl;
       
     }
     else if ( e->type == EE_LOOPER_LOAD ) {
@@ -396,7 +396,7 @@ int JackClient::processRtQueue()
       top->state.setPluginParameter(e->ia,e->ib,e->fa);
     }
     else if ( e->type == EE_TRACK_SELECT_DEVICE) {
-      cout << "JC::RT() EE_TRACK_SELECT_DEVICE " << endl;
+      //cout << "JC::RT() EE_TRACK_SELECT_DEVICE " << endl;
       top->controller->setTrackDevice(e->ia, e->ib);
     }
     else if ( e->type == EE_TRACK_DEVICE_ACTIVE) {
@@ -510,7 +510,7 @@ int JackClient::processMidi(jack_nframes_t nframes)
     top->state.midib2 = b2;
     top->state.midib3 = b3;
     
-    cout << "JACK MIDI IN:  " << b1 << "  " << b2 << "  " << b3 << endl;
+    //cout << "JACK MIDI IN:  " << b1 << "  " << b2 << "  " << b3 << endl;
     
     if ( b1 == 176 && b2 == 10 )
     {
@@ -955,10 +955,10 @@ void JackClient::apcRead( int nframes )
         numTracks = stateNumTracks;
       }
       
-      std::cout << "Apc Track Control Mode = " << b2 << "\t";
+      //std::cout << "Apc Track Control Mode = " << b2 << "\t";
       if ( b2 == APC_TRACK_CONTROL_MODE_PAN )
       {
-        std::cout << "PAN" << std::endl;
+        //std::cout << "PAN" << std::endl;
         
         // loop over 8 controls
         for ( int i = 0; i < numTracks; i++ )
@@ -976,10 +976,12 @@ void JackClient::apcRead( int nframes )
           writeMidi( apcOutputBuffer, 176, 48 + i, (state->sends * 127.f) );
         }
       }
+      /*
       if ( b2 == APC_TRACK_CONTROL_MODE_SEND_B){ std::cout << "B" << std::endl; }
       if ( b2 == APC_TRACK_CONTROL_MODE_SEND_C){ std::cout << "C" << std::endl; }
+      */
       
-      std::cout  << "setTrackControlMode()  off = " << trackControlMode << "  on = " << b2 << std::endl;
+      //std::cout  << "setTrackControlMode()  off = " << trackControlMode << "  on = " << b2 << std::endl;
       writeMidi( apcOutputBuffer, 128, trackControlMode, 0); // turn off previous mode
       trackControlMode = (ApcTrackControlMode)b2;
       
@@ -1007,18 +1009,18 @@ void JackClient::apcRead( int nframes )
         {
           case APC_TRACK_CONTROL_MODE_PAN:
             value = (b3 / 63.f) - 1.f;
-            std::cout << "Track Control: PAN MODE:  trackID: " << trackID << "  value " << value << std::endl;
+            //std::cout << "Track Control: PAN MODE:  trackID: " << trackID << "  value " << value << std::endl;
             top->state.setPan( trackID, value );
             break;
           case APC_TRACK_CONTROL_MODE_SEND_A:
             value = b3 / 127.f;
-            std::cout << "Track Control: SEND A:  trackID: " << trackID << "  value " << value << std::endl;
+            //std::cout << "Track Control: SEND A:  trackID: " << trackID << "  value " << value << std::endl;
             top->state.setSend( trackID, 0, value ); // 0 = send A
             
             break;
           case APC_TRACK_CONTROL_MODE_SEND_B:
             value = (b3 / 63.f) - 1.f;
-            std::cout << "Track Control: SEND B:  trackID: " << -2 << "  value " << value << std::endl;
+            //std::cout << "Track Control: SEND B:  trackID: " << -2 << "  value " << value << std::endl;
             //lo_send( //lo_address_new( NULL,"14688") , "/luppp/track/setpluginparameter", "iiif", -2, 2, b2 - 47, b3 / 127.f );
             break;
         }
@@ -1041,7 +1043,7 @@ void JackClient::apcRead( int nframes )
         int id = b1 - 144;
         int val= b2 - 53; // here we take 53 away, so the clip stop button will result in -1 for buffer ID
         
-        std::cout << "SETTING BUFFER FROM APC40! ID:" << id << " val: " << val << std::endl;
+        //std::cout << "SETTING BUFFER FROM APC40! ID:" << id << " val: " << val << std::endl;
         
         if ( id >= 0 && id < top->state.getNumTracks() )
         {
@@ -1072,7 +1074,7 @@ void JackClient::apcRead( int nframes )
         int track = b1 - 176;
         int device= b2 - 16;
         
-        std::cout << "APC: Device Control on track " << track << " device " << device << std::endl;
+        //std::cout << "APC: Device Control on track " << track << " device " << device << std::endl;
         
         // get unique ID of current selected track, then setPluginParam that UID
         int uid = mixer.getEffectID(track, device);
@@ -1086,11 +1088,11 @@ void JackClient::apcRead( int nframes )
       }
     }
     
-    // apc 40 scene launch & Stop All Clips buttons
-    if ( b1 == 144 && ( b2 >= 81 && b2 < 87 ) )
+    // apc 40 scene launch, NOT Stop All Clips button
+    if ( ( b1 == 144 ) && ( b2 >= 81 && b2 < 87 ) )
     {
       int sceneID = b2 - 82;
-      std::cout << "APC: Scene Launch on Scene " << sceneID << std::endl;
+      //std::cout << "APC: Scene Launch on Scene " << sceneID << std::endl;
       
       // SEQ24 integration
       // turn off all scenes on Seq24
@@ -1107,19 +1109,38 @@ void JackClient::apcRead( int nframes )
       time.processEngineEvent(x);
     }
     
+    /*
+    if ( b1 == 144 && b2 == 81 )
+    {
+      // toggle the queue clip state
+      top->state.queueClips = !top->state.queueClips;
+      cout << "Toggle QUEUE state, now = " << top->state.queueClips << " !" << endl;
+    }
+    if ( b1 == 128 && b2 == 81 )
+    {
+      cout << "Writing QUEUE state!" << endl;
+      // write the value, its a button release
+      int noteType = 128;
+      if ( top->state.queueClips )
+        noteType = 144;
+      
+      writeMidi(apcOutputBuffer, noteType, 81, 127);
+    }
+    */
+    
     if ( b2 == 48 )
     {
       if ( b1 >= 144 && b1 < 144 + 16 ) // REC on
       {
         int trackID = b1 - 144;
-        std::cout << "APC: REC on track " << trackID << " on!" << std::endl;
+        //std::cout << "APC: REC on track " << trackID << " on!" << std::endl;
         
         top->state.setRec( trackID, true );
       }
       else if ( b1 >= 128 && b1 < 128 + 16 ) // rec off
       {
         int trackID = b1 - 128;
-        std::cout << "APC: REC on track " << trackID << " off!" << std::endl;
+        //std::cout << "APC: REC on track " << trackID << " off!" << std::endl;
         
         top->state.setRec( trackID, false );
       }
@@ -1129,7 +1150,7 @@ void JackClient::apcRead( int nframes )
       if ( b1 >= 144 && b1 < 144 + 16 ) // Solo on
       {
         int trackID = b1 - 144;
-        std::cout << "APC: SOLO on track " << trackID << " on!" << std::endl;
+        //std::cout << "APC: SOLO on track " << trackID << " on!" << std::endl;
         
         if ( trackID >= 0 && trackID < top->state.getNumTracks() )
         {
@@ -1144,7 +1165,7 @@ void JackClient::apcRead( int nframes )
         if ( trackID >= 0 && trackID < top->state.getNumTracks() )
         {
           int trackID = b1 - 128;
-          std::cout << "APC: SOLO on track " << trackID << " off!" << std::endl;
+          //std::cout << "APC: SOLO on track " << trackID << " off!" << std::endl;
           EngineEvent* x = top->toEngineEmptyEventQueue.pull();
           x->setTrackSolo(trackID, false);
           top->toGuiQueue.push(x);
@@ -1180,7 +1201,7 @@ void JackClient::apcRead( int nframes )
       int bpm = 120 + (b3 / 127.f) * 60;
       top->bpm = bpm;
       top->speed = 0.5 + (b3 / 127.f);
-      cout << "XFade " << b3 << "   setting BPM to " << bpm << " and top->speed " << top->speed << " sending to GUI now"<< endl;
+      //cout << "XFade " << b3 << "   setting BPM to " << bpm << " and top->speed " << top->speed << " sending to GUI now"<< endl;
       
       EngineEvent* x = top->toEngineEmptyEventQueue.pull();
       x->setBpm(bpm);

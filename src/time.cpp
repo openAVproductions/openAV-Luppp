@@ -143,7 +143,7 @@ void Time::process(int frameNumber)
     
     if ( newBeat % 4 == 0 )
     {
-      cout << "Time:process() doing 4th list!" << endl;
+      //cout << "Time:process() doing 4th list!" << endl;
       if ( !q4.empty() ) {
         doEngineEventList(q4);
       }
@@ -172,7 +172,7 @@ void Time::process(int frameNumber)
         int numTracks = top->state.getNumTracks();
         for ( int i = 0; i < numTracks; i++)
         {
-          cout << "4th BEAT MASTER CLIP QEUEU " << queueClipMaster << " on SCENE " << i << endl; 
+          //cout << "4th BEAT MASTER CLIP QEUEU " << queueClipMaster << " on SCENE " << i << endl; 
           top->state.clipSelectorActivateClip(i, queueClipMaster);
         }
         
@@ -223,21 +223,18 @@ void Time::processEngineEvent(EngineEvent* e)
       queueClip[e->ia] = e->ib;
     }
   }
-  
-  if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER )
+  else if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER )
   {
     //cout << "Time::processEE() SET_PLUGIN_PARAM queue in 1" << endl;
     //q1.push_back(e);
     doEngineEvent(e);
   }
-  
-  if ( e->type == EE_TRACK_DEVICE_ACTIVE )
+  else if ( e->type == EE_TRACK_DEVICE_ACTIVE )
   {
     doEngineEvent(e);
     //q1.push_back(e);
   }
-  
-  if ( e->type == EE_SCENE_NUMBER )
+  else if ( e->type == EE_SCENE_NUMBER )
   {
     queueClipMaster = e->ia;
     //doEngineEvent(e);

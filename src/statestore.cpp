@@ -31,6 +31,8 @@ StateStore::StateStore(Top* t)
   numTracks = 0;
   top = t;
   
+  queueClips = false;
+  
   globalUnit = 0.f;
   globalUnitType = AUTOMOVE_TYPE_NONE;
   
@@ -103,7 +105,7 @@ AudioBuffer* StateStore::getAudioBuffer(int ID)
 
 void StateStore::addEffectState(EffectState* newEffectState)
 {
-  cout << "StateStore::addEffectState()  ID = " << newEffectState->ID << endl;
+  //cout << "StateStore::addEffectState()  ID = " << newEffectState->ID << endl;
   // store the new ID in the EffectState, so it can be retrieved later
   effectStateList.push_back( newEffectState );
 }
@@ -128,7 +130,7 @@ EffectState* StateStore::getEffectState(int ID)
 int StateStore::setVolume(int t, float v)
 {
   if ( !trackCheck(t) ) {
-    std::cout << "StateStore::setVolume() track OOB" << std::endl; return -1;
+    //std::cout << "StateStore::setVolume() track OOB" << std::endl; return -1;
   }
   
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
@@ -166,7 +168,7 @@ int StateStore::setVolume(int t, float v)
 int StateStore::setSend(int t, int send, float value)
 {
   if ( !trackCheck(t) ) {
-    std::cout << "StateStore::setSend() track OOB" << std::endl; return -1;
+    //std::cout << "StateStore::setSend() track OOB" << std::endl; return -1;
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
@@ -184,12 +186,12 @@ int StateStore::setSend(int t, int send, float value)
 int StateStore::setPan(int t, float v)
 {
   if ( !trackCheck(t) ) {
-    std::cout << "StateStore::setPan() track OOB" << std::endl; return -1;
+    //std::cout << "StateStore::setPan() track OOB" << std::endl; return -1;
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
   iter->pan = v;
-  std::cout << "New pan: " << iter->pan << std::endl;
+  //std::cout << "New pan: " << iter->pan << std::endl;
   
   EngineEvent* x = top->toEngineEmptyEventQueue.pull();
   x->setTrackPan(t, v);
@@ -201,7 +203,7 @@ int StateStore::setPan(int t, float v)
 int StateStore::setMute(int t, int v)
 {
   if ( !trackCheck(t) ) {
-    std::cout << "StateStore::setMute() track OOB" << std::endl; return -1;
+    //std::cout << "StateStore::setMute() track OOB" << std::endl; return -1;
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
@@ -220,7 +222,7 @@ int StateStore::setMute(int t, int v)
 int StateStore::setSolo(int t, int v)
 {
   if ( !trackCheck(t) ) {
-    std::cout << "StateStore::setSolo() track OOB" << std::endl; return -1;
+    //std::cout << "StateStore::setSolo() track OOB" << std::endl; return -1;
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
@@ -239,12 +241,12 @@ int StateStore::setSolo(int t, int v)
 int StateStore::setRec(int t, int v)
 {
   if ( !trackCheck(t) ) {
-    std::cout << "StateStore::setRec() track OOB" << std::endl; return -1;
+    //std::cout << "StateStore::setRec() track OOB" << std::endl; return -1;
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
   iter->recEnable = v;
-  cout << "StateStore::setRec()  Track " << t << " has REC ENABLE = " << v << endl;
+  //cout << "StateStore::setRec()  Track " << t << " has REC ENABLE = " << v << endl;
   
   EngineEvent* x = top->toEngineEmptyEventQueue.pull();
   x->setTrackRec(t, v);
@@ -259,7 +261,7 @@ int StateStore::setRec(int t, int v)
 int StateStore::setPanZ(int t, float v)
 {
   if ( !trackCheck(t) ) {
-    std::cout << "StateStore::setPanZ() track OOB" << std::endl; return -1;
+    //std::cout << "StateStore::setPanZ() track OOB" << std::endl; return -1;
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
@@ -294,7 +296,7 @@ void StateStore::clipSelectorQueueClip(int t, int b)
   std::list<ClipSelectorState>::iterator iter = clipSelectorState.begin();
   std::advance(iter, t);
   
-  cout << "clipSelectorQueueCLip() T = " << t << ", block = " << b << endl;
+  //cout << "clipSelectorQueueCLip() T = " << t << ", block = " << b << endl;
   
   iter->queued = b;
 }
@@ -305,7 +307,7 @@ void StateStore::clipSelectorQueueClip(int t, int b)
 // play it back.
 void StateStore::clipSelectorActivateClip(int t, int b)
 {
-  cout << " clipSElectorActivateClip() track: " << t << "   block " << b << endl;
+  //cout << " clipSElectorActivateClip() track: " << t << "   block " << b << endl;
   // we get a track & scene number, so we set them in the ClipSelectorState
   // later the playback will request the bufferID ClipInfo of the right position in the list
   //std::cout << "StateStore::clipSelectorActivateClip() " << t << ", " << b << endl;
@@ -319,7 +321,7 @@ void StateStore::clipSelectorActivateClip(int t, int b)
   {
     if ( trackState->recEnable && top->jackClient->recordInput == false )
     {
-      cout << "Clip @ " << t << "  block " << b << " pressed while REC ENABLE, starting RECORDING NOW!" << endl;
+      //cout << "Clip @ " << t << "  block " << b << " pressed while REC ENABLE, starting RECORDING NOW!" << endl;
       top->jackClient->recordInput = true;
       iter->recording = b;
       
@@ -334,7 +336,7 @@ void StateStore::clipSelectorActivateClip(int t, int b)
       
       if ( iter->recording == b )
       {
-        cout << "RECORDING BLOCK PRESSED! \t\t\t\tSTOP RECORD & SEND GUI!" << endl;
+        //cout << "RECORDING BLOCK PRESSED! \t\t\t\tSTOP RECORD & SEND GUI!" << endl;
         // this Clip has been recording ( other clips might be pressed inbetween
         // record & stop-record presses) so we tell JACK to stop recording, and
         // tell the GUI thread that we want the recorded buffer loaded to the current
@@ -418,7 +420,7 @@ void StateStore::setPluginParameter(int ID, int param, float value)
   
   if ( iter == effectStateList.end() )
   {
-    std::cout << "StateStore::setPluginPara() Error, did not find EffectState with ID " << ID << std::endl;
+    //std::cout << "StateStore::setPluginPara() Error, did not find EffectState with ID " << ID << std::endl;
     return;
   }
   else
@@ -474,7 +476,8 @@ void StateStore::setPluginGlobalUnit(int ID, int onOff)
 TrackOutputState* StateStore::getAudioSinkOutput(int t)
 {
   if ( !trackCheck(t) ) {
-    //std::cout << "StateStore::getAudioSinkOutput() track OOB: " << t << std::endl; return 0;
+    //std::cout << "StateStore::getAudioSinkOutput() track OOB: " << t << std::endl;
+    return 0;
   }
   
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
@@ -486,7 +489,8 @@ TrackOutputState* StateStore::getAudioSinkOutput(int t)
 ClipSelectorState* StateStore::getClipSelectorState(int t)
 {
   if ( !trackCheck(t) ) {
-    //std::cout << "StateStore::getClipSelectorState() track OOB: " << t << std::endl; return 0;
+    //std::cout << "StateStore::getClipSelectorState() track OOB: " << t << std::endl;
+    return 0;
   }
   
   std::list<ClipSelectorState>::iterator iter = clipSelectorState.begin();

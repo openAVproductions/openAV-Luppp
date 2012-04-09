@@ -28,7 +28,7 @@ Top::Top() :
   state(this)
 {
   
-  bpm = 127;
+  bpm = 150;
   cout << "Top()  BPM = " << bpm << endl;
   
   controller = new Controller(this);
