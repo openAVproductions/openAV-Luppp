@@ -329,7 +329,7 @@ int Window::handleEvent()
     if ( e->type == EE_MIXER_VOLUME )
     {
       if ( e->ia >= numTracks ) { cout << "MIXER_VOLUME: Out of bounds" << endl; return true; }
-      cout << "MixerVolume: " << e->ia << ", " << e->fa << endl;
+      //cout << "MixerVolume: " << e->ia << ", " << e->fa << endl;
       
       if ( e->ia == -1 ) // master track
       {
@@ -395,9 +395,16 @@ int Window::handleEvent()
       (*i)->redraw();
     }
     else if ( e->type == EE_TRACK_SET_SEND_VOLUME ) {
-      cout << "GUI got SEND" << endl;
-      guiState.trackoutputState.at(e->ia).sends = e->fa;
-      sendsList.at( e->ia )->queue_draw();
+      int track = e->ia;
+      int send  = e->ib;
+      float value = e->fa;
+      //cout << "GUI got SEND   track = " << track << endl;
+      
+      if ( track >= 0 && track < guiState.trackoutputState.size() )
+      {
+        guiState.trackoutputState.at(track).sends = value;
+        sendsList.at( track )->queue_draw();
+      }
     }
     else if ( e->type == EE_TRACK_SET_MUTE ) {
       //std::cout << "GUI MUTE event: " << e->ib << std::endl;

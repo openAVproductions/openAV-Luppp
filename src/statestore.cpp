@@ -130,7 +130,8 @@ EffectState* StateStore::getEffectState(int ID)
 int StateStore::setVolume(int t, float v)
 {
   if ( !trackCheck(t) ) {
-    //std::cout << "StateStore::setVolume() track OOB" << std::endl; return -1;
+    //std::cout << "StateStore::setVolume() track OOB" << std::endl;
+    return -1;
   }
   
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
@@ -167,13 +168,16 @@ int StateStore::setVolume(int t, float v)
 
 int StateStore::setSend(int t, int send, float value)
 {
+  cout << "StateStore::setSend()" << endl;
+  
   if ( !trackCheck(t) ) {
-    //std::cout << "StateStore::setSend() track OOB" << std::endl; return -1;
+    std::cout << "StateStore::setSend() track OOB" << std::endl;
+    return -1;
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
   iter->sends = value;
-  //std::cout << "New send level: " << iter->sends << "  on track " << t << std::endl;
+  std::cout << "New send level: " << iter->sends << "  on track " << t << std::endl;
   
   // to GUI
   EngineEvent* x = top->toEngineEmptyEventQueue.pull();
@@ -186,7 +190,8 @@ int StateStore::setSend(int t, int send, float value)
 int StateStore::setPan(int t, float v)
 {
   if ( !trackCheck(t) ) {
-    //std::cout << "StateStore::setPan() track OOB" << std::endl; return -1;
+    //std::cout << "StateStore::setPan() track OOB" << std::endl;
+    return -1;
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
@@ -203,7 +208,8 @@ int StateStore::setPan(int t, float v)
 int StateStore::setMute(int t, int v)
 {
   if ( !trackCheck(t) ) {
-    //std::cout << "StateStore::setMute() track OOB" << std::endl; return -1;
+    //std::cout << "StateStore::setMute() track OOB" << std::endl;
+    return -1;
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
@@ -222,7 +228,8 @@ int StateStore::setMute(int t, int v)
 int StateStore::setSolo(int t, int v)
 {
   if ( !trackCheck(t) ) {
-    //std::cout << "StateStore::setSolo() track OOB" << std::endl; return -1;
+    //std::cout << "StateStore::setSolo() track OOB" << std::endl;
+    return -1;
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
@@ -241,7 +248,8 @@ int StateStore::setSolo(int t, int v)
 int StateStore::setRec(int t, int v)
 {
   if ( !trackCheck(t) ) {
-    //std::cout << "StateStore::setRec() track OOB" << std::endl; return -1;
+    //std::cout << "StateStore::setRec() track OOB" << std::endl;
+    return -1;
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);
@@ -261,7 +269,8 @@ int StateStore::setRec(int t, int v)
 int StateStore::setPanZ(int t, float v)
 {
   if ( !trackCheck(t) ) {
-    //std::cout << "StateStore::setPanZ() track OOB" << std::endl; return -1;
+    //std::cout << "StateStore::setPanZ() track OOB" << std::endl;
+    return -1;
   }
   std::list<TrackOutputState>::iterator iter = trackoutputState.begin();
   std::advance(iter, t);

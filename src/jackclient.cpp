@@ -769,6 +769,11 @@ void JackClient::apcWriteOutput(int track)
 {
   TrackOutputState* state = top->state.getAudioSinkOutput(track);
   
+  if ( state == 0 )
+  {
+    return;
+  }
+  
   writeMidi( apcOutputBuffer, 144 + track, 50, 127 * !state->mute     );
   writeMidi( apcOutputBuffer, 144 + track, 49, 127 *  state->pflEnable);
   writeMidi( apcOutputBuffer, 144 + track, 48, 127 *  state->recEnable);
@@ -994,12 +999,12 @@ void JackClient::apcRead( int nframes )
     // apc 40 top controllers (bank of 8)
     if ( b1 == 176 && b2 >= 48 && b2 < 56 )
     {
-      int trackID = b2 - 48;;
+      int trackID = b2 - 48;
       float value;
       
       // for send A
       ClipSelectorState* clipSelectorState = top->state.getClipSelectorState(trackID);
-      if ( clipSelectorState )
+      if ( clipSelectorState != 0 )
       {
         std::list<ClipInfo>::iterator clipIter = clipSelectorState->clipInfo.begin();
         int playingScene = clipSelectorState->playing;
@@ -1024,7 +1029,7 @@ void JackClient::apcRead( int nframes )
             //lo_send( //lo_address_new( NULL,"14688") , "/luppp/track/setpluginparameter", "iiif", -2, 2, b2 - 47, b3 / 127.f );
             break;
         }
-      } // clipSelectorState == 0
+      } // clipSelectorState != 0
       
       /*
       if ( b2 == 48 ) // knob 1
@@ -1172,6 +1177,7 @@ void JackClient::apcRead( int nframes )
         }
       }
     }
+    
     if ( b2 == 50 )
     {
       // LED ON = Active = NOT MUTED

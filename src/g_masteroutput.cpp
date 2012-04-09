@@ -207,7 +207,7 @@ bool GMasterOutput::on_expose_event(GdkEventExpose* event)
     float tmpX = sin ( tmpRot ) * 45;
     float tmpY = cos ( tmpRot ) * -45;
     
-    cout << "Rotation = " << rotation << "  Arc @ " << tmpX + 7 << ", " << tmpY + 7 << endl;
+    //cout << "Rotation = " << rotation << "  Arc @ " << tmpX + 7 << ", " << tmpY + 7 << endl;
     
     cr->arc( 7 + 45 + tmpX, 7 + 45 + tmpY, 7, 0, 6.282);
     setColour(cr, COLOUR_BLUE_1);
