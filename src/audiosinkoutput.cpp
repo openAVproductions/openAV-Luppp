@@ -86,13 +86,14 @@ void AudioSinkOutput::process(int nframes, float* in, float *W, float *X, float 
     
     if ( !state->mute ) // only write when not muted
     {
+      // write to postFaderSend buffer
+      *postFaderSend++ += tmp * state->sends;
+      
       W[i] += tmp;
       X[i] += in[i] * cosAzimuth * cosElevation * logVolume;
       Y[i] += in[i] * sinAzimuth * cosElevation * logVolume;
       Z[i] += in[i] * sinElevation * logVolume;
     }
-    // write to postFaderSend buffer
-    *postFaderSend++ += tmp * state->sends;
     
     if ( state->pflEnable )
     {
