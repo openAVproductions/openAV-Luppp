@@ -363,15 +363,15 @@ bool GMasterOutput::on_button_press_event(GdkEventButton* event)
   else if ( event->x > 110 && event->x < 145 &&
             event->y > 40  && event->y < 75 )
   {
-    cout << "DIAL CLICKED!!" << endl;
+    //cout << "DIAL CLICKED!!" << endl;
     clickedWidget = CLICKED_WIDGET_DIAL;
     
     headphonesDialClickOffset = event->y;
     
     headphonesDialClickVolume = headphonesVolume;
     
-    cout << "headphonesDialClickOffset: " << headphonesDialClickOffset << ", headphonesVolume: "
-         << headphonesVolume << endl;
+    //cout << "headphonesDialClickOffset: " << headphonesDialClickOffset << ", headphonesVolume: "
+    //     << headphonesVolume << endl;
           
     
     redraw();
@@ -423,8 +423,8 @@ bool GMasterOutput::onMouseMove(GdkEventMotion* event)
   else if ( clickedWidget == CLICKED_WIDGET_DIAL )
   {
     float currentDrag = (event->y - headphonesDialClickOffset) / 94.f;
-    cout << "Offset: " << headphonesDialClickOffset << " current drag " << currentDrag
-         << "  headphonesDialClickVolume " << headphonesDialClickVolume;
+    //cout << "Offset: " << headphonesDialClickOffset << " current drag " << currentDrag
+    //     << "  headphonesDialClickVolume " << headphonesDialClickVolume;
     
     if ( headphonesDialClickVolume > 1.f )
       headphonesDialClickVolume = 1.f;
@@ -433,7 +433,7 @@ bool GMasterOutput::onMouseMove(GdkEventMotion* event)
     
     headphonesVolume = headphonesDialClickVolume - currentDrag;
     
-    cout << "  final vol " << headphonesVolume << endl;
+    //cout << "  final vol " << headphonesVolume << endl;
     
     if ( headphonesVolume > 1.f )
       headphonesVolume = 1.f;
