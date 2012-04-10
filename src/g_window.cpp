@@ -398,12 +398,22 @@ int Window::handleEvent()
       std::advance(i,e->ia);
       (*i)->redraw();
     }
+    else if ( e->type == EE_MIXER_RETURN_VOLUME ) {
+      int returnID = e->ia;
+      float value  = e->fa;
+      
+      if ( returnID == 0 )
+        masterReturnA.redraw(value);
+      else if ( returnID == 1 )
+        masterReturnB.redraw(value);
+      else if ( returnID == 2 )
+        masterReturnC.redraw(value);
+    }
     else if ( e->type == EE_TRACK_SET_SEND_VOLUME ) {
       int track = e->ia;
       int send  = e->ib;
       float value = e->fa;
-      //cout << "GUI got SEND   track = " << track << endl;
-      
+      //cout << "GUI got SEND  track = " << track << endl;
       if ( track >= 0 && track < guiState.trackoutputState.size() )
       {
         guiState.trackoutputState.at(track).sends = value;

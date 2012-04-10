@@ -36,6 +36,8 @@ GMasterReturn::GMasterReturn(Top* t, GuiStateStore* s)
   mouseX = -1;
   mouseY = -1;
   
+  value = 0.f;
+  
   //std::cout << "Enterin GMasterReturn contructor" << std::endl;
   add_events(Gdk::EXPOSURE_MASK | Gdk::POINTER_MOTION_MASK | Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK);
   signal_button_press_event().connect(sigc::mem_fun(*this, &GMasterReturn::on_button_press_event) );
@@ -45,8 +47,10 @@ GMasterReturn::GMasterReturn(Top* t, GuiStateStore* s)
   set_size_request(72,39);
 }
 
-bool GMasterReturn::redraw()
+bool GMasterReturn::redraw(float newVal)
 {
+  value = newVal;
+  
   // force our program to redraw the entire widget.
   Glib::RefPtr<Gdk::Window> win = get_window();
   if (win)
@@ -78,24 +82,8 @@ bool GMasterReturn::on_expose_event(GdkEventExpose* event)
     cr->set_source_rgb(0.1 , 0.1 , 0.1 );
     cr->fill();
     
-    /*
-    GMasterReturnState* state = &stateStore->trackoutputState.at(ID);
     
-    if ( state->selected )
-      setColour(cr, COLOUR_GREY_3 );
-    else
-      setColour(cr, COLOUR_GREY_4 );
-    
-    cr->rectangle(0, 0, 74, 102);
-    cr->fill();
-    
-    Dial(cr,true, 7,4,state->pan,DIAL_MODE_PAN); // pan
-    Mute(cr, 9  , 41 , state->ID, state->mute ); // mute button
-    Solo(cr, 9  , 68 , state->ID, state->solo ); // solo button
-    Rec (cr, 9  , 85 , state->ID, state->recEnable); // rec button
-    */
-    
-    Dial(cr, true, 35 , 0, 0.75, DIAL_MODE_SEND ); // fader
+    Dial(cr, true, 35 , 0, value, DIAL_MODE_SEND ); // fader
     
     // Dial text "A"
     cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_BOLD);
@@ -124,53 +112,14 @@ void GMasterReturn::on_menu_file_popup_generic()
 
 bool GMasterReturn::on_button_press_event(GdkEventButton* event)
 {
+  clickedWidget = CLICKED_WIDGET_NONE;
+  
   if( event->type == GDK_BUTTON_PRESS && event->button == 1 )
   {
     // reset click, will be set again if needed
-    clickedWidget = CLICKED_WIDGET_NONE;
+    clickedWidget = CLICKED_WIDGET_DIAL;
     
-    /*
-    if ( event->x > 38 ) // fader
-    {
-      clickedWidget = CLICKED_WIDGET_FADER;
-      mouseX = event->x;
-      mouseY = event->y;
-      
-      float volume = 1 - ((event->y-4) / 94.f);
-      EngineEvent* x = new EngineEvent();
-      x->setMixerVolume(ID, volume);
-      top->toEngineQueue.push(x);
-      
-    }
-    else if ( event->x > 5 && event->y > 39 && event->y < 39 + 23 ) // mute
-    {
-      EngineEvent* x = new EngineEvent();
-      GMasterReturnState* state = &stateStore->trackoutputState.at(ID);
-      x->setTrackMute(ID, !state->mute);
-      top->toEngineQueue.push(x);
-    }
-    else if ( event->x > 5 && event->y > 67 && event->y < 67 + 13 ) // solo
-    {
-      std::cout << "SOLO" << std::endl;
-      EngineEvent* x = new EngineEvent();
-      GMasterReturnState* state = &stateStore->trackoutputState.at(ID);
-      x->setTrackSolo(ID, !state->solo);
-      top->toEngineQueue.push(x);
-    }
-    else if ( event->x > 5 && event->y > 85 && event->y < 85 + 13 ) // rec
-    {
-      std::cout << "REC" << std::endl;
-      EngineEvent* x = new EngineEvent();
-      GMasterReturnState* state = &stateStore->trackoutputState.at(ID);
-      x->setTrackRec(ID, !state->recEnable);
-      top->toEngineQueue.push(x);
-    }
-    else if ( event->x > 3 && event->y > 7 && event->y < 37 )
-    {
-      std::cout << "DIAL" << std::endl;
-      clickedWidget = CLICKED_WIDGET_DIAL;
-    }
-    */
+    mouseY = event->y;
   }
   
   return true;
@@ -190,47 +139,25 @@ bool GMasterReturn::on_button_release_event(GdkEventButton* event)
 
 bool GMasterReturn::onMouseMove(GdkEventMotion* event)
 {
-  /*
-  if ( clickedWidget == CLICKED_WIDGET_FADER )
+  if ( clickedWidget == CLICKED_WIDGET_DIAL )
   {
-    GMasterReturnState* state = &stateStore->trackoutputState.at(ID);
+    float mouseYdelta = (mouseY - event->y) / 25.f;
+    std::cout << "GMaster Return: MouseYdelta: " << mouseYdelta << std::endl;
     
-    float volume = 1 - ((event->y-4) / 94.f);
-    
-    //float mouseYdelta = (mouseY - event->y) / 25.f;
-    //std::cout << "MouseYdelta: " << mouseYdelta << std::endl;
+    float newVal = value + mouseYdelta;
+    if ( newVal > 1 ) newVal  = 1.f;
+    if ( newVal < 0 ) newVal  = 0.f;
     
     EngineEvent* x = new EngineEvent();
-    
     // move volume relative to current value
-    x->setMixerVolume(ID, volume);
+    x->setMixerReturnVolume(ID, newVal );
     top->toEngineQueue.push(x);
+    
+    //redraw( newVal );
     
     // reset mouseY
     mouseY = event->y;
   }
-  else if ( clickedWidget == CLICKED_WIDGET_DIAL )
-  {
-    GMasterReturnState* state = &stateStore->trackoutputState.at(ID);
-    
-    float mouseYdelta = (mouseY - event->y) / 94.f;
-    std::cout << "MouseYdelta: " << mouseYdelta << std::endl;
-    
-    float tmpPan = mouseYdelta + state->pan;
-    
-    if ( tmpPan > 1.f )
-      tmpPan = 1.f;
-    else if ( tmpPan < -1.f )
-      tmpPan = -1.f;
-    
-    EngineEvent* x = new EngineEvent();
-    x->setTrackPan(ID, tmpPan);
-    top->toEngineQueue.push(x);
-    
-    // reset mouseY
-    mouseY = event->y;
-  }
-  */
   
   return true;
   

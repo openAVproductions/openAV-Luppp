@@ -273,6 +273,15 @@ int JackClient::processRtQueue()
         top->state.setVolume( e->ia, e->fa );
       }
     }
+    else if ( e->type == EE_MIXER_RETURN_VOLUME ) {
+      int track = e->ia;
+      float v   = e->fa;
+      cout << "EE_MIXER_RETURN_VOL  " << track << v << endl;
+      if ( track >= 0 && track < 3 )
+      {
+        mixer.setReturnVolume( track, v );
+      }
+    }
     else if ( e->type == EE_TRACK_SET_PLUGIN_GLOBAL_UNIT ) {
       cout << "Global Unit type change: UID = " << e->ia << "  onOff = " << e->ib << endl;
       top->state.setPluginGlobalUnit(e->ia, e->ib);

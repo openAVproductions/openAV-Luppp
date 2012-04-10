@@ -35,14 +35,15 @@ class GMasterReturn : public Gtk::DrawingArea
     GMasterReturn(Top*,GuiStateStore*);
     ~GMasterReturn();
     
-    bool redraw();
+    bool redraw(float);
   
   protected:
     enum ClickedWidget {
       CLICKED_WIDGET_NONE,
       CLICKED_WIDGET_DIAL,
-      CLICKED_WIDGET_FADER,
     };
+    
+    float value;
     
     ClickedWidget clickedWidget;
     

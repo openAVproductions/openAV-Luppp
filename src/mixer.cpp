@@ -43,6 +43,18 @@ Mixer::Mixer(Top* t) :
   inputBuffer.resize(1024);
 }
 
+void Mixer::setReturnVolume(int returnNum, float vol)
+{
+  if ( returnNum >= 0 && returnNum < 3 )
+  {
+    returnVolume[returnNum] = vol;
+    
+    EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+    x->setMixerReturnVolume(returnNum, vol);
+    top->toGuiQueue.push(x);
+  }
+}
+
 void Mixer::addTrack(AudioTrack* trackPtr)
 {
   //cout << "Mixer::addTrack() AudioTrack* = " << trackPtr << endl;
