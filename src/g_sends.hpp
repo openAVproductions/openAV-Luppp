@@ -42,6 +42,13 @@ class GSends : public Gtk::DrawingArea
     static int privateID;
     GuiStateStore* stateStore;
     
+    enum ClickedWidget {
+      CLICKED_WIDGET_NONE,
+      CLICKED_WIDGET_DIAL,
+    };
+    
+    ClickedWidget clickedWidget;
+    
     Top* top;
     
     int mouseX, mouseY;

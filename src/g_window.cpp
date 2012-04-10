@@ -413,7 +413,8 @@ int Window::handleEvent()
       int track = e->ia;
       int send  = e->ib;
       float value = e->fa;
-      //cout << "GUI got SEND  track = " << track << endl;
+      cout << "GUI got SEND_VOL track = " << track << endl;
+      
       if ( track >= 0 && track < guiState.trackoutputState.size() )
       {
         guiState.trackoutputState.at(track).sends = value;

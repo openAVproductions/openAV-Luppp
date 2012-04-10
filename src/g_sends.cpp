@@ -121,20 +121,14 @@ void GSends::on_menu_file_popup_generic()
 
 bool GSends::on_button_press_event(GdkEventButton* event)
 {
+  clickedWidget = CLICKED_WIDGET_NONE;
+  
   if( event->type == GDK_BUTTON_PRESS && event->button == 1 )
   {
-    if ( event->x > 38 ) // fader
-    {
-      mouseX = event->x;
-      mouseY = event->y;
-      
-      /*
-      float volume = 1 - ((event->y-4) / 94.f);
-      EngineEvent* x = new EngineEvent();
-      x->setMixerVolume(ID, volume);
-      top->toEngineQueue.push(x);
-      */
-    }
+    mouseX = event->x;
+    mouseY = event->y;
+    
+    clickedWidget = CLICKED_WIDGET_DIAL;
   }
   
   // update Engine that we have a different track selected:
@@ -152,52 +146,34 @@ bool GSends::on_button_release_event(GdkEventButton* event)
     mouseY = -1;
   }
   
+  clickedWidget = CLICKED_WIDGET_NONE;
+  
   return true;
 }
 
 bool GSends::onMouseMove(GdkEventMotion* event)
 {
-  /*
-  if ( clickedWidget == CLICKED_WIDGET_FADER )
+  
+  if ( clickedWidget == CLICKED_WIDGET_DIAL )
   {
-    GSendsState* state = &stateStore->trackoutputState.at(ID);
+    float mouseYdelta = (mouseY - event->y) / 25.f;
+    std::cout << "GMaster Return: MouseYdelta: " << mouseYdelta << std::endl;
     
-    float volume = 1 - ((event->y-4) / 94.f);
+    TrackOutputState* state = &stateStore->trackoutputState.at(ID);
+    if ( !state ) { return; }
     
-    //float mouseYdelta = (mouseY - event->y) / 25.f;
-    //std::cout << "MouseYdelta: " << mouseYdelta << std::endl;
+    float newVal = state->sends + mouseYdelta;
+    if ( newVal > 1 ) newVal  = 1.f;
+    if ( newVal < 0 ) newVal  = 0.f;
     
     EngineEvent* x = new EngineEvent();
     
-    // move volume relative to current value
-    x->setMixerVolume(ID, volume);
+    x->setTrackSend(ID, 0, newVal );
     top->toEngineQueue.push(x);
     
     // reset mouseY
     mouseY = event->y;
   }
-  else if ( clickedWidget == CLICKED_WIDGET_DIAL )
-  {
-    GSendsState* state = &stateStore->trackoutputState.at(ID);
-    
-    float mouseYdelta = (mouseY - event->y) / 94.f;
-    std::cout << "MouseYdelta: " << mouseYdelta << std::endl;
-    
-    float tmpPan = mouseYdelta + state->pan;
-    
-    if ( tmpPan > 1.f )
-      tmpPan = 1.f;
-    else if ( tmpPan < -1.f )
-      tmpPan = -1.f;
-    
-    EngineEvent* x = new EngineEvent();
-    x->setTrackPan(ID, tmpPan);
-    top->toEngineQueue.push(x);
-    
-    // reset mouseY
-    mouseY = event->y;
-  }
-  */
   
   return true;
   
