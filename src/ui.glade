@@ -680,15 +680,31 @@ Author: Harry van Haaren &lt;harryhaaren@gmail.com&gt;</property>
                                   <placeholder/>
                                 </child>
                                 <child>
-                                  <object class="GtkBox" id="masterReturnBox">
+                                  <object class="GtkBox" id="scopeBox">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="spacing">2</property>
+                                    <property name="orientation">vertical</property>
                                     <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
+                                      <object class="GtkBox" id="masterReturnBox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="spacing">2</property>
+                                        <child>
+                                          <placeholder/>
+                                        </child>
+                                        <child>
+                                          <placeholder/>
+                                        </child>
+                                        <child>
+                                          <placeholder/>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="pack_type">end</property>
+                                        <property name="position">0</property>
+                                      </packing>
                                     </child>
                                     <child>
                                       <placeholder/>

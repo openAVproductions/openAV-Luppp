@@ -55,6 +55,7 @@ Window::Window(Gtk::Main *k, Top* t) :
   masterReturnC(t, &guiState),
   
   waveview(t),
+  outputScope(t),
   inputWaveview(t)
 {
   // store the "kit" instance from main to run it at the end of the
@@ -128,6 +129,7 @@ Window::Window(Gtk::Main *k, Top* t) :
   
   refBuilder->get_widget("mainTable", mainTable);
   
+  refBuilder->get_widget("scopeBox", scopeBox);
   refBuilder->get_widget("masterOutputBox", masterOutputBox);
   refBuilder->get_widget("masterReturnBox", masterReturnBox);
   refBuilder->get_widget("masterClipSelectorBox", masterClipSelectorBox);
@@ -147,6 +149,8 @@ Window::Window(Gtk::Main *k, Top* t) :
   masterReturnBox->add( masterReturnC );
   masterReturnBox->show_all();
   
+  scopeBox->add( outputScope );
+  scopeBox->show_all();
   
   // master output widget
   masterOutputBox->pack_end( masterOutput, false, true, 0 );
@@ -304,10 +308,10 @@ int Window::handleEvent()
   top->scopeVectorMutex.lock();
   {
     inputWaveview.setSample( top->inputScopeVector );
-    waveview.setSample( top->scopeVector );
+    outputScope.setSample( top->scopeVector );
   }
   top->scopeVectorMutex.unlock();
-  waveview.redraw();
+  outputScope.redraw();
   inputWaveview.redraw();
   
   

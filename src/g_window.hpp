@@ -46,6 +46,7 @@ class Top;
 #include "trackoutputstate.hpp"
 #include "g_instrumentselector.hpp"
 
+#include "g_scope.hpp"
 #include "g_waveview.hpp"
 
 class Window
@@ -65,6 +66,7 @@ class Window
     Gtk::Box* masterOutputBox;
     Gtk::Box* masterReturnBox;
     
+    Gtk::Box* scopeBox;
     Gtk::Box* automoveBox;
     Gtk::HBox* bottomWidgetBox;
     Gtk::Box* masterClipSelectorBox;
@@ -107,6 +109,8 @@ class Window
     
     GWaveView waveview;
     GWaveView inputWaveview;
+    
+    GScope    outputScope;
     
     GAutoMove automove;
     

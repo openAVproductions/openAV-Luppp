@@ -75,6 +75,7 @@ def build(ctx):
               'src/g_sends.cpp',
               'src/g_automove.cpp',
               'src/g_waveview.cpp',
+              'src/g_scope.cpp',
               'src/g_masterprogress.cpp',
               'src/g_delay.cpp',
               'src/g_reverb.cpp',
