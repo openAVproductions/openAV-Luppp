@@ -42,7 +42,7 @@ GMasterReturn::GMasterReturn(Top* t, GuiStateStore* s)
   signal_button_release_event().connect(sigc::mem_fun(*this, &GMasterReturn::on_button_release_event) );
   signal_motion_notify_event().connect( sigc::mem_fun( *this, &GMasterReturn::onMouseMove ) );
   
-  set_size_request(74,102);
+  set_size_request(74,39);
 }
 
 bool GMasterReturn::redraw()
@@ -95,7 +95,7 @@ bool GMasterReturn::on_expose_event(GdkEventExpose* event)
     Rec (cr, 9  , 85 , state->ID, state->recEnable); // rec button
     */
     
-    Fader(cr,46 , 4  , 0.7, 0.6, 0.8 ); // fader
+    Dial(cr, true, 35 , 0, 0.75, DIAL_MODE_SEND ); // fader
     
     // Dial text "A"
     cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_BOLD);
