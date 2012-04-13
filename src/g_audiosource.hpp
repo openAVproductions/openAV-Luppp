@@ -44,6 +44,8 @@ class GAudioSource : public Gtk::DrawingArea
     
     bool playing;
     
+    std::string sourceName;
+    
     // popup menu stuff:
     Gtk::Menu    pMenu;
     Gtk::MenuItem  setLv2Source;

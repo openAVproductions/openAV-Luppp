@@ -36,6 +36,8 @@ GAudioSource::GAudioSource(Top* t)
   
   playing = true;
   
+  sourceName = "Source";
+  
   //setBufferSource.set_label("Audio Buffer");
   setLv2Source.set_label("Make LV2 instrument");
   setJackSource.set_label("Make JACK source");
@@ -113,7 +115,34 @@ bool GAudioSource::on_button_press_event(GdkEventButton* event)
   
   std::cout << "Event Type: " << event->type << ". Event Button: " << event->button << "." << std::endl;
   
-  if( event->type == GDK_BUTTON_PRESS  ) // && event->button == 3
+  if( event->type == GDK_2BUTTON_PRESS  )
+  {
+      Gtk::Dialog dialog("Rename Scene", false); // not modal, leave program update!
+      
+      Gtk::Entry* entry = new Gtk::Entry();
+      entry->set_activates_default (true);
+      
+      dialog.add_button( Gtk::Stock::OK, Gtk::RESPONSE_OK );
+      dialog.add_button( Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL );
+      
+      dialog.set_default_response( Gtk::RESPONSE_OK );
+      dialog.get_vbox()->add( *entry );
+      dialog.get_vbox()->show_all();
+      
+      std::string name;
+      
+      switch ( dialog.run() )
+      {
+        case Gtk::RESPONSE_OK:
+          name = entry->get_buffer()->get_text();
+          cout << " Dialog OK clicked, entry contains: " << name << endl;
+          sourceName = name;
+          redraw();
+          break;
+        default: break;
+      }
+  }
+  else if( event->type == GDK_BUTTON_PRESS  ) // && event->button == 3
   {
     std::cout << "Event Type: " << event->type << ". Event Button: " << event->button << "." << std::endl;
     
@@ -175,7 +204,7 @@ bool GAudioSource::on_expose_event(GdkEventExpose* event)
     setColour(cr, COLOUR_ORANGE_1 );
     if ( playing )
       setColour(cr, COLOUR_GREY_3 );
-    cr->show_text ( "Source" );
+    cr->show_text ( sourceName );
     
   }
   return true;
