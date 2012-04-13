@@ -89,6 +89,9 @@ void GAudioSource::jackSource()
   
   // tell offlineWorker to do the loading
   top->offlineWorker->setTrackSource(ID, AUDIO_SOURCE_TYPE_JACK);
+  
+  sourceName = "Jack";
+  redraw();
 }
 
 void GAudioSource::fluidSynthSource()
@@ -103,6 +106,9 @@ void GAudioSource::fluidSynthSource()
   
   // tell offlineWorker to do the loading
   top->offlineWorker->setTrackSource(ID, AUDIO_SOURCE_TYPE_FLUIDSYNTH);
+  
+  sourceName = "Fluid";
+  redraw();
 }
 
 void GAudioSource::whiteNoiseSource()
