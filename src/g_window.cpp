@@ -441,12 +441,14 @@ int Window::handleEvent()
       std::advance(i,e->ia);
       (*i)->redraw();
     }
+    else if ( e->type == EE_BEAT ) {
+      // update the new Beat to the GUI
+      masterProgress.setProgress( (e->ia % 4) / 4.f );
+      masterProgress.queue_draw();
+    }
     else if ( e->type == EE_LOOPER_PROGRESS ) {
       //cout << "Gui LOOPER_PROGRESS UID = " << e->ia  << " value = " << e->fa << endl;
       guiState.bufferAudioSourceState.at(e->ia).index = e->fa;
-      
-      // HACK, master progress should be updated independant of any looper
-      masterProgress.setProgress(e->fa);
       
       if ( e->ia < progressWidgetVector.size() )
       {

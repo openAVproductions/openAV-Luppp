@@ -24,6 +24,7 @@
 
 void EngineEvent::addTrack             (int newId){ ia = newId; type = EE_ADD_TRACK;}
 void EngineEvent::setBpm               (int bpm){ ia = bpm; type = EE_BPM;}
+void EngineEvent::setBeat              (int beat){ ia = beat; type = EE_BEAT;}
 
 void EngineEvent::setSceneNumber       (int scene){ ia = scene; type = EE_SCENE_NUMBER;}
 

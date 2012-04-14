@@ -28,6 +28,7 @@ enum EngineEventType
   EE_INVALID = 0,
   
   EE_BPM,
+  EE_BEAT,
   
   EE_SCENE_NUMBER,
   
@@ -115,6 +116,8 @@ class EngineEvent
     
     void addTrack             (int newId);
     void setBpm               (int bpm);
+    
+    void setBeat              (int beat);
     
     void setSceneNumber       (int scene);
     

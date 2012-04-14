@@ -128,6 +128,14 @@ void Time::process(int frameNumber)
   // here we handle *all* events that should occur on *a* beat
   if ( newBeat != beat )
   {
+    // send the new beat up to the GUI 
+    EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+    if ( x != 0 )
+    {
+      x->setBeat(newBeat);
+      top->toGuiQueue.push(x);
+    }
+    
     //cout << "Time:P() bpm = " << bpm << "  FPB: " << framesPerBeat << "  beat: " << newBeat << " Q1: " << q1.size() << "  Q4: " << q4.size() << endl;
     beat = newBeat;
     
