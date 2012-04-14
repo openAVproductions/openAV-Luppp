@@ -37,6 +37,7 @@ enum EngineEventType
   
   EE_AUTOMOVE_TYPE,
   EE_AUTOMOVE_PROGRESS,
+  EE_AUTOMOVE_DURATION,
   
   EE_ADD_TRACK,
   EE_SET_TRACK_SOURCE,
@@ -122,6 +123,7 @@ class EngineEvent
     void setSceneNumber       (int scene);
     
     void setAutomoveType      (int track, int type);
+    void setAutomoveDuration  (int track, int duration);
     void setAutomoveProgress  (int track, float progress);
     
     void sendAddTrackPointers (void*,void*,void*,void*);

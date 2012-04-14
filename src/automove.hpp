@@ -29,5 +29,13 @@ enum AutoMoveType
   AUTOMOVE_TYPE_DOWN_UP,
 };
 
+enum AutoMoveDuration
+{
+  AUTOMOVE_DURATION_4 = 0,
+  AUTOMOVE_DURATION_8,
+  AUTOMOVE_DURATION_16,
+  AUTOMOVE_DURATION_32,
+};
+
 #endif
 

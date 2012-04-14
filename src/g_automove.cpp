@@ -41,6 +41,8 @@ GAutoMove::GAutoMove(Top* t)
   
   progress = 0;
   
+  type = AUTOMOVE_TYPE_NONE;
+  
   /*
   // add labels to menu, attach them to the right function, and add to menu
   setSize1Sec.set_label("1 second");
@@ -75,23 +77,12 @@ GAutoMove::GAutoMove(Top* t)
   set_size_request(230, 130);
 }
 
-void GAutoMove::setType(int type)
+void GAutoMove::setType(int newType)
 {
   cout << "GAutoMove::setType() type = " << type << endl;
-  type = static_cast<AutoMoveType>(type);
-  
-  if ( type == AUTOMOVE_TYPE_NONE )
-  {
-    cout << "TYPE == NONE!" << endl;
-    progress = 0.f;
-  }
+  type = static_cast<AutoMoveType>(newType);
   
   redraw();
-  
-  if ( type == AUTOMOVE_TYPE_NONE )
-  {
-    cout << "After REDRAW! TYPE == NONE!" << endl;
-  }
 }
 
 void GAutoMove::setProgress(float p)
@@ -170,6 +161,11 @@ bool GAutoMove::on_expose_event(GdkEventExpose* event)
       cr->set_line_width(1.9);
       setColour( cr, COLOUR_BLUE_1 );
       cr->stroke();
+      
+      if ( type == AUTOMOVE_TYPE_NONE )
+      {
+        progress = 0.f;
+      }
       
       float progressPx = 215 * progress;
       
@@ -322,19 +318,26 @@ void GAutoMove::redraw()
 
 bool GAutoMove::on_button_press_event(GdkEventButton* event)
 {
-  if ( event->x > 7  && event->y > 7 &&
-       event->x < 57 && event->y < 49 )
+  if ( event->button == 1 )
   {
-    type = AUTOMOVE_TYPE_UP;
-  }
-  else if ( event->x > 7  && event->y > 55 &&
-       event->x < 57 && event->y < 91 )
-  {
-    type = AUTOMOVE_TYPE_DOWN;
+    if ( event->x > 7  && event->y > 7 &&
+         event->x < 57 && event->y < 49 )
+    {
+      type = AUTOMOVE_TYPE_UP;
+    }
+    else if ( event->x > 7  && event->y > 55 &&
+         event->x < 57 && event->y < 91 )
+    {
+      type = AUTOMOVE_TYPE_DOWN;
+    }
+    else
+    {
+      type = AUTOMOVE_TYPE_NONE;
+    }
   }
   else
   {
-    type = AUTOMOVE_TYPE_NONE;
+    
   }
   
   EngineEvent* x = new EngineEvent();

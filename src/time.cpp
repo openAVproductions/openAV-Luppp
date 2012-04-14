@@ -63,6 +63,7 @@ void Time::startAutomoveType(int type)
     case AUTOMOVE_TYPE_UP:        top->jackClient->writeMidi( top->jackClient->getLpdOutputBuffer(), 144, 64, 127 ); break;
     case AUTOMOVE_TYPE_DOWN:      top->jackClient->writeMidi( top->jackClient->getLpdOutputBuffer(), 144, 60, 127 ); break;
     case AUTOMOVE_TYPE_NONE:
+    default:
     {
       // reset all variables, and let GUI & LPD know
       top->state.globalUnit = 0.f;
