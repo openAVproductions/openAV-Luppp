@@ -41,6 +41,8 @@ GAutoMove::GAutoMove(Top* t)
   
   progress = 0;
   
+  duration = 4;
+  
   type = AUTOMOVE_TYPE_NONE;
   
   /*
@@ -79,9 +81,15 @@ GAutoMove::GAutoMove(Top* t)
 
 void GAutoMove::setType(int newType)
 {
-  cout << "GAutoMove::setType() type = " << type << endl;
+  //cout << "GAutoMove::setType() type = " << type << endl;
   type = static_cast<AutoMoveType>(newType);
   
+  redraw();
+}
+
+void GAutoMove::setDuration(int newDur)
+{
+  duration = newDur;
   redraw();
 }
 
@@ -210,6 +218,14 @@ bool GAutoMove::on_expose_event(GdkEventExpose* event)
         cr->stroke();
       }
       
+      cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_NORMAL);
+      cr->set_font_size ( 40 );
+      cr->move_to ( 180, 65) ;
+      setColour(cr, COLOUR_ORANGE_1, 0.7 );
+      stringstream s;
+      s << duration;
+      cr->show_text ( s.str() );
+      
       /*
       // outline
       setColour(cr, COLOUR_GREY_3 );
@@ -334,15 +350,33 @@ bool GAutoMove::on_button_press_event(GdkEventButton* event)
     {
       type = AUTOMOVE_TYPE_NONE;
     }
+    
+    // send new Type to Engine
+    EngineEvent* x = new EngineEvent();
+    x->setAutomoveType( -1, type );
+    top->toEngineQueue.push(x);
+    
   }
   else
   {
+    switch ( duration )
+    {
+      case  2: duration =  4; break;
+      case  4: duration =  8; break;
+      case  8: duration = 16; break;
+      case 16: duration = 32; break;
+      case 32: duration =  2; break;
+    }
     
+    // send new Duration to engine
+    EngineEvent* x = new EngineEvent();
+    x->setAutomoveDuration( -1, duration );
+    top->toEngineQueue.push(x);
+    
+    redraw();
+    
+    //int tmpDuration = static_cast<int>( duration );
   }
-  
-  EngineEvent* x = new EngineEvent();
-  x->setAutomoveType( -1, type );
-  top->toEngineQueue.push(x);
   
   redraw();
   

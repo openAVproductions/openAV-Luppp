@@ -39,6 +39,7 @@ class GAutoMove : public Gtk::DrawingArea
     void redraw();
     
     void setType(int);
+    void setDuration(int);
     void setProgress(float);
 
   protected:
@@ -49,6 +50,7 @@ class GAutoMove : public Gtk::DrawingArea
     
     float progress;
     AutoMoveType type;
+    AutoMoveDuration duration;
     
     // helper draw functions
     void drawNoBuffer(Cairo::RefPtr<Cairo::Context>);

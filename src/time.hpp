@@ -40,6 +40,7 @@ class Time
     Time(Top*);
     
     void startAutomoveType(int);
+    void setAutomoveDuration(int duration);
     
     void process(int nframes);
     void processEngineEvent(EngineEvent* e);

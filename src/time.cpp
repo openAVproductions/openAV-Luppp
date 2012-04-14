@@ -45,6 +45,13 @@ Time::Time(Top* t)
   
 }
 
+void Time::setAutomoveDuration(int duration)
+{
+  automoveDuration = duration;
+  
+  cout << "New AutoMove duration = " << automoveDuration << endl;
+}
+
 void Time::startAutomoveType(int type)
 {
   cout << "starting Automove type " << type << " now!" << endl;

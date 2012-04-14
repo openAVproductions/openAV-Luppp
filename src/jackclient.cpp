@@ -286,6 +286,9 @@ int JackClient::processRtQueue()
       cout << "Global Unit type change: UID = " << e->ia << "  onOff = " << e->ib << endl;
       top->state.setPluginGlobalUnit(e->ia, e->ib);
     }
+    else if ( e->type == EE_AUTOMOVE_DURATION ) {
+      time.setAutomoveDuration(e->ib);
+    }
     else if ( e->type == EE_AUTOMOVE_TYPE ) {
       int type = e->ib;
       cout << "Automove type : " << type << endl;
