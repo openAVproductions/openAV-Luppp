@@ -73,6 +73,8 @@ GScope::GScope(Top* t)
   signal_drag_data_received().connect(sigc::mem_fun(*this, &GScope::dropFunction) );
   */
   
+  set_tooltip_text ( "Master Output Scope (w signal)" );
+  
   // set default widget size
   set_size_request(148 + 74,22 + 95 + 2);
 }

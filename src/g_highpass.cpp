@@ -42,6 +42,8 @@ GHighPass::GHighPass(Top* t, GuiStateStore* s)
   signal_button_release_event().connect(sigc::mem_fun(*this, &GHighPass::on_button_release_event) );
   signal_motion_notify_event().connect( sigc::mem_fun( *this, &GHighPass::onMouseMove ) );
   
+  set_tooltip_text ( "Highpass effect" );
+  
   set_size_request(75, 37);
   xSize = 75;
   

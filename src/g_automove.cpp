@@ -75,6 +75,8 @@ GAutoMove::GAutoMove(Top* t)
   signal_drag_data_received().connect(sigc::mem_fun(*this, &GAutoMove::dropFunction) );
   */
   
+  set_tooltip_text ( "AutoMove feature: Automatically moves parameters of effects" );
+  
   // set default widget size
   set_size_request(230, 130);
 }

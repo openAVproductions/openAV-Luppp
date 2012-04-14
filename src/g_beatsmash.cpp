@@ -41,6 +41,8 @@ GBeatSmash::GBeatSmash(Top* t, GuiStateStore* s)
   signal_button_release_event().connect(sigc::mem_fun(*this, &GBeatSmash::on_button_release_event) );
   signal_motion_notify_event().connect( sigc::mem_fun( *this, &GBeatSmash::onMouseMove ) );
   
+  set_tooltip_text ( "BeatSmash effect: Loops previous played content" );
+  
   set_size_request(74, 37);
   xSize = 74;
 }
