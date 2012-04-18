@@ -20,6 +20,8 @@
 #ifndef LUPPP_GPROGRESS
 #define LUPPP_GPROGRESS
 
+class Top;
+
 #include <vector>
 #include <iostream>
 
@@ -29,12 +31,13 @@
 class GProgress : public Gtk::DrawingArea
 {
   public:
-    GProgress();
+    GProgress(Top*);
     
     bool redraw();
     void setValue(float);
   
   protected:
+    Top* top;
     float value;
     
     bool on_expose_event(GdkEventExpose* event);

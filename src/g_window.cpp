@@ -829,7 +829,7 @@ void Window::addTrack()
   mainTable->attach( **clipselectorIter, numTracks, numTracks+1, 2, 3);
   
   // progress bar
-  progressWidgetVector.push_back( new GProgress() );
+  progressWidgetVector.push_back( new GProgress(top) );
   progressWidgetVector.back()->setValue( 0.f );
   Gtk::Box* tmpVbox = new Gtk::HBox();
   tmpVbox->add( *progressWidgetVector.back() );

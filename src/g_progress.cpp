@@ -19,16 +19,19 @@
 
 #include "g_progress.hpp"
 
+#include "top.hpp"
 #include "settings.hpp"
 #include "g_widgets.hpp"
 
 using namespace std;
 using namespace Luppp;
 
-GProgress::GProgress()
+GProgress::GProgress(Top* t)
 {
-  //if ( top->settings->showTooltips )
-  set_tooltip_text ( "Progress indicator of current clip" );
+  top = t;
+  
+  if ( top->settings->showTooltips )
+    set_tooltip_text ( "Progress indicator of current clip" );
   
   set_size_request(74, 20);
 }
