@@ -58,6 +58,7 @@ GAudioSource::GAudioSource(Top* t)
   setFluidSynthSource.signal_activate().connect( sigc::mem_fun(*this, &GAudioSource::fluidSynthSource));
   setWhiteNoiseSource.signal_activate().connect( sigc::mem_fun(*this, &GAudioSource::whiteNoiseSource));
   
+  set_tooltip_text ( "Track Source: Sample, JACK, Fluidsynth, LV2 plugin or White noise gen" );
   
   set_size_request(74, 20);
 }

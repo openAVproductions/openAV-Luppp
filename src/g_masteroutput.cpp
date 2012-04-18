@@ -61,6 +61,8 @@ GMasterOutput::GMasterOutput(Top* t, GuiStateStore* s)
   
   clickedWidget = CLICKED_WIDGET_NONE;
   
+  set_tooltip_text ( "Master output: Master volume, Headphones volume, master rotation (1st order ambi), Backtrack snapshot feature" );
+  
   set_size_request(74*3,130);
 }
 

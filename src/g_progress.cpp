@@ -26,6 +26,8 @@ using namespace Luppp;
 
 GProgress::GProgress()
 {
+  set_tooltip_text ( "Progress indicator of current clip" );
+  
   set_size_request(74, 20);
 }
 
