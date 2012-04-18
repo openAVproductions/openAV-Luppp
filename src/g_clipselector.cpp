@@ -71,6 +71,8 @@ ClipSelector::ClipSelector(Top* t, GuiStateStore* s)
   masterClipPlaying  = -1;
   masterClipQueued   = -1;
   
+  set_tooltip_text ( "ClipSelector: Choose which audiofile to playback" );
+  
   set_size_request(74,18 * 10);
 }
 

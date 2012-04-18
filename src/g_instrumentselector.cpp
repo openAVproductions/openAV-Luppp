@@ -51,6 +51,8 @@ InstrumentSelector::InstrumentSelector(Top* t, GuiStateStore* s)
   fileList.push_back( "White Noise gen" );
   fileList.push_back( "Fluidsynth player" );
   
+  set_tooltip_text ( "Instrument Selector: Drag instruments from here to tracks" );
+  
   set_size_request(200,18 * fileList.size() );
 }
 

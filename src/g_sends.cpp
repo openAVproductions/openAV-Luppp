@@ -42,6 +42,8 @@ GSends::GSends(Top* t, GuiStateStore* s)
   signal_button_release_event().connect(sigc::mem_fun(*this, &GSends::on_button_release_event) );
   signal_motion_notify_event().connect( sigc::mem_fun( *this, &GSends::onMouseMove ) );
   
+  set_tooltip_text ( "Track send: outputs signal to the JACK graph for external processing" );
+  
   set_size_request(74,39);
 }
 

@@ -42,6 +42,8 @@ TrackOutput::TrackOutput(Top* t, GuiStateStore* s)
   signal_button_release_event().connect(sigc::mem_fun(*this, &TrackOutput::on_button_release_event) );
   signal_motion_notify_event().connect( sigc::mem_fun( *this, &TrackOutput::onMouseMove ) );
   
+  set_tooltip_text ( "Track output settings: Volume, Pan, PFL, Record" );
+  
   set_size_request(74,102);
 }
 
