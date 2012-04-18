@@ -21,15 +21,15 @@ def configure(ctx):
   ctx.env.CXXFLAGS = ['-pg','-g','-ldl','-Wall','-std=gnu++0x','-Wextra','-fpermissive']
   
   #   Engine Depends
-  ctx.check_cfg	(package='jack',at_least_version='0.118',args='--cflags --libs',uselib_store='JACK')
-  ctx.check_cfg	(package='sndfile',args='--cflags --libs',uselib_store='SNDFILE')
-  ctx.check_cfg	(package='gtkmm-2.4',at_least_version='2.4.0',args='--cflags --libs',uselib_store='GTKMM')
-  ctx.check_cfg	(package='glibmm-2.4',at_least_version='2.0.0',args='--cflags --libs',uselib_store='GLIBMM')
-  ctx.check_cfg	(package='fluidsynth',args='--libs',uselib_store='FLUIDSYNTH')
-  ctx.check_cfg	(package='libconfig++',at_least_version='1.4.8',args='--libs',uselib_store='LIBCONFIG')
-  ctx.check_cfg	(package='lilv-0',args='--cflags --libs',uselib_store='LILV')
-  ctx.check_cfg	(package='suil-0',args='--cflags --libs',uselib_store='SUIL')
-  ctx.check_cfg	(package='liblo',at_least_version='1.0.0',args='--cflags --libs',uselib_store='LIBLO') # harmonySeq integration
+  ctx.check_cfg(package='jack',at_least_version='0.118',args='--cflags --libs',uselib_store='JACK')
+  ctx.check_cfg(package='sndfile',args='--cflags --libs',uselib_store='SNDFILE')
+  ctx.check_cfg(package='gtkmm-2.4',at_least_version='2.4.0',args='--cflags --libs',uselib_store='GTKMM')
+  ctx.check_cfg(package='glibmm-2.4',at_least_version='2.0.0',args='--cflags --libs',uselib_store='GLIBMM')
+  ctx.check_cfg(package='fluidsynth',args='--libs',uselib_store='FLUIDSYNTH')
+  ctx.check_cfg(package='libconfig++',at_least_version='1.4.8',args='--libs',uselib_store='LIBCONFIG')
+  ctx.check_cfg(package='lilv-0',args='--cflags --libs',uselib_store='LILV')
+  ctx.check_cfg(package='suil-0',args='--cflags --libs',uselib_store='SUIL')
+  ctx.check_cfg(package='liblo',at_least_version='1.0.0',args='--cflags --libs',uselib_store='LIBLO') # harmonySeq integration
   
   # Check for headers:
   ctx.check(header_name="lv2.h",mandatory=True,uselib_store='LV2.H')
@@ -119,20 +119,20 @@ def build(ctx):
   
   #print 'Depends list:',dependList
   
-  lib	 = ctx.new_task_gen(
-    features	= 'cxx cxxstlib',
-    source		= buildList,
-    target		= 'engine_gui',
-    uselib		= engineDepends,
+  lib = ctx.new_task_gen(
+    features  = 'cxx cxxstlib',
+    source    = buildList,
+    target    = 'engine_gui',
+    uselib    = engineDepends,
     export_includes = '.')
   
   
-  main			= ctx.new_task_gen(
-    features	= 'cxx cprogram',
-    source		= 'src/main.cpp',
+  main = ctx.new_task_gen(
+    features  = 'cxx cprogram',
+    source    = 'src/main.cpp',
     use       = 'engine_gui',
     uselib    = engineDepends,
-    target		= 'luppp' )
+    target    = 'luppp' )
 
 
 
