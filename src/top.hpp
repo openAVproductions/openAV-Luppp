@@ -29,6 +29,7 @@
 
 #include "statestore.hpp"
 
+class Settings;
 class Controller;
 class JackClient;
 class GuiStateStore;
@@ -71,6 +72,8 @@ class Top
     AudioQueue recordAudioQueue;
     
     JackClient* jackClient;
+    
+    Settings*   settings;
 };
 
 #endif

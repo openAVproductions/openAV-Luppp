@@ -19,6 +19,7 @@
 
 #include "top.hpp"
 
+#include "settings.hpp"
 #include "controller.hpp"
 #include "offlineworker.hpp"
 
@@ -31,6 +32,7 @@ Top::Top() :
   bpm = 150;
   cout << "Top()  BPM = " << bpm << endl;
   
+  settings = new Settings(this);
   controller = new Controller(this);
   offlineWorker = new OfflineWorker(this);
   guiDispatcher = new Glib::Dispatcher();

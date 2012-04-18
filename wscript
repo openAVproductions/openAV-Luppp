@@ -57,6 +57,7 @@ def build(ctx):
               'src/whitenoiseaudiosource.cpp',
               'src/trancegate.cpp',
               'src/mixer.cpp',
+              'src/settings.cpp',
               'src/effect.cpp',
               'src/beatsmash.cpp',
               'src/statestore.cpp',
