@@ -44,12 +44,17 @@ using namespace std;
 #include "g_ampitchshift.hpp"
 
 Window::Window(Gtk::Main *k, Top* t) :
+  
   masterOutput(t, &guiState),
+  
   fileSelector(t, &guiState),
   effectSelector(t, &guiState),
   instrumentSelector(t, &guiState),
+  
   automove(t),
   masterSource(t),
+  masterProgress(t),
+  
   masterReturnA(t, &guiState),
   masterReturnB(t, &guiState),
   masterReturnC(t, &guiState),

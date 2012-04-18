@@ -20,6 +20,7 @@
 #include "g_mastersource.hpp"
 
 #include "top.hpp"
+#include "settings.hpp"
 #include "offlineworker.hpp"
 #include "g_widgets.hpp"
 
@@ -34,6 +35,10 @@ GMasterSource::GMasterSource(Top* t)
   
   add_events(Gdk::BUTTON_PRESS_MASK);
   signal_button_press_event().connect(sigc::mem_fun(*this, &GMasterSource::on_button_press_event) );
+  
+  if ( top->settings->showTooltips )
+    set_tooltip_text ( "Master Source : Sound comes from other tracks!" );
+  
   
   set_size_request(74*3, 20);
 }

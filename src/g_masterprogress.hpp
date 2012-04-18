@@ -25,17 +25,20 @@
 
 #include <gtkmm/drawingarea.h>
 
+class Top;
 
 class GMasterProgress : public Gtk::DrawingArea
 {
   public:
-    GMasterProgress();
+    GMasterProgress(Top* t);
     
     bool redraw();
     void setBpm(int);
     void setProgress(float);
   
   protected:
+    Top* top;
+    
     float progress;
     
     int bpm;

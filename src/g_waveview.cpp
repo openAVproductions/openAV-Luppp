@@ -18,6 +18,8 @@
 */
 #include "g_waveview.hpp"
 
+#include "settings.hpp"
+
 #include <iostream>
 #include <cairomm/context.h>
 #include <sstream>
@@ -71,8 +73,8 @@ GWaveView::GWaveView(Top* t)
   
   signal_drag_data_received().connect(sigc::mem_fun(*this, &GWaveView::dropFunction) );
   
-  
-  set_tooltip_text ( "Waveview: Drag a clip from the clipselector here to view it" );
+  if ( top->settings->showTooltips )
+    set_tooltip_text ( "Waveview: Drag a clip from the clipselector here to view it" );
   
   // set default widget size
   set_size_request(148 + 74,22 + 95 + 2);

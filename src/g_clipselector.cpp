@@ -99,6 +99,10 @@ ClipSelector::ClipSelector(Top* t, GuiStateStore* s, bool masterConstructor)
     s << i;
     nameList.push_back( s.str() );
   }
+  
+  if ( top->settings->showTooltips )
+    set_tooltip_text ( "Master ClipSelector: Choose which scene to play" );
+  
   set_size_request(74*3,18 * 10);
 }
 
