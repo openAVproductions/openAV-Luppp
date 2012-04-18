@@ -20,6 +20,7 @@
 #include "g_audiosource.hpp"
 
 #include "top.hpp"
+#include "settings.hpp"
 #include "offlineworker.hpp"
 #include "g_widgets.hpp"
 
@@ -58,7 +59,8 @@ GAudioSource::GAudioSource(Top* t)
   setFluidSynthSource.signal_activate().connect( sigc::mem_fun(*this, &GAudioSource::fluidSynthSource));
   setWhiteNoiseSource.signal_activate().connect( sigc::mem_fun(*this, &GAudioSource::whiteNoiseSource));
   
-  set_tooltip_text ( "Track Source: Sample, JACK, Fluidsynth, LV2 plugin or White noise gen" );
+  if ( top->settings->showTooltips )
+    set_tooltip_text ( "Track Source: Sample, JACK, Fluidsynth, LV2 plugin or White noise gen" );
   
   set_size_request(74, 20);
 }

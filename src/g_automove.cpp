@@ -25,6 +25,7 @@
 #include "g_widgets.hpp"
 
 #include "top.hpp"
+#include "settings.hpp"
 #include "offlineworker.hpp"
 #include "g_statestore.hpp"
 
@@ -75,7 +76,8 @@ GAutoMove::GAutoMove(Top* t)
   signal_drag_data_received().connect(sigc::mem_fun(*this, &GAutoMove::dropFunction) );
   */
   
-  set_tooltip_text ( "AutoMove feature: Automatically moves parameters of effects" );
+  if ( top->settings->showTooltips )
+    set_tooltip_text ( "AutoMove feature: Automatically moves parameters of effects" );
   
   // set default widget size
   set_size_request(230, 130);

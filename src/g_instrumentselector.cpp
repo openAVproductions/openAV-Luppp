@@ -20,6 +20,7 @@
 #include "g_instrumentselector.hpp"
 
 #include "g_widgets.hpp"
+#include "settings.hpp"
 
 #include <glibmm/fileutils.h>
 //#include <gtkmm/filechooserdialog.h>
@@ -51,7 +52,8 @@ InstrumentSelector::InstrumentSelector(Top* t, GuiStateStore* s)
   fileList.push_back( "White Noise gen" );
   fileList.push_back( "Fluidsynth player" );
   
-  set_tooltip_text ( "Instrument Selector: Drag instruments from here to tracks" );
+  if ( top->settings->showTooltips )
+    set_tooltip_text ( "Instrument Selector: Drag instruments from here to tracks" );
   
   set_size_request(200,18 * fileList.size() );
 }

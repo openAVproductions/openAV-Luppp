@@ -20,6 +20,7 @@
 #include "g_masteroutput.hpp"
 
 #include "g_widgets.hpp"
+#include "settings.hpp"
 
 #include <cmath>
 
@@ -61,7 +62,8 @@ GMasterOutput::GMasterOutput(Top* t, GuiStateStore* s)
   
   clickedWidget = CLICKED_WIDGET_NONE;
   
-  set_tooltip_text ( "Master output: Master volume, Headphones volume, master rotation (1st order ambi), Backtrack snapshot feature" );
+  if ( top->settings->showTooltips )
+    set_tooltip_text ( "Master output: Master volume, Headphones volume, master rotation (1st order ambi), Backtrack snapshot feature" );
   
   set_size_request(74*3,130);
 }

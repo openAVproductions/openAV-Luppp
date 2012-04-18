@@ -19,6 +19,7 @@
 
 #include "g_masterreturn.hpp"
 
+#include "settings.hpp"
 #include "g_widgets.hpp"
 
 using namespace std;
@@ -44,7 +45,8 @@ GMasterReturn::GMasterReturn(Top* t, GuiStateStore* s)
   signal_button_release_event().connect(sigc::mem_fun(*this, &GMasterReturn::on_button_release_event) );
   signal_motion_notify_event().connect( sigc::mem_fun( *this, &GMasterReturn::onMouseMove ) );
   
-  set_tooltip_text ( "JACK returns: Amount to mix into master bus" );
+  if ( top->settings->showTooltips )
+    set_tooltip_text ( "JACK returns: Amount to mix into master bus" );
   
   set_size_request(72,39);
 }

@@ -28,6 +28,7 @@
 #include "gtkmm.h"
 #include "gtkmm/filechooserdialog.h"
 
+#include "settings.hpp"
 #include "offlineworker.hpp"
 
 using namespace std;
@@ -71,7 +72,8 @@ ClipSelector::ClipSelector(Top* t, GuiStateStore* s)
   masterClipPlaying  = -1;
   masterClipQueued   = -1;
   
-  set_tooltip_text ( "ClipSelector: Choose which audiofile to playback" );
+  if ( top->settings->showTooltips )
+    set_tooltip_text ( "ClipSelector: Choose which audiofile to playback" );
   
   set_size_request(74,18 * 10);
 }

@@ -19,8 +19,9 @@
 
 #include "g_masterprogress.hpp"
 
-#include "g_widgets.hpp"
 #include <sstream>
+#include "settings.hpp"
+#include "g_widgets.hpp"
 
 using namespace std;
 using namespace Luppp;
@@ -29,6 +30,10 @@ GMasterProgress::GMasterProgress()
 {
   set_size_request(74, 18);
   bpm = 160;
+  
+  //if ( top->settings->showTooltips )
+  set_tooltip_text ( "Master Progress: Shows downbeats in Luppp's internal engine" );
+  
 }
 
 bool GMasterProgress::redraw()
