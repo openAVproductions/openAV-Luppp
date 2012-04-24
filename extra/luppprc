@@ -1,0 +1,7 @@
+luppp : 
+{
+  settings : 
+  {
+    showtooltips = 1;
+  };
+};
