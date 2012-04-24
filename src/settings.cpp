@@ -21,6 +21,9 @@
 
 #include "top.hpp"
 
+#include <glib.h>
+#include <glib/gstdio.h>
+
 // for reading sample pack info stuffs
 #include <libconfig.h++>
 
@@ -39,6 +42,13 @@ Settings::Settings(Top* t)
   
   dotLupppDir = Glib::build_filename(userHome, ".luppp");
   lupppRcFilename = Glib::build_filename( dotLupppDir, "luppprc");
+  
+  bool dirExists = Glib::file_test ( dotLupppDir , Glib::FILE_TEST_IS_DIR );
+  if ( !dirExists )
+  {
+    cout << ".luppp directory doesn't exist!" << endl;
+    g_mkdir( dotLupppDir.c_str(), 0755);
+  }
   
   bool fileExists = Glib::file_test ( lupppRcFilename , Glib::FILE_TEST_EXISTS );
   
