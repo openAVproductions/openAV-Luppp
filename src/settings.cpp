@@ -35,11 +35,13 @@ Settings::Settings(Top* t)
   showTooltips = true;
   
   // here we attempt to load .luppprc from the users home dir
-  std::string userHome = Glib::get_home_dir();
+  userHome = Glib::get_home_dir();
   
-  std::string lupppRcFilename = Glib::build_filename(userHome, ".luppprc");
+  dotLupppDir = Glib::build_filename(userHome, ".luppp");
+  lupppRcFilename = Glib::build_filename( dotLupppDir, "luppprc");
   
   bool fileExists = Glib::file_test ( lupppRcFilename , Glib::FILE_TEST_EXISTS );
+  
   if ( fileExists )
   {
     cout << "Found Luppprc file, parsing now!" << endl;
@@ -58,25 +60,53 @@ Settings::Settings(Top* t)
     try
     {
       config.lookupValue("luppp.settings.showtooltips", showTooltips );
-      
       cout << "Show tooltips: " << showTooltips << endl;
-      
-      //if( config.lookupValue( "luppp.samplePack.s"+ toString(i) +".numBeats" , numBeats) &&
-      //config.lookupValue( "luppp.samplePack.s"+ toString(i) +".name"     , sampleName) )
     }
     catch ( ParseException &e )
     {
-      // some libconfig error, like ParseException, or SettingException
-      cout << "Settings::loadAudioBuffer() LibConfig Parsing exception... ignoring" << endl; 
+      cout << "luppp.settings.showtooltips: Error! Key not found" << endl; 
     }
   }
   else
   {
-    cout << "Could not find a '.luppprc' file in user home dir!" << endl;
+    cout << "Could not find 'luppprc' in settings folder " + dotLupppDir << endl;
+    writeDefaults();
   }
-  
 }
 
 
-
-
+void Settings::writeDefaults()
+{
+  cout << "Settings: writeDefaults()" << endl;
+  
+  // create config, and then read it's root
+  Config config;
+  Setting &root = config.getRoot();
+  
+  if(!root.exists("luppp"))
+    root.add("luppp", Setting::TypeGroup);
+  
+  Setting &luppp = root["luppp"];
+  
+  if( !luppp.exists("settings"))
+    luppp.add("settings", Setting::TypeGroup);
+  
+  Setting &settings = luppp["settings"];
+  
+  // here we add the "settings", and thier default values
+  settings.add("showtooltips",Setting::TypeInt) = 1;
+  
+  
+  // Write out the updated configuration.
+  try
+  {
+    config.writeFile( lupppRcFilename.c_str() );
+  }
+  catch(const FileIOException &fioex)
+  {
+    cerr << "I/O error while writing file: " << lupppRcFilename.c_str() << endl;
+  }
+  
+  
+  
+}

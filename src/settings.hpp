@@ -37,6 +37,11 @@ class Settings
   private:
     Top* top;
     
+    void writeDefaults();
+    
+    std::string userHome;
+    std::string dotLupppDir;
+    std::string lupppRcFilename;
 };
 
 
