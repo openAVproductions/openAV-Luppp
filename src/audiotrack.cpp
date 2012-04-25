@@ -62,7 +62,8 @@ AudioTrack::AudioTrack( Top* t, bool masterTrack )
   
   std::cout << "Creating MASTER AudioTrack ID: " << ID << std::endl;
   
-  trackBuffer.resize(top->bufferSize);
+  // hack to fix buffer resize issue cause top isn't initialized yet!
+  trackBuffer.resize(1024);
   
   
   // default source for a track is the BufferAudioSource, we can exchange

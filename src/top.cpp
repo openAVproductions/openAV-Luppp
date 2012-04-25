@@ -32,6 +32,10 @@ Top::Top() :
   bpm = 150;
   cout << "Top()  BPM = " << bpm << endl;
   
+  samplerate = -1;
+  bufferSize = -1;
+  frameNumber = -1;
+  
   settings = new Settings(this);
   controller = new Controller(this);
   offlineWorker = new OfflineWorker(this);
@@ -46,6 +50,9 @@ Top::Top() :
 // is the scope view in the GUI / live waveform passing
 void Top::initialize()
 {
+  cout << "Top::initialize() BufferSize = " << bufferSize << endl;
+  
   scopeVector.resize(bufferSize);
   inputScopeVector.resize(bufferSize);
+  
 }
