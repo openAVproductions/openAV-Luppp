@@ -34,6 +34,7 @@ Time::Time(Top* t)
   
   automoveQueue = false;
   automoveDuration = 4;
+  automoveType = AUTOMOVE_TYPE_NONE;
   
   // queued clips hack
   for(int i = 0; i < 16; i++)

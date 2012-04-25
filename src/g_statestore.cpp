@@ -26,6 +26,9 @@ using namespace std;
 GuiStateStore::GuiStateStore()
 {
   numTracks = 0;
+  
+  masterClipPlaying = -1;
+  
   lastUsedDir = Glib::get_home_dir();
   cout << "Last used dir = " << lastUsedDir << endl;
 }

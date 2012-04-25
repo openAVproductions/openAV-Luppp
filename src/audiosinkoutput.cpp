@@ -31,6 +31,8 @@ AudioSinkOutput::AudioSinkOutput(Top* t)
   
   amplitudeSendCounter = 0;
   
+  maxAmplitude = 0.f;
+  
   top = t;
 }
 

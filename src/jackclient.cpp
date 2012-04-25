@@ -48,6 +48,8 @@ JackClient::JackClient( Top* t) :
   headphonePflVector.resize(t->bufferSize);
   postFaderSendVector.resize(t->bufferSize);
   
+  recordInput = false;
+  
   inputPort = jack_port_register ( client,
                                     "input",
                                     JACK_DEFAULT_AUDIO_TYPE,
