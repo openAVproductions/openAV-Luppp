@@ -21,6 +21,8 @@
 
 #include "audiobuffer.hpp"
 
+#include <cmath>
+
 using namespace std;
 
 BufferAudioSource::BufferAudioSource(Top* t)
@@ -32,11 +34,16 @@ BufferAudioSource::BufferAudioSource(Top* t)
   // init faust pitch shift variables
   fSamplingFreq = top->samplerate;
   IOTA = 0;
-  for (int i=0; i<65536; i++) fVec0[i] = 0;
-  fslider0 = 0.0f;
-  fslider1 = 1e+03f;
-  for (int i=0; i<2; i++) fRec0[i] = 0;
-  fslider2 = 1e+01f;
+  
+  for (int i=0; i<65536; i++)
+    fVec0[i] = 0;
+  
+  semitoneShift = 0.0f;
+  windowSize = 1000;
+  crossfadeSize = 1000;
+  
+  for (int i=0; i<2; i++)
+    fRec0[i] = 0;
   
   // temp buffer for storing audio
   for ( int i = 0; i < top->bufferSize; i++)
@@ -91,7 +98,12 @@ void BufferAudioSource::process (int nframes, float* buffer )
   
   speed = speed * top->speed;
   
-  //cout << " Wanted = " << totalFramesWanted << "  Buffer = " << totalFramesInBuffer << "  TopSpeed: " << top->speed <<  "  speed = " << speed << endl;
+  // pitch algorithm logic
+  float deltaPitch = 12 * log ( totalFramesInBuffer / float(totalFramesWanted) ) / log (2);
+  //cout << " Wanted = " << totalFramesWanted << "  Buffer = " << totalFramesInBuffer << "  TopSpeed: " << top->speed <<  "  speed = " << speed << "  DeltaPitch: " << deltaPitch << endl;
+  
+  // here we set the semitone value to the opposite of the resample delta, so it balances out :D
+  semitoneShift = -deltaPitch;
   
   if ( size == 0 )
     return;
@@ -130,11 +142,8 @@ void BufferAudioSource::process (int nframes, float* buffer )
   // write index to state, so that next time we read the next samples
   iter->index = index;
   
-  
   // now pitch shift the audio
   pitchShift( nframes, &tmpBuffer[0], buffer);
-  
-  
   
   
   if ( guiUpdateCounter < 0 )
@@ -153,9 +162,9 @@ void BufferAudioSource::process (int nframes, float* buffer )
 
 void BufferAudioSource::pitchShift(int count, float* input, float* output)
 {
-  float   fSlow0 = fslider1;
-  float   fSlow1 = ((1 + fSlow0) - powf(2,(0.08333333333333333f * fslider0)));
-  float   fSlow2 = (1.0f / fslider2);
+  float   fSlow0 = windowSize;
+  float   fSlow1 = ((1 + fSlow0) - powf(2,(0.08333333333333333f * semitoneShift)));
+  float   fSlow2 = (1.0f / crossfadeSize);
   float   fSlow3 = (fSlow0 - 1);
   float* input0 = &input[0];
   float* output0 = &output[0];

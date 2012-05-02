@@ -47,10 +47,10 @@ class BufferAudioSource : public AudioSource
     // pitch shifting variables (extraced from faust)
     int    IOTA;
     float  fVec0[65536];
-    float  fslider0;
-    float  fslider1;
+    float  semitoneShift;
+    float  windowSize;
     float  fRec0[2];
-    float  fslider2;
+    float  crossfadeSize;
     float  fSamplingFreq;
     
     int guiUpdateCounter;
