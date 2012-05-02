@@ -185,8 +185,6 @@ void BufferAudioSource::pitchShift(int count, float* input, float* output)
     &65535]))) + (fTemp3 * (((fRec0[0] - iTemp1) * fVec0[(IOTA-int((int(
     iTemp2) & 65535)))&65535]) + ((iTemp2 - fRec0[0]) * fVec0[(IOTA-int((
     iTemp1 & 65535)))&65535]))));
-    
-    // post processing
     fRec0[1] = fRec0[0];
     IOTA = IOTA+1;
   }
