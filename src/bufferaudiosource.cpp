@@ -29,6 +29,19 @@ BufferAudioSource::BufferAudioSource(Top* t)
   ID = AudioSource::getID();
   //cout << "BufferAudioSource() ID = " << ID << endl;
   
+  // init faust pitch shift variables
+  fSamplingFreq = top->samplerate;
+  IOTA = 0;
+  for (int i=0; i<65536; i++) fVec0[i] = 0;
+  fslider0 = 0.0f;
+  fslider1 = 1e+03f;
+  for (int i=0; i<2; i++) fRec0[i] = 0;
+  fslider2 = 1e+01f;
+  
+  // temp buffer for storing audio
+  for ( int i = 0; i < top->bufferSize; i++)
+    tmpBuffer.push_back(0.f);
+  
   guiUpdateCounter = 0;
 }
 
@@ -86,6 +99,7 @@ void BufferAudioSource::process (int nframes, float* buffer )
   float attackRelease = 1.f;
   
   //cout << "BAS:process() ID = " << ID << "  Size: " << size << " index = " << index << endl;
+  
   for (int i = 0; i < nframes; i++ )
   {
     if ( (int)(index*size) >= size )
@@ -103,14 +117,25 @@ void BufferAudioSource::process (int nframes, float* buffer )
       attackRelease = 1 +   ((size-100) - (index * size))  / 100.f;
     }
     
+    tmpBuffer[i] = 0.f;
+    
     // here we multiply in by attackRelease to remove any non-zero endings
     // to make the join over the loop smooth, without a click
-    *buffer++  += attackRelease * tmpVector->at( (int)(index * size) );
+    tmpBuffer[i] += attackRelease * tmpVector->at( (int)(index * size) );
     index = index + ( speed / size );
+    
+    //*buffer++ = tmpBuffer[i];
   }
   
   // write index to state, so that next time we read the next samples
   iter->index = index;
+  
+  
+  // now pitch shift the audio
+  pitchShift( nframes, &tmpBuffer[0], buffer);
+  
+  
+  
   
   if ( guiUpdateCounter < 0 )
   {
@@ -124,3 +149,39 @@ void BufferAudioSource::process (int nframes, float* buffer )
     guiUpdateCounter--;
   }
 }
+
+
+void BufferAudioSource::pitchShift(int count, float* input, float* output)
+{
+  float   fSlow0 = fslider1;
+  float   fSlow1 = ((1 + fSlow0) - powf(2,(0.08333333333333333f * fslider0)));
+  float   fSlow2 = (1.0f / fslider2);
+  float   fSlow3 = (fSlow0 - 1);
+  float* input0 = &input[0];
+  float* output0 = &output[0];
+  
+  for (int i=0; i<count; i++)
+  {
+    float fTemp0 = (float)input0[i];
+    fVec0[IOTA&65535] = fTemp0;
+    fRec0[0] = fmodf((fRec0[1] + fSlow1),fSlow0);
+    int iTemp1 = int(fRec0[0]);
+    int iTemp2 = (1 + iTemp1);
+    float fTemp3 = min((fSlow2 * fRec0[0]), 1.f );
+    float fTemp4 = (fSlow0 + fRec0[0]);
+    int iTemp5 = int(fTemp4);
+    output0[i] = (float)(((1 - fTemp3) * (((fTemp4 - iTemp5) * 
+    fVec0[(IOTA-int((int((1 + iTemp5)) & 65535)))&65535]) + ((0 - ((
+    fRec0[0] + fSlow3) - iTemp5)) * fVec0[(IOTA-int((iTemp5 & 65535)))
+    &65535]))) + (fTemp3 * (((fRec0[0] - iTemp1) * fVec0[(IOTA-int((int(
+    iTemp2) & 65535)))&65535]) + ((iTemp2 - fRec0[0]) * fVec0[(IOTA-int((
+    iTemp1 & 65535)))&65535]))));
+    
+    // post processing
+    fRec0[1] = fRec0[0];
+    IOTA = IOTA+1;
+  }
+}
+
+
+

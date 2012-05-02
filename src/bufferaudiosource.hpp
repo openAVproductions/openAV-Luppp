@@ -44,7 +44,20 @@ class BufferAudioSource : public AudioSource
     Top* top;
     int ID;
     
+    // pitch shifting variables (extraced from faust)
+    int    IOTA;
+    float  fVec0[65536];
+    float  fslider0;
+    float  fslider1;
+    float  fRec0[2];
+    float  fslider2;
+    float  fSamplingFreq;
+    
     int guiUpdateCounter;
+    
+    std::vector<float> tmpBuffer;
+    
+    void pitchShift(int count, float* input, float* output);
 };
 
 
