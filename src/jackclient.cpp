@@ -262,7 +262,16 @@ int JackClient::processRtQueue()
     
     //std::cout << "processRtQueue() in engine got event!" << std::endl;
     
-    if ( e->type == EE_MIXER_VOLUME )
+    if ( e->type == EE_BPM )
+    {
+      cout << "New BPM!" << endl;
+      int bpm = e->ia;
+      
+      top->bpm = bpm;
+      //top->speed = 0.5 + (b3 / 127.f);
+      
+    }
+    else if ( e->type == EE_MIXER_VOLUME )
     {
       if ( e->ia == -1 )
       {

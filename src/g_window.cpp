@@ -61,7 +61,10 @@ Window::Window(Gtk::Main *k, Top* t) :
   
   waveview(t),
   outputScope(t),
-  inputWaveview(t)
+  inputWaveview(t),
+  
+  bpmAdjustment(0.0, 0.0, 101.0, 0.1, 1.0, 1.0),
+  bpmScale( 50.d, 260.d, 10.d )
 {
   // store the "kit" instance from main to run it at the end of the
   // constructor.
@@ -122,6 +125,16 @@ Window::Window(Gtk::Main *k, Top* t) :
   effectSelector.show();
   
   refBuilder->get_widget("bpmBox", bpmBox);
+  bpmBox->pack_end(bpmScale, true, true);
+  bpmBox->show_all();
+  
+  //refBuilder->get_widget("bpmScale", bpmScale);
+  //refBuilder->get_object("bpmAdjustment", bpmAdjustment );
+  
+  bpmScale.signal_value_changed().connect( sigc::mem_fun( *this, &Window::onBpmChange ) );
+  
+  //bpmAdjustment.
+  
   //bpmBox->append("Dubstep");
   //effectSelector.show();
   
@@ -265,6 +278,20 @@ void Window::setFileChooserPane()
     //cout << "FileBrowserToggle disabled, px = 0" << endl;
     fileChooserPane->set_position( 0 );
   }
+}
+
+void Window::onBpmChange()
+{
+  const double val = bpmScale.get_value();
+  
+  //const double val = bpmAdjustment->get_value();
+  cout << "New BPM value = " << val << endl;
+  
+  
+  EngineEvent* x = new EngineEvent();
+  x->setBpm(val);
+  top->toEngineQueue.push(x);
+  
 }
 
 void Window::trackEffectDragDrop(const Glib::RefPtr<Gdk::DragContext>& context, int, int,

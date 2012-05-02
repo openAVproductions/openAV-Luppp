@@ -66,9 +66,12 @@ class Window
     Gtk::Box* masterOutputBox;
     Gtk::Box* masterReturnBox;
     
+    Gtk::HScale     bpmScale;
+    Gtk::Adjustment bpmAdjustment;
+    
     Gtk::Box* scopeBox;
     Gtk::Box* automoveBox;
-    Gtk::ComboBox* bpmBox;
+    Gtk::Box* bpmBox;
     Gtk::HBox* bottomWidgetBox;
     Gtk::Box* masterClipSelectorBox;
     Gtk::EventBox* trackEffectEventBox;
@@ -136,6 +139,8 @@ class Window
     
     int numTracks;
     void addTrack();
+    
+    void onBpmChange();
     
     int handleEvent();
     void addEffect(EffectType);
