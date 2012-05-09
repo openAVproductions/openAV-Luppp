@@ -659,6 +659,32 @@ int Window::handleEvent()
       else
         cout << "GUI: LOOPER_LOAD track OOB " << e->ia << endl;
     }
+    else if ( e->type == EE_LOOPER_QUEUE_BUFFER )
+    {
+      cout << "QUEUE BUFFER recieved NOW!" << endl;
+      if ( e->ia < guiState.clipSelectorState.size() )
+      {
+        int queued = guiState.clipSelectorState.at(e->ia).queued;
+        
+        guiState.clipSelectorState.at(e->ia).queued = e->ib;
+        list<ClipInfo>::iterator iter = guiState.clipSelectorState.at(e->ia).clipInfo.begin();
+        advance(iter, e->ib);
+        
+        if ( !iter->hasBuffer )
+        {
+          guiState.clipSelectorState.at(e->ia).queued = -1;
+          audioSourceVector.at(e->ia)->setQueued(true);
+        }
+        else
+        {
+          audioSourceVector.at(e->ia)->setQueued(false);
+        }
+        
+        std::list<ClipSelector*>::iterator clipIter = clipselectorList.begin();
+        advance(clipIter,e->ia);
+        (*clipIter)->redraw();
+      }
+    }
     else if ( e->type == EE_LOOPER_SELECT_BUFFER )
     {
       if ( e->ia < guiState.clipSelectorState.size() ) {

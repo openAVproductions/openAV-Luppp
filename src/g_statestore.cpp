@@ -125,11 +125,13 @@ void GuiStateStore::setLastDir(std::string s)
 void GuiStateStore::addAudioBufferName(int ID, std::string name)
 {
   
-  audioBufferNameVector.push_back( name );
+  audioBufferNameVector.push_back( BlockIdName() );
+  audioBufferNameVector.back().ID = ID;
+  audioBufferNameVector.back().name = name;
   
   for ( int i = 0; i < audioBufferNameVector.size(); i++)
   {
-    cout << i << " " << audioBufferNameVector.at(i) << endl;
+    cout << i << " " << audioBufferNameVector.at(i).ID << "  " << audioBufferNameVector.at(i).name << endl;
   }
 }
 

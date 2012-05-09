@@ -43,6 +43,7 @@ void EngineEvent::setLooperRecord      (int id, int block, int rec) { ia = id; i
 void EngineEvent::looperSetBeats       (int id, int b) { ia = id; ib = b; type = EE_LOOPER_SET_BEATS; }
 void EngineEvent::looperProgress       (int id, float p) { ia = id; fa = p; type = EE_LOOPER_PROGRESS; }
 void EngineEvent::looperSetInputType   (int id, int b) { ia = id; ib = b; type = EE_LOOPER_SET_INPUT_TYPE; }
+void EngineEvent::looperQueueBuffer    (int id, int b) { ia = id; ib = b; type = EE_LOOPER_QUEUE_BUFFER; }
 void EngineEvent::looperSelectBuffer   (int id, int b) { ia = id; ib = b; type = EE_LOOPER_SELECT_BUFFER; }
 void EngineEvent::looperSetQuantization(int id, int b) { ia = id; ib = b; type = EE_LOOPER_QUANTIZATION; }
 

@@ -34,6 +34,7 @@ class GAudioSource : public Gtk::DrawingArea
     GAudioSource(Top*);
     
     bool redraw();
+    void setQueued(bool);
     void setPlaying(bool);
   
   protected:
@@ -42,6 +43,7 @@ class GAudioSource : public Gtk::DrawingArea
     int ID;
     static int privateID;
     
+    bool queued;
     bool playing;
     
     std::string sourceName;

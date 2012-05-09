@@ -308,6 +308,10 @@ void StateStore::clipSelectorQueueClip(int t, int b)
   //cout << "clipSelectorQueueCLip() T = " << t << ", block = " << b << endl;
   
   iter->queued = b;
+  
+  EngineEvent* x = top->toEngineEmptyEventQueue.pull();
+  x->looperQueueBuffer(t, b);
+  top->toGuiQueue.push(x);
 }
 
 // this function handles the logic in activating / deactivating and otherwise

@@ -234,10 +234,13 @@ void Time::processEngineEvent(EngineEvent* e)
     cout << "Time::processEE() LOOPER_SELECT_BUFFER queue in 4... type = " << e->type << "  T: " << e->ia << "  clip = " << e->ib << endl;
     if ( true ) // quantize check here?
     {
-      //top->state.clipSelectorQueueClip(e->ia, e->ib);
-      //q4.push_back(e);
+      int track = e->ia;
+      int clip  = e->ib;
       
-      queueClip[e->ia] = e->ib;
+      // mark the clip as "queued"
+      queueClip[track] = clip;
+      
+      top->state.clipSelectorQueueClip( track, clip );
     }
   }
   else if ( e->type == EE_TRACK_SET_PLUGIN_PARAMETER )

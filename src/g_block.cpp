@@ -48,6 +48,10 @@ namespace Luppp
      playColour = COLOUR_GREY_4;
      bgColour   = COLOUR_GREEN_1;
      playheadCol= COLOUR_GREEN_1;
+    } else if ( state == CLIP_STATE_PLAY_QUEUED ){
+     textColour = COLOUR_GREY_4;
+     playColour = COLOUR_GREY_4;
+     bgColour   = COLOUR_BLUE_1;
     } else if ( state == CLIP_STATE_RECORDING ){
      textColour = COLOUR_TRANSPARENT;
      playColour = COLOUR_GREY_4;

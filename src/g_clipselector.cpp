@@ -177,6 +177,8 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
         
         if ( state->playing == i ) // if also playing, make green
           clipState = CLIP_STATE_PLAYING;
+        else if ( state->queued == i )
+          clipState = CLIP_STATE_PLAY_QUEUED;
       }
       
       if ( state->recording == i )
@@ -188,16 +190,16 @@ bool ClipSelector::on_expose_event(GdkEventExpose* event)
       std::string name = "";
       
       if ( (*iter).bufferID < stateStore->audioBufferNameVector.size() )
-        name = stateStore->audioBufferNameVector.at( (*iter).bufferID );
+        name = stateStore->audioBufferNameVector.at( (*iter).bufferID ).name;
       else
-        name = "invalid";
+        name = "-=-";
       
       //cout << "Clip " << (*iter).bufferID << " has name " << name << endl;
       
       // retrieve audio buffer name from unique bufferID and audioBufferNameVector
       if ( (*iter).bufferID < stateStore->audioBufferNameVector.size() )
       {
-        name = stateStore->audioBufferNameVector.at( (*iter).bufferID );
+        name = stateStore->audioBufferNameVector.at( (*iter).bufferID ).name;
         cout << "AudioClip @ " << (*iter).bufferID << " got name " << name << endl;
       }
       
@@ -359,7 +361,7 @@ void ClipSelector::dropFunction( const Glib::RefPtr<Gdk::DragContext>& context, 
     
     if ( ret == 0 ) // successful load, so store filename in vector
     {
-      stateStore->audioBufferNameVector.push_back( Glib::path_get_basename(filename) );
+      stateStore->addAudioBufferName(ID, Glib::path_get_basename(filename) );
     }
   }
 
@@ -420,7 +422,7 @@ void ClipSelector::loadSample(int block)
       
       if ( ret == 0 ) // successful load, so store filename in vector
       {
-        stateStore->audioBufferNameVector.push_back( Glib::path_get_basename(filename) );
+        //stateStore->addAudioBufferName(ID, Glib::path_get_basename(filename) );
       }
       
       return;

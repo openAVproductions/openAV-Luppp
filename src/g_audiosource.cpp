@@ -36,6 +36,7 @@ GAudioSource::GAudioSource(Top* t)
   ID = privateID++;
   
   playing = true;
+  queued = false;
   
   sourceName = "Source";
   
@@ -81,6 +82,12 @@ bool GAudioSource::redraw()
 void GAudioSource::setPlaying(bool p )
 {
   playing = p;
+  redraw();
+}
+
+void GAudioSource::setQueued(bool q )
+{
+  queued = q;
   redraw();
 }
 
@@ -203,8 +210,11 @@ bool GAudioSource::on_expose_event(GdkEventExpose* event)
     
     cr->rectangle(event->area.x, event->area.y,
        event->area.width, event->area.height);
+    
     if ( playing )
       setColour(cr, COLOUR_GREEN_1 );
+    else if ( queued )
+      setColour(cr, COLOUR_BLUE_1 );
     cr->fill();
     
     cr->select_font_face ("Impact" , Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_BOLD);

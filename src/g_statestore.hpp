@@ -67,7 +67,17 @@ class GuiStateStore
     vector<ClipSelectorState> clipSelectorState;
     vector<TrackOutputState> trackoutputState;
     
-    vector<std::string> audioBufferNameVector;
+    struct BlockIdName
+    {
+      int ID;
+      std::string name;
+      BlockIdName() {
+        ID = -1;
+        name = "";
+      }
+    };
+    
+    vector<BlockIdName> audioBufferNameVector;
     
   private:
     int numTracks;
