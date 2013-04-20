@@ -7,6 +7,7 @@
 #include <jack/ringbuffer.h>
 
 // Internal
+#include "gui.hxx"
 #include "jack.hxx"
 
 
@@ -25,7 +26,7 @@ int main()
   
   jack->activate();
   
-  sleep(10);
-  
+  Gui gui;
+  gui.show();
   
 }

@@ -62,7 +62,7 @@ int Jack::process (jack_nframes_t nframes)
   
   for(uint i = 0; i < nframes; i++)
   {
-    *output = *input;
+    *output++ = *input++;
   }
   
   return false;
