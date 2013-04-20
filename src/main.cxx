@@ -9,6 +9,7 @@
 // Internal
 #include "gui.hxx"
 #include "jack.hxx"
+#include "event.hxx"
 
 
 char* processDspMem = 0;
@@ -21,6 +22,13 @@ Jack* jack = 0;
 
 int main()
 {
+  // allocate data to read from
+  processDspMem = (char*)malloc( sizeof(EventBase) );
+  processOscMem = (char*)malloc( sizeof(EventBase) );
+  
+  rbToDsp = jack_ringbuffer_create( 2000 * sizeof(EventBase));
+  rbToGui = jack_ringbuffer_create( 2000 * sizeof(EventBase));
+  
   
   jack = new Jack();
   

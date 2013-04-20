@@ -17,7 +17,7 @@ using namespace std;
 
 extern Jack* jack;
 
-extern void handleDspEvents()
+void handleDspEvents()
 {
   uint availableRead = jack_ringbuffer_read_space( rbToDsp );
   

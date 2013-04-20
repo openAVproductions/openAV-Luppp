@@ -2,6 +2,7 @@
 #ifndef LUPPP_EVENT_HANDLER_H
 #define LUPPP_EVENT_HANDLER_H
 
+#include "event.hxx"
 #include <jack/ringbuffer.h>
 
 extern char* processDspMem;

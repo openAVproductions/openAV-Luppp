@@ -5,6 +5,8 @@
 #include <cstring>
 #include <iostream>
 
+#include "eventhandler.hxx"
+
 
 using namespace std;
 
@@ -47,8 +49,8 @@ void Jack::activate()
 
 int Jack::process (jack_nframes_t nframes)
 {
-  // update values from the ringbuffer
-  //processDsp();
+  // do events from the ringbuffer
+  handleDspEvents();
   
   // get buffers
   buffers.audio[Buffers::MASTER_INPUT]  = (float*)jack_port_get_buffer( masterInput , nframes);
