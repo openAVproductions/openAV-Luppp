@@ -10,6 +10,7 @@
 #include "gui.hxx"
 #include "jack.hxx"
 #include "event.hxx"
+#include "denormals.hxx"
 
 
 char* processDspMem = 0;
@@ -22,6 +23,9 @@ Jack* jack = 0;
 
 int main()
 {
+  // setup the environment
+  AVOIDDENORMALS();
+  
   // allocate data to read from
   processDspMem = (char*)malloc( sizeof(EventBase) );
   processOscMem = (char*)malloc( sizeof(EventBase) );
@@ -31,7 +35,6 @@ int main()
   
   
   jack = new Jack();
-  
   jack->activate();
   
   Gui gui;
