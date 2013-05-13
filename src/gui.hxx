@@ -3,10 +3,14 @@
 #define LUPPP_GUI
 
 #include <FL/Fl.H>
-#include <FL/Fl_Window.H>
+#include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Box.H>
 
 #include "gtrack.hxx"
+
+#include <vector>
+
+using namespace std;
 
 class Gui
 {
@@ -15,10 +19,9 @@ class Gui
     int show();
   
   private:
-    Fl_Window*  window;
+    Fl_Double_Window*  window;
     Fl_Box*     box;
-    GTrack*     track;
-    GTrack*     track2;
+    vector<GTrack*> tracks;
 };
 
 #endif // LUPPP_GUI

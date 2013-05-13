@@ -20,19 +20,22 @@
  */
 
 
-#ifndef AVTK_BUTTON_H
-#define AVTK_BUTTON_H
+#ifndef AVTK_BACKGROUND_H
+#define AVTK_BACKGROUND_H
 
-#include <FL/Fl_Button.H>
+
+#include <FL/Fl_Widget.H>
+#include <valarray>
+#include <string>
 
 namespace Avtk
 {
 
-class Button : public Fl_Button
+class Background : public Fl_Widget
 {
   public:
-    Button(int _x, int _y, int _w, int _h, const char *_label):
-        Fl_Button(_x, _y, _w, _h, _label)
+    Background(int _x, int _y, int _w, int _h, const char *_label):
+        Fl_Widget(_x, _y, _w, _h, _label)
     {
       x = _x;
       y = _y;
@@ -42,10 +45,7 @@ class Button : public Fl_Button
       label = _label;
       
       highlight = false;
-      mouseOver = false;
     }
-    
-    bool mouseOver;
     bool highlight;
     int x, y, w, h;
     const char* label;
@@ -58,28 +58,59 @@ class Button : public Fl_Button
         
         cairo_save( cr );
         
-        cairo_rectangle( cr, x+1, y+1, w-2, h-2 );
-        cairo_set_source_rgb( cr,28 / 255.f,  28 / 255.f ,  28 / 255.f  );
-        cairo_fill_preserve(cr);
-        
         cairo_set_line_width(cr, 1.5);
-        cairo_rectangle( cr, x+1, y+1, w-2, h-2 );
         
-        if ( highlight )
+        
+        // fill background
+        cairo_rectangle( cr, x, y, w, h);
+        cairo_set_source_rgba( cr, 66 / 255.f,  66 / 255.f ,  66 / 255.f , 1 );
+        cairo_fill( cr );
+        
+        
+        // set up dashed lines, 1 px off, 1 px on
+        double dashes[1];
+        dashes[0] = 2.0;
+        
+        cairo_set_dash ( cr, dashes, 1, 0.0);
+        cairo_set_line_width( cr, 1.0);
+        
+        // loop over each 2nd line, drawing dots
+        for ( int i = x; i < x + w; i += 4 )
         {
-          cairo_set_source_rgba(cr, 1.0, 0.48,   0, 0.4);
-          cairo_fill_preserve(cr);
+          cairo_move_to( cr, i, y );
+          cairo_line_to( cr, i, y + h );
         }
         
-        float alpha = 0.7;
-        if (mouseOver)
-          alpha = 1;
-        cairo_set_source_rgba(cr, 1.0, 0.48,   0, alpha);
+        cairo_set_source_rgba( cr,  28 / 255.f,  28 / 255.f ,  28 / 255.f , 0.5 );
         cairo_stroke(cr);
+        cairo_set_dash ( cr, dashes, 0, 0.0);
+        
+        
+        // draw header
+          // backing
+          cairo_rectangle(cr, x, y, w, 20);
+          cairo_set_source_rgb( cr, 28 / 255.f,  28 / 255.f ,  28 / 255.f );
+          cairo_fill( cr );
+          
+          // text
+          cairo_move_to( cr, x + 10, y + 14 );
+          cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 1 );
+          cairo_set_font_size( cr, 10 );
+          cairo_show_text( cr, label );
+          
+          // lower stripe
+          cairo_move_to( cr, x    , y + 20 );
+          cairo_line_to( cr, x + w, y + 20 );
+          cairo_stroke( cr );
+        
+        
+        // stroke rim
+        cairo_rectangle(cr, x, y, w, h);
+        cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 1 );
+        cairo_stroke( cr );
+        
         
         cairo_restore( cr );
-        
-        draw_label();
       }
     }
     
@@ -95,26 +126,20 @@ class Button : public Fl_Button
     
     int handle(int event)
     {
-      switch(event) {
+      return 0;
+      
+      switch(event)
+      {
         case FL_PUSH:
-          highlight = 1;
+          highlight = 0;
           redraw();
           return 1;
         case FL_DRAG: {
             int t = Fl::event_inside(this);
             if (t != highlight) {
-              highlight = t;
               redraw();
             }
           }
-          return 1;
-        case FL_ENTER:
-          mouseOver = true;
-          redraw();
-          return 1;
-        case FL_LEAVE:
-          mouseOver = false;
-          redraw();
           return 1;
         case FL_RELEASE:
           if (highlight) {
@@ -138,5 +163,5 @@ class Button : public Fl_Button
 
 } // Avtk
 
-#endif // AVTK_BUTTON_H
+#endif // AVTK_BACKGROUND_H
 
