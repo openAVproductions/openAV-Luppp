@@ -38,6 +38,8 @@ Jack::Jack()
   {
     cerr << "Jack() error setting process callback" << endl;
   }
+  
+  loopers.push_back( new Looper() );
 }
 
 
@@ -59,6 +61,9 @@ int Jack::process (jack_nframes_t nframes)
   // pre-zero output buffers
   memset( buffers.audio[Buffers::MASTER_OUTPUT], 0, sizeof(float) * nframes );
   
+  loopers.at(0)->process(nframes, &buffers );
+  
+  /*
   float* input = buffers.audio[Buffers::MASTER_INPUT];
   float* output = buffers.audio[Buffers::MASTER_OUTPUT];
   
@@ -66,6 +71,7 @@ int Jack::process (jack_nframes_t nframes)
   {
     *output++ = *input++;
   }
+  */
   
   return false;
 }

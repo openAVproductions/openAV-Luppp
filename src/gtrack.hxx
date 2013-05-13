@@ -2,6 +2,8 @@
 #ifndef LUPPP_G_TRACK_H
 #define LUPPP_G_TRACK_H
 
+#include <iostream>
+
 #include <FL/Fl.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Slider.H>
@@ -9,6 +11,26 @@
 #include "avtk/avtk_dial.h"
 #include "avtk/avtk_button.h"
 #include "avtk/avtk_background.h"
+
+
+#include "eventhandler.hxx"
+
+using namespace std;
+
+static void button_callback(Fl_Widget *w, void *data) {
+  cout << "Button " << w->label() << " clicked" << endl;
+  
+  if ( strcmp( w->label() , "Rec" ) == 0 )
+  {
+    EventLooperState e = EventLooperState(Looper::STATE_RECORDING);
+    writeToDspRingbuffer( &e );
+  }
+  else if ( strcmp( w->label() , "Play" ) == 0 )
+  {
+    EventLooperState e = EventLooperState(Looper::STATE_PLAYING);
+    writeToDspRingbuffer( &e );
+  }
+}
 
 class GTrack : public Fl_Group
 {
@@ -18,8 +40,8 @@ class GTrack : public Fl_Group
       title( strdup(l) ),
       bg( x, y , w, h, title ),
       
-      button1(x + 5, y + 24, 18, 18,"1"),
-      button2(x + 5, y + 44, 18, 18,"2"),
+      button1(x + 5, y + 24, 100, 18,"Rec"),
+      button2(x + 5, y + 44, 100, 18,"Play"),
       button3(x + 5, y + 64, 18, 18,"3"),
       button4(x + 5, y + 84, 18, 18,"4"),
       button5(x + 5, y +104, 18, 18,"5"),
@@ -29,6 +51,9 @@ class GTrack : public Fl_Group
       dial2(x+45, y +155, 24, 24, "B"),
       dial3(x+75, y +155, 24, 24, "C")
     {
+      button1.callback( button_callback, 0 );
+      button2.callback( button_callback, 0 );
+      
       end(); // close the group
     }
     

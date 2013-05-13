@@ -56,6 +56,12 @@ void handleDspEvents()
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventRecord) );
             //jack->setRecord( ev.track, ev.record );
           } break; }
+        case Event::LOOPER_STATE: {
+          if ( availableRead >= sizeof(EventLooperState) ) {
+            EventLooperState ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventLooperState) );
+            jack->setLooperState( 0, ev.state );
+          } break; }
         default:
           {
             // just do nothing

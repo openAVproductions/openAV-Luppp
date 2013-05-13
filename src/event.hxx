@@ -11,6 +11,8 @@
   
 */
 
+#include "looper.hxx"
+
 namespace Event
 {
   enum {
@@ -18,6 +20,8 @@ namespace Event
     PLAY_SAMPLE,
     MASTER_VOL,
     RECORD,
+    
+    LOOPER_STATE,
   };
 };
 
@@ -45,6 +49,17 @@ class EventMasterVol : public EventBase
     {
       vol = v;
     }
+};
+
+class EventLooperState : public EventBase
+{
+  public:
+    int type() { return int(LOOPER_STATE); }
+    uint32_t size() { return sizeof(EventLooperState); }
+    
+    Looper::State state;
+    EventLooperState(){}
+    EventLooperState(Looper::State s) : state(s){}
 };
 
 class EventLoadSample : public EventBase

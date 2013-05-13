@@ -11,24 +11,14 @@
 */
 
 // Library
+#include <vector>
 #include <cstring>
 #include <jack/jack.h>
 #include <jack/midiport.h>
 
-class Buffers
-{
-  public:
-    Buffers()
-    {
-      memset( audio, 0, sizeof(float*)*2);
-    }
-    float* audio[2];
-    
-    enum BUFFER {
-      MASTER_OUTPUT = 0,
-      MASTER_INPUT,
-    };
-};
+#include "looper.hxx"
+
+using namespace std;
 
 class Jack
 {
@@ -38,9 +28,16 @@ class Jack
     void activate();
     int getBuffersize();
     int getSamplerate();
+    
+    void setLooperState(int, Looper::State s)
+    {
+      loopers.at(0)->setState(s);
+    }
   
   private:
     Buffers buffers;
+    
+    vector<Looper*> loopers;
     
     int nframes;
     int samplerate;
