@@ -15,7 +15,8 @@ class GTrack : public Fl_Group
   public:
     GTrack(int x, int y, int w, int h, const char* l = 0 ) :
       Fl_Group(x, y, w, h),
-      bg( x, y , w, h, strdup(l) ),
+      title( strdup(l) ),
+      bg( x, y , w, h, title ),
       
       button1(x + 5, y + 24, 18, 18,"1"),
       button2(x + 5, y + 44, 18, 18,"2"),
@@ -31,8 +32,15 @@ class GTrack : public Fl_Group
       end(); // close the group
     }
     
+    ~GTrack()
+    {
+      free(title);
+    }
+    
   
   private:
+    char* title;
+    
     Avtk::Background bg;
     
     Avtk::Button button1;
@@ -45,6 +53,7 @@ class GTrack : public Fl_Group
     Avtk::Dial dial1;
     Avtk::Dial dial2;
     Avtk::Dial dial3;
+    
     
     static int privateID;
 };
