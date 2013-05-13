@@ -30,6 +30,11 @@ static void button_callback(Fl_Widget *w, void *data) {
     EventLooperState e = EventLooperState(Looper::STATE_PLAYING);
     writeToDspRingbuffer( &e );
   }
+  else if ( strcmp( w->label() , "Stop" ) == 0 )
+  {
+    EventLooperState e = EventLooperState(Looper::STATE_STOPPED);
+    writeToDspRingbuffer( &e );
+  }
 }
 
 class GTrack : public Fl_Group
@@ -42,7 +47,7 @@ class GTrack : public Fl_Group
       
       button1(x + 5, y + 24, 100, 18,"Rec"),
       button2(x + 5, y + 44, 100, 18,"Play"),
-      button3(x + 5, y + 64, 18, 18,"3"),
+      button3(x + 5, y + 64, 100, 18,"Stop"),
       button4(x + 5, y + 84, 18, 18,"4"),
       button5(x + 5, y +104, 18, 18,"5"),
       button6(x + 5, y +124, 18, 18,"6"),
@@ -53,6 +58,10 @@ class GTrack : public Fl_Group
     {
       button1.callback( button_callback, 0 );
       button2.callback( button_callback, 0 );
+      button3.callback( button_callback, 0 );
+      button4.callback( button_callback, 0 );
+      button5.callback( button_callback, 0 );
+      button6.callback( button_callback, 0 );
       
       end(); // close the group
     }

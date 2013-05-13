@@ -14,10 +14,11 @@ class Looper
     enum State {
       STATE_PLAYING = 0,
       STATE_RECORDING,
+      STATE_STOPPED,
     };
     
     Looper() :
-      state(STATE_PLAYING),
+      state(STATE_STOPPED),
       endPoint   (0),
       playPoint  (0)
     {
@@ -33,14 +34,18 @@ class Looper
       {
         endPoint = lastWrittenSampleIndex;
         playPoint = 0;
-        cout << "State = PLAYING, endPoint = " << endPoint << endl;
+        //cout << "State = PLAYING, endPoint = " << endPoint << endl;
       }
       else if ( state == STATE_RECORDING ) // setup REC
       {
-        cout << "State = RECORDING" << endl;
+        //cout << "State = RECORDING" << endl;
         playPoint = 0;
         endPoint = 0;
         lastWrittenSampleIndex = 0;
+      }
+      else if ( state == STATE_STOPPED ) // 
+      {
+        //cout << "State = STOPPED" << endl;
       }
       
     }
@@ -72,6 +77,9 @@ class Looper
           }
         }
       }
+      
+      // buffers pre-zeroed, so just do nothing
+      else if ( state == STATE_STOPPED ){}
     }
   
   private:
