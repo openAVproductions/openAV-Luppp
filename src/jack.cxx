@@ -17,8 +17,8 @@ Jack::Jack()
   // open the client
   client = jack_client_open ( "Luppp", JackNullOption , 0 , 0 );
   
-  nframes = jack_get_buffer_size( client );
-  samplerate = jack_get_sample_rate( client );
+  buffers.nframes = jack_get_buffer_size( client );
+  buffers.samplerate = jack_get_sample_rate( client );
   
   masterOutput = jack_port_register( client,
                           "master_out",
@@ -33,11 +33,20 @@ Jack::Jack()
                           0 );
   
   if ( jack_set_process_callback( client,
-                                      static_process,
-                                      static_cast<void*>(this)) )
+                                  static_process,
+                                  static_cast<void*>(this)) )
   {
     cerr << "Jack() error setting process callback" << endl;
   }
+  
+  if ( jack_set_timebase_callback(client,
+                                  0,
+                                  (JackTimebaseCallback)static_timebase,
+                                  static_cast<void*>(this)) )
+  {
+    cerr << "Jack() error setting timebase callback" << endl;
+  }
+  
   
   loopers.push_back( new Looper() );
 }
@@ -60,6 +69,7 @@ int Jack::process (jack_nframes_t nframes)
   
   // pre-zero output buffers
   memset( buffers.audio[Buffers::MASTER_OUTPUT], 0, sizeof(float) * nframes );
+  
   
   loopers.at(0)->process(nframes, &buffers );
   
@@ -86,11 +96,19 @@ int Jack::getSamplerate()
   return jack_get_sample_rate( client );
 }
 
-int Jack::timebase(jack_transport_state_t,
-                   jack_nframes_t,
-                   jack_position_t*,
-                   int)
+int Jack::timebase(jack_transport_state_t state,
+                   jack_nframes_t nframes,
+                   jack_position_t* pos,
+                   int newPos)
 {
+  // fill buffers with data, then pass to timeManager
+  buffers.transportFrame    = jack_get_current_transport_frame(client);
+  buffers.transportPosition = *pos;
+  buffers.transportState    = state;
+  
+  // update "time" from JACK master, or write master?
+  timeManager.process( &buffers );
+  
   return 0;
 }
 
@@ -107,4 +125,3 @@ int Jack::static_timebase(jack_transport_state_t state,
 {
   return static_cast<Jack*>(instance)->timebase(state,nframes, pos, newPos );
 }
-

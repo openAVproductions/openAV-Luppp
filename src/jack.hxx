@@ -15,8 +15,10 @@
 #include <cstring>
 #include <jack/jack.h>
 #include <jack/midiport.h>
+#include <jack/transport.h>
 
 #include "looper.hxx"
+#include "timemanager.hxx"
 
 using namespace std;
 
@@ -36,6 +38,7 @@ class Jack
   
   private:
     Buffers buffers;
+    TimeManager timeManager;
     
     vector<Looper*> loopers;
     
