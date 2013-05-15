@@ -24,7 +24,7 @@ class Looper : public Observer // for notifications
     
     Looper(int t) :
       track(t),
-      state(0),
+      state(STATE_STOPPED),
       endPoint   (0),
       playPoint  (0),
       lastWrittenSampleIndex(0)
@@ -35,35 +35,35 @@ class Looper : public Observer // for notifications
     void bar()
     {
       cout << "Looper " << track << " got bar()" << flush;
-      cout << endl;
-    }
-    
-    void beat()
-    {
-      //cout << "Looper " << track << " got beat()" << flush;
-      if ( state & STATE_PLAY_QUEUED )
+      playPoint = 0;
+      
+      if ( state == STATE_PLAY_QUEUED )
       {
-        state = 0;
-        cout << "  Q->Playing ";
+        cout << "  Q->Playing  endpoint = " << endPoint;
         state = STATE_PLAYING;
         playPoint = 0;
+        endPoint = lastWrittenSampleIndex;
       }
-      if ( state & STATE_RECORD_QUEUED )
+      if ( state == STATE_RECORD_QUEUED )
       {
-        state = 0;
         cout << "  Q->Recording ";
         state = STATE_RECORDING;
         playPoint = 0;
         endPoint = 0;
         lastWrittenSampleIndex = 0;
       }
-      if ( state & STATE_PLAY_QUEUED )
+      if ( state == STATE_PLAY_QUEUED )
       {
-        state = 0;
         cout << "  Q->Stopped ";
         state = STATE_STOPPED;
+        endPoint = lastWrittenSampleIndex;
       }
       cout << endl;
+    }
+    
+    void beat()
+    {
+      //cout << "Looper " << track << " got beat()" << flush;
     }
     
     void setFpb(int f)
@@ -79,22 +79,21 @@ class Looper : public Observer // for notifications
       float* in  = buffers->audio[Buffers::MASTER_INPUT];
       float* out = buffers->audio[Buffers::MASTER_OUTPUT];
       
-      if ( state & STATE_PLAYING )
+      if ( state == STATE_PLAYING )
       {
-        cout << "playing" << endl;
         for(int i = 0; i < nframes; i++)
         {
-          if ( playPoint >= endPoint )
+          if ( playPoint < endPoint )
           {
-            playPoint = 0;
+            out[i] += sample[playPoint++];
           }
-          out[i] += sample[playPoint++];
+          
         }
       }
       
-      else if ( state & STATE_RECORDING )
+      else if ( state == STATE_RECORDING )
       {
-        cout << "recording" << endl;
+        cout << "recording " << endl;
         for(int i = 0; i < nframes; i++)
         {
           if ( lastWrittenSampleIndex < 44100 * 60 )
@@ -107,7 +106,7 @@ class Looper : public Observer // for notifications
   
   private:
     int track;
-    unsigned int state;
+    State state;
     
     int fpb;
     

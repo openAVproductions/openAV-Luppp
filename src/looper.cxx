@@ -21,5 +21,5 @@ void Looper::setState(State s)
   */
   
   // quantize?!
-  state |= s;
+  state = s;
 }
