@@ -6,6 +6,8 @@
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Box.H>
 
+#include "avtk/avtk_light_button.h"
+
 #include "gtrack.hxx"
 
 #include <vector>
@@ -21,7 +23,7 @@ class Gui
   private:
     Fl_Double_Window    window;
     Fl_Box*             box;
-    Avtk::Button*       metronomeButton;
+    Avtk::LightButton*  metronomeButton;
     vector<GTrack*>     tracks;
 };
 

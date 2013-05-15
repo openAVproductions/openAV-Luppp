@@ -1,7 +1,6 @@
 
 #include "gui.hxx"
 #include "avtk/avtk_image.h"
-#include "avtk/avtk_button.h"
 
 #include <sstream>
 
@@ -29,7 +28,7 @@ Gui::Gui() :
   
   Avtk::Image* header = new Avtk::Image(0,0,600,36,"header.png");
   
-  metronomeButton = new Avtk::Button(0,0,200,30,"Metronome");
+  metronomeButton = new Avtk::LightButton(0,0,200,30,"Metronome");
   
   for (int i = 0; i < 5; i++ )
   {
