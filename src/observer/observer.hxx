@@ -6,6 +6,10 @@ class Observer
 {
   public:
     virtual void setFpb(int fpb){};
+    
+    virtual void bar(){};
+    virtual void beat(){};
+    
 };
 
 #endif // LUPPP_OBSERVER_H

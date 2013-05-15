@@ -74,7 +74,7 @@ int Jack::process (jack_nframes_t nframes)
   // pre-zero output buffers
   memset( buffers.audio[Buffers::MASTER_OUTPUT], 0, sizeof(float) * nframes );
   
-  for(int i = 0; i < loopers.size(); i++)
+  for(uint i = 0; i < loopers.size(); i++)
     loopers.at(i)->process( nframes, &buffers );
   
   /*

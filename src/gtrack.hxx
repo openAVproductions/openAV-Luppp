@@ -19,21 +19,21 @@ using namespace std;
 
 static void button_callback(Fl_Widget *w, void *data) {
   int track = *(int*)data;
-  cout << "Button " << *(int*)data << w->label() << " clicked" << endl;
+  cout << "Button " << *(int*)data << " " << w->label() << " clicked" << endl;
   
   if ( strcmp( w->label() , "Rec" ) == 0 )
   {
-    EventLooperState e = EventLooperState(track,Looper::STATE_RECORDING);
+    EventLooperState e = EventLooperState(track,Looper::STATE_RECORD_QUEUED);
     writeToDspRingbuffer( &e );
   }
   else if ( strcmp( w->label() , "Play" ) == 0 )
   {
-    EventLooperState e = EventLooperState(track,Looper::STATE_PLAYING);
+    EventLooperState e = EventLooperState(track,Looper::STATE_PLAY_QUEUED);
     writeToDspRingbuffer( &e );
   }
   else if ( strcmp( w->label() , "Stop" ) == 0 )
   {
-    EventLooperState e = EventLooperState(track,Looper::STATE_STOPPED);
+    EventLooperState e = EventLooperState(track,Looper::STATE_STOP_QUEUED);
     writeToDspRingbuffer( &e );
   }
   else

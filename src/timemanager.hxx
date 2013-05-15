@@ -15,14 +15,18 @@ class TimeManager
 {
   public:
     TimeManager():
-        oldBeat(0),
-        bpm(120)
+        bpm(120),
+        oldBeat(0)
     {
     }
     
     void setBpm(int b)
     {
       bpm = b;
+      for(uint i = 0; i < observers.size(); i++)
+      {
+        observers.at(i)->setFpb(bpm);
+      }
     }
     
     void registerObserver(Observer* o)
@@ -32,7 +36,6 @@ class TimeManager
     
     void process(Buffers* buffers)
     {
-      
       int framesPerBeat = (int) buffers->samplerate / (bpm / 60.0);
       
       // time signature?
@@ -48,12 +51,15 @@ class TimeManager
       {
         if ( beat % (int)buffers->transportPosition->beats_per_bar == 0 )
         {
-          bpm++;
-          for(int i = 0; i < observers.size(); i++)
-          {
-            observers.at(i)->setFpb(bpm);
-          }
+          // inform observers of new bar
+          for(uint i = 0; i < observers.size(); i++) { observers.at(i)->bar(); }
           buffers->transportPosition->bar++;
+        }
+        
+        // inform observers of new beat
+        for(uint i = 0; i < observers.size(); i++)
+        {
+          observers.at(i)->beat();
         }
         
         oldBeat = beat;

@@ -11,7 +11,7 @@ using namespace std;
 
 Gui::Gui()
 {
-  window = new Fl_Double_Window(650,280);
+  window = new Fl_Double_Window(600,280);
   window->color(FL_BLACK);
   window->label("Luppp 5");
   
