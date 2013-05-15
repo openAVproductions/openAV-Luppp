@@ -52,6 +52,9 @@ Jack::Jack()
     loopers.push_back( new Looper(i) );
     timeManager.registerObserver( loopers.back() );
   }
+  
+  timeManager.registerObserver( &metronome );
+  
   jack_transport_start(client);
 }
 
@@ -76,6 +79,9 @@ int Jack::process (jack_nframes_t nframes)
   
   for(uint i = 0; i < loopers.size(); i++)
     loopers.at(i)->process( nframes, &buffers );
+  
+  if (true)
+    metronome.process( nframes, &buffers );
   
   /*
   float* input = buffers.audio[Buffers::MASTER_INPUT];

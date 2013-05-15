@@ -34,19 +34,19 @@ class Looper : public Observer // for notifications
     
     void bar()
     {
-      cout << "Looper " << track << " got bar()" << flush;
+      //cout << "Looper " << track << " got bar()" << flush;
       playPoint = 0;
       
       if ( state == STATE_PLAY_QUEUED )
       {
-        cout << "  Q->Playing  endpoint = " << endPoint;
+        cout << "  Q->Playing  endpoint = " << endPoint << endl;
         state = STATE_PLAYING;
         playPoint = 0;
         endPoint = lastWrittenSampleIndex;
       }
       if ( state == STATE_RECORD_QUEUED )
       {
-        cout << "  Q->Recording ";
+        cout << "  Q->Recording " << endl;
         state = STATE_RECORDING;
         playPoint = 0;
         endPoint = 0;
@@ -54,11 +54,10 @@ class Looper : public Observer // for notifications
       }
       if ( state == STATE_PLAY_QUEUED )
       {
-        cout << "  Q->Stopped ";
+        cout << "  Q->Stopped " << endl;
         state = STATE_STOPPED;
         endPoint = lastWrittenSampleIndex;
       }
-      cout << endl;
     }
     
     void beat()

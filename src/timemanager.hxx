@@ -49,17 +49,17 @@ class TimeManager
       
       if ( beat != oldBeat )
       {
-        if ( beat % (int)buffers->transportPosition->beats_per_bar == 0 )
-        {
-          // inform observers of new bar
-          for(uint i = 0; i < observers.size(); i++) { observers.at(i)->bar(); }
-          buffers->transportPosition->bar++;
-        }
-        
-        // inform observers of new beat
+        // inform observers of new beat FIRST
         for(uint i = 0; i < observers.size(); i++)
         {
           observers.at(i)->beat();
+        }
+        
+        if ( beat % (int)buffers->transportPosition->beats_per_bar == 0 )
+        {
+          // inform observers of new bar SECOND
+          for(uint i = 0; i < observers.size(); i++) { observers.at(i)->bar(); }
+          buffers->transportPosition->bar++;
         }
         
         oldBeat = beat;

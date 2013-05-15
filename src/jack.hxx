@@ -18,6 +18,7 @@
 #include <jack/transport.h>
 
 #include "looper.hxx"
+#include "metronome.hxx"
 #include "timemanager.hxx"
 
 using namespace std;
@@ -39,7 +40,8 @@ class Jack
     TimeManager* getTimeManager(){return &timeManager;}
   
   private:
-    Buffers buffers;
+    Buffers     buffers;
+    Metronome   metronome;
     TimeManager timeManager;
     
     vector<Looper*> loopers;
