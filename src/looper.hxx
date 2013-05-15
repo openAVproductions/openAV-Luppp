@@ -6,9 +6,14 @@
 
 #include "buffers.hxx"
 
+#include "observer/observer.hxx"
+
+class Jack;
+extern Jack* jack;
+
 using namespace std;
 
-class Looper
+class Looper : public Observer // for notifications
 {
   public:
     enum State {
@@ -26,30 +31,12 @@ class Looper
       
     }
     
-    void setState(State s)
+    void setFpb(int fpb)
     {
-      // quantize?!
-      state = s;
-      
-      if ( state == STATE_PLAYING ) // setup PLAY
-      {
-        endPoint = lastWrittenSampleIndex;
-        playPoint = 0;
-        //cout << "State = PLAYING, endPoint = " << endPoint << endl;
-      }
-      else if ( state == STATE_RECORDING ) // setup REC
-      {
-        //cout << "State = RECORDING" << endl;
-        playPoint = 0;
-        endPoint = 0;
-        lastWrittenSampleIndex = 0;
-      }
-      else if ( state == STATE_STOPPED ) // 
-      {
-        //cout << "State = STOPPED" << endl;
-      }
-      
+      cout << "Looper " << track << " got fpb of " << fpb << endl;
     }
+    
+    void setState(State s);
     
     void process(int nframes, Buffers* buffers)
     {

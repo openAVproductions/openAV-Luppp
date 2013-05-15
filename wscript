@@ -22,6 +22,7 @@ def build(bld):
   sources = ['src/gui.cxx',
              'src/main.cxx',
              'src/jack.cxx',
+             'src/looper.cxx',
              'src/eventhandlerdsp.cxx']
   
   bld.program(source = sources, target='luppp5', use='JACK NTK')

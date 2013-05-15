@@ -6,6 +6,8 @@
 
 #include "buffers.hxx"
 
+#include "observer/observer.hxx"
+
 using namespace std;
 
 // inherits from ObserverSubject
@@ -13,21 +15,31 @@ class TimeManager
 {
   public:
     TimeManager():
-        oldBeat(0)
+        oldBeat(0),
+        bpm(120)
     {
+    }
+    
+    void setBpm(int b)
+    {
+      bpm = b;
+    }
+    
+    void registerObserver(Observer* o)
+    {
+      observers.push_back(o);
     }
     
     void process(Buffers* buffers)
     {
-      /*
-      float bpm = 160;
+      
       int framesPerBeat = (int) buffers->samplerate / (bpm / 60.0);
       
       // time signature?
       buffers->transportPosition->beats_per_bar = 4;
       buffers->transportPosition->beat_type     = 4;
       
-      int beatFloat = buffers->transportFrame / framesPerBeat;
+      int beat = buffers->transportFrame / framesPerBeat;
       //int beat = int(beat);
       
       //int tick = int( (beatFloat - beat) * 1920 );
@@ -35,7 +47,14 @@ class TimeManager
       if ( beat != oldBeat )
       {
         if ( beat % (int)buffers->transportPosition->beats_per_bar == 0 )
+        {
+          bpm++;
+          for(int i = 0; i < observers.size(); i++)
+          {
+            observers.at(i)->setFpb(bpm);
+          }
           buffers->transportPosition->bar++;
+        }
         
         oldBeat = beat;
       }
@@ -48,11 +67,13 @@ class TimeManager
       
       buffers->transportPosition->ticks_per_beat = 1920;
       buffers->transportPosition->beats_per_minute = bpm;
-      */
     }
   
   private:
+    float bpm;
     int oldBeat;
+    
+    std::vector<Observer*> observers;
     
     // list of Observers of this TimeManager Subject, "beat", "bar" updates?
     /*

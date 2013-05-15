@@ -48,8 +48,10 @@ Jack::Jack()
   }
   
   for(int i = 0; i < 5; i++)
+  {
     loopers.push_back( new Looper(i) );
-  
+    timeManager.registerObserver( loopers.back() );
+  }
   jack_transport_start(client);
 }
 

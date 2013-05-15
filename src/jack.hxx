@@ -35,6 +35,8 @@ class Jack
     {
       loopers.at(t)->setState(s);
     }
+    
+    TimeManager* getTimeManager(){return &timeManager;}
   
   private:
     Buffers buffers;

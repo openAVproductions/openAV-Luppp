@@ -2,6 +2,7 @@
 #ifndef LUPPP_BUFFERS_H
 #define LUPPP_BUFFERS_H
 
+#include <cstring>
 #include <jack/transport.h>
 
 class Buffers
