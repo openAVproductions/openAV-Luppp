@@ -17,7 +17,8 @@ class Looper
       STATE_STOPPED,
     };
     
-    Looper() :
+    Looper(int t) :
+      track(t),
       state(STATE_STOPPED),
       endPoint   (0),
       playPoint  (0)
@@ -83,6 +84,7 @@ class Looper
     }
   
   private:
+    int track;
     State state;
     
     int endPoint, playPoint, lastWrittenSampleIndex;

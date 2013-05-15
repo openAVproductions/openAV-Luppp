@@ -18,22 +18,27 @@
 using namespace std;
 
 static void button_callback(Fl_Widget *w, void *data) {
-  cout << "Button " << w->label() << " clicked" << endl;
+  int track = *(int*)data;
+  cout << "Button " << *(int*)data << w->label() << " clicked" << endl;
   
   if ( strcmp( w->label() , "Rec" ) == 0 )
   {
-    EventLooperState e = EventLooperState(Looper::STATE_RECORDING);
+    EventLooperState e = EventLooperState(track,Looper::STATE_RECORDING);
     writeToDspRingbuffer( &e );
   }
   else if ( strcmp( w->label() , "Play" ) == 0 )
   {
-    EventLooperState e = EventLooperState(Looper::STATE_PLAYING);
+    EventLooperState e = EventLooperState(track,Looper::STATE_PLAYING);
     writeToDspRingbuffer( &e );
   }
   else if ( strcmp( w->label() , "Stop" ) == 0 )
   {
-    EventLooperState e = EventLooperState(Looper::STATE_STOPPED);
+    EventLooperState e = EventLooperState(track,Looper::STATE_STOPPED);
     writeToDspRingbuffer( &e );
+  }
+  else
+  {
+    cout << __FILE__ << __LINE__ << " Error: unknown command string" << endl;
   }
 }
 
@@ -56,12 +61,14 @@ class GTrack : public Fl_Group
       dial2(x+45, y +155, 24, 24, "B"),
       dial3(x+75, y +155, 24, 24, "C")
     {
-      button1.callback( button_callback, 0 );
-      button2.callback( button_callback, 0 );
-      button3.callback( button_callback, 0 );
-      button4.callback( button_callback, 0 );
-      button5.callback( button_callback, 0 );
-      button6.callback( button_callback, 0 );
+      ID = privateID++;
+      
+      button1.callback( button_callback, &ID );
+      button2.callback( button_callback, &ID );
+      button3.callback( button_callback, &ID );
+      button4.callback( button_callback, &ID );
+      button5.callback( button_callback, &ID );
+      button6.callback( button_callback, &ID );
       
       end(); // close the group
     }
@@ -73,6 +80,8 @@ class GTrack : public Fl_Group
     
   
   private:
+    int ID;
+    
     char* title;
     
     Avtk::Background bg;

@@ -60,7 +60,7 @@ void handleDspEvents()
           if ( availableRead >= sizeof(EventLooperState) ) {
             EventLooperState ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventLooperState) );
-            jack->setLooperState( 0, ev.state );
+            jack->setLooperState( ev.track, ev.state );
           } break; }
         default:
           {

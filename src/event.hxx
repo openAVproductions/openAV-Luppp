@@ -57,9 +57,10 @@ class EventLooperState : public EventBase
     int type() { return int(LOOPER_STATE); }
     uint32_t size() { return sizeof(EventLooperState); }
     
+    int track;
     Looper::State state;
     EventLooperState(){}
-    EventLooperState(Looper::State s) : state(s){}
+    EventLooperState(int t, Looper::State s) : track(t), state(s){}
 };
 
 class EventLoadSample : public EventBase
