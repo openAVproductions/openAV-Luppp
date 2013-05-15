@@ -22,9 +22,9 @@ class Buffers
     jack_nframes_t         nframes;
     jack_nframes_t         samplerate;
     
-    jack_nframes_t         transportFrame;
-    jack_position_t        transportPosition;
-    jack_transport_state_t transportState;
+    jack_nframes_t          transportFrame;
+    jack_position_t*        transportPosition;
+    jack_transport_state_t* transportState;
     
 };
 

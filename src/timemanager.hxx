@@ -12,25 +12,47 @@ using namespace std;
 class TimeManager
 {
   public:
-    TimeManager()
+    TimeManager():
+        oldBeat(0)
     {
     }
     
     void process(Buffers* buffers)
     {
-      float bpm = 120;
-      int framesPerBeat = (int) samplerate / (bpm / 60.0);
+      /*
+      float bpm = 160;
+      int framesPerBeat = (int) buffers->samplerate / (bpm / 60.0);
       
-      // divide by zero errors!
-      if ( framesPerBeat > 0 )
+      // time signature?
+      buffers->transportPosition->beats_per_bar = 4;
+      buffers->transportPosition->beat_type     = 4;
+      
+      int beatFloat = buffers->transportFrame / framesPerBeat;
+      //int beat = int(beat);
+      
+      //int tick = int( (beatFloat - beat) * 1920 );
+      
+      if ( beat != oldBeat )
       {
-        int newBeat = buffers->transportFrame / framesPerBeat;
+        if ( beat % (int)buffers->transportPosition->beats_per_bar == 0 )
+          buffers->transportPosition->bar++;
+        
+        oldBeat = beat;
       }
-      //cout << buffers->transportPosition.frame << endl;
+      
+      buffers->transportPosition->valid = JackPositionBBT;
+      buffers->transportPosition->tick += (buffers->nframes / buffers->samplerate);
+      
+      buffers->transportPosition->beat = beat % 4;
+      buffers->transportPosition->tick = 0;
+      
+      buffers->transportPosition->ticks_per_beat = 1920;
+      buffers->transportPosition->beats_per_minute = bpm;
+      */
     }
   
   private:
-    int samplerate;
+    int oldBeat;
     
     // list of Observers of this TimeManager Subject, "beat", "bar" updates?
     /*

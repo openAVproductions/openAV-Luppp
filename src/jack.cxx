@@ -49,6 +49,8 @@ Jack::Jack()
   
   
   loopers.push_back( new Looper() );
+  
+  jack_transport_start(client);
 }
 
 
@@ -103,8 +105,8 @@ int Jack::timebase(jack_transport_state_t state,
 {
   // fill buffers with data, then pass to timeManager
   buffers.transportFrame    = jack_get_current_transport_frame(client);
-  buffers.transportPosition = *pos;
-  buffers.transportState    = state;
+  buffers.transportPosition = pos;
+  buffers.transportState    =&state;
   
   // update "time" from JACK master, or write master?
   timeManager.process( &buffers );
