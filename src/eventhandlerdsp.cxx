@@ -50,11 +50,11 @@ void handleDspEvents()
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventPlaySample) );
             //jack->setPlayBuffer( ev.track, ev.bufferID );
           } break; }
-        case Event::RECORD: {
-          if ( availableRead >= sizeof(EventRecord) ) {
-            EventRecord ev(0,0);
-            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventRecord) );
-            //jack->setRecord( ev.track, ev.record );
+        case Event::METRONOME_ACTIVE: {
+          if ( availableRead >= sizeof(EventMetronomeActive) ) {
+            EventMetronomeActive ev(false);
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMetronomeActive) );
+            jack->getMetronome()->setActive(ev.active);
           } break; }
         case Event::LOOPER_STATE: {
           if ( availableRead >= sizeof(EventLooperState) ) {

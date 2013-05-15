@@ -37,6 +37,7 @@ class Jack
       loopers.at(t)->setState(s);
     }
     
+    Metronome*   getMetronome(){return &metronome;}
     TimeManager* getTimeManager(){return &timeManager;}
   
   private:

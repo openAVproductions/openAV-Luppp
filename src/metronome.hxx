@@ -17,7 +17,8 @@ class Metronome : public Observer
   public:
     Metronome() :
       playPoint  (0),
-      playBar    (false)
+      playBar    (false),
+      active     (true)
     {
       // create beat and bar samples
       endPoint = (44100.f/441);
@@ -29,6 +30,11 @@ class Metronome : public Observer
         beatSample[i]= sin(i*scale);
         barSample [i]= sin(i*scale*1.5);
       }
+    }
+    
+    void setActive(bool a)
+    {
+      active = a;
     }
     
     void bar()
@@ -51,6 +57,9 @@ class Metronome : public Observer
     
     void process(int nframes, Buffers* buffers)
     {
+      if ( not active )
+        return;
+      
       float* out = buffers->audio[Buffers::MASTER_OUTPUT];
       
       float* sample = &beatSample[0];
@@ -69,6 +78,7 @@ class Metronome : public Observer
   private:
     int fpb;
     bool playBar;
+    bool active;
     
     int playPoint, endPoint;
     float barSample[44100];

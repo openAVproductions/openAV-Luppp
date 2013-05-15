@@ -17,7 +17,7 @@
 
 using namespace std;
 
-static void button_callback(Fl_Widget *w, void *data) {
+static void gtrack_button_callback(Fl_Widget *w, void *data) {
   int track = *(int*)data;
   cout << "Button " << *(int*)data << " " << w->label() << " clicked" << endl;
   
@@ -63,12 +63,12 @@ class GTrack : public Fl_Group
     {
       ID = privateID++;
       
-      button1.callback( button_callback, &ID );
-      button2.callback( button_callback, &ID );
-      button3.callback( button_callback, &ID );
-      button4.callback( button_callback, &ID );
-      button5.callback( button_callback, &ID );
-      button6.callback( button_callback, &ID );
+      button1.callback( gtrack_button_callback, &ID );
+      button2.callback( gtrack_button_callback, &ID );
+      button3.callback( gtrack_button_callback, &ID );
+      button4.callback( gtrack_button_callback, &ID );
+      button5.callback( gtrack_button_callback, &ID );
+      button6.callback( gtrack_button_callback, &ID );
       
       end(); // close the group
     }

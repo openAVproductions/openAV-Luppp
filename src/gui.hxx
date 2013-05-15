@@ -19,9 +19,10 @@ class Gui
     int show();
   
   private:
-    Fl_Double_Window*  window;
-    Fl_Box*     box;
-    vector<GTrack*> tracks;
+    Fl_Double_Window    window;
+    Fl_Box*             box;
+    Avtk::Button*       metronomeButton;
+    vector<GTrack*>     tracks;
 };
 
 #endif // LUPPP_GUI

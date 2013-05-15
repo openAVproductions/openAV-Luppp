@@ -22,6 +22,7 @@ namespace Event
     RECORD,
     
     LOOPER_STATE,
+    METRONOME_ACTIVE,
   };
 };
 
@@ -92,20 +93,16 @@ class EventPlaySample : public EventBase
     }
 };
 
-class EventRecord : public EventBase
+class EventMetronomeActive : public EventBase
 {
   public:
-    int type() { return int(RECORD); }
-    uint32_t size() { return sizeof(EventRecord); }
+    int type() { return int(METRONOME_ACTIVE); }
+    uint32_t size() { return sizeof(EventMetronomeActive); }
     
-    int track;
-    bool record;
+    bool active;
     
-    EventRecord(int t, bool b)
-    {
-      track = t;
-      record = b;
-    }
+    EventMetronomeActive() : active(false) {}
+    EventMetronomeActive(bool a) : active(a) {}
 };
 
 
