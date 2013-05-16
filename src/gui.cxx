@@ -10,6 +10,12 @@ int GMasterTrack::privateID = 0;
 
 using namespace std;
 
+void close_cb(Fl_Widget*o, void*) {
+   if ((Fl::event() == FL_KEYDOWN || Fl::event() == FL_SHORTCUT)
+     && Fl::event_key() == FL_Escape)
+     return;                            // ignore ESC
+   else o->hide();
+}
 
 static void gui_static_read_rb(void* inst)
 {
@@ -23,6 +29,7 @@ Gui::Gui() :
 {
   window.color(FL_BLACK);
   window.label("Luppp 5");
+  window.callback( close_cb, 0 );
   
   Avtk::Image* header = new Avtk::Image(0,0,600,36,"header.png");
   
