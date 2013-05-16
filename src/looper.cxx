@@ -71,7 +71,11 @@ void Looper::process(int nframes, Buffers* buffers)
 
 void Looper::bar()
 {
-  stopRecordOnBar = false;
+  // queue stop recording -> stop recording, now calculate beats in loop
+  if ( stopRecordOnBar )
+  {
+    stopRecordOnBar = false;
+  }
   
   if ( playedBeats >= numBeats )
   {
@@ -109,11 +113,11 @@ void Looper::bar()
 
 void Looper::beat()
 {
-  if (state == STATE_RECORDING)
+  if (state == STATE_RECORDING || stopRecordOnBar )
   {
     numBeats++;
   }
-  playedBeats++;   // only reset if we're on the last beat of a loop
+  playedBeats++;
 }
 
 void Looper::setLoopLength(float l)
