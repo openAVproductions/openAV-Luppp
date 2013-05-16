@@ -19,7 +19,9 @@
 using namespace std;
 
 static void gtrack_button_callback(Fl_Widget *w, void *data) {
-  int track = *(int*)data;
+  int track = 0;
+  if ( data )
+    track = *(int*)data;
   //cout << "Button " << *(int*)data << " " << w->label() << " clicked" << endl;
   
   if ( strcmp( w->label() , "Rec" ) == 0 )
@@ -49,8 +51,7 @@ static void gtrack_button_callback(Fl_Widget *w, void *data) {
   }
   else if ( strcmp( w->label() , "Vol" ) == 0 )
   {
-    EventLooperLoopLength e = EventLooperLoopLength(track, 0.5);
-    writeToDspRingbuffer( &e );
+    
   }
   else
   {

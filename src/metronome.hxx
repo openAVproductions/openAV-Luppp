@@ -54,7 +54,9 @@ class Metronome : public Observer
     void setFpb(int f)
     {
       fpb = f;
-      //cout << "Looper " << track << " got fpb of " << fpb << endl;
+      
+      // disable play until next beat
+      playPoint = endPoint + 1;
     }
     
     void process(int nframes, Buffers* buffers)

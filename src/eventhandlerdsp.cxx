@@ -74,6 +74,12 @@ void handleDspEvents()
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTimeBPM) );
             jack->getTimeManager()->setBpm(ev.bpm);
           } break; }
+        case Event::TIME_TEMPO_TAP: {
+          if ( availableRead >= sizeof(EventTimeTempoTap) ) {
+            EventTimeTempoTap ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTimeTempoTap) );
+            jack->getTimeManager()->tap();
+          } break; }
         default:
           {
             // just do nothing

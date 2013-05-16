@@ -39,7 +39,12 @@ static void gmastertrack_button_callback(Fl_Widget *w, void *data) {
     float bpm = b->value() * 160 + 60; // 60 - 220
     EventTimeBPM e = EventTimeBPM( bpm );
     writeToDspRingbuffer( &e );
-    cout << "GUI writing bpm = " << bpm << endl;
+  }
+  else if ( strcmp( w->label(), "Tap" ) == 0 )
+  {
+    Avtk::Button* b = (Avtk::Button*)w;
+    EventTimeTempoTap e;
+    writeToDspRingbuffer( &e );
   }
   else
   {
@@ -54,8 +59,9 @@ class GMasterTrack : public Fl_Group
       Fl_Group(x, y, w, h),
       title( strdup(l) ),
       bg( x, y , w, h, title ),
+      
+      tapTempo(x + 25 + 22, y + 75, 44, 44,"Tap"),
       /*
-      button1(x + 5, y + 24, 100, 18,"Rec"),
       button2(x + 5, y + 44, 100, 18,"Play"),
       button3(x + 5, y + 64, 100, 18,"Stop"),
       button4(x + 5, y + 84,  48, 18,"-"),
@@ -71,8 +77,10 @@ class GMasterTrack : public Fl_Group
       */
     {
       ID = privateID++;
+      
+      tapTempo.callback( gmastertrack_button_callback, &ID );
+      
       /*
-      button1.callback( gmastertrack_button_callback, &ID );
       button2.callback( gmastertrack_button_callback, &ID );
       button3.callback( gmastertrack_button_callback, &ID );
       button4.callback( gmastertrack_button_callback, &ID );
@@ -97,8 +105,9 @@ class GMasterTrack : public Fl_Group
     char* title;
     
     Avtk::Background bg;
+    
+    Avtk::Button tapTempo;
     /*
-    Avtk::Button button1;
     Avtk::Button button2;
     Avtk::Button button3;
     Avtk::Button button4;

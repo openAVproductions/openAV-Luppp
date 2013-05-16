@@ -18,49 +18,71 @@ class TimeManager
 {
   public:
     TimeManager():
-        bpm(120),
+        fpb(120),
         oldBeat(0)
     {
+      tapTempoPos = 0;
+      tapTempo[0] = 0;
+      tapTempo[1] = 0;
+      tapTempo[2] = 0;
     }
     
-    void setBpm(float b)
+    void setBpm(float bpm)
     {
-      char buffer [50];
-      sprintf (buffer, "%d", b);
-      //printf ("[%s] is a string %d chars long\n",buffer,n);
+      setFpb( 44100 / bpm * 60 );
+    }
+    void setFpb(float f)
+    {
+      fpb = f;
       
+      char buffer [50];
+      sprintf (buffer, "TM, setFpb() %i", int(f) );
       EventGuiPrint e( buffer );
       writeToGuiRingbuffer( &e );
       
-      bpm = b;
       for(uint i = 0; i < observers.size(); i++)
       {
-        observers.at(i)->setFpb(bpm);
+        observers.at(i)->setFpb(fpb);
       }
     }
     
     void registerObserver(Observer* o)
     {
       observers.push_back(o);
-      int fpb = 44100 / bpm * 60;
-      char buffer [50];
-      sprintf (buffer, "TM, bpm = %i, fpb = %i", int(bpm), fpb );
-      EventGuiPrint e( buffer );
-      writeToGuiRingbuffer( &e );
-      
-      // triggers newly registered object to have bpm set
       o->setFpb( fpb );
+    }
+    
+    void tap()
+    {
+      if ( tapTempoPos < 3 )
+      {
+        tapTempo[tapTempoPos] = frame;
+      }
+      else
+      {
+        // calculate frames per tap
+        int tapFpb1 = tapTempo[1] - tapTempo[0];
+        int tapFpb2 = tapTempo[2] - tapTempo[1];
+        
+        int average = (tapFpb1 + tapFpb2) / 2;
+        setFpb(average);
+      }
     }
     
     void process(Buffers* buffers)
     {
-      int framesPerBeat = (int) buffers->samplerate / (bpm / 60.0);
+      // tap tempo measurements
+      frame = buffers->transportFrame;
+      
+      //int framesPerBeat = (int) buffers->samplerate / (bpm / 60.0);
+      
+      
       
       // time signature?
       buffers->transportPosition->beats_per_bar = 4;
       buffers->transportPosition->beat_type     = 4;
       
-      int beat = buffers->transportFrame / framesPerBeat;
+      int beat = buffers->transportFrame / fpb;
       //int beat = int(beat);
       
       //int tick = int( (beatFloat - beat) * 1920 );
@@ -90,12 +112,20 @@ class TimeManager
       buffers->transportPosition->tick = 0;
       
       buffers->transportPosition->ticks_per_beat = 1920;
+      
+      int bpm = int(buffers->samplerate * fpb / 60.0);
       buffers->transportPosition->beats_per_minute = bpm;
     }
   
   private:
-    float bpm;
+    float fpb;
     int oldBeat;
+    
+    // tap tempo measurements
+    int frame;
+    
+    int tapTempoPos;
+    int tapTempo[3];
     
     std::vector<Observer*> observers;
 };
