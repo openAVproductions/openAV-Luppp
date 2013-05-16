@@ -21,6 +21,7 @@ class Gui
   public:
     Gui();
     int show();
+    GTrack* getTrack(int id);
   
   private:
     Fl_Double_Window    window;

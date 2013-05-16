@@ -7,6 +7,7 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Slider.H>
+#include <FL/Fl_Progress.H>
 
 #include "avtk/avtk_dial.h"
 #include "avtk/avtk_button.h"
@@ -70,7 +71,9 @@ class GTrack : public Fl_Group
       
       dial1(x+15, y +155, 24, 24, "A"),
       dial2(x+45, y +155, 24, 24, "B"),
-      dial3(x+75, y +155, 24, 24, "C")
+      dial3(x+75, y +155, 24, 24, "C"),
+      
+      progress(x, y, 100, 20, "prog")
     {
       ID = privateID++;
       
@@ -81,6 +84,9 @@ class GTrack : public Fl_Group
       button5.callback( gtrack_button_callback, &ID );
       button6.callback( gtrack_button_callback, &ID );
       
+      progress.maximum(1.0f);
+      progress.minimum(0.0f);
+      
       end(); // close the group
     }
     
@@ -89,8 +95,6 @@ class GTrack : public Fl_Group
       free(title);
     }
     
-  
-  private:
     int ID;
     
     char* title;
@@ -104,10 +108,11 @@ class GTrack : public Fl_Group
     Avtk::Button button5;
     Avtk::Button button6;
     
-    Avtk::Dial dial1;
-    Avtk::Dial dial2;
-    Avtk::Dial dial3;
+    Avtk::Dial   dial1;
+    Avtk::Dial   dial2;
+    Avtk::Dial   dial3;
     
+    Fl_Progress  progress;
     
     static int privateID;
 };

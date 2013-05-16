@@ -6,18 +6,18 @@
 #include <jack/ringbuffer.h>
 
 extern char* processDspMem;
-extern char* processOscMem;
+extern char* processGuiMem;
 
 extern jack_ringbuffer_t* rbToDsp;
-//extern jack_ringbuffer_t* ringbufferDspToGui;
+extern jack_ringbuffer_t* rbToGui;
 
 // to process events in the ringbuffer
 extern void handleDspEvents();
-//extern void handleGuiEvents();
+extern void handleGuiEvents();
 
 // to write events to the ringbuffer
 extern void writeToDspRingbuffer(EventBase* e);
-//extern void writeToGuiRingbuffer(EventBase* e);
+extern void writeToGuiRingbuffer(EventBase* e);
 
 #endif // LUPPP_EVENT_HANDLER_H
 

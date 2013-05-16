@@ -5,7 +5,6 @@
 #include <iostream>
 
 #include "buffers.hxx"
-
 #include "observer/observer.hxx"
 
 using namespace std;
@@ -92,35 +91,7 @@ class Looper : public Observer // for notifications
     
     void setState(State s);
     
-    void process(int nframes, Buffers* buffers)
-    {
-      float* in  = buffers->audio[Buffers::MASTER_INPUT];
-      float* out = buffers->audio[Buffers::MASTER_OUTPUT];
-      
-      if ( state == STATE_PLAYING )
-      {
-        for(int i = 0; i < nframes; i++)
-        {
-          if ( playPoint < endPoint )
-          {
-            out[i] += sample[playPoint++];
-          }
-          
-        }
-      }
-      
-      else if ( state == STATE_RECORDING )
-      {
-        cout << "recording " << endl;
-        for(int i = 0; i < nframes; i++)
-        {
-          if ( lastWrittenSampleIndex < 44100 * 60 )
-          {
-            sample[lastWrittenSampleIndex++] = in[i];
-          }
-        }
-      }
-    }
+    void process(int nframes, Buffers* buffers);
   
   private:
     int track;

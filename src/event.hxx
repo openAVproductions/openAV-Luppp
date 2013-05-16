@@ -22,6 +22,7 @@ namespace Event
     RECORD,
     
     LOOPER_STATE,
+    LOOPER_PROGRESS,
     LOOPER_LOOP_LENGTH,
     
     METRONOME_ACTIVE,
@@ -64,6 +65,18 @@ class EventLooperState : public EventBase
     Looper::State state;
     EventLooperState(){}
     EventLooperState(int t, Looper::State s) : track(t), state(s){}
+};
+
+class EventLooperProgress : public EventBase
+{
+  public:
+    int type() { return int(LOOPER_PROGRESS); }
+    uint32_t size() { return sizeof(EventLooperProgress); }
+    
+    int track;
+    float progress;
+    EventLooperProgress(){}
+    EventLooperProgress(int t, float p) : track(t), progress(p) {}
 };
 
 class EventLooperLoopLength : public EventBase

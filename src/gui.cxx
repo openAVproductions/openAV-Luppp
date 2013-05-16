@@ -10,6 +10,14 @@ int GMasterTrack::privateID = 0;
 
 using namespace std;
 
+
+static void gui_static_read_rb(void* inst)
+{
+  //cout << "read gui" << endl;
+  handleGuiEvents();
+  Fl::repeat_timeout( 1 / 30.f, &gui_static_read_rb, inst);
+}
+
 Gui::Gui() :
     window(1200,280)
 {
@@ -37,8 +45,16 @@ Gui::Gui() :
   window.end();
 }
 
+GTrack* Gui::getTrack(int id)
+{
+  return tracks.at(id);
+}
+
 int Gui::show()
 {
   window.show();
+  
+  gui_static_read_rb( this);
+  
   return Fl::run();
 }
