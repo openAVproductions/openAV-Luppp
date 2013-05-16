@@ -32,14 +32,12 @@ void Looper::process(int nframes, Buffers* buffers)
       }
     }
     
-    // update UI
     EventLooperProgress e(track, float(playPoint) / endPoint );
     writeToGuiRingbuffer( &e );
   }
   
   else if ( state == STATE_RECORDING )
   {
-    cout << "recording " << endl;
     for(int i = 0; i < nframes; i++)
     {
       if ( lastWrittenSampleIndex < 44100 * 60 )
@@ -48,4 +46,57 @@ void Looper::process(int nframes, Buffers* buffers)
       }
     }
   }
+}
+
+
+void Looper::bar()
+{
+  // only reset if we're on the last beat of a loop
+  if ( playedBeats >= numBeats )
+  {
+    //cout << "Looper " << track << " restting to 0 " << endl;
+    playPoint = 0;
+    playedBeats = 0;
+  }
+  
+  if ( state == STATE_PLAY_QUEUED )
+  {
+    EventGuiPrint e( "Looper Q->Playing" );
+    writeToGuiRingbuffer( &e );
+    state = STATE_PLAYING;
+    playPoint = 0;
+    endPoint = lastWrittenSampleIndex;
+  }
+  if ( state == STATE_RECORD_QUEUED && state != STATE_RECORDING )
+  {
+    EventGuiPrint e( "Looper Q->Recording" );
+    writeToGuiRingbuffer( &e );
+    
+    state = STATE_RECORDING;
+    playPoint = 0;
+    endPoint = 0;
+    lastWrittenSampleIndex = 0;
+  }
+  if ( state == STATE_PLAY_QUEUED && state != STATE_STOPPED )
+  {
+    EventGuiPrint e( "Looper Q->Stopped" );
+    writeToGuiRingbuffer( &e );
+    
+    state = STATE_STOPPED;
+    endPoint = lastWrittenSampleIndex;
+  }
+}
+
+void Looper::setLoopLength(float l)
+{
+  numBeats *= l;
+  
+  // avoid the 0 * 2 problem
+  if ( numBeats < 1 )
+    numBeats = 1;
+  
+  char buffer [50];
+  sprintf (buffer, "Looper loop lenght = %i", numBeats );
+  EventGuiPrint e( buffer );
+  writeToGuiRingbuffer( &e );
 }

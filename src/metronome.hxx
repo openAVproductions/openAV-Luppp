@@ -35,6 +35,8 @@ class Metronome : public Observer
     void setActive(bool a)
     {
       active = a;
+      // don't play immidiatly
+      playPoint = endPoint + 1;
     }
     
     void bar()

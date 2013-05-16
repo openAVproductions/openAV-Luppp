@@ -77,6 +77,12 @@ void handleGuiEvents()
             gui->getTrack(ev.track)->progress.value(ev.progress);
             //jack->setLooperLoopLength( ev.track, ev.scale );
           } break; }
+        case Event::GUI_PRINT: {
+          if ( availableRead >= sizeof(EventGuiPrint) ) {
+            EventGuiPrint ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventGuiPrint) );
+            cout << "DSP: " << ev.getMessage() << endl;
+          } break; }
         default:
           {
             cout << "Unkown message!! Will clog ringbuffer" << endl;

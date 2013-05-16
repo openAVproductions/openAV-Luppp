@@ -20,7 +20,7 @@ using namespace std;
 
 static void gtrack_button_callback(Fl_Widget *w, void *data) {
   int track = *(int*)data;
-  cout << "Button " << *(int*)data << " " << w->label() << " clicked" << endl;
+  //cout << "Button " << *(int*)data << " " << w->label() << " clicked" << endl;
   
   if ( strcmp( w->label() , "Rec" ) == 0 )
   {
@@ -73,7 +73,7 @@ class GTrack : public Fl_Group
       dial2(x+45, y +155, 24, 24, "B"),
       dial3(x+75, y +155, 24, 24, "C"),
       
-      progress(x, y, 100, 20, "prog")
+      progress(x+5, y+3, 100, 15, "prog")
     {
       ID = privateID++;
       

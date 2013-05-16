@@ -26,6 +26,8 @@ namespace Event
     LOOPER_LOOP_LENGTH,
     
     METRONOME_ACTIVE,
+    
+    GUI_PRINT,
   };
 };
 
@@ -132,6 +134,37 @@ class EventMetronomeActive : public EventBase
     EventMetronomeActive(bool a) : active(a) {}
 };
 
+
+// prints the string S in the GUI console
+class EventGuiPrint : public EventBase
+{
+  public:
+    int type() { return int(GUI_PRINT); }
+    uint32_t size() { return sizeof(EventGuiPrint); }
+    
+    char stringArray[50];
+    
+    EventGuiPrint(){}
+    EventGuiPrint(const char* s)
+    {
+      if ( strlen( s ) > 50 )
+      {
+        // this will be called from an RT context, and should be removed from
+        // production code. It is here for the programmer to notice when they
+        // are using code which causes too long a message.
+        cout << "EventGuiPrint() error! Size of string too long!" << endl;
+      }
+      else
+      {
+        // move the sting into this event
+        strcpy( &stringArray[0], s );
+      }
+    }
+    char* getMessage()
+    {
+      return &stringArray[0];
+    }
+};
 
 #endif // LUPPP_EVENT_H
 
