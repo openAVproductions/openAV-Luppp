@@ -68,6 +68,12 @@ void handleDspEvents()
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventLooperLoopLength) );
             jack->setLooperLoopLength( ev.track, ev.scale );
           } break; }
+        case Event::TIME_BPM: {
+          if ( availableRead >= sizeof(EventTimeBPM) ) {
+            EventTimeBPM ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTimeBPM) );
+            jack->getTimeManager()->setBpm(ev.bpm);
+          } break; }
         default:
           {
             // just do nothing

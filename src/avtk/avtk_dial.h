@@ -40,6 +40,8 @@ class Dial : public Fl_Slider
       w = _w;
       h = _h;
       
+      drawLabel = true;
+      
       // * 0.9 for line width to remain inside redraw area
       if ( w > h )
         radius = (h / 2.f)*0.9;
@@ -65,11 +67,16 @@ class Dial : public Fl_Slider
     int mouseClickedY;
     bool mouseClicked;
     
+    bool drawLabel;
+    
     void draw()
     {
       if (damage() & FL_DAMAGE_ALL)
       {
-        draw_label();
+        if ( drawLabel )
+        {
+          draw_label();
+        }
         
         cairo_t *cr = Fl::cairo_cc();
         
@@ -96,8 +103,6 @@ class Dial : public Fl_Slider
         cairo_stroke(cr);
         
         cairo_restore( cr );
-        
-        
       }
     }
     

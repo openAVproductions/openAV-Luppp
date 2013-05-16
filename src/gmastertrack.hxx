@@ -26,37 +26,20 @@ static void gmastertrack_button_callback(Fl_Widget *w, void *data) {
   
   cout << "Button " << track << " " << w->label() << " clicked" << endl;
   
-  if ( strcmp( w->label() , "Rec" ) == 0 )
-  {
-    EventLooperState e = EventLooperState(track,Looper::STATE_RECORD_QUEUED);
-    writeToDspRingbuffer( &e );
-  }
-  else if ( strcmp( w->label() , "Play" ) == 0 )
-  {
-    EventLooperState e = EventLooperState(track,Looper::STATE_PLAY_QUEUED);
-    writeToDspRingbuffer( &e );
-  }
-  else if ( strcmp( w->label() , "Stop" ) == 0 )
-  {
-    EventLooperState e = EventLooperState(track,Looper::STATE_STOP_QUEUED);
-    writeToDspRingbuffer( &e );
-  }
-  else if ( strcmp( w->label() , "+" ) == 0 )
-  {
-    EventLooperLoopLength e = EventLooperLoopLength(track, 2);
-    writeToDspRingbuffer( &e );
-  }
-  else if ( strcmp( w->label() , "-" ) == 0 )
-  {
-    EventLooperLoopLength e = EventLooperLoopLength(track, 0.5);
-    writeToDspRingbuffer( &e );
-  }
-  else if ( strcmp( w->label(), "Metro" ) == 0 )
+  if ( strcmp( w->label(), "Metro" ) == 0 )
   {
     Avtk::Button* b = (Avtk::Button*)w;
     b->value( !b->value() );
     EventMetronomeActive e = EventMetronomeActive( b->value() );
     writeToDspRingbuffer( &e );
+  }
+  else if ( strcmp( w->label(), "BPM" ) == 0 )
+  {
+    Avtk::Dial* b = (Avtk::Dial*)w;
+    float bpm = b->value() * 160 + 60; // 60 - 220
+    EventTimeBPM e = EventTimeBPM( bpm );
+    writeToDspRingbuffer( &e );
+    cout << "GUI writing bpm = " << bpm << endl;
   }
   else
   {
@@ -79,9 +62,10 @@ class GMasterTrack : public Fl_Group
       button5(x +57, y + 84,  48, 18,"+"),
       button6(x + 5, y +104, 18, 18,"6"),
       */
-      metronomeButton(x + 5,y + 24,140,30,"Metro")
+      metronomeButton(x + 5,y + 24,140,30,"Metro"),
+      
+      dial1(x+25-22, y +75, 44, 44, "BPM")
       /*
-      dial1(x+15, y +155, 24, 24, "A"),
       dial2(x+45, y +155, 24, 24, "B"),
       dial3(x+75, y +155, 24, 24, "C")
       */
@@ -96,6 +80,7 @@ class GMasterTrack : public Fl_Group
       button6.callback( gmastertrack_button_callback, &ID );
       */
       metronomeButton.callback( gmastertrack_button_callback, 0 );
+      dial1.callback( gmastertrack_button_callback, 0 );
       
       end(); // close the group
     }
@@ -121,8 +106,9 @@ class GMasterTrack : public Fl_Group
     Avtk::Button button6;
     */
     Avtk::LightButton metronomeButton;
-    /*
+    
     Avtk::Dial dial1;
+    /*
     Avtk::Dial dial2;
     Avtk::Dial dial3;
     */

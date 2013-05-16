@@ -23,7 +23,7 @@ class TimeManager
     {
     }
     
-    void setBpm(int b)
+    void setBpm(float b)
     {
       char buffer [50];
       sprintf (buffer, "%d", b);

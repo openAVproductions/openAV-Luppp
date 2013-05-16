@@ -47,6 +47,11 @@ static void gtrack_button_callback(Fl_Widget *w, void *data) {
     EventLooperLoopLength e = EventLooperLoopLength(track, 0.5);
     writeToDspRingbuffer( &e );
   }
+  else if ( strcmp( w->label() , "Vol" ) == 0 )
+  {
+    EventLooperLoopLength e = EventLooperLoopLength(track, 0.5);
+    writeToDspRingbuffer( &e );
+  }
   else
   {
     cout << __FILE__ << __LINE__ << " Error: unknown command string" << endl;
@@ -69,9 +74,11 @@ class GTrack : public Fl_Group
       
       button6(x + 5, y +104, 18, 18,"6"),
       
-      dial1(x+15, y +155, 24, 24, "A"),
-      dial2(x+45, y +155, 24, 24, "B"),
-      dial3(x+75, y +155, 24, 24, "C"),
+      volume(x+55-22, y +175, 34, 34, "Vol"),
+      
+      dial1(x+15, y +135, 24, 24, "A"),
+      dial2(x+45, y +135, 24, 24, "B"),
+      dial3(x+75, y +135, 24, 24, "C"),
       
       progress(x+5, y+3, 100, 15, "prog")
     {
@@ -83,6 +90,8 @@ class GTrack : public Fl_Group
       button4.callback( gtrack_button_callback, &ID );
       button5.callback( gtrack_button_callback, &ID );
       button6.callback( gtrack_button_callback, &ID );
+      
+      volume.callback( gtrack_button_callback, 0 );
       
       progress.maximum(1.0f);
       progress.minimum(0.0f);
@@ -107,6 +116,8 @@ class GTrack : public Fl_Group
     Avtk::Button button4;
     Avtk::Button button5;
     Avtk::Button button6;
+    
+    Avtk::Dial   volume;
     
     Avtk::Dial   dial1;
     Avtk::Dial   dial2;

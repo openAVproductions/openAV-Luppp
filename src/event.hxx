@@ -27,6 +27,8 @@ namespace Event
     
     METRONOME_ACTIVE,
     
+    TIME_BPM,
+    
     GUI_PRINT,
   };
 };
@@ -132,6 +134,18 @@ class EventMetronomeActive : public EventBase
     
     EventMetronomeActive() : active(false) {}
     EventMetronomeActive(bool a) : active(a) {}
+};
+
+class EventTimeBPM : public EventBase
+{
+  public:
+    int type() { return int(TIME_BPM); }
+    uint32_t size() { return sizeof(EventTimeBPM); }
+    
+    float bpm;
+    
+    EventTimeBPM(){}
+    EventTimeBPM(float b) : bpm(b) {}
 };
 
 
