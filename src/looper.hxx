@@ -26,14 +26,15 @@ class Looper : public Observer // for notifications
       state(STATE_STOPPED),
       numBeats   (4),
       playedBeats(0),
+      stopRecordOnBar(false),
       endPoint   (0),
       playPoint  (0),
       lastWrittenSampleIndex(0)
     {}
     
     void bar();
+    void beat();
     
-    void beat() { playedBeats++; }
     void setFpb(int f) { fpb = f; }
     
     void setState(State s);
@@ -48,6 +49,7 @@ class Looper : public Observer // for notifications
     int fpb;
     int numBeats;
     int playedBeats;
+    bool stopRecordOnBar;
     
     int endPoint, playPoint, lastWrittenSampleIndex;
     float sample[44100*60];

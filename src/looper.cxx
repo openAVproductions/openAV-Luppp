@@ -28,15 +28,21 @@ void Looper::process(int nframes, Buffers* buffers)
     {
       if ( playPoint < endPoint )
       {
-        out[i] += sample[playPoint++];
+        out[i] += sample[playPoint];
       }
+      // always update playPoint, even when not playing sound.
+      // it updates the UI of progress
+      playPoint++;
     }
     
-    EventLooperProgress e(track, float(playPoint) / endPoint );
+    float prog = (float(playPoint) / fpb * numBeats);
+    if ( track == 0 )
+      cout << prog << "  fpb*numBeats " << fpb * numBeats << endl;
+    EventLooperProgress e(track, prog );
     writeToGuiRingbuffer( &e );
   }
   
-  else if ( state == STATE_RECORDING )
+  else if ( state == STATE_RECORDING || stopRecordOnBar )
   {
     for(int i = 0; i < nframes; i++)
     {
@@ -51,12 +57,11 @@ void Looper::process(int nframes, Buffers* buffers)
 
 void Looper::bar()
 {
-  // only reset if we're on the last beat of a loop
-  if ( playedBeats >= numBeats )
+  stopRecordOnBar = false;
+  
+  if ( state == STATE_RECORDING )
   {
-    //cout << "Looper " << track << " restting to 0 " << endl;
-    playPoint = 0;
-    playedBeats = 0;
+    stopRecordOnBar = true;
   }
   
   if ( state == STATE_PLAY_QUEUED )
@@ -84,6 +89,18 @@ void Looper::bar()
     
     state = STATE_STOPPED;
     endPoint = lastWrittenSampleIndex;
+  }
+}
+
+void Looper::beat()
+{
+  playedBeats++;   // only reset if we're on the last beat of a loop
+  
+  if ( playedBeats >= numBeats )
+  {
+    //cout << "Looper " << track << " restting to 0 " << endl;
+    playPoint = 0;
+    playedBeats = 0;
   }
 }
 
