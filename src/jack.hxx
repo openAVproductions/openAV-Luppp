@@ -17,6 +17,7 @@
 #include <jack/midiport.h>
 #include <jack/transport.h>
 
+#include "config.hxx"
 #include "looper.hxx"
 #include "metronome.hxx"
 #include "timemanager.hxx"
@@ -35,6 +36,10 @@ class Jack
     void setLooperState(int t, Looper::State s)
     {
       loopers.at(t)->setState(s);
+    }
+    void setLooperLoopLength(int t, float l)
+    {
+      loopers.at(t)->setLoopLength(l);
     }
     
     Metronome*   getMetronome(){return &metronome;}

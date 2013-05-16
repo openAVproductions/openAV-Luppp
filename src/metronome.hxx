@@ -18,7 +18,7 @@ class Metronome : public Observer
     Metronome() :
       playPoint  (0),
       playBar    (false),
-      active     (true)
+      active     (false)
     {
       // create beat and bar samples
       endPoint = (44100.f/441);

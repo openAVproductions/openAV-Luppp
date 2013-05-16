@@ -47,7 +47,7 @@ Jack::Jack()
     cerr << "Jack() error setting timebase callback" << endl;
   }
   
-  for(int i = 0; i < 5; i++)
+  for(int i = 0; i < NTRACKS; i++)
   {
     loopers.push_back( new Looper(i) );
     timeManager.registerObserver( loopers.back() );

@@ -14,17 +14,19 @@ class Looper : public Observer // for notifications
 {
   public:
     enum State {
-      STATE_PLAYING         = 0x01,
-      STATE_PLAY_QUEUED     = 0x02,
-      STATE_RECORDING       = 0x03,
-      STATE_RECORD_QUEUED   = 0x04,
-      STATE_STOPPED         = 0x05,
-      STATE_STOP_QUEUED     = 0x06,
+      STATE_PLAYING = 0,
+      STATE_PLAY_QUEUED,
+      STATE_RECORDING,
+      STATE_RECORD_QUEUED,
+      STATE_STOPPED,
+      STATE_STOP_QUEUED,
     };
     
     Looper(int t) :
       track(t),
       state(STATE_STOPPED),
+      numBeats   (4),
+      playedBeats(0),
       endPoint   (0),
       playPoint  (0),
       lastWrittenSampleIndex(0)
@@ -34,8 +36,13 @@ class Looper : public Observer // for notifications
     
     void bar()
     {
-      //cout << "Looper " << track << " got bar()" << flush;
-      playPoint = 0;
+      // only reset if we're on the last beat of a loop
+      if ( playedBeats >= numBeats + 1 )
+      {
+        //cout << "Looper " << track << " restting to 0 " << endl;
+        playPoint = 0;
+        playedBeats = 0;
+      }
       
       if ( state == STATE_PLAY_QUEUED )
       {
@@ -44,7 +51,7 @@ class Looper : public Observer // for notifications
         playPoint = 0;
         endPoint = lastWrittenSampleIndex;
       }
-      if ( state == STATE_RECORD_QUEUED )
+      if ( state == STATE_RECORD_QUEUED && state != STATE_RECORDING )
       {
         cout << "  Q->Recording " << endl;
         state = STATE_RECORDING;
@@ -52,7 +59,7 @@ class Looper : public Observer // for notifications
         endPoint = 0;
         lastWrittenSampleIndex = 0;
       }
-      if ( state == STATE_PLAY_QUEUED )
+      if ( state == STATE_PLAY_QUEUED && state != STATE_STOPPED )
       {
         cout << "  Q->Stopped " << endl;
         state = STATE_STOPPED;
@@ -60,8 +67,20 @@ class Looper : public Observer // for notifications
       }
     }
     
+    void setLoopLength(float l)
+    {
+      numBeats *= l;
+      
+      // avoid the 0 * 2 problem
+      if ( numBeats < 1 )
+        numBeats = 1;
+      
+      cout << "Looper " << track << " loop lenght now " << numBeats << endl;
+    }
+    
     void beat()
     {
+      playedBeats++;
       //cout << "Looper " << track << " got beat()" << flush;
     }
     
@@ -108,6 +127,8 @@ class Looper : public Observer // for notifications
     State state;
     
     int fpb;
+    int numBeats;
+    int playedBeats;
     
     int endPoint, playPoint, lastWrittenSampleIndex;
     float sample[44100*60];

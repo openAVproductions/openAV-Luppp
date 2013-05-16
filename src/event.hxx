@@ -22,6 +22,8 @@ namespace Event
     RECORD,
     
     LOOPER_STATE,
+    LOOPER_LOOP_LENGTH,
+    
     METRONOME_ACTIVE,
   };
 };
@@ -62,6 +64,18 @@ class EventLooperState : public EventBase
     Looper::State state;
     EventLooperState(){}
     EventLooperState(int t, Looper::State s) : track(t), state(s){}
+};
+
+class EventLooperLoopLength : public EventBase
+{
+  public:
+    int type() { return int(LOOPER_LOOP_LENGTH); }
+    uint32_t size() { return sizeof(EventLooperLoopLength); }
+    
+    int track;
+    float scale; // multiply length by this
+    EventLooperLoopLength(){}
+    EventLooperLoopLength(int t, float s) : track(t), scale(s){}
 };
 
 class EventLoadSample : public EventBase

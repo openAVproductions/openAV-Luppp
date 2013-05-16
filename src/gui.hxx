@@ -8,7 +8,9 @@
 
 #include "avtk/avtk_light_button.h"
 
+#include "config.hxx"
 #include "gtrack.hxx"
+#include "gmastertrack.hxx"
 
 #include <vector>
 
@@ -23,7 +25,9 @@ class Gui
   private:
     Fl_Double_Window    window;
     Fl_Box*             box;
-    Avtk::LightButton*  metronomeButton;
+    
+    GMasterTrack*       master;
+    
     vector<GTrack*>     tracks;
 };
 
