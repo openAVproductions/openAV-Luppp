@@ -57,6 +57,7 @@ class TimeManager
       if ( tapTempoPos < 3 )
       {
         tapTempo[tapTempoPos] = frame;
+        tapTempoPos++;
       }
       else
       {
@@ -66,6 +67,14 @@ class TimeManager
         
         int average = (tapFpb1 + tapFpb2) / 2;
         setFpb(average);
+        
+        char buffer [50];
+        sprintf (buffer, "TM, tap() average = %i", average );
+        EventGuiPrint e( buffer );
+        writeToGuiRingbuffer( &e );
+        
+        // reset, so next 3 taps restart process
+        tapTempoPos = 0;
       }
     }
     
