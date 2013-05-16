@@ -9,11 +9,22 @@ extern Jack* jack;
 
 void Looper::setState(State s)
 {
+  if ( state == STATE_RECORDING )
+  {
+    cout << "stopRecordOnBar = true" << endl;
+    stopRecordOnBar = true;
+  }
+  
   // ensure we're not setting eg PLAY_QUEUED, if we're already PLAYING
   if ( static_cast<int>(s) != static_cast<int>(state) + 1)
   {
     cout << "new state " << s << endl;
     state = s;
+    
+    if (state == STATE_RECORDING)
+    {
+      numBeats = 0;
+    }
   }
 }
 
@@ -35,13 +46,18 @@ void Looper::process(int nframes, Buffers* buffers)
       playPoint++;
     }
     
-    float prog = (float(playPoint) / fpb * numBeats);
+    float prog = (float(playPoint) / (fpb*numBeats));
+    
+    /*
     if ( track == 0 )
-      cout << prog << "  fpb*numBeats " << fpb * numBeats << endl;
+      cout << prog << "  playPoint " << playPoint << "  endPoint " << endPoint
+           << "  fpb*numBeats " << fpb * numBeats <<  endl;
+    */
     EventLooperProgress e(track, prog );
     writeToGuiRingbuffer( &e );
   }
   
+  // stopRecordOnBar ensures we record right up to the bar measure
   else if ( state == STATE_RECORDING || stopRecordOnBar )
   {
     for(int i = 0; i < nframes; i++)
@@ -59,9 +75,11 @@ void Looper::bar()
 {
   stopRecordOnBar = false;
   
-  if ( state == STATE_RECORDING )
+  if ( playedBeats >= numBeats )
   {
-    stopRecordOnBar = true;
+    //cout << "Looper " << track << " restting to 0 " << endl;
+    playPoint = 0;
+    playedBeats = 0;
   }
   
   if ( state == STATE_PLAY_QUEUED )
@@ -94,23 +112,20 @@ void Looper::bar()
 
 void Looper::beat()
 {
-  playedBeats++;   // only reset if we're on the last beat of a loop
-  
-  if ( playedBeats >= numBeats )
+  if (state == STATE_RECORDING)
   {
-    //cout << "Looper " << track << " restting to 0 " << endl;
-    playPoint = 0;
-    playedBeats = 0;
+    numBeats++;
   }
+  playedBeats++;   // only reset if we're on the last beat of a loop
 }
 
 void Looper::setLoopLength(float l)
 {
   numBeats *= l;
   
-  // avoid the 0 * 2 problem
-  if ( numBeats < 1 )
-    numBeats = 1;
+  // smallest loop = 4 beats
+  if ( numBeats < 4 )
+    numBeats = 4;
   
   char buffer [50];
   sprintf (buffer, "Looper loop lenght = %i", numBeats );
