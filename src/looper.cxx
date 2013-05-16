@@ -11,14 +11,12 @@ void Looper::setState(State s)
 {
   if ( state == STATE_RECORDING )
   {
-    cout << "stopRecordOnBar = true" << endl;
     stopRecordOnBar = true;
   }
   
   // ensure we're not setting eg PLAY_QUEUED, if we're already PLAYING
   if ( static_cast<int>(s) != static_cast<int>(state) + 1)
   {
-    cout << "new state " << s << endl;
     state = s;
     
     if (state == STATE_RECORDING)
@@ -77,7 +75,6 @@ void Looper::bar()
   
   if ( playedBeats >= numBeats )
   {
-    //cout << "Looper " << track << " restting to 0 " << endl;
     playPoint = 0;
     playedBeats = 0;
   }
