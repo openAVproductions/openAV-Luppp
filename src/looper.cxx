@@ -7,6 +7,36 @@
 
 extern Jack* jack;
 
+Looper::Looper(int t) :
+      track(t),
+      state(STATE_STOPPED),
+      numBeats   (4),
+      playedBeats(0),
+      stopRecordOnBar(false),
+      endPoint   (0),
+      playPoint  (0),
+      lastWrittenSampleIndex(0)
+{
+  // init faust pitch shift variables
+  fSamplingFreq = 44100;
+  IOTA = 0;
+  
+  int bufferSize = 1024;
+  
+  for ( int i = 0; i < bufferSize; i++)
+    tmpBuffer.push_back(0.f);
+  
+  for (int i=0; i<65536; i++)
+    fVec0[i] = 0;
+  
+  semitoneShift = 0.0f;
+  windowSize = 1000;
+  crossfadeSize = 1000;
+  
+  for (int i=0; i<2; i++)
+    fRec0[i] = 0;
+}
+
 void Looper::setState(State s)
 {
   if ( state == STATE_RECORDING )
@@ -37,7 +67,7 @@ void Looper::process(int nframes, Buffers* buffers)
     {
       if ( playPoint < endPoint )
       {
-        out[i] += sample[playPoint];
+        tmpBuffer[i] += sample[playPoint];
       }
       // always update playPoint, even when not playing sound.
       // it updates the UI of progress
@@ -54,7 +84,6 @@ void Looper::process(int nframes, Buffers* buffers)
     EventLooperProgress e(track, prog );
     writeToGuiRingbuffer( &e );
   }
-  
   // stopRecordOnBar ensures we record right up to the bar measure
   else if ( state == STATE_RECORDING || stopRecordOnBar )
   {
@@ -66,6 +95,11 @@ void Looper::process(int nframes, Buffers* buffers)
       }
     }
   }
+  
+  
+  // not pitch-shift the audio in the buffer
+  pitchShift( nframes, &tmpBuffer[0], out);
+  
 }
 
 
@@ -132,4 +166,35 @@ void Looper::setLoopLength(float l)
   sprintf (buffer, "Looper loop lenght = %i", numBeats );
   EventGuiPrint e( buffer );
   writeToGuiRingbuffer( &e );
+}
+
+
+void Looper::pitchShift(int count, float* input, float* output)
+{
+  float   fSlow0 = windowSize;
+  float   fSlow1 = ((1 + fSlow0) - powf(2,(0.08333333333333333f * semitoneShift)));
+  float   fSlow2 = (1.0f / crossfadeSize);
+  float   fSlow3 = (fSlow0 - 1);
+  float* input0 = &input[0];
+  float* output0 = &output[0];
+  
+  for (int i=0; i<count; i++)
+  {
+    float fTemp0 = (float)input0[i];
+    fVec0[IOTA&65535] = fTemp0;
+    fRec0[0] = fmodf((fRec0[1] + fSlow1),fSlow0);
+    int iTemp1 = int(fRec0[0]);
+    int iTemp2 = (1 + iTemp1);
+    float fTemp3 = min((fSlow2 * fRec0[0]), 1.f );
+    float fTemp4 = (fSlow0 + fRec0[0]);
+    int iTemp5 = int(fTemp4);
+    output0[i] += (float)(((1 - fTemp3) * (((fTemp4 - iTemp5) * 
+    fVec0[(IOTA-int((int((1 + iTemp5)) & 65535)))&65535]) + ((0 - ((
+    fRec0[0] + fSlow3) - iTemp5)) * fVec0[(IOTA-int((iTemp5 & 65535)))
+    &65535]))) + (fTemp3 * (((fRec0[0] - iTemp1) * fVec0[(IOTA-int((int(
+    iTemp2) & 65535)))&65535]) + ((iTemp2 - fRec0[0]) * fVec0[(IOTA-int((
+    iTemp1 & 65535)))&65535]))));
+    fRec0[1] = fRec0[0];
+    IOTA = IOTA+1;
+  }
 }

@@ -2,6 +2,7 @@
 #ifndef LUPPP_LOOPER_H
 #define LUPPP_LOOPER_H
 
+#include <vector>
 #include <iostream>
 
 #include "buffers.hxx"
@@ -21,16 +22,7 @@ class Looper : public Observer // for notifications
       STATE_STOP_QUEUED,
     };
     
-    Looper(int t) :
-      track(t),
-      state(STATE_STOPPED),
-      numBeats   (4),
-      playedBeats(0),
-      stopRecordOnBar(false),
-      endPoint   (0),
-      playPoint  (0),
-      lastWrittenSampleIndex(0)
-    {}
+    Looper(int t);
     
     void bar();
     void beat();
@@ -53,7 +45,17 @@ class Looper : public Observer // for notifications
     
     int endPoint, playPoint, lastWrittenSampleIndex;
     float sample[44100*60];
-  
+    
+    // Pitch Shifting
+    void pitchShift(int count, float* input, float* output);
+    vector<float> tmpBuffer;
+    int    IOTA;
+    float  fVec0[65536];
+    float  semitoneShift;
+    float  windowSize;
+    float  fRec0[2];
+    float  crossfadeSize;
+    float  fSamplingFreq;
 };
 
 #endif // LUPPP_LOOPER_H

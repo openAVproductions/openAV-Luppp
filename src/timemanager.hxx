@@ -18,7 +18,7 @@ class TimeManager
 {
   public:
     TimeManager():
-        fpb(120),
+        fpb(22050),
         oldBeat(0)
     {
       tapTempoPos = 0;
@@ -29,11 +29,13 @@ class TimeManager
     
     void setBpm(float bpm)
     {
+      //cout << "setBpm() " << bpm << endl;
       setFpb( 44100 / bpm * 60 );
     }
     void setFpb(float f)
     {
       fpb = f;
+      //cout << "setFpb() " << fpb << endl;
       
       char buffer [50];
       sprintf (buffer, "TM, setFpb() %i", int(f) );
@@ -48,6 +50,7 @@ class TimeManager
     
     void registerObserver(Observer* o)
     {
+      //cout << "registerObserver() " << fpb << endl;
       observers.push_back(o);
       o->setFpb( fpb );
     }
@@ -66,12 +69,13 @@ class TimeManager
         int tapFpb2 = tapTempo[2] - tapTempo[1];
         
         int average = (tapFpb1 + tapFpb2) / 2;
-        setFpb(average);
         
         char buffer [50];
         sprintf (buffer, "TM, tap() average = %i", average );
         EventGuiPrint e( buffer );
         writeToGuiRingbuffer( &e );
+        
+        setFpb(average);
         
         // reset, so next 3 taps restart process
         tapTempoPos = 0;

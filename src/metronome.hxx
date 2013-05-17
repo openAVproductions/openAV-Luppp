@@ -30,6 +30,9 @@ class Metronome : public Observer
         beatSample[i]= sin(i*scale);
         barSample [i]= sin(i*scale*1.5);
       }
+      
+      // don't play after creation
+      playPoint = endPoint + 1;
     }
     
     void setActive(bool a)
