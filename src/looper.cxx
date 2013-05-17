@@ -61,18 +61,36 @@ void Looper::process(int nframes, Buffers* buffers)
   float* in  = buffers->audio[Buffers::MASTER_INPUT];
   float* out = buffers->audio[Buffers::MASTER_OUTPUT];
   
+  float playbackSpeed = endPoint / ( float(numBeats) * fpb );
+  // invert the change due to speed, and pitch-shift it back to normal :D
+  float deltaPitch = 12 * log ( playbackSpeed ) / log (2);
+  semitoneShift = -deltaPitch;
+  
+  if (track == 0)
+  {
+    // log pitch-shift rates
+    char buffer [50];
+    sprintf (buffer, "Looper, pbs=%f, dP=%f", playbackSpeed, deltaPitch );
+    EventGuiPrint e( buffer );
+    writeToGuiRingbuffer( &e );
+  }
+  
   if ( state == STATE_PLAYING )
   {
     for(int i = 0; i < nframes; i++)
     {
       if ( playPoint < endPoint )
       {
-        tmpBuffer[i] += sample[playPoint];
+        tmpBuffer[i] = sample[playPoint];
       }
       // always update playPoint, even when not playing sound.
       // it updates the UI of progress
       playPoint++;
     }
+    
+    
+    // not pitch-shift the audio in the buffer
+    pitchShift( nframes, &tmpBuffer[0], out);
     
     float prog = (float(playPoint) / (fpb*numBeats));
     
@@ -95,10 +113,6 @@ void Looper::process(int nframes, Buffers* buffers)
       }
     }
   }
-  
-  
-  // not pitch-shift the audio in the buffer
-  pitchShift( nframes, &tmpBuffer[0], out);
   
 }
 

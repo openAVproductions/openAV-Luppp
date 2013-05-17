@@ -24,8 +24,6 @@ static void gmastertrack_button_callback(Fl_Widget *w, void *data) {
   if ( data )
    track = *(int*)data;
   
-  cout << "Button " << track << " " << w->label() << " clicked" << endl;
-  
   if ( strcmp( w->label(), "Metro" ) == 0 )
   {
     Avtk::Button* b = (Avtk::Button*)w;

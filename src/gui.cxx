@@ -29,7 +29,7 @@ Gui::Gui() :
 {
   window.color(FL_BLACK);
   window.label("Luppp 5");
-  window.callback( close_cb, 0 );
+  //window.callback( close_cb, 0 );
   
   Avtk::Image* header = new Avtk::Image(0,0,600,36,"header.png");
   
