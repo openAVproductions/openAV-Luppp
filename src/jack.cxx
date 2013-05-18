@@ -85,22 +85,24 @@ void Jack::activate()
 
 int Jack::process (jack_nframes_t nframes)
 {
-  // do events from the ringbuffer
-  handleDspEvents();
-  
   // get buffers
   buffers.audio[Buffers::MASTER_INPUT]    = (float*)jack_port_get_buffer( masterInput , nframes);
   buffers.audio[Buffers::MASTER_OUTPUT]   = (float*)jack_port_get_buffer( masterOutput, nframes);
-  buffers.midi[Buffers::MASTER_MIDI_INPUT]= (unsigned char*) jack_port_get_buffer( masterMidiInput, nframes );
-  buffers.midi[Buffers::APC_INPUT]        = (unsigned char*) jack_port_get_buffer( apcMidiInput   , nframes );
-  buffers.midi[Buffers::APC_OUTPUT]       = (unsigned char*) jack_port_get_buffer( apcMidiOutput  , nframes );
+  buffers.midi[Buffers::MASTER_MIDI_INPUT]= (void*) jack_port_get_buffer( masterMidiInput, nframes );
+  buffers.midi[Buffers::APC_INPUT]        = (void*) jack_port_get_buffer( apcMidiInput   , nframes );
+  buffers.midi[Buffers::APC_OUTPUT]       = (void*) jack_port_get_buffer( apcMidiOutput  , nframes );
   
   // pre-zero output buffers
   memset( buffers.audio[Buffers::MASTER_OUTPUT], 0, sizeof(float) * nframes );
   jack_midi_clear_buffer( buffers.midi[Buffers::APC_OUTPUT] );
   
+  
+  // do events from the ringbuffer
+  handleDspEvents();
+  
   // process incoming MIDI
   jack_midi_event_t in_event;
+  
   
   int masterMidiInputIndex = 0;
   int event_count = (int) jack_midi_get_event_count( buffers.midi[Buffers::MASTER_MIDI_INPUT] );
@@ -109,7 +111,7 @@ int Jack::process (jack_nframes_t nframes)
   {
     jack_midi_event_get(&in_event, buffers.midi[Buffers::MASTER_MIDI_INPUT], masterMidiInputIndex);
     
-    cout << int(in_event.buffer[0]) << int(in_event.buffer[1]) << int(in_event.buffer[2]) << endl;
+    cout  << "Frame: "  << in_event.time << " " << int(in_event.buffer[0])  << " " << int(in_event.buffer[1])  << " " << int(in_event.buffer[2]) << endl;
     
     // check each looper for MIDI match
     for(int i = 0; i < loopers.size(); i++)
@@ -121,18 +123,7 @@ int Jack::process (jack_nframes_t nframes)
   for(uint i = 0; i < loopers.size(); i++)
     loopers.at(i)->process( nframes, &buffers );
   
-  if (true)
-    metronome.process( nframes, &buffers );
-  
-  /*
-  float* input = buffers.audio[Buffers::MASTER_INPUT];
-  float* output = buffers.audio[Buffers::MASTER_OUTPUT];
-  
-  for(uint i = 0; i < nframes; i++)
-  {
-    *output++ = *input++;
-  }
-  */
+  metronome.process( nframes, &buffers );
   
   return false;
 }
@@ -152,9 +143,10 @@ void Jack::writeApcOutput( unsigned char* data )
   void* apcOutput   = buffers.midi[Buffers::APC_OUTPUT];
   
   unsigned char* buf = jack_midi_event_reserve( apcOutput, 0, 3);
-  if( buf )
+  if( buf != 0 )
   {
     memcpy( buf, data, sizeof( unsigned char ) * 3);
+    cout << "writeApcOutput " << int(buf[0]) << ", " << int(buf[1]) << ", " << int(buf[2]) << endl; 
   }
   else
   {

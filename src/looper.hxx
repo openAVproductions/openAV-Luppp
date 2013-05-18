@@ -41,6 +41,7 @@ class Looper : public Observer // for notifications
     State state;
     
     int fpb;
+    float gain;
     int numBeats;
     int playedBeats;
     bool stopRecordOnBar;

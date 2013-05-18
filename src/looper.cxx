@@ -10,6 +10,8 @@ extern Jack* jack;
 Looper::Looper(int t) :
       track(t),
       state(STATE_STOPPED),
+      fpb(120),
+      gain(1.f),
       numBeats   (4),
       playedBeats(0),
       stopRecordOnBar(false),
@@ -55,6 +57,13 @@ void Looper::midi(unsigned char* data)
       case 48: setState( STATE_STOP_QUEUED );
     }
   }
+  else if ( data[0] - 176 == track )
+  {
+    switch ( data[1] )
+    {
+      case 7: gain = int(data[2])/127.f; break;
+    }
+  }
   
   
 }
@@ -72,11 +81,10 @@ void Looper::setState(State s)
   {
     numBeats = 0;
     unsigned char data[3];
-    data[0] == 144 + track;
-    data[1] == 48; // record LED
-    data[2] == 127;
+    data[0] = 144 + track;
+    data[1] = 48; // record LED
+    data[2] = 127;
     jack->writeApcOutput( &data[0] );
-    cout << "wrote to APC" << endl;
   }
 }
 
@@ -107,15 +115,14 @@ void Looper::process(int nframes, Buffers* buffers)
     {
       if ( playPoint < endPoint )
       {
-        tmpBuffer[i] = sample[playPoint];
+        tmpBuffer[i] = sample[playPoint] * gain;
       }
       // always update playPoint, even when not playing sound.
       // it updates the UI of progress
       playPoint++;
     }
     
-    
-    // not pitch-shift the audio in the buffer
+    // now pitch-shift the audio in the buffer
     pitchShift( nframes, &tmpBuffer[0], out);
     
     float prog = (float(playPoint) / (fpb*numBeats));
@@ -228,12 +235,14 @@ void Looper::pitchShift(int count, float* input, float* output)
     float fTemp3 = min((fSlow2 * fRec0[0]), 1.f );
     float fTemp4 = (fSlow0 + fRec0[0]);
     int iTemp5 = int(fTemp4);
+    
     output0[i] += (float)(((1 - fTemp3) * (((fTemp4 - iTemp5) * 
     fVec0[(IOTA-int((int((1 + iTemp5)) & 65535)))&65535]) + ((0 - ((
     fRec0[0] + fSlow3) - iTemp5)) * fVec0[(IOTA-int((iTemp5 & 65535)))
     &65535]))) + (fTemp3 * (((fRec0[0] - iTemp1) * fVec0[(IOTA-int((int(
     iTemp2) & 65535)))&65535]) + ((iTemp2 - fRec0[0]) * fVec0[(IOTA-int((
     iTemp1 & 65535)))&65535]))));
+    
     fRec0[1] = fRec0[0];
     IOTA = IOTA+1;
   }

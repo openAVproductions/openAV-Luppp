@@ -13,7 +13,7 @@ class Buffers
       memset( audio, 0, sizeof(float*)*2);
     }
     float* audio[32];
-    unsigned char* midi [32];
+    void* midi [32];
     
     enum BUFFER {
       MASTER_OUTPUT = 0,
