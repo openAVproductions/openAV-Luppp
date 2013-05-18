@@ -22,6 +22,8 @@
 #include "metronome.hxx"
 #include "timemanager.hxx"
 
+#include "controller/apc.hxx"
+
 using namespace std;
 
 class Jack
@@ -44,11 +46,15 @@ class Jack
     
     Metronome*   getMetronome(){return &metronome;}
     TimeManager* getTimeManager(){return &timeManager;}
+    
+    void writeApcOutput( unsigned char* data );
   
   private:
     Buffers     buffers;
     Metronome   metronome;
     TimeManager timeManager;
+    
+    vector<Controller*> controllers;
     
     vector<Looper*> loopers;
     
@@ -61,6 +67,8 @@ class Jack
     jack_port_t*  masterInput;
     jack_port_t*  masterOutput;
     
+    jack_port_t*  apcMidiInput;
+    jack_port_t*  apcMidiOutput;
     jack_port_t*  masterMidiInput;
     
     // JACK callbacks

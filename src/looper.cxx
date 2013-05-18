@@ -37,8 +37,25 @@ Looper::Looper(int t) :
     fRec0[i] = 0;
 }
 
-void Looper::midi(char* data)
+void Looper::midi(unsigned char* data)
 {
+  if ( data[0] - 144 == track )
+  {
+    switch ( data[1] )
+    {
+      case 48: setState( STATE_RECORD_QUEUED );     break;
+      case 53: setState( STATE_PLAY_QUEUED );       break;
+      case 52: setState( STATE_STOPPED );           break;
+    }
+  }
+  else if ( data[0] - 128 == track )
+  {
+    switch ( data[1] )
+    {
+      case 48: setState( STATE_STOP_QUEUED );
+    }
+  }
+  
   
 }
 
@@ -49,15 +66,17 @@ void Looper::setState(State s)
     stopRecordOnBar = true;
   }
   
-  // ensure we're not setting eg PLAY_QUEUED, if we're already PLAYING
-  if ( static_cast<int>(s) != static_cast<int>(state) + 1)
+  state = s;
+  
+  if (state == STATE_RECORD_QUEUED )
   {
-    state = s;
-    
-    if (state == STATE_RECORDING)
-    {
-      numBeats = 0;
-    }
+    numBeats = 0;
+    unsigned char data[3];
+    data[0] == 144 + track;
+    data[1] == 48; // record LED
+    data[2] == 127;
+    jack->writeApcOutput( &data[0] );
+    cout << "wrote to APC" << endl;
   }
 }
 
@@ -146,7 +165,7 @@ void Looper::bar()
     playPoint = 0;
     endPoint = lastWrittenSampleIndex;
   }
-  if ( state == STATE_RECORD_QUEUED && state != STATE_RECORDING )
+  if ( state == STATE_RECORD_QUEUED )
   {
     EventGuiPrint e( "Looper Q->Recording" );
     writeToGuiRingbuffer( &e );
@@ -156,7 +175,7 @@ void Looper::bar()
     endPoint = 0;
     lastWrittenSampleIndex = 0;
   }
-  if ( state == STATE_PLAY_QUEUED && state != STATE_STOPPED )
+  if ( state == STATE_PLAY_QUEUED )
   {
     EventGuiPrint e( "Looper Q->Stopped" );
     writeToGuiRingbuffer( &e );

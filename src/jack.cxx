@@ -38,6 +38,18 @@ Jack::Jack()
                           JackPortIsInput,
                           0 );
   
+  apcMidiInput  = jack_port_register( client,
+                          "apc_in",
+                          JACK_DEFAULT_MIDI_TYPE,
+                          JackPortIsInput,
+                          0 );
+  
+  apcMidiOutput  = jack_port_register( client,
+                          "apc_out",
+                          JACK_DEFAULT_MIDI_TYPE,
+                          JackPortIsOutput,
+                          0 );
+  
   if ( jack_set_process_callback( client,
                                   static_process,
                                   static_cast<void*>(this)) )
@@ -79,7 +91,13 @@ int Jack::process (jack_nframes_t nframes)
   // get buffers
   buffers.audio[Buffers::MASTER_INPUT]    = (float*)jack_port_get_buffer( masterInput , nframes);
   buffers.audio[Buffers::MASTER_OUTPUT]   = (float*)jack_port_get_buffer( masterOutput, nframes);
-  buffers.midi[Buffers::MASTER_MIDI_INPUT]= (char*) jack_port_get_buffer( masterMidiInput, nframes );
+  buffers.midi[Buffers::MASTER_MIDI_INPUT]= (unsigned char*) jack_port_get_buffer( masterMidiInput, nframes );
+  buffers.midi[Buffers::APC_INPUT]        = (unsigned char*) jack_port_get_buffer( apcMidiInput   , nframes );
+  buffers.midi[Buffers::APC_OUTPUT]       = (unsigned char*) jack_port_get_buffer( apcMidiOutput  , nframes );
+  
+  // pre-zero output buffers
+  memset( buffers.audio[Buffers::MASTER_OUTPUT], 0, sizeof(float) * nframes );
+  jack_midi_clear_buffer( buffers.midi[Buffers::APC_OUTPUT] );
   
   // process incoming MIDI
   jack_midi_event_t in_event;
@@ -95,13 +113,10 @@ int Jack::process (jack_nframes_t nframes)
     
     // check each looper for MIDI match
     for(int i = 0; i < loopers.size(); i++)
-      loopers.at(i)->midi( (char*)in_event.buffer );
+      loopers.at(i)->midi( (unsigned char*)&in_event.buffer[0] );
     
     masterMidiInputIndex++;
   }
-  
-  // pre-zero output buffers
-  memset( buffers.audio[Buffers::MASTER_OUTPUT], 0, sizeof(float) * nframes );
   
   for(uint i = 0; i < loopers.size(); i++)
     loopers.at(i)->process( nframes, &buffers );
@@ -130,6 +145,22 @@ int Jack::getBuffersize()
 int Jack::getSamplerate()
 {
   return jack_get_sample_rate( client );
+}
+
+void Jack::writeApcOutput( unsigned char* data )
+{
+  void* apcOutput   = buffers.midi[Buffers::APC_OUTPUT];
+  
+  unsigned char* buf = jack_midi_event_reserve( apcOutput, 0, 3);
+  if( buf )
+  {
+    memcpy( buf, data, sizeof( unsigned char ) * 3);
+  }
+  else
+  {
+    EventGuiPrint e( "__FILE__ __LINE__ Buffer not valid" );
+    writeToGuiRingbuffer( &e );
+  }
 }
 
 int Jack::timebase(jack_transport_state_t state,

@@ -12,13 +12,15 @@ class Buffers
     {
       memset( audio, 0, sizeof(float*)*2);
     }
-    float* audio[2];
-    char* midi [1];
+    float* audio[32];
+    unsigned char* midi [32];
     
     enum BUFFER {
       MASTER_OUTPUT = 0,
       MASTER_INPUT,
       MASTER_MIDI_INPUT,
+      APC_INPUT,
+      APC_OUTPUT,
     };
     
     // Jack details

@@ -24,7 +24,7 @@ class Looper : public Observer // for notifications
     
     Looper(int t);
     
-    void midi(char* data);
+    void midi(unsigned char* data);
     
     void bar();
     void beat();
@@ -37,7 +37,7 @@ class Looper : public Observer // for notifications
     void process(int nframes, Buffers* buffers);
   
   private:
-    int track;
+    const int track;
     State state;
     
     int fpb;
