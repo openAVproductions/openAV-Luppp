@@ -12,7 +12,6 @@
 
 using namespace std;
 
-
 // inherits from ObserverSubject
 class TimeManager
 {
@@ -57,6 +56,13 @@ class TimeManager
     
     void tap()
     {
+      // reset tap tempo to "first tap" if more than 5 secs elapsed since last tap
+      int sr = 44100;
+      if ( tapTempo[0] < frame - sr * 5 )
+      {
+        tapTempoPos = 0;
+      }
+      
       if ( tapTempoPos < 3 )
       {
         tapTempo[tapTempoPos] = frame;
@@ -67,8 +73,9 @@ class TimeManager
         // calculate frames per tap
         int tapFpb1 = tapTempo[1] - tapTempo[0];
         int tapFpb2 = tapTempo[2] - tapTempo[1];
+        int tapFpb3 = frame - tapTempo[2]; // last tap, until now
         
-        int average = (tapFpb1 + tapFpb2) / 2;
+        int average = (tapFpb1 + tapFpb2 + tapFpb3) / 3;
         
         char buffer [50];
         sprintf (buffer, "TM, tap() average = %i", average );
