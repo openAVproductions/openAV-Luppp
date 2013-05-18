@@ -61,6 +61,8 @@ class Jack
     jack_port_t*  masterInput;
     jack_port_t*  masterOutput;
     
+    jack_port_t*  masterMidiInput;
+    
     // JACK callbacks
     int process (jack_nframes_t);
     

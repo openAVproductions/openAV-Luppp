@@ -37,6 +37,11 @@ Looper::Looper(int t) :
     fRec0[i] = 0;
 }
 
+void Looper::midi(char* data)
+{
+  
+}
+
 void Looper::setState(State s)
 {
   if ( state == STATE_RECORDING )
@@ -68,11 +73,13 @@ void Looper::process(int nframes, Buffers* buffers)
   
   if (track == 0)
   {
+    /*
     // log pitch-shift rates
     char buffer [50];
     sprintf (buffer, "Looper, pbs=%f, dP=%f", playbackSpeed, deltaPitch );
     EventGuiPrint e( buffer );
     writeToGuiRingbuffer( &e );
+    */
   }
   
   if ( state == STATE_PLAYING )

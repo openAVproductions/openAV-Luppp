@@ -32,6 +32,12 @@ Jack::Jack()
                           JackPortIsInput,
                           0 );
   
+  masterMidiInput  = jack_port_register( client,
+                          "midi_in",
+                          JACK_DEFAULT_MIDI_TYPE,
+                          JackPortIsInput,
+                          0 );
+  
   if ( jack_set_process_callback( client,
                                   static_process,
                                   static_cast<void*>(this)) )
@@ -71,8 +77,28 @@ int Jack::process (jack_nframes_t nframes)
   handleDspEvents();
   
   // get buffers
-  buffers.audio[Buffers::MASTER_INPUT]  = (float*)jack_port_get_buffer( masterInput , nframes);
-  buffers.audio[Buffers::MASTER_OUTPUT] = (float*)jack_port_get_buffer( masterOutput, nframes);
+  buffers.audio[Buffers::MASTER_INPUT]    = (float*)jack_port_get_buffer( masterInput , nframes);
+  buffers.audio[Buffers::MASTER_OUTPUT]   = (float*)jack_port_get_buffer( masterOutput, nframes);
+  buffers.midi[Buffers::MASTER_MIDI_INPUT]= (char*) jack_port_get_buffer( masterMidiInput, nframes );
+  
+  // process incoming MIDI
+  jack_midi_event_t in_event;
+  
+  int masterMidiInputIndex = 0;
+  int event_count = (int) jack_midi_get_event_count( buffers.midi[Buffers::MASTER_MIDI_INPUT] );
+  
+  while ( masterMidiInputIndex < event_count )
+  {
+    jack_midi_event_get(&in_event, buffers.midi[Buffers::MASTER_MIDI_INPUT], masterMidiInputIndex);
+    
+    cout << int(in_event.buffer[0]) << int(in_event.buffer[1]) << int(in_event.buffer[2]) << endl;
+    
+    // check each looper for MIDI match
+    for(int i = 0; i < loopers.size(); i++)
+      loopers.at(i)->midi( (char*)in_event.buffer );
+    
+    masterMidiInputIndex++;
+  }
   
   // pre-zero output buffers
   memset( buffers.audio[Buffers::MASTER_OUTPUT], 0, sizeof(float) * nframes );
