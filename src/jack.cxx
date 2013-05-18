@@ -7,7 +7,6 @@
 
 #include "eventhandler.hxx"
 
-
 using namespace std;
 
 extern int jackSamplerate;

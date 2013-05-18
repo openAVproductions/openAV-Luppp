@@ -6,15 +6,15 @@
 class Controller
 {
   public:
-    Controller();
-    virtual ~Controller();
+    Controller(){};
+    virtual ~Controller(){};
     
-    virtual void mute(int t, bool b);
-    virtual void clip(int t, bool b);
+    virtual void mute(int t, bool b){};
+    virtual void clipSelect(int t, bool b){};
     
-    virtual void record(int t, bool b);
+    virtual void record(int t, bool b){};
     
-    virtual void volume(int t, float f);
+    virtual void volume(int t, float f){};
 };
 
 #endif // LUPPP_CONTROLLER_H

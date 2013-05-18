@@ -80,11 +80,7 @@ void Looper::setState(State s)
   if (state == STATE_RECORD_QUEUED )
   {
     numBeats = 0;
-    unsigned char data[3];
-    data[0] = 144 + track;
-    data[1] = 48; // record LED
-    data[2] = 127;
-    jack->writeApcOutput( &data[0] );
+    jack->getControllerUpdator()->record(track, true);
   }
 }
 

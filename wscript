@@ -23,6 +23,7 @@ def build(bld):
              'src/main.cxx',
              'src/jack.cxx',
              'src/looper.cxx',
+             'src/controller/apc.cxx',
              'src/eventhandlergui.cxx',
              'src/eventhandlerdsp.cxx']
   

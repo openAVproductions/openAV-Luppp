@@ -22,7 +22,7 @@
 #include "metronome.hxx"
 #include "timemanager.hxx"
 
-#include "controller/apc.hxx"
+#include "controllerupdater.hxx"
 
 using namespace std;
 
@@ -46,6 +46,7 @@ class Jack
     
     Metronome*   getMetronome(){return &metronome;}
     TimeManager* getTimeManager(){return &timeManager;}
+    ControllerUpdator* getControllerUpdator(){return &controllerUpdator;}
     
     void writeApcOutput( unsigned char* data );
   
@@ -54,7 +55,7 @@ class Jack
     Metronome   metronome;
     TimeManager timeManager;
     
-    vector<Controller*> controllers;
+    ControllerUpdator controllerUpdator;
     
     vector<Looper*> loopers;
     
