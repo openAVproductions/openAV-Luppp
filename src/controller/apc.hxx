@@ -11,10 +11,10 @@ class AkaiAPC : public Controller
     AkaiAPC();
     
     void mute(int t, bool b);
-    void clipSelect(int t, bool b);
-    
-    virtual void record(int t, bool b);
     void volume(int t, float f);
+    void recordArm(int t, bool b);
+    void clipSelect(int track, int clip, ClipMode cm);
+    
 };
 
 #endif // LUPPP_APC_H

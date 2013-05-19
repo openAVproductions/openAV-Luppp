@@ -4,6 +4,7 @@
 
 #include "jack.hxx"
 #include "eventhandler.hxx"
+#include "controllerupdater.hxx"
 
 extern Jack* jack;
 
@@ -70,25 +71,45 @@ void Looper::midi(unsigned char* data)
 
 void Looper::setState(State s)
 {
+  // quantize recording to next bar event
   if ( state == STATE_RECORDING )
   {
     stopRecordOnBar = true;
   }
   
   state = s;
-  
+  updateControllers();
+}
+
+void Looper::updateControllers()
+{
   if (state == STATE_RECORD_QUEUED )
   {
     numBeats = 0;
-    jack->getControllerUpdator()->record(track, true);
+    jack->getControllerUpdator()->recordArm(track, true);
   }
   else
   {
-    jack->getControllerUpdator()->record(track, false);
+    jack->getControllerUpdator()->recordArm(track, false);
   }
   
   if (state == STATE_PLAY_QUEUED )
   {
+    jack->getControllerUpdator()->clipSelect(track, 0, Controller::CLIP_MODE_PLAY_QUEUED);
+  }
+  else if ( state == STATE_PLAYING )
+  {
+    jack->getControllerUpdator()->clipSelect(track, 0, Controller::CLIP_MODE_PLAYING);
+  }
+  
+  if (state == STATE_STOP_QUEUED )
+  {
+    jack->getControllerUpdator()->clipSelect(track, 0, Controller::CLIP_MODE_LOADED);
+  }
+  else if ( state == STATE_STOPPED )
+  {
+    jack->getControllerUpdator()->clipSelect(track, 0, Controller::CLIP_MODE_LOADED);
+  }
 }
 
 void Looper::process(int nframes, Buffers* buffers)
@@ -155,6 +176,7 @@ void Looper::process(int nframes, Buffers* buffers)
 
 void Looper::bar()
 {
+  int barTmpState = state;
   // queue stop recording -> stop recording, now calculate beats in loop
   if ( stopRecordOnBar )
   {
@@ -192,6 +214,11 @@ void Looper::bar()
     
     state = STATE_STOPPED;
     endPoint = lastWrittenSampleIndex;
+  }
+  
+  if ( barTmpState != state )
+  {
+    jack->getControllerUpdator()->recordArm( track, state == STATE_RECORDING ? 1 : 0 );
   }
 }
 

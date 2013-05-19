@@ -34,6 +34,7 @@ class Looper : public Observer // for notifications
     void setState(State s);
     void setLoopLength(float l);
     
+    void updateControllers();
     void process(int nframes, Buffers* buffers);
   
   private:

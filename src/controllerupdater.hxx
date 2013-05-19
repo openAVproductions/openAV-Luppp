@@ -15,14 +15,6 @@ using namespace std;
 class ControllerUpdator
 {
   public:
-    enum ClipMode {
-      CLIP_MODE_PLAYING,
-      CLIP_MODE_PLAY_QUEUED,
-      CLIP_MODE_LOADED,
-      CLIP_MODE_EMPTY,
-    };
-    
-    
     ControllerUpdator()
     {
       c.push_back( new AkaiAPC() );
@@ -33,17 +25,17 @@ class ControllerUpdator
       for(int i = 0; i < c.size(); i++) c.at(i)->mute(t,b);
     }
     
-    void clipSelect(int t, ClipMode cm)
+    void clipSelect(int t, int clip, Controller::ClipMode cm)
     {
       for(int i = 0; i < c.size(); i++)
-        c.at(i)->clipSelect(t,cm);
+        c.at(i)->clipSelect(t,clip,cm);
     }
     
-    void record(int t, bool r)
+    void recordArm(int t, bool r)
     {
       cout << "record() " << t << " " << r << endl;
       for(int i = 0; i < c.size(); i++)
-        c.at(i)->record(t,r);
+        c.at(i)->recordArm(t,r);
     }
     
     void volume(int t, float v)
