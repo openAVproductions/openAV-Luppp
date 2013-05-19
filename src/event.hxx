@@ -21,6 +21,7 @@ namespace Event
     MASTER_VOL,
     RECORD,
     
+    LOOPER_LOAD,
     LOOPER_STATE,
     LOOPER_PROGRESS,
     LOOPER_LOOP_LENGTH,
@@ -96,18 +97,18 @@ class EventLooperLoopLength : public EventBase
     EventLooperLoopLength(int t, float s) : track(t), scale(s){}
 };
 
-class EventLoadSample : public EventBase
+class EventLooperLoad : public EventBase
 {
   public:
     int type() { return int(LOAD_SAMPLE); }
-    uint32_t size() { return sizeof(EventLoadSample); }
+    uint32_t size() { return sizeof(EventLooperLoad); }
     
-    AudioBuffer* audioBufferPtr;
+    int track;
+    int clip;
+    AudioBuffer* audioBuffer;
     
-    EventLoadSample(AudioBuffer* a)
-    {
-      audioBufferPtr = a;
-    }
+    EventLooperLoad(){}
+    EventLooperLoad(int t, int c, AudioBuffer* ab) : track(t), clip(c), audioBuffer(ab) {}
 };
 
 class EventPlaySample : public EventBase

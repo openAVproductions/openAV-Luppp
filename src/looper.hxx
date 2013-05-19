@@ -26,6 +26,8 @@ class Looper : public Observer // for notifications
     
     Looper(int t);
     
+    void setSample(int c, int nB, int bS, float* bP);
+    
     void midi(unsigned char* data);
     
     void bar();

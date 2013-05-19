@@ -8,15 +8,40 @@
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Slider.H>
 #include <FL/Fl_Progress.H>
+#include <FL/Fl_Native_File_Chooser.H>
 
 #include "avtk/avtk_dial.h"
 #include "avtk/avtk_button.h"
 #include "avtk/avtk_background.h"
 
 
+#include "worker.hxx"
+#include "audiobuffer.hxx"
 #include "eventhandler.hxx"
 
 using namespace std;
+
+static string choose_file()
+{
+  string path;
+  Fl_Native_File_Chooser fnfc;
+  fnfc.title("Pick a file");
+  fnfc.type(Fl_Native_File_Chooser::BROWSE_FILE);
+  //fnfc.filter("Wav\t*.wav");
+  fnfc.directory( getenv("HOME") ); // default directory to use
+  // Show native chooser
+  switch ( fnfc.show() ) {
+   case -1: printf("ERROR: %s\n", fnfc.errmsg());    break;  // ERROR
+   case  1: printf("CANCEL\n");                      break;  // CANCEL
+   default: printf("Loading directory: %s\n", fnfc.filename());    
+    
+    // update path and load it
+    path = fnfc.filename();
+    
+    break;  // FILE CHOSEN
+  }
+  return path;
+}
 
 static void gtrack_button_callback(Fl_Widget *w, void *data) {
   int track = 0;
@@ -49,6 +74,13 @@ static void gtrack_button_callback(Fl_Widget *w, void *data) {
     EventLooperLoopLength e = EventLooperLoopLength(track, 0.5);
     writeToDspRingbuffer( &e );
   }
+  else if ( strcmp( w->label() , "Load" ) == 0 )
+  {
+    AudioBuffer* ab = Worker::loadSample( choose_file() );
+    
+    EventLooperLoad e = EventLooperLoad( track, 0 , ab );
+    writeToDspRingbuffer( &e );
+  }
   else if ( strcmp( w->label() , "Vol" ) == 0 )
   {
     
@@ -73,7 +105,7 @@ class GTrack : public Fl_Group
       button4(x + 5, y + 84,  48, 18,"-"),
       button5(x +57, y + 84,  48, 18,"+"),
       
-      button6(x + 5, y +104, 18, 18,"6"),
+      button6(x + 5, y +104, 100, 18,"Load"),
       
       volume(x+55-22, y +175, 34, 34, "Vol"),
       

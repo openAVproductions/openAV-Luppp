@@ -4,9 +4,12 @@
 
 #include <sstream>
 
+#include "audiobuffer.hxx"
+
 // Hack, move to gtrack.cpp
 int GTrack::privateID = 0;
 int GMasterTrack::privateID = 0;
+int AudioBuffer::privateID = 0;
 
 using namespace std;
 

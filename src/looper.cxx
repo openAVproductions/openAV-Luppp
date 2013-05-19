@@ -122,6 +122,17 @@ void Looper::updateControllers()
   }
 }
 
+void Looper::setSample(int c, int nB, int bS, float* bP)
+{
+  if ( bS > SAMPLE_SIZE )
+  {
+    EventGuiPrint e( "Looper setSample() size > incoming sample" );
+    writeToGuiRingbuffer( &e );
+  }
+  numBeats = nB;
+  memcpy( &sample[0], bP, bS ); // copy sample data to pre-allocated buffer
+}
+
 void Looper::process(int nframes, Buffers* buffers)
 {
   float* in  = buffers->audio[Buffers::MASTER_INPUT];

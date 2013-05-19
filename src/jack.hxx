@@ -43,6 +43,10 @@ class Jack
     {
       loopers.at(t)->setLoopLength(l);
     }
+    Looper* getLooper(int t)
+    {
+      return loopers.at(t);
+    }
     
     Metronome*   getMetronome(){return &metronome;}
     TimeManager* getTimeManager(){return &timeManager;}

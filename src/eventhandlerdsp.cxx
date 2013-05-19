@@ -38,11 +38,12 @@ void handleDspEvents()
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMasterVol) );
             //jack->masterVolume = ev.vol;
           } break; }
-        case Event::LOAD_SAMPLE: {
-          if ( availableRead >= sizeof(EventLoadSample) ) {
-            EventLoadSample ev(0);
-            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventLoadSample) );
-            //jack->addAudioBuffer( ev.audioBufferPtr );
+        case Event::LOOPER_LOAD: {
+          if ( availableRead >= sizeof(EventLooperLoad) ) {
+            EventLooperLoad ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventLooperLoad) );
+            Looper* l = jack->getLooper( ev.track );
+            
           } break; }
         case Event::PLAY_SAMPLE: {
           if ( availableRead >= sizeof(EventPlaySample) ) {

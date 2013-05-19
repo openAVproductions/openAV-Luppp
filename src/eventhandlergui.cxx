@@ -40,12 +40,6 @@ void handleGuiEvents()
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventMasterVol) );
             //jack->masterVolume = ev.vol;
           } break; }
-        case Event::LOAD_SAMPLE: {
-          if ( availableRead >= sizeof(EventLoadSample) ) {
-            EventLoadSample ev(0);
-            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventLoadSample) );
-            //jack->addAudioBuffer( ev.audioBufferPtr );
-          } break; }
         case Event::PLAY_SAMPLE: {
           if ( availableRead >= sizeof(EventPlaySample) ) {
             EventPlaySample ev(0,0);
