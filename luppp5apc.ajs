@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<alsa>
+  <client name="System">
+    <port id="0" />
+    <port id="1" />
+  </client>
+  <client name="Midi Through">
+    <port id="0" />
+  </client>
+  <client name="Hammerfall DSP">
+    <port id="0" />
+  </client>
+  <client name="Akai APC40">
+    <port id="0" />
+  </client>
+  <client name="Client-128" />
+  <client name="jack_midi" />
+</alsa>
+<jack>
+  <client name="system">
+    <port name="capture_1">
+      <connection port="Luppp:master_in" />
+    </port>
+    <port name="capture_2" />
+    <port name="capture_3" />
+    <port name="capture_4" />
+    <port name="capture_5" />
+    <port name="capture_6" />
+    <port name="capture_7" />
+    <port name="capture_8" />
+    <port name="capture_9" />
+    <port name="capture_10" />
+    <port name="capture_11" />
+    <port name="capture_12" />
+    <port name="capture_13" />
+    <port name="capture_14" />
+    <port name="capture_15" />
+    <port name="capture_16" />
+    <port name="capture_17" />
+    <port name="capture_18" />
+  </client>
+  <client name="alsa_pcm">
+    <port name="Midi-Through/midi_capture_1" />
+    <port name="Hammerfall-DSP/midi_capture_1" />
+    <port name="Akai-APC40/midi_capture_1">
+      <connection port="Luppp:apc_in" />
+    </port>
+  </client>
+  <client name="Luppp">
+    <port name="master_out">
+      <connection port="system:playback_2" />
+      <connection port="system:playback_1" />
+    </port>
+    <port name="apc_out">
+      <connection port="alsa_pcm:Akai-APC40/midi_playback_1" />
+    </port>
+  </client>
+</jack>

@@ -82,6 +82,13 @@ void Looper::setState(State s)
     numBeats = 0;
     jack->getControllerUpdator()->record(track, true);
   }
+  else
+  {
+    jack->getControllerUpdator()->record(track, false);
+  }
+  
+  if (state == STATE_PLAY_QUEUED )
+  {
 }
 
 void Looper::process(int nframes, Buffers* buffers)

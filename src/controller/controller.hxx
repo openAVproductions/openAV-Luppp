@@ -12,7 +12,7 @@ class Controller
     virtual void mute(int t, bool b){};
     virtual void clipSelect(int t, bool b){};
     
-    virtual void record(int t, bool b){};
+    virtual void record(int t, bool b) = 0;
     
     virtual void volume(int t, float f){};
 };
