@@ -125,20 +125,7 @@ void Looper::process(int nframes, Buffers* buffers)
   float* out = buffers->audio[Buffers::MASTER_OUTPUT];
   
   float playbackSpeed = endPoint / ( float(numBeats) * fpb );
-  // invert the change due to speed, and pitch-shift it back to normal :D
-  float deltaPitch = 12 * log ( playbackSpeed ) / log (2);
-  semitoneShift = -deltaPitch;
-  
-  if (track == 0)
-  {
-    /*
-    // log pitch-shift rates
-    char buffer [50];
-    sprintf (buffer, "Looper, pbs=%f, dP=%f", playbackSpeed, deltaPitch );
-    EventGuiPrint e( buffer );
-    writeToGuiRingbuffer( &e );
-    */
-  }
+  semitoneShift = -( 12 * log ( playbackSpeed ) / log (2) );
   
   if ( state == STATE_PLAYING )
   {
@@ -146,10 +133,8 @@ void Looper::process(int nframes, Buffers* buffers)
     {
       if ( playPoint < endPoint )
       {
-        tmpBuffer[i] = sample[int(playPoint)];// * gain;
+        tmpBuffer[i] = sample[int(playPoint)] * gain;
       }
-      // always update playPoint, even when not playing sound.
-      // it updates the UI of progress
       playPoint += playbackSpeed;
     }
     
@@ -157,12 +142,6 @@ void Looper::process(int nframes, Buffers* buffers)
     pitchShift( nframes, &tmpBuffer[0], out);
     
     float prog = (float(playPoint) / (fpb*numBeats));
-    
-    /*
-    if ( track == 0 )
-      cout << prog << "  playPoint " << playPoint << "  endPoint " << endPoint
-           << "  fpb*numBeats " << fpb * numBeats <<  endl;
-    */
     EventLooperProgress e(track, prog );
     writeToGuiRingbuffer( &e );
   }

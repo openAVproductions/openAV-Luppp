@@ -33,7 +33,6 @@ class ControllerUpdator
     
     void recordArm(int t, bool r)
     {
-      cout << "record() " << t << " " << r << endl;
       for(int i = 0; i < c.size(); i++)
         c.at(i)->recordArm(t,r);
     }
