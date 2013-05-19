@@ -12,10 +12,10 @@ using namespace std;
 
 // this is a wrapper class around a vector of Controller instances
 // Call the method on this class, and all controllers will be updated
-class ControllerUpdator
+class ControllerUpdater
 {
   public:
-    ControllerUpdator()
+    ControllerUpdater()
     {
       c.push_back( new AkaiAPC() );
     }

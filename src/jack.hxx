@@ -46,7 +46,7 @@ class Jack
     
     Metronome*   getMetronome(){return &metronome;}
     TimeManager* getTimeManager(){return &timeManager;}
-    ControllerUpdator* getControllerUpdator(){return &controllerUpdator;}
+    ControllerUpdater* getControllerUpdater(){return &controllerUpdater;}
     
     void writeApcOutput( unsigned char* data );
   
@@ -55,7 +55,7 @@ class Jack
     Metronome   metronome;
     TimeManager timeManager;
     
-    ControllerUpdator controllerUpdator;
+    ControllerUpdater controllerUpdater;
     
     vector<Looper*> loopers;
     

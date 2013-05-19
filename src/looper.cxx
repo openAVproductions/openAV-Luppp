@@ -86,36 +86,36 @@ void Looper::updateControllers()
   if (state == STATE_RECORD_QUEUED )
   {
     numBeats = 0;
-    jack->getControllerUpdator()->recordArm(track, true);
-    jack->getControllerUpdator()->clipSelect(track, currentClip, Controller::CLIP_MODE_RECORD_QUEUED);
+    jack->getControllerUpdater()->recordArm(track, true);
+    jack->getControllerUpdater()->clipSelect(track, currentClip, Controller::CLIP_MODE_RECORD_QUEUED);
   }
   else if (state == STATE_RECORDING )
   {
-    jack->getControllerUpdator()->recordArm(track, true);
-    jack->getControllerUpdator()->clipSelect(track, currentClip, Controller::CLIP_MODE_RECORDING);
+    jack->getControllerUpdater()->recordArm(track, true);
+    jack->getControllerUpdater()->clipSelect(track, currentClip, Controller::CLIP_MODE_RECORDING);
   }
   else
   {
-    jack->getControllerUpdator()->recordArm(track, false);
+    jack->getControllerUpdater()->recordArm(track, false);
   }
   
   if (state == STATE_PLAY_QUEUED )
   {
-    jack->getControllerUpdator()->clipSelect(track, currentClip, Controller::CLIP_MODE_PLAY_QUEUED);
+    jack->getControllerUpdater()->clipSelect(track, currentClip, Controller::CLIP_MODE_PLAY_QUEUED);
   }
   
   if ( state == STATE_PLAYING )
   {
-    jack->getControllerUpdator()->clipSelect(track, currentClip, Controller::CLIP_MODE_PLAYING);
+    jack->getControllerUpdater()->clipSelect(track, currentClip, Controller::CLIP_MODE_PLAYING);
   }
   
   if (state == STATE_STOP_QUEUED )
   {
-    jack->getControllerUpdator()->clipSelect(track, currentClip, Controller::CLIP_MODE_LOADED);
+    jack->getControllerUpdater()->clipSelect(track, currentClip, Controller::CLIP_MODE_LOADED);
   }
   else if ( state == STATE_STOPPED )
   {
-    jack->getControllerUpdator()->clipSelect(track, currentClip, Controller::CLIP_MODE_LOADED);
+    jack->getControllerUpdater()->clipSelect(track, currentClip, Controller::CLIP_MODE_LOADED);
   }
 }
 
