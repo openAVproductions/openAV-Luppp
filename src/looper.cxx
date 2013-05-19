@@ -20,6 +20,9 @@ Looper::Looper(int t) :
       playPoint  (0),
       lastWrittenSampleIndex(0)
 {
+  // pre-zero the internal sample
+  memset( &sample[0], 0, SAMPLE_SIZE );
+  
   // init faust pitch shift variables
   fSamplingFreq = 44100;
   IOTA = 0;
@@ -48,7 +51,7 @@ void Looper::midi(unsigned char* data)
     {
       case 48: setState( STATE_RECORD_QUEUED );     break;
       case 53: setState( STATE_PLAY_QUEUED );       break;
-      case 52: setState( STATE_STOPPED );           break;
+      case 52: setState( STATE_STOP_QUEUED );       break;
     }
   }
   else if ( data[0] - 128 == track )
@@ -62,7 +65,7 @@ void Looper::midi(unsigned char* data)
   {
     switch ( data[1] )
     {
-      case 7: gain = int(data[2])/127.f; break;
+      case  7: gain = int(data[2])/127.f; break;
     }
   }
   
@@ -111,7 +114,7 @@ void Looper::updateControllers()
   
   if (state == STATE_STOP_QUEUED )
   {
-    jack->getControllerUpdater()->clipSelect(track, currentClip, Controller::CLIP_MODE_LOADED);
+    jack->getControllerUpdater()->clipSelect(track, currentClip, Controller::CLIP_MODE_STOP_QUEUED);
   }
   else if ( state == STATE_STOPPED )
   {
@@ -193,7 +196,7 @@ void Looper::bar()
     endPoint = 0;
     lastWrittenSampleIndex = 0;
   }
-  if ( state == STATE_PLAY_QUEUED )
+  if ( state == STATE_STOP_QUEUED )
   {
     EventGuiPrint e( "Looper Q->Stopped" );
     writeToGuiRingbuffer( &e );

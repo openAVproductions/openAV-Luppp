@@ -15,12 +15,13 @@ class Controller
     */
     
     enum ClipMode {
+      CLIP_MODE_EMPTY,
       CLIP_MODE_PLAYING,
       CLIP_MODE_PLAY_QUEUED,
       CLIP_MODE_LOADED,
+      CLIP_MODE_STOP_QUEUED,
       CLIP_MODE_RECORDING,
       CLIP_MODE_RECORD_QUEUED,
-      CLIP_MODE_EMPTY,
     };
     
     Controller(){};

@@ -8,6 +8,8 @@
 #include "buffers.hxx"
 #include "observer/observer.hxx"
 
+#define SAMPLE_SIZE 44100*60
+
 using namespace std;
 
 class Looper : public Observer // for notifications
@@ -50,7 +52,7 @@ class Looper : public Observer // for notifications
     
     int endPoint, lastWrittenSampleIndex;
     float playPoint;
-    float sample[44100*60];
+    float sample[SAMPLE_SIZE];
     
     // Pitch Shifting
     void pitchShift(int count, float* input, float* output);

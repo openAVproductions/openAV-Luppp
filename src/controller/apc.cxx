@@ -31,8 +31,9 @@ void AkaiAPC::clipSelect(int t, int clip, ClipMode cm)
     case CLIP_MODE_PLAYING:       data[2] = 1; break;
     case CLIP_MODE_PLAY_QUEUED:   data[2] = 2; break;
     case CLIP_MODE_RECORDING:     data[2] = 3; break;
-    // case flashing red light?:  data[2] = 4; break;
+    case CLIP_MODE_RECORD_QUEUED: data[2] = 4; break;
     case CLIP_MODE_LOADED:        data[2] = 5; break;
+    case CLIP_MODE_STOP_QUEUED:   data[2] = 6; break;
   }
   
   jack->writeApcOutput( &data[0] );
