@@ -87,6 +87,12 @@ void Looper::updateControllers()
   {
     numBeats = 0;
     jack->getControllerUpdator()->recordArm(track, true);
+    jack->getControllerUpdator()->clipSelect(track, currentClip, Controller::CLIP_MODE_RECORD_QUEUED);
+  }
+  else if (state == STATE_RECORDING )
+  {
+    jack->getControllerUpdator()->recordArm(track, true);
+    jack->getControllerUpdator()->clipSelect(track, currentClip, Controller::CLIP_MODE_RECORDING);
   }
   else
   {
@@ -95,20 +101,21 @@ void Looper::updateControllers()
   
   if (state == STATE_PLAY_QUEUED )
   {
-    jack->getControllerUpdator()->clipSelect(track, 0, Controller::CLIP_MODE_PLAY_QUEUED);
+    jack->getControllerUpdator()->clipSelect(track, currentClip, Controller::CLIP_MODE_PLAY_QUEUED);
   }
-  else if ( state == STATE_PLAYING )
+  
+  if ( state == STATE_PLAYING )
   {
-    jack->getControllerUpdator()->clipSelect(track, 0, Controller::CLIP_MODE_PLAYING);
+    jack->getControllerUpdator()->clipSelect(track, currentClip, Controller::CLIP_MODE_PLAYING);
   }
   
   if (state == STATE_STOP_QUEUED )
   {
-    jack->getControllerUpdator()->clipSelect(track, 0, Controller::CLIP_MODE_LOADED);
+    jack->getControllerUpdator()->clipSelect(track, currentClip, Controller::CLIP_MODE_LOADED);
   }
   else if ( state == STATE_STOPPED )
   {
-    jack->getControllerUpdator()->clipSelect(track, 0, Controller::CLIP_MODE_LOADED);
+    jack->getControllerUpdator()->clipSelect(track, currentClip, Controller::CLIP_MODE_LOADED);
   }
 }
 
@@ -139,11 +146,11 @@ void Looper::process(int nframes, Buffers* buffers)
     {
       if ( playPoint < endPoint )
       {
-        tmpBuffer[i] = sample[playPoint] * gain;
+        tmpBuffer[i] = sample[int(playPoint)];// * gain;
       }
       // always update playPoint, even when not playing sound.
       // it updates the UI of progress
-      playPoint++;
+      playPoint += playbackSpeed;
     }
     
     // now pitch-shift the audio in the buffer
@@ -218,7 +225,7 @@ void Looper::bar()
   
   if ( barTmpState != state )
   {
-    jack->getControllerUpdator()->recordArm( track, state == STATE_RECORDING ? 1 : 0 );
+    updateControllers();
   }
 }
 
