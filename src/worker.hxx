@@ -17,7 +17,7 @@ namespace Worker
   {
     SndfileHandle infile( path, SFM_READ );
     
-    
+    cout << "Worker: loadSample() TODO: fix memory leak using Shared()" << endl;
     AudioBuffer* ab = new AudioBuffer();
     
     std::vector<float> buf( infile.frames(), 0.f );

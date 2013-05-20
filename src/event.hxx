@@ -16,7 +16,6 @@
 namespace Event
 {
   enum {
-    LOAD_SAMPLE = 0,
     PLAY_SAMPLE,
     MASTER_VOL,
     RECORD,
@@ -100,15 +99,18 @@ class EventLooperLoopLength : public EventBase
 class EventLooperLoad : public EventBase
 {
   public:
-    int type() { return int(LOAD_SAMPLE); }
+    int type() { return int(LOOPER_LOAD); }
     uint32_t size() { return sizeof(EventLooperLoad); }
     
     int track;
     int clip;
-    AudioBuffer* audioBuffer;
+    void* audioBuffer;
     
     EventLooperLoad(){}
-    EventLooperLoad(int t, int c, AudioBuffer* ab) : track(t), clip(c), audioBuffer(ab) {}
+    EventLooperLoad(int t, int c, void* ab) : track(t), clip(c), audioBuffer(ab)
+    {
+      cout << "ab ptr = " << audioBuffer << endl;
+    }
 };
 
 class EventPlaySample : public EventBase

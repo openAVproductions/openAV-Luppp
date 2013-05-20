@@ -3,6 +3,7 @@
 #include "looper.hxx"
 
 #include "jack.hxx"
+#include "audiobuffer.hxx"
 #include "eventhandler.hxx"
 #include "controllerupdater.hxx"
 
@@ -122,15 +123,29 @@ void Looper::updateControllers()
   }
 }
 
-void Looper::setSample(int c, int nB, int bS, float* bP)
+void Looper::setSample(int c, AudioBuffer* ab)
 {
-  if ( bS > SAMPLE_SIZE )
+  vector<float>& buf = ab->get();
+  if ( buf.size() > SAMPLE_SIZE )
   {
-    EventGuiPrint e( "Looper setSample() size > incoming sample" );
+    EventGuiPrint e( "Looper setSample() ERROR size > incoming sample" );
     writeToGuiRingbuffer( &e );
   }
-  numBeats = nB;
-  memcpy( &sample[0], bP, bS ); // copy sample data to pre-allocated buffer
+  else
+  {
+    numBeats = ab->getBeats();
+    float* s = &sample[0];
+    float* b = &buf[0];
+    for (int i = 0; i < buf.size(); i++)
+    {
+      *s++ = *b++;
+    }
+    
+    endPoint = buf.size();
+    lastWrittenSampleIndex = buf.size();
+    
+    //memcpy( &sample[0], &buf[0], buf.size() ); // copy sample data to pre-allocated buffer
+  }
 }
 
 void Looper::process(int nframes, Buffers* buffers)

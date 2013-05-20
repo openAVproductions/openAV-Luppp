@@ -77,9 +77,10 @@ static void gtrack_button_callback(Fl_Widget *w, void *data) {
   else if ( strcmp( w->label() , "Load" ) == 0 )
   {
     AudioBuffer* ab = Worker::loadSample( choose_file() );
-    
     EventLooperLoad e = EventLooperLoad( track, 0 , ab );
+    cout << "writing event ab ptr = " << ab  << endl;
     writeToDspRingbuffer( &e );
+    cout << "writing event done" << endl;
   }
   else if ( strcmp( w->label() , "Vol" ) == 0 )
   {

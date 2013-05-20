@@ -10,6 +10,8 @@
 
 #define SAMPLE_SIZE 44100*60
 
+class AudioBuffer;
+
 using namespace std;
 
 class Looper : public Observer // for notifications
@@ -26,7 +28,7 @@ class Looper : public Observer // for notifications
     
     Looper(int t);
     
-    void setSample(int c, int nB, int bS, float* bP);
+    void setSample(int c, AudioBuffer* ab);
     
     void midi(unsigned char* data);
     
