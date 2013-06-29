@@ -110,7 +110,10 @@ int Jack::process (jack_nframes_t nframes)
   {
     jack_midi_event_get(&in_event, buffers.midi[Buffers::MASTER_MIDI_INPUT], masterMidiInputIndex);
     
-    cout  << "Frame: "  << in_event.time << " " << int(in_event.buffer[0])  << " " << int(in_event.buffer[1])  << " " << int(in_event.buffer[2]) << endl;
+    char buffer [50];
+    sprintf (buffer, "MIDI %i %i %i", int(in_event.buffer[0]), int(in_event.buffer[1]), int(in_event.buffer[2]) );
+    EventGuiPrint e( buffer );
+    writeToGuiRingbuffer( &e );
     
     // check each looper for MIDI match
     for(int i = 0; i < loopers.size(); i++)
