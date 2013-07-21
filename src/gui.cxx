@@ -45,7 +45,7 @@ Gui::Gui() :
     tracks.push_back( new GTrack(8 + i * 118, 40, 110, 650, s.str().c_str() ) );
   }
   
-  master = new GMasterTrack(9 + i * 118, 40, 150, 250, "Master");
+  master = new GMasterTrack(9 + i * 118, 40, 150, 650, "Master");
   
   
   /*

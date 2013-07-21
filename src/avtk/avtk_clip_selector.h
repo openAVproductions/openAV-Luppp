@@ -82,7 +82,7 @@ class ClipSelector : public Fl_Button
           else if ( false ) // loaded: orange
             cairo_set_source_rgba(cr, 1.0, 0.48,   0, 0.4);
           else // empty: grey
-            cairo_set_source_rgba(cr, 0.11, 0.11, 0.11, 0.8);
+            cairo_set_source_rgba(cr, 66 / 255.f,  66 / 255.f ,  66 / 255.f, 0.4);
           
           cairo_fill_preserve(cr);
           
@@ -95,7 +95,7 @@ class ClipSelector : public Fl_Button
           
           float alpha = 0.7;
           if (mouseOver) { alpha = 1; }
-          cairo_set_source_rgba(cr, 1.0, 0.48,   0, alpha);
+          cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, alpha);
           cairo_set_line_width( cr, 1.4);
           cairo_stroke(cr);
           
