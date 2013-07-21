@@ -63,10 +63,10 @@ class Background : public Fl_Widget
         
         // fill background
         cairo_rectangle( cr, x, y, w, h);
-        cairo_set_source_rgba( cr, 66 / 255.f,  66 / 255.f ,  66 / 255.f , 1 );
+        cairo_set_source_rgba( cr, 28 / 255.f,  28 / 255.f ,  28 / 255.f , 1 );
         cairo_fill( cr );
         
-        
+        /*
         // set up dashed lines, 1 px off, 1 px on
         double dashes[1];
         dashes[0] = 2.0;
@@ -84,7 +84,7 @@ class Background : public Fl_Widget
         cairo_set_source_rgba( cr,  28 / 255.f,  28 / 255.f ,  28 / 255.f , 0.5 );
         cairo_stroke(cr);
         cairo_set_dash ( cr, dashes, 0, 0.0);
-        
+        */
         
         // draw header
           // backing
@@ -106,7 +106,7 @@ class Background : public Fl_Widget
         
         // stroke rim
         cairo_rectangle(cr, x, y, w, h);
-        cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 1 );
+        cairo_set_source_rgba( cr, 66 / 255.f, 66 / 255.f , 66 / 255.f , 1 );
         cairo_stroke( cr );
         
         

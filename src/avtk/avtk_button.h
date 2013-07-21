@@ -62,7 +62,7 @@ class Button : public Fl_Button
         cairo_set_source_rgb( cr,28 / 255.f,  28 / 255.f ,  28 / 255.f  );
         cairo_fill_preserve(cr);
         
-        cairo_set_line_width(cr, 1.5);
+        cairo_set_line_width(cr, 1.3);
         cairo_rectangle( cr, x+1, y+1, w-2, h-2 );
         
         if ( highlight )
@@ -71,10 +71,12 @@ class Button : public Fl_Button
           cairo_fill_preserve(cr);
         }
         
-        float alpha = 0.7;
+        float alpha = 0.6;
         if (mouseOver)
           alpha = 1;
         cairo_set_source_rgba(cr, 1.0, 0.48,   0, alpha);
+        if ( highlight )
+          cairo_set_line_width(cr, 2.2);
         cairo_stroke(cr);
         
         cairo_restore( cr );

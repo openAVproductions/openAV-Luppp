@@ -100,21 +100,21 @@ class GTrack : public Fl_Group
       title( strdup(l) ),
       bg( x, y , w, h, title ),
       
-      button1(x + 5, y + 24, 100, 18,"Rec"),
-      button2(x + 5, y + 44, 100, 18,"Play"),
-      button3(x + 5, y + 64, 100, 18,"Stop"),
-      button4(x + 5, y + 84,  48, 18,"-"),
-      button5(x +57, y + 84,  48, 18,"+"),
+      button1(x + 5, y + 324, 100, 18,"Rec"),
+      button2(x + 5, y + 344, 100, 18,"Play"),
+      button3(x + 5, y + 364, 100, 18,"Stop"),
+      button4(x + 5, y + 384,  48, 18,"-"),
+      button5(x +57, y + 384,  48, 18,"+"),
       
-      button6(x + 5, y +104, 100, 18,"Load"),
+      button6(x + 5, y + 404, 100, 18,"Load"),
       
-      volume(x+55-22, y +175, 34, 34, "Vol"),
+      volume(x+55-22, y +490, 34, 34, "Vol"),
       
-      dial1(x+15, y +135, 24, 24, "A"),
-      dial2(x+45, y +135, 24, 24, "B"),
-      dial3(x+75, y +135, 24, 24, "C"),
+      dial1(x+15, y +455, 24, 24, "A"),
+      dial2(x+45, y +455, 24, 24, "B"),
+      dial3(x+75, y +455, 24, 24, "C"),
       
-      progress(x+5, y+3, 100, 15, "prog")
+      progress(x+5, y+428, 100, 18, "")
     {
       ID = privateID++;
       
@@ -129,6 +129,23 @@ class GTrack : public Fl_Group
       
       progress.maximum(1.0f);
       progress.minimum(0.0f);
+      progress.color( fl_color_cube(0.2 * (FL_NUM_RED - 1) / 255,
+                                     0.2 * (FL_NUM_GREEN - 1) / 255,
+                                     0.2 * (FL_NUM_BLUE - 1) / 255) );
+      progress.selection_color( FL_BLUE );
+      /*
+00366   Fl_Color color() const {return color_;}
+00367 
+00378   void color(Fl_Color bg) {color_ = bg;}
+00379 
+00384   Fl_Color selection_color() const {return color2_;}
+00385 
+00394   void selection_color(Fl_Color a) {color2_ = a;}
+00395 
+00403   void color(Fl_Color bg, Fl_Color sel) {color_=bg; color2_=sel;}
+00404 
+      */
+      
       
       end(); // close the group
     }
