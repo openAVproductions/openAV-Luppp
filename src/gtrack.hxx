@@ -13,6 +13,7 @@
 #include "avtk/avtk_dial.h"
 #include "avtk/avtk_button.h"
 #include "avtk/avtk_background.h"
+#include "avtk/avtk_clip_selector.h"
 
 
 #include "worker.hxx"
@@ -100,6 +101,8 @@ class GTrack : public Fl_Group
       title( strdup(l) ),
       bg( x, y , w, h, title ),
       
+      clipSel(x + 5, y + 26, 100, 278,"Clips"),
+      
       button1(x + 5, y + 324, 100, 18,"Rec"),
       button2(x + 5, y + 344, 100, 18,"Play"),
       button3(x + 5, y + 364, 100, 18,"Stop"),
@@ -129,9 +132,7 @@ class GTrack : public Fl_Group
       
       progress.maximum(1.0f);
       progress.minimum(0.0f);
-      progress.color( fl_color_cube(0.2 * (FL_NUM_RED - 1) / 255,
-                                     0.2 * (FL_NUM_GREEN - 1) / 255,
-                                     0.2 * (FL_NUM_BLUE - 1) / 255) );
+      progress.color( FL_BLACK );
       progress.selection_color( FL_BLUE );
       /*
 00366   Fl_Color color() const {return color_;}
@@ -161,12 +162,15 @@ class GTrack : public Fl_Group
     
     Avtk::Background bg;
     
+    Avtk::ClipSelector clipSel;
+    
     Avtk::Button button1;
     Avtk::Button button2;
     Avtk::Button button3;
     Avtk::Button button4;
     Avtk::Button button5;
     Avtk::Button button6;
+    
     
     Avtk::Dial   volume;
     
