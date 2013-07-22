@@ -44,6 +44,7 @@ class ClipState
     ClipState()
     {
       state = CLIP_EMPTY;
+      name = "CLIP";
     }
     ClipState(std::string n)
     {
@@ -74,10 +75,11 @@ class ClipSelector : public Fl_Button
       mouseOver = false;
       
       clips[0].state = ClipState::CLIP_EMPTY;
-      clips[1].state = ClipState::CLIP_QUEUED;
-      clips[2].state = ClipState::CLIP_PLAYING;
-      clips[3].state = ClipState::CLIP_RECORDING;
-      clips[4].state = ClipState::CLIP_STOPPING;
+      clips[1].state = ClipState::CLIP_LOADED;
+      clips[2].state = ClipState::CLIP_QUEUED;
+      clips[3].state = ClipState::CLIP_PLAYING;
+      clips[4].state = ClipState::CLIP_RECORDING;
+      clips[5].state = ClipState::CLIP_STOPPING;
     }
     
     static const int numClips = 10;
@@ -119,25 +121,34 @@ class ClipSelector : public Fl_Button
           switch( clips[i].state )
           {
             case ClipState::CLIP_EMPTY:
-                cairo_set_source_rgba(cr, 66 / 255.f,  66 / 255.f ,  66 / 255.f, 0.4);
+                cairo_set_source_rgba(cr, 66 / 255.f,  66 / 255.f ,  66 / 255.f, 1.f);
+                cairo_fill(cr);
                 break;
             case ClipState::CLIP_LOADED:
-                cairo_set_source_rgba(cr, 1.0, 0.48,   0, 0.5);
+                cairo_set_source_rgba(cr, 1.0, 0.6,   0, 1.f);
+                cairo_fill(cr);
                 break;
             case ClipState::CLIP_QUEUED:
                 cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 1 );
+                cairo_fill(cr);
                 break;
             case ClipState::CLIP_PLAYING:
                 cairo_set_source_rgba(cr, 0.0, 1.0,   0, 1.f );
+                cairo_fill(cr);
                 break;
             case ClipState::CLIP_RECORDING:
                 cairo_set_source_rgba(cr, 1.f,  0 / 255.f ,  0 / 255.f, 1.f);
+                cairo_fill(cr);
                 break;
             case ClipState::CLIP_STOPPING:
-                cairo_set_source_rgba(cr, 0 / 255.f,  0 / 255.f ,  0 / 255.f, 0.4);
+                cairo_set_source_rgba(cr, 0 / 255.f,  0 / 255.f ,  0 / 255.f, 1.0);
+                cairo_fill(cr);
                 break;
           }
-          cairo_fill(cr);
+          
+          
+          
+          
           
           cairo_rectangle( cr, x+1, drawY, clipWidth, clipHeight - 2 );
           
@@ -157,6 +168,12 @@ class ClipSelector : public Fl_Button
           cairo_move_to( cr, x+clipHeight-1, drawY );
           cairo_line_to( cr, x+clipHeight-1, drawY + clipHeight - 2);
           cairo_stroke(cr);
+          
+          // clip name
+          cairo_move_to( cr, x+clipHeight-1+ 10, drawY + 15 );
+          cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 1 );
+          cairo_set_font_size( cr, 10 );
+          cairo_show_text( cr, label );
           
           drawY += clipHeight + 2;
         }
