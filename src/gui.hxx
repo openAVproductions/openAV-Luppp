@@ -10,6 +10,7 @@
 
 #include "config.hxx"
 #include "gtrack.hxx"
+#include "gunittrack.hxx"
 #include "gmastertrack.hxx"
 
 #include <vector>
@@ -28,6 +29,7 @@ class Gui
     Fl_Box*             box;
     
     GMasterTrack*       master;
+    GUnitTrack*         unit;
     
     vector<GTrack*>     tracks;
 };

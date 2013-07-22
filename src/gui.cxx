@@ -32,13 +32,13 @@ static void gui_static_read_rb(void* inst)
 }
 
 Gui::Gui() :
-    window(1200,750)
+    window(1272,750)
 {
   window.color(FL_BLACK);
   window.label("Luppp 5");
   //window.callback( close_cb, 0 );
   
-  Avtk::Image* headerImage = new Avtk::Image(0,0,1200,36,"header.png");
+  Avtk::Image* headerImage = new Avtk::Image(0,0,1272,36,"header.png");
   headerImage->setPixbuf( header.pixel_data, 4 );
   
   int i = 0;
@@ -49,7 +49,9 @@ Gui::Gui() :
     tracks.push_back( new GTrack(8 + i * 118, 40, 110, 650, s.str().c_str() ) );
   }
   
-  master = new GMasterTrack(9 + i * 118, 40, 150, 650, "Master");
+  master = new GMasterTrack(8 + i * 118, 40, 150, 650, "Master");
+  
+  unit = new GUnitTrack(9 + i * 118  + 158, 40, 150, 650, "Units");
   
   
   /*

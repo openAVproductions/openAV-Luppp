@@ -44,7 +44,7 @@ class ClipState
     ClipState()
     {
       state = CLIP_EMPTY;
-      name = "CLIP";
+      name = "Clip";
     }
     ClipState(std::string n)
     {
