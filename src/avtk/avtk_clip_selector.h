@@ -31,9 +31,18 @@ namespace Avtk
 class ClipSelector : public Fl_Button
 {
   public:
+    enum State {
+      CLIP_EMPTY = 0,
+      CLIP_LOADED,
+      CLIP_QUEUED,
+      CLIP_PLAYING,
+      CLIP_RECORDING,
+      CLIP_STOPPING,
+    };
+    
+    
     ClipSelector(int _x, int _y, int _w, int _h, const char *_label):
-        Fl_Button(_x, _y, _w, _h, _label),
-        numClips(10)
+        Fl_Button(_x, _y, _w, _h, _label)
     {
       x = _x;
       y = _y;
@@ -44,9 +53,17 @@ class ClipSelector : public Fl_Button
       
       highlight = false;
       mouseOver = false;
+      
+      clipState[0] = CLIP_EMPTY;
+      clipState[1] = CLIP_QUEUED;
+      clipState[2] = CLIP_PLAYING;
+      clipState[3] = CLIP_RECORDING;
+      clipState[4] = CLIP_STOPPING;
+      
     }
     
-    const int numClips;
+    static const int numClips = 10;
+    State clipState[numClips];
     
     bool mouseOver;
     bool highlight;
@@ -77,26 +94,50 @@ class ClipSelector : public Fl_Button
         for( int i = 0; i < numClips; i++) // draw each clip
         {
           cairo_rectangle( cr, x+1, drawY, clipWidth, clipHeight - 2 );
-          if ( false )// playing: green
-            cairo_set_source_rgba(cr, 1.0, 0.48,   0, 0.4);
-          else if ( false ) // loaded: orange
-            cairo_set_source_rgba(cr, 1.0, 0.48,   0, 0.4);
-          else // empty: grey
-            cairo_set_source_rgba(cr, 66 / 255.f,  66 / 255.f ,  66 / 255.f, 0.4);
+          cairo_set_source_rgba(cr, 66 / 255.f,  66 / 255.f ,  66 / 255.f, 0.4);
+          cairo_fill(cr);
           
-          cairo_fill_preserve(cr);
+          cairo_rectangle( cr, x+1, drawY, clipHeight - 2, clipHeight - 2 );
+          switch( clipState[i] )
+          {
+            case CLIP_EMPTY:
+                cairo_set_source_rgba(cr, 66 / 255.f,  66 / 255.f ,  66 / 255.f, 0.4);
+                break;
+            case CLIP_LOADED:
+                cairo_set_source_rgba(cr, 1.0, 0.48,   0, 0.5);
+                break;
+            case CLIP_QUEUED:
+                cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 1 );
+                break;
+            case CLIP_PLAYING:
+                cairo_set_source_rgba(cr, 0.0, 1.0,   0, 1.f );
+                break;
+            case CLIP_RECORDING:
+                cairo_set_source_rgba(cr, 1.f,  0 / 255.f ,  0 / 255.f, 1.f);
+                break;
+            case CLIP_STOPPING:
+                cairo_set_source_rgba(cr, 0 / 255.f,  0 / 255.f ,  0 / 255.f, 0.4);
+                break;
+          }
+          cairo_fill(cr);
           
+          cairo_rectangle( cr, x+1, drawY, clipWidth, clipHeight - 2 );
+          
+          /*
           //cairo_set_source_rgb( cr,28 / 255.f,  28 / 255.f ,  28 / 255.f  );
           if ( highlight )
           {
             cairo_set_source_rgba(cr, 1.0, 0.48,   0, 0.4);
             cairo_fill_preserve(cr);
           }
+          */
           
           float alpha = 0.7;
           if (mouseOver) { alpha = 1; }
           cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, alpha);
           cairo_set_line_width( cr, 1.4);
+          cairo_move_to( cr, x+clipHeight-1, drawY );
+          cairo_line_to( cr, x+clipHeight-1, drawY + clipHeight - 2);
           cairo_stroke(cr);
           
           drawY += clipHeight + 2;
