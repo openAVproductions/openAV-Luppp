@@ -25,10 +25,12 @@
 
 #include <FL/Fl_Button.H>
 
+#include <string>
+
 namespace Avtk
 {
 
-class ClipSelector : public Fl_Button
+class ClipState
 {
   public:
     enum State {
@@ -39,6 +41,23 @@ class ClipSelector : public Fl_Button
       CLIP_RECORDING,
       CLIP_STOPPING,
     };
+    ClipState()
+    {
+      state = CLIP_EMPTY;
+    }
+    ClipState(std::string n)
+    {
+      state = CLIP_EMPTY;
+      name = n;
+    }
+  
+    State state;
+    std::string name;
+};
+
+class ClipSelector : public Fl_Button
+{
+  public:
     
     
     ClipSelector(int _x, int _y, int _w, int _h, const char *_label):
@@ -54,16 +73,15 @@ class ClipSelector : public Fl_Button
       highlight = false;
       mouseOver = false;
       
-      clipState[0] = CLIP_EMPTY;
-      clipState[1] = CLIP_QUEUED;
-      clipState[2] = CLIP_PLAYING;
-      clipState[3] = CLIP_RECORDING;
-      clipState[4] = CLIP_STOPPING;
-      
+      clips[0].state = ClipState::CLIP_EMPTY;
+      clips[1].state = ClipState::CLIP_QUEUED;
+      clips[2].state = ClipState::CLIP_PLAYING;
+      clips[3].state = ClipState::CLIP_RECORDING;
+      clips[4].state = ClipState::CLIP_STOPPING;
     }
     
     static const int numClips = 10;
-    State clipState[numClips];
+    ClipState clips[numClips];
     
     bool mouseOver;
     bool highlight;
@@ -98,24 +116,24 @@ class ClipSelector : public Fl_Button
           cairo_fill(cr);
           
           cairo_rectangle( cr, x+1, drawY, clipHeight - 2, clipHeight - 2 );
-          switch( clipState[i] )
+          switch( clips[i].state )
           {
-            case CLIP_EMPTY:
+            case ClipState::CLIP_EMPTY:
                 cairo_set_source_rgba(cr, 66 / 255.f,  66 / 255.f ,  66 / 255.f, 0.4);
                 break;
-            case CLIP_LOADED:
+            case ClipState::CLIP_LOADED:
                 cairo_set_source_rgba(cr, 1.0, 0.48,   0, 0.5);
                 break;
-            case CLIP_QUEUED:
+            case ClipState::CLIP_QUEUED:
                 cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 1 );
                 break;
-            case CLIP_PLAYING:
+            case ClipState::CLIP_PLAYING:
                 cairo_set_source_rgba(cr, 0.0, 1.0,   0, 1.f );
                 break;
-            case CLIP_RECORDING:
+            case ClipState::CLIP_RECORDING:
                 cairo_set_source_rgba(cr, 1.f,  0 / 255.f ,  0 / 255.f, 1.f);
                 break;
-            case CLIP_STOPPING:
+            case ClipState::CLIP_STOPPING:
                 cairo_set_source_rgba(cr, 0 / 255.f,  0 / 255.f ,  0 / 255.f, 0.4);
                 break;
           }
