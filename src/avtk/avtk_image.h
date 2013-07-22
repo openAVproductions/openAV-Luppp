@@ -29,6 +29,8 @@
 #include <iostream>
 #include <stdio.h>
 
+#include <FL/fl_draw.H>
+
 using namespace std;
 
 namespace Avtk
@@ -47,53 +49,27 @@ class Image : public Fl_Widget
       
       label = _label;
       
-      imageSurf = 0;
-      
-      if ( _label )
-      {
-        //cout << "creating image from label" << endl;
-        imageSurf = cairo_image_surface_create_from_png( label );
-      }
+      bits = -1;
+      imageDataPtr = 0;
+    }
+    
+    void setPixbuf(const unsigned char* data, int b )
+    {
+      bits = b;
+      imageDataPtr = data;
     }
     
     int x, y, w, h;
     const char* label;
     
-    cairo_surface_t*  imageSurf;
+    int bits;
+    const unsigned char* imageDataPtr;
     
     void draw()
     {
-      if (damage() & FL_DAMAGE_ALL)
+      if ( damage() & FL_DAMAGE_ALL && imageDataPtr != 0 )
       {
-        cairo_t *cr = Fl::cairo_cc();
-        
-        //cairo_save(cr);
-        
-        if ( imageSurf == 0 )
-        {
-          // draw X
-          cairo_move_to( cr,  x    , y     );
-          cairo_line_to( cr,  x + w, y + h );
-          cairo_move_to( cr,  x    , y + h );
-          cairo_line_to( cr,  x + w, y     );
-          cairo_set_source_rgb ( cr, 0.2,0.2,0.2);
-          cairo_stroke(cr);
-          
-          // draw text
-          cairo_move_to( cr,  x + (w/2.f) - 65, y + (h/2.f) + 10 );
-          cairo_set_source_rgb ( cr, 0.6,0.6,0.6);
-          cairo_set_font_size( cr, 20 );
-          cairo_show_text( cr, "Image not loaded" );
-          
-          return;
-        }
-        
-        // draw the image to the context
-        cairo_set_source_surface(cr, imageSurf, x, y);
-        //cairo_rectangle( cr, x, y, w, h );
-        cairo_paint(cr);
-        
-        //cairo_restore(cr);
+        fl_draw_image((const uchar*)imageDataPtr, x, y, w, h, bits, w*bits);
       }
     }
     

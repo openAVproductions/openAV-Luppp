@@ -6,6 +6,10 @@
 
 #include "audiobuffer.hxx"
 
+// include the header.c file in the planning dir:
+// its the GIMP .c export of the LUPPP header image 
+#include "../planning/header.c"
+
 // Hack, move to gtrack.cpp
 int GTrack::privateID = 0;
 int GMasterTrack::privateID = 0;
@@ -34,8 +38,8 @@ Gui::Gui() :
   window.label("Luppp 5");
   //window.callback( close_cb, 0 );
   
-  Avtk::Image* header = new Avtk::Image(0,0,1200,36,"header.png");
-  
+  Avtk::Image* headerImage = new Avtk::Image(0,0,1200,36,"header.png");
+  headerImage->setPixbuf( header.pixel_data, 4 );
   
   int i = 0;
   for (; i < NTRACKS; i++ )
