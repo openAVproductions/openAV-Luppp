@@ -11,6 +11,7 @@
 #include <FL/Fl_Native_File_Chooser.H>
 
 #include "avtk/avtk_dial.h"
+#include "avtk/avtk_volume.h"
 #include "avtk/avtk_button.h"
 #include "avtk/avtk_background.h"
 #include "avtk/avtk_clip_selector.h"
@@ -111,11 +112,11 @@ class GTrack : public Fl_Group
       
       button6(x + 5, y + 404, 100, 18,"Load"),
       
-      volume(x+55-22, y +490, 34, 34, "Vol"),
+      volume(x+68, y +495, 36, 150, "Vol"),
       
-      dial1(x+15, y +455, 24, 24, "A"),
-      dial2(x+45, y +455, 24, 24, "B"),
-      dial3(x+75, y +455, 24, 24, "C"),
+      dial1(x+15, y +452, 24, 24, "REV"),
+      dial2(x+45, y +452, 24, 24, "SC"),
+      dial3(x+75, y +452, 24, 24, "POST"),
       
       progress(x+5, y+428, 100, 18, "")
     {
@@ -130,23 +131,12 @@ class GTrack : public Fl_Group
       
       volume.callback( gtrack_button_callback, 0 );
       
+      volume.amplitude( 0.75, 0.5 );
+      
       progress.maximum(1.0f);
       progress.minimum(0.0f);
       progress.color( FL_BLACK );
       progress.selection_color( FL_BLUE );
-      /*
-00366   Fl_Color color() const {return color_;}
-00367 
-00378   void color(Fl_Color bg) {color_ = bg;}
-00379 
-00384   Fl_Color selection_color() const {return color2_;}
-00385 
-00394   void selection_color(Fl_Color a) {color2_ = a;}
-00395 
-00403   void color(Fl_Color bg, Fl_Color sel) {color_=bg; color2_=sel;}
-00404 
-      */
-      
       
       end(); // close the group
     }
@@ -172,7 +162,7 @@ class GTrack : public Fl_Group
     Avtk::Button button6;
     
     
-    Avtk::Dial   volume;
+    Avtk::Volume volume;
     
     Avtk::Dial   dial1;
     Avtk::Dial   dial2;

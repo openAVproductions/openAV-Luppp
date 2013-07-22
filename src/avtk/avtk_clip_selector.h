@@ -104,7 +104,7 @@ class ClipSelector : public Fl_Button
         
         cairo_restore( cr );
         
-        draw_label();
+        //draw_label();
       }
     }
     
