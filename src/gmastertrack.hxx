@@ -11,6 +11,7 @@
 #include "avtk/avtk_dial.h"
 #include "avtk/avtk_button.h"
 #include "avtk/avtk_background.h"
+#include "avtk/avtk_clip_selector.h"
 
 
 #include "eventhandler.hxx"
@@ -58,7 +59,10 @@ class GMasterTrack : public Fl_Group
       title( strdup(l) ),
       bg( x, y , w, h, title ),
       
-      tapTempo(x + 25 + 22, y + 75, 44, 44,"Tap"),
+      clipSel(x + 5, y + 26, 140, 279,""),
+      
+      
+      tapTempo(x + 25 + 22, y + 475, 44, 44,"Tap"),
       /*
       button2(x + 5, y + 44, 100, 18,"Play"),
       button3(x + 5, y + 64, 100, 18,"Stop"),
@@ -66,17 +70,20 @@ class GMasterTrack : public Fl_Group
       button5(x +57, y + 84,  48, 18,"+"),
       button6(x + 5, y +104, 18, 18,"6"),
       */
-      metronomeButton(x + 5,y + 24,140,30,"Metro"),
+      metronomeButton(x + 5,y + 424,140,30,"Metro"),
       
-      dial1(x+25-22, y +75, 44, 44, "BPM")
+      dial1(x+25-22, y +475, 44, 44, "BPM"),
       /*
       dial2(x+45, y +155, 24, 24, "B"),
       dial3(x+75, y +155, 24, 24, "C")
       */
+      volume(x+108, y +495, 36, 150, "Vol")
     {
       ID = privateID++;
       
       tapTempo.callback( gmastertrack_button_callback, &ID );
+      
+      volume.amplitude( 0.75, 0.8 );
       
       /*
       button2.callback( gmastertrack_button_callback, &ID );
@@ -104,6 +111,8 @@ class GMasterTrack : public Fl_Group
     
     Avtk::Background bg;
     
+    Avtk::ClipSelector clipSel;
+    
     Avtk::Button tapTempo;
     /*
     Avtk::Button button2;
@@ -119,6 +128,8 @@ class GMasterTrack : public Fl_Group
     Avtk::Dial dial2;
     Avtk::Dial dial3;
     */
+    
+    Avtk::Volume volume;
     
     static int privateID;
 };
