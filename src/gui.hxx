@@ -26,7 +26,7 @@ class Gui
     GTrack* getTrack(int id);
     
     // for pushing strings to tooltip area
-    static void show_tooltip( const char* );
+    void setTooltip( std::string s );
   
   private:
     Fl_Double_Window    window;
@@ -37,7 +37,8 @@ class Gui
     
     vector<GTrack*>     tracks;
     
-    static Fl_Box*      tooltipLabel;
+    std::string         tooltip;
+    Fl_Box*             tooltipLabel;
 };
 
 #endif // LUPPP_GUI

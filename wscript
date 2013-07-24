@@ -22,6 +22,7 @@ def build(bld):
   sources = ['src/gui.cxx',
              'src/main.cxx',
              'src/jack.cxx',
+             'src/gtrack.cxx',
              'src/looper.cxx',
              'src/controller/apc.cxx',
              'src/eventhandlergui.cxx',
