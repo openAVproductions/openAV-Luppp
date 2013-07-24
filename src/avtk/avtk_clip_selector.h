@@ -231,11 +231,21 @@ class ClipSelector : public Fl_Button
           return 1;
         case FL_PUSH:
           highlight = 1;
+          {
+            // calculate the clicked clip number
+            int clipHeight = (h / numClips);
+            int clipNum = ( (Fl::event_y() ) - y ) / clipHeight;
+            if (clipNum >= numClips)
+              clipNum = numClips -1; // fix for clicking the lowest pixel
+            printf("clip number %i\n" , clipNum);
+          }
           do_callback();
           return 1;
-        case FL_DRAG: {
+        case FL_DRAG:
+          {
             int t = Fl::event_inside(this);
-            if (t != highlight) {
+            if (t != highlight)
+            {
               highlight = t;
               redraw();
             }

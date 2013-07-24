@@ -56,33 +56,40 @@ class GTrack : public Fl_Group
       title( strdup(l) ),
       bg( x, y , w, h, title ),
       
-      clipSel(x + 5, y + 26 + 26, 100, 294,""),
+      clipSel(x + 5, y + 26 + 102, 100, 294,""),
       
-      button1(x + 5, y + 324 + 26, 100, 18,"Rec"),
-      button2(x + 5, y + 344 + 26, 100, 18,"Play"),
-      button3(x + 5, y + 364 + 26, 100, 18,"Stop"),
-      button4(x + 5, y + 384 + 26,  48, 18,"-"),
-      button5(x +57, y + 384 + 26,  48, 18,"+"),
+      volBox(x+5, y+522+2, 100, 250, ""),
       
-      button6(x + 5, y + 404 + 26, 100, 18,"Load"),
+      /*
+      button1(x + 5, y + 324 + 102, 100, 18,"Rec"),
+      button2(x + 5, y + 344 + 102, 100, 18,"Play"),
+      button3(x + 5, y + 364 + 102, 100, 18,"Stop"),
+      button4(x + 5, y + 384 + 102,  48, 18,"-"),
+      button5(x +57, y + 384 + 102,  48, 18,"+"),
+      button6(x + 5, y + 404 + 102, 100, 18,"Load"),
+      */
       
-      volume(x+68, y +495 + 26, 36, 150, "Vol"),
+      volume(x+68, y +530, 36, 150, "Vol"),
       
-      dial1(x+15, y +452 + 26, 24, 24, "REV"),
-      dial2(x+45, y +452 + 26, 24, 24, "SC"),
-      dial3(x+75, y +452 + 26, 24, 24, "POST"),
+      dial1(x+25, y +452 + 102, 24, 24, "REV"),
+      dial2(x+25, y +452 + 152, 24, 24, "SC"),
+      dial3(x+25, y +452 + 202, 24, 24, "POST"),
       
-      progress(x+5, y+428 + 26, 100, 18, "")
+      progress(x+5, y+ 26, 100, 100, "Source UI"),
+      
+      //unit(x+5, y+200+26, 100, 100, "Unit"),
+      
+      fx(x+5, y+ 422, 100, 100, "FX")
     {
       ID = privateID++;
-      
+      /*
       button1.callback( gtrack_button_callback, &ID );
       button2.callback( gtrack_button_callback, &ID );
       button3.callback( gtrack_button_callback, &ID );
       button4.callback( gtrack_button_callback, &ID );
       button5.callback( gtrack_button_callback, &ID );
       button6.callback( gtrack_button_callback, &ID );
-      
+      */
       volume.callback( gtrack_button_callback, 0 );
       
       volume.amplitude( 0.75, 0.5 );
@@ -92,6 +99,22 @@ class GTrack : public Fl_Group
       progress.color( FL_BLACK );
       progress.selection_color( FL_BLUE );
       
+      fx.maximum(1.0f);
+      fx.minimum(0.0f);
+      fx.color( FL_BLACK );
+      fx.selection_color( FL_BLUE );
+      
+      
+      volBox.maximum(1.0f);
+      volBox.minimum(0.0f);
+      volBox.color( FL_BLACK );
+      volBox.selection_color( FL_BLUE );
+      /*
+      unit.maximum(1.0f);
+      unit.minimum(0.0f);
+      unit.color( FL_BLACK );
+      unit.selection_color( FL_BLUE );
+      */
       end(); // close the group
     }
     
@@ -108,13 +131,15 @@ class GTrack : public Fl_Group
     
     Avtk::ClipSelector clipSel;
     
+    Fl_Progress  volBox;
+    /*
     Avtk::Button button1;
     Avtk::Button button2;
     Avtk::Button button3;
     Avtk::Button button4;
     Avtk::Button button5;
     Avtk::Button button6;
-    
+    */
     
     Avtk::Volume volume;
     
@@ -123,6 +148,9 @@ class GTrack : public Fl_Group
     Avtk::Dial   dial3;
     
     Fl_Progress  progress;
+    //Fl_Progress       unit;
+    Fl_Progress       fx;
+    
     
     static int privateID;
 };
