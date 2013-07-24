@@ -69,7 +69,7 @@ class GTrack : public Fl_Group
       button6(x + 5, y + 404 + 102, 100, 18,"Load"),
       */
       
-      volume(x+68, y +530, 36, 150, "Vol"),
+      volume(x+66, y +526, 36, 160, "Vol"),
       
       dial1(x+25, y +452 + 102, 24, 24, "REV"),
       dial2(x+25, y +452 + 152, 24, 24, "SC"),

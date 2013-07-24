@@ -73,13 +73,6 @@ class ClipSelector : public Fl_Button
       
       highlight = false;
       mouseOver = false;
-      
-      clips[0].state = ClipState::CLIP_EMPTY;
-      clips[1].state = ClipState::CLIP_LOADED;
-      clips[2].state = ClipState::CLIP_QUEUED;
-      clips[3].state = ClipState::CLIP_PLAYING;
-      clips[4].state = ClipState::CLIP_RECORDING;
-      clips[5].state = ClipState::CLIP_STOPPING;
     }
     
     static const int numClips = 10;
@@ -238,7 +231,40 @@ class ClipSelector : public Fl_Button
             if (clipNum >= numClips)
               clipNum = numClips -1; // fix for clicking the lowest pixel
             printf("clip number %i\n" , clipNum);
+            
+            
+            // handle right clicks: popup menu
+            if ( Fl::event_state(FL_BUTTON3) )
+            {
+              
+            }
+            
+            switch( clips[clipNum].state )
+            {
+              case ClipState::CLIP_EMPTY:
+                  clips[clipNum].state = ClipState::CLIP_RECORDING;
+                  break;
+              case ClipState::CLIP_LOADED:
+                    clips[clipNum].state = ClipState::CLIP_QUEUED;
+                  break;
+              case ClipState::CLIP_QUEUED:
+                  clips[clipNum].state = ClipState::CLIP_PLAYING;
+                  break;
+              case ClipState::CLIP_PLAYING:
+                  clips[clipNum].state = ClipState::CLIP_STOPPING;
+                  break;
+              case ClipState::CLIP_RECORDING:
+                  clips[clipNum].state = ClipState::CLIP_STOPPING;
+                  break;
+              case ClipState::CLIP_STOPPING:
+                  clips[clipNum].state = ClipState::CLIP_PLAYING;
+                  break;
+              default:
+                  printf("Avtk::ClipSelector, warning: unknown clip type\n");
+              
+            }
           }
+          redraw();
           do_callback();
           return 1;
         case FL_DRAG:
