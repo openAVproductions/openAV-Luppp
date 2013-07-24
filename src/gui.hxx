@@ -14,6 +14,7 @@
 #include "gmastertrack.hxx"
 
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -23,6 +24,9 @@ class Gui
     Gui();
     int show();
     GTrack* getTrack(int id);
+    
+    // for pushing strings to tooltip area
+    void setTooltip( std::string s );
   
   private:
     Fl_Double_Window    window;
@@ -32,6 +36,9 @@ class Gui
     GUnitTrack*         unit;
     
     vector<GTrack*>     tracks;
+    
+    std::string         tooltip;
+    Fl_Box*             tooltipLabel;
 };
 
 #endif // LUPPP_GUI

@@ -17,6 +17,7 @@
 #include "avtk/avtk_clip_selector.h"
 
 
+#include "config.hxx"
 #include "worker.hxx"
 #include "audiobuffer.hxx"
 #include "eventhandler.hxx"
@@ -45,54 +46,7 @@ static string choose_file()
   return path;
 }
 
-static void gtrack_button_callback(Fl_Widget *w, void *data) {
-  int track = 0;
-  if ( data )
-    track = *(int*)data;
-  //cout << "Button " << *(int*)data << " " << w->label() << " clicked" << endl;
-  
-  if ( strcmp( w->label() , "Rec" ) == 0 )
-  {
-    EventLooperState e = EventLooperState(track,Looper::STATE_RECORD_QUEUED);
-    writeToDspRingbuffer( &e );
-  }
-  else if ( strcmp( w->label() , "Play" ) == 0 )
-  {
-    EventLooperState e = EventLooperState(track,Looper::STATE_PLAY_QUEUED);
-    writeToDspRingbuffer( &e );
-  }
-  else if ( strcmp( w->label() , "Stop" ) == 0 )
-  {
-    EventLooperState e = EventLooperState(track,Looper::STATE_STOP_QUEUED);
-    writeToDspRingbuffer( &e );
-  }
-  else if ( strcmp( w->label() , "+" ) == 0 )
-  {
-    EventLooperLoopLength e = EventLooperLoopLength(track, 2);
-    writeToDspRingbuffer( &e );
-  }
-  else if ( strcmp( w->label() , "-" ) == 0 )
-  {
-    EventLooperLoopLength e = EventLooperLoopLength(track, 0.5);
-    writeToDspRingbuffer( &e );
-  }
-  else if ( strcmp( w->label() , "Load" ) == 0 )
-  {
-    AudioBuffer* ab = Worker::loadSample( choose_file() );
-    EventLooperLoad e = EventLooperLoad( track, 0 , ab );
-    cout << "writing event ab ptr = " << ab  << endl;
-    writeToDspRingbuffer( &e );
-    cout << "writing event done" << endl;
-  }
-  else if ( strcmp( w->label() , "Vol" ) == 0 )
-  {
-    
-  }
-  else
-  {
-    cout << __FILE__ << __LINE__ << " Error: unknown command string" << endl;
-  }
-}
+extern void gtrack_button_callback(Fl_Widget *w, void *data);
 
 class GTrack : public Fl_Group
 {
@@ -102,23 +56,23 @@ class GTrack : public Fl_Group
       title( strdup(l) ),
       bg( x, y , w, h, title ),
       
-      clipSel(x + 5, y + 26, 100, 294,"Clip"),
+      clipSel(x + 5, y + 26 + 26, 100, 294,""),
       
-      button1(x + 5, y + 324, 100, 18,"Rec"),
-      button2(x + 5, y + 344, 100, 18,"Play"),
-      button3(x + 5, y + 364, 100, 18,"Stop"),
-      button4(x + 5, y + 384,  48, 18,"-"),
-      button5(x +57, y + 384,  48, 18,"+"),
+      button1(x + 5, y + 324 + 26, 100, 18,"Rec"),
+      button2(x + 5, y + 344 + 26, 100, 18,"Play"),
+      button3(x + 5, y + 364 + 26, 100, 18,"Stop"),
+      button4(x + 5, y + 384 + 26,  48, 18,"-"),
+      button5(x +57, y + 384 + 26,  48, 18,"+"),
       
-      button6(x + 5, y + 404, 100, 18,"Load"),
+      button6(x + 5, y + 404 + 26, 100, 18,"Load"),
       
-      volume(x+68, y +495, 36, 150, "Vol"),
+      volume(x+68, y +495 + 26, 36, 150, "Vol"),
       
-      dial1(x+15, y +452, 24, 24, "REV"),
-      dial2(x+45, y +452, 24, 24, "SC"),
-      dial3(x+75, y +452, 24, 24, "POST"),
+      dial1(x+15, y +452 + 26, 24, 24, "REV"),
+      dial2(x+45, y +452 + 26, 24, 24, "SC"),
+      dial3(x+75, y +452 + 26, 24, 24, "POST"),
       
-      progress(x+5, y+428, 100, 18, "")
+      progress(x+5, y+428 + 26, 100, 18, "")
     {
       ID = privateID++;
       

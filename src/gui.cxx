@@ -17,6 +17,20 @@ int AudioBuffer::privateID = 0;
 
 using namespace std;
 
+extern Gui* gui;
+
+
+static void luppp_tooltip(std::string s)
+{
+  gui->setTooltip(s);
+}
+
+void Gui::setTooltip( std::string s )
+{
+  tooltip = s;
+  tooltipLabel->label( tooltip.c_str() );
+}
+
 void close_cb(Fl_Widget*o, void*) {
    if ((Fl::event() == FL_KEYDOWN || Fl::event() == FL_SHORTCUT)
      && Fl::event_key() == FL_Escape)
@@ -39,9 +53,10 @@ Gui::Gui() :
   //window.callback( close_cb, 0 );
   
   
-  
   Avtk::Image* headerImage = new Avtk::Image(0,0,1272,36,"header.png");
   headerImage->setPixbuf( header.pixel_data, 4 );
+  
+  Gui::tooltipLabel = new Fl_Box(100, 20, 200, 20, "tooltips go here");
   
   //window.resizable( headerImage );
   
@@ -57,13 +72,6 @@ Gui::Gui() :
   
   unit = new GUnitTrack(9 + i * 118  + 158, 40, 150, 700, "Units");
   
-  
-  /*
-  box = new Fl_Box(655, 5, 200, 60, "BPM = 120");
-  box->box(FL_UP_BOX);
-  box->labelsize(36);
-  box->labeltype(FL_SHADOW_LABEL);
-  */
   window.end();
 }
 
@@ -80,3 +88,4 @@ int Gui::show()
   
   return Fl::run();
 }
+
