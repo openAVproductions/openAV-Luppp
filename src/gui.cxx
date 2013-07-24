@@ -4,6 +4,8 @@
 
 #include <sstream>
 
+#include <FL/Fl_Tooltip.H>
+
 #include "audiobuffer.hxx"
 
 // include the header.c file in the planning dir:
@@ -11,11 +13,13 @@
 #include "../planning/header.c"
 
 // Hack, move to gtrack.cpp
+Fl_Box* Gui::tooltipLabel = 0;
 int GTrack::privateID = 0;
 int GMasterTrack::privateID = 0;
 int AudioBuffer::privateID = 0;
 
 using namespace std;
+
 
 void close_cb(Fl_Widget*o, void*) {
    if ((Fl::event() == FL_KEYDOWN || Fl::event() == FL_SHORTCUT)
@@ -34,14 +38,17 @@ static void gui_static_read_rb(void* inst)
 Gui::Gui() :
     window(1272,750)
 {
+  fl_show_tooltip = &Gui::show_tooltip;
+  
   window.color(FL_BLACK);
   window.label("Luppp 5");
   //window.callback( close_cb, 0 );
   
   
-  
   Avtk::Image* headerImage = new Avtk::Image(0,0,1272,36,"header.png");
   headerImage->setPixbuf( header.pixel_data, 4 );
+  
+  Gui::tooltipLabel = new Fl_Box(100, 20, 200, 20, "tooltips go here");
   
   //window.resizable( headerImage );
   
@@ -79,4 +86,9 @@ int Gui::show()
   gui_static_read_rb( this);
   
   return Fl::run();
+}
+
+void Gui::show_tooltip( const char* c )
+{
+  tooltipLabel->label( c );
 }

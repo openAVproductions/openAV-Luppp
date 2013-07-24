@@ -59,10 +59,10 @@ class GMasterTrack : public Fl_Group
       title( strdup(l) ),
       bg( x, y , w, h, title ),
       
-      clipSel(x + 5, y + 26, 140, 294,"Testing"),
+      clipSel(x + 5, y + 26 + 26, 140, 294,"Testing"),
       
       
-      tapTempo(x + 25 + 22, y + 475, 44, 44,"Tap"),
+      tapTempo(x + 25 + 22, y + 475 + 26, 44, 44,"Tap"),
       /*
       button2(x + 5, y + 44, 100, 18,"Play"),
       button3(x + 5, y + 64, 100, 18,"Stop"),
@@ -70,14 +70,14 @@ class GMasterTrack : public Fl_Group
       button5(x +57, y + 84,  48, 18,"+"),
       button6(x + 5, y +104, 18, 18,"6"),
       */
-      metronomeButton(x + 5,y + 424,140,30,"Metro"),
+      metronomeButton(x + 5,y + 424 + 26,140,30,"Metro"),
       
-      dial1(x+25-22, y +475, 44, 44, "BPM"),
+      dial1(x+25-22, y +475 + 26, 44, 44, "BPM"),
       /*
       dial2(x+45, y +155, 24, 24, "B"),
       dial3(x+75, y +155, 24, 24, "C")
       */
-      volume(x+108, y +495, 36, 150, "Vol")
+      volume(x+108, y +495 + 26, 36, 150, "Vol")
     {
       ID = privateID++;
       
