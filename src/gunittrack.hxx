@@ -64,7 +64,7 @@ class GUnitTrack : public Fl_Group
       unit[1] = new Avtk::Unit(x + 2, y + uh * 3 - 2, w - 6, h / 5 - 2,"2");
       unit[2] = new Avtk::Unit(x + 2, y + uh * 2 - 2, w - 6, h / 5 - 2,"3");
       unit[3] = new Avtk::Unit(x + 2, y + uh * 1 - 2, w - 6, h / 5 - 2,"4");
-      unit[4] = new Avtk::Unit(x + 2, y             , w - 6, h / 5 - 2,"5");
+      unit[4] = new Avtk::Unit(x + 2, y - 2         , w - 6, h / 5 - 2,"5");
       
       end(); // close the group
     }

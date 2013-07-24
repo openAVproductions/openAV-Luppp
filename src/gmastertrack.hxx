@@ -59,7 +59,7 @@ class GMasterTrack : public Fl_Group
       title( strdup(l) ),
       bg( x, y , w, h, title ),
       
-      clipSel(x + 5, y + 26, 140, 279,""),
+      clipSel(x + 5, y + 26, 140, 294,"Testing"),
       
       
       tapTempo(x + 25 + 22, y + 475, 44, 44,"Tap"),

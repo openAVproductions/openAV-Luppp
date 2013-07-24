@@ -113,11 +113,11 @@ class ClipSelector : public Fl_Button
         int drawY = y + 1;
         for( int i = 0; i < numClips; i++) // draw each clip
         {
-          cairo_rectangle( cr, x+1, drawY, clipWidth, clipHeight - 2 );
+          cairo_rectangle( cr, x+1, drawY, clipWidth, clipHeight - 4 );
           cairo_set_source_rgba(cr, 66 / 255.f,  66 / 255.f ,  66 / 255.f, 0.4);
           cairo_fill(cr);
           
-          cairo_rectangle( cr, x+1, drawY, clipHeight - 2, clipHeight - 2 );
+          cairo_rectangle( cr, x+1, drawY, clipHeight - 2, clipHeight - 4 );
           switch( clips[i].state )
           {
             case ClipState::CLIP_EMPTY:
@@ -198,7 +198,7 @@ class ClipSelector : public Fl_Button
           cairo_set_font_size( cr, 10 );
           cairo_show_text( cr, label );
           
-          drawY += clipHeight + 2;
+          drawY += clipHeight;
         }
         
         cairo_restore( cr );

@@ -38,20 +38,24 @@ Gui::Gui() :
   window.label("Luppp 5");
   //window.callback( close_cb, 0 );
   
+  
+  
   Avtk::Image* headerImage = new Avtk::Image(0,0,1272,36,"header.png");
   headerImage->setPixbuf( header.pixel_data, 4 );
+  
+  //window.resizable( headerImage );
   
   int i = 0;
   for (; i < NTRACKS; i++ )
   {
     stringstream s;
     s << "Track " << i+1;
-    tracks.push_back( new GTrack(8 + i * 118, 40, 110, 650, s.str().c_str() ) );
+    tracks.push_back( new GTrack(8 + i * 118, 40, 110, 700, s.str().c_str() ) );
   }
   
-  master = new GMasterTrack(8 + i * 118, 40, 150, 650, "Master");
+  master = new GMasterTrack(8 + i * 118, 40, 150, 700, "Master");
   
-  unit = new GUnitTrack(9 + i * 118  + 158, 40, 150, 650, "Units");
+  unit = new GUnitTrack(9 + i * 118  + 158, 40, 150, 700, "Units");
   
   
   /*

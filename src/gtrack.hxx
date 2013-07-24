@@ -102,7 +102,7 @@ class GTrack : public Fl_Group
       title( strdup(l) ),
       bg( x, y , w, h, title ),
       
-      clipSel(x + 5, y + 26, 100, 279,""),
+      clipSel(x + 5, y + 26, 100, 294,"Clip"),
       
       button1(x + 5, y + 324, 100, 18,"Rec"),
       button2(x + 5, y + 344, 100, 18,"Play"),
