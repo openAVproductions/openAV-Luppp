@@ -36,6 +36,8 @@
 #include "../eventhandler.hxx"
 
 
+extern void luppp_tooltip(std::string s);
+
 namespace Avtk
 {
 
@@ -383,6 +385,9 @@ class ClipSelector : public Fl_Button
           return 1;
         case FL_ENTER:
           mouseOver = true;
+          // push help string to UI tooltip area
+          luppp_tooltip( "Clip selector" );
+          
           redraw();
           return 1;
         case FL_LEAVE:

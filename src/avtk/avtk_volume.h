@@ -28,6 +28,8 @@
 #include <valarray>
 #include <string>
 
+extern void luppp_tooltip(std::string s);
+
 namespace Avtk
 {
   
@@ -205,6 +207,10 @@ class Volume : public Fl_Slider
               do_callback();
             }
           }
+          return 1;
+        case FL_ENTER:
+          // push help string to UI tooltip area
+          luppp_tooltip( "Volume" );
           return 1;
         case FL_RELEASE:
           if (highlight) {
