@@ -19,8 +19,6 @@
 using namespace std;
 
 static void gunittrack_button_callback(Fl_Widget *w, void *data) {
-  
-  
   int track = 0;
   if ( data )
    track = *(int*)data;

@@ -46,7 +46,7 @@ static void gui_static_read_rb(void* inst)
 }
 
 Gui::Gui() :
-    window(1110,750)
+    window(1110,650)
 {
   window.color(FL_BLACK);
   window.label("Luppp");
@@ -62,10 +62,10 @@ Gui::Gui() :
   {
     stringstream s;
     s << "Track " << i+1;
-    tracks.push_back( new GTrack(8 + i * 118, 40, 110, 700, s.str().c_str() ) );
+    tracks.push_back( new GTrack(8 + i * 118, 40, 110, 600, s.str().c_str() ) );
   }
   
-  master = new GMasterTrack(8 + i * 118, 40, 150, 700, "Master");
+  master = new GMasterTrack(8 + i * 118, 40, 150, 600, "Master");
   
   window.end();
 }

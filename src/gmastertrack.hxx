@@ -61,41 +61,33 @@ class GMasterTrack : public Fl_Group
       title( strdup(l) ),
       bg( x, y , w, h, title ),
       
-      clipSel(x + 5, y + 26 + 102, 140, 294,"Testing"),
+      clipSel(x + 5, y + 26 + 102, 140, 294,""),
       
-      volBox(x+5, y+522+2, 140, 172, ""),
+      volBox(x+5, y+422, 140, 172, ""),
       
-      source(x+5, y+26, 140, 100, "Audio IN"),
-      fxBox(x+5, y+ 421, 140, 100, ""),
+      source(x+5, y+26, 140, 100, ""),
       
-      tapTempo(x + 25 + 52, y + 450 + 26, 66, 30,"Tap"),
-      metronomeButton(x + 7,y + 450 + 26, 66, 30,"Metro"),
+      tapTempo(x + 25 + 52, y + 26 + 5, 63, 30,"Tap"),
+      metronomeButton(x + 10,y + 26 + 5, 63, 30,"Metro"),
       
-      dial1(x+54, y + 420, 44, 44, "BPM"),
-      
-      volume(x+108, y +530, 36, 150, "Vol")
+      volume(x+106, y +427, 36, 150, "Vol")
     {
       ID = privateID++;
       
       tapTempo.callback( gmastertrack_button_callback, &ID );
-      
-      volume.amplitude( 0.75, 0.8 );
+      metronomeButton.callback( gmastertrack_button_callback, 0 );
       
       volBox.maximum(1.0f);
       volBox.minimum(0.0f);
       volBox.color( FL_BLACK );
       volBox.selection_color( FL_BLUE );
-      fxBox.maximum(1.0f);
-      fxBox.minimum(0.0f);
-      fxBox.color( FL_BLACK );
-      fxBox.selection_color( FL_BLUE );
+      
       source.maximum(1.0f);
       source.minimum(0.0f);
       source.color( FL_BLACK );
       source.selection_color( FL_BLUE );
       
-      metronomeButton.callback( gmastertrack_button_callback, 0 );
-      dial1.callback( gmastertrack_button_callback, 0 );
+      volume.amplitude( 0.75, 0.8 );
       
       end(); // close the group
     }
@@ -117,12 +109,9 @@ class GMasterTrack : public Fl_Group
     
     Fl_Progress  source;
     Fl_Progress  volBox;
-    Fl_Progress  fxBox;
     
     Avtk::Button tapTempo;
     Avtk::LightButton metronomeButton;
-    
-    Avtk::Dial dial1;
     
     Avtk::Volume volume;
     
