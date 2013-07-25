@@ -96,6 +96,10 @@ int Jack::process (jack_nframes_t nframes)
   
   // pre-zero output buffers
   memset( buffers.audio[Buffers::MASTER_OUTPUT], 0, sizeof(float) * nframes );
+  
+  for(int i = 0; i < NTRACKS; i++)
+    memset( buffers.audio[Buffers::TRACK_0 + i], 0, sizeof(float) * nframes );
+  
   jack_midi_clear_buffer( buffers.midi[Buffers::APC_OUTPUT] );
   
   
@@ -125,8 +129,22 @@ int Jack::process (jack_nframes_t nframes)
     masterMidiInputIndex++;
   }
   
+  // process each track
   for(uint i = 0; i < loopers.size(); i++)
     loopers.at(i)->process( nframes, &buffers );
+  
+  // mixdown tracks into master output buffer
+  float* output = buffers.audio[Buffers::MASTER_OUTPUT];
+  for(int i = 0; i < nframes; i++)
+  {
+    float tmp = 0.f;
+    
+    for(int n = 0; n < NTRACKS; n++)
+    {
+      tmp += buffers.audio[Buffers::TRACK_0 + n][i];
+    }
+    *output++ = tmp;
+  }
   
   metronome.process( nframes, &buffers );
   
