@@ -148,7 +148,7 @@ void Jack::writeApcOutput( unsigned char* data )
   if( buf != 0 )
   {
     memcpy( buf, data, sizeof( unsigned char ) * 3);
-    cout << "writeApcOutput " << int(buf[0]) << ", " << int(buf[1]) << ", " << int(buf[2]) << endl; 
+    //cout << "writeApcOutput " << int(buf[0]) << ", " << int(buf[1]) << ", " << int(buf[2]) << endl;
   }
   else
   {

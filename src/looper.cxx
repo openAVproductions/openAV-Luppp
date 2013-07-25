@@ -255,7 +255,7 @@ void Looper::setLoopLength(float l)
     numBeats = 4;
   
   char buffer [50];
-  sprintf (buffer, "Looper loop lenght = %i", numBeats );
+  sprintf (buffer, "Looper %i loop lenght = %i", track, numBeats );
   EventGuiPrint e( buffer );
   writeToGuiRingbuffer( &e );
 }

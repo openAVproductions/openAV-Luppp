@@ -273,6 +273,10 @@ class ClipSelector : public Fl_Button
               {
                 case ClipState::CLIP_EMPTY:
                     clips[clipNum].state = ClipState::CLIP_RECORDING;
+                    {
+                    EventLooperState e = EventLooperState( 0, Looper::STATE_RECORD_QUEUED);
+                    writeToDspRingbuffer( &e );
+                    }
                     break;
                 case ClipState::CLIP_LOADED:
                     {
@@ -292,7 +296,7 @@ class ClipSelector : public Fl_Button
                     }
                     break;
                 case ClipState::CLIP_RECORDING:
-                    clips[clipNum].state = ClipState::CLIP_STOPPING;
+                    clips[clipNum].state = ClipState::CLIP_LOADED;
                     break;
                 case ClipState::CLIP_STOPPING:
                     clips[clipNum].state = ClipState::CLIP_PLAYING;
