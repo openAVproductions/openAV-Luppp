@@ -158,7 +158,7 @@ void Looper::process(int nframes, Buffers* buffers)
   float playbackSpeed = endPoint / ( float(numBeats) * fpb );
   semitoneShift = -( 12 * log ( playbackSpeed ) / log (2) );
   
-  if ( state == STATE_PLAYING )
+  if ( state == STATE_PLAYING || state == STATE_STOP_QUEUED )
   {
     for(int i = 0; i < nframes; i++)
     {
