@@ -36,8 +36,8 @@ int main()
   rbToGui = jack_ringbuffer_create( 5000 * sizeof(EventBase));
   
   
-  //jack = new Jack();
-  //jack->activate();
+  jack = new Jack();
+  jack->activate();
   
   gui = new Gui();
   gui->show();

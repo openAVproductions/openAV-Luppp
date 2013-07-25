@@ -12,6 +12,7 @@
 #include "avtk/avtk_dial.h"
 #include "avtk/avtk_button.h"
 #include "avtk/avtk_background.h"
+#include "avtk/avtk_light_button.h"
 #include "avtk/avtk_clip_selector.h"
 
 

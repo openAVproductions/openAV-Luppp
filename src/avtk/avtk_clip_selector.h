@@ -27,6 +27,8 @@
 
 #include <string>
 
+#include "../gclipselectoraction.hxx"
+
 namespace Avtk
 {
 
@@ -51,7 +53,7 @@ class ClipState
       state = CLIP_EMPTY;
       name = n;
     }
-  
+    
     State state;
     std::string name;
 };
@@ -249,7 +251,7 @@ class ClipSelector : public Fl_Button
               }
               else if ( strcmp(m->label(), "Load") == 0 )
               {
-                fl_choice("Loading...", "OK", NULL, NULL);
+                clipSelectorLoad( 0 );
                 clips[clipNum].state = ClipState::CLIP_LOADED;
               }
               else if ( strcmp(m->label(), "Duration") == 0 )

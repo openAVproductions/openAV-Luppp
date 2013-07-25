@@ -6,8 +6,6 @@
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Box.H>
 
-#include "avtk/avtk_light_button.h"
-
 #include "config.hxx"
 #include "gtrack.hxx"
 #include "gunittrack.hxx"
