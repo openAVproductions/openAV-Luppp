@@ -113,21 +113,6 @@ class EventLooperLoad : public EventBase
     }
 };
 
-class EventLooperPlay : public EventBase
-{
-  public:
-    int type() { return int(LOOPER_PLAY); }
-    uint32_t size() { return sizeof(EventLooperPlay); }
-    
-    int track, scene;
-    
-    EventLooperPlay(int t, int s)
-    {
-      track = t;
-      scene = s;
-    }
-};
-
 class EventMetronomeActive : public EventBase
 {
   public:

@@ -29,6 +29,12 @@
 
 #include "../gclipselectoraction.hxx"
 
+#include "../worker.hxx"
+#include "../looper.hxx"
+#include "../audiobuffer.hxx"
+#include "../eventhandler.hxx"
+
+
 namespace Avtk
 {
 
@@ -256,6 +262,7 @@ class ClipSelector : public Fl_Button
               }
               else if ( strcmp(m->label(), "Duration") == 0 )
               {
+                
                 //clips[clipNum].name = "title";
                 clips[clipNum].state = ClipState::CLIP_QUEUED;
               }
@@ -268,13 +275,21 @@ class ClipSelector : public Fl_Button
                     clips[clipNum].state = ClipState::CLIP_RECORDING;
                     break;
                 case ClipState::CLIP_LOADED:
-                      clips[clipNum].state = ClipState::CLIP_QUEUED;
+                    {
+                      EventLooperState e = EventLooperState( 0, Looper::STATE_PLAY_QUEUED);
+                      writeToDspRingbuffer( &e );
+                      clips[clipNum].state = ClipState::CLIP_PLAYING;
+                    }
                     break;
                 case ClipState::CLIP_QUEUED:
                     clips[clipNum].state = ClipState::CLIP_PLAYING;
                     break;
                 case ClipState::CLIP_PLAYING:
-                    clips[clipNum].state = ClipState::CLIP_STOPPING;
+                    {
+                      EventLooperState e = EventLooperState( 0, Looper::STATE_STOP_QUEUED);
+                      writeToDspRingbuffer( &e );
+                      clips[clipNum].state = ClipState::CLIP_LOADED;
+                    }
                     break;
                 case ClipState::CLIP_RECORDING:
                     clips[clipNum].state = ClipState::CLIP_STOPPING;

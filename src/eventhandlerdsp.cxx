@@ -45,12 +45,7 @@ void handleDspEvents()
             Looper* l = jack->getLooper( ev.track );
             //assert(l);
             l->setSample( ev.clip, (AudioBuffer*)ev.audioBuffer );
-          } break; }
-        case Event::LOOPER_PLAY: {
-          if ( availableRead >= sizeof(EventLooperPlay) ) {
-            EventLooperPlay ev(0,0);
-            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventLooperPlay) );
-            //jack->setPlayBuffer( ev.track, ev.bufferID );
+            //jack->setLooperState( ev.track, ev.state );
           } break; }
         case Event::METRONOME_ACTIVE: {
           if ( availableRead >= sizeof(EventMetronomeActive) ) {

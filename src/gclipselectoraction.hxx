@@ -4,9 +4,9 @@
 
 #include "config.hxx"
 #include "worker.hxx"
+#include "looper.hxx"
 #include "audiobuffer.hxx"
 #include "eventhandler.hxx"
-
 
 static string choose_file()
 {
@@ -32,15 +32,15 @@ static string choose_file()
 
 static void clipSelectorLoad(int track)
 {
-    AudioBuffer* ab = Worker::loadSample( choose_file() );
-    EventLooperLoad e = EventLooperLoad( track, 0, ab );
-    writeToDspRingbuffer( &e );
+  AudioBuffer* ab = Worker::loadSample( choose_file() );
+  EventLooperLoad e = EventLooperLoad( track, 0, ab );
+  writeToDspRingbuffer( &e );
 }
 
 static void clipSelectorPlay(int track, int scene)
 {
-    EventLooperPlay e = EventLooperPlay( track, scene );
-    writeToDspRingbuffer( &e );
+  EventLooperState e = EventLooperState(track, Looper::STATE_PLAY_QUEUED);
+  writeToDspRingbuffer( &e );
 }
 
 #endif // LUPPP_G_CLIP_SELECTOR_ACTION_H
