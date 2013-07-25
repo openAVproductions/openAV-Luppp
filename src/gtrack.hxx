@@ -29,6 +29,9 @@ extern void gtrack_button_callback(Fl_Widget *w, void *data);
 class GTrack : public Fl_Group
 {
   public:
+    
+    Avtk::ClipSelector* getClipSelector(){return &clipSel;}
+    
     GTrack(int x, int y, int w, int h, const char* l = 0 ) :
       Fl_Group(x, y, w, h),
       title( strdup(l) ),

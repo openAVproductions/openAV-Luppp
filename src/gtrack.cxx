@@ -13,21 +13,21 @@ void gtrack_button_callback(Fl_Widget *w, void *data)
   
   if ( strcmp( w->label() , "Rec" ) == 0 )
   {
-    EventLooperState e = EventLooperState(track,Looper::STATE_RECORD_QUEUED);
+    EventLooperState e = EventLooperState(track,0,Looper::STATE_RECORD_QUEUED);
     writeToDspRingbuffer( &e );
     //w->tooltip( "Rec Clicked" );
     gui->setTooltip("Rec clicked");
   }
   else if ( strcmp( w->label() , "Play" ) == 0 )
   {
-    EventLooperState e = EventLooperState(track,Looper::STATE_PLAY_QUEUED);
+    EventLooperState e = EventLooperState(track,0,Looper::STATE_PLAY_QUEUED);
     writeToDspRingbuffer( &e );
     //w->tooltip( "Play clicked" );
     gui->setTooltip("Play clicked");
   }
   else if ( strcmp( w->label() , "Stop" ) == 0 )
   {
-    EventLooperState e = EventLooperState(track,Looper::STATE_STOP_QUEUED);
+    EventLooperState e = EventLooperState(track,0,Looper::STATE_STOP_QUEUED);
     writeToDspRingbuffer( &e );
   }
   else if ( strcmp( w->label() , "+" ) == 0 )

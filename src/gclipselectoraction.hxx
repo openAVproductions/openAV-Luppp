@@ -37,11 +37,5 @@ static void clipSelectorLoad(int track)
   writeToDspRingbuffer( &e );
 }
 
-static void clipSelectorPlay(int track, int scene)
-{
-  EventLooperState e = EventLooperState(track, Looper::STATE_PLAY_QUEUED);
-  writeToDspRingbuffer( &e );
-}
-
 #endif // LUPPP_G_CLIP_SELECTOR_ACTION_H
 

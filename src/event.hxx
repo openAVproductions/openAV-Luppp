@@ -67,9 +67,10 @@ class EventLooperState : public EventBase
     uint32_t size() { return sizeof(EventLooperState); }
     
     int track;
+    int scene;
     Looper::State state;
     EventLooperState(){}
-    EventLooperState(int t, Looper::State s) : track(t), state(s){}
+    EventLooperState(int t, int sc, Looper::State s) : track(t), scene(sc), state(s){}
 };
 
 class EventLooperProgress : public EventBase

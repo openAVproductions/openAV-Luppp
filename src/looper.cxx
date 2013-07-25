@@ -211,11 +211,20 @@ void Looper::bar()
     state = STATE_PLAYING;
     playPoint = 0;
     endPoint = lastWrittenSampleIndex;
+    
+    
+    int scene = 0;
+    EventLooperState e2( track, scene, STATE_PLAYING );
+    writeToGuiRingbuffer( &e2 );
   }
   if ( state == STATE_RECORD_QUEUED )
   {
     EventGuiPrint e( "Looper Q->Recording" );
     writeToGuiRingbuffer( &e );
+    
+    int scene = 0;
+    EventLooperState e2( track, scene, STATE_RECORDING );
+    writeToGuiRingbuffer( &e2 );
     
     state = STATE_RECORDING;
     playPoint = 0;
@@ -226,6 +235,10 @@ void Looper::bar()
   {
     EventGuiPrint e( "Looper Q->Stopped" );
     writeToGuiRingbuffer( &e );
+    
+    int scene = 0;
+    EventLooperState e2( track, scene, STATE_STOPPED );
+    writeToGuiRingbuffer( &e2 );
     
     state = STATE_STOPPED;
     endPoint = lastWrittenSampleIndex;

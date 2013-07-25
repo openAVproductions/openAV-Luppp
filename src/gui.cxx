@@ -56,7 +56,7 @@ Gui::Gui() :
   Avtk::Image* headerImage = new Avtk::Image(0,0,1272,36,"header.png");
   headerImage->setPixbuf( header.pixel_data, 4 );
   
-  tooltipLabel = new Fl_Box(100, 20, 200, 20, "tooltips go here");
+  //tooltipLabel = new Fl_Box(100, 20, 200, 20, "tooltips go here");
   
   //window.resizable( headerImage );
   

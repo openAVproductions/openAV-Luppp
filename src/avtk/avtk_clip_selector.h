@@ -27,6 +27,7 @@
 
 #include <string>
 
+#include "../looper.hxx"
 #include "../gclipselectoraction.hxx"
 
 #include "../worker.hxx"
@@ -81,6 +82,37 @@ class ClipSelector : public Fl_Button
       
       highlight = false;
       mouseOver = false;
+    }
+    
+    void setState( int clipNum, Looper::State s )
+    {
+      switch(s)
+      {
+        case Looper::STATE_PLAYING:
+            clips[clipNum].state = ClipState::CLIP_PLAYING;
+            break;
+        case Looper::STATE_PLAY_QUEUED:
+            clips[clipNum].state = ClipState::CLIP_QUEUED;
+            break;
+        case Looper::STATE_RECORDING:
+            clips[clipNum].state = ClipState::CLIP_RECORDING;
+            break;
+        case Looper::STATE_RECORD_QUEUED:
+            clips[clipNum].state = ClipState::CLIP_QUEUED;
+            break;
+        case Looper::STATE_STOPPED:
+            clips[clipNum].state = ClipState::CLIP_LOADED;
+            break;
+        case Looper::STATE_STOP_QUEUED:
+            clips[clipNum].state = ClipState::CLIP_QUEUED;
+            break;
+      }
+      redraw();
+    }
+    void setState( int clipNum, ClipState::State s )
+    {
+      clips[clipNum].state = s;
+      redraw();
     }
     
     static const int numClips = 10;
@@ -290,7 +322,7 @@ class ClipSelector : public Fl_Button
               else if ( strcmp(m->label(), "Record") == 0 )
               {
                 clips[clipNum].state = ClipState::CLIP_RECORDING;
-                EventLooperState e = EventLooperState( 0, Looper::STATE_RECORD_QUEUED);
+                EventLooperState e = EventLooperState( 0, 0, Looper::STATE_RECORD_QUEUED);
                 writeToDspRingbuffer( &e );
               }
             }
@@ -301,32 +333,34 @@ class ClipSelector : public Fl_Button
                 case ClipState::CLIP_EMPTY:
                     clips[clipNum].state = ClipState::CLIP_RECORDING;
                     {
-                    EventLooperState e = EventLooperState( 0, Looper::STATE_RECORD_QUEUED);
+                    EventLooperState e = EventLooperState( 0, 0, Looper::STATE_RECORD_QUEUED);
                     writeToDspRingbuffer( &e );
                     }
                     break;
                 case ClipState::CLIP_LOADED:
                     {
-                      EventLooperState e = EventLooperState( 0, Looper::STATE_PLAY_QUEUED);
+                      EventLooperState e = EventLooperState( 0, 0, Looper::STATE_PLAY_QUEUED);
                       writeToDspRingbuffer( &e );
-                      clips[clipNum].state = ClipState::CLIP_PLAYING;
+                      clips[clipNum].state = ClipState::CLIP_QUEUED;
                     }
                     break;
                 case ClipState::CLIP_QUEUED:
-                    clips[clipNum].state = ClipState::CLIP_PLAYING;
+                    clips[clipNum].state = ClipState::CLIP_QUEUED;
                     break;
                 case ClipState::CLIP_PLAYING:
                     {
-                      EventLooperState e = EventLooperState( 0, Looper::STATE_STOP_QUEUED);
+                      EventLooperState e = EventLooperState( 0, 0, Looper::STATE_STOP_QUEUED);
                       writeToDspRingbuffer( &e );
-                      clips[clipNum].state = ClipState::CLIP_LOADED;
+                      clips[clipNum].state = ClipState::CLIP_QUEUED;
                     }
                     break;
-                case ClipState::CLIP_RECORDING:
-                    clips[clipNum].state = ClipState::CLIP_LOADED;
+                case ClipState::CLIP_RECORDING: {
+                    clips[clipNum].state = ClipState::CLIP_QUEUED;
+                    EventLooperState e = EventLooperState( 0, 0, Looper::STATE_STOP_QUEUED);
+                    writeToDspRingbuffer( &e ); }
                     break;
                 case ClipState::CLIP_STOPPING:
-                    clips[clipNum].state = ClipState::CLIP_PLAYING;
+                    clips[clipNum].state = ClipState::CLIP_QUEUED;
                     break;
                 default:
                     printf("Avtk::ClipSelector, warning: unknown clip type\n");
