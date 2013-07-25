@@ -7,6 +7,7 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Slider.H>
+#include <FL/Fl_Progress.H>
 
 #include "avtk/avtk_dial.h"
 #include "avtk/avtk_button.h"
@@ -61,22 +62,16 @@ class GMasterTrack : public Fl_Group
       
       clipSel(x + 5, y + 26 + 102, 140, 294,"Testing"),
       
+      volBox(x+5, y+522+2, 140, 172, ""),
       
-      tapTempo(x + 25 + 22, y + 475 + 26, 44, 44,"Tap"),
-      /*
-      button2(x + 5, y + 44, 100, 18,"Play"),
-      button3(x + 5, y + 64, 100, 18,"Stop"),
-      button4(x + 5, y + 84,  48, 18,"-"),
-      button5(x +57, y + 84,  48, 18,"+"),
-      button6(x + 5, y +104, 18, 18,"6"),
-      */
-      metronomeButton(x + 5,y + 424 + 26,140,30,"Metro"),
+      source(x+5, y+26, 140, 100, "Audio IN"),
+      fxBox(x+5, y+ 421, 140, 100, ""),
       
-      dial1(x+25-22, y +465 + 26, 44, 44, "BPM"),
-      /*
-      dial2(x+45, y +155, 24, 24, "B"),
-      dial3(x+75, y +155, 24, 24, "C")
-      */
+      tapTempo(x + 25 + 52, y + 450 + 26, 66, 30,"Tap"),
+      metronomeButton(x + 7,y + 450 + 26, 66, 30,"Metro"),
+      
+      dial1(x+54, y + 420, 44, 44, "BPM"),
+      
       volume(x+108, y +530, 36, 150, "Vol")
     {
       ID = privateID++;
@@ -85,13 +80,19 @@ class GMasterTrack : public Fl_Group
       
       volume.amplitude( 0.75, 0.8 );
       
-      /*
-      button2.callback( gmastertrack_button_callback, &ID );
-      button3.callback( gmastertrack_button_callback, &ID );
-      button4.callback( gmastertrack_button_callback, &ID );
-      button5.callback( gmastertrack_button_callback, &ID );
-      button6.callback( gmastertrack_button_callback, &ID );
-      */
+      volBox.maximum(1.0f);
+      volBox.minimum(0.0f);
+      volBox.color( FL_BLACK );
+      volBox.selection_color( FL_BLUE );
+      fxBox.maximum(1.0f);
+      fxBox.minimum(0.0f);
+      fxBox.color( FL_BLACK );
+      fxBox.selection_color( FL_BLUE );
+      source.maximum(1.0f);
+      source.minimum(0.0f);
+      source.color( FL_BLACK );
+      source.selection_color( FL_BLUE );
+      
       metronomeButton.callback( gmastertrack_button_callback, 0 );
       dial1.callback( gmastertrack_button_callback, 0 );
       
@@ -113,21 +114,14 @@ class GMasterTrack : public Fl_Group
     
     Avtk::ClipSelector clipSel;
     
+    Fl_Progress  source;
+    Fl_Progress  volBox;
+    Fl_Progress  fxBox;
+    
     Avtk::Button tapTempo;
-    /*
-    Avtk::Button button2;
-    Avtk::Button button3;
-    Avtk::Button button4;
-    Avtk::Button button5;
-    Avtk::Button button6;
-    */
     Avtk::LightButton metronomeButton;
     
     Avtk::Dial dial1;
-    /*
-    Avtk::Dial dial2;
-    Avtk::Dial dial3;
-    */
     
     Avtk::Volume volume;
     

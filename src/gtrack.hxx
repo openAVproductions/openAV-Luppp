@@ -58,7 +58,7 @@ class GTrack : public Fl_Group
       
       clipSel(x + 5, y + 26 + 102, 100, 294,""),
       
-      volBox(x+5, y+522+2, 100, 250, ""),
+      volBox(x+5, y+522+2, 100, 172, ""),
       
       /*
       button1(x + 5, y + 324 + 102, 100, 18,"Rec"),
@@ -69,17 +69,17 @@ class GTrack : public Fl_Group
       button6(x + 5, y + 404 + 102, 100, 18,"Load"),
       */
       
-      volume(x+66, y +526, 36, 160, "Vol"),
+      volume(x+66, y +527, 36, 150, "Vol"),
       
-      dial1(x+25, y +452 + 102, 24, 24, "REV"),
-      dial2(x+25, y +452 + 152, 24, 24, "SC"),
-      dial3(x+25, y +452 + 202, 24, 24, "POST"),
+      dial1(x+22, y +440 + 100, 30, 30, "Rev"),
+      dial2(x+22, y +440 + 150, 30, 30, "S-C"),
+      dial3(x+22, y +440 + 200, 30, 30, "P-S"),
       
       progress(x+5, y+ 26, 100, 100, "Source UI"),
       
       //unit(x+5, y+200+26, 100, 100, "Unit"),
       
-      fx(x+5, y+ 422, 100, 100, "FX")
+      fx(x+5, y+ 421, 100, 100, "FX")
     {
       ID = privateID++;
       /*

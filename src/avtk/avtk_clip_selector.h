@@ -44,7 +44,7 @@ class ClipState
     ClipState()
     {
       state = CLIP_EMPTY;
-      name = "Clip";
+      name = "";
     }
     ClipState(std::string n)
     {
@@ -189,7 +189,7 @@ class ClipSelector : public Fl_Button
           cairo_move_to( cr, x+clipHeight-1+ 10, drawY + 15 );
           cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 1 );
           cairo_set_font_size( cr, 10 );
-          cairo_show_text( cr, label );
+          cairo_show_text( cr, clips[i].name.c_str() );
           
           drawY += clipHeight;
         }
@@ -236,32 +236,54 @@ class ClipSelector : public Fl_Button
             // handle right clicks: popup menu
             if ( Fl::event_state(FL_BUTTON3) )
             {
-              
+              Fl_Menu_Item rclick_menu[] =
+              {
+                { "Load" },
+                { "Duration" },
+                { 0 }
+              };
+              Fl_Menu_Item *m = (Fl_Menu_Item*) rclick_menu->popup(Fl::event_x(), Fl::event_y(), 0, 0, 0);
+              if ( !m )
+              {
+                  return 0;
+              }
+              else if ( strcmp(m->label(), "Load") == 0 )
+              {
+                fl_choice("Loading...", "OK", NULL, NULL);
+                clips[clipNum].state = ClipState::CLIP_LOADED;
+              }
+              else if ( strcmp(m->label(), "Duration") == 0 )
+              {
+                //clips[clipNum].name = "title";
+                clips[clipNum].state = ClipState::CLIP_QUEUED;
+              }
             }
-            
-            switch( clips[clipNum].state )
+            else
             {
-              case ClipState::CLIP_EMPTY:
-                  clips[clipNum].state = ClipState::CLIP_RECORDING;
-                  break;
-              case ClipState::CLIP_LOADED:
-                    clips[clipNum].state = ClipState::CLIP_QUEUED;
-                  break;
-              case ClipState::CLIP_QUEUED:
-                  clips[clipNum].state = ClipState::CLIP_PLAYING;
-                  break;
-              case ClipState::CLIP_PLAYING:
-                  clips[clipNum].state = ClipState::CLIP_STOPPING;
-                  break;
-              case ClipState::CLIP_RECORDING:
-                  clips[clipNum].state = ClipState::CLIP_STOPPING;
-                  break;
-              case ClipState::CLIP_STOPPING:
-                  clips[clipNum].state = ClipState::CLIP_PLAYING;
-                  break;
-              default:
-                  printf("Avtk::ClipSelector, warning: unknown clip type\n");
-              
+              switch( clips[clipNum].state )
+              {
+                case ClipState::CLIP_EMPTY:
+                    clips[clipNum].state = ClipState::CLIP_RECORDING;
+                    break;
+                case ClipState::CLIP_LOADED:
+                      clips[clipNum].state = ClipState::CLIP_QUEUED;
+                    break;
+                case ClipState::CLIP_QUEUED:
+                    clips[clipNum].state = ClipState::CLIP_PLAYING;
+                    break;
+                case ClipState::CLIP_PLAYING:
+                    clips[clipNum].state = ClipState::CLIP_STOPPING;
+                    break;
+                case ClipState::CLIP_RECORDING:
+                    clips[clipNum].state = ClipState::CLIP_STOPPING;
+                    break;
+                case ClipState::CLIP_STOPPING:
+                    clips[clipNum].state = ClipState::CLIP_PLAYING;
+                    break;
+                default:
+                    printf("Avtk::ClipSelector, warning: unknown clip type\n");
+                
+              }
             }
           }
           redraw();
