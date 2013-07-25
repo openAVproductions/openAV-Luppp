@@ -248,7 +248,7 @@ void Looper::beat()
 
 void Looper::setLoopLength(float l)
 {
-  numBeats *= l;
+  numBeats = l * 4;
   
   // smallest loop = 4 beats
   if ( numBeats < 4 )

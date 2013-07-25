@@ -247,7 +247,15 @@ class ClipSelector : public Fl_Button
               Fl_Menu_Item rclick_menu[] =
               {
                 { "Load" },
-                { "Duration" },
+                { "Bars",  0,   0, 0, FL_SUBMENU },
+                  {"1"},
+                  {"2"},
+                  {"4"},
+                  {"8"},
+                  {"16"},
+                  {"32"},
+                  {0},
+                { "Record" },
                 { 0 }
               };
               Fl_Menu_Item *m = (Fl_Menu_Item*) rclick_menu->popup(Fl::event_x(), Fl::event_y(), 0, 0, 0);
@@ -260,11 +268,30 @@ class ClipSelector : public Fl_Button
                 clipSelectorLoad( 0 );
                 clips[clipNum].state = ClipState::CLIP_LOADED;
               }
-              else if ( strcmp(m->label(), "Duration") == 0 )
+              else if ( strcmp(m->label(), "1") == 0 ) {
+                EventLooperLoopLength e = EventLooperLoopLength(0, 1);
+                writeToDspRingbuffer( &e );
+              } else if ( strcmp(m->label(), "2") == 0 ) {
+                EventLooperLoopLength e = EventLooperLoopLength(0, 2);
+                writeToDspRingbuffer( &e );
+              } else if ( strcmp(m->label(), "4") == 0 ) {
+                EventLooperLoopLength e = EventLooperLoopLength(0, 4);
+                writeToDspRingbuffer( &e );
+              } else if ( strcmp(m->label(), "8") == 0 ) {
+                EventLooperLoopLength e = EventLooperLoopLength(0, 8);
+                writeToDspRingbuffer( &e );
+              } else if ( strcmp(m->label(), "16") == 0 ) {
+                EventLooperLoopLength e = EventLooperLoopLength(0, 16);
+                writeToDspRingbuffer( &e );
+              } else if ( strcmp(m->label(), "32") == 0 ) {
+                EventLooperLoopLength e = EventLooperLoopLength(0, 32);
+                writeToDspRingbuffer( &e );
+              }
+              else if ( strcmp(m->label(), "Record") == 0 )
               {
-                
-                //clips[clipNum].name = "title";
-                clips[clipNum].state = ClipState::CLIP_QUEUED;
+                clips[clipNum].state = ClipState::CLIP_RECORDING;
+                EventLooperState e = EventLooperState( 0, Looper::STATE_RECORD_QUEUED);
+                writeToDspRingbuffer( &e );
               }
             }
             else
