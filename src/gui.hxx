@@ -31,7 +31,6 @@ class Gui
     Fl_Box*             box;
     
     GMasterTrack*       master;
-    GUnitTrack*         unit;
     
     vector<GTrack*>     tracks;
     
