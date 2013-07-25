@@ -44,6 +44,8 @@ class Background : public Fl_Widget
       
       label = _label;
       
+      printf("AVTK background label: %s\n", label );
+      
       highlight = false;
     }
     bool highlight;

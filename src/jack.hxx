@@ -22,6 +22,8 @@
 #include "metronome.hxx"
 #include "timemanager.hxx"
 
+#include "dsp/dsp_dbmeter.hxx"
+
 #include "controllerupdater.hxx"
 
 using namespace std;
@@ -62,6 +64,7 @@ class Jack
     ControllerUpdater controllerUpdater;
     
     vector<Looper*> loopers;
+    vector<DBMeter*> dbMeters;
     
     int nframes;
     int samplerate;

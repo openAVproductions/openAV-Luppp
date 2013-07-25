@@ -71,6 +71,8 @@ Jack::Jack()
     
     loopers.push_back( new Looper(i) );
     timeManager.registerObserver( loopers.back() );
+    
+    dbMeters.push_back( new DBMeter( buffers.samplerate ) );
   }
   
   timeManager.registerObserver( &metronome );
@@ -135,6 +137,8 @@ int Jack::process (jack_nframes_t nframes)
   
   // mixdown tracks into master output buffer
   float* output = buffers.audio[Buffers::MASTER_OUTPUT];
+  
+  
   for(int i = 0; i < nframes; i++)
   {
     float tmp = 0.f;

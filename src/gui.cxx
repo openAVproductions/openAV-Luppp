@@ -61,12 +61,14 @@ Gui::Gui() :
   tooltipLabel->hide();
   //tooltipLabel->align( FL_ALIGN_TOP_LEFT );
   
+  window.resizable( headerImage );
   
   int i = 0;
   for (; i < NTRACKS; i++ )
   {
     stringstream s;
     s << "Track " << i+1;
+    printf("track name %s\n", s.str().c_str() );
     tracks.push_back( new GTrack(8 + i * 118, 40, 110, 600, s.str().c_str() ) );
   }
   
