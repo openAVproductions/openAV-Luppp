@@ -217,8 +217,8 @@ class ClipSelector : public Fl_Button
           }
           */
           
-          float alpha = 0.7;
-          if (mouseOver) { alpha = 1; }
+          float alpha = 1.0;
+          //if (mouseOver) { alpha = 1; }
           cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, alpha);
           cairo_set_line_width( cr, 1.4);
           cairo_move_to( cr, x+clipHeight-1, drawY );
