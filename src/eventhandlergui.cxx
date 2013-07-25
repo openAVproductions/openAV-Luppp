@@ -40,10 +40,10 @@ void handleGuiEvents()
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventMasterVol) );
             //jack->masterVolume = ev.vol;
           } break; }
-        case Event::PLAY_SAMPLE: {
-          if ( availableRead >= sizeof(EventPlaySample) ) {
-            EventPlaySample ev(0,0);
-            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventPlaySample) );
+        case Event::LOOPER_PLAY: {
+          if ( availableRead >= sizeof(EventLooperPlay) ) {
+            EventLooperPlay ev(0,0);
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventLooperPlay) );
             //jack->setPlayBuffer( ev.track, ev.bufferID );
           } break; }
         case Event::METRONOME_ACTIVE: {

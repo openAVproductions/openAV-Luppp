@@ -16,11 +16,11 @@
 namespace Event
 {
   enum {
-    PLAY_SAMPLE,
     MASTER_VOL,
     RECORD,
     
     LOOPER_LOAD,
+    LOOPER_PLAY,
     LOOPER_STATE,
     LOOPER_PROGRESS,
     LOOPER_LOOP_LENGTH,
@@ -113,18 +113,18 @@ class EventLooperLoad : public EventBase
     }
 };
 
-class EventPlaySample : public EventBase
+class EventLooperPlay : public EventBase
 {
   public:
-    int type() { return int(PLAY_SAMPLE); }
-    uint32_t size() { return sizeof(EventPlaySample); }
+    int type() { return int(LOOPER_PLAY); }
+    uint32_t size() { return sizeof(EventLooperPlay); }
     
-    int track, bufferID;
+    int track, scene;
     
-    EventPlaySample(int t, int id)
+    EventLooperPlay(int t, int s)
     {
       track = t;
-      bufferID = id;
+      scene = s;
     }
 };
 
