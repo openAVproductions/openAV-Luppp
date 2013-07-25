@@ -43,9 +43,10 @@ class GTrack : public Fl_Group
       
       volume(x+65, y +427, 36, 150, "Vol"),
       
-      dial1(x+22, y +440     , 30, 30, "Rev"),
-      dial2(x+22, y +440 + 50, 30, 30, "S-C"),
-      dial3(x+22, y +440 +100, 30, 30, "P-S"),
+      
+      dial2(x+22, y +440 +  0, 30, 30, "S-C"),
+      dial3(x+22, y +440 + 50, 30, 30, "P-S"),
+      dial1(x+22, y +440 +100, 30, 30, "Rev"),
       
       progress(x+5, y+ 26, 100, 100, "Source UI")
     {

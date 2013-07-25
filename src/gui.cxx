@@ -55,9 +55,11 @@ Gui::Gui() :
   Avtk::Image* headerImage = new Avtk::Image(0,0,1110,36,"header.png");
   headerImage->setPixbuf( header.pixel_data, 4 );
   
-  tooltipLabel = new Fl_Box(90, 15, 200, 20, "");
+  tooltipLabel = new Fl_Box(130, 25, 500, 20, "");
   tooltipLabel->labelcolor( FL_LIGHT2 );
   tooltipLabel->color( FL_DARK2 );
+  tooltipLabel->hide();
+  //tooltipLabel->align( FL_ALIGN_TOP_LEFT );
   
   
   int i = 0;
