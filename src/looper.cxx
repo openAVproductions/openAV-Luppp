@@ -24,6 +24,8 @@ Looper::Looper(int t) :
   // pre-zero the internal sample
   memset( &sample[0], 0, SAMPLE_SIZE );
   
+  printf("Looper ID %i\n" , track );
+  
   // init faust pitch shift variables
   fSamplingFreq = 44100;
   IOTA = 0;
@@ -151,7 +153,7 @@ void Looper::setSample(int c, AudioBuffer* ab)
 void Looper::process(int nframes, Buffers* buffers)
 {
   float* in  = buffers->audio[Buffers::MASTER_INPUT];
-  float* out = buffers->audio[Buffers::MASTER_OUTPUT];
+  float* out = buffers->audio[Buffers::TRACK_0 + track];
   
   float playbackSpeed = endPoint / ( float(numBeats) * fpb );
   semitoneShift = -( 12 * log ( playbackSpeed ) / log (2) );

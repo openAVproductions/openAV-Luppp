@@ -66,6 +66,9 @@ Jack::Jack()
   
   for(int i = 0; i < NTRACKS; i++)
   {
+    // allocate working buffers for each track
+    buffers.audio[Buffers::TRACK_0 + i] = (float*) malloc( sizeof(float) * nframes );
+    
     loopers.push_back( new Looper(i) );
     timeManager.registerObserver( loopers.back() );
   }
