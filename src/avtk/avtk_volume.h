@@ -125,14 +125,6 @@ class Volume : public Fl_Slider
         
         
         // audio level
-        
-        //cairo_move_to(cr, x+w*0.3, y+h); // left
-        //cairo_line_to(cr, x+w*0.3, y+h*(1-ampL) );
-        
-        //cairo_move_to(cr, x+w*0.7, y+h); // right
-        //cairo_line_to(cr, x+w*0.7, y+h*(1-ampL) );
-        
-        
         cairo_rectangle(cr, x+w*0.15, y+h*(1-ampL), 9.9, h - h*(1-ampL) );
         cairo_rectangle(cr, x+w*0.56, y+h*(1-ampR), 9.9, h - h*(1-ampR) );
         

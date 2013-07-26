@@ -55,8 +55,6 @@ class GTrack : public Fl_Group
       
       volume.callback( gtrack_button_callback, 0 );
       
-      volume.amplitude( 0.75, 0.5 );
-      
       progress.maximum(1.0f);
       progress.minimum(0.0f);
       progress.color( FL_BLACK );
