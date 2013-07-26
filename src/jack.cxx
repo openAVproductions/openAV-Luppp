@@ -142,9 +142,25 @@ int Jack::process (jack_nframes_t nframes)
   for(uint i = 0; i < loopers.size(); i++)
     loopers.at(i)->process( nframes, &buffers );
   
+  
+  // get DB readings, and send to UI
+  for(int n = 0; n < NTRACKS; n++)
+  {
+    // needs to be setup to handle stereo instead of mono
+    float* buf = buffers.audio[Buffers::TRACK_0 + n];
+    dbMeters.at(n).process( nframes, buf, buf );
+    
+    if (uiUpdateCounter > uiUpdateConstant )
+    {
+      EventTrackSignalLevel e( n, dbMeters.at(n).getLeftDB(), dbMeters.at(n).getRightDB() );
+      //EventTrackSignalLevel e( n, n / 8.f, n / 8.f );
+      writeToGuiRingbuffer( &e );
+    }
+  }
+  
+  
   // mixdown tracks into master output buffer
   float* output = buffers.audio[Buffers::MASTER_OUTPUT];
-  
   
   for(int i = 0; i < nframes; i++)
   {
@@ -157,18 +173,6 @@ int Jack::process (jack_nframes_t nframes)
     *output++ = tmp;
   }
   
-  // get DB readings, and send to UI
-  for(int n = 0; n < NTRACKS; n++)
-  {
-    // needs to be setup to handle stereo instead of mono
-    dbMeters.at(n).process( nframes, buffers.audio[Buffers::TRACK_0 + n], buffers.audio[Buffers::TRACK_0 + n]);
-    
-    if (uiUpdateCounter > uiUpdateConstant )
-    {
-      EventTrackSignalLevel e( n, dbMeters.at(n).getLeftDB(), dbMeters.at(n).getRightDB() );
-      writeToGuiRingbuffer( &e );
-    }
-  }
 
   
   

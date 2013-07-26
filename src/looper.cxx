@@ -220,8 +220,6 @@ void Looper::bar()
     playPoint = 0;
     endPoint = lastWrittenSampleIndex;
     
-    
-    int scene = 0;
     EventLooperState e2( track, scene, STATE_PLAYING );
     writeToGuiRingbuffer( &e2 );
   }
@@ -230,7 +228,6 @@ void Looper::bar()
     EventGuiPrint e( "Looper Q->Recording" );
     writeToGuiRingbuffer( &e );
     
-    int scene = 0;
     EventLooperState e2( track, scene, STATE_RECORDING );
     writeToGuiRingbuffer( &e2 );
     
@@ -244,7 +241,6 @@ void Looper::bar()
     EventGuiPrint e( "Looper Q->Stopped" );
     writeToGuiRingbuffer( &e );
     
-    int scene = 0;
     EventLooperState e2( track, scene, STATE_STOPPED );
     writeToGuiRingbuffer( &e2 );
     
@@ -302,7 +298,7 @@ void Looper::pitchShift(int count, float* input, float* output)
     float fTemp4 = (fSlow0 + fRec0[0]);
     int iTemp5 = int(fTemp4);
     
-    output0[i] += (float)(((1 - fTemp3) * (((fTemp4 - iTemp5) * 
+    *output++ += (float)(((1 - fTemp3) * (((fTemp4 - iTemp5) * 
     fVec0[(IOTA-int((int((1 + iTemp5)) & 65535)))&65535]) + ((0 - ((
     fRec0[0] + fSlow3) - iTemp5)) * fVec0[(IOTA-int((iTemp5 & 65535)))
     &65535]))) + (fTemp3 * (((fRec0[0] - iTemp1) * fVec0[(IOTA-int((int(
