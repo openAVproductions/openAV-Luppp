@@ -64,8 +64,12 @@ class Jack
     ControllerUpdater controllerUpdater;
     
     vector<Looper*> loopers;
-    
     vector<DBMeter> dbMeters;
+    
+    // UI update variables
+    long uiUpdateCounter;
+    long uiUpdateConstant;
+    
     
     int nframes;
     int samplerate;

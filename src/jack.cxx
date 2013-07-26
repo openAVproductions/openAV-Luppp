@@ -19,6 +19,11 @@ Jack::Jack()
   buffers.nframes = jack_get_buffer_size( client );
   buffers.samplerate = jack_get_sample_rate( client );
   
+  // UI update
+  uiUpdateConstant = buffers.samplerate / 30;
+  uiUpdateCounter = buffers.samplerate / 30;
+  
+  
   masterOutput = jack_port_register( client,
                           "master_out",
                           JACK_DEFAULT_AUDIO_TYPE,
@@ -157,12 +162,25 @@ int Jack::process (jack_nframes_t nframes)
   {
     // needs to be setup to handle stereo instead of mono
     dbMeters.at(n).process( nframes, buffers.audio[Buffers::TRACK_0 + n], buffers.audio[Buffers::TRACK_0 + n]);
-    EventTrackSignalLevel e( n, dbMeters.at(n).getLeftDB(), dbMeters.at(n).getRightDB() );
-    writeToGuiRingbuffer( &e );
+    
+    if (uiUpdateCounter > uiUpdateConstant )
+    {
+      EventTrackSignalLevel e( n, dbMeters.at(n).getLeftDB(), dbMeters.at(n).getRightDB() );
+      writeToGuiRingbuffer( &e );
+    }
   }
+
   
   
   metronome.process( nframes, &buffers );
+  
+  if (uiUpdateCounter > uiUpdateConstant )
+  {
+    uiUpdateCounter = 0;
+  }
+  
+  uiUpdateCounter += nframes;
+  
   
   return false;
 }

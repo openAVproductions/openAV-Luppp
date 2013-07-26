@@ -29,11 +29,13 @@ class DBMeter
     {
       // range scale from range = -96 -> +10, to 0 -> 1
       float zeroOneL = (1-(fvbargraph0 / -96.f));
+      fvbargraph0 = -96;
       return pow(zeroOneL, 4);
     }
     float getRightDB()
     {
       float zeroOneR = (1-(fvbargraph1 / -96.f));
+      fvbargraph1 = -96;
       return pow(zeroOneR, 4);
     }
     
@@ -42,10 +44,12 @@ class DBMeter
       for (int i = 0; (i < count); i = (i + 1))
       {
         fRec0[0] = max((fRec0[1] - fConst0), min(10.f, (20.f * log10f(max(1.58489e-05f, fabsf(*inputL))))));
-        fvbargraph0 = fRec0[0];
+        if ( fvbargraph0 < fRec0[0] )
+          fvbargraph0 = fRec0[0];
         
         fRec1[0] = max((fRec1[1] - fConst0), min(10.f, (20.f * log10f(max(1.58489e-05f, fabsf(*inputR))))));
-        fvbargraph1 = fRec1[0];
+        if ( fvbargraph1 < fRec1[0] )
+          fvbargraph1 = fRec1[0];
         
         fRec0[1] = fRec0[0];
         fRec1[1] = fRec1[0];
