@@ -80,14 +80,20 @@ void Looper::midi(unsigned char* data)
   
 }
 
-void Looper::setState(State s)
+void Looper::setScene( int sc )
+{
+  // update Looper to play different scene
+  scene = sc;
+  sample = samples[scene];
+}
+
+void Looper::setState( State s)
 {
   // quantize recording to next bar event
   if ( state == STATE_RECORDING )
   {
     stopRecordOnBar = true;
   }
-  
   state = s;
   updateControllers();
 }
@@ -130,7 +136,7 @@ void Looper::updateControllers()
   }
 }
 
-void Looper::setSample(int scene, AudioBuffer* ab)
+void Looper::setSample(int sc, AudioBuffer* ab)
 {
   vector<float>& buf = ab->get();
   if ( buf.size() > SAMPLE_SIZE )
@@ -140,8 +146,13 @@ void Looper::setSample(int scene, AudioBuffer* ab)
   }
   else
   {
+    char buffer [50];
+    sprintf (buffer, "Looper setSample() writing to scene %i",scene);
+    EventGuiPrint e( buffer );
+    writeToGuiRingbuffer( &e );
+    
     numBeats = ab->getBeats();
-    float* s = &sample[0];
+    float* s = &sample[sc];
     float* b = &buf[0];
     for (int i = 0; i < buf.size(); i++)
     {

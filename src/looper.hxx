@@ -37,7 +37,8 @@ class Looper : public Observer // for notifications
     
     void setFpb(int f) { fpb = f; }
     
-    void setState(State s);
+    void setScene( int sc );
+    void setState( State s);
     void setLoopLength(float l);
     
     void updateControllers();

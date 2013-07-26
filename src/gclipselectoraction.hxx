@@ -30,10 +30,10 @@ static string choose_file()
   return path;
 }
 
-static void clipSelectorLoad(int track)
+static void clipSelectorLoad(int track, int scene)
 {
   AudioBuffer* ab = Worker::loadSample( choose_file() );
-  EventLooperLoad e = EventLooperLoad( track, 0, ab );
+  EventLooperLoad e = EventLooperLoad( track, scene, ab );
   writeToDspRingbuffer( &e );
 }
 

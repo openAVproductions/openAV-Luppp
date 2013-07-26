@@ -97,28 +97,29 @@ class ClipSelector : public Fl_Button
       {
         case Looper::STATE_PLAYING:
             clips[clipNum].state = ClipState::CLIP_PLAYING;
+            printf("clipSelector setState() clip %i = CLIP_PLAYING\n", clipNum);
             break;
         case Looper::STATE_PLAY_QUEUED:
             clips[clipNum].state = ClipState::CLIP_QUEUED;
+            printf("clipSelector setState() clip %i = CLIP_QUEUED\n", clipNum);
             break;
         case Looper::STATE_RECORDING:
             clips[clipNum].state = ClipState::CLIP_RECORDING;
+            printf("clipSelector setState() clip %i = CLIP_RECORDING\n", clipNum);
             break;
         case Looper::STATE_RECORD_QUEUED:
             clips[clipNum].state = ClipState::CLIP_QUEUED;
+            printf("clipSelector setState() clip %i = CLIP_QUEUED\n", clipNum);
             break;
         case Looper::STATE_STOPPED:
             clips[clipNum].state = ClipState::CLIP_LOADED;
+            printf("clipSelector setState() clip %i = CLIP_LOADED\n", clipNum);
             break;
         case Looper::STATE_STOP_QUEUED:
             clips[clipNum].state = ClipState::CLIP_QUEUED;
+            printf("clipSelector setState() clip %i = CLIP_QUEUED\n", clipNum);
             break;
       }
-      redraw();
-    }
-    void setState( int clipNum, ClipState::State s )
-    {
-      clips[clipNum].state = s;
       redraw();
     }
     
@@ -306,7 +307,7 @@ class ClipSelector : public Fl_Button
               }
               else if ( strcmp(m->label(), "Load") == 0 )
               {
-                clipSelectorLoad( ID );
+                clipSelectorLoad( ID, clipNum );
                 clips[clipNum].state = ClipState::CLIP_LOADED;
               }
               else if ( strcmp(m->label(), "1") == 0 ) {
@@ -331,7 +332,7 @@ class ClipSelector : public Fl_Button
               else if ( strcmp(m->label(), "Record") == 0 )
               {
                 clips[clipNum].state = ClipState::CLIP_RECORDING;
-                EventLooperState e = EventLooperState( ID, 0, Looper::STATE_RECORD_QUEUED);
+                EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_RECORD_QUEUED);
                 writeToDspRingbuffer( &e );
               }
             }
@@ -342,13 +343,13 @@ class ClipSelector : public Fl_Button
                 case ClipState::CLIP_EMPTY:
                     clips[clipNum].state = ClipState::CLIP_RECORDING;
                     {
-                    EventLooperState e = EventLooperState( ID, 0, Looper::STATE_RECORD_QUEUED);
+                    EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_RECORD_QUEUED);
                     writeToDspRingbuffer( &e );
                     }
                     break;
                 case ClipState::CLIP_LOADED:
                     {
-                      EventLooperState e = EventLooperState( ID, 0, Looper::STATE_PLAY_QUEUED);
+                      EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_PLAY_QUEUED);
                       writeToDspRingbuffer( &e );
                       clips[clipNum].state = ClipState::CLIP_QUEUED;
                     }
@@ -358,14 +359,14 @@ class ClipSelector : public Fl_Button
                     break;
                 case ClipState::CLIP_PLAYING:
                     {
-                      EventLooperState e = EventLooperState( ID, 0, Looper::STATE_STOP_QUEUED);
+                      EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_STOP_QUEUED);
                       writeToDspRingbuffer( &e );
                       clips[clipNum].state = ClipState::CLIP_QUEUED;
                     }
                     break;
                 case ClipState::CLIP_RECORDING: {
                     clips[clipNum].state = ClipState::CLIP_QUEUED;
-                    EventLooperState e = EventLooperState( ID, 0, Looper::STATE_STOP_QUEUED);
+                    EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_STOP_QUEUED);
                     writeToDspRingbuffer( &e ); }
                     break;
                 case ClipState::CLIP_STOPPING:

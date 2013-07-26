@@ -37,9 +37,10 @@ class Jack
     int getBuffersize();
     int getSamplerate();
     
-    void setLooperState(int t, Looper::State s)
+    void setLooperState(int t, int sc, Looper::State s)
     {
       loopers.at(t)->setState(s);
+      loopers.at(t)->setScene(sc);
     }
     void setLooperLoopLength(int t, float l)
     {
