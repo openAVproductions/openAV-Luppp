@@ -86,6 +86,11 @@ class ClipSelector : public Fl_Button
       mouseOver = false;
     }
     
+    void setID( int id )
+    {
+      ID = id;
+    }
+    
     void setState( int clipNum, Looper::State s )
     {
       switch(s)
@@ -116,6 +121,8 @@ class ClipSelector : public Fl_Button
       clips[clipNum].state = s;
       redraw();
     }
+    
+    int ID;
     
     static const int numClips = 10;
     ClipState clips[numClips];
@@ -299,32 +306,32 @@ class ClipSelector : public Fl_Button
               }
               else if ( strcmp(m->label(), "Load") == 0 )
               {
-                clipSelectorLoad( 0 );
+                clipSelectorLoad( ID );
                 clips[clipNum].state = ClipState::CLIP_LOADED;
               }
               else if ( strcmp(m->label(), "1") == 0 ) {
-                EventLooperLoopLength e = EventLooperLoopLength(0, 1);
+                EventLooperLoopLength e = EventLooperLoopLength(ID, 1);
                 writeToDspRingbuffer( &e );
               } else if ( strcmp(m->label(), "2") == 0 ) {
-                EventLooperLoopLength e = EventLooperLoopLength(0, 2);
+                EventLooperLoopLength e = EventLooperLoopLength(ID, 2);
                 writeToDspRingbuffer( &e );
               } else if ( strcmp(m->label(), "4") == 0 ) {
-                EventLooperLoopLength e = EventLooperLoopLength(0, 4);
+                EventLooperLoopLength e = EventLooperLoopLength(ID, 4);
                 writeToDspRingbuffer( &e );
               } else if ( strcmp(m->label(), "8") == 0 ) {
-                EventLooperLoopLength e = EventLooperLoopLength(0, 8);
+                EventLooperLoopLength e = EventLooperLoopLength(ID, 8);
                 writeToDspRingbuffer( &e );
               } else if ( strcmp(m->label(), "16") == 0 ) {
-                EventLooperLoopLength e = EventLooperLoopLength(0, 16);
+                EventLooperLoopLength e = EventLooperLoopLength(ID, 16);
                 writeToDspRingbuffer( &e );
               } else if ( strcmp(m->label(), "32") == 0 ) {
-                EventLooperLoopLength e = EventLooperLoopLength(0, 32);
+                EventLooperLoopLength e = EventLooperLoopLength(ID, 32);
                 writeToDspRingbuffer( &e );
               }
               else if ( strcmp(m->label(), "Record") == 0 )
               {
                 clips[clipNum].state = ClipState::CLIP_RECORDING;
-                EventLooperState e = EventLooperState( 0, 0, Looper::STATE_RECORD_QUEUED);
+                EventLooperState e = EventLooperState( ID, 0, Looper::STATE_RECORD_QUEUED);
                 writeToDspRingbuffer( &e );
               }
             }
@@ -335,13 +342,13 @@ class ClipSelector : public Fl_Button
                 case ClipState::CLIP_EMPTY:
                     clips[clipNum].state = ClipState::CLIP_RECORDING;
                     {
-                    EventLooperState e = EventLooperState( 0, 0, Looper::STATE_RECORD_QUEUED);
+                    EventLooperState e = EventLooperState( ID, 0, Looper::STATE_RECORD_QUEUED);
                     writeToDspRingbuffer( &e );
                     }
                     break;
                 case ClipState::CLIP_LOADED:
                     {
-                      EventLooperState e = EventLooperState( 0, 0, Looper::STATE_PLAY_QUEUED);
+                      EventLooperState e = EventLooperState( ID, 0, Looper::STATE_PLAY_QUEUED);
                       writeToDspRingbuffer( &e );
                       clips[clipNum].state = ClipState::CLIP_QUEUED;
                     }
@@ -351,14 +358,14 @@ class ClipSelector : public Fl_Button
                     break;
                 case ClipState::CLIP_PLAYING:
                     {
-                      EventLooperState e = EventLooperState( 0, 0, Looper::STATE_STOP_QUEUED);
+                      EventLooperState e = EventLooperState( ID, 0, Looper::STATE_STOP_QUEUED);
                       writeToDspRingbuffer( &e );
                       clips[clipNum].state = ClipState::CLIP_QUEUED;
                     }
                     break;
                 case ClipState::CLIP_RECORDING: {
                     clips[clipNum].state = ClipState::CLIP_QUEUED;
-                    EventLooperState e = EventLooperState( 0, 0, Looper::STATE_STOP_QUEUED);
+                    EventLooperState e = EventLooperState( ID, 0, Looper::STATE_STOP_QUEUED);
                     writeToDspRingbuffer( &e ); }
                     break;
                 case ClipState::CLIP_STOPPING:

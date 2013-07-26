@@ -53,6 +53,8 @@ class GTrack : public Fl_Group
     {
       ID = privateID++;
       
+      clipSel.setID( ID );
+      
       volume.callback( gtrack_button_callback, 0 );
       
       progress.maximum(1.0f);
