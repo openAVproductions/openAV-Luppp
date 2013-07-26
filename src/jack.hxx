@@ -64,7 +64,8 @@ class Jack
     ControllerUpdater controllerUpdater;
     
     vector<Looper*> loopers;
-    vector<DBMeter*> dbMeters;
+    
+    vector<DBMeter> dbMeters;
     
     int nframes;
     int samplerate;

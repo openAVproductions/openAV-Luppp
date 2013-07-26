@@ -30,6 +30,7 @@ class GTrack : public Fl_Group
 {
   public:
     
+    Avtk::Volume*       getVolume(){return &volume;}
     Avtk::ClipSelector* getClipSelector(){return &clipSel;}
     
     GTrack(int x, int y, int w, int h, const char* l = 0 ) :

@@ -66,6 +66,12 @@ void handleGuiEvents()
             gui->getTrack(ev.track)->progress.value(ev.progress);
             //jack->setLooperLoopLength( ev.track, ev.scale );
           } break; }
+        case Event::TRACK_SIGNAL_LEVEL: {
+          if ( availableRead >= sizeof(EventTrackSignalLevel) ) {
+            EventTrackSignalLevel ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTrackSignalLevel) );
+            gui->getTrack(ev.track)->getVolume()->amplitude( ev.left, ev.right );
+          } break; }
         case Event::GUI_PRINT: {
           if ( availableRead >= sizeof(EventGuiPrint) ) {
             EventGuiPrint ev;

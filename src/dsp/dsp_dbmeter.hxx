@@ -7,9 +7,6 @@
 #include <cmath>
 #include <cstdlib>
 
-float fabsf(float dummy0);
-float log10f(float dummy0);
-
 class DBMeter
 {
   public:
@@ -27,33 +24,28 @@ class DBMeter
     int getNumInputs() { return 2;}
     int getNumOutputs(){ return 2;}
     
-    // call this to get the current dB value, range = -96 -> +10
+    // call these to get the current dB values
     float getLeftDB()
     {
-      return fvbargraph0;
+      // range scale from range = -96 -> +10, to 0 -> 1
+      float zeroOneL = (1-(fvbargraph0 / -96.f));
+      return pow(zeroOneL, 4);
     }
     float getRightDB()
     {
-      return fvbargraph1;
+      float zeroOneR = (1-(fvbargraph1 / -96.f));
+      return pow(zeroOneR, 4);
     }
     
-    void process(int count, float** inputs, float** outputs)
+    void process(int count, float* inputL, float* inputR )
     {
-      float* input0 = inputs[0];
-      float* input1 = inputs[1];
-      float* output0 = outputs[0];
-      float* output1 = outputs[1];
       for (int i = 0; (i < count); i = (i + 1))
       {
-        float fTemp0 = float(input0[i]);
-        fRec0[0] = max((fRec0[1] - fConst0), min(10.f, (20.f * log10f(max(1.58489e-05f, fabsf(fTemp0))))));
+        fRec0[0] = max((fRec0[1] - fConst0), min(10.f, (20.f * log10f(max(1.58489e-05f, fabsf(*inputL))))));
         fvbargraph0 = fRec0[0];
-        output0[i] = float(fTemp0);
         
-        float fTemp1 = float(input1[i]);
-        fRec1[0] = max((fRec1[1] - fConst0), min(10.f, (20.f * log10f(max(1.58489e-05f, fabsf(fTemp1))))));
+        fRec1[0] = max((fRec1[1] - fConst0), min(10.f, (20.f * log10f(max(1.58489e-05f, fabsf(*inputR))))));
         fvbargraph1 = fRec1[0];
-        output1[i] = float(fTemp1);
         
         fRec0[1] = fRec0[0];
         fRec1[1] = fRec1[0];

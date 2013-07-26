@@ -49,6 +49,22 @@ Jack::Jack()
                           JackPortIsOutput,
                           0 );
   
+  for(int i = 0; i < NTRACKS; i++)
+  {
+    loopers.push_back( new Looper(i) );
+    timeManager.registerObserver( loopers.back() );
+    
+    // allocate working buffers for each track
+    buffers.audio[Buffers::TRACK_0 + i] = (float*) malloc( sizeof(float) * nframes );
+  }
+  
+  for( int i = 0; i < NTRACKS; i++)
+  {
+    dbMeters.push_back( DBMeter( buffers.samplerate ) );
+  }
+  
+  timeManager.registerObserver( &metronome );
+  
   if ( jack_set_process_callback( client,
                                   static_process,
                                   static_cast<void*>(this)) )
@@ -63,27 +79,13 @@ Jack::Jack()
   {
     cerr << "Jack() error setting timebase callback" << endl;
   }
-  
-  for(int i = 0; i < NTRACKS; i++)
-  {
-    // allocate working buffers for each track
-    buffers.audio[Buffers::TRACK_0 + i] = (float*) malloc( sizeof(float) * nframes );
-    
-    loopers.push_back( new Looper(i) );
-    timeManager.registerObserver( loopers.back() );
-    
-    dbMeters.push_back( new DBMeter( buffers.samplerate ) );
-  }
-  
-  timeManager.registerObserver( &metronome );
-  
-  jack_transport_start(client);
 }
 
 
 void Jack::activate()
 {
   jack_activate( client );
+  jack_transport_start(client);
 }
 
 
@@ -149,6 +151,16 @@ int Jack::process (jack_nframes_t nframes)
     }
     *output++ = tmp;
   }
+  
+  // get DB readings, and send to UI
+  for(int n = 0; n < NTRACKS; n++)
+  {
+    // needs to be setup to handle stereo instead of mono
+    dbMeters.at(n).process( nframes, buffers.audio[Buffers::TRACK_0 + n], buffers.audio[Buffers::TRACK_0 + n]);
+    EventTrackSignalLevel e( n, dbMeters.at(n).getLeftDB(), dbMeters.at(n).getRightDB() );
+    writeToGuiRingbuffer( &e );
+  }
+  
   
   metronome.process( nframes, &buffers );
   

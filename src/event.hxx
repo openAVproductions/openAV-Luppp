@@ -19,6 +19,8 @@ namespace Event
     MASTER_VOL,
     RECORD,
     
+    TRACK_SIGNAL_LEVEL,
+    
     LOOPER_LOAD,
     LOOPER_PLAY,
     LOOPER_STATE,
@@ -136,6 +138,20 @@ class EventTimeBPM : public EventBase
     
     EventTimeBPM(){}
     EventTimeBPM(float b) : bpm(b) {}
+};
+
+class EventTrackSignalLevel : public EventBase
+{
+  public:
+    int type() { return int(TRACK_SIGNAL_LEVEL); }
+    uint32_t size() { return sizeof(EventTrackSignalLevel); }
+    
+    int track;
+    float left;
+    float right;
+    
+    EventTrackSignalLevel(){}
+    EventTrackSignalLevel(int t, float l,float r) : track(t), left(l), right(r) {}
 };
 
 class EventTimeTempoTap : public EventBase

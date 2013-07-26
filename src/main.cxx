@@ -37,9 +37,11 @@ int main()
   
   
   jack = new Jack();
-  jack->activate();
   
   gui = new Gui();
+  
+  jack->activate();
+  
   gui->show();
   
 }
