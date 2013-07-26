@@ -46,7 +46,7 @@ class Looper : public Observer // for notifications
   private:
     const int track;
     State state;
-    int currentClip;
+    int scene;
     
     int fpb;
     float gain;
@@ -56,7 +56,8 @@ class Looper : public Observer // for notifications
     
     int endPoint, lastWrittenSampleIndex;
     float playPoint;
-    float sample[SAMPLE_SIZE];
+    float* sample;
+    float samples[10][SAMPLE_SIZE];
     
     // Pitch Shifting
     void pitchShift(int count, float* input, float* output);

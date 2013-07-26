@@ -11,6 +11,7 @@ extern Jack* jack;
 
 Looper::Looper(int t) :
       track(t),
+      scene(0),
       state(STATE_STOPPED),
       fpb(120),
       gain(1.f),
@@ -22,7 +23,11 @@ Looper::Looper(int t) :
       lastWrittenSampleIndex(0)
 {
   // pre-zero the internal sample
-  memset( &sample[0], 0, SAMPLE_SIZE );
+  for(int i = 0; i < 10; i++)
+  {
+    //memset( sample[int(i)][0], 0, SAMPLE_SIZE );
+  }
+  sample = &samples[0][0];
   
   printf("Looper ID %i\n" , track );
   
@@ -93,12 +98,12 @@ void Looper::updateControllers()
   {
     numBeats = 0;
     jack->getControllerUpdater()->recordArm(track, true);
-    jack->getControllerUpdater()->clipSelect(track, currentClip, Controller::CLIP_MODE_RECORD_QUEUED);
+    jack->getControllerUpdater()->clipSelect(track, scene, Controller::CLIP_MODE_RECORD_QUEUED);
   }
   else if (state == STATE_RECORDING )
   {
     jack->getControllerUpdater()->recordArm(track, true);
-    jack->getControllerUpdater()->clipSelect(track, currentClip, Controller::CLIP_MODE_RECORDING);
+    jack->getControllerUpdater()->clipSelect(track, scene, Controller::CLIP_MODE_RECORDING);
   }
   else
   {
@@ -107,25 +112,25 @@ void Looper::updateControllers()
   
   if (state == STATE_PLAY_QUEUED )
   {
-    jack->getControllerUpdater()->clipSelect(track, currentClip, Controller::CLIP_MODE_PLAY_QUEUED);
+    jack->getControllerUpdater()->clipSelect(track, scene, Controller::CLIP_MODE_PLAY_QUEUED);
   }
   
   if ( state == STATE_PLAYING )
   {
-    jack->getControllerUpdater()->clipSelect(track, currentClip, Controller::CLIP_MODE_PLAYING);
+    jack->getControllerUpdater()->clipSelect(track, scene, Controller::CLIP_MODE_PLAYING);
   }
   
   if (state == STATE_STOP_QUEUED )
   {
-    jack->getControllerUpdater()->clipSelect(track, currentClip, Controller::CLIP_MODE_STOP_QUEUED);
+    jack->getControllerUpdater()->clipSelect(track, scene, Controller::CLIP_MODE_STOP_QUEUED);
   }
   else if ( state == STATE_STOPPED )
   {
-    jack->getControllerUpdater()->clipSelect(track, currentClip, Controller::CLIP_MODE_LOADED);
+    jack->getControllerUpdater()->clipSelect(track, scene, Controller::CLIP_MODE_LOADED);
   }
 }
 
-void Looper::setSample(int c, AudioBuffer* ab)
+void Looper::setSample(int scene, AudioBuffer* ab)
 {
   vector<float>& buf = ab->get();
   if ( buf.size() > SAMPLE_SIZE )
@@ -158,7 +163,8 @@ void Looper::process(int nframes, Buffers* buffers)
   float playbackSpeed = endPoint / ( float(numBeats) * fpb );
   semitoneShift = -( 12 * log ( playbackSpeed ) / log (2) );
   
-  if ( state == STATE_PLAYING || state == STATE_STOP_QUEUED )
+  if ( state == STATE_PLAYING ||
+      (state == STATE_STOP_QUEUED && !stopRecordOnBar)  )
   {
     for(int i = 0; i < nframes; i++)
     {
