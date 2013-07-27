@@ -88,8 +88,9 @@ class ClipSelector : public Fl_Button
       ID = id;
     }
     
-    // calling this function marks a clip as loaded, optionally with name
-    // parameter. Recording won't provide a name, or "..." or something
+    /** calling this function marks a clip as loaded, optionally with name
+     parameter. Recording won't provide a name, or "..." or something
+    **/
     void loadClip( int clip, std::string name = "" )
     {
       clips[clip].loaded = true;
@@ -97,9 +98,9 @@ class ClipSelector : public Fl_Button
       clips[clip].state  = ClipState::CLIP_LOADED;
     }
     
-    // this function converts the Looper::State into the UI represnted
-    // ClipSelector state. It puts some of the data into clips[], and stores
-    // unique things (like playing) into the class.
+    /** converts the Looper::State into the UI represnted ClipSelector state.
+     * It puts some of the data into clips[], and stores unique state into the class.
+    **/
     void setState( int clipNum, Looper::State s )
     {
       switch(s)
@@ -221,23 +222,9 @@ class ClipSelector : public Fl_Button
                 break;
           }
           
-          
-          
-          
-          
           cairo_rectangle( cr, x+1, drawY, clipWidth, clipHeight - 2 );
           
-          /*
-          //cairo_set_source_rgb( cr,28 / 255.f,  28 / 255.f ,  28 / 255.f  );
-          if ( highlight )
-          {
-            cairo_set_source_rgba(cr, 1.0, 0.48,   0, 0.4);
-            cairo_fill_preserve(cr);
-          }
-          */
-          
           float alpha = 1.0;
-          //if (mouseOver) { alpha = 1; }
           cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, alpha);
           cairo_set_line_width( cr, 1.4);
           cairo_move_to( cr, x+clipHeight-1, drawY );
@@ -245,7 +232,7 @@ class ClipSelector : public Fl_Button
           cairo_stroke(cr);
           
           // clip name
-          cairo_move_to( cr, x+clipHeight-1+ 10, drawY + 15 );
+          cairo_move_to( cr, x + clipHeight + 10, drawY + 16 );
           cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 1 );
           cairo_set_font_size( cr, 10 );
           cairo_show_text( cr, clips[i].name.c_str() );
@@ -317,7 +304,7 @@ class ClipSelector : public Fl_Button
               else if ( strcmp(m->label(), "Load") == 0 )
               {
                 clipSelectorLoad( ID, clipNum );
-                loadClip( clipNum, "loaded" );
+                loadClip( clipNum, "---" );
               }
               else if ( strcmp(m->label(), "1") == 0 ) {
                 EventLooperLoopLength e = EventLooperLoopLength(ID, 1);
