@@ -55,12 +55,8 @@ class ClipState
     ClipState()
     {
       state = CLIP_EMPTY;
+      loaded = false;
       name = "";
-    }
-    ClipState(std::string n)
-    {
-      state = CLIP_EMPTY;
-      name = n;
     }
     
     State state;
@@ -96,7 +92,9 @@ class ClipSelector : public Fl_Button
     // parameter. Recording won't provide a name, or "..." or something
     void loadClip( int clip, std::string name = "" )
     {
-      
+      clips[clip].loaded = true;
+      clips[clip].name   = name;
+      clips[clip].state  = ClipState::CLIP_LOADED;
     }
     
     // this function converts the Looper::State into the UI represnted
@@ -319,7 +317,7 @@ class ClipSelector : public Fl_Button
               else if ( strcmp(m->label(), "Load") == 0 )
               {
                 clipSelectorLoad( ID, clipNum );
-                clips[clipNum].state = ClipState::CLIP_LOADED;
+                loadClip( clipNum, "loaded" );
               }
               else if ( strcmp(m->label(), "1") == 0 ) {
                 EventLooperLoopLength e = EventLooperLoopLength(ID, 1);
