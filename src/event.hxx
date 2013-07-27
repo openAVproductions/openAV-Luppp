@@ -20,6 +20,7 @@ namespace Event
     RECORD,
     
     TRACK_SIGNAL_LEVEL,
+    TRACK_VOLUME,
     
     LOOPER_LOAD,
     LOOPER_STATE,
@@ -58,6 +59,23 @@ class EventMasterVol : public EventBase
     
     EventMasterVol(float v)
     {
+      vol = v;
+    }
+};
+
+class EventTrackVol : public EventBase
+{
+  public:
+    int type() { return int(TRACK_VOLUME); }
+    uint32_t size() { return sizeof(EventTrackVol); }
+    
+    int track;
+    float vol;
+    
+    EventTrackVol(){};
+    EventTrackVol(int t, float v)
+    {
+      track = t;
       vol = v;
     }
 };

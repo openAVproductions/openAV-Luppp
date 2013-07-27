@@ -73,7 +73,13 @@ void Looper::midi(unsigned char* data)
   {
     switch ( data[1] )
     {
-      case  7: gain = int(data[2])/127.f; break;
+      //case  7: gain = int(data[2])/127.f; break;
+      case 7:{
+          printf("volue\n");
+          // volume from APC 
+          EventTrackVol e( track, data[2] / 127.f );
+          writeToGuiRingbuffer( &e ); }
+        break;
     }
   }
   
@@ -204,7 +210,6 @@ void Looper::process(int nframes, Buffers* buffers)
       }
     }
   }
-  
 }
 
 
