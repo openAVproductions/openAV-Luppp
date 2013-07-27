@@ -46,11 +46,33 @@ class ClipState
   public:
     ClipState()
     {
-      loaded = false;
+      _loaded = false;
       name = "";
     }
     
-    bool loaded;
+    void load(std::string n = "")
+    {
+      _loaded = true;
+      name = n;
+    }
+    void play(){_playing = true;}
+    void stop(){_playing = false;}
+    void queue(){_queued = true;}
+    void stopQueue(){_queued = false;}
+    void record(){_recording = true;}
+    void stopRecord(){_recording = false;}
+    
+    bool loaded(){return _loaded;}
+    bool playing(){return _playing;}
+    bool queued() {return _queued;}
+    bool recording(){return _recording;}
+    std::string getName(){return name;}
+  
+  private:
+    bool _loaded;
+    bool _playing;
+    bool _queued;
+    bool _recording;
     std::string name;
 };
 
@@ -71,11 +93,6 @@ class ClipSelector : public Fl_Button
       
       highlight = false;
       mouseOver = false;
-      
-      playingClip    = -1;
-      queuedClip     = -1;
-      recordingClip  = -1;
-      stopQueuedClip = -1;
     }
     
     
@@ -83,11 +100,6 @@ class ClipSelector : public Fl_Button
     
     static const int numClips = 10;
     ClipState clips[numClips];
-    
-    int playingClip;
-    int queuedClip;
-    int recordingClip;
-    int stopQueuedClip;
     
     bool mouseOver;
     bool highlight;
@@ -104,8 +116,7 @@ class ClipSelector : public Fl_Button
     **/
     void loadClip( int clip, std::string name = "" )
     {
-      clips[clip].loaded = true;
-      clips[clip].name   = name;
+      clips[clip].load(name);
     }
     
     /** converts the Looper::State into the UI represnted ClipSelector state.
@@ -116,27 +127,25 @@ class ClipSelector : public Fl_Button
       switch(s)
       {
         case Looper::STATE_PLAYING:
-            playingClip = clipNum;
             printf("clipSelector setState() clip %i = CLIP_PLAYING\n", clipNum);
             break;
         case Looper::STATE_PLAY_QUEUED:
-            queuedClip = clipNum;
+            clips[clipNum].queue();
             printf("clipSelector setState() clip %i = CLIP_QUEUED\n", clipNum);
             break;
         case Looper::STATE_RECORDING:
-            recordingClip = clipNum;
+            clips[clipNum].record();
             printf("clipSelector setState() clip %i = CLIP_RECORDING\n", clipNum);
             break;
         case Looper::STATE_RECORD_QUEUED:
-            
+            clips[clipNum].queue();
             printf("clipSelector setState() clip %i = CLIP_QUEUED\n", clipNum);
             break;
         case Looper::STATE_STOPPED:
-            stopQueuedClip = -1;
+            clips[clipNum].stop();
             printf("clipSelector setState() clip %i = STATE_STOPPED\n", clipNum);
             break;
         case Looper::STATE_STOP_QUEUED:
-            //clips[clipNum].state = ClipState::CLIP_QUEUED;
             printf("clipSelector setState() clip %i = CLIP_QUEUED\n", clipNum);
             break;
       }
@@ -172,7 +181,7 @@ class ClipSelector : public Fl_Button
           
           cairo_rectangle( cr, x+1, drawY, clipHeight - 2, clipHeight - 4 );
           
-          if ( i == recordingClip )
+          if ( clips[i].recording() )
           {
             cairo_set_source_rgba(cr, 1.f,  0 / 255.f ,  0 / 255.f, 1.f);
             cairo_fill(cr);
@@ -180,7 +189,7 @@ class ClipSelector : public Fl_Button
             cairo_set_source_rgba(cr, 0, 0, 0, 1.f);
             cairo_fill(cr);
           }
-          else if ( i == playingClip )
+          else if ( clips[i].playing() )
           {
             cairo_set_source_rgba(cr, 0.0, 1.0,   0, 1.f );
             cairo_fill(cr);
@@ -191,6 +200,7 @@ class ClipSelector : public Fl_Button
             cairo_set_source_rgba(cr, 0, 0, 0, 1.f);
             cairo_fill(cr);
           }
+          /*
           else if ( i == stopQueuedClip )
           {
             cairo_set_source_rgba(cr, 0 / 255.f,  0 / 255.f ,  0 / 255.f, 1.0);
@@ -199,7 +209,8 @@ class ClipSelector : public Fl_Button
             cairo_set_source_rgba(cr, 1, 1, 1, 0.6);
             cairo_fill(cr);
           }
-          else if ( i == queuedClip )
+          */
+          else if ( clips[i].queued() )
           {
             cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 1 );
             cairo_fill(cr);
@@ -211,7 +222,7 @@ class ClipSelector : public Fl_Button
             cairo_set_line_width(cr, 2.8f);
             cairo_stroke(cr);
           }
-          else if ( clips[i].loaded )
+          else if ( clips[i].loaded() )
           {
             cairo_set_source_rgba(cr, 1.0, 0.6,   0, 1.f);
             cairo_fill(cr);
@@ -239,7 +250,7 @@ class ClipSelector : public Fl_Button
           cairo_move_to( cr, x + clipHeight + 10, drawY + 16 );
           cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 1 );
           cairo_set_font_size( cr, 10 );
-          cairo_show_text( cr, clips[i].name.c_str() );
+          cairo_show_text( cr, clips[i].getName().c_str() );
           
           drawY += clipHeight;
         }
@@ -280,7 +291,7 @@ class ClipSelector : public Fl_Button
             int clipNum = ( (Fl::event_y() ) - y ) / clipHeight;
             if (clipNum >= numClips)
               clipNum = numClips -1; // fix for clicking the lowest pixel
-            printf("clip number %i. Playing %i, rec %i, Q %i, StopQ, %i\n" , clipNum, recordingClip, queuedClip, stopQueuedClip );
+            //printf("clip number %i. Playing %i, rec %i, Q %i, StopQ, %i\n" , clipNum, recordingClip, queuedClip, stopQueuedClip );
             
             
             // handle right clicks: popup menu
@@ -331,13 +342,14 @@ class ClipSelector : public Fl_Button
               }
               else if ( strcmp(m->label(), "Record") == 0 )
               {
-                recordingClip = clipNum;
+                //recordingClip = clipNum;
                 EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_RECORD_QUEUED);
                 writeToDspRingbuffer( &e );
               }
             }
             else
             {
+              /*
               // decide action to take based on current state of clip
               if ( clipNum == queuedClip )
               {
@@ -347,17 +359,17 @@ class ClipSelector : public Fl_Button
               {
                 EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_STOP_QUEUED);
                 writeToDspRingbuffer( &e );
-                playingClip = -1;
-                stopQueuedClip = clipNum;
+                //playingClip = -1;
+                //stopQueuedClip = clipNum;
                 printf("stopping clip now: playingClip == %i", clipNum );
               }
               else if ( clipNum == recordingClip )
               {
                 EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_STOP_QUEUED);
                 writeToDspRingbuffer( &e );
-                recordingClip = -1;
-                stopQueuedClip = -1;
-                clips[clipNum].loaded = true;
+                //recordingClip = -1;
+                //stopQueuedClip = -1;
+                //clips[clipNum].loaded = true;
               }
               else if ( clipNum == stopQueuedClip )
               {
@@ -380,7 +392,7 @@ class ClipSelector : public Fl_Button
                 printf("avtk clipSelector handle click: no state triggered");
               }
               
-              /*
+              
               switch( clips[clipNum].state )
               {
                 case ClipState::CLIP_EMPTY:
