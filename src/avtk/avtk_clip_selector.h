@@ -27,7 +27,6 @@
 
 #include <string>
 
-#include "../looper.hxx"
 #include "../gclipselectoraction.hxx"
 
 #include "../worker.hxx"
@@ -126,8 +125,9 @@ class ClipSelector : public Fl_Button
     /** converts the Looper::State into the UI represnted ClipSelector state.
      * It puts some of the data into clips[], and stores unique state into the class.
     **/
-    void setState( int clipNum, Looper::State s )
+    void setState( int clipNum, int )
     {
+      /*
       switch(s)
       {
         case Looper::STATE_PLAYING:
@@ -162,6 +162,7 @@ class ClipSelector : public Fl_Button
             printf("clipSelector setState() clip %i = CLIP_QUEUED\n", clipNum);
             break;
       }
+      */
       redraw();
     }
     
@@ -353,13 +354,16 @@ class ClipSelector : public Fl_Button
               }
               else if ( strcmp(m->label(), "Record") == 0 )
               {
+                /*
                 //recordingClip = clipNum;
                 EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_RECORD_QUEUED);
                 writeToDspRingbuffer( &e );
+                */
               }
             }
             else
             {
+              /*
               // decide action to take based on current state of clip
               if ( clips[clipNum].queued() )
               {
@@ -384,7 +388,7 @@ class ClipSelector : public Fl_Button
               {
                 playingClip = -1;
               }
-              */
+              *
               else if ( clips[clipNum].loaded() )
               {
                 EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_PLAY_QUEUED);
@@ -400,6 +404,7 @@ class ClipSelector : public Fl_Button
               {
                 printf("avtk clipSelector handle click: no state triggered");
               }
+              */
               
               /*
               switch( clips[clipNum].state )

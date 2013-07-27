@@ -9,8 +9,6 @@
 #include "audioprocessor.hxx"
 #include "observer/observer.hxx"
 
-#define SAMPLE_SIZE 44100*20
-
 class AudioBuffer;
 
 using namespace std;
@@ -28,26 +26,10 @@ using namespace std;
  * pre-allocated buffers while it is still quite simple.
  * 
  * Each clip has its properties like length and bars/beats, so the Looper knows
- * to dynamically stretch / process the audio appropriately.
+ * to dynamically stretch / process the audio appropriately. Controllers and the
+ * UI are updated from this data.
 **/
 class LooperClip
-{
-  public:
-    LooperClip()
-    {
-      buffer = 0;
-    }
-    
-    void setRequestedBuffer( AudioBuffer* ab )
-    {
-      
-    }
-  
-  private:
-    AudioBuffer* buffer;
-};
-
-class Looper : public Observer, public AudioProcessor
 {
   public:
     enum State {
@@ -58,6 +40,43 @@ class Looper : public Observer, public AudioProcessor
       STATE_STOPPED,
       STATE_STOP_QUEUED,
     };
+    
+    LooperClip()
+    {
+      _loaded = false;
+      _buffer = 0;
+      _state  = STATE_STOPPED;
+    }
+    
+    void setRequestedBuffer( AudioBuffer* ab )
+    {
+      // here we copy the data from the existing buffer into the new one,
+      // and send the old one away to be deallocated.
+    }
+    
+    bool  loaded(){return _loaded;}
+    State state(){return _state;}
+    
+    // Set
+    void clipLength(int l){_clipLenght = l;}
+  
+  private:
+    bool _loaded;
+    State _state;
+    AudioBuffer* _buffer;
+    
+    // Clip Properties
+    int _clipLenght;
+};
+
+/** Looper
+ * The class which reads from LooperClips, and reads/ writes the data using the
+ * track buffer. Scene recording / playback is the essential functionality here.
+**/
+class Looper : public Observer, public AudioProcessor
+{
+  public:
+
     
     Looper(int t);
     
@@ -71,15 +90,15 @@ class Looper : public Observer, public AudioProcessor
     void setFpb(int f) { fpb = f; }
     
     void setScene( int sc );
-    void setState( State s);
-    void setLoopLength(float l);
+    //void setState( State s);
+    
     
     void updateControllers();
     void process(int nframes, Buffers* buffers);
   
   private:
     const int track;
-    State state;
+    //State state;
     int scene;
     
     int fpb;
@@ -91,7 +110,7 @@ class Looper : public Observer, public AudioProcessor
     int endPoint, lastWrittenSampleIndex;
     float playPoint;
     float* sample;
-    float samples[10][SAMPLE_SIZE];
+    float* tmpRecordBuffer;
     
     // Pitch Shifting
     void pitchShift(int count, float* input, float* output);

@@ -111,9 +111,10 @@ class EventLooperState : public EventBase
     
     int track;
     int scene;
-    Looper::State state;
+    //Looper::State state;
+    
     EventLooperState(){}
-    EventLooperState(int t, int sc, Looper::State s) : track(t), scene(sc), state(s){}
+    //EventLooperState(int t, int sc, Looper::State s) : track(t), scene(sc), state(s){}
 };
 
 class EventLooperProgress : public EventBase

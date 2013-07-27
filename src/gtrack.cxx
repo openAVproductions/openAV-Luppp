@@ -9,6 +9,7 @@ extern void luppp_tooltip(std::string s);
 
 void gtrack_button_callback(Fl_Widget *w, void *data)
 {
+  /*
   int track = 0;
   if ( data )
     track = *(int*)data;
@@ -59,4 +60,5 @@ void gtrack_button_callback(Fl_Widget *w, void *data)
   {
     cout << __FILE__ << __LINE__ << " Error: unknown command string" << endl;
   }
+  */
 }

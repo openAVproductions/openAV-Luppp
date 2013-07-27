@@ -4,5 +4,7 @@
 
 #define NTRACKS 8
 
+#define MAX_BUFFER_SIZE 1024
+
 #endif // LUPPP_CONFIG_H
 

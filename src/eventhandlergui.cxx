@@ -50,13 +50,13 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventLooperState) ) {
             EventLooperState ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventLooperState) );
-            gui->getTrack(ev.track)->getClipSelector()->setState(ev.scene, ev.state);
+            //gui->getTrack(ev.track)->getClipSelector()->setState(ev.scene, ev.state);
             //jack->setLooperState( ev.track, ev.state );
           } break; }
         case Event::LOOPER_LOOP_LENGTH: {
           if ( availableRead >= sizeof(EventLooperLoopLength) ) {
-            EventLooperLoopLength ev;
-            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventLooperLoopLength) );
+            //EventLooperLoopLength ev;
+            //jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventLooperLoopLength) );
             //jack->setLooperLoopLength( ev.track, ev.scale );
           } break; }
         case Event::LOOPER_PROGRESS: {

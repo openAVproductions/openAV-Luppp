@@ -2,6 +2,8 @@
 
 #include "looper.hxx"
 
+#include "config.hxx"
+
 #include "jack.hxx"
 #include "audiobuffer.hxx"
 #include "eventhandler.hxx"
@@ -11,7 +13,6 @@ extern Jack* jack;
 
 Looper::Looper(int t) :
       track(t),
-      state(STATE_STOPPED),
       scene(0),
       fpb(120),
       gain(1.f),
@@ -25,36 +26,29 @@ Looper::Looper(int t) :
       uiUpdateCounter(44100/30)
 {
   // pre-zero the internal sample
-  for(int i = 0; i < 10; i++)
-  {
-    //memset( sample[int(i)][0], 0, SAMPLE_SIZE );
-  }
-  sample = &samples[0][0];
+  tmpRecordBuffer = (float*)malloc( sizeof(float) * MAX_BUFFER_SIZE );
+  memset( tmpRecordBuffer, 0, sizeof(float) * MAX_BUFFER_SIZE );
   
   printf("Looper ID %i\n" , track );
+  
   
   // init faust pitch shift variables
   fSamplingFreq = 44100;
   IOTA = 0;
-  
-  int bufferSize = 1024;
-  
-  for ( int i = 0; i < bufferSize; i++)
+  for ( int i = 0; i < MAX_BUFFER_SIZE; i++)
     tmpBuffer.push_back(0.f);
-  
   for (int i=0; i<65536; i++)
     fVec0[i] = 0;
-  
+  for (int i=0; i<2; i++)
+    fRec0[i] = 0;
   semitoneShift = 0.0f;
   windowSize = 1000;
   crossfadeSize = 1000;
-  
-  for (int i=0; i<2; i++)
-    fRec0[i] = 0;
 }
 
 void Looper::midi(unsigned char* data)
 {
+  /*
   if ( data[0] - 144 == track )
   {
     switch ( data[1] )
@@ -87,19 +81,18 @@ void Looper::midi(unsigned char* data)
         break;
     }
   }
-  
-  
+  */
 }
 
 void Looper::setScene( int sc )
 {
   // update Looper to play different scene
   scene = sc;
-  sample = samples[scene];
+  //sample = samples[scene];
 }
 
-void Looper::setState( State s)
-{
+//void Looper::setState( State s) {
+  /*
   // quantize recording to next bar event
   if ( state == STATE_RECORDING )
   {
@@ -107,10 +100,12 @@ void Looper::setState( State s)
   }
   state = s;
   updateControllers();
-}
+}  */
+
 
 void Looper::updateControllers()
 {
+  /*
   if (state == STATE_RECORD_QUEUED )
   {
     numBeats = 0;
@@ -147,10 +142,12 @@ void Looper::updateControllers()
     EventLooperProgress e(track, 0 );
     writeToGuiRingbuffer( &e );
   }
+  */
 }
 
 void Looper::setSample(int sc, AudioBuffer* ab)
 {
+  /*
   vector<float>& buf = ab->getData();
   if ( buf.size() > SAMPLE_SIZE )
   {
@@ -177,10 +174,12 @@ void Looper::setSample(int sc, AudioBuffer* ab)
     
     //memcpy( &sample[0], &buf[0], buf.size() ); // copy sample data to pre-allocated buffer
   }
+  */
 }
 
 void Looper::process(int nframes, Buffers* buffers)
 {
+  /*
   float* in  = buffers->audio[Buffers::MASTER_INPUT];
   
   // FIXME:
@@ -237,6 +236,7 @@ void Looper::process(int nframes, Buffers* buffers)
 
 void Looper::bar()
 {
+  /*
   int barTmpState = state;
   // queue stop recording -> stop recording, now calculate beats in loop
   if ( stopRecordOnBar )
@@ -290,31 +290,20 @@ void Looper::bar()
   {
     updateControllers();
   }
+  */
 }
 
 void Looper::beat()
 {
+  /*
   if (state == STATE_RECORDING || stopRecordOnBar )
   {
     numBeats++;
   }
   playedBeats++;
+  * 
+  */
 }
-
-void Looper::setLoopLength(float l)
-{
-  numBeats = l * 4;
-  
-  // smallest loop = 4 beats
-  if ( numBeats < 4 )
-    numBeats = 4;
-  
-  char buffer [50];
-  sprintf (buffer, "Looper %i loop lenght = %i", track, numBeats );
-  EventGuiPrint e( buffer );
-  writeToGuiRingbuffer( &e );
-}
-
 
 void Looper::pitchShift(int count, float* input, float* output)
 {
