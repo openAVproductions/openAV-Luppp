@@ -12,18 +12,7 @@
 extern Jack* jack;
 
 Looper::Looper(int t) :
-      track(t),
-      scene(0),
-      fpb(120),
-      gain(1.f),
-      numBeats   (4),
-      playedBeats(0),
-      stopRecordOnBar(false),
-      endPoint   (0),
-      lastWrittenSampleIndex(0),
-      playPoint  (0),
-      uiUpdateConstant(44100/30),
-      uiUpdateCounter(44100/30)
+  track(t)
 {
   // pre-zero the internal sample
   tmpRecordBuffer = (float*)malloc( sizeof(float) * MAX_BUFFER_SIZE );
@@ -87,7 +76,7 @@ void Looper::midi(unsigned char* data)
 void Looper::setScene( int sc )
 {
   // update Looper to play different scene
-  scene = sc;
+  //scene = sc;
   //sample = samples[scene];
 }
 
