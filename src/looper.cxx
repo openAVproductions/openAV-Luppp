@@ -60,8 +60,11 @@ void Looper::midi(unsigned char* data)
     switch ( data[1] )
     {
       case 48: setState( STATE_RECORD_QUEUED );     break;
-      case 53: setState( STATE_PLAY_QUEUED );       break;
-      case 52: setState( STATE_STOP_QUEUED );       break;
+      case 53: case 54: case 55: case 56: case 57:
+          setState( STATE_PLAY_QUEUED );
+          setScene( data[1] - 53 );
+          break;
+      case 52: setState( STATE_STOP_QUEUED   );     break;
     }
   }
   else if ( data[0] - 128 == track )
