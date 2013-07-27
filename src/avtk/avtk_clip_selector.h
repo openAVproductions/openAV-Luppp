@@ -56,10 +56,10 @@ class ClipState
       name = n;
     }
     void play(){_playing = true;}
-    void stop(){_playing = false;}
+    void stop(){_playing = false; _recording = false;}
     void queue(){_queued = true;}
     void stopQueue(){_queued = false;}
-    void record(){_recording = true;}
+    void record(){_recording = true; _loaded = true;}
     void stopRecord(){_recording = false;}
     
     bool loaded(){return _loaded;}
@@ -128,6 +128,7 @@ class ClipSelector : public Fl_Button
       {
         case Looper::STATE_PLAYING:
             printf("clipSelector setState() clip %i = CLIP_PLAYING\n", clipNum);
+            clips[clipNum].play();
             break;
         case Looper::STATE_PLAY_QUEUED:
             clips[clipNum].queue();
@@ -291,8 +292,6 @@ class ClipSelector : public Fl_Button
             int clipNum = ( (Fl::event_y() ) - y ) / clipHeight;
             if (clipNum >= numClips)
               clipNum = numClips -1; // fix for clicking the lowest pixel
-            //printf("clip number %i. Playing %i, rec %i, Q %i, StopQ, %i\n" , clipNum, recordingClip, queuedClip, stopQueuedClip );
-            
             
             // handle right clicks: popup menu
             if ( Fl::event_state(FL_BUTTON3) )
@@ -349,50 +348,48 @@ class ClipSelector : public Fl_Button
             }
             else
             {
-              /*
               // decide action to take based on current state of clip
-              if ( clipNum == queuedClip )
+              if ( clips[clipNum].queued() )
               {
                 
               }
-              else if ( clipNum == playingClip )
+              else if ( clips[clipNum].playing() )
               {
                 EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_STOP_QUEUED);
                 writeToDspRingbuffer( &e );
-                //playingClip = -1;
-                //stopQueuedClip = clipNum;
+                clips[clipNum].stop();
+                //clips[clipNum].stopQueue();
                 printf("stopping clip now: playingClip == %i", clipNum );
               }
-              else if ( clipNum == recordingClip )
+              else if ( clips[clipNum].recording() )
               {
                 EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_STOP_QUEUED);
                 writeToDspRingbuffer( &e );
-                //recordingClip = -1;
-                //stopQueuedClip = -1;
-                //clips[clipNum].loaded = true;
+                clips[clipNum].record();
               }
+              /*
               else if ( clipNum == stopQueuedClip )
               {
                 playingClip = -1;
               }
-              else if ( clips[clipNum].loaded )
+              */
+              else if ( clips[clipNum].loaded() )
               {
                 EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_PLAY_QUEUED);
                 writeToDspRingbuffer( &e );
-                queuedClip = clipNum;
+                //queuedClip = clipNum;
               }
-              else if ( !clips[clipNum].loaded )
+              else if ( !clips[clipNum].loaded() )
               {
                 EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_RECORD_QUEUED);
                 writeToDspRingbuffer( &e );
-                recordingClip = clipNum;
               }
               else
               {
                 printf("avtk clipSelector handle click: no state triggered");
               }
               
-              
+              /*
               switch( clips[clipNum].state )
               {
                 case ClipState::CLIP_EMPTY:
