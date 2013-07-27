@@ -151,7 +151,7 @@ void Looper::updateControllers()
 
 void Looper::setSample(int sc, AudioBuffer* ab)
 {
-  vector<float>& buf = ab->get();
+  vector<float>& buf = ab->getData();
   if ( buf.size() > SAMPLE_SIZE )
   {
     EventGuiPrint e( "Looper setSample() ERROR size > incoming sample" );

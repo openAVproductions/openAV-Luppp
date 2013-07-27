@@ -31,7 +31,7 @@ class AudioBuffer
       numBeats = b;
     }
     
-    std::vector<float>& get()
+    std::vector<float>& getData()
     {
       return buffer;
     }
