@@ -64,6 +64,7 @@ class ClipState
     }
     
     State state;
+    bool loaded;
     std::string name;
 };
 
@@ -91,6 +92,16 @@ class ClipSelector : public Fl_Button
       ID = id;
     }
     
+    // calling this function marks a clip as loaded, optionally with name
+    // parameter. Recording won't provide a name, or "..." or something
+    void loadClip( int clip, std::string name = "" )
+    {
+      
+    }
+    
+    // this function converts the Looper::State into the UI represnted
+    // ClipSelector state. It puts some of the data into clips[], and stores
+    // unique things (like playing) into the class.
     void setState( int clipNum, Looper::State s )
     {
       switch(s)
