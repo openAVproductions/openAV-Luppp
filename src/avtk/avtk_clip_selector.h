@@ -44,22 +44,12 @@ namespace Avtk
 class ClipState
 {
   public:
-    enum State {
-      CLIP_EMPTY = 0,
-      CLIP_LOADED,
-      CLIP_QUEUED,
-      CLIP_PLAYING,
-      CLIP_RECORDING,
-      CLIP_STOPPING,
-    };
     ClipState()
     {
-      state = CLIP_EMPTY;
       loaded = false;
       name = "";
     }
     
-    State state;
     bool loaded;
     std::string name;
 };
@@ -81,7 +71,26 @@ class ClipSelector : public Fl_Button
       
       highlight = false;
       mouseOver = false;
+      
+      playingClip = -1;
+      queuedClip = -1;
+      recordingClip = -1;
     }
+    
+    
+    int ID;
+    
+    static const int numClips = 10;
+    ClipState clips[numClips];
+    
+    int playingClip;
+    int queuedClip;
+    int recordingClip;
+    
+    bool mouseOver;
+    bool highlight;
+    int x, y, w, h;
+    const char* label;
     
     void setID( int id )
     {
@@ -95,7 +104,6 @@ class ClipSelector : public Fl_Button
     {
       clips[clip].loaded = true;
       clips[clip].name   = name;
-      clips[clip].state  = ClipState::CLIP_LOADED;
     }
     
     /** converts the Looper::State into the UI represnted ClipSelector state.
@@ -106,42 +114,32 @@ class ClipSelector : public Fl_Button
       switch(s)
       {
         case Looper::STATE_PLAYING:
-            clips[clipNum].state = ClipState::CLIP_PLAYING;
+            playingClip = clipNum;
             printf("clipSelector setState() clip %i = CLIP_PLAYING\n", clipNum);
             break;
         case Looper::STATE_PLAY_QUEUED:
-            clips[clipNum].state = ClipState::CLIP_QUEUED;
+            queuedClip = clipNum;
             printf("clipSelector setState() clip %i = CLIP_QUEUED\n", clipNum);
             break;
         case Looper::STATE_RECORDING:
-            clips[clipNum].state = ClipState::CLIP_RECORDING;
+            //clips[clipNum].state = ClipState::CLIP_RECORDING;
             printf("clipSelector setState() clip %i = CLIP_RECORDING\n", clipNum);
             break;
         case Looper::STATE_RECORD_QUEUED:
-            clips[clipNum].state = ClipState::CLIP_QUEUED;
+            //clips[clipNum].state = ClipState::CLIP_QUEUED;
             printf("clipSelector setState() clip %i = CLIP_QUEUED\n", clipNum);
             break;
         case Looper::STATE_STOPPED:
-            clips[clipNum].state = ClipState::CLIP_LOADED;
+            //clips[clipNum].state = ClipState::CLIP_LOADED;
             printf("clipSelector setState() clip %i = CLIP_LOADED\n", clipNum);
             break;
         case Looper::STATE_STOP_QUEUED:
-            clips[clipNum].state = ClipState::CLIP_QUEUED;
+            //clips[clipNum].state = ClipState::CLIP_QUEUED;
             printf("clipSelector setState() clip %i = CLIP_QUEUED\n", clipNum);
             break;
       }
       redraw();
     }
-    
-    int ID;
-    
-    static const int numClips = 10;
-    ClipState clips[numClips];
-    
-    bool mouseOver;
-    bool highlight;
-    int x, y, w, h;
-    const char* label;
     
     void draw()
     {
@@ -171,55 +169,62 @@ class ClipSelector : public Fl_Button
           cairo_fill(cr);
           
           cairo_rectangle( cr, x+1, drawY, clipHeight - 2, clipHeight - 4 );
-          switch( clips[i].state )
+          
+          if ( i == recordingClip )
           {
-            case ClipState::CLIP_EMPTY:
-                cairo_set_source_rgba(cr, 66 / 255.f,  66 / 255.f ,  66 / 255.f, 1.f);
-                cairo_fill(cr);
-                break;
-            case ClipState::CLIP_LOADED:
-                cairo_set_source_rgba(cr, 1.0, 0.6,   0, 1.f);
-                cairo_fill(cr);
-                cairo_arc( cr, x+14, drawY+13, 4.3, 0, 6.29 );
-                cairo_set_source_rgba(cr, 0, 0, 0, 1.f);
-                cairo_set_line_width(cr, 2.2f);
-                cairo_stroke(cr);
-                break;
-            case ClipState::CLIP_QUEUED:
-                cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 1 );
-                cairo_fill(cr);
-                cairo_move_to( cr, x+11, drawY+8  );
-                cairo_line_to( cr, x+11, drawY+18 );
-                cairo_move_to( cr, x+17, drawY+8  );
-                cairo_line_to( cr, x+17, drawY+18 );
-                cairo_set_source_rgba(cr, 0, 0, 0, 1.f);
-                cairo_set_line_width(cr, 2.8f);
-                cairo_stroke(cr);
-                break;
-            case ClipState::CLIP_PLAYING:
-                cairo_set_source_rgba(cr, 0.0, 1.0,   0, 1.f );
-                cairo_fill(cr);
-                cairo_move_to( cr, x+10, drawY+8 );
-                cairo_line_to( cr, x+19, drawY+13 );
-                cairo_line_to( cr, x+10, drawY+18 );
-                cairo_close_path(cr);
-                cairo_set_source_rgba(cr, 0, 0, 0, 1.f);
-                cairo_fill(cr);
-                break;
-            case ClipState::CLIP_RECORDING:
-                cairo_set_source_rgba(cr, 1.f,  0 / 255.f ,  0 / 255.f, 1.f);
-                cairo_fill(cr);
-                cairo_arc( cr, x+14, drawY+13, 4.3, 0, 6.29 );
-                cairo_set_source_rgba(cr, 0, 0, 0, 1.f);
-                cairo_fill(cr);
-                break;
-            case ClipState::CLIP_STOPPING:
-                cairo_set_source_rgba(cr, 0 / 255.f,  0 / 255.f ,  0 / 255.f, 1.0);
-                cairo_fill(cr);
-                cairo_rectangle( cr, x+9, drawY+8, 9, 9 );
-                cairo_set_source_rgba(cr, 1, 1, 1, 0.6);
-                cairo_fill(cr);
-                break;
+            cairo_set_source_rgba(cr, 1.f,  0 / 255.f ,  0 / 255.f, 1.f);
+            cairo_fill(cr);
+            cairo_arc( cr, x+14, drawY+13, 4.3, 0, 6.29 );
+            cairo_set_source_rgba(cr, 0, 0, 0, 1.f);
+            cairo_fill(cr);
+          }
+          else if ( i == playingClip )
+          {
+            cairo_set_source_rgba(cr, 0.0, 1.0,   0, 1.f );
+            cairo_fill(cr);
+            cairo_move_to( cr, x+10, drawY+8 );
+            cairo_line_to( cr, x+19, drawY+13 );
+            cairo_line_to( cr, x+10, drawY+18 );
+            cairo_close_path(cr);
+            cairo_set_source_rgba(cr, 0, 0, 0, 1.f);
+            cairo_fill(cr);
+          }
+          else if ( i == queuedClip )
+          {
+            cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 1 );
+            cairo_fill(cr);
+            cairo_move_to( cr, x+11, drawY+8  );
+            cairo_line_to( cr, x+11, drawY+18 );
+            cairo_move_to( cr, x+17, drawY+8  );
+            cairo_line_to( cr, x+17, drawY+18 );
+            cairo_set_source_rgba(cr, 0, 0, 0, 1.f);
+            cairo_set_line_width(cr, 2.8f);
+            cairo_stroke(cr);
+          }
+          else if ( clips[i].loaded )
+          {
+            cairo_set_source_rgba(cr, 1.0, 0.6,   0, 1.f);
+            cairo_fill(cr);
+            cairo_arc( cr, x+14, drawY+13, 4.3, 0, 6.29 );
+            cairo_set_source_rgba(cr, 0, 0, 0, 1.f);
+            cairo_set_line_width(cr, 2.2f);
+            cairo_stroke(cr);
+          }
+          else if ( false )
+          {
+            // stop symbol: not currently used
+            /*
+            cairo_set_source_rgba(cr, 0 / 255.f,  0 / 255.f ,  0 / 255.f, 1.0);
+            cairo_fill(cr);
+            cairo_rectangle( cr, x+9, drawY+8, 9, 9 );
+            cairo_set_source_rgba(cr, 1, 1, 1, 0.6);
+            cairo_fill(cr);
+            */
+          }
+          else
+          {
+            cairo_set_source_rgba(cr, 66 / 255.f,  66 / 255.f ,  66 / 255.f, 1.f);
+            cairo_fill(cr);
           }
           
           cairo_rectangle( cr, x+1, drawY, clipWidth, clipHeight - 2 );
@@ -327,13 +332,14 @@ class ClipSelector : public Fl_Button
               }
               else if ( strcmp(m->label(), "Record") == 0 )
               {
-                clips[clipNum].state = ClipState::CLIP_RECORDING;
+                //clips[clipNum].state = ClipState::CLIP_RECORDING;
                 EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_RECORD_QUEUED);
                 writeToDspRingbuffer( &e );
               }
             }
             else
             {
+              /*
               switch( clips[clipNum].state )
               {
                 case ClipState::CLIP_EMPTY:
@@ -372,6 +378,7 @@ class ClipSelector : public Fl_Button
                     printf("Avtk::ClipSelector, warning: unknown clip type\n");
                 
               }
+              */
             }
           }
           redraw();
