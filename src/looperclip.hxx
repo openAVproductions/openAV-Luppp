@@ -2,7 +2,7 @@
 #ifndef LUPPP_LOOPER_CLIP_H
 #define LUPPP_LOOPER_CLIP_H
 
-class AudioBuffer;
+#include "audiobuffer.hxx"
 
 /** LooperClip
  * Represents each clip that a looper can playback. The core of the audio
@@ -23,20 +23,24 @@ class AudioBuffer;
 class LooperClip
 {
   public:
-    enum State {
-      STATE_PLAYING = 0,
-      STATE_PLAY_QUEUED,
-      STATE_RECORDING,
-      STATE_RECORD_QUEUED,
-      STATE_STOPPED,
-      STATE_STOP_QUEUED,
-    };
-    
     LooperClip()
     {
       _loaded = false;
+      _playing = false;
+      _recording = false;
+      
       _buffer = 0;
-      _state  = STATE_STOPPED;
+      
+      index = 0;
+    }
+    
+    // loads a sample: eg from disk
+    void load( AudioBuffer* ab )
+    {
+      _loaded = true;
+      _buffer = ab;
+      
+      _playing = true;
     }
     
     void setRequestedBuffer( AudioBuffer* ab )
@@ -45,15 +49,31 @@ class LooperClip
       // and send the old one away to be deallocated.
     }
     
-    bool  loaded(){return _loaded;}
-    State state(){return _state;}
+    void record(int count, float* L, float* R)
+    {
+      // write "count" samples into current buffer. If the last
+    }
+    
+    int nframesAvailable()
+    {
+      // return amount of space left to record
+    }
+    
+    bool loaded(){return _loaded;}
+    bool playing(){return _playing;}
+    bool recording(){return _recording;}
+    
+    float getSample(){return _buffer->getData().at(index++);}
     
     // Set
     void clipLength(int l){_clipLenght = l;}
   
   private:
     bool _loaded;
-    State _state;
+    bool _recording;
+    bool _playing;
+    
+    long index;
     AudioBuffer* _buffer;
     
     // Clip Properties

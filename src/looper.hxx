@@ -12,7 +12,6 @@
 #include "looperclip.hxx"
 #include "observer/observer.hxx"
 
-
 using namespace std;
 
 /** Looper
@@ -34,8 +33,9 @@ class Looper : public Observer, public AudioProcessor
     void setFpb(int f) { /*fpb = f;*/ }
     
     void setScene( int sc );
-    //void setState( State s);
     
+    
+    LooperClip* getClip(int scene);
     
     void updateControllers();
     void process(int nframes, Buffers* buffers);
@@ -44,7 +44,6 @@ class Looper : public Observer, public AudioProcessor
     const int track;
     
     float* tmpRecordBuffer;
-    
     LooperClip clips[10];
     
     // Pitch Shifting

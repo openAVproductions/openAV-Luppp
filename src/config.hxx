@@ -3,8 +3,10 @@
 #define LUPPP_CONFIG_H
 
 #define NTRACKS 8
-
+#define NSCENES 10
 #define MAX_BUFFER_SIZE 1024
+
+#define LOOPER_SAMPLES_BEFORE_REQUEST 44100
 
 #endif // LUPPP_CONFIG_H
 

@@ -18,9 +18,6 @@ Looper::Looper(int t) :
   tmpRecordBuffer = (float*)malloc( sizeof(float) * MAX_BUFFER_SIZE );
   memset( tmpRecordBuffer, 0, sizeof(float) * MAX_BUFFER_SIZE );
   
-  printf("Looper ID %i\n" , track );
-  
-  
   // init faust pitch shift variables
   fSamplingFreq = 44100;
   IOTA = 0;
@@ -33,6 +30,11 @@ Looper::Looper(int t) :
   semitoneShift = 0.0f;
   windowSize = 1000;
   crossfadeSize = 1000;
+}
+
+LooperClip* Looper::getClip(int scene)
+{
+  return &clips[scene];
 }
 
 void Looper::midi(unsigned char* data)
@@ -134,8 +136,9 @@ void Looper::updateControllers()
   */
 }
 
-void Looper::setSample(int sc, AudioBuffer* ab)
+void Looper::setSample(int scene, AudioBuffer* ab)
 {
+  clips[scene].load( ab );
   /*
   vector<float>& buf = ab->getData();
   if ( buf.size() > SAMPLE_SIZE )
@@ -168,7 +171,6 @@ void Looper::setSample(int sc, AudioBuffer* ab)
 
 void Looper::process(int nframes, Buffers* buffers)
 {
-  /*
   float* in  = buffers->audio[Buffers::MASTER_INPUT];
   
   // FIXME:
@@ -177,6 +179,33 @@ void Looper::process(int nframes, Buffers* buffers)
   float* trk = buffers->audio[Buffers::TRACK_0 + track];
   float* out = buffers->audio[Buffers::MASTER_OUTPUT];
   
+  // process each clip individually: this allows for playback of one clip,
+  // while another clip records.
+  for ( int i = 0; i < NSCENES; i++ )
+  {
+    // handle state of clip, and do what needs doing:
+    // record into buffer, play from buffer, etc
+    if ( clips[i].recording() )
+    {
+      // copy data from input buffer to recording buffer
+      
+      if ( clips[i].nframesAvailable() < LOOPER_SAMPLES_BEFORE_REQUEST )
+      {
+        // request bigger buffer for this track/scene
+      }
+    }
+    else if ( clips[i].playing() )
+    {
+      // copy data into tmpBuffer, then pitch-stretch into track buffer
+      for(int i = 0; i < nframes; i++ )
+      {
+        out[i] += clips[i].getSample();
+      }
+    }
+  }
+  
+  
+  /*
   float playbackSpeed = endPoint / ( float(numBeats) * fpb );
   semitoneShift = -( 12 * log ( playbackSpeed ) / log (2) );
   
