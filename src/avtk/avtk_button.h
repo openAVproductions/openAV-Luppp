@@ -41,6 +41,14 @@ class Button : public Fl_Button
       
       label = _label;
       
+      _r = 1.0;
+      _g = 0.48;
+      _b = 0.0;
+      
+      _bgr = 0.11;
+      _bgg = 0.11;
+      _bgb = 0.11;
+      
       highlight = false;
       mouseOver = false;
     }
@@ -49,6 +57,24 @@ class Button : public Fl_Button
     bool highlight;
     int x, y, w, h;
     const char* label;
+    
+    float _r, _g, _b;       // foreground colour
+    float _bgr, _bgg, _bgb; // background colour
+    float _outr, _outg, _outb; // outline colour
+    
+    void setColor(float r, float g, float b)
+    {
+      _r = r;
+      _g = g;
+      _b = b;
+    }
+    
+    void setBgColor(float r, float g, float b)
+    {
+      _bgr = r;
+      _bgg = g;
+      _bgb = b;
+    }
     
     void draw()
     {
@@ -59,7 +85,7 @@ class Button : public Fl_Button
         cairo_save( cr );
         
         cairo_rectangle( cr, x+1, y+1, w-2, h-2 );
-        cairo_set_source_rgb( cr,28 / 255.f,  28 / 255.f ,  28 / 255.f  );
+        cairo_set_source_rgb( cr, _bgr, _bgg, _bgb );
         cairo_fill_preserve(cr);
         
         cairo_set_line_width(cr, 1.3);
@@ -67,14 +93,14 @@ class Button : public Fl_Button
         
         if ( highlight )
         {
-          cairo_set_source_rgba(cr, 1.0, 0.48,   0, 0.4);
+          cairo_set_source_rgba(cr, _r, _g, _b, 0.4);
           cairo_fill_preserve(cr);
         }
         
         float alpha = 0.6;
         if (mouseOver)
           alpha = 1;
-        cairo_set_source_rgba(cr, 1.0, 0.48,   0, alpha);
+        cairo_set_source_rgba(cr,  _r, _g, _b, alpha);
         if ( highlight )
           cairo_set_line_width(cr, 2.2);
         cairo_stroke(cr);

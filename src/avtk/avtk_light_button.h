@@ -43,6 +43,14 @@ class LightButton : public Fl_Button
       _g = 0.48;
       _b = 0.0;
       
+      _bgr = 0.11;
+      _bgg = 0.11;
+      _bgb = 0.11;
+      
+      _outr = _r;
+      _outg = _g;
+      _outb = _b;
+      
       label = _label;
       
       _highlight = false;
@@ -53,13 +61,22 @@ class LightButton : public Fl_Button
     bool _highlight;
     int x, y, w, h;
     const char* label;
-    float _r, _g, _b;
+    float _r, _g, _b;       // foreground colour
+    float _bgr, _bgg, _bgb; // background colour
+    float _outr, _outg, _outb; // outline colour
     
     void setColor(float r, float g, float b)
     {
       _r = r;
       _g = g;
       _b = b;
+    }
+    
+    void setBgColor(float r, float g, float b)
+    {
+      _bgr = r;
+      _bgg = g;
+      _bgb = b;
     }
     
     void draw()
@@ -80,7 +97,7 @@ class LightButton : public Fl_Button
         cairo_save( cr );
         
         cairo_rectangle( cr, x+1, y+1, w-2, h-2 );
-        cairo_set_source_rgb( cr,28 / 255.f,  28 / 255.f ,  28 / 255.f  );
+        cairo_set_source_rgba( cr, _bgr, _bgg, _bgb, 0.4 );
         cairo_fill_preserve(cr);
         
         cairo_set_line_width(cr, 1.5);

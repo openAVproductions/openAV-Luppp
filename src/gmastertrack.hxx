@@ -68,25 +68,43 @@ class GMasterTrack : public Fl_Group
       
       source(x+5, y+26, 140, 100, ""),
       
-      tapTempo(x + 25 + 52, y + 26 + 5, 63, 30,"Tap"),
-      metronomeButton(x + 10,y + 26 + 5, 63, 30,"Metro"),
+      tapTempo(x + 25 + 52, y + 26 + 4, 63, 29,"Tap"),
+      metronomeButton(x + 9,y + 26 + 4, 64, 29,"Metro"),
       
       volume(x+106, y +427, 36, 150, "Vol")
     {
       ID = privateID++;
       
+      bar = 0;
+      
       tapTempo.callback( gmastertrack_button_callback, &ID );
       metronomeButton.callback( gmastertrack_button_callback, 0 );
       
+      tapTempo.setBgColor( 0, 0, 0 );
+      //metronomeButton.setBgColor( 0, 0, 0 );
+      metronomeButton.setColor( 0.4, 0.4, 0.4 );
+      //metronomeButton.setOutlineColor( 0.4, 0.4, 0.4 );
+      
       for(int i = 0; i < 4; i++)
       {
-        beatLights[i] = new Avtk::LightButton( x + 10 + 33 * i, y + 26 + 38, 30, 30, "" );
+        int offset = 0;
+        /*
+        if ( i > 1 )
+          offset = 1;
+        */
+        beatLights[i]   = new Avtk::LightButton( x + 9 + 34 * i + offset, y + 25 + 37     , 30, 29, "" );
+        beatLights[i+4] = new Avtk::LightButton( x + 9 + 34 * i + offset, y + 25 + 37 + 32, 30, 29, "" );
       }
       
       beatLights[0]->setColor( 0.0, 1.0 , 0.0 );
       beatLights[1]->setColor( 1.0, 1.0 , 0.0 );
       beatLights[2]->setColor( 1.0, 0.48, 0.0 );
       beatLights[3]->setColor( 1.0, 0.0 , 0.0 );
+      
+      beatLights[4]->setColor( 0.0, 1.0 , 0.0 );
+      beatLights[5]->setColor( 1.0, 1.0 , 0.0 );
+      beatLights[6]->setColor( 1.0, 0.48, 0.0 );
+      beatLights[7]->setColor( 1.0, 0.0 , 0.0 );
       
       volBox.maximum(1.0f);
       volBox.minimum(0.0f);
@@ -103,16 +121,31 @@ class GMasterTrack : public Fl_Group
       end(); // close the group
     }
     
-    void setBarBeat(int bar, int beat)
+    void setBarBeat(int b, int beat)
     {
-      cout << bar << "  " << beat << endl;
+      if ( beat % 4 == 0 )
+      {
+        bar = bar % 4 + 1;
+      }
+      
       int num = (beat % 4) + 1;
       
-      // turn all off, then on again if its lit
-      for( int i = 0; i < 4; i++)
+      cout << bar << "  " << num << endl;
+      
+      // turn all off
+      for( int i = 0; i < 8; i++)
         beatLights[i]->value( 0 );
-      for( int i = 0; i < num; i++)
+      
+      // bar lights
+      for( int i = 0; i < bar; i++)
         beatLights[i]->value( 1 );
+      
+      
+      // beat starts at 4
+      for( int i = 0; i < num; i++)
+        beatLights[i+4]->value( 1 );
+      
+      
     }
     
     ~GMasterTrack()
@@ -123,6 +156,8 @@ class GMasterTrack : public Fl_Group
   
   private:
     int ID;
+    
+    int bar;
     
     char* title;
     
@@ -136,7 +171,7 @@ class GMasterTrack : public Fl_Group
     Avtk::Button tapTempo;
     Avtk::LightButton metronomeButton;
     
-    Avtk::LightButton* beatLights[4];
+    Avtk::LightButton* beatLights[8];
     
     Avtk::Volume volume;
     
