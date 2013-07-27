@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "buffers.hxx"
+#include "audioprocessor.hxx"
 #include "observer/observer.hxx"
 
 #define SAMPLE_SIZE 44100*60
@@ -14,7 +15,7 @@ class AudioBuffer;
 
 using namespace std;
 
-class Looper : public Observer // for notifications
+class Looper : public AudioProcessor, public Observer // for notifications
 {
   public:
     enum State {
