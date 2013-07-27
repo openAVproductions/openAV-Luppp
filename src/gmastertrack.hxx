@@ -3,6 +3,7 @@
 #define LUPPP_G_MASTER_TRACK_H
 
 #include <iostream>
+#include <sstream>
 
 #include <FL/Fl.H>
 #include <FL/Fl_Group.H>
@@ -77,6 +78,16 @@ class GMasterTrack : public Fl_Group
       tapTempo.callback( gmastertrack_button_callback, &ID );
       metronomeButton.callback( gmastertrack_button_callback, 0 );
       
+      for(int i = 0; i < 4; i++)
+      {
+        beatLights[i] = new Avtk::LightButton( x + 10 + 33 * i, y + 26 + 38, 30, 30, "" );
+      }
+      
+      beatLights[0]->setColor( 0.0, 1.0 , 0.0 );
+      beatLights[1]->setColor( 1.0, 1.0 , 0.0 );
+      beatLights[2]->setColor( 1.0, 0.48, 0.0 );
+      beatLights[3]->setColor( 1.0, 0.0 , 0.0 );
+      
       volBox.maximum(1.0f);
       volBox.minimum(0.0f);
       volBox.color( FL_BLACK );
@@ -90,6 +101,18 @@ class GMasterTrack : public Fl_Group
       volume.amplitude( 0.75, 0.8 );
       
       end(); // close the group
+    }
+    
+    void setBarBeat(int bar, int beat)
+    {
+      cout << bar << "  " << beat << endl;
+      int num = (beat % 4) + 1;
+      
+      // turn all off, then on again if its lit
+      for( int i = 0; i < 4; i++)
+        beatLights[i]->value( 0 );
+      for( int i = 0; i < num; i++)
+        beatLights[i]->value( 1 );
     }
     
     ~GMasterTrack()
@@ -112,6 +135,8 @@ class GMasterTrack : public Fl_Group
     
     Avtk::Button tapTempo;
     Avtk::LightButton metronomeButton;
+    
+    Avtk::LightButton* beatLights[4];
     
     Avtk::Volume volume;
     

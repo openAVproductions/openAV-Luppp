@@ -29,6 +29,7 @@ namespace Event
     METRONOME_ACTIVE,
     
     TIME_BPM,
+    TIME_BAR_BEAT,
     TIME_TEMPO_TAP,
     
     GUI_PRINT,
@@ -162,6 +163,18 @@ class EventTimeTempoTap : public EventBase
     // no data needed, the event itself is an "event",
     // jack measures time intervals in frames & does math
     EventTimeTempoTap(){}
+};
+
+class EventTimeBarBeat : public EventBase
+{
+  public:
+    int type() { return int(TIME_BAR_BEAT); }
+    uint32_t size() { return sizeof(EventTimeBarBeat); }
+    
+    int bar;
+    int beat;
+    EventTimeBarBeat(): bar(0), beat(0){}
+    EventTimeBarBeat(int ba, int be): bar(ba), beat(be) {}
 };
 
 

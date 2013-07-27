@@ -78,6 +78,12 @@ void handleGuiEvents()
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventGuiPrint) );
             cout << "DSP: " << ev.getMessage() << endl;
           } break; }
+        case Event::TIME_BAR_BEAT: {
+          if ( availableRead >= sizeof(EventTimeBarBeat) ) {
+            EventTimeBarBeat ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTimeBarBeat) );
+            gui->getMasterTrack()->setBarBeat( ev.bar, ev.beat);
+          } break; }
         default:
           {
             cout << "Unkown message!! Will clog ringbuffer" << endl;

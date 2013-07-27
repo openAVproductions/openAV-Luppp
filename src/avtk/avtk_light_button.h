@@ -39,16 +39,28 @@ class LightButton : public Fl_Button
       w = _w;
       h = _h;
       
+      _r = 1.0;
+      _g = 0.48;
+      _b = 0.0;
+      
       label = _label;
       
-      highlight = false;
+      _highlight = false;
       mouseOver = false;
     }
     
     bool mouseOver;
-    bool highlight;
+    bool _highlight;
     int x, y, w, h;
     const char* label;
+    float _r, _g, _b;
+    
+    void setColor(float r, float g, float b)
+    {
+      _r = r;
+      _g = g;
+      _b = b;
+    }
     
     void draw()
     {
@@ -56,11 +68,11 @@ class LightButton : public Fl_Button
       {
         if ( value() )
         {
-          highlight = true;
+          _highlight = true;
         }
         else
         {
-          highlight = false;
+          _highlight = false;
         }
         
         cairo_t *cr = Fl::cairo_cc();
@@ -74,16 +86,16 @@ class LightButton : public Fl_Button
         cairo_set_line_width(cr, 1.5);
         cairo_rectangle( cr, x+1, y+1, w-2, h-2 );
         
-        if ( highlight )
+        if ( _highlight )
         {
-          cairo_set_source_rgba(cr, 1.0, 0.48,   0, 0.4);
+          cairo_set_source_rgba(cr, _r, _g, _b, 0.4);
           cairo_fill_preserve(cr);
         }
         
         float alpha = 0.7;
         if (mouseOver)
           alpha = 1;
-        cairo_set_source_rgba(cr, 1.0, 0.48,   0, alpha);
+        cairo_set_source_rgba(cr, _r, _g, _b, alpha);
         cairo_stroke(cr);
         
         cairo_restore( cr );
@@ -115,13 +127,13 @@ class LightButton : public Fl_Button
           }
           return 1;
         case FL_PUSH:
-          highlight = 1;
+          _highlight = 1;
           do_callback();
           return 1;
         case FL_DRAG: {
             int t = Fl::event_inside(this);
-            if (t != highlight) {
-              highlight = t;
+            if (t != _highlight) {
+              _highlight = t;
               redraw();
             }
           }

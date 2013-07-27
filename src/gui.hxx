@@ -22,6 +22,7 @@ class Gui
     Gui();
     int show();
     GTrack* getTrack(int id);
+    GMasterTrack* getMasterTrack(){return master;}
     
     // for pushing strings to tooltip area
     void setTooltip( std::string s );

@@ -173,9 +173,6 @@ int Jack::process (jack_nframes_t nframes)
     *output++ = tmp;
   }
   
-
-  
-  
   metronome.process( nframes, &buffers );
   
   if (uiUpdateCounter > uiUpdateConstant )

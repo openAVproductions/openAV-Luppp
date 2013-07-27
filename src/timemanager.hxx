@@ -122,6 +122,10 @@ class TimeManager
           buffers->transportPosition->bar++;
         }
         
+        // write new beat to UI (bar info currently not used)
+        EventTimeBarBeat e( 0, beat );
+        writeToGuiRingbuffer( &e );
+        
         oldBeat = beat;
       }
       
