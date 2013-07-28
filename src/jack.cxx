@@ -50,6 +50,12 @@ Jack::Jack()
                           JackPortIsOutput,
                           0 );
   
+  
+  /// prepare internal buffers
+  buffers.audio[Buffers::REVERB]         = (float*) malloc( sizeof(float) * nframes );
+  buffers.audio[Buffers::SIDECHAIN]      = (float*) malloc( sizeof(float) * nframes );
+  buffers.audio[Buffers::POST_SIDECHAIN] = (float*) malloc( sizeof(float) * nframes );
+  
   for(int i = 0; i < NTRACKS; i++)
   {
     loopers.push_back( new Looper(i) );

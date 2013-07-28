@@ -60,10 +60,20 @@ class TrackOutput : public AudioProcessor
       }
       uiUpdateCounter += nframes;
       
+      
+      /// copy audio data into reverb / sidechain / master buffers
+      float* trackBuf      = buffers->audio[Buffers::TRACK_0 + track];
+      float* reverb        = buffers->audio[Buffers::REVERB];
+      float* sidechain     = buffers->audio[Buffers::SIDECHAIN];
+      float* postSidechain = buffers->audio[Buffers::POST_SIDECHAIN];
+      
       for(int i = 0; i < nframes; i++)
       {
-        // copy data here
+        *reverb++        += *trackBuf * _toReverb;
+        *sidechain++     += *trackBuf * _toSidechain;
+        *postSidechain++ += *trackBuf * _toPostSidechain;
         
+        trackBuf++;
       }
     }
   

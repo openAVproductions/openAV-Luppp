@@ -17,8 +17,15 @@ class Buffers
     void*  midi [32];
     
     enum BUFFER {
+      // AUDIO
       MASTER_OUTPUT = 0,
       MASTER_INPUT,
+      
+      REVERB,
+      SIDECHAIN,
+      POST_SIDECHAIN,
+      
+      // MIDI
       MASTER_MIDI_INPUT,
       APC_INPUT,
       APC_OUTPUT,
