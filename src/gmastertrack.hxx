@@ -12,6 +12,7 @@
 
 #include "avtk/avtk_dial.h"
 #include "avtk/avtk_button.h"
+#include "avtk/avtk_reverb.h"
 #include "avtk/avtk_background.h"
 #include "avtk/avtk_light_button.h"
 #include "avtk/avtk_clip_selector.h"
@@ -70,6 +71,9 @@ class GMasterTrack : public Fl_Group
       
       tapTempo(x + 25 + 52, y + 26 + 4, 63, 29,"Tap"),
       metronomeButton(x + 9,y + 26 + 4, 64, 29,"Metro"),
+      
+      sidechain(x+9, y +427, 95, 95, ""),
+      reverb   (x+9, y +528, 95, 62, ""),
       
       volume(x+106, y +427, 36, 150, "Vol")
     {
@@ -152,6 +156,10 @@ class GMasterTrack : public Fl_Group
     {
       return &volume;
     }
+    Avtk::Reverb* getReverb()
+    {
+      return &reverb;
+    }
     
     ~GMasterTrack()
     {
@@ -178,6 +186,8 @@ class GMasterTrack : public Fl_Group
     
     Avtk::LightButton* beatLights[8];
     
+    Avtk::Reverb sidechain;
+    Avtk::Reverb reverb;
     Avtk::Volume volume;
     
     static int privateID;
