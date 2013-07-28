@@ -65,6 +65,8 @@ Jack::Jack()
   
   for( int i = 0; i < NTRACKS; i++)
   {
+    trackOutputs.push_back( new TrackOutput(i, loopers.at(i) ) );
+    
     dbMeters.push_back( DBMeter( buffers.samplerate ) );
   }
   
@@ -138,9 +140,9 @@ int Jack::process (jack_nframes_t nframes)
     masterMidiInputIndex++;
   }
   
-  // process each track
+  /// process each track, starting at output and working up signal path
   for(uint i = 0; i < loopers.size(); i++)
-    loopers.at(i)->process( nframes, &buffers );
+    trackOutputs.at(i)->process( nframes, &buffers );
   
   
   // get DB readings, and send to UI

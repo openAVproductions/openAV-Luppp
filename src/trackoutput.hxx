@@ -2,19 +2,24 @@
 #ifndef LUPPP_TRACK_OUTPUT_H
 #define LUPPP_TRACK_OUTPUT_H
 
-class TrackOutput
+#include "audioprocessor.hxx"
+
+class TrackOutput : public AudioProcessor
 {
   public:
     TrackOutput(int t, AudioProcessor* ap) :
       track(t),
-      previousInChain(ap),
+      previousInChain(ap)
     {
     }
     
     /// copies the track output to master buffer, sidechain & post-side buffer
     void process(int nframes, Buffers* buffers)
     {
-      ap->process( nframes, buffers );
+      if ( previousInChain )
+      {
+        previousInChain->process( nframes, buffers );
+      }
       
       for(int i = 0; i < nframes; i++)
       {

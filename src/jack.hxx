@@ -19,6 +19,7 @@
 
 #include "config.hxx"
 #include "looper.hxx"
+#include "trackoutput.hxx"
 #include "metronome.hxx"
 #include "timemanager.hxx"
 
@@ -65,6 +66,9 @@ class Jack
     ControllerUpdater controllerUpdater;
     
     vector<Looper*> loopers;
+    
+    vector<TrackOutput*> trackOutputs;
+    
     vector<DBMeter> dbMeters;
     
     // UI update variables
