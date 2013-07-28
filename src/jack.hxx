@@ -23,8 +23,6 @@
 #include "metronome.hxx"
 #include "timemanager.hxx"
 
-#include "dsp/dsp_dbmeter.hxx"
-
 #include "controllerupdater.hxx"
 
 using namespace std;
@@ -68,13 +66,6 @@ class Jack
     vector<Looper*> loopers;
     
     vector<TrackOutput*> trackOutputs;
-    
-    vector<DBMeter> dbMeters;
-    
-    // UI update variables
-    long uiUpdateCounter;
-    long uiUpdateConstant;
-    
     
     int nframes;
     int samplerate;

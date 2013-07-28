@@ -19,10 +19,6 @@ Jack::Jack()
   buffers.nframes = jack_get_buffer_size( client );
   buffers.samplerate = jack_get_sample_rate( client );
   
-  // UI update
-  uiUpdateConstant = buffers.samplerate / 30;
-  uiUpdateCounter = buffers.samplerate / 30;
-  
   
   masterOutput = jack_port_register( client,
                           "master_out",
@@ -66,8 +62,6 @@ Jack::Jack()
   for( int i = 0; i < NTRACKS; i++)
   {
     trackOutputs.push_back( new TrackOutput(i, loopers.at(i) ) );
-    
-    dbMeters.push_back( DBMeter( buffers.samplerate ) );
   }
   
   timeManager.registerObserver( &metronome );
@@ -145,22 +139,6 @@ int Jack::process (jack_nframes_t nframes)
     trackOutputs.at(i)->process( nframes, &buffers );
   
   
-  // get DB readings, and send to UI
-  for(int n = 0; n < NTRACKS; n++)
-  {
-    // needs to be setup to handle stereo instead of mono
-    float* buf = buffers.audio[Buffers::TRACK_0 + n];
-    dbMeters.at(n).process( nframes, buf, buf );
-    
-    if (uiUpdateCounter > uiUpdateConstant )
-    {
-      EventTrackSignalLevel e( n, dbMeters.at(n).getLeftDB(), dbMeters.at(n).getRightDB() );
-      //EventTrackSignalLevel e( n, n / 8.f, n / 8.f );
-      writeToGuiRingbuffer( &e );
-    }
-  }
-  
-  
   // mixdown tracks into master output buffer
   float* output = buffers.audio[Buffers::MASTER_OUTPUT];
   
@@ -176,13 +154,6 @@ int Jack::process (jack_nframes_t nframes)
   }
   
   metronome.process( nframes, &buffers );
-  
-  if (uiUpdateCounter > uiUpdateConstant )
-  {
-    uiUpdateCounter = 0;
-  }
-  
-  uiUpdateCounter += nframes;
   
   
   return false;

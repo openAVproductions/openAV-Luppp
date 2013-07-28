@@ -4,13 +4,41 @@
 
 #include "audioprocessor.hxx"
 
+#include "eventhandler.hxx"
+#include "dsp/dsp_dbmeter.hxx"
+
 class TrackOutput : public AudioProcessor
 {
   public:
     TrackOutput(int t, AudioProcessor* ap) :
       track(t),
-      previousInChain(ap)
+      previousInChain(ap),
+      dbMeter(44100)
     {
+      // UI update
+      uiUpdateConstant = 44100 / 20;
+      uiUpdateCounter  = 44100 / 30;
+    }
+    
+    /// set main mix, 0-1
+    void setMaster(float value)
+    {
+      
+    }
+    /// set sidechain mix, 0-1
+    void setSidechain(float value)
+    {
+      
+    }
+    /// set post sidechain mix, 0-1
+    void setPostSidechain(float value)
+    {
+      
+    }
+    /// set reverb mix, 0-1
+    void setReverb(float value)
+    {
+      
     }
     
     /// copies the track output to master buffer, sidechain & post-side buffer
@@ -21,9 +49,21 @@ class TrackOutput : public AudioProcessor
         previousInChain->process( nframes, buffers );
       }
       
+      float* buf = buffers->audio[Buffers::TRACK_0 + track];
+      dbMeter.process( nframes, buf, buf );
+      
+      if (uiUpdateCounter > uiUpdateConstant )
+      {
+        EventTrackSignalLevel e( track, dbMeter.getLeftDB(), dbMeter.getRightDB() );
+        writeToGuiRingbuffer( &e );
+        uiUpdateCounter = 0;
+      }
+      uiUpdateCounter += nframes;
+      
       for(int i = 0; i < nframes; i++)
       {
         // copy data here
+        
       }
     }
   
@@ -38,6 +78,11 @@ class TrackOutput : public AudioProcessor
     
     /// Pointer to "previous" processor: the graph is backwards
     AudioProcessor* previousInChain;
+    
+    // Metering variables
+    long uiUpdateCounter;
+    long uiUpdateConstant;
+    DBMeter dbMeter;
   
 };
 
