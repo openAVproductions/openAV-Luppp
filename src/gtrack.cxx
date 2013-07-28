@@ -7,9 +7,6 @@ extern Gui* gui;
 extern void luppp_tooltip(std::string s);
 
 
-//void gtrack_reverb_cb(Avtk::Dial *w, void *data)
-
-
 void gtrack_button_callback(Fl_Widget *w, void *data)
 {
   int track = 0;

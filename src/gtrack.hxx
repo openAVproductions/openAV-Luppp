@@ -24,6 +24,9 @@
 
 using namespace std;
 
+static void gtrack_vol_cb(Fl_Widget *w, void *data);
+static void gtrack_side_cb(Fl_Widget *w, void *data);
+static void gtrack_post_cb(Fl_Widget *w, void *data);
 static void gtrack_reverb_cb(Fl_Widget *w, void *data);
 extern void gtrack_button_callback(Fl_Widget *w, void *data);
 
@@ -57,8 +60,10 @@ class GTrack : public Fl_Group
       clipSel.setID( ID );
       
       rev.callback( gtrack_reverb_cb, this );
+      side.callback( gtrack_side_cb, this );
+      post.callback( gtrack_post_cb, this );
       
-      volume.callback( gtrack_button_callback, 0 );
+      volume.callback( gtrack_vol_cb, this );
       
       progress.maximum(1.0f);
       progress.minimum(0.0f);
@@ -112,7 +117,28 @@ void gtrack_reverb_cb(Fl_Widget *w, void *data)
   GTrack* track = (GTrack*) data;
   EventTrackSend e( track->ID, SEND_REV, ((Avtk::Dial*)w)->value() );
   writeToDspRingbuffer( &e );
-  //printf("track %i reverb send %f\n", track->ID, ((Avtk::Dial*)w)->value() );
+  printf("track %i reverb send %f\n", track->ID, ((Avtk::Dial*)w)->value() );
+}
+void gtrack_side_cb(Fl_Widget *w, void *data)
+{
+  GTrack* track = (GTrack*) data;
+  EventTrackSend e( track->ID, SEND_SIDE, ((Avtk::Dial*)w)->value() );
+  writeToDspRingbuffer( &e );
+  printf("track %i post send %f\n", track->ID, ((Avtk::Dial*)w)->value() );
+}
+void gtrack_post_cb(Fl_Widget *w, void *data)
+{
+  GTrack* track = (GTrack*) data;
+  EventTrackSend e( track->ID, SEND_POST, ((Avtk::Dial*)w)->value() );
+  writeToDspRingbuffer( &e );
+  printf("track %i side send %f\n", track->ID, ((Avtk::Dial*)w)->value() );
+}
+void gtrack_vol_cb(Fl_Widget *w, void *data)
+{
+  GTrack* track = (GTrack*) data;
+  EventTrackVol e( track->ID, ((Avtk::Volume*)w)->value() );
+  writeToDspRingbuffer( &e );
+  printf("track %i vol %f\n", track->ID, ((Avtk::Dial*)w)->value() );
 }
 
 #endif // LUPPP_G_TRACK_H
