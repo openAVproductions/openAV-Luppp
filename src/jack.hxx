@@ -52,6 +52,10 @@ class Jack
     {
       return loopers.at(t);
     }
+    TrackOutput* getTrackOutput(int t)
+    {
+      return trackOutputs.at(t);
+    }
     
     Metronome*   getMetronome(){return &metronome;}
     TimeManager* getTimeManager(){return &timeManager;}

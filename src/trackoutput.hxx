@@ -25,22 +25,22 @@ class TrackOutput : public AudioProcessor
     /// set main mix, 0-1
     void setMaster(float value)
     {
-      
+      _toMaster = value;
     }
     /// set sidechain mix, 0-1
     void setSidechain(float value)
     {
-      
+      _toSidechain = value;
     }
     /// set post sidechain mix, 0-1
     void setPostSidechain(float value)
     {
-      
+      _toPostSidechain = value;
     }
     /// set reverb mix, 0-1
     void setReverb(float value)
     {
-      
+      _toReverb = value;
     }
     
     /// copies the track output to master buffer, sidechain & post-side buffer

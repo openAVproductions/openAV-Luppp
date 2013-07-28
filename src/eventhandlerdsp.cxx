@@ -75,6 +75,22 @@ void handleDspEvents()
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTimeTempoTap) );
             jack->getTimeManager()->tap();
           } break; }
+        
+        case Event::TRACK_SEND: {
+          if ( availableRead >= sizeof(EventTrackSend) ) {
+            EventTrackSend ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackSend) );
+            if ( ev.send == SEND_REV )
+              jack->getTrackOutput(ev.track)->setReverb( ev.value );
+            else if ( ev.send == SEND_SIDE )
+              jack->getTrackOutput(ev.track)->setSidechain( ev.value );
+            else if ( ev.send == SEND_POST )
+              jack->getTrackOutput(ev.track)->setPostSidechain( ev.value );
+            else
+            {
+              // nothing
+            }
+          } break; }
         default:
           {
             // just do nothing

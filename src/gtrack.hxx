@@ -24,6 +24,7 @@
 
 using namespace std;
 
+static void gtrack_reverb_cb(Fl_Widget *w, void *data);
 extern void gtrack_button_callback(Fl_Widget *w, void *data);
 
 class GTrack : public Fl_Group
@@ -45,15 +46,17 @@ class GTrack : public Fl_Group
       volume(x+65, y +427, 36, 150, "Vol"),
       
       
-      dial2(x+22, y +440 +  0, 30, 30, "S-C"),
-      dial3(x+22, y +440 + 50, 30, 30, "P-S"),
-      dial1(x+22, y +440 +100, 30, 30, "Rev"),
+      side(x+22, y +440 +  0, 30, 30, "S-C"),
+      post(x+22, y +440 + 50, 30, 30, "P-S"),
+      rev (x+22, y +440 +100, 30, 30, "Rev"),
       
       progress(x+5, y+ 26, 100, 100, "Source UI")
     {
       ID = privateID++;
       
       clipSel.setID( ID );
+      
+      rev.callback( gtrack_reverb_cb, this );
       
       volume.callback( gtrack_button_callback, 0 );
       
@@ -95,14 +98,22 @@ class GTrack : public Fl_Group
     
     Avtk::Volume volume;
     
-    Avtk::Dial   dial1;
-    Avtk::Dial   dial2;
-    Avtk::Dial   dial3;
+    Avtk::Dial   side;
+    Avtk::Dial   post;
+    Avtk::Dial   rev;
     
     Fl_Progress  progress;
     
     static int privateID;
 };
+
+void gtrack_reverb_cb(Fl_Widget *w, void *data)
+{
+  GTrack* track = (GTrack*) data;
+  EventTrackSend e( track->ID, SEND_REV, ((Avtk::Dial*)w)->value() );
+  writeToDspRingbuffer( &e );
+  //printf("track %i reverb send %f\n", track->ID, ((Avtk::Dial*)w)->value() );
+}
 
 #endif // LUPPP_G_TRACK_H
 

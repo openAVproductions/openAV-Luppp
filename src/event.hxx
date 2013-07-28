@@ -15,10 +15,19 @@
 
 namespace Event
 {
+  enum SEND_TYPE
+  {
+    SEND_REV = 0,
+    SEND_SIDE,
+    SEND_POST,
+  };
+  
   enum {
     MASTER_VOL,
     RECORD,
     
+    
+    TRACK_SEND,
     TRACK_SIGNAL_LEVEL,
     TRACK_VOLUME,
     
@@ -78,6 +87,20 @@ class EventTrackVol : public EventBase
       track = t;
       vol = v;
     }
+};
+
+class EventTrackSend : public EventBase
+{
+  public:
+    int type() { return int(TRACK_SEND); }
+    uint32_t size() { return sizeof(EventTrackSend); }
+    
+    int track;
+    SEND_TYPE send;
+    float value;
+    
+    EventTrackSend(){};
+    EventTrackSend(int t, SEND_TYPE s, int v): track(t), send(s), value(v){}
 };
 
 class EventLooperState : public EventBase
