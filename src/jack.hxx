@@ -80,6 +80,7 @@ class Jack
     // FX
     Reverb* reverb;
     DBMeter* reverbMeter;
+    DBMeter* masterMeter;
     
     // JACK member variables
     jack_client_t* client;

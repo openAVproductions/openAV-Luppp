@@ -102,7 +102,7 @@ void handleGuiEvents()
           } break; }
         default:
           {
-            cout << "Unkown message!! Will clog ringbuffer" << endl;
+            cout << "GUI: Unkown message!! Will clog ringbuffer" << endl;
             // just do nothing
             break;
           }

@@ -18,8 +18,9 @@ class Buffers
     
     enum BUFFER {
       // AUDIO
-      MASTER_OUTPUT = 0,
-      MASTER_INPUT,
+      MASTER_INPUT  = 0,
+      MASTER_OUTPUT,
+      JACK_MASTER_OUTPUT,
       
       REVERB,
       SIDECHAIN,

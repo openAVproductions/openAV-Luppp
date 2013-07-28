@@ -46,7 +46,7 @@ class GTrack : public Fl_Group
       
       volBox(x+5, y+422, 100, 172, ""),
       
-      volume(x+65, y +427, 36, 150, "Vol"),
+      volume(x+63, y +427, 36, 162, ""),
       
       
       side(x+22, y +440 +  0, 30, 30, "S-C"),

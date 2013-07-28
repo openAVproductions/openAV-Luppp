@@ -57,6 +57,7 @@ Jack::Jack()
   buffers.audio[Buffers::REVERB]         = (float*) malloc( sizeof(float) * nframes );
   buffers.audio[Buffers::SIDECHAIN]      = (float*) malloc( sizeof(float) * nframes );
   buffers.audio[Buffers::POST_SIDECHAIN] = (float*) malloc( sizeof(float) * nframes );
+  buffers.audio[Buffers::MASTER_OUTPUT]  = (float*) malloc( sizeof(float) * nframes );
   
   for(int i = 0; i < NTRACKS; i++)
   {
@@ -75,6 +76,7 @@ Jack::Jack()
   /// setup FX
   reverb = new Reverb( buffers.samplerate );
   reverbMeter = new DBMeter( buffers.samplerate );
+  masterMeter = new DBMeter( buffers.samplerate );
   
   /// setup JACK callbacks
   if ( jack_set_process_callback( client,
@@ -105,13 +107,14 @@ int Jack::process (jack_nframes_t nframes)
 {
   // get buffers
   buffers.audio[Buffers::MASTER_INPUT]    = (float*)jack_port_get_buffer( masterInput , nframes);
-  buffers.audio[Buffers::MASTER_OUTPUT]   = (float*)jack_port_get_buffer( masterOutput, nframes);
+  buffers.audio[Buffers::JACK_MASTER_OUTPUT]=(float*)jack_port_get_buffer(masterOutput, nframes);
   buffers.midi[Buffers::MASTER_MIDI_INPUT]= (void*) jack_port_get_buffer( masterMidiInput, nframes );
   buffers.midi[Buffers::APC_INPUT]        = (void*) jack_port_get_buffer( apcMidiInput   , nframes );
   buffers.midi[Buffers::APC_OUTPUT]       = (void*) jack_port_get_buffer( apcMidiOutput  , nframes );
   
   // pre-zero output buffers
   memset( buffers.audio[Buffers::MASTER_OUTPUT], 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::JACK_MASTER_OUTPUT],0,sizeof(float)*nframes);
   memset( buffers.audio[Buffers::REVERB]       , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::SIDECHAIN]    , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::POST_SIDECHAIN],0, sizeof(float) * nframes );
@@ -177,17 +180,26 @@ int Jack::process (jack_nframes_t nframes)
     *output++ = tmp;
   }
   
+  // db meter on master output, then memcpy to JACK
+  masterMeter->process(nframes, buffers.audio[Buffers::MASTER_OUTPUT], buffers.audio[Buffers::MASTER_OUTPUT] );
+  
   metronome.process( nframes, &buffers );
   
   if ( uiUpdateCounter > uiUpdateConstant )
   {
-    EventTrackSignalLevel e(-1, reverbMeter->getLeftDB(),reverbMeter->getRightDB() );
+    EventTrackSignalLevel e(-1, masterMeter->getLeftDB(), masterMeter->getRightDB() );
     writeToGuiRingbuffer( &e );
     
     uiUpdateCounter = 0;
   }
   
   uiUpdateCounter += nframes;
+  
+  // memcpy the internal MASTER_OUTPUT buffer to the JACK_MASTER_OUTPUT
+  memcpy( buffers.audio[Buffers::JACK_MASTER_OUTPUT],
+          buffers.audio[Buffers::MASTER_OUTPUT],
+          sizeof(float)*nframes);
+  
   
   return false;
 }

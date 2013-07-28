@@ -76,6 +76,13 @@ void handleDspEvents()
             jack->getTimeManager()->tap();
           } break; }
         
+        case Event::TRACK_VOLUME: {
+          if ( availableRead >= sizeof(EventTrackVol) ) {
+            EventTrackVol ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackVol) );
+            jack->getTrackOutput(ev.track)->setMaster( ev.vol );
+            break; }
+          }
         case Event::TRACK_SEND: {
           if ( availableRead >= sizeof(EventTrackSend) ) {
             EventTrackSend ev;
@@ -93,6 +100,7 @@ void handleDspEvents()
           } break; }
         default:
           {
+            cout << "DSP: Unkown message!! Will clog ringbuffer" << endl;
             // just do nothing
             break;
           }
