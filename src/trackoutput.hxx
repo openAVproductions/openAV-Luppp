@@ -18,6 +18,8 @@ class TrackOutput : public AudioProcessor
       // UI update
       uiUpdateConstant = 44100 / 20;
       uiUpdateCounter  = 44100 / 30;
+      
+      _toReverb = 1.0;
     }
     
     /// set main mix, 0-1

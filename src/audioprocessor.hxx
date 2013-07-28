@@ -8,23 +8,21 @@ class AudioProcessor
     AudioProcessor(){}
     
     /// copies the track output to master buffer, sidechain & post-side buffer
-    virtual void process(int nframes, Buffers* buffers)
-    {
-      
-      
-    }
+    virtual void process(int nframes, Buffers* buffers){}
+    
+    /// set main mix, 0-1
+    virtual void setMaster(float value){}
+    
+    /// set sidechain mix, 0-1
+    virtual void setSidechain(float value){}
+    
+    /// set post sidechain mix, 0-1
+    virtual void setPostSidechain(float value){}
+    
+    /// set reverb mix, 0-1
+    virtual void setReverb(float value){}
     
     virtual ~AudioProcessor(){};
-  
-  private:
-    int track;
-    
-    float _toMaster;
-    
-    float _toReverb;
-    float _toSidechain;
-    float _toPostSidechain;
-  
 };
 
 #endif // LUPPP_AUDIO_PROCESSOR_H

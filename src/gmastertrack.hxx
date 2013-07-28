@@ -148,6 +148,11 @@ class GMasterTrack : public Fl_Group
       
     }
     
+    Avtk::Volume* getVolume()
+    {
+      return &volume;
+    }
+    
     ~GMasterTrack()
     {
       free(title);

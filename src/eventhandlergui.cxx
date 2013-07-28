@@ -71,13 +71,21 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventTrackSignalLevel) ) {
             EventTrackSignalLevel ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTrackSignalLevel) );
-            gui->getTrack(ev.track)->getVolume()->amplitude( ev.left, ev.right );
+            if ( ev.track < 0 ) {
+              gui->getMasterTrack()->getVolume()->amplitude( ev.left, ev.right );
+            } else {
+              gui->getTrack(ev.track)->getVolume()->amplitude( ev.left, ev.right ); }
           } break; }
         case Event::TRACK_VOLUME: {
           if ( availableRead >= sizeof(EventTrackVol) ) {
             EventTrackVol ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTrackVol) );
-            gui->getTrack(ev.track)->getVolume()->value( ev.vol );
+            if ( ev.track < 0 )
+            {
+              gui->getMasterTrack()->getVolume()->value( ev.vol );
+            }
+            else
+              gui->getTrack(ev.track)->getVolume()->value( ev.vol );
           } break; }
           
         case Event::GUI_PRINT: {

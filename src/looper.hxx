@@ -9,7 +9,7 @@
 #include "audioprocessor.hxx"
 #include "observer/observer.hxx"
 
-#define SAMPLE_SIZE 44100*60
+#define SAMPLE_SIZE 44100*20
 
 class AudioBuffer;
 

@@ -23,6 +23,9 @@
 #include "metronome.hxx"
 #include "timemanager.hxx"
 
+#include "dsp/dsp_reverb.hxx"
+#include "dsp/dsp_dbmeter.hxx"
+
 #include "controllerupdater.hxx"
 
 using namespace std;
@@ -70,6 +73,10 @@ class Jack
     int nframes;
     int samplerate;
     
+    // FX
+    Reverb* reverb;
+    DBMeter* reverbMeter;
+    
     // JACK member variables
     jack_client_t* client;
     
@@ -97,6 +104,9 @@ class Jack
                                 int,
                                 void* );
     
+    // UI update variables
+    int uiUpdateCounter;
+    int uiUpdateConstant;
 };
 
 #endif // LUPPP_JACK_H
