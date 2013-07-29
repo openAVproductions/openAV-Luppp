@@ -2,6 +2,8 @@
 #ifndef LUPPP_TRACK_OUTPUT_H
 #define LUPPP_TRACK_OUTPUT_H
 
+#include <stdio.h>
+
 #include "audioprocessor.hxx"
 
 #include "eventhandler.hxx"
@@ -15,16 +17,22 @@ class TrackOutput : public AudioProcessor
       previousInChain(ap),
       dbMeter(44100)
     {
+      printf("trackOutput ID: %i\n", track);
+      
       // UI update
       uiUpdateConstant = 44100 / 20;
       uiUpdateCounter  = 44100 / 30;
       
-      _toReverb = 1.0;
+      _toReverb        = 0.0;
+      _toMaster        = 0.8;
+      _toSidechain     = 0.0;
+      _toPostSidechain = 0.0;
     }
     
     /// set main mix, 0-1
     void setMaster(float value)
     {
+      printf("TrackOutput: master vol : %f\n", value);
       _toMaster = value;
     }
     /// set sidechain mix, 0-1
@@ -56,8 +64,8 @@ class TrackOutput : public AudioProcessor
       
       if (uiUpdateCounter > uiUpdateConstant )
       {
-        EventTrackSignalLevel e( track, dbMeter.getLeftDB(), dbMeter.getRightDB() );
-        writeToGuiRingbuffer( &e );
+        //EventTrackSignalLevel e( track, dbMeter.getLeftDB(), dbMeter.getRightDB() );
+        //writeToGuiRingbuffer( &e );
         uiUpdateCounter = 0;
       }
       uiUpdateCounter += nframes;
@@ -69,11 +77,15 @@ class TrackOutput : public AudioProcessor
       float* sidechain     = buffers->audio[Buffers::SIDECHAIN];
       float* postSidechain = buffers->audio[Buffers::POST_SIDECHAIN];
       
+      float* master        = buffers->audio[Buffers::MASTER_OUTPUT];
+      
       for(int i = 0; i < nframes; i++)
       {
         *reverb++        += *trackBuf * _toReverb;
         *sidechain++     += *trackBuf * _toSidechain;
         *postSidechain++ += *trackBuf * _toPostSidechain;
+        
+        *master++        += *trackBuf * _toMaster;
         
         trackBuf++;
       }

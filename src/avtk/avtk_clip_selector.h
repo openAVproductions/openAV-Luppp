@@ -47,6 +47,9 @@ class ClipState
     ClipState()
     {
       _loaded = false;
+      _playing = false;
+      _queued = false;
+      _recording = false;
       name = "";
     }
     

@@ -15,7 +15,7 @@ class AudioBuffer;
 
 using namespace std;
 
-class Looper : public AudioProcessor, public Observer // for notifications
+class Looper : public Observer, public AudioProcessor
 {
   public:
     enum State {

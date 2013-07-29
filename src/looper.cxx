@@ -175,7 +175,8 @@ void Looper::setSample(int sc, AudioBuffer* ab)
 void Looper::process(int nframes, Buffers* buffers)
 {
   float* in  = buffers->audio[Buffers::MASTER_INPUT];
-  float* out = buffers->audio[Buffers::TRACK_0 + track];
+  //float* out = buffers->audio[Buffers::TRACK_0 + track];
+  float* out = buffers->audio[Buffers::MASTER_OUTPUT];
   
   float playbackSpeed = endPoint / ( float(numBeats) * fpb );
   semitoneShift = -( 12 * log ( playbackSpeed ) / log (2) );
@@ -190,10 +191,13 @@ void Looper::process(int nframes, Buffers* buffers)
         tmpBuffer[i] = sample[int(playPoint)] * gain;
       }
       playPoint += playbackSpeed;
+      
+      *out++ = 0.f;//sin( playPoint * 440 * 6.24 );
+      
     }
     
     // now pitch-shift the audio in the buffer
-    pitchShift( nframes, &tmpBuffer[0], out);
+    //pitchShift( nframes, &tmpBuffer[0], out);
     
     float prog = (float(playPoint) / (fpb*numBeats));
     EventLooperProgress e(track, prog );
@@ -204,7 +208,7 @@ void Looper::process(int nframes, Buffers* buffers)
   {
     for(int i = 0; i < nframes; i++)
     {
-      if ( lastWrittenSampleIndex < 44100 * 60 )
+      if ( lastWrittenSampleIndex < SAMPLE_SIZE )
       {
         sample[lastWrittenSampleIndex++] = in[i];
       }

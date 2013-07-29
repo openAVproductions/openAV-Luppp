@@ -62,7 +62,8 @@ Jack::Jack()
   for(int i = 0; i < NTRACKS; i++)
   {
     loopers.push_back( new Looper(i) );
-    timeManager.registerObserver( loopers.back() );
+    timeManager.registerObserver( loopers.at(i) );
+    
     buffers.audio[Buffers::TRACK_0 + i] = (float*) malloc( sizeof(float) * nframes );
   }
   
@@ -152,8 +153,8 @@ int Jack::process (jack_nframes_t nframes)
   }
   
   // process each track, starting at output and working up signal path
-  for(uint i = 0; i < loopers.size(); i++)
-    trackOutputs.at(i)->process( nframes, &buffers );
+  for(uint i = 0; i < NTRACKS; i++)
+    loopers.at(i)->process( nframes, &buffers );
   
   // process fx
   float* buf[] = {
@@ -163,22 +164,8 @@ int Jack::process (jack_nframes_t nframes)
     buffers.audio[Buffers::REVERB],
   };
   
-  reverbMeter->process(nframes, buffers.audio[Buffers::REVERB], buffers.audio[Buffers::REVERB] );
-  reverb->process( nframes, &buf[0], &buf[2] );
-  
-  // mixdown tracks into master output buffer
-  float* output = buffers.audio[Buffers::MASTER_OUTPUT];
-  
-  for(int i = 0; i < nframes; i++)
-  {
-    float tmp = 0.f;
-    
-    for(int n = 0; n < NTRACKS; n++)
-    {
-      tmp += buffers.audio[Buffers::TRACK_0 + n][i];
-    }
-    *output++ = tmp;
-  }
+  //reverbMeter->process(nframes, buffers.audio[Buffers::REVERB], buffers.audio[Buffers::REVERB] );
+  //reverb->process( nframes, &buf[0], &buf[2] );
   
   // db meter on master output, then memcpy to JACK
   masterMeter->process(nframes, buffers.audio[Buffers::MASTER_OUTPUT], buffers.audio[Buffers::MASTER_OUTPUT] );
@@ -187,8 +174,14 @@ int Jack::process (jack_nframes_t nframes)
   
   if ( uiUpdateCounter > uiUpdateConstant )
   {
-    EventTrackSignalLevel e(-1, masterMeter->getLeftDB(), masterMeter->getRightDB() );
+    float peak = masterMeter->getLeftDB();
+    EventTrackSignalLevel e(-1, peak, masterMeter->getRightDB() );
     writeToGuiRingbuffer( &e );
+    
+    char buf[50];
+    snprintf( buf, 50, "signal: %f", peak );
+    EventGuiPrint e2( buf );
+    writeToGuiRingbuffer(&e2);
     
     uiUpdateCounter = 0;
   }
