@@ -121,7 +121,9 @@ int Jack::process (jack_nframes_t nframes)
   memset( buffers.audio[Buffers::POST_SIDECHAIN],0, sizeof(float) * nframes );
   
   for(int i = 0; i < NTRACKS; i++)
+  {
     memset( buffers.audio[Buffers::TRACK_0 + i], 0, sizeof(float) * nframes );
+  }
   
   jack_midi_clear_buffer( buffers.midi[Buffers::APC_OUTPUT] );
   

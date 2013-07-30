@@ -19,6 +19,9 @@ class DBMeter
       fRec0[1] = -96.f;
       fRec1[0] = -96.f;
       fRec1[1] = -96.f;
+      
+      fvbargraph0 = -96.f;
+      fvbargraph1 = -96.f;
     }
     
     int getNumInputs() { return 2;}

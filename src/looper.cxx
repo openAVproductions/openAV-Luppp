@@ -175,6 +175,10 @@ void Looper::setSample(int sc, AudioBuffer* ab)
 void Looper::process(int nframes, Buffers* buffers)
 {
   float* in  = buffers->audio[Buffers::MASTER_INPUT];
+  
+  // FIXME:
+  // using the track output causes distortion: clipping / not proper writing.
+  // writing to master fixes issue, so its due to trackOutput or Looper writing...?
   //float* out = buffers->audio[Buffers::TRACK_0 + track];
   float* out = buffers->audio[Buffers::MASTER_OUTPUT];
   
@@ -190,10 +194,10 @@ void Looper::process(int nframes, Buffers* buffers)
       {
         tmpBuffer[i] = sample[int(playPoint)] * gain;
       }
-      playPoint += playbackSpeed;
+      playPoint += 1.0; //playbackSpeed;
       
-      *out++ = 0.f;//sin( playPoint * 440 * 6.24 );
-      
+      //*out++ = sin( playPoint * 440 * 6.24 );
+      *out++ = tmpBuffer[i];
     }
     
     // now pitch-shift the audio in the buffer

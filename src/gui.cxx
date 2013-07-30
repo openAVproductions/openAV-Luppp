@@ -22,7 +22,8 @@ extern Gui* gui;
 
 void luppp_tooltip(std::string s)
 {
-  gui->setTooltip(s);
+  return;
+  //gui->setTooltip(s);
 }
 
 void Gui::setTooltip( std::string s )
@@ -68,7 +69,7 @@ Gui::Gui() :
   {
     stringstream s;
     s << "Track " << i+1;
-    printf("track name %s\n", s.str().c_str() );
+    //printf("track name %s\n", s.str().c_str() );
     tracks.push_back( new GTrack(8 + i * 118, 40, 110, 600, s.str().c_str() ) );
   }
   

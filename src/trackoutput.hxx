@@ -20,7 +20,7 @@ class TrackOutput : public AudioProcessor
       printf("trackOutput ID: %i\n", track);
       
       // UI update
-      uiUpdateConstant = 44100 / 20;
+      uiUpdateConstant = 44100 / 30;
       uiUpdateCounter  = 44100 / 30;
       
       _toReverb        = 0.0;
@@ -59,17 +59,18 @@ class TrackOutput : public AudioProcessor
         previousInChain->process( nframes, buffers );
       }
       
+      /*
       float* buf = buffers->audio[Buffers::TRACK_0 + track];
       dbMeter.process( nframes, buf, buf );
       
       if (uiUpdateCounter > uiUpdateConstant )
       {
-        //EventTrackSignalLevel e( track, dbMeter.getLeftDB(), dbMeter.getRightDB() );
-        //writeToGuiRingbuffer( &e );
+        EventTrackSignalLevel e( track, dbMeter.getLeftDB(), dbMeter.getRightDB() );
+        writeToGuiRingbuffer( &e );
         uiUpdateCounter = 0;
       }
       uiUpdateCounter += nframes;
-      
+      */
       
       /// copy audio data into reverb / sidechain / master buffers
       float* trackBuf      = buffers->audio[Buffers::TRACK_0 + track];
