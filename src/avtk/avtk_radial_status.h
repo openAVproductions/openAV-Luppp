@@ -99,17 +99,22 @@ class RadialStatus : public Fl_Slider
         }
         */
         
-        cairo_set_line_cap ( cr, CAIRO_LINE_CAP_ROUND );
-        cairo_move_to( cr, x + xc, y + yc );
-        cairo_arc( cr, x + xc, y + yc, xc - 7, -(3.1415/2), angle * 6.28 - (3.1415/2) );
-        cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 0.21 );
-        cairo_set_line_width(cr, 1.0);
-        cairo_stroke_preserve(cr);
-        cairo_fill_preserve(cr);
-        
-        cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 0.8 );
-        cairo_set_line_width(cr, 5.2);
-        cairo_stroke(cr);
+        if ( angle > 0.001 )
+        {
+          cairo_set_line_cap ( cr, CAIRO_LINE_CAP_ROUND );
+          //cairo_move_to( cr, x + xc, y + yc );
+          cairo_arc( cr, x + xc, y + yc, xc - 10, -(3.1415/2), angle * 6.28 - (3.1415/2) );
+          /*
+          cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 0.21 );
+          cairo_set_line_width(cr, 1.0);
+          cairo_stroke_preserve(cr);
+          //cairo_fill_preserve(cr);
+          */
+          cairo_set_source_rgba (cr, 1.0, 0.48, 0.0, 0.8 );
+          //cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 0.8 );
+          cairo_set_line_width(cr, 6.2);
+          cairo_stroke(cr);
+        }
         
         // inside circle
         cairo_set_source_rgba(cr,0.3,0.3,0.3, 0.8);
@@ -117,11 +122,13 @@ class RadialStatus : public Fl_Slider
         cairo_set_line_width(cr, 4.2);
         cairo_fill(cr);
         
+        /*
         cairo_move_to (cr,x + xc, y + yc);
         cairo_set_source_rgba (cr, 1.0, 0.48, 0.0, 1);
         cairo_rotate ( cr, angle * 6.28 );
         cairo_rel_line_to ( cr,0, - (yc - 11) );
         cairo_stroke(cr);
+        */
         
         cairo_restore( cr );
         
