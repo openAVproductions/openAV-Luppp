@@ -20,7 +20,9 @@ Looper::Looper(int t) :
       stopRecordOnBar(false),
       endPoint   (0),
       lastWrittenSampleIndex(0),
-      playPoint  (0)
+      playPoint  (0),
+      uiUpdateConstant(44100/30),
+      uiUpdateCounter(44100/30)
 {
   // pre-zero the internal sample
   for(int i = 0; i < 10; i++)
@@ -139,6 +141,8 @@ void Looper::updateControllers()
   else if ( state == STATE_STOPPED )
   {
     jack->getControllerUpdater()->clipSelect(track, scene, Controller::CLIP_MODE_LOADED);
+    EventLooperProgress e(track, 0 );
+    writeToGuiRingbuffer( &e );
   }
 }
 
@@ -179,14 +183,14 @@ void Looper::process(int nframes, Buffers* buffers)
   // FIXME:
   // using the track output causes distortion: clipping / not proper writing.
   // writing to master fixes issue, so its due to trackOutput or Looper writing...?
-  //float* out = buffers->audio[Buffers::TRACK_0 + track];
+  float* trk = buffers->audio[Buffers::TRACK_0 + track];
   float* out = buffers->audio[Buffers::MASTER_OUTPUT];
   
   float playbackSpeed = endPoint / ( float(numBeats) * fpb );
   semitoneShift = -( 12 * log ( playbackSpeed ) / log (2) );
   
   if ( state == STATE_PLAYING ||
-      (state == STATE_STOP_QUEUED && !stopRecordOnBar)  )
+       state == STATE_STOP_QUEUED )
   {
     for(int i = 0; i < nframes; i++)
     {
@@ -197,16 +201,22 @@ void Looper::process(int nframes, Buffers* buffers)
       playPoint += 1.0; //playbackSpeed;
       
       //*out++ = sin( playPoint * 440 * 6.24 );
-      *out++ = tmpBuffer[i];
+      *trk = tmpBuffer[i];
+      *out++ = *trk++;
     }
     
     // now pitch-shift the audio in the buffer
     //pitchShift( nframes, &tmpBuffer[0], out);
     
-    float prog = (float(playPoint) / (fpb*numBeats));
-    EventLooperProgress e(track, prog );
-    writeToGuiRingbuffer( &e );
+    if ( uiUpdateCounter > uiUpdateConstant )
+    {
+      float prog = (float(playPoint) / (fpb*numBeats));
+      EventLooperProgress e(track, prog );
+      writeToGuiRingbuffer( &e );
+    }
+    uiUpdateCounter += nframes;
   }
+  /*
   // stopRecordOnBar ensures we record right up to the bar measure
   else if ( state == STATE_RECORDING || stopRecordOnBar )
   {
@@ -218,6 +228,7 @@ void Looper::process(int nframes, Buffers* buffers)
       }
     }
   }
+  */
 }
 
 

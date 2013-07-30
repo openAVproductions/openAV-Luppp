@@ -61,6 +61,7 @@ class ClipState
     void play(){_playing = true;}
     void stop(){_playing = false; _recording = false;}
     void queue(){_queued = true;}
+    void unqueue(){_queued = false;}
     void stopQueue(){_queued = false;}
     void record(){_recording = true; _loaded = true;}
     void stopRecord(){_recording = false;}
@@ -131,17 +132,25 @@ class ClipSelector : public Fl_Button
       {
         case Looper::STATE_PLAYING:
             printf("clipSelector setState() clip %i = CLIP_PLAYING\n", clipNum);
+            for(int i = 0; i < numClips; i++ )
+              clips[clipNum].stop();
             clips[clipNum].play();
             break;
         case Looper::STATE_PLAY_QUEUED:
+            for(int i = 0; i < numClips; i++ )
+              clips[clipNum].unqueue();
             clips[clipNum].queue();
             printf("clipSelector setState() clip %i = CLIP_QUEUED\n", clipNum);
             break;
         case Looper::STATE_RECORDING:
+            for(int i = 0; i < numClips; i++ )
+              clips[clipNum].stopRecord();
             clips[clipNum].record();
             printf("clipSelector setState() clip %i = CLIP_RECORDING\n", clipNum);
             break;
         case Looper::STATE_RECORD_QUEUED:
+            for(int i = 0; i < numClips; i++ )
+              clips[clipNum].unqueue();
             clips[clipNum].queue();
             printf("clipSelector setState() clip %i = CLIP_QUEUED\n", clipNum);
             break;

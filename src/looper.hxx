@@ -71,6 +71,9 @@ class Looper : public Observer, public AudioProcessor
     float  fRec0[2];
     float  crossfadeSize;
     float  fSamplingFreq;
+    
+    int uiUpdateConstant;
+    int uiUpdateCounter;
 };
 
 #endif // LUPPP_LOOPER_H

@@ -43,7 +43,7 @@ class GTrack : public Fl_Group
       title( strdup(l) ),
       bg( x, y , w, h, title ),
       
-      radial( x+5, y+ 26, 100, 100, "Source UI"),
+      radial( x+5, y+ 26, 100, 100, ""),
       
       clipSel(x + 5, y + 26 + 102, 100, 294,""),
       

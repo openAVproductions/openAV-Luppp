@@ -84,57 +84,31 @@ class RadialStatus : public Fl_Slider
         
         cairo_save( cr );
         
-        cairo_rectangle( cr, x+1, y+1, w-2, h-2 );
-        cairo_set_source_rgb( cr, _bgr, _bgg, _bgb );
-        cairo_fill_preserve(cr);
-        
-        cairo_set_line_width(cr, 1.3);
-        cairo_rectangle( cr, x+1, y+1, w-2, h-2 );
-        
-        if ( highlight )
-        {
-          cairo_set_source_rgba(cr, _r, _g, _b, 0.4);
-          cairo_fill_preserve(cr);
-        }
-        
-        float alpha = 0.6;
-        if (mouseOver)
-          alpha = 1;
-        cairo_set_source_rgba(cr, 0.4, 0.4, 0.4, alpha);
-        if ( highlight )
-          cairo_set_line_width(cr, 2.2);
-        cairo_stroke(cr);
-        
         int xc = (w) / 2.f;
         int yc = (h) / 2.f;
         
         float angle = value();
         
+        /*
         // draw background quadrants
         int nbeats = 4;
         for(int i = 0; i < nbeats; i ++ )
         {
-          int mod = i % 4;
-          if ( mod == 0 )
-            cairo_set_source_rgba(cr,0.0,1,0.f  , 1);
-          else if ( mod == 1 )
-            cairo_set_source_rgba(cr,1.0,1.0,0.0, 1);
-          else if ( mod == 2 )
-            cairo_set_source_rgba(cr,1.0,0.48,0 , 1);
-          else if ( mod == 3 )
-            cairo_set_source_rgba(cr,1.0,0.f,0.f, 1);
-          
+          cairo_set_source_rgba(cr, 0.0, 0.0, 1.f, 1);
           float start = (i-1) * (3.1415*2)/nbeats;
-          
-          cairo_arc( cr, x + xc, y + yc, xc - 7, start, start + (3.1415/2) );
-          cairo_set_line_width(cr, 5.2);
-          cairo_stroke(cr);
         }
+        */
         
-        // blank rest of circle
-        cairo_set_source_rgb( cr, _bgr, _bgg, _bgb );
-        cairo_arc_negative( cr, x + xc, y + yc, xc - 7, -(3.1415/2), angle * 6.28 - (3.1415/2) );
-        cairo_set_line_width(cr, 5.4);
+        cairo_set_line_cap ( cr, CAIRO_LINE_CAP_ROUND );
+        cairo_move_to( cr, x + xc, y + yc );
+        cairo_arc( cr, x + xc, y + yc, xc - 7, -(3.1415/2), angle * 6.28 - (3.1415/2) );
+        cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 0.21 );
+        cairo_set_line_width(cr, 1.0);
+        cairo_stroke_preserve(cr);
+        cairo_fill_preserve(cr);
+        
+        cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 0.8 );
+        cairo_set_line_width(cr, 5.2);
         cairo_stroke(cr);
         
         // inside circle
@@ -143,12 +117,10 @@ class RadialStatus : public Fl_Slider
         cairo_set_line_width(cr, 4.2);
         cairo_fill(cr);
         
-        
         cairo_move_to (cr,x + xc, y + yc);
         cairo_set_source_rgba (cr, 1.0, 0.48, 0.0, 1);
         cairo_rotate ( cr, angle * 6.28 );
         cairo_rel_line_to ( cr,0, - (yc - 11) );
-        cairo_set_line_cap ( cr, CAIRO_LINE_CAP_ROUND );
         cairo_stroke(cr);
         
         cairo_restore( cr );

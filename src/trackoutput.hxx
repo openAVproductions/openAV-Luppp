@@ -59,7 +59,7 @@ class TrackOutput : public AudioProcessor
         previousInChain->process( nframes, buffers );
       }
       
-      /*
+      
       float* buf = buffers->audio[Buffers::TRACK_0 + track];
       dbMeter.process( nframes, buf, buf );
       
@@ -70,7 +70,6 @@ class TrackOutput : public AudioProcessor
         uiUpdateCounter = 0;
       }
       uiUpdateCounter += nframes;
-      */
       
       /// copy audio data into reverb / sidechain / master buffers
       float* trackBuf      = buffers->audio[Buffers::TRACK_0 + track];
