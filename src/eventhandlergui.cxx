@@ -63,7 +63,7 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventLooperProgress) ) {
             EventLooperProgress ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventLooperProgress) );
-            gui->getTrack(ev.track)->progress.value(ev.progress);
+            gui->getTrack(ev.track)->radial.value(ev.progress);
             //jack->setLooperLoopLength( ev.track, ev.scale );
           } break; }
         

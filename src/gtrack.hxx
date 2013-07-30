@@ -15,6 +15,7 @@
 #include "avtk/avtk_button.h"
 #include "avtk/avtk_background.h"
 #include "avtk/avtk_clip_selector.h"
+#include "avtk/avtk_radial_status.h"
 
 
 #include "config.hxx"
@@ -42,6 +43,8 @@ class GTrack : public Fl_Group
       title( strdup(l) ),
       bg( x, y , w, h, title ),
       
+      radial( x+5, y+ 26, 100, 100, "Source UI"),
+      
       clipSel(x + 5, y + 26 + 102, 100, 294,""),
       
       volBox(x+5, y+422, 100, 172, ""),
@@ -51,9 +54,9 @@ class GTrack : public Fl_Group
       
       side(x+22, y +440 +  0, 30, 30, "S-C"),
       post(x+22, y +440 + 50, 30, 30, "P-S"),
-      rev (x+22, y +440 +100, 30, 30, "Rev"),
+      rev (x+22, y +440 +100, 30, 30, "Rev")
       
-      progress(x+5, y+ 26, 100, 100, "Source UI")
+      //progress(x+5, y+ 26, 100, 10, "Source UI")
     {
       ID = privateID++;
       
@@ -65,10 +68,12 @@ class GTrack : public Fl_Group
       
       volume.callback( gtrack_vol_cb, this );
       
+      /*
       progress.maximum(1.0f);
       progress.minimum(0.0f);
       progress.color( FL_BLACK );
       progress.selection_color( FL_BLUE );
+      */
       
       volBox.maximum(1.0f);
       volBox.minimum(0.0f);
@@ -89,17 +94,11 @@ class GTrack : public Fl_Group
     
     Avtk::Background bg;
     
+    Avtk::RadialStatus radial;
+    
     Avtk::ClipSelector clipSel;
     
     Fl_Progress  volBox;
-    /*
-    Avtk::Button button1;
-    Avtk::Button button2;
-    Avtk::Button button3;
-    Avtk::Button button4;
-    Avtk::Button button5;
-    Avtk::Button button6;
-    */
     
     Avtk::Volume volume;
     
@@ -107,7 +106,7 @@ class GTrack : public Fl_Group
     Avtk::Dial   post;
     Avtk::Dial   rev;
     
-    Fl_Progress  progress;
+    //Fl_Progress  progress;
     
     static int privateID;
 };
