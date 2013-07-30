@@ -11,16 +11,16 @@ extern Jack* jack;
 
 Looper::Looper(int t) :
       track(t),
-      scene(0),
       state(STATE_STOPPED),
+      scene(0),
       fpb(120),
       gain(1.f),
       numBeats   (4),
       playedBeats(0),
       stopRecordOnBar(false),
       endPoint   (0),
-      playPoint  (0),
-      lastWrittenSampleIndex(0)
+      lastWrittenSampleIndex(0),
+      playPoint  (0)
 {
   // pre-zero the internal sample
   for(int i = 0; i < 10; i++)
@@ -160,7 +160,7 @@ void Looper::setSample(int sc, AudioBuffer* ab)
     numBeats = ab->getBeats();
     float* s = &sample[sc];
     float* b = &buf[0];
-    for (int i = 0; i < buf.size(); i++)
+    for (unsigned int i = 0; i < buf.size(); i++)
     {
       *s++ = *b++;
     }
@@ -305,7 +305,7 @@ void Looper::pitchShift(int count, float* input, float* output)
   float   fSlow2 = (1.0f / crossfadeSize);
   float   fSlow3 = (fSlow0 - 1);
   float* input0 = &input[0];
-  float* output0 = &output[0];
+  //float* output0 = &output[0];
   
   for (int i=0; i<count; i++)
   {

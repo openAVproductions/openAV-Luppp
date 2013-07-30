@@ -22,24 +22,24 @@ class ControllerUpdater
     
     void mute(int t, bool b)
     {
-      for(int i = 0; i < c.size(); i++) c.at(i)->mute(t,b);
+      for(unsigned int i = 0; i < c.size(); i++) c.at(i)->mute(t,b);
     }
     
     void clipSelect(int t, int clip, Controller::ClipMode cm)
     {
-      for(int i = 0; i < c.size(); i++)
+      for(unsigned int i = 0; i < c.size(); i++)
         c.at(i)->clipSelect(t,clip,cm);
     }
     
     void recordArm(int t, bool r)
     {
-      for(int i = 0; i < c.size(); i++)
+      for(unsigned int i = 0; i < c.size(); i++)
         c.at(i)->recordArm(t,r);
     }
     
     void volume(int t, float v)
     {
-      for(int i = 0; i < c.size(); i++) c.at(i)->volume(t,v);
+      for(unsigned int i = 0; i < c.size(); i++) c.at(i)->volume(t,v);
     }
   
   private:

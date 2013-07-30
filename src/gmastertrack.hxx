@@ -23,12 +23,6 @@
 using namespace std;
 
 static void gmastertrack_button_callback(Fl_Widget *w, void *data) {
-  
-  
-  int track = 0;
-  if ( data )
-   track = *(int*)data;
-  
   if ( strcmp( w->label(), "Metro" ) == 0 )
   {
     Avtk::Button* b = (Avtk::Button*)w;
@@ -45,7 +39,7 @@ static void gmastertrack_button_callback(Fl_Widget *w, void *data) {
   }
   else if ( strcmp( w->label(), "Tap" ) == 0 )
   {
-    Avtk::Button* b = (Avtk::Button*)w;
+    //Avtk::Button* b = (Avtk::Button*)w;
     EventTimeTempoTap e;
     writeToDspRingbuffer( &e );
   }
@@ -65,9 +59,10 @@ class GMasterTrack : public Fl_Group
       
       clipSel(x + 5, y + 26 + 102, 140, 294,""),
       
+      source(x+5, y+26, 140, 100, ""),
       volBox(x+5, y+422, 140, 172, ""),
       
-      source(x+5, y+26, 140, 100, ""),
+      
       
       tapTempo(x + 25 + 52, y + 26 + 4, 63, 29,"Tap"),
       metronomeButton(x + 9,y + 26 + 4, 64, 29,"Metro"),

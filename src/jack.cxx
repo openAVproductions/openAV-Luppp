@@ -146,7 +146,7 @@ int Jack::process (jack_nframes_t nframes)
     writeToGuiRingbuffer( &e );
     
     // check each looper for MIDI match
-    for(int i = 0; i < loopers.size(); i++)
+    for(unsigned int i = 0; i < loopers.size(); i++)
       loopers.at(i)->midi( (unsigned char*)&in_event.buffer[0] );
     
     masterMidiInputIndex++;
@@ -156,6 +156,7 @@ int Jack::process (jack_nframes_t nframes)
   for(uint i = 0; i < NTRACKS; i++)
     loopers.at(i)->process( nframes, &buffers );
   
+  /*
   // process fx
   float* buf[] = {
     buffers.audio[Buffers::REVERB],
@@ -163,6 +164,7 @@ int Jack::process (jack_nframes_t nframes)
     buffers.audio[Buffers::REVERB],
     buffers.audio[Buffers::REVERB],
   };
+  */
   
   //reverbMeter->process(nframes, buffers.audio[Buffers::REVERB], buffers.audio[Buffers::REVERB] );
   //reverb->process( nframes, &buf[0], &buf[2] );

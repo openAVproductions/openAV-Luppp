@@ -105,8 +105,6 @@ class Unit : public Fl_Button
         
         cairo_save( cr );
         
-        int drawY = y;
-        
         cairo_rectangle( cr, x+2, y + 2, w - 2, h - 2 );
         cairo_set_source_rgba(cr, 66 / 255.f,  66 / 255.f ,  66 / 255.f, 0.4);
         cairo_fill(cr);
