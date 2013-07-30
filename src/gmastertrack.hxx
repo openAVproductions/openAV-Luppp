@@ -129,7 +129,7 @@ class GMasterTrack : public Fl_Group
       
       int num = (beat % 4) + 1;
       
-      cout << bar << "  " << num << endl;
+      //cout << bar << "  " << num << endl;
       
       // turn all off
       for( int i = 0; i < 8; i++)

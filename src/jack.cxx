@@ -180,10 +180,12 @@ int Jack::process (jack_nframes_t nframes)
     EventTrackSignalLevel e(-1, peak, masterMeter->getRightDB() );
     writeToGuiRingbuffer( &e );
     
+    /*
     char buf[50];
     snprintf( buf, 50, "signal: %f", peak );
     EventGuiPrint e2( buf );
     writeToGuiRingbuffer(&e2);
+    */
     
     uiUpdateCounter = 0;
   }
