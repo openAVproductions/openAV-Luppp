@@ -186,38 +186,37 @@ void Looper::process(int nframes, Buffers* buffers)
   // FIXME:
   // using the track output causes distortion: clipping / not proper writing.
   // writing to master fixes issue, so its due to trackOutput or Looper writing...?
-  //float* trk = buffers->audio[Buffers::TRACK_0 + track];
+  //float* out = buffers->audio[Buffers::TRACK_0 + track];
   float* out = buffers->audio[Buffers::MASTER_OUTPUT];
   
   // process each clip individually: this allows for playback of one clip,
   // while another clip records.
-  for ( int i = 0; i < NSCENES; i++ )
+  for ( int clip = 0; clip < NSCENES; clip++ )
   {
     // handle state of clip, and do what needs doing:
     // record into buffer, play from buffer, etc
-    if ( clips[i]->recording() )
+    if ( clips[clip]->recording() )
     {
       // copy data from input buffer to recording buffer
       
-      if ( clips[i]->nframesAvailable() < LOOPER_SAMPLES_BEFORE_REQUEST )
+      if ( clips[clip]->nframesAvailable() < LOOPER_SAMPLES_BEFORE_REQUEST )
       {
         // request bigger buffer for this track/scene
       }
     }
-    else if ( clips[i]->playing() )
+    else if ( clips[clip]->playing() )
     {
       //printf("Looper %i playing()\n", track );
       // copy data into tmpBuffer, then pitch-stretch into track buffer
-      for(int c = 0; c < nframes; c++ )
+      for(int i = 0; i < nframes; i++ )
       {
-        
-        out[i] += clips[i]->getSample(); // sin( clips[i]->getProgress() * 440 * 6.24 );
+        out[i] += clips[clip]->getSample();
       }
       
       // update UI of progress
       if ( uiUpdateCounter > uiUpdateConstant )
       {
-        EventLooperProgress e(track, clips[i]->getProgress() );
+        EventLooperProgress e(track, clips[clip]->getProgress() );
         writeToGuiRingbuffer( &e );
         //printf("writing event\n");
         uiUpdateCounter = 0;

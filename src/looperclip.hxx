@@ -32,7 +32,7 @@ class LooperClip
       
       _buffer = 0;
       
-      _index = 0;
+      _playhead = 0;
     }
     
     // loads a sample: eg from disk
@@ -48,7 +48,7 @@ class LooperClip
       
       _buffer = ab;
       
-      _index = 0;
+      _playhead = 0;
       
       _playing = true;
     }
@@ -80,12 +80,12 @@ class LooperClip
     {
       if ( _buffer )
       {
-        if ( _index >= _buffer->getData().size() || _index < 0  )
+        if ( _playhead >= _buffer->getData().size() || _playhead < 0  )
         {
-          _index = 0;
+          _playhead = 0;
         }
-        float tmp = _buffer->getData().at(_index);
-        _index++;
+        float tmp = _buffer->getData().at(_playhead);
+        _playhead++;
         
         return tmp;
       }
@@ -97,7 +97,7 @@ class LooperClip
     {
       if ( _buffer )
       {
-        return float(_index) / _buffer->getData().size();
+        return float(_playhead) / _buffer->getData().size();
       }
       return 0.f;
     }
@@ -110,7 +110,7 @@ class LooperClip
     bool _recording;
     bool _playing;
     
-    unsigned int _index;
+    long int _playhead;
     AudioBuffer* _buffer;
     
     // Clip Properties

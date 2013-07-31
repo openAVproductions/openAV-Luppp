@@ -83,7 +83,7 @@ Jack::Jack()
   /// setup FX
   //reverb = new Reverb( buffers.samplerate );
   //reverbMeter = new DBMeter( buffers.samplerate );
-  //masterMeter = new DBMeter( buffers.samplerate );
+  masterMeter = new DBMeter( buffers.samplerate );
   
   /// setup JACK callbacks
   if ( jack_set_process_callback( client,
@@ -119,19 +119,14 @@ int Jack::process (jack_nframes_t nframes)
   buffers.midi [Buffers::APC_INPUT]           = (void*) jack_port_get_buffer( apcMidiInput   , nframes );
   buffers.midi [Buffers::APC_OUTPUT]          = (void*) jack_port_get_buffer( apcMidiOutput  , nframes );
   
-  
   // pre-zero output buffers
-  memset( buffers.audio[Buffers::MASTER_OUTPUT], 0, sizeof(float) * nframes );
-  /*
   memset( buffers.audio[Buffers::MASTER_OUTPUT]     , 0, sizeof(float) * nframes );
-  
+  memset( buffers.audio[Buffers::MASTER_OUTPUT]     , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::REVERB]            , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::SIDECHAIN]         , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::POST_SIDECHAIN]    , 0, sizeof(float) * nframes );
-  */
   
   jack_midi_clear_buffer( buffers.midi[Buffers::APC_OUTPUT] );
-  
   
   // do events from the ringbuffer
   handleDspEvents();
@@ -162,7 +157,7 @@ int Jack::process (jack_nframes_t nframes)
   // process each track, starting at output and working up signal path
   for(uint i = 0; i < NTRACKS; i++)
   {
-    loopers.at(i)->process( nframes, &buffers );
+    trackOutputs.at(i)->process( nframes, &buffers );
   }
   
   /*
@@ -179,15 +174,15 @@ int Jack::process (jack_nframes_t nframes)
   //reverb->process( nframes, &buf[0], &buf[2] );
   
   // db meter on master output, then memcpy to JACK
-  //masterMeter->process(nframes, buffers.audio[Buffers::MASTER_OUTPUT], buffers.audio[Buffers::MASTER_OUTPUT] );
+  masterMeter->process(nframes, buffers.audio[Buffers::MASTER_OUTPUT], buffers.audio[Buffers::MASTER_OUTPUT] );
   
   metronome.process( nframes, &buffers );
   
   if ( uiUpdateCounter > uiUpdateConstant )
   {
-    //float peak = masterMeter->getLeftDB();
-    //EventTrackSignalLevel e(-1, peak, masterMeter->getRightDB() );
-    //writeToGuiRingbuffer( &e );
+    float peak = masterMeter->getLeftDB();
+    EventTrackSignalLevel e(-1, peak, masterMeter->getRightDB() );
+    writeToGuiRingbuffer( &e );
     
     /*
     char buf[50];
@@ -201,11 +196,11 @@ int Jack::process (jack_nframes_t nframes)
   
   uiUpdateCounter += nframes;
   
+  
   // memcpy the internal MASTER_OUTPUT buffer to the JACK_MASTER_OUTPUT
   memcpy( buffers.audio[Buffers::JACK_MASTER_OUTPUT],
           buffers.audio[Buffers::MASTER_OUTPUT],
           sizeof(float)*nframes);
-  
   
   return false;
 }
