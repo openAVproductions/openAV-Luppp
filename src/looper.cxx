@@ -24,7 +24,7 @@ Looper::Looper(int t) :
   
   for(int i = 0; i < 10; i++ )
   {
-    clips[i] = new LooperClip();
+    clips[i] = LooperClip();
   }
   
   // init faust pitch shift variables
@@ -44,7 +44,7 @@ Looper::Looper(int t) :
 
 LooperClip* Looper::getClip(int scene)
 {
-  return clips[scene];
+  return &clips[scene];
 }
 
 void Looper::midi(unsigned char* data)
@@ -148,7 +148,7 @@ void Looper::updateControllers()
 
 void Looper::setSample(int scene, AudioBuffer* ab)
 {
-  clips[scene]->load( ab );
+  clips[scene].load( ab );
   /*
   vector<float>& buf = ab->getData();
   if ( buf.size() > SAMPLE_SIZE )
@@ -195,28 +195,28 @@ void Looper::process(int nframes, Buffers* buffers)
   {
     // handle state of clip, and do what needs doing:
     // record into buffer, play from buffer, etc
-    if ( clips[clip]->recording() )
+    if ( clips[clip].recording() )
     {
       // copy data from input buffer to recording buffer
       
-      if ( clips[clip]->nframesAvailable() < LOOPER_SAMPLES_BEFORE_REQUEST )
+      if ( clips[clip].nframesAvailable() < LOOPER_SAMPLES_BEFORE_REQUEST )
       {
         // request bigger buffer for this track/scene
       }
     }
-    else if ( clips[clip]->playing() )
+    else if ( clips[clip].playing() )
     {
       //printf("Looper %i playing()\n", track );
       // copy data into tmpBuffer, then pitch-stretch into track buffer
       for(int i = 0; i < nframes; i++ )
       {
-        out[i] = clips[clip]->getSample();
+        out[i] = clips[clip].getSample();
       }
       
       // update UI of progress
       if ( uiUpdateCounter > uiUpdateConstant )
       {
-        EventLooperProgress e(track, clips[clip]->getProgress() );
+        EventLooperProgress e(track, clips[clip].getProgress() );
         writeToGuiRingbuffer( &e );
         //printf("writing event\n");
         uiUpdateCounter = 0;

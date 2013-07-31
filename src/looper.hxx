@@ -44,7 +44,7 @@ class Looper : public AudioProcessor, public TimeObserver
     const int track;
     
     float* tmpRecordBuffer;
-    LooperClip* clips[10];
+    LooperClip clips[10];
     
     // Pitch Shifting
     void pitchShift(int count, float* input, float* output);
