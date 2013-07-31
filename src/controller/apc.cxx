@@ -54,7 +54,7 @@ void AkaiAPC::volume(int t, float f)
 
 void note_on( int track, int note, int vel )
 {
-  
+  printf("apc note on using MIDI observer \n");
 }
 
 void cc_change( int track, int cc, float value )
@@ -84,6 +84,6 @@ void AkaiAPC::midi(unsigned char* data)
   }
   else if ( b1 >= 176 && b1 < 176 + 16 ) // CC
   {
-    cc_change( b1 - 144, b2, data[2] / 127.f );
+    cc_change( b1 - 176, b2, data[2] / 127.f );
   }
 }

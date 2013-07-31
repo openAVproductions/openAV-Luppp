@@ -13,7 +13,8 @@ extern int jackSamplerate;
 
 Jack::Jack() :
   clientActive(false),
-  client( 0 )
+  client( 0 ),
+  controllerUpdater( new ControllerUpdater() )
 {
   // open the client
   client = jack_client_open ( "Luppp", JackNullOption , 0 , 0 );
@@ -103,7 +104,8 @@ Jack::Jack() :
 void Jack::activate()
 {
   // move to "settings" class or so
-  controllerUpdater->registerController( new AkaiAPC() );
+  Controller* c = new AkaiAPC();
+  controllerUpdater->registerController( c );
   
   jack_activate( client );
   jack_transport_start(client);
@@ -161,7 +163,7 @@ int Jack::process (jack_nframes_t nframes)
     // check each looper for MIDI match
     for( int i = 0; i < midiObservers.size(); i++ )
     {
-      midiObservers.at(i)->midi( (unsigned char*) in_event.buffer[0] );
+      midiObservers.at(i)->midi( (unsigned char*) &in_event.buffer[0] );
     }
     //std::for_each( midiObservers.begin(), midiObservers.end(), [](MidiObserver* mo) { mo->midi(  ); } );
     

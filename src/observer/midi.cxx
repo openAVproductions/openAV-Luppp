@@ -7,5 +7,5 @@ extern Jack* jack;
 
 MidiObserver::MidiObserver( std::string portName )
 {
-  //jack->registerMidiObserver( this );
+  jack->registerMidiObserver( this );
 }
