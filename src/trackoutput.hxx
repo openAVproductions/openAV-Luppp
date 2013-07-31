@@ -20,8 +20,6 @@ class TrackOutput : public AudioProcessor
     {
       printf("trackOutput ID: %i\n", track);
       
-      _trackBuffer = new float( 1024 );
-      
       // UI update
       uiUpdateConstant = 44100 / 30;
       uiUpdateCounter  = 44100 / 30;
@@ -56,18 +54,27 @@ class TrackOutput : public AudioProcessor
     /// copies the track output to master buffer, sidechain & post-side buffer
     void process(int nframes, Buffers* buffers)
     {
+      // zero track buffer
+      float* buf = _trackBuffer;
+      for(int i = 0; i < nframes; i++ )
+      {
+        *buf++ = 0.f;
+      }
+      
       if ( previousInChain )
       {
+        buffers->audio[Buffers::TRACK_0 + track] = _trackBuffer;
+        //memset( _trackBuffer, 0, nframes );
         previousInChain->process( nframes, buffers );
       }
       
-      
-      float* buf = buffers->audio[Buffers::TRACK_0 + track];
+      // run the meter
+      buf = _trackBuffer;
       dbMeter.process( nframes, buf, buf );
       
       if (uiUpdateCounter > uiUpdateConstant )
       {
-        EventTrackSignalLevel e( track, dbMeter.getLeftDB(), dbMeter.getRightDB() );
+        EventTrackSignalLevel e( track, dbMeter.getLeftDB() * _toMaster, dbMeter.getRightDB() * _toMaster );
         writeToGuiRingbuffer( &e );
         uiUpdateCounter = 0;
       }
@@ -87,10 +94,11 @@ class TrackOutput : public AudioProcessor
         //*sidechain++     += *trackBuf * _toSidechain;
         //*postSidechain++ += *trackBuf * _toPostSidechain;
         
-        //*master++        += *trackBuf * _toMaster;
+        *master++        += *trackBuf * _toMaster;
         
         trackBuf++;
       }
+      
     }
     
     ~TrackOutput()
@@ -101,7 +109,7 @@ class TrackOutput : public AudioProcessor
   private:
     int track;
     
-    float* _trackBuffer;
+    float _trackBuffer[1024];
     
     float _toMaster;
     

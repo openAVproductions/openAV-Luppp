@@ -186,8 +186,8 @@ void Looper::process(int nframes, Buffers* buffers)
   // FIXME:
   // using the track output causes distortion: clipping / not proper writing.
   // writing to master fixes issue, so its due to trackOutput or Looper writing...?
-  //float* out = buffers->audio[Buffers::TRACK_0 + track];
-  float* out = buffers->audio[Buffers::MASTER_OUTPUT];
+  float* out = buffers->audio[Buffers::TRACK_0 + track];
+  //float* out = buffers->audio[Buffers::MASTER_OUTPUT];
   
   // process each clip individually: this allows for playback of one clip,
   // while another clip records.
@@ -210,7 +210,7 @@ void Looper::process(int nframes, Buffers* buffers)
       // copy data into tmpBuffer, then pitch-stretch into track buffer
       for(int i = 0; i < nframes; i++ )
       {
-        out[i] += clips[clip]->getSample();
+        out[i] = clips[clip]->getSample();
       }
       
       // update UI of progress

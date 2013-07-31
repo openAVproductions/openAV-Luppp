@@ -59,23 +59,12 @@ Jack::Jack()
   buffers.audio[Buffers::POST_SIDECHAIN] = new float( nframes );
   buffers.audio[Buffers::MASTER_OUTPUT]  = new float( nframes );
   
-  printf("Master output buffer on alloc() %i\n", buffers.audio[Buffers::MASTER_OUTPUT] );
-  
-  buffers.audio[Buffers::TRACK_0] = new float( nframes );
-  buffers.audio[Buffers::TRACK_1] = new float( nframes );
-  buffers.audio[Buffers::TRACK_2] = new float( nframes );
-  buffers.audio[Buffers::TRACK_3] = new float( nframes );
-  buffers.audio[Buffers::TRACK_4] = new float( nframes );
-  buffers.audio[Buffers::TRACK_5] = new float( nframes );
-  buffers.audio[Buffers::TRACK_6] = new float( nframes );
-  buffers.audio[Buffers::TRACK_7] = new float( nframes );
-  
   for(int i = 0; i < NTRACKS; i++)
   {
     loopers.push_back( new Looper(i) );
-    timeManager.registerObserver( loopers.back() );
-    
     trackOutputs.push_back( new TrackOutput(i, loopers.back() ) );
+    
+    timeManager.registerObserver( loopers.back() );
   }
   
   timeManager.registerObserver( &metronome );
