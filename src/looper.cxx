@@ -13,14 +13,14 @@ extern Jack* jack;
 
 Looper::Looper(int t) :
   AudioProcessor(),
-  Observer(),
+  TimeObserver(),
   track(t),
   uiUpdateConstant(44100/30.f),
   uiUpdateCounter(44100/30.f)
 {
   // pre-zero the internal sample
-  //tmpRecordBuffer = (float*)malloc( sizeof(float) * MAX_BUFFER_SIZE );
-  //memset( tmpRecordBuffer, 0, sizeof(float) * MAX_BUFFER_SIZE );
+  tmpRecordBuffer = (float*)malloc( sizeof(float) * MAX_BUFFER_SIZE );
+  memset( tmpRecordBuffer, 0, sizeof(float) * MAX_BUFFER_SIZE );
   
   for(int i = 0; i < 10; i++ )
   {

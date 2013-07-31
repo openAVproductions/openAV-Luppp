@@ -10,7 +10,7 @@
 #include "audioprocessor.hxx"
 
 #include "looperclip.hxx"
-#include "observer/observer.hxx"
+#include "observer/time.hxx"
 
 using namespace std;
 
@@ -18,7 +18,7 @@ using namespace std;
  * The class which reads from LooperClips, and reads/ writes the data using the
  * track buffer. Scene recording / playback is the essential functionality here.
 **/
-class Looper : public AudioProcessor, public Observer
+class Looper : public AudioProcessor, public TimeObserver
 {
   public:
     Looper(int t);

@@ -35,7 +35,7 @@ class LooperClip
       _playhead = 0;
     }
     
-    // loads a sample: eg from disk
+    /// loads a sample: eg from disk
     void load( AudioBuffer* ab )
     {
       _loaded = true;
@@ -53,10 +53,12 @@ class LooperClip
       _playing = true;
     }
     
+    /// used to update the size of the buffer for this looperclip. The current
+    /// data is copied into the new buffer, then the smaller buffer is sent
+    /// for de-allocation
     void setRequestedBuffer( AudioBuffer* ab )
     {
-      // here we copy the data from the existing buffer into the new one,
-      // and send the old one away to be deallocated.
+      
     }
     
     void record(int count, float* L, float* R)

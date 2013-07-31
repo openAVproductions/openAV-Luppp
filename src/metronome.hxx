@@ -7,15 +7,16 @@
 
 #include "buffers.hxx"
 
-#include "observer/observer.hxx"
+#include "observer/time.hxx"
 
 using namespace std;
 
 // simple metronome class
-class Metronome : public Observer
+class Metronome : public TimeObserver
 {
   public:
     Metronome() :
+      TimeObserver(),
       playBar    (false),
       active     (false),
       playPoint  (0)

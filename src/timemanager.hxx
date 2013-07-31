@@ -8,11 +8,10 @@
 #include "buffers.hxx"
 #include "eventhandler.hxx"
 
-#include "observer/observer.hxx"
+#include "observer/time.hxx"
 
 using namespace std;
 
-// inherits from ObserverSubject
 class TimeManager
 {
   public:
@@ -47,7 +46,7 @@ class TimeManager
       }
     }
     
-    void registerObserver(Observer* o)
+    void registerObserver(TimeObserver* o)
     {
       cout << "registerObserver() " << o << endl;
       observers.push_back(o);
@@ -151,7 +150,7 @@ class TimeManager
     int tapTempoPos;
     int tapTempo[3];
     
-    std::vector<Observer*> observers;
+    std::vector<TimeObserver*> observers;
 };
 
 #endif // LUPPP_TIME_H

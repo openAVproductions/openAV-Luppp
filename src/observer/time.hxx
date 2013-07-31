@@ -2,7 +2,7 @@
 #ifndef LUPPP_OBSERVER_H
 #define LUPPP_OBSERVER_H
 
-class Observer
+class TimeObserver
 {
   public:
     virtual void setFpb(int fpb){};
