@@ -12,6 +12,8 @@ class AkaiAPC : public Controller, public MidiObserver
   public:
     AkaiAPC();
     
+    std::string getName(){return "Akai APC";}
+    
     void mute(int t, bool b);
     void volume(int t, float f);
     void recordArm(int t, bool b);

@@ -5,7 +5,9 @@
 
 extern Jack* jack;
 
-AkaiAPC::AkaiAPC()
+AkaiAPC::AkaiAPC() :
+  Controller(),
+  MidiObserver("apc")
 {
   
 }

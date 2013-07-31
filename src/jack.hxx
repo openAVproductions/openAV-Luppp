@@ -45,7 +45,14 @@ class Jack
     Metronome*          getMetronome(){return &metronome;}
     TrackOutput*        getTrackOutput(int t){return trackOutputs.at(t);}
     TimeManager*        getTimeManager(){return &timeManager;}
-    ControllerUpdater*  getControllerUpdater(){return &controllerUpdater;}
+    ControllerUpdater*  getControllerUpdater(){return controllerUpdater;}
+    
+    /// register MIDI observers: they're called when a MIDI message arrives on
+    /// a port they're watching
+    void registerMidiObserver( MidiObserver* mo )
+    {
+      midiObservers.push_back( mo );
+    }
     
     
     /// sets reverb bus parameters
@@ -59,11 +66,13 @@ class Jack
     Metronome   metronome;
     TimeManager timeManager;
     
-    ControllerUpdater controllerUpdater;
+    ControllerUpdater* controllerUpdater;
     
     vector<Looper*> loopers;
     
     vector<TrackOutput*> trackOutputs;
+    
+    vector<MidiObserver*> midiObservers;
     
     int nframes;
     int samplerate;

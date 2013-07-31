@@ -14,8 +14,8 @@ extern Jack* jack;
 class MidiObserver
 {
   public:
-    /// registers class with jack's MIDI handling, with optional MIDI port name
-    MidiObserver( std::string portName = "" );
+    /// registers class with jack's MIDI handling, with MIDI port name
+    MidiObserver( std::string portName );
     
     /// gets called with each MIDI message from the controller. Deal with its
     /// input here, and route to the appropriate function in Luppp

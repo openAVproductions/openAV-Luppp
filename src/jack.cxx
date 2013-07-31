@@ -102,6 +102,9 @@ Jack::Jack() :
 
 void Jack::activate()
 {
+  // move to "settings" class or so
+  controllerUpdater->registerController( new AkaiAPC() );
+  
   jack_activate( client );
   jack_transport_start(client);
 }
@@ -156,8 +159,18 @@ int Jack::process (jack_nframes_t nframes)
     writeToGuiRingbuffer( &e );
     
     // check each looper for MIDI match
+    for( int i = 0; i < midiObservers.size(); i++ )
+    {
+      midiObservers.at(i)->midi( (unsigned char*) in_event.buffer[0] );
+    }
+    //std::for_each( midiObservers.begin(), midiObservers.end(), [](MidiObserver* mo) { mo->midi(  ); } );
+    
+    
+    
+    /*
     for(unsigned int i = 0; i < loopers.size(); i++)
       loopers.at(i)->midi( (unsigned char*)&in_event.buffer[0] );
+    */
     
     masterMidiInputIndex++;
   }

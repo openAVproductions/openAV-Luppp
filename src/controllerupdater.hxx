@@ -15,14 +15,20 @@ using namespace std;
 class ControllerUpdater
 {
   public:
-    ControllerUpdater()
+    ControllerUpdater() {}
+    
+    void registerController( Controller* controller )
     {
-      c.push_back( new AkaiAPC() );
+      std::cout << "ControllerUpdater registering controller: " <<
+        controller->getName() << endl;
+      c.push_back( controller );
     }
+    
     
     void mute(int t, bool b)
     {
-      for(unsigned int i = 0; i < c.size(); i++) c.at(i)->mute(t,b);
+      for(unsigned int i = 0; i < c.size(); i++)
+        c.at(i)->mute(t,b);
     }
     
     void clipSelect(int t, int clip, Controller::ClipMode cm)
