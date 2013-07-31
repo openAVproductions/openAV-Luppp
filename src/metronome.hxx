@@ -68,7 +68,7 @@ class Metronome : public TimeObserver
       if ( not active )
         return;
       
-      float* out = buffers->audio[Buffers::MASTER_OUTPUT];
+      float* out = buffers->audio[Buffers::MASTER_OUT_L];
       
       float* sample = &beatSample[0];
       if( playBar ) { sample = &barSample[0]; playBar = false; }

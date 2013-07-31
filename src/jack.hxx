@@ -59,6 +59,8 @@ class Jack
       return trackOutputs.at(t);
     }
     
+    void setReverb( bool e, float d, float s );
+    
     Metronome*   getMetronome(){return &metronome;}
     TimeManager* getTimeManager(){return &timeManager;}
     ControllerUpdater* getControllerUpdater(){return &controllerUpdater;}
@@ -88,7 +90,8 @@ class Jack
     jack_client_t* client;
     
     jack_port_t*  masterInput;
-    jack_port_t*  masterOutput;
+    jack_port_t*  masterOutputL;
+    jack_port_t*  masterOutputR;
     
     jack_port_t*  apcMidiInput;
     jack_port_t*  apcMidiOutput;

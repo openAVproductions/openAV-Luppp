@@ -24,6 +24,16 @@ class Reverb // : Effect
     int getNumInputs() { return 2; }
     int getNumOutputs(){ return 2; }
     
+    void setActive(bool a)
+    {
+      active = a;
+    }
+    
+    bool getActive()
+    {
+      return active;
+    }
+    
     /// set HF damping, 0-1
     void damping(float d)
     {
@@ -44,6 +54,9 @@ class Reverb // : Effect
     
     void process(int count, float** input, float** output)
     {
+      if ( !active )
+        return;
+      
       float 	fSlow0 = fslider0;
       float 	fSlow1 = expf((fConst2 / fSlow0));
       float 	fSlow2 = faustpower<2>(fSlow1);
@@ -237,6 +250,7 @@ class Reverb // : Effect
     }
   
   private:
+    bool active;
     float fslider0;
     int iConst0;
     float fConst1;
@@ -338,6 +352,7 @@ class Reverb // : Effect
     /// Long nasty function setting initial values
     void init(int samplingFreq)
     {
+      active = 0;
       fslider0 = 3.0f;
       iConst0 = min(192000, max(1, samplingFreq));
       fConst1 = floorf((0.5f + (0.174713f * iConst0)));

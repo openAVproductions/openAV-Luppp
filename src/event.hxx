@@ -26,10 +26,11 @@ namespace Event
     MASTER_VOL,
     RECORD,
     
-    
     TRACK_SEND,
     TRACK_SIGNAL_LEVEL,
     TRACK_VOLUME,
+    
+    FX_REVERB,
     
     LOOPER_LOAD,
     LOOPER_STATE,
@@ -87,6 +88,21 @@ class EventTrackVol : public EventBase
       track = t;
       vol = v;
     }
+};
+
+class EventFxReverb : public EventBase
+{
+  public:
+    int type() { return int(FX_REVERB); }
+    uint32_t size() { return sizeof(EventFxReverb); }
+    
+    int track;
+    bool enable;
+    float damping;
+    float rtSize;
+    
+    EventFxReverb(){};
+    EventFxReverb(int t, bool e, float d, float s): track(t), enable(e), damping(d), rtSize(s) {}
 };
 
 class EventTrackSend : public EventBase

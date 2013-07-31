@@ -86,15 +86,18 @@ class TrackOutput : public AudioProcessor
       float* sidechain     = buffers->audio[Buffers::SIDECHAIN];
       float* postSidechain = buffers->audio[Buffers::POST_SIDECHAIN];
       
-      float* master        = buffers->audio[Buffers::MASTER_OUTPUT];
+      float* master        = buffers->audio[Buffers::MASTER_OUT_L];
       
       for(int i = 0; i < nframes; i++)
       {
-        *reverb++        += *trackBuf * _toReverb;
-        //*sidechain++     += *trackBuf * _toSidechain;
-        //*postSidechain++ += *trackBuf * _toPostSidechain;
+        float tmp = *trackBuf;
         
-        *master++        += *trackBuf * _toMaster;
+        *master++        += tmp * _toMaster;
+        
+        *reverb++        += tmp * _toReverb;
+        //*sidechain++     += tmp * _toSidechain;
+        //*postSidechain++ += tmp * _toPostSidechain;
+        
         
         trackBuf++;
       }

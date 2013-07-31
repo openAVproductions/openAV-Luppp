@@ -22,6 +22,14 @@
 
 using namespace std;
 
+static void gmastertrack_reverb_cb(Fl_Widget *w, void *data)
+{
+  int enable = ((Avtk::Reverb*)w)->getActive();
+  printf("reverb enable %i\n",enable);
+  EventFxReverb e = EventFxReverb( -1, enable, 0.5, 0.5 );
+  writeToDspRingbuffer( &e );
+}
+
 static void gmastertrack_button_callback(Fl_Widget *w, void *data) {
   if ( strcmp( w->label(), "Metro" ) == 0 )
   {
@@ -78,6 +86,8 @@ class GMasterTrack : public Fl_Group
       
       tapTempo.callback( gmastertrack_button_callback, &ID );
       metronomeButton.callback( gmastertrack_button_callback, 0 );
+      
+      reverb.callback( gmastertrack_reverb_cb, 0 );
       
       tapTempo.setBgColor( 0, 0, 0 );
       //metronomeButton.setBgColor( 0, 0, 0 );

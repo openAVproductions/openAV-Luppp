@@ -76,6 +76,15 @@ void handleDspEvents()
             jack->getTimeManager()->tap();
           } break; }
         
+        // ======== FX ===========
+        case Event::FX_REVERB: {
+          if ( availableRead >= sizeof(EventFxReverb) ) {
+            EventFxReverb ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventFxReverb) );
+            jack->setReverb( ev.enable, ev.damping, ev.rtSize );
+            break; }
+          }
+        
         case Event::TRACK_VOLUME: {
           if ( availableRead >= sizeof(EventTrackVol) ) {
             EventTrackVol ev;

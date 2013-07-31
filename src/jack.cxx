@@ -22,8 +22,13 @@ Jack::Jack()
   uiUpdateCounter  = buffers.samplerate / 30;
   uiUpdateConstant = buffers.samplerate / 30;
   
-  masterOutput = jack_port_register( client,
-                          "master_out",
+  masterOutputL = jack_port_register( client,
+                          "master_left",
+                          JACK_DEFAULT_AUDIO_TYPE,
+                          JackPortIsOutput,
+                          0 );
+  masterOutputR = jack_port_register( client,
+                          "master_right",
                           JACK_DEFAULT_AUDIO_TYPE,
                           JackPortIsOutput,
                           0 );
@@ -57,7 +62,8 @@ Jack::Jack()
   buffers.audio[Buffers::REVERB]         = new float( nframes );
   buffers.audio[Buffers::SIDECHAIN]      = new float( nframes );
   buffers.audio[Buffers::POST_SIDECHAIN] = new float( nframes );
-  buffers.audio[Buffers::MASTER_OUTPUT]  = new float( nframes );
+  buffers.audio[Buffers::MASTER_OUT_L]   = new float( nframes );
+  buffers.audio[Buffers::MASTER_OUT_R]   = new float( nframes );
   
   for(int i = 0; i < NTRACKS; i++)
   {
@@ -103,7 +109,8 @@ int Jack::process (jack_nframes_t nframes)
 {
   // get buffers
   buffers.audio[Buffers::MASTER_INPUT]        = (float*)jack_port_get_buffer( masterInput    , nframes );
-  buffers.audio[Buffers::JACK_MASTER_OUTPUT]  = (float*)jack_port_get_buffer( masterOutput   , nframes );
+  buffers.audio[Buffers::JACK_MASTER_OUT_L]   = (float*)jack_port_get_buffer( masterOutputL  , nframes );
+  buffers.audio[Buffers::JACK_MASTER_OUT_R]   = (float*)jack_port_get_buffer( masterOutputR  , nframes );
   buffers.midi [Buffers::MASTER_MIDI_INPUT]   = (void*) jack_port_get_buffer( masterMidiInput, nframes );
   buffers.midi [Buffers::APC_INPUT]           = (void*) jack_port_get_buffer( apcMidiInput   , nframes );
   buffers.midi [Buffers::APC_OUTPUT]          = (void*) jack_port_get_buffer( apcMidiOutput  , nframes );
@@ -111,7 +118,8 @@ int Jack::process (jack_nframes_t nframes)
   // pre-zero output buffers
   for(uint i = 0; i < nframes; i++)
   {
-    buffers.audio[Buffers::MASTER_OUTPUT]   [i] = 0.f;
+    buffers.audio[Buffers::MASTER_OUT_L]    [i] = 0.f;
+    buffers.audio[Buffers::MASTER_OUT_R]    [i] = 0.f;
     buffers.audio[Buffers::REVERB]          [i] = 0.f;
     buffers.audio[Buffers::SIDECHAIN]       [i] = 0.f;
     buffers.audio[Buffers::POST_SIDECHAIN]  [i] = 0.f;
@@ -170,17 +178,18 @@ int Jack::process (jack_nframes_t nframes)
     buffers.audio[Buffers::REVERB],
   };
   
-  
-  reverbMeter->process(nframes, buffers.audio[Buffers::REVERB], buffers.audio[Buffers::REVERB] );
-  reverb->process( nframes, &buf[0], &buf[2] );
+  if ( reverb->getActive() )
+  {
+    reverbMeter->process(nframes, buffers.audio[Buffers::REVERB], buffers.audio[Buffers::REVERB] );
+    reverb->process( nframes, &buf[0], &buf[2] );
+  }
   
   // db meter on master output, then memcpy to JACK
-  masterMeter->process(nframes, buffers.audio[Buffers::MASTER_OUTPUT], buffers.audio[Buffers::MASTER_OUTPUT] );
+  masterMeter->process(nframes, buffers.audio[Buffers::MASTER_OUT_L], buffers.audio[Buffers::MASTER_OUT_R] );
   
   if ( uiUpdateCounter > uiUpdateConstant )
   {
-    float peak = masterMeter->getLeftDB();
-    EventTrackSignalLevel e(-1, peak, masterMeter->getRightDB() );
+    EventTrackSignalLevel e(-1, masterMeter->getLeftDB(), masterMeter->getRightDB() );
     writeToGuiRingbuffer( &e );
     
     /*
@@ -197,12 +206,23 @@ int Jack::process (jack_nframes_t nframes)
   
   
   // memcpy the internal MASTER_OUTPUT buffer to the JACK_MASTER_OUTPUT
-  memcpy( buffers.audio[Buffers::JACK_MASTER_OUTPUT],
-          buffers.audio[Buffers::MASTER_OUTPUT],
+  memcpy( buffers.audio[Buffers::JACK_MASTER_OUT_L],
+          buffers.audio[Buffers::MASTER_OUT_L],
+          sizeof(float)*nframes);
+  
+  memcpy( buffers.audio[Buffers::JACK_MASTER_OUT_R],
+          buffers.audio[Buffers::MASTER_OUT_R],
           //buffers.audio[Buffers::REVERB],  // uncomment to listen to reverb send only
           sizeof(float)*nframes);
   
   return false;
+}
+
+void Jack::setReverb( bool a, float d, float s )
+{
+  reverb->setActive( a );
+  reverb->damping( d );
+  reverb->rt60( d );
 }
 
 int Jack::getBuffersize()
