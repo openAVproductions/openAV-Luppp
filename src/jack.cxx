@@ -68,7 +68,7 @@ Jack::Jack()
     
     trackOutputs.push_back( new TrackOutput(i, loopers.back() ) );
     
-    //buffers.audio[Buffers::TRACK_0 + i] = new float( nframes ); // (float*) malloc( sizeof(float) * nframes );
+    buffers.audio[Buffers::TRACK_0 + i] = new float( nframes ); // (float*) malloc( sizeof(float) * nframes );
   }
   
   timeManager.registerObserver( &metronome );
@@ -114,11 +114,13 @@ int Jack::process (jack_nframes_t nframes)
   
   
   // pre-zero output buffers
+  /*
   memset( buffers.audio[Buffers::MASTER_OUTPUT]     , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::JACK_MASTER_OUTPUT], 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::REVERB]            , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::SIDECHAIN]         , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::POST_SIDECHAIN]    , 0, sizeof(float) * nframes );
+  */
   
   jack_midi_clear_buffer( buffers.midi[Buffers::APC_OUTPUT] );
   
@@ -152,7 +154,7 @@ int Jack::process (jack_nframes_t nframes)
   // process each track, starting at output and working up signal path
   for(uint i = 0; i < NTRACKS; i++)
   {
-    loopers.at(i)->process( nframes, &buffers );
+    trackOutputs.at(i)->process( nframes, &buffers );
   }
   
   /*

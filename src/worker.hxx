@@ -29,7 +29,11 @@ namespace Worker
     ab->nonRtSetSample( buf );
     
     cout << "Worker: loadSample() " << path << " size: " << infile.frames() << endl;
-    return ab;
+    
+    if ( infile.frames() > 0 )
+      return ab;
+    
+    return 0;
   }
 }
 

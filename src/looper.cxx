@@ -30,8 +30,9 @@ Looper::Looper(int t) :
   // init faust pitch shift variables
   fSamplingFreq = 44100;
   IOTA = 0;
-  for ( int i = 0; i < MAX_BUFFER_SIZE; i++)
-    tmpBuffer.push_back(0.f);
+  
+  tmpBuffer.resize(MAX_BUFFER_SIZE);
+  
   for (int i=0; i<65536; i++)
     fVec0[i] = 0;
   for (int i=0; i<2; i++)

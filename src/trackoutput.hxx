@@ -13,6 +13,7 @@ class TrackOutput : public AudioProcessor
 {
   public:
     TrackOutput(int t, AudioProcessor* ap) :
+      AudioProcessor(),
       track(t),
       previousInChain(ap),
       dbMeter(44100)
