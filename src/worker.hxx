@@ -13,11 +13,11 @@ using namespace std;
 
 namespace Worker
 {
+  /// loads a sample into a new AudioBuffer, returning the buffer
   static AudioBuffer* loadSample( string path )
   {
     SndfileHandle infile( path, SFM_READ );
     
-    cout << "Worker: loadSample() TODO: fix memory leak using Shared()" << endl;
     AudioBuffer* ab = new AudioBuffer();
     
     std::vector<float> buf( infile.frames(), 0.f );
@@ -34,6 +34,18 @@ namespace Worker
       return ab;
     
     return 0;
+  }
+  
+  /// allocates a new audiobuffer of the desired size and returns it
+  static AudioBuffer* allocateNewBuffer(int size)
+  {
+    AudioBuffer* ab = new AudioBuffer();
+    
+    std::vector<float> buf( size, 0.f );
+    
+    ab->nonRtSetSample( buf );
+    
+    return ab;
   }
 }
 
