@@ -211,7 +211,7 @@ void Looper::process(int nframes, Buffers* buffers)
       for(int c = 0; c < nframes; c++ )
       {
         
-        out[i] = clips[i]->getSample(); // sin( clips[i]->getProgress() * 440 * 6.24 );
+        out[i] += clips[i]->getSample(); // sin( clips[i]->getProgress() * 440 * 6.24 );
       }
       
       // update UI of progress

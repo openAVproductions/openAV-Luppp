@@ -61,22 +61,29 @@ Jack::Jack()
   
   printf("Master output buffer on alloc() %i\n", buffers.audio[Buffers::MASTER_OUTPUT] );
   
+  buffers.audio[Buffers::TRACK_0] = new float( nframes );
+  buffers.audio[Buffers::TRACK_1] = new float( nframes );
+  buffers.audio[Buffers::TRACK_2] = new float( nframes );
+  buffers.audio[Buffers::TRACK_3] = new float( nframes );
+  buffers.audio[Buffers::TRACK_4] = new float( nframes );
+  buffers.audio[Buffers::TRACK_5] = new float( nframes );
+  buffers.audio[Buffers::TRACK_6] = new float( nframes );
+  buffers.audio[Buffers::TRACK_7] = new float( nframes );
+  
   for(int i = 0; i < NTRACKS; i++)
   {
     loopers.push_back( new Looper(i) );
     timeManager.registerObserver( loopers.back() );
     
     trackOutputs.push_back( new TrackOutput(i, loopers.back() ) );
-    
-    buffers.audio[Buffers::TRACK_0 + i] = new float( nframes ); // (float*) malloc( sizeof(float) * nframes );
   }
   
   timeManager.registerObserver( &metronome );
   
   /// setup FX
-  reverb = new Reverb( buffers.samplerate );
-  reverbMeter = new DBMeter( buffers.samplerate );
-  masterMeter = new DBMeter( buffers.samplerate );
+  //reverb = new Reverb( buffers.samplerate );
+  //reverbMeter = new DBMeter( buffers.samplerate );
+  //masterMeter = new DBMeter( buffers.samplerate );
   
   /// setup JACK callbacks
   if ( jack_set_process_callback( client,
@@ -114,9 +121,10 @@ int Jack::process (jack_nframes_t nframes)
   
   
   // pre-zero output buffers
+  memset( buffers.audio[Buffers::MASTER_OUTPUT], 0, sizeof(float) * nframes );
   /*
   memset( buffers.audio[Buffers::MASTER_OUTPUT]     , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::JACK_MASTER_OUTPUT], 0, sizeof(float) * nframes );
+  
   memset( buffers.audio[Buffers::REVERB]            , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::SIDECHAIN]         , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::POST_SIDECHAIN]    , 0, sizeof(float) * nframes );
@@ -154,7 +162,7 @@ int Jack::process (jack_nframes_t nframes)
   // process each track, starting at output and working up signal path
   for(uint i = 0; i < NTRACKS; i++)
   {
-    trackOutputs.at(i)->process( nframes, &buffers );
+    loopers.at(i)->process( nframes, &buffers );
   }
   
   /*
@@ -171,15 +179,15 @@ int Jack::process (jack_nframes_t nframes)
   //reverb->process( nframes, &buf[0], &buf[2] );
   
   // db meter on master output, then memcpy to JACK
-  masterMeter->process(nframes, buffers.audio[Buffers::MASTER_OUTPUT], buffers.audio[Buffers::MASTER_OUTPUT] );
+  //masterMeter->process(nframes, buffers.audio[Buffers::MASTER_OUTPUT], buffers.audio[Buffers::MASTER_OUTPUT] );
   
   metronome.process( nframes, &buffers );
   
   if ( uiUpdateCounter > uiUpdateConstant )
   {
-    float peak = masterMeter->getLeftDB();
-    EventTrackSignalLevel e(-1, peak, masterMeter->getRightDB() );
-    writeToGuiRingbuffer( &e );
+    //float peak = masterMeter->getLeftDB();
+    //EventTrackSignalLevel e(-1, peak, masterMeter->getRightDB() );
+    //writeToGuiRingbuffer( &e );
     
     /*
     char buf[50];
