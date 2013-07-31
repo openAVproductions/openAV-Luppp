@@ -17,7 +17,7 @@ class AkaiAPC : public Controller, public MidiObserver
     void recordArm(int t, bool b);
     void clipSelect(int track, int clip, ClipMode cm);
     
-    void midi(unsigned char* data){};
+    void midi(unsigned char* data);
     
 };
 

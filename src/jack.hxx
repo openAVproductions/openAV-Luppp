@@ -39,32 +39,19 @@ class Jack
     int getBuffersize();
     int getSamplerate();
     
-    /*
-    void setLooperState(int t, int sc, Looper::State s)
-    {
-      loopers.at(t)->setState(s);
-      loopers.at(t)->setScene(sc);
-    }
-    */
-    void setLooperLoopLength(int t, float l)
-    {
-      //loopers.at(t)->setLoopLength(l);
-    }
-    Looper* getLooper(int t)
-    {
-      return loopers.at(t);
-    }
-    TrackOutput* getTrackOutput(int t)
-    {
-      return trackOutputs.at(t);
-    }
     
+    /// get functions for components owned by Jack 
+    Looper*             getLooper(int t) {return loopers.at(t); }
+    Metronome*          getMetronome(){return &metronome;}
+    TrackOutput*        getTrackOutput(int t){return trackOutputs.at(t);}
+    TimeManager*        getTimeManager(){return &timeManager;}
+    ControllerUpdater*  getControllerUpdater(){return &controllerUpdater;}
+    
+    
+    /// sets reverb bus parameters
     void setReverb( bool e, float d, float s );
     
-    Metronome*   getMetronome(){return &metronome;}
-    TimeManager* getTimeManager(){return &timeManager;}
-    ControllerUpdater* getControllerUpdater(){return &controllerUpdater;}
-    
+    /// writes MIDI messages to APC port
     void writeApcOutput( unsigned char* data );
   
   private:

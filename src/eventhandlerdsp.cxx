@@ -61,7 +61,7 @@ void handleDspEvents()
           if ( availableRead >= sizeof(EventLooperLoopLength) ) {
             EventLooperLoopLength ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventLooperLoopLength) );
-            jack->setLooperLoopLength( ev.track, ev.scale );
+            //jack->setLooperLoopLength( ev.track, ev.scale );
           } break; }
         case Event::TIME_BPM: {
           if ( availableRead >= sizeof(EventTimeBPM) ) {

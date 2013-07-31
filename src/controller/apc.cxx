@@ -49,3 +49,39 @@ void AkaiAPC::volume(int t, float f)
 {
   
 }
+
+void note_on( int track, int note, int vel )
+{
+  
+}
+
+void cc_change( int track, int cc, float value )
+{
+  switch( cc )
+  {
+    case 7: {
+        EventTrackVol e( track, value );
+        writeToGuiRingbuffer( &e ); }
+        break;
+  }
+}
+
+void AkaiAPC::midi(unsigned char* data)
+{
+  int b1 = data[0];
+  int b2 = data[1];
+  int b3 = data[2];
+  
+  if ( b1 >= 144 && b1 < 144 + 16 ) // NOTE_ON
+  {
+    note_on( b1 - 144, b2, b3 );
+  }
+  else if ( b1 >= 128 && b1 < 128 + 16 ) // NOTE_OFF
+  {
+    //note_off( b1 - 144, b2, b3 );
+  }
+  else if ( b1 >= 176 && b1 < 176 + 16 ) // CC
+  {
+    cc_change( b1 - 144, b2, data[2] / 127.f );
+  }
+}
