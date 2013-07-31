@@ -24,29 +24,29 @@ class Buffers
     enum BUFFER {
       // AUDIO
       MASTER_INPUT  = 0,
-      MASTER_OUTPUT,
-      JACK_MASTER_OUTPUT,
+      MASTER_OUTPUT = 1,
+      JACK_MASTER_OUTPUT = 2,
       
-      REVERB,
-      SIDECHAIN,
-      POST_SIDECHAIN,
+      REVERB = 3,
+      SIDECHAIN = 4,
+      POST_SIDECHAIN = 5,
       
       // MIDI
-      MASTER_MIDI_INPUT,
-      APC_INPUT,
-      APC_OUTPUT,
+      MASTER_MIDI_INPUT  = 6,
+      APC_INPUT = 7,
+      APC_OUTPUT = 8,
       
       // track buffers: they are the "working" buffers per track:
       // the end result is mixed into the master output, while each
       // stage along the way the amplitude etc can be analysed
-      TRACK_0,
-      TRACK_1,
-      TRACK_2,
-      TRACK_3,
-      TRACK_4,
-      TRACK_5,
-      TRACK_6,
-      TRACK_7,
+      TRACK_0 = 9,
+      TRACK_1 = 10,
+      TRACK_2 = 11,
+      TRACK_3 = 12,
+      TRACK_4 = 13,
+      TRACK_5 = 14,
+      TRACK_6 = 15,
+      TRACK_7 = 16,
     };
     
     // Jack details

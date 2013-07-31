@@ -51,7 +51,6 @@ class GTrack : public Fl_Group
       
       volume(x+63, y +427, 36, 162, ""),
       
-      
       side(x+22, y +440 +  0, 30, 30, "S-C"),
       post(x+22, y +440 + 50, 30, 30, "P-S"),
       rev (x+22, y +440 +100, 30, 30, "Rev")

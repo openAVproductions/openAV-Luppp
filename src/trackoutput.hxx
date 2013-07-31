@@ -20,6 +20,8 @@ class TrackOutput : public AudioProcessor
     {
       printf("trackOutput ID: %i\n", track);
       
+      _trackBuffer = new float( 1024 );
+      
       // UI update
       uiUpdateConstant = 44100 / 30;
       uiUpdateCounter  = 44100 / 30;
@@ -33,7 +35,6 @@ class TrackOutput : public AudioProcessor
     /// set main mix, 0-1
     void setMaster(float value)
     {
-      printf("TrackOutput: master vol : %f\n", value);
       _toMaster = value;
     }
     /// set sidechain mix, 0-1
@@ -91,9 +92,16 @@ class TrackOutput : public AudioProcessor
         trackBuf++;
       }
     }
+    
+    ~TrackOutput()
+    {
+      delete _trackBuffer;
+    }
   
   private:
     int track;
+    
+    float* _trackBuffer;
     
     float _toMaster;
     

@@ -120,11 +120,20 @@ int Jack::process (jack_nframes_t nframes)
   buffers.midi [Buffers::APC_OUTPUT]          = (void*) jack_port_get_buffer( apcMidiOutput  , nframes );
   
   // pre-zero output buffers
+  for(uint i = 0; i < nframes; i++)
+  {
+    buffers.audio[Buffers::MASTER_OUTPUT]   [i] = 0.f;
+    buffers.audio[Buffers::REVERB]          [i] = 0.f;
+    buffers.audio[Buffers::SIDECHAIN]       [i] = 0.f;
+    buffers.audio[Buffers::POST_SIDECHAIN]  [i] = 0.f;
+  }
+  /*
   memset( buffers.audio[Buffers::MASTER_OUTPUT]     , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::MASTER_OUTPUT]     , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::REVERB]            , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::SIDECHAIN]         , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::POST_SIDECHAIN]    , 0, sizeof(float) * nframes );
+  */
   
   jack_midi_clear_buffer( buffers.midi[Buffers::APC_OUTPUT] );
   
