@@ -104,15 +104,12 @@ class RadialStatus : public Fl_Slider
           cairo_set_line_cap ( cr, CAIRO_LINE_CAP_ROUND );
           //cairo_move_to( cr, x + xc, y + yc );
           cairo_arc( cr, x + xc, y + yc, xc - 10, -(3.1415/2), angle * 6.28 - (3.1415/2) );
-          /*
-          cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 0.21 );
-          cairo_set_line_width(cr, 1.0);
+          cairo_set_source_rgba (cr, 0.0, 0.0, 0.0, 0.8 );
+          cairo_set_line_width(cr, 13.2);
           cairo_stroke_preserve(cr);
-          //cairo_fill_preserve(cr);
-          */
-          cairo_set_source_rgba (cr, 1.0, 0.48, 0.0, 0.8 );
-          //cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 0.8 );
-          cairo_set_line_width(cr, 6.2);
+          
+          cairo_set_source_rgba (cr, 1.0, 0.48, 0.0, 1 );
+          cairo_set_line_width(cr, 8.2);
           cairo_stroke(cr);
         }
         

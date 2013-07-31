@@ -34,7 +34,7 @@ namespace Avtk
 class Background : public Fl_Widget
 {
   public:
-    Background(int _x, int _y, int _w, int _h, const char *_label):
+    Background(int _x, int _y, int _w, int _h, const char *_label = 0):
         Fl_Widget(_x, _y, _w, _h, _label)
     {
       x = _x;

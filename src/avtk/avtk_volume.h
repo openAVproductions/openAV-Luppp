@@ -102,7 +102,7 @@ class Volume : public Fl_Slider
         double dashes[1];
         dashes[0] = 2.0;
         
-        cairo_set_dash ( cr, dashes, 1, 0.0);
+        //cairo_set_dash ( cr, dashes, 1, 0.0);
         cairo_set_line_width( cr, 1.0);
         
         // loop over each 2nd line, drawing dots
@@ -121,7 +121,7 @@ class Volume : public Fl_Slider
         
         cairo_set_source_rgba( cr,  66 / 255.f,  66 / 255.f ,  66 / 255.f , 0.5 );
         cairo_stroke(cr);
-        cairo_set_dash ( cr, dashes, 0, 0.0);
+        //cairo_set_dash ( cr, dashes, 0, 0.0);
         
         
         // audio level

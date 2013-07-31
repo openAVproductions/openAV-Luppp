@@ -189,11 +189,11 @@ class ClipSelector : public Fl_Button
         int drawY = y + 1;
         for( int i = 0; i < numClips; i++) // draw each clip
         {
-          cairo_rectangle( cr, x+1, drawY, clipWidth, clipHeight - 4 );
+          cairo_rectangle( cr, x+2, drawY, clipWidth-1, clipHeight - 4 );
           cairo_set_source_rgba(cr, 66 / 255.f,  66 / 255.f ,  66 / 255.f, 0.4);
           cairo_fill(cr);
           
-          cairo_rectangle( cr, x+1, drawY, clipHeight - 2, clipHeight - 4 );
+          cairo_rectangle( cr, x+2, drawY, clipHeight-4, clipHeight - 4 );
           
           if ( clips[i].recording() )
           {
@@ -251,11 +251,11 @@ class ClipSelector : public Fl_Button
             cairo_fill(cr);
           }
           
-          cairo_rectangle( cr, x+1, drawY, clipWidth, clipHeight - 2 );
+          cairo_rectangle( cr, x+2, drawY, clipWidth -1, clipHeight - 3 );
           
-          float alpha = 1.0;
+          float alpha = 1;
           cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, alpha);
-          cairo_set_line_width( cr, 1.4);
+          cairo_set_line_width( cr, 1.3);
           cairo_move_to( cr, x+clipHeight-1, drawY );
           cairo_line_to( cr, x+clipHeight-1, drawY + clipHeight - 2);
           cairo_stroke(cr);
