@@ -18,7 +18,7 @@ using namespace std;
  * The class which reads from LooperClips, and reads/ writes the data using the
  * track buffer. Scene recording / playback is the essential functionality here.
 **/
-class Looper : public Observer, public AudioProcessor
+class Looper : public AudioProcessor, public Observer
 {
   public:
     Looper(int t);
@@ -44,7 +44,7 @@ class Looper : public Observer, public AudioProcessor
     const int track;
     
     float* tmpRecordBuffer;
-    LooperClip clips[10];
+    LooperClip* clips[10];
     
     // Pitch Shifting
     void pitchShift(int count, float* input, float* output);

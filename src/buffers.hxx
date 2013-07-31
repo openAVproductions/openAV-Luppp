@@ -10,8 +10,13 @@ class Buffers
   public:
     Buffers()
     {
-      memset( audio, 0, sizeof(float*)*32);
-      memset( midi , 0, sizeof(void *)*32);
+      for(int i = 0; i < 32; i++)
+      {
+        audio[i] = 0;
+        midi [i] = 0;
+      }
+      //memset( audio, 0, sizeof(float*)*32);
+      //memset( midi , 0, sizeof(void *)*32);
     }
     float* audio[32];
     void*  midi [32];

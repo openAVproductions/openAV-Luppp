@@ -19,7 +19,6 @@ int AudioBuffer::privateID = 0;
 using namespace std;
 
 extern Gui* gui;
-extern Jack* jack;
 
 
 void luppp_tooltip(std::string s)
@@ -46,12 +45,6 @@ static void gui_static_read_rb(void* inst)
   //cout << "read gui" << endl;
   handleGuiEvents();
   Fl::repeat_timeout( 1 / 30.f, &gui_static_read_rb, inst);
-}
-
-static void gui_jack_activate(void* inst)
-{
-  cout << "GUI: Jack activate called now\n" << endl;
-  jack->activate();
 }
 
 Gui::Gui() :
@@ -96,8 +89,6 @@ int Gui::show()
   window.show();
   
   gui_static_read_rb( this );
-  
-  Fl::repeat_timeout( 1, &gui_jack_activate, 0 );
   
   return Fl::run();
 }

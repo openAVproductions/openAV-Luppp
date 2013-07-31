@@ -2,6 +2,7 @@
 #ifndef LUPPP_LOOPER_CLIP_H
 #define LUPPP_LOOPER_CLIP_H
 
+#include <stdio.h>
 #include "audiobuffer.hxx"
 
 /** LooperClip
@@ -31,14 +32,23 @@ class LooperClip
       
       _buffer = 0;
       
-      index = 0;
+      _index = 0;
     }
     
     // loads a sample: eg from disk
     void load( AudioBuffer* ab )
     {
       _loaded = true;
+      
+      if ( _buffer )
+      {
+        // unload old buffer!
+        printf("LooperClip: FIXME:TODO de-allocate old sample here!\n");
+      }
+      
       _buffer = ab;
+      
+      _index = 0;
       
       _playing = true;
     }
@@ -54,16 +64,43 @@ class LooperClip
       // write "count" samples into current buffer. If the last
     }
     
+    
     int nframesAvailable()
     {
       // return amount of space left to record
+      return 0;
     }
+    
     
     bool loaded(){return _loaded;}
     bool playing(){return _playing;}
     bool recording(){return _recording;}
     
-    float getSample(){return _buffer->getData().at(index++);}
+    float getSample()
+    {
+      if ( _buffer )
+      {
+        if ( _index >= _buffer->getData().size() || _index < 0  )
+        {
+          _index = 0;
+        }
+        float tmp = _buffer->getData().at(_index);
+        _index++;
+        
+        return tmp;
+      }
+      
+      return 0.f;
+    }
+    
+    float getProgress()
+    {
+      if ( _buffer )
+      {
+        return float(_index) / _buffer->getData().size();
+      }
+      return 0.f;
+    }
     
     // Set
     void clipLength(int l){_clipLenght = l;}
@@ -73,7 +110,7 @@ class LooperClip
     bool _recording;
     bool _playing;
     
-    long index;
+    unsigned int _index;
     AudioBuffer* _buffer;
     
     // Clip Properties

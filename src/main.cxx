@@ -40,7 +40,7 @@ int main()
   
   jack = new Jack();
   
-  //jack->activate();
+  jack->activate();
   
   gui->show();
   

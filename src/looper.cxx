@@ -12,11 +12,20 @@
 extern Jack* jack;
 
 Looper::Looper(int t) :
-  track(t)
+  AudioProcessor(),
+  Observer(),
+  track(t),
+  uiUpdateConstant(44100/30.f),
+  uiUpdateCounter(44100/30.f)
 {
   // pre-zero the internal sample
-  tmpRecordBuffer = (float*)malloc( sizeof(float) * MAX_BUFFER_SIZE );
-  memset( tmpRecordBuffer, 0, sizeof(float) * MAX_BUFFER_SIZE );
+  //tmpRecordBuffer = (float*)malloc( sizeof(float) * MAX_BUFFER_SIZE );
+  //memset( tmpRecordBuffer, 0, sizeof(float) * MAX_BUFFER_SIZE );
+  
+  for(int i = 0; i < 10; i++ )
+  {
+    clips[i] = new LooperClip();
+  }
   
   // init faust pitch shift variables
   fSamplingFreq = 44100;
@@ -34,7 +43,7 @@ Looper::Looper(int t) :
 
 LooperClip* Looper::getClip(int scene)
 {
-  return &clips[scene];
+  return clips[scene];
 }
 
 void Looper::midi(unsigned char* data)
@@ -138,7 +147,7 @@ void Looper::updateControllers()
 
 void Looper::setSample(int scene, AudioBuffer* ab)
 {
-  clips[scene].load( ab );
+  clips[scene]->load( ab );
   /*
   vector<float>& buf = ab->getData();
   if ( buf.size() > SAMPLE_SIZE )
@@ -176,7 +185,7 @@ void Looper::process(int nframes, Buffers* buffers)
   // FIXME:
   // using the track output causes distortion: clipping / not proper writing.
   // writing to master fixes issue, so its due to trackOutput or Looper writing...?
-  float* trk = buffers->audio[Buffers::TRACK_0 + track];
+  //float* trk = buffers->audio[Buffers::TRACK_0 + track];
   float* out = buffers->audio[Buffers::MASTER_OUTPUT];
   
   // process each clip individually: this allows for playback of one clip,
@@ -185,22 +194,34 @@ void Looper::process(int nframes, Buffers* buffers)
   {
     // handle state of clip, and do what needs doing:
     // record into buffer, play from buffer, etc
-    if ( clips[i].recording() )
+    if ( clips[i]->recording() )
     {
       // copy data from input buffer to recording buffer
       
-      if ( clips[i].nframesAvailable() < LOOPER_SAMPLES_BEFORE_REQUEST )
+      if ( clips[i]->nframesAvailable() < LOOPER_SAMPLES_BEFORE_REQUEST )
       {
         // request bigger buffer for this track/scene
       }
     }
-    else if ( clips[i].playing() )
+    else if ( clips[i]->playing() )
     {
+      //printf("Looper %i playing()\n", track );
       // copy data into tmpBuffer, then pitch-stretch into track buffer
-      for(int i = 0; i < nframes; i++ )
+      for(int c = 0; c < nframes; c++ )
       {
-        out[i] += clips[i].getSample();
+        
+        out[i] = clips[i]->getSample(); // sin( clips[i]->getProgress() * 440 * 6.24 );
       }
+      
+      // update UI of progress
+      if ( uiUpdateCounter > uiUpdateConstant )
+      {
+        EventLooperProgress e(track, clips[i]->getProgress() );
+        writeToGuiRingbuffer( &e );
+        //printf("writing event\n");
+        uiUpdateCounter = 0;
+      }
+      uiUpdateCounter += nframes;
     }
   }
   

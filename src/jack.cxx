@@ -54,22 +54,21 @@ Jack::Jack()
   
   
   /// prepare internal buffers
-  buffers.audio[Buffers::REVERB]         = (float*) malloc( sizeof(float) * nframes );
-  buffers.audio[Buffers::SIDECHAIN]      = (float*) malloc( sizeof(float) * nframes );
-  buffers.audio[Buffers::POST_SIDECHAIN] = (float*) malloc( sizeof(float) * nframes );
-  buffers.audio[Buffers::MASTER_OUTPUT]  = (float*) malloc( sizeof(float) * nframes );
+  buffers.audio[Buffers::REVERB]         = new float( nframes );
+  buffers.audio[Buffers::SIDECHAIN]      = new float( nframes );
+  buffers.audio[Buffers::POST_SIDECHAIN] = new float( nframes );
+  buffers.audio[Buffers::MASTER_OUTPUT]  = new float( nframes );
+  
+  printf("Master output buffer on alloc() %i\n", buffers.audio[Buffers::MASTER_OUTPUT] );
   
   for(int i = 0; i < NTRACKS; i++)
   {
     loopers.push_back( new Looper(i) );
-    timeManager.registerObserver( loopers.at(i) );
+    timeManager.registerObserver( loopers.back() );
     
-    buffers.audio[Buffers::TRACK_0 + i] = (float*) malloc( sizeof(float) * nframes );
-  }
-  
-  for( int i = 0; i < NTRACKS; i++)
-  {
-    trackOutputs.push_back( new TrackOutput(i, loopers.at(i) ) );
+    trackOutputs.push_back( new TrackOutput(i, loopers.back() ) );
+    
+    //buffers.audio[Buffers::TRACK_0 + i] = new float( nframes ); // (float*) malloc( sizeof(float) * nframes );
   }
   
   timeManager.registerObserver( &metronome );
@@ -107,23 +106,19 @@ void Jack::activate()
 int Jack::process (jack_nframes_t nframes)
 {
   // get buffers
-  buffers.audio[Buffers::MASTER_INPUT]    = (float*)jack_port_get_buffer( masterInput , nframes);
-  buffers.audio[Buffers::JACK_MASTER_OUTPUT]=(float*)jack_port_get_buffer(masterOutput, nframes);
-  buffers.midi[Buffers::MASTER_MIDI_INPUT]= (void*) jack_port_get_buffer( masterMidiInput, nframes );
-  buffers.midi[Buffers::APC_INPUT]        = (void*) jack_port_get_buffer( apcMidiInput   , nframes );
-  buffers.midi[Buffers::APC_OUTPUT]       = (void*) jack_port_get_buffer( apcMidiOutput  , nframes );
+  buffers.audio[Buffers::MASTER_INPUT]        = (float*)jack_port_get_buffer( masterInput    , nframes );
+  buffers.audio[Buffers::JACK_MASTER_OUTPUT]  = (float*)jack_port_get_buffer( masterOutput   , nframes );
+  buffers.midi [Buffers::MASTER_MIDI_INPUT]   = (void*) jack_port_get_buffer( masterMidiInput, nframes );
+  buffers.midi [Buffers::APC_INPUT]           = (void*) jack_port_get_buffer( apcMidiInput   , nframes );
+  buffers.midi [Buffers::APC_OUTPUT]          = (void*) jack_port_get_buffer( apcMidiOutput  , nframes );
+  
   
   // pre-zero output buffers
-  memset( buffers.audio[Buffers::MASTER_OUTPUT], 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::JACK_MASTER_OUTPUT],0,sizeof(float)*nframes);
-  memset( buffers.audio[Buffers::REVERB]       , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::SIDECHAIN]    , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::POST_SIDECHAIN],0, sizeof(float) * nframes );
-  
-  for(int i = 0; i < NTRACKS; i++)
-  {
-    memset( buffers.audio[Buffers::TRACK_0 + i], 0, sizeof(float) * nframes );
-  }
+  memset( buffers.audio[Buffers::MASTER_OUTPUT]     , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::JACK_MASTER_OUTPUT], 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::REVERB]            , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::SIDECHAIN]         , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::POST_SIDECHAIN]    , 0, sizeof(float) * nframes );
   
   jack_midi_clear_buffer( buffers.midi[Buffers::APC_OUTPUT] );
   
@@ -156,7 +151,9 @@ int Jack::process (jack_nframes_t nframes)
   
   // process each track, starting at output and working up signal path
   for(uint i = 0; i < NTRACKS; i++)
+  {
     loopers.at(i)->process( nframes, &buffers );
+  }
   
   /*
   // process fx

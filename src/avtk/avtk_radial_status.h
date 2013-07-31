@@ -117,7 +117,7 @@ class RadialStatus : public Fl_Slider
         }
         
         // inside circle
-        cairo_set_source_rgba(cr,0.3,0.3,0.3, 0.8);
+        cairo_set_source_rgba(cr,0.3,0.3,0.3, 1);
         cairo_arc(cr, x + xc, y + yc, 10, 0, 2 * 3.1415);
         cairo_set_line_width(cr, 4.2);
         cairo_fill(cr);

@@ -383,12 +383,12 @@ class ClipSelector : public Fl_Button
                 writeToDspRingbuffer( &e );
                 clips[clipNum].record();
               }
-              /*
+              
               else if ( clipNum == stopQueuedClip )
               {
                 playingClip = -1;
               }
-              *
+              
               else if ( clips[clipNum].loaded() )
               {
                 EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_PLAY_QUEUED);
