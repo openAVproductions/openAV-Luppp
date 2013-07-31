@@ -1,1 +1,1 @@
-valgrind --tool=memcheck --leak-check=full  .build/luppp5
+valgrind --tool=memcheck --leak-check=full --track-origins=yes  .build/luppp5
