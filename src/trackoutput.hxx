@@ -90,7 +90,7 @@ class TrackOutput : public AudioProcessor
       
       for(int i = 0; i < nframes; i++)
       {
-        //*reverb++        += *trackBuf * _toReverb;
+        *reverb++        += *trackBuf * _toReverb;
         //*sidechain++     += *trackBuf * _toSidechain;
         //*postSidechain++ += *trackBuf * _toPostSidechain;
         

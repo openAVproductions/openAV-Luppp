@@ -138,7 +138,7 @@ class Reverb : public Fl_Slider
         {
           // big grey X
           cairo_set_line_width(cr, 12.0);
-          cairo_set_source_rgba(cr, 1.0,1.0,1.0, 0.5);
+          cairo_set_source_rgba(cr, 0.0,0.0,0.0, 1.0);
           
           cairo_move_to( cr, x + (3 * w / 4.f), y + ( h / 4.f ) );
           cairo_line_to( cr, x + (w / 4.f), y + ( 3 *h / 4.f ) );

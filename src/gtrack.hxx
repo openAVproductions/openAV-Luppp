@@ -49,11 +49,11 @@ class GTrack : public Fl_Group
       
       volBox(x+5, y+422, 100, 172, ""),
       
-      volume(x+63, y +427, 36, 162, ""),
+      volume(x+66, y +425, 36, 166, ""),
       
-      side(x+22, y +440 +  0, 30, 30, "S-C"),
-      post(x+22, y +440 + 50, 30, 30, "P-S"),
-      rev (x+22, y +440 +100, 30, 30, "Rev")
+      side(x+21, y +435 +  0, 30, 30, "Side"),
+      post(x+21, y +435 + 50, 30, 30, "Post"),
+      rev (x+21, y +440 +100, 30, 30, "Verb")
       
       //progress(x+5, y+ 26, 100, 10, "Source UI")
     {

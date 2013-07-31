@@ -67,10 +67,10 @@ class GMasterTrack : public Fl_Group
       tapTempo(x + 25 + 52, y + 26 + 4, 63, 29,"Tap"),
       metronomeButton(x + 9,y + 26 + 4, 64, 29,"Metro"),
       
-      sidechain(x+9, y +427, 95, 95, ""),
-      reverb   (x+9, y +528, 95, 62, ""),
+      sidechain(x+9, y +428, 94, 94, ""),
+      reverb   (x+9, y +527, 94, 62, ""),
       
-      volume(x+106, y +427, 36, 150, "Vol")
+      volume(x+106, y +425, 36, 166, "")
     {
       ID = privateID++;
       

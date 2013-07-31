@@ -70,8 +70,8 @@ Jack::Jack()
   timeManager.registerObserver( &metronome );
   
   /// setup FX
-  //reverb = new Reverb( buffers.samplerate );
-  //reverbMeter = new DBMeter( buffers.samplerate );
+  reverb = new Reverb( buffers.samplerate );
+  reverbMeter = new DBMeter( buffers.samplerate );
   masterMeter = new DBMeter( buffers.samplerate );
   
   /// setup JACK callbacks
@@ -158,7 +158,10 @@ int Jack::process (jack_nframes_t nframes)
     trackOutputs.at(i)->process( nframes, &buffers );
   }
   
-  /*
+  
+  metronome.process( nframes, &buffers );
+  
+  
   // process fx
   float* buf[] = {
     buffers.audio[Buffers::REVERB],
@@ -166,15 +169,13 @@ int Jack::process (jack_nframes_t nframes)
     buffers.audio[Buffers::REVERB],
     buffers.audio[Buffers::REVERB],
   };
-  */
   
-  //reverbMeter->process(nframes, buffers.audio[Buffers::REVERB], buffers.audio[Buffers::REVERB] );
-  //reverb->process( nframes, &buf[0], &buf[2] );
+  
+  reverbMeter->process(nframes, buffers.audio[Buffers::REVERB], buffers.audio[Buffers::REVERB] );
+  reverb->process( nframes, &buf[0], &buf[2] );
   
   // db meter on master output, then memcpy to JACK
   masterMeter->process(nframes, buffers.audio[Buffers::MASTER_OUTPUT], buffers.audio[Buffers::MASTER_OUTPUT] );
-  
-  metronome.process( nframes, &buffers );
   
   if ( uiUpdateCounter > uiUpdateConstant )
   {
@@ -198,6 +199,7 @@ int Jack::process (jack_nframes_t nframes)
   // memcpy the internal MASTER_OUTPUT buffer to the JACK_MASTER_OUTPUT
   memcpy( buffers.audio[Buffers::JACK_MASTER_OUTPUT],
           buffers.audio[Buffers::MASTER_OUTPUT],
+          //buffers.audio[Buffers::REVERB],  // uncomment to listen to reverb send only
           sizeof(float)*nframes);
   
   return false;
