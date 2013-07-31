@@ -1,6 +1,6 @@
 
-#ifndef LUPPP_OBSERVER_H
-#define LUPPP_OBSERVER_H
+#ifndef LUPPP_TIME_OBSERVER_H
+#define LUPPP_TIME_OBSERVER_H
 
 class TimeObserver
 {
@@ -12,4 +12,4 @@ class TimeObserver
     
 };
 
-#endif // LUPPP_OBSERVER_H
+#endif // LUPPP_TIME_OBSERVER_H

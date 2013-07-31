@@ -11,7 +11,9 @@ using namespace std;
 
 extern int jackSamplerate;
 
-Jack::Jack()
+Jack::Jack() :
+  clientActive(false),
+  client( 0 )
 {
   // open the client
   client = jack_client_open ( "Luppp", JackNullOption , 0 , 0 );
@@ -181,7 +183,7 @@ int Jack::process (jack_nframes_t nframes)
   if ( reverb->getActive() )
   {
     reverbMeter->process(nframes, buffers.audio[Buffers::REVERB], buffers.audio[Buffers::REVERB] );
-    reverb->process( nframes, &buf[0], &buf[2] );
+    //reverb->process( nframes, &buf[0], &buf[2] );
   }
   
   // db meter on master output, then memcpy to JACK

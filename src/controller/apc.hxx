@@ -5,7 +5,9 @@
 
 #include "controller.hxx"
 
-class AkaiAPC : public Controller
+#include "../observer/midi.hxx"
+
+class AkaiAPC : public Controller, public MidiObserver
 {
   public:
     AkaiAPC();
@@ -14,6 +16,8 @@ class AkaiAPC : public Controller
     void volume(int t, float f);
     void recordArm(int t, bool b);
     void clipSelect(int track, int clip, ClipMode cm);
+    
+    void midi(unsigned char* data){};
     
 };
 

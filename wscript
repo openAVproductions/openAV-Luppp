@@ -25,6 +25,9 @@ def build(bld):
              'src/jack.cxx',
              'src/gtrack.cxx',
              'src/looper.cxx',
+             
+             'src/observer/midi.cxx',
+             
              'src/controller/apc.cxx',
              'src/eventhandlergui.cxx',
              'src/eventhandlerdsp.cxx']

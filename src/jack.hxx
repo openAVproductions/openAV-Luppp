@@ -87,6 +87,7 @@ class Jack
     DBMeter* masterMeter;
     
     // JACK member variables
+    bool clientActive;
     jack_client_t* client;
     
     jack_port_t*  masterInput;
