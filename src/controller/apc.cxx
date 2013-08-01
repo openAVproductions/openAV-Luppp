@@ -21,21 +21,21 @@ void AkaiAPC::recordArm(int t, bool enabled)
   jack->writeApcOutput( &data[0] );
 }
 
-void AkaiAPC::clipSelect(int t, int clip, ClipMode cm)
+void AkaiAPC::setSceneState(int t, int clip, GridLogic::State s)
 {
   unsigned char data[3];
   data[0] = 144 + t;
   data[1] = 53 + clip;
   
-  switch (cm)
+  switch (s)
   {
-    case CLIP_MODE_EMPTY:         data[2] = 0; break;
-    case CLIP_MODE_PLAYING:       data[2] = 1; break;
-    case CLIP_MODE_PLAY_QUEUED:   data[2] = 2; break;
-    case CLIP_MODE_RECORDING:     data[2] = 3; break;
-    case CLIP_MODE_RECORD_QUEUED: data[2] = 4; break;
-    case CLIP_MODE_LOADED:        data[2] = 5; break;
-    case CLIP_MODE_STOP_QUEUED:   data[2] = 6; break;
+    case GridLogic::STATE_EMPTY:         data[2] = 0; break;
+    case GridLogic::STATE_PLAYING:       data[2] = 1; break;
+    case GridLogic::STATE_PLAY_QUEUED:   data[2] = 2; break;
+    case GridLogic::STATE_RECORDING:     data[2] = 3; break;
+    case GridLogic::STATE_RECORD_QUEUED: data[2] = 4; break;
+    case GridLogic::STATE_LOADED:        data[2] = 5; break;
+    case GridLogic::STATE_STOP_QUEUED:   data[2] = 6; break;
   }
   
   jack->writeApcOutput( &data[0] );

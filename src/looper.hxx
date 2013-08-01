@@ -32,7 +32,7 @@ class Looper : public AudioProcessor, public TimeObserver
     
     void setFpb(int f) { /*fpb = f;*/ }
     
-    void setScene( int sc );
+    void queuePlayScene( int sc );
     
     
     LooperClip* getClip(int scene);
@@ -42,6 +42,10 @@ class Looper : public AudioProcessor, public TimeObserver
   
   private:
     const int track;
+    
+    /// variables used to determing the current actions of the looper
+    int playingScene;
+    int queuedScene;
     
     float* tmpRecordBuffer;
     LooperClip clips[10];

@@ -5,6 +5,8 @@
 
 #include <string>
 
+#include "../gridlogic.hxx"
+
 class Controller
 {
   public:
@@ -30,7 +32,7 @@ class Controller
     virtual void mute(int t, bool b){};
     virtual void volume(int t, float f){};
     virtual void recordArm(int t, bool r){};
-    virtual void clipSelect(int track, int clip, ClipMode cm){};
+    virtual void setSceneState(int track, int scene, GridLogic::State s){};
 };
 
 #endif // LUPPP_CONTROLLER_H

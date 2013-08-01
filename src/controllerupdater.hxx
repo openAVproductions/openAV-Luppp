@@ -8,6 +8,8 @@
 #include "controller/apc.hxx"
 #include "controller/controller.hxx"
 
+#include "gridlogic.hxx"
+
 using namespace std;
 
 // this is a wrapper class around a vector of Controller instances
@@ -31,10 +33,10 @@ class ControllerUpdater
         c.at(i)->mute(t,b);
     }
     
-    void clipSelect(int t, int clip, Controller::ClipMode cm)
+    void clipSelect(int t, int clip, GridLogic::State s)
     {
       for(unsigned int i = 0; i < c.size(); i++)
-        c.at(i)->clipSelect(t,clip,cm);
+        c.at(i)->setSceneState(t,clip,s);
     }
     
     void recordArm(int t, bool r)

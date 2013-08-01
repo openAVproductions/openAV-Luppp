@@ -85,11 +85,10 @@ void Looper::midi(unsigned char* data)
   */
 }
 
-void Looper::setScene( int sc )
+void Looper::queuePlayScene( int sc )
 {
-  // update Looper to play different scene
-  //scene = sc;
-  //sample = samples[scene];
+  //queuedScene = sc;
+  //jack->getControllerUpdater()->clipSelect(track, scene, Controller::CLIP_MODE_PLAY_QUEUED);
 }
 
 //void Looper::setState( State s) {
