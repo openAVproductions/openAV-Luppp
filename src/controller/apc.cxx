@@ -1,7 +1,11 @@
 
-#include "../jack.hxx"
+
+#include "apc.hxx"
 
 #include <iostream>
+
+#include "../jack.hxx"
+#include "../gridlogic.hxx"
 
 extern Jack* jack;
 
@@ -52,12 +56,25 @@ void AkaiAPC::volume(int t, float f)
   
 }
 
-void note_on( int track, int note, int vel )
+void noteOn( int track, int note, int vel )
 {
-  printf("apc note on using MIDI observer \n");
+  printf("apc noteOn: t = %i, n = %i, vel = %i\n", track, note, vel);
+  if ( note >= 53 && note <= 57 )
+  {
+    jack->getGridLogic()->pressed( track, note - 53 );
+  }
 }
 
-void cc_change( int track, int cc, float value )
+void noteOff( int track, int note, int vel )
+{
+  printf("apc noteOff: t = %i, n = %i, vel = %i\n", track, note, vel);
+  if ( note >= 53 && note <= 57 )
+  {
+    jack->getGridLogic()->released( track, note - 53 );
+  }
+}
+
+void ccChange( int track, int cc, float value )
 {
   switch( cc )
   {
@@ -76,14 +93,14 @@ void AkaiAPC::midi(unsigned char* data)
   
   if ( b1 >= 144 && b1 < 144 + 16 ) // NOTE_ON
   {
-    note_on( b1 - 144, b2, b3 );
+    noteOn( b1 - 144, b2, b3 );
   }
   else if ( b1 >= 128 && b1 < 128 + 16 ) // NOTE_OFF
   {
-    //note_off( b1 - 144, b2, b3 );
+    noteOff( b1 - 128, b2, b3 );
   }
   else if ( b1 >= 176 && b1 < 176 + 16 ) // CC
   {
-    cc_change( b1 - 176, b2, data[2] / 127.f );
+    ccChange( b1 - 176, b2, data[2] / 127.f );
   }
 }

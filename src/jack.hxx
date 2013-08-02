@@ -19,14 +19,15 @@
 
 #include "config.hxx"
 #include "looper.hxx"
-#include "trackoutput.hxx"
 #include "metronome.hxx"
+#include "gridlogic.hxx"
+#include "trackoutput.hxx"
 #include "timemanager.hxx"
+#include "controllerupdater.hxx"
 
 #include "dsp/dsp_reverb.hxx"
 #include "dsp/dsp_dbmeter.hxx"
 
-#include "controllerupdater.hxx"
 
 using namespace std;
 
@@ -43,6 +44,7 @@ class Jack
     /// get functions for components owned by Jack 
     Looper*             getLooper(int t) {return loopers.at(t); }
     Metronome*          getMetronome(){return &metronome;}
+    GridLogic*          getGridLogic(){return &gridLogic;}
     TrackOutput*        getTrackOutput(int t){return trackOutputs.at(t);}
     TimeManager*        getTimeManager(){return &timeManager;}
     ControllerUpdater*  getControllerUpdater(){return controllerUpdater;}
@@ -64,6 +66,7 @@ class Jack
   private:
     Buffers     buffers;
     Metronome   metronome;
+    GridLogic   gridLogic;
     TimeManager timeManager;
     
     ControllerUpdater* controllerUpdater;

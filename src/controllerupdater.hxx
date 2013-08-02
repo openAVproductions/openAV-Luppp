@@ -33,7 +33,7 @@ class ControllerUpdater
         c.at(i)->mute(t,b);
     }
     
-    void clipSelect(int t, int clip, GridLogic::State s)
+    void setSceneState(int t, int clip, GridLogic::State s)
     {
       for(unsigned int i = 0; i < c.size(); i++)
         c.at(i)->setSceneState(t,clip,s);
