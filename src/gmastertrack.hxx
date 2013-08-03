@@ -16,6 +16,7 @@
 #include "avtk/avtk_background.h"
 #include "avtk/avtk_light_button.h"
 #include "avtk/avtk_clip_selector.h"
+#include "avtk/avtk_sidechain_gain.h"
 
 
 #include "eventhandler.hxx"
@@ -191,9 +192,9 @@ class GMasterTrack : public Fl_Group
     
     Avtk::LightButton* beatLights[8];
     
-    Avtk::Reverb sidechain;
-    Avtk::Reverb reverb;
-    Avtk::Volume volume;
+    Avtk::SidechainGain sidechain;
+    Avtk::Reverb        reverb;
+    Avtk::Volume        volume;
     
     static int privateID;
 };
