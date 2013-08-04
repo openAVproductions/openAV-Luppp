@@ -87,8 +87,27 @@ void ccChange( int track, int cc, float value )
 {
   switch( cc )
   {
+    /// Track faders
     case 7: {
         EventTrackVol e( track, value );
+        writeToGuiRingbuffer( &e ); }
+        break;
+    case 14: { // master
+        EventTrackVol e( -1, value );
+        writeToGuiRingbuffer( &e ); }
+        break;
+    
+    /// Device Control
+    case 16: {
+        EventTrackSend e( track, SEND_SIDE, value );
+        writeToGuiRingbuffer( &e ); }
+        break;
+    case 17: {
+        EventTrackSend e( track, SEND_POST, value );
+        writeToGuiRingbuffer( &e ); }
+        break;
+    case 18: {
+        EventTrackSend e( track, SEND_REV, value );
         writeToGuiRingbuffer( &e ); }
         break;
   }

@@ -116,7 +116,7 @@ class EventTrackSend : public EventBase
     float value;
     
     EventTrackSend(){};
-    EventTrackSend(int t, SEND_TYPE s, int v): track(t), send(s), value(v){}
+    EventTrackSend(int t, SEND_TYPE s, float v): track(t), send(s), value(v){}
 };
 
 class EventLooperState : public EventBase
@@ -152,7 +152,7 @@ class EventLooperLoopLength : public EventBase
     uint32_t size() { return sizeof(EventLooperLoopLength); }
     
     int track;
-    float scale; // multiply length by this
+    float scale;
     EventLooperLoopLength(){}
     EventLooperLoopLength(int t, float s) : track(t), scale(s){}
 };

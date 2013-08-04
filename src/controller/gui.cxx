@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "../jack.hxx"
+#include "../event.hxx"
 #include "../gridlogic.hxx"
 
 extern Jack* jack;
@@ -15,9 +16,21 @@ LupppGUI::LupppGUI() :
   
 }
 
+void LupppGUI::masterVolume(float f)
+{
+  EventTrackVol e( -1, f );
+  writeToGuiRingbuffer( &e );
+}
+
 void LupppGUI::recordArm(int t, bool enabled)
 {
   
+}
+
+void LupppGUI::fxReverbSend(int t, float r)
+{
+  EventTrackSend e( t, SEND_REV, r );
+  writeToGuiRingbuffer( &e );
 }
 
 void LupppGUI::setSceneState(int t, int clip, GridLogic::State s)
@@ -30,10 +43,10 @@ void LupppGUI::mute(int t, bool b)
   
 }
 
-
 void LupppGUI::volume(int t, float f)
 {
-  
+  EventTrackVol e( t, f );
+  writeToGuiRingbuffer( &e );
 }
 
 void LupppGUI::progress(int t, int s, float f)

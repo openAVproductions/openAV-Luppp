@@ -16,6 +16,12 @@ class Controller
     /// name string to show in UI
     virtual std::string getName() = 0;
     
+    /// master
+    virtual void masterVolume(float f){};
+    
+    /// FX
+    virtual void fxReverbSend(int t, float r){}; 
+    
     /// track functionality
     virtual void mute(int t, bool b){};
     virtual void volume(int t, float f){};

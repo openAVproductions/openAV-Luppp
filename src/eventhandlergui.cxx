@@ -88,7 +88,18 @@ void handleGuiEvents()
             else
               gui->getTrack(ev.track)->getVolume()->value( ev.vol );
           } break; }
-          
+        case Event::TRACK_SEND: {
+          if ( availableRead >= sizeof(EventTrackSend) ) {
+            EventTrackSend ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTrackSend) );
+            if ( ev.send == SEND_REV )
+              gui->getTrack(ev.track)->rev.value( ev.value );
+            if ( ev.send == SEND_POST )
+              gui->getTrack(ev.track)->post.value( ev.value );
+            if ( ev.send == SEND_SIDE )
+              gui->getTrack(ev.track)->side.value( ev.value );
+          } break; }
+        
         case Event::GUI_PRINT: {
           if ( availableRead >= sizeof(EventGuiPrint) ) {
             EventGuiPrint ev;

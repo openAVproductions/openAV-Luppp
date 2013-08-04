@@ -14,6 +14,10 @@ class LupppGUI : public Controller
     
     std::string getName(){return "Luppp GUI";}
     
+    void masterVolume(float f);
+    
+    void fxReverbSend(int t, float r);
+    
     void mute(int t, bool b);
     void volume(int t, float f);
     void progress(int t, int s, float p);
