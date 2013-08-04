@@ -44,8 +44,16 @@ class GridLogic : public TimeObserver
     /// button release / click-release event
     void released( int track, int scene );
     
-    /// resend entire grid state to controller
+    /// resend entire grid state to controllers
     void updateState();
+    
+    /// resend track / scene combo to controllers
+    void updateState( int track, int scene );
+    
+    
+    /// time functions, not for use by Controller subclasses
+    void bar();
+    void beat();
   
   private:
     /// contains the current state of each grid square

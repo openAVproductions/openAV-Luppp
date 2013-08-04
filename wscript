@@ -27,9 +27,12 @@ def build(bld):
              'src/looper.cxx',
              'src/gridlogic.cxx',
              
+             'src/observer/time.cxx',
              'src/observer/midi.cxx',
              
              'src/controller/apc.cxx',
+             'src/controller/gui.cxx',
+             
              'src/eventhandlergui.cxx',
              'src/eventhandlerdsp.cxx']
   

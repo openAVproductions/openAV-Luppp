@@ -16,6 +16,7 @@ class AkaiAPC : public Controller, public MidiObserver
     
     void mute(int t, bool b);
     void volume(int t, float f);
+    void progress(int t, int s, float f);
     void recordArm(int t, bool b);
     void setSceneState(int track, int clip, GridLogic::State s);
     

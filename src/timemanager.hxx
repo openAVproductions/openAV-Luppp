@@ -17,12 +17,15 @@ class TimeManager
   public:
     TimeManager():
         fpb(22050),
-        oldBeat(0)
+        oldBeat(0),
+        observers()
     {
       tapTempoPos = 0;
       tapTempo[0] = 0;
       tapTempo[1] = 0;
       tapTempo[2] = 0;
+      
+      cout << "TimeManager() done" << endl;
     }
     
     void setBpm(float bpm)

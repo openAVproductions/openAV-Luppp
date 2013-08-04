@@ -43,8 +43,8 @@ class Jack
     
     /// get functions for components owned by Jack 
     Looper*             getLooper(int t) {return loopers.at(t); }
-    Metronome*          getMetronome(){return &metronome;}
-    GridLogic*          getGridLogic(){return &gridLogic;}
+    Metronome*          getMetronome(){return metronome;}
+    GridLogic*          getGridLogic(){return gridLogic;}
     TrackOutput*        getTrackOutput(int t){return trackOutputs.at(t);}
     TimeManager*        getTimeManager(){return &timeManager;}
     ControllerUpdater*  getControllerUpdater(){return controllerUpdater;}
@@ -64,18 +64,15 @@ class Jack
     void writeApcOutput( unsigned char* data );
   
   private:
-    Buffers     buffers;
-    Metronome   metronome;
-    GridLogic   gridLogic;
-    TimeManager timeManager;
+    Buffers             buffers;
+    TimeManager         timeManager;
+    Metronome*          metronome;
+    GridLogic*          gridLogic;
+    ControllerUpdater*  controllerUpdater;
     
-    ControllerUpdater* controllerUpdater;
-    
-    vector<Looper*> loopers;
-    
-    vector<TrackOutput*> trackOutputs;
-    
-    vector<MidiObserver*> midiObservers;
+    vector<Looper*>         loopers;
+    vector<TrackOutput*>    trackOutputs;
+    vector<MidiObserver*>   midiObservers;
     
     int nframes;
     int samplerate;

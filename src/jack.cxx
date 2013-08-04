@@ -7,6 +7,8 @@
 
 #include "eventhandler.hxx"
 
+#include "controller/gui.hxx"
+
 using namespace std;
 
 extern int jackSamplerate;
@@ -14,7 +16,10 @@ extern int jackSamplerate;
 Jack::Jack() :
   clientActive(false),
   client( 0 ),
-  controllerUpdater( new ControllerUpdater() )
+  controllerUpdater( new ControllerUpdater() ),
+  timeManager(),
+  metronome( new Metronome() ),
+  gridLogic( new GridLogic() )
 {
   // open the client
   client = jack_client_open ( "Luppp", JackNullOption , 0 , 0 );
@@ -76,7 +81,7 @@ Jack::Jack() :
     timeManager.registerObserver( loopers.back() );
   }
   
-  timeManager.registerObserver( &metronome );
+  //timeManager.registerObserver( &metronome );
   
   /// setup FX
   reverb = new Reverb( buffers.samplerate );
@@ -106,6 +111,12 @@ void Jack::activate()
   // move to "settings" class or so
   Controller* c = new AkaiAPC();
   controllerUpdater->registerController( c );
+  Controller* g = new LupppGUI();
+  controllerUpdater->registerController( g );
+  
+  // move to time class, get instantiate order right
+  jack->getTimeManager()->registerObserver( metronome );
+  jack->getTimeManager()->registerObserver( gridLogic );
   
   jack_activate( client );
   jack_transport_start(client);
@@ -184,7 +195,7 @@ int Jack::process (jack_nframes_t nframes)
   }
   
   
-  metronome.process( nframes, &buffers );
+  metronome->process( nframes, &buffers );
   
   
   // process fx

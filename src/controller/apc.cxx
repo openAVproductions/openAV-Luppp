@@ -25,6 +25,15 @@ void AkaiAPC::recordArm(int t, bool enabled)
   jack->writeApcOutput( &data[0] );
 }
 
+void AkaiAPC::progress(int t, int s, float f)
+{
+  unsigned char data[3];
+  data[0] = 176;
+  data[1] = 48; // record enable LED
+  data[2] = 127 * f;
+  jack->writeApcOutput( &data[0] );
+}
+
 void AkaiAPC::setSceneState(int t, int clip, GridLogic::State s)
 {
   unsigned char data[3];

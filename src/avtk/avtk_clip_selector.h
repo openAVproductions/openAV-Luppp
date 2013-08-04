@@ -27,11 +27,12 @@
 
 #include <string>
 
+#include "../gridlogic.hxx"
 #include "../gclipselectoraction.hxx"
 
 #include "../worker.hxx"
 #include "../looper.hxx"
-#include "../audiobuffer.hxx"
+#include "../audiobuffer.hxx"./
 #include "../eventhandler.hxx"
 
 
@@ -125,44 +126,51 @@ class ClipSelector : public Fl_Button
     /** converts the Looper::State into the UI represnted ClipSelector state.
      * It puts some of the data into clips[], and stores unique state into the class.
     **/
-    void setState( int clipNum, int )
+    void setState( int clipNum, GridLogic::State s )
     {
-      /*
+      
       switch(s)
       {
-        case Looper::STATE_PLAYING:
+        case GridLogic::STATE_EMPTY:
+            break;
+        case GridLogic::STATE_LOADED:
+            clips[clipNum].load();
+            break;
+        case GridLogic::STATE_PLAYING:
             printf("clipSelector setState() clip %i = CLIP_PLAYING\n", clipNum);
             for(int i = 0; i < numClips; i++ )
               clips[clipNum].stop();
             clips[clipNum].play();
             break;
-        case Looper::STATE_PLAY_QUEUED:
+        case GridLogic::STATE_PLAY_QUEUED:
             for(int i = 0; i < numClips; i++ )
               clips[clipNum].unqueue();
             clips[clipNum].queue();
             printf("clipSelector setState() clip %i = CLIP_QUEUED\n", clipNum);
             break;
-        case Looper::STATE_RECORDING:
+        case GridLogic::STATE_RECORDING:
             for(int i = 0; i < numClips; i++ )
               clips[clipNum].stopRecord();
             clips[clipNum].record();
             printf("clipSelector setState() clip %i = CLIP_RECORDING\n", clipNum);
             break;
-        case Looper::STATE_RECORD_QUEUED:
+        case GridLogic::STATE_RECORD_QUEUED:
             for(int i = 0; i < numClips; i++ )
               clips[clipNum].unqueue();
             clips[clipNum].queue();
             printf("clipSelector setState() clip %i = CLIP_QUEUED\n", clipNum);
             break;
-        case Looper::STATE_STOPPED:
+        /*
+        case GridLogic::STATE_STOPPED:
             clips[clipNum].stop();
             printf("clipSelector setState() clip %i = STATE_STOPPED\n", clipNum);
             break;
-        case Looper::STATE_STOP_QUEUED:
+        */
+        case GridLogic::STATE_STOP_QUEUED:
             printf("clipSelector setState() clip %i = CLIP_QUEUED\n", clipNum);
             break;
       }
-      */
+      
       redraw();
     }
     

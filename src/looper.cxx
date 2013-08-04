@@ -215,9 +215,7 @@ void Looper::process(int nframes, Buffers* buffers)
       // update UI of progress
       if ( uiUpdateCounter > uiUpdateConstant )
       {
-        EventLooperProgress e(track, clips[clip].getProgress() );
-        writeToGuiRingbuffer( &e );
-        //printf("writing event\n");
+        jack->getControllerUpdater()->setTrackSceneProgress(track, clip, clips[clip].getProgress() );
         uiUpdateCounter = 0;
       }
       uiUpdateCounter += nframes;
