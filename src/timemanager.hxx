@@ -51,7 +51,7 @@ class TimeManager
     
     void registerObserver(TimeObserver* o)
     {
-      cout << "registerObserver() " << o << endl;
+      //cout << "registerObserver() " << o << endl;
       observers.push_back(o);
       o->setFpb( fpb );
     }

@@ -3,6 +3,13 @@
 
 - Update recording mechanism to request buffers when they're getting full
 
+- Update GUI threading to become controller independant, allowing a
+ControllerUpdater instance run in the UI thread, updating each Controller
+subclass instance. This affords OSC user-interfaces, as well a the GUI, as well
+as future controllers.
+    - thread per Controller
+    - deriving from TimeManager etc not possible, should they be functions in
+      Controller, so that moving a class from RT to non-RT won't = code change
 
 === IN PROGRESS
 

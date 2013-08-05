@@ -38,6 +38,13 @@ void AkaiAPC::fxTrackSend(int t, int send, float v)
 {
   unsigned char data[3];
   data[0] = 176 + t;
+  
+  if ( data[0] >= 184)
+  {
+    // master track
+    return;
+  }
+  
   switch( send )
   {
     case SEND_REV:
