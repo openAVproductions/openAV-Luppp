@@ -19,6 +19,7 @@ Jack::Jack() :
   controllerUpdater( new ControllerUpdater() ),
   timeManager(),
   metronome( new Metronome() ),
+  logic( new Logic() ),
   gridLogic( new GridLogic() )
 {
   // open the client

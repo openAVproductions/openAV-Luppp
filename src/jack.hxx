@@ -17,6 +17,7 @@
 #include <jack/midiport.h>
 #include <jack/transport.h>
 
+#include "logic.hxx"
 #include "config.hxx"
 #include "looper.hxx"
 #include "metronome.hxx"
@@ -44,6 +45,7 @@ class Jack
     /// get functions for components owned by Jack 
     Looper*             getLooper(int t) {return loopers.at(t); }
     Metronome*          getMetronome(){return metronome;}
+    Logic*              getLogic(){return logic;}
     GridLogic*          getGridLogic(){return gridLogic;}
     TrackOutput*        getTrackOutput(int t){return trackOutputs.at(t);}
     TimeManager*        getTimeManager(){return &timeManager;}
@@ -67,6 +69,7 @@ class Jack
     Buffers             buffers;
     TimeManager         timeManager;
     Metronome*          metronome;
+    Logic*              logic;
     GridLogic*          gridLogic;
     ControllerUpdater*  controllerUpdater;
     

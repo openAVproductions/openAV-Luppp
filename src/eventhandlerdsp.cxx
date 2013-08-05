@@ -13,6 +13,8 @@
 #include "event.hxx"
 #include "eventhandler.hxx"
 
+#include "logic.hxx"
+
 using namespace std;
 
 extern Jack* jack;
@@ -89,15 +91,14 @@ void handleDspEvents()
           if ( availableRead >= sizeof(EventTrackVol) ) {
             EventTrackVol ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackVol) );
-            jack->getTrackOutput(ev.track)->setMaster( ev.vol );
+            jack->getLogic()->trackVolume( ev.track, ev.vol );
             break; }
           }
         case Event::TRACK_SEND: {
           if ( availableRead >= sizeof(EventTrackSend) ) {
             EventTrackSend ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackSend) );
-            jack->getTrackOutput(ev.track)->setSend( ev.send, ev.value );
-            jack->getControllerUpdater()->setTrackSend( ev.track, ev.send, ev.value );
+            jack->getLogic()->trackSend( ev.track, ev.send, ev.value );
           } break; }
         default:
           {

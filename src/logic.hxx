@@ -20,9 +20,11 @@
 class Logic
 {
   public:
-    Logic()
+    Logic();
     
-    void 
+    void trackVolume(int t, float v);
+    void trackRecordArm(int t, bool v);
+    void trackSend(int t, int send, float v); 
 };
 
 #endif // LUPPP_LOGIC_H

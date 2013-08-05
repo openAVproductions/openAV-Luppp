@@ -1,5 +1,16 @@
 
-= Interface / Logic class for all Luppp engines actions
+=== NEW
+
+- Update recording mechanism to request buffers when they're getting full
+
+
+=== IN PROGRESS
+
+
+
+=== COMPLETED
+
+- Interface / Logic class for all Luppp engines actions
 Needed to give Controller classes a way to tell Luppp what to do.
 This class must update all controllers based on state. Essentially
 its like "GridLogic", but for the rest of the functionality.
