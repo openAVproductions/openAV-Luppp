@@ -34,6 +34,25 @@ void AkaiAPC::progress(int t, int s, float f)
   jack->writeApcOutput( &data[0] );
 }
 
+void AkaiAPC::fxTrackSend(int t, int send, float v)
+{
+  unsigned char data[3];
+  data[0] = 176 + t;
+  switch( send )
+  {
+    case SEND_REV:
+      data[1] = 18; break;
+    case SEND_POST:
+      data[1] = 17; break;
+    case SEND_SIDE:
+      data[1] = 16; break;
+    default:
+      break;
+  }
+  data[2] = 127 * v;
+  jack->writeApcOutput( &data[0] );
+}
+
 void AkaiAPC::setSceneState(int t, int clip, GridLogic::State s)
 {
   unsigned char data[3];

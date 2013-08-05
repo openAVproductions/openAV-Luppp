@@ -14,11 +14,15 @@ class AkaiAPC : public Controller, public MidiObserver
     
     std::string getName(){return "Akai APC";}
     
+    /// track actions
     void mute(int t, bool b);
     void volume(int t, float f);
     void progress(int t, int s, float f);
     void recordArm(int t, bool b);
     void setSceneState(int track, int clip, GridLogic::State s);
+    
+    /// track FX
+    void fxTrackSend(int t, int send, float v);
     
     void midi(unsigned char* data);
     

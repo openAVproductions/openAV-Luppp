@@ -20,7 +20,7 @@ class Controller
     virtual void masterVolume(float f){};
     
     /// FX
-    virtual void fxReverbSend(int t, float r){}; 
+    virtual void fxTrackSend(int t, int send, float v){};
     
     /// track functionality
     virtual void mute(int t, bool b){};
