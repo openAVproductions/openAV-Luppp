@@ -1,0 +1,5 @@
+
+= Interface / Logic class for all Luppp engines actions
+Needed to give Controller classes a way to tell Luppp what to do.
+This class must update all controllers based on state. Essentially
+its like "GridLogic", but for the rest of the functionality.

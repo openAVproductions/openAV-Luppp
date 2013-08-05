@@ -1,0 +1,5 @@
+
+
+=TimeManager class, auto register TimeObservers with it.
+  Segfaulting on register in constructor
+
