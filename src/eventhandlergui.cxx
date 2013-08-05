@@ -123,6 +123,12 @@ void handleGuiEvents()
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTimeBarBeat) );
             gui->getMasterTrack()->setBarBeat( ev.bar, ev.beat);
           } break; }
+        case Event::TIME_TEMPO_TAP: {
+          if ( availableRead >= sizeof(EventTimeTempoTap) ) {
+            EventTimeTempoTap ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTimeTempoTap) );
+            gui->getMasterTrack()->setTapTempo( ev.pressed );
+          } break; }
         default:
           {
             cout << "GUI: Unkown message!! Will clog ringbuffer" << endl;

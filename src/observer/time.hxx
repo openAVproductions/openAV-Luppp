@@ -13,6 +13,8 @@ class TimeObserver
     virtual void bar(){};
     virtual void beat(){};
     
+    virtual void tapTempo(bool b){};
+    
 };
 
 #endif // LUPPP_TIME_OBSERVER_H

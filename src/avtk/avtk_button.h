@@ -76,6 +76,11 @@ class Button : public Fl_Button
       _bgb = b;
     }
     
+    void setHighlight(bool b)
+    {
+      highlight = b; redraw();
+    }
+    
     void draw()
     {
       if (damage() & FL_DAMAGE_ALL)

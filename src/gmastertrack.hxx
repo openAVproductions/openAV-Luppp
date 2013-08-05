@@ -131,6 +131,11 @@ class GMasterTrack : public Fl_Group
       end(); // close the group
     }
     
+    void setTapTempo( bool b )
+    {
+      tapTempo.setHighlight( b );
+    }
+    
     void setBarBeat(int b, int beat)
     {
       if ( beat % 4 == 0 )

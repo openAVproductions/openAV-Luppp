@@ -22,6 +22,9 @@ class Controller
     /// FX
     virtual void fxTrackSend(int t, int send, float v){};
     
+    /// Time
+    virtual void tapTempo(bool b){};
+    
     /// track functionality
     virtual void mute(int t, bool b){};
     virtual void volume(int t, float f){};

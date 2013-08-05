@@ -43,6 +43,12 @@ void LupppGUI::mute(int t, bool b)
   
 }
 
+void LupppGUI::tapTempo( bool b )
+{
+  EventTimeTempoTap e(b);
+  writeToGuiRingbuffer( &e );
+}
+
 void LupppGUI::volume(int t, float f)
 {
   EventTrackVol e( t, f );

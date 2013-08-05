@@ -218,9 +218,9 @@ class EventTimeTempoTap : public EventBase
     int type() { return int(TIME_TEMPO_TAP); }
     uint32_t size() { return sizeof(EventTimeTempoTap); }
     
-    // no data needed, the event itself is an "event",
-    // jack measures time intervals in frames & does math
-    EventTimeTempoTap(){}
+    bool pressed; // only used to turn on / off the button in GUI
+    EventTimeTempoTap():pressed(false){}
+    EventTimeTempoTap(bool p): pressed(p) {}
 };
 
 class EventTimeBarBeat : public EventBase

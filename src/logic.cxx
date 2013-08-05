@@ -9,6 +9,11 @@ Logic::Logic()
   
 }
 
+void Logic::tapTempo()
+{
+  jack->getTimeManager()->tap();
+}
+
 void Logic::trackVolume(int t, float v)
 {
   printf( "Logic trackVolume() %i, %f\n", t, v );

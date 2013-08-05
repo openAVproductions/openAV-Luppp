@@ -97,7 +97,28 @@ void noteOn( int track, int note, int vel )
   if ( note >= 53 && note <= 57 )
   {
     jack->getGridLogic()->pressed( track, note - 53 );
+    return;
   }
+  
+  
+  switch( note )
+  {
+    case 99: { // tap tempo
+        jack->getLogic()->tapTempo();
+        jack->getControllerUpdater()->tapTempo( true );
+        } break; 
+    case 100: { // nudge +
+        
+        } break; 
+    case 101: { // nudge -
+        
+        } break; 
+    
+    default:
+        break;
+  }
+  
+  
 }
 
 void noteOff( int track, int note, int vel )
@@ -106,6 +127,14 @@ void noteOff( int track, int note, int vel )
   if ( note >= 53 && note <= 57 )
   {
     jack->getGridLogic()->released( track, note - 53 );
+  }
+  
+    switch( note )
+  {
+    case 99: { // tap tempo
+        EventTimeTempoTap e(false);
+        writeToGuiRingbuffer( &e );
+        } break; 
   }
 }
 

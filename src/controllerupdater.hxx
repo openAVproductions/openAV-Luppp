@@ -72,6 +72,11 @@ class ControllerUpdater
     {
       for(unsigned int i = 0; i < c.size(); i++) c.at(i)->volume(t,v);
     }
+    
+    void tapTempo(bool b)
+    {
+      for(unsigned int i = 0; i < c.size(); i++) c.at(i)->tapTempo(b);
+    }
   
   private:
     std::vector<Controller*> c;

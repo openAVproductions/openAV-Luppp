@@ -22,6 +22,8 @@ class Logic
   public:
     Logic();
     
+    void tapTempo();
+    
     void trackVolume(int t, float v);
     void trackRecordArm(int t, bool v);
     void trackSend(int t, int send, float v); 
