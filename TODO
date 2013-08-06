@@ -1,6 +1,8 @@
 
 === NEW
 
+- Add AudioBuffer soundfile writer in order to check contents (looper distortion bug)
+
 - Update recording mechanism to request buffers when they're getting full
 
 - Update GUI threading to become controller independant, allowing a

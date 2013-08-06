@@ -137,6 +137,9 @@ int Jack::process (jack_nframes_t nframes)
   // pre-zero output buffers
   for(uint i = 0; i < nframes; i++)
   {
+    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = 0.f;
+    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = 0.f;
+    
     buffers.audio[Buffers::MASTER_OUT_L]    [i] = 0.f;
     buffers.audio[Buffers::MASTER_OUT_R]    [i] = 0.f;
     buffers.audio[Buffers::REVERB]          [i] = 0.f;
@@ -144,8 +147,8 @@ int Jack::process (jack_nframes_t nframes)
     buffers.audio[Buffers::POST_SIDECHAIN]  [i] = 0.f;
   }
   /*
-  memset( buffers.audio[Buffers::MASTER_OUTPUT]     , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::MASTER_OUTPUT]     , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::MASTER_OUT_L]     , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::MASTER_OUT_R]     , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::REVERB]            , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::SIDECHAIN]         , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::POST_SIDECHAIN]    , 0, sizeof(float) * nframes );
@@ -196,9 +199,9 @@ int Jack::process (jack_nframes_t nframes)
   }
   
   
-  metronome->process( nframes, &buffers );
+  //metronome->process( nframes, &buffers );
   
-  
+  /*
   // process fx
   float* buf[] = {
     buffers.audio[Buffers::REVERB],
@@ -212,21 +215,15 @@ int Jack::process (jack_nframes_t nframes)
     reverbMeter->process(nframes, buffers.audio[Buffers::REVERB], buffers.audio[Buffers::REVERB] );
     //reverb->process( nframes, &buf[0], &buf[2] );
   }
+  */
   
   // db meter on master output, then memcpy to JACK
-  masterMeter->process(nframes, buffers.audio[Buffers::MASTER_OUT_L], buffers.audio[Buffers::MASTER_OUT_R] );
+  //masterMeter->process(nframes, buffers.audio[Buffers::MASTER_OUT_L], buffers.audio[Buffers::MASTER_OUT_R] );
   
   if ( uiUpdateCounter > uiUpdateConstant )
   {
     EventTrackSignalLevel e(-1, masterMeter->getLeftDB(), masterMeter->getRightDB() );
     writeToGuiRingbuffer( &e );
-    
-    /*
-    char buf[50];
-    snprintf( buf, 50, "signal: %f", peak );
-    EventGuiPrint e2( buf );
-    writeToGuiRingbuffer(&e2);
-    */
     
     uiUpdateCounter = 0;
   }
@@ -241,6 +238,7 @@ int Jack::process (jack_nframes_t nframes)
   
   memcpy( buffers.audio[Buffers::JACK_MASTER_OUT_R],
           buffers.audio[Buffers::MASTER_OUT_R],
+          //buffers.audio[Buffers::MASTER_OUT_L],
           //buffers.audio[Buffers::REVERB],  // uncomment to listen to reverb send only
           sizeof(float)*nframes);
   

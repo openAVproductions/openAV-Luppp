@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 
+#include "config.hxx"
 #include "audioprocessor.hxx"
 
 #include "eventhandler.hxx"
@@ -15,10 +16,13 @@ class TrackOutput : public AudioProcessor
     TrackOutput(int t, AudioProcessor* ap) :
       AudioProcessor(),
       track(t),
+      _trackBuffer( MAX_BUFFER_SIZE, 0.f ),
       previousInChain(ap),
       dbMeter(44100)
     {
       printf("trackOutput ID: %i\n", track);
+      
+      
       
       // UI update
       uiUpdateConstant = 44100 / 30;
@@ -57,31 +61,37 @@ class TrackOutput : public AudioProcessor
     /// copies the track output to master buffer, sidechain & post-side buffer
     void process(int nframes, Buffers* buffers)
     {
+      /*
       // zero track buffer
-      float* buf = _trackBuffer;
+      float* buf = &_trackBuffer[0];
       for(int i = 0; i < nframes; i++ )
       {
         *buf++ = 0.f;
       }
+      */
+      
+      memset( &_trackBuffer[0], 0, nframes );
       
       if ( previousInChain )
       {
-        buffers->audio[Buffers::TRACK_0 + track] = _trackBuffer;
-        //memset( _trackBuffer, 0, nframes );
+        buffers->audio[Buffers::TRACK_0 + track] = &_trackBuffer[0];
         previousInChain->process( nframes, buffers );
       }
       
+      /*
       // run the meter
       buf = _trackBuffer;
       dbMeter.process( nframes, buf, buf );
       
       if (uiUpdateCounter > uiUpdateConstant )
       {
+        // FIXME: should be using ControllerUpdater
         EventTrackSignalLevel e( track, dbMeter.getLeftDB() * _toMaster, dbMeter.getRightDB() * _toMaster );
         writeToGuiRingbuffer( &e );
         uiUpdateCounter = 0;
       }
       uiUpdateCounter += nframes;
+      */
       
       /// copy audio data into reverb / sidechain / master buffers
       float* trackBuf      = buffers->audio[Buffers::TRACK_0 + track];
@@ -89,15 +99,17 @@ class TrackOutput : public AudioProcessor
       float* sidechain     = buffers->audio[Buffers::SIDECHAIN];
       float* postSidechain = buffers->audio[Buffers::POST_SIDECHAIN];
       
-      float* master        = buffers->audio[Buffers::MASTER_OUT_L];
+      float* masterL       = buffers->audio[Buffers::MASTER_OUT_L];
+      float* masterR       = buffers->audio[Buffers::MASTER_OUT_R];
       
       for(int i = 0; i < nframes; i++)
       {
-        float tmp = *trackBuf;
+        float tmp = _trackBuffer[i];
         
-        *master++        += tmp * _toMaster;
+        *masterR++       += tmp; // * _toMaster;
+        *masterL++       += tmp; // * _toMaster;
         
-        *reverb++        += tmp * _toReverb;
+        //*reverb++        += tmp * _toReverb;
         //*sidechain++     += tmp * _toSidechain;
         //*postSidechain++ += tmp * _toPostSidechain;
         
@@ -109,13 +121,12 @@ class TrackOutput : public AudioProcessor
     
     ~TrackOutput()
     {
-      delete _trackBuffer;
     }
   
   private:
     int track;
     
-    float _trackBuffer[1024];
+    std::vector<float> _trackBuffer;
     
     float _toMaster;
     

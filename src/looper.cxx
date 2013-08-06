@@ -198,10 +198,6 @@ void Looper::process(int nframes, Buffers* buffers)
     {
       // copy data from input buffer to recording buffer
       
-      if ( clips[clip].nframesAvailable() < LOOPER_SAMPLES_BEFORE_REQUEST )
-      {
-        // request bigger buffer for this track/scene
-      }
     }
     else if ( clips[clip].playing() )
     {

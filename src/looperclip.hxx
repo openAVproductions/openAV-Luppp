@@ -3,6 +3,7 @@
 #define LUPPP_LOOPER_CLIP_H
 
 #include <stdio.h>
+#include "config.hxx"
 #include "audiobuffer.hxx"
 
 /** LooperClip
@@ -63,14 +64,19 @@ class LooperClip
     
     void record(int count, float* L, float* R)
     {
-      // write "count" samples into current buffer. If the last
-    }
-    
-    
-    int nframesAvailable()
-    {
-      // return amount of space left to record
-      return 0;
+      // write "count" samples into current buffer.
+      if ( _buffer )
+      {
+        for(int i = 0; i < count; i++)
+          _buffer->getData().at( _recordhead ) = *L++;
+      }
+      
+      if(_buffer->getData().size() - _recordhead < LOOPER_SAMPLES_BEFORE_REQUEST)
+      {
+        // request bigger buffer for this LooperClip
+        
+      }
+      
     }
     
     
@@ -85,8 +91,11 @@ class LooperClip
         if ( _playhead >= _buffer->getData().size() || _playhead < 0  )
         {
           _playhead = 0;
+          printf("looper resetting playhead\n");
         }
-        float tmp = _buffer->getData().at(_playhead);
+        
+        std::vector<float>& v = _buffer->getData();
+        float tmp = v.at(_playhead);
         _playhead++;
         
         return tmp;
@@ -105,18 +114,16 @@ class LooperClip
     }
     
     // Set
-    void clipLength(int l){_clipLenght = l;}
+    //void clipLength(int l){_clipLenght = l;}
   
   private:
     bool _loaded;
     bool _recording;
     bool _playing;
     
-    long int _playhead;
+    unsigned int _playhead;
+    unsigned int _recordhead;
     AudioBuffer* _buffer;
-    
-    // Clip Properties
-    int _clipLenght;
 };
 
 #endif // LUPPP_LOOPER_CLIP_H
