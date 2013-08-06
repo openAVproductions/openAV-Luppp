@@ -5,8 +5,7 @@
 // System
 #include <vector>
 
-// AudioBuffer stores float samples in a big vector. The vector can be
-// accessed only by const reference, so its state is immutable
+/// AudioBuffer stores float samples in a big vector.
 class AudioBuffer
 {
   public:

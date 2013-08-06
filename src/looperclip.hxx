@@ -59,7 +59,16 @@ class LooperClip
     /// for de-allocation
     void setRequestedBuffer( AudioBuffer* ab )
     {
-      
+      if ( _buffer )
+      {
+        int size = _buffer->getData().size();
+        for(int i = 0; i < size; i++)
+          ab->getData().at(i) = _buffer->getData().at( i );
+        
+        // Send Deallocate event for _buffer *here* *now*
+        
+        _buffer = ab;
+      }
     }
     
     void record(int count, float* L, float* R)

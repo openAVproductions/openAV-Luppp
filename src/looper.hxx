@@ -23,7 +23,12 @@ class Looper : public AudioProcessor, public TimeObserver
   public:
     Looper(int t);
     
+    /// *sets* the sample
     void setSample(int c, AudioBuffer* ab);
+    
+    /// *sets* the new audiobuffer, but the content gets copied to the new buffer.
+    /// Used for infinite lenght recording
+    void setRequestedBuffer(int s, AudioBuffer* ab);
     
     void midi(unsigned char* data);
     

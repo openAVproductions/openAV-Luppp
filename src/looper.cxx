@@ -145,6 +145,13 @@ void Looper::updateControllers()
   */
 }
 
+void Looper::setRequestedBuffer(int s, AudioBuffer* ab)
+{
+  clips[s].setRequestedBuffer( ab );
+  
+}
+
+
 void Looper::setSample(int scene, AudioBuffer* ab)
 {
   clips[scene].load( ab );

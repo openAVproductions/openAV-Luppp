@@ -100,6 +100,15 @@ void handleDspEvents()
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackSend) );
             jack->getLogic()->trackSend( ev.track, ev.send, ev.value );
           } break; }
+        
+        // ========= LUPPP INTERNAL =====
+        case Event::LOOPER_REQUEST_BUFFER: {
+          if ( availableRead >= sizeof(EventLooperClipRequestBuffer) ) {
+            EventLooperClipRequestBuffer ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventLooperClipRequestBuffer) );
+            jack->getLooper( ev.track )->setRequestedBuffer( ev.scene, ev.ab );
+          } break; }
+        
         default:
           {
             cout << "DSP: Unkown message!! Will clog ringbuffer" << endl;

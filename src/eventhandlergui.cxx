@@ -139,8 +139,9 @@ void handleGuiEvents()
             
             /// allocate a new AudioBuffer with ev.numElements, pass back to DSP
             AudioBuffer* ab = new AudioBuffer(ev.numElements);
-            
-            //gui->getMasterTrack()->setTapTempo( ev.pressed );
+            EventLooperClipRequestBuffer returnEvent(ev.track, ev.scene, ab);
+            writeToDspRingbuffer( &returnEvent );
+            printf("new buffer going to track %i, scene %i");
           } break; }
         
         

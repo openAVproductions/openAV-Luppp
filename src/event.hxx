@@ -249,8 +249,12 @@ class EventLooperClipRequestBuffer : public EventBase
     // number of floats to contain
     unsigned long numElements;
     
-    EventLooperClipRequestBuffer(): track(0), scene(0){}
-    EventLooperClipRequestBuffer(int t, int s, int si): track(t), scene(s), numElements(si) {}
+    // pointer to the new AudioBuffer being passed back
+    AudioBuffer* ab;
+    
+    EventLooperClipRequestBuffer(): track(0), scene(0), numElements(0), ab(0) {}
+    EventLooperClipRequestBuffer(int t, int s, int si): track(t), scene(s), numElements(si), ab(0) {}
+    EventLooperClipRequestBuffer(int t, int s, AudioBuffer* a): track(t), scene(s), numElements(0), ab(a) {}
 };
 
 
