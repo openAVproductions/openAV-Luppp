@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include "config.hxx"
+#include "eventhandler.hxx"
 #include "audiobuffer.hxx"
 
 /** LooperClip
@@ -31,9 +32,11 @@ class LooperClip
       _playing = false;
       _recording = false;
       
-      _buffer = 0;
+      _buffer = new AudioBuffer(44100);
+      _newBufferInTransit = false;
       
-      _playhead = 0;
+      _playhead   = 0;
+      _recordhead = 0;
     }
     
     /// loads a sample: eg from disk
@@ -61,14 +64,23 @@ class LooperClip
     {
       if ( _buffer )
       {
-        int size = _buffer->getData().size();
-        for(int i = 0; i < size; i++)
+        size_t size = _buffer->getData().size();
+        
+        for(size_t i = 0; i < size; i++)
+        {
           ab->getData().at(i) = _buffer->getData().at( i );
+        }
         
         // Send Deallocate event for _buffer *here* *now*
         
-        _buffer = ab;
+        EventDeallocateBuffer e( _buffer );
+        writeToGuiRingbuffer( &e );
       }
+      
+      printf("New buffer  size = %i\n", ab->getData().size() );
+      _buffer = ab;
+      
+      _newBufferInTransit = false;
     }
     
     void record(int count, float* L, float* R)
@@ -77,15 +89,19 @@ class LooperClip
       if ( _buffer )
       {
         for(int i = 0; i < count; i++)
+        {
           _buffer->getData().at( _recordhead ) = *L++;
+          _recordhead++;
+        }
       }
       
     }
     
-    bool recordSpaceAvailable()
+    unsigned long recordSpaceAvailable()
     {
       return _buffer->getData().size() - _recordhead;
     }
+    
     size_t audioBufferSize()
     {
       if ( _buffer )
@@ -98,6 +114,10 @@ class LooperClip
     bool loaded(){return _loaded;}
     bool playing(){return _playing;}
     bool recording(){return _recording;}
+    void recording(bool r){_recording = r;}
+    
+    void newBufferInTransit(bool n){_newBufferInTransit = n;}
+    bool newBufferInTransit(){return _newBufferInTransit;}
     
     float getSample()
     {
@@ -127,17 +147,16 @@ class LooperClip
       }
       return 0.f;
     }
-    
-    // Set
-    //void clipLength(int l){_clipLenght = l;}
   
   private:
     bool _loaded;
     bool _recording;
     bool _playing;
     
-    unsigned int _playhead;
-    unsigned int _recordhead;
+    bool _newBufferInTransit;
+    
+    size_t _playhead;
+    size_t _recordhead;
     AudioBuffer* _buffer;
 };
 

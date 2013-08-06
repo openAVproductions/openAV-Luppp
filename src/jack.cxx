@@ -180,14 +180,7 @@ int Jack::process (jack_nframes_t nframes)
     {
       midiObservers.at(i)->midi( (unsigned char*) &in_event.buffer[0] );
     }
-    //std::for_each( midiObservers.begin(), midiObservers.end(), [](MidiObserver* mo) { mo->midi(  ); } );
     
-    
-    
-    /*
-    for(unsigned int i = 0; i < loopers.size(); i++)
-      loopers.at(i)->midi( (unsigned char*)&in_event.buffer[0] );
-    */
     
     masterMidiInputIndex++;
   }
@@ -199,9 +192,8 @@ int Jack::process (jack_nframes_t nframes)
   }
   
   
-  //metronome->process( nframes, &buffers );
+  metronome->process( nframes, &buffers );
   
-  /*
   // process fx
   float* buf[] = {
     buffers.audio[Buffers::REVERB],
@@ -215,10 +207,9 @@ int Jack::process (jack_nframes_t nframes)
     reverbMeter->process(nframes, buffers.audio[Buffers::REVERB], buffers.audio[Buffers::REVERB] );
     //reverb->process( nframes, &buf[0], &buf[2] );
   }
-  */
   
   // db meter on master output, then memcpy to JACK
-  //masterMeter->process(nframes, buffers.audio[Buffers::MASTER_OUT_L], buffers.audio[Buffers::MASTER_OUT_R] );
+  masterMeter->process(nframes, buffers.audio[Buffers::MASTER_OUT_L], buffers.audio[Buffers::MASTER_OUT_R] );
   
   if ( uiUpdateCounter > uiUpdateConstant )
   {

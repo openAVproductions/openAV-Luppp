@@ -2,6 +2,7 @@
 #ifndef LUPPP_EVENT_H
 #define LUPPP_EVENT_H
 
+#include <iostream>
 #include <stdint.h>
 
 /*
@@ -13,6 +14,8 @@
 
 #include "looper.hxx"
 #include "gridlogic.hxx"
+
+using namespace std;
 
 namespace Event
 {
@@ -50,6 +53,7 @@ namespace Event
     GUI_PRINT,
     
     LOOPER_REQUEST_BUFFER,
+    DEALLOCATE_BUFFER,
   };
 };
 
@@ -285,8 +289,20 @@ class EventLooperClipRequestBuffer : public EventBase
     AudioBuffer* ab;
     
     EventLooperClipRequestBuffer(): track(0), scene(0), numElements(0), ab(0) {}
-    EventLooperClipRequestBuffer(int t, int s, int si): track(t), scene(s), numElements(si), ab(0) {}
+    EventLooperClipRequestBuffer(int t, int s, int siz): track(t), scene(s), numElements(siz), ab(0) {}
     EventLooperClipRequestBuffer(int t, int s, AudioBuffer* a): track(t), scene(s), numElements(0), ab(a) {}
+};
+
+class EventDeallocateBuffer : public EventBase
+{
+  public:
+    int type() { return int(DEALLOCATE_BUFFER); }
+    uint32_t size() { return sizeof(EventDeallocateBuffer); }
+    
+    AudioBuffer* ab;
+    
+    EventDeallocateBuffer(): ab(0) {}
+    EventDeallocateBuffer(AudioBuffer* a): ab(a) {}
 };
 
 

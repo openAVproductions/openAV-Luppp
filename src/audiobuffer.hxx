@@ -18,7 +18,7 @@ class AudioBuffer
       //ID = id;
       buffer.resize(size);
     }
-    ~AudioBuffer();
+    
     /*
     int getID()
     {

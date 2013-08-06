@@ -61,15 +61,7 @@ class TrackOutput : public AudioProcessor
     /// copies the track output to master buffer, sidechain & post-side buffer
     void process(int nframes, Buffers* buffers)
     {
-      /*
       // zero track buffer
-      float* buf = &_trackBuffer[0];
-      for(int i = 0; i < nframes; i++ )
-      {
-        *buf++ = 0.f;
-      }
-      */
-      
       memset( &_trackBuffer[0], 0, nframes );
       
       if ( previousInChain )
@@ -78,9 +70,9 @@ class TrackOutput : public AudioProcessor
         previousInChain->process( nframes, buffers );
       }
       
-      /*
+      
       // run the meter
-      buf = _trackBuffer;
+      float* buf = &_trackBuffer[0];
       dbMeter.process( nframes, buf, buf );
       
       if (uiUpdateCounter > uiUpdateConstant )
@@ -91,7 +83,7 @@ class TrackOutput : public AudioProcessor
         uiUpdateCounter = 0;
       }
       uiUpdateCounter += nframes;
-      */
+      
       
       /// copy audio data into reverb / sidechain / master buffers
       float* trackBuf      = buffers->audio[Buffers::TRACK_0 + track];
