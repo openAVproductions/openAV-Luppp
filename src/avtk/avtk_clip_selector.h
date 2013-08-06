@@ -371,87 +371,9 @@ class ClipSelector : public Fl_Button
             }
             else
             {
-              /*
-              // decide action to take based on current state of clip
-              if ( clips[clipNum].queued() )
-              {
-                
-              }
-              else if ( clips[clipNum].playing() )
-              {
-                EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_STOP_QUEUED);
-                writeToDspRingbuffer( &e );
-                clips[clipNum].stop();
-                //clips[clipNum].stopQueue();
-                printf("stopping clip now: playingClip == %i", clipNum );
-              }
-              else if ( clips[clipNum].recording() )
-              {
-                EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_STOP_QUEUED);
-                writeToDspRingbuffer( &e );
-                clips[clipNum].record();
-              }
-              
-              else if ( clipNum == stopQueuedClip )
-              {
-                playingClip = -1;
-              }
-              
-              else if ( clips[clipNum].loaded() )
-              {
-                EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_PLAY_QUEUED);
-                writeToDspRingbuffer( &e );
-                //queuedClip = clipNum;
-              }
-              else if ( !clips[clipNum].loaded() )
-              {
-                EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_RECORD_QUEUED);
-                writeToDspRingbuffer( &e );
-              }
-              else
-              {
-                printf("avtk clipSelector handle click: no state triggered");
-              }
-              */
-              
-              /*
-              switch( clips[clipNum].state )
-              {
-                case ClipState::CLIP_EMPTY:
-                    clips[clipNum].state = ClipState::CLIP_RECORDING;
-                    {
-                    }
-                    break;
-                case ClipState::CLIP_LOADED:
-                    {
-                      EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_PLAY_QUEUED);
-                      writeToDspRingbuffer( &e );
-                      clips[clipNum].state = ClipState::CLIP_QUEUED;
-                    }
-                    break;
-                case ClipState::CLIP_QUEUED:
-                    clips[clipNum].state = ClipState::CLIP_QUEUED;
-                    break;
-                case ClipState::CLIP_PLAYING:
-                    {
-                      EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_STOP_QUEUED);
-                      writeToDspRingbuffer( &e );
-                      clips[clipNum].state = ClipState::CLIP_QUEUED;
-                    }
-                    break;
-                case ClipState::CLIP_RECORDING: {
-                    clips[clipNum].state = ClipState::CLIP_QUEUED;
-                    EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_STOP_QUEUED);
-                    writeToDspRingbuffer( &e ); }
-                    break;
-                case ClipState::CLIP_STOPPING:
-                    clips[clipNum].state = ClipState::CLIP_QUEUED;
-                    break;
-                default:
-                    printf("Avtk::ClipSelector, warning: unknown clip type\n");
-                
-              }
-              */
+              // write "pressed" event for this track,scene
+              EventGridEvent e( ID, clipNum, true );
+              writeToDspRingbuffer( &e );
             }
           }
           redraw();

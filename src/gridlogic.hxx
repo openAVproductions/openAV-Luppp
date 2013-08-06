@@ -36,6 +36,16 @@ class GridLogic : public TimeObserver
       STATE_RECORD_QUEUED,
     };
     
+    const char* StateString[8] = {
+      "empty",
+      "playing",
+      "play queued",
+      "loaded",
+      "stop queued",
+      "recording",
+      "record queued"
+    };
+    
     GridLogic();
     
     /// button press / click event

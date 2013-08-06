@@ -40,6 +40,18 @@ void handleDspEvents()
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMasterVol) );
             //jack->masterVolume = ev.vol;
           } break; }
+        
+        // ========= GRID =====
+        case Event::GRID_EVENT: {
+          if ( availableRead >= sizeof(EventGridEvent) ) {
+            EventGridEvent ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventGridEvent) );
+            if ( ev.pressed )
+              jack->getGridLogic()->pressed( ev.track, ev.scene );
+            else
+              jack->getGridLogic()->released( ev.track, ev.scene );
+          } break; }
+        
         case Event::LOOPER_LOAD: {
           if ( availableRead >= sizeof(EventLooperLoad) ) {
             EventLooperLoad ev;

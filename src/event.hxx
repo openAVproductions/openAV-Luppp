@@ -26,6 +26,9 @@ namespace Event
     MASTER_VOL,
     RECORD,
     
+    // press / release events
+    GRID_EVENT,
+    
     TRACK_SEND,
     TRACK_SIGNAL_LEVEL,
     TRACK_VOLUME,
@@ -90,6 +93,20 @@ class EventTrackVol : public EventBase
       track = t;
       vol = v;
     }
+};
+
+class EventGridEvent : public EventBase
+{
+  public:
+    int type() { return int(GRID_EVENT); }
+    uint32_t size() { return sizeof(EventGridEvent); }
+    
+    int track;
+    int scene;
+    bool pressed;
+    
+    EventGridEvent(){};
+    EventGridEvent(int t, int s, bool p): track(t), scene(s), pressed(p) {}
 };
 
 class EventFxReverb : public EventBase

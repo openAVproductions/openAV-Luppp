@@ -13,8 +13,23 @@ GridLogic::GridLogic()
 
 void GridLogic::pressed( int track, int scene )
 {
-  state[track*NTRACKS + scene] = STATE_PLAYING;
-  jack->getControllerUpdater()->setSceneState(track, scene, STATE_PLAY_QUEUED);
+  printf("before press state = %s\n", StateString[ int(state[track*NTRACKS + scene]) ] );
+  
+  if ( state[track*NTRACKS + scene] == STATE_EMPTY )
+    state[track*NTRACKS + scene] = STATE_RECORD_QUEUED;
+  
+  if ( state[track*NTRACKS + scene] == STATE_LOADED )
+    state[track*NTRACKS + scene] = STATE_PLAY_QUEUED;
+  
+  if ( state[track*NTRACKS + scene] == STATE_PLAYING )
+    state[track*NTRACKS + scene] = STATE_STOP_QUEUED;
+  
+  if ( state[track*NTRACKS + scene] == STATE_RECORDING )
+    state[track*NTRACKS + scene] = STATE_STOP_QUEUED;
+  
+  printf("after press state = %s\n", StateString[ int(state[track*NTRACKS + scene]) ] );
+  
+  jack->getControllerUpdater()->setSceneState(track, scene, state[track*NTRACKS + scene]);
 }
 
 
@@ -26,7 +41,6 @@ void GridLogic::released( int track, int scene )
 
 void GridLogic::updateState()
 {
-  
 }
 
 
@@ -40,6 +54,7 @@ void GridLogic::bar()
 {
   printf("GridLogic::bar()\n" );
   
+  /// iterate over all clips, if they're set to QUEUED, set to the next state
   for( int i = 0; i < NTRACKS*NSCENES; i++ )
   {
     bool change = false;
@@ -62,8 +77,8 @@ void GridLogic::bar()
     
     if ( change )
     {
-      int scene = i % NTRACKS;
-      int track = i - scene;
+      int track = i / NTRACKS;
+      int scene = i - scene;
       updateState( track, scene );
       printf("GridLogic::bar(), updated %i, %i\n", track, scene );
     }
