@@ -89,6 +89,15 @@ void handleGuiEvents()
             else
               gui->getTrack(ev.track)->getVolume()->value( ev.vol );
           } break; }
+        
+        
+        case Event::GRID_STATE: {
+          if ( availableRead >= sizeof(EventGridState) ) {
+            EventGridState ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventGridState) );
+            gui->getTrack(ev.track)->getClipSelector()->setState( ev.scene, ev.state );
+          } break; }
+        
         case Event::TRACK_SEND: {
           if ( availableRead >= sizeof(EventTrackSend) ) {
             EventTrackSend ev;

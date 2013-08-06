@@ -12,6 +12,7 @@
 */
 
 #include "looper.hxx"
+#include "gridlogic.hxx"
 
 namespace Event
 {
@@ -26,8 +27,8 @@ namespace Event
     MASTER_VOL,
     RECORD,
     
-    // press / release events
-    GRID_EVENT,
+    GRID_EVENT, // press / release events
+    GRID_STATE, // state of one block
     
     TRACK_SEND,
     TRACK_SIGNAL_LEVEL,
@@ -107,6 +108,20 @@ class EventGridEvent : public EventBase
     
     EventGridEvent(){};
     EventGridEvent(int t, int s, bool p): track(t), scene(s), pressed(p) {}
+};
+
+class EventGridState : public EventBase
+{
+  public:
+    int type() { return int(GRID_STATE); }
+    uint32_t size() { return sizeof(EventGridState); }
+    
+    int track;
+    int scene;
+    GridLogic::State state;
+    
+    EventGridState(){};
+    EventGridState(int t, int s, GridLogic::State st): track(t), scene(s), state(st) {}
 };
 
 class EventFxReverb : public EventBase

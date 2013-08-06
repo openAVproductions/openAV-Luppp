@@ -35,7 +35,8 @@ void LupppGUI::fxReverbSend(int t, float r)
 
 void LupppGUI::setSceneState(int t, int clip, GridLogic::State s)
 {
-  
+  EventGridState e( t, clip, s );
+  writeToGuiRingbuffer( &e );
 }
 
 void LupppGUI::mute(int t, bool b)

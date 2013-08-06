@@ -15,38 +15,33 @@ void GridLogic::pressed( int track, int scene )
 {
   printf("before press state = %s\n", StateString[ int(state[track*NTRACKS + scene]) ] );
   
-  if ( state[track*NTRACKS + scene] == STATE_EMPTY )
-    state[track*NTRACKS + scene] = STATE_RECORD_QUEUED;
+  if ( state[track*NSCENES + scene] == STATE_EMPTY )
+    state[track*NSCENES + scene] = STATE_RECORD_QUEUED;
   
-  if ( state[track*NTRACKS + scene] == STATE_LOADED )
-    state[track*NTRACKS + scene] = STATE_PLAY_QUEUED;
+  if ( state[track*NSCENES + scene] == STATE_LOADED )
+    state[track*NSCENES + scene] = STATE_PLAY_QUEUED;
   
-  if ( state[track*NTRACKS + scene] == STATE_PLAYING )
-    state[track*NTRACKS + scene] = STATE_STOP_QUEUED;
+  if ( state[track*NSCENES + scene] == STATE_PLAYING )
+    state[track*NSCENES + scene] = STATE_STOP_QUEUED;
   
-  if ( state[track*NTRACKS + scene] == STATE_RECORDING )
-    state[track*NTRACKS + scene] = STATE_STOP_QUEUED;
+  if ( state[track*NSCENES + scene] == STATE_RECORDING )
+    state[track*NSCENES + scene] = STATE_STOP_QUEUED;
   
-  printf("after press state = %s\n", StateString[ int(state[track*NTRACKS + scene]) ] );
+  printf("after press state = %s\n", StateString[ int(state[track*NSCENES + scene]) ] );
   
-  jack->getControllerUpdater()->setSceneState(track, scene, state[track*NTRACKS + scene]);
+  jack->getControllerUpdater()->setSceneState(track, scene, state[track*NSCENES + scene]);
 }
 
 
 void GridLogic::released( int track, int scene )
 {
-  jack->getControllerUpdater()->setSceneState(track, scene, state[track*NTRACKS + scene] );
+  jack->getControllerUpdater()->setSceneState(track, scene, state[track*NSCENES + scene] );
 }
 
 
 void GridLogic::updateState()
 {
-}
-
-
-void GridLogic::updateState( int track, int scene )
-{
-  jack->getControllerUpdater()->setSceneState(track, scene, state[track*NTRACKS + scene] );
+  printf("GridLogic::updateState() stub" );
 }
 
 
@@ -77,10 +72,10 @@ void GridLogic::bar()
     
     if ( change )
     {
-      int track = i / NTRACKS;
-      int scene = i - scene;
-      updateState( track, scene );
-      printf("GridLogic::bar(), updated %i, %i\n", track, scene );
+      int track = i / NSCENES;
+      int scene = i - track * NSCENES;
+      jack->getControllerUpdater()->setSceneState(track, scene, state[track*NSCENES + scene] );
+      printf("GridLogic::bar(), i = %i, track %i, scene %i\n", i, track, scene );
     }
     
   }

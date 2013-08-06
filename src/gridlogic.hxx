@@ -57,10 +57,6 @@ class GridLogic : public TimeObserver
     /// resend entire grid state to controllers
     void updateState();
     
-    /// resend track / scene combo to controllers
-    void updateState( int track, int scene );
-    
-    
     /// time functions, not for use by Controller subclasses
     void bar();
     void beat();
