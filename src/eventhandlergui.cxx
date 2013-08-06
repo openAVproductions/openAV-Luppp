@@ -11,6 +11,7 @@
 // Internal
 #include "gui.hxx"
 #include "event.hxx"
+#include "audiobuffer.hxx"
 #include "eventhandler.hxx"
 
 extern Gui* gui;
@@ -129,6 +130,20 @@ void handleGuiEvents()
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTimeTempoTap) );
             gui->getMasterTrack()->setTapTempo( ev.pressed );
           } break; }
+        
+        
+        case Event::LOOPER_REQUEST_BUFFER: {
+          if ( availableRead >= sizeof(EventLooperClipRequestBuffer) ) {
+            EventLooperClipRequestBuffer ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventLooperClipRequestBuffer) );
+            
+            /// allocate a new AudioBuffer with ev.numElements, pass back to DSP
+            AudioBuffer* ab = new AudioBuffer(ev.numElements);
+            
+            //gui->getMasterTrack()->setTapTempo( ev.pressed );
+          } break; }
+        
+        
         default:
           {
             cout << "GUI: Unkown message!! Will clog ringbuffer" << endl;

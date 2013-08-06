@@ -71,14 +71,20 @@ class LooperClip
           _buffer->getData().at( _recordhead ) = *L++;
       }
       
-      if(_buffer->getData().size() - _recordhead < LOOPER_SAMPLES_BEFORE_REQUEST)
-      {
-        // request bigger buffer for this LooperClip
-        
-      }
-      
     }
     
+    bool recordSpaceAvailable()
+    {
+      return _buffer->getData().size() - _recordhead;
+    }
+    size_t audioBufferSize()
+    {
+      if ( _buffer )
+      {
+        return _buffer->getData().size();
+      }
+      return 0;
+    }
     
     bool loaded(){return _loaded;}
     bool playing(){return _playing;}

@@ -44,6 +44,8 @@ namespace Event
     TIME_TEMPO_TAP,
     
     GUI_PRINT,
+    
+    LOOPER_REQUEST_BUFFER,
   };
 };
 
@@ -233,6 +235,22 @@ class EventTimeBarBeat : public EventBase
     int beat;
     EventTimeBarBeat(): bar(0), beat(0){}
     EventTimeBarBeat(int ba, int be): bar(ba), beat(be) {}
+};
+
+class EventLooperClipRequestBuffer : public EventBase
+{
+  public:
+    int type() { return int(LOOPER_REQUEST_BUFFER); }
+    uint32_t size() { return sizeof(EventLooperClipRequestBuffer); }
+    
+    int track;
+    int scene;
+    
+    // number of floats to contain
+    unsigned long numElements;
+    
+    EventLooperClipRequestBuffer(): track(0), scene(0){}
+    EventLooperClipRequestBuffer(int t, int s, int si): track(t), scene(s), numElements(si) {}
 };
 
 

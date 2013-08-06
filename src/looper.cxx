@@ -198,6 +198,11 @@ void Looper::process(int nframes, Buffers* buffers)
     {
       // copy data from input buffer to recording buffer
       
+      if ( clips[clip].recordSpaceAvailable() <  LOOPER_SAMPLES_BEFORE_REQUEST )
+      {
+        EventLooperClipRequestBuffer e( track, clip, clips[clip].audioBufferSize() + 44100 );
+        writeToGuiRingbuffer( &e );
+      }
     }
     else if ( clips[clip].playing() )
     {
