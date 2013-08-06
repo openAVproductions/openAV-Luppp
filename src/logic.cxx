@@ -16,7 +16,7 @@ void Logic::tapTempo()
 
 void Logic::trackVolume(int t, float v)
 {
-  printf( "Logic trackVolume() %i, %f\n", t, v );
+  //printf( "Logic trackVolume() %i, %f\n", t, v );
   jack->getTrackOutput( t )->setMaster( v );
   jack->getControllerUpdater()->volume( t, v );
 }

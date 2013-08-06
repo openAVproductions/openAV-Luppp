@@ -98,8 +98,8 @@ class TrackOutput : public AudioProcessor
       {
         float tmp = _trackBuffer[i];
         
-        *masterR++       += tmp; // * _toMaster;
-        *masterL++       += tmp; // * _toMaster;
+        *masterL++       += tmp * _toMaster;
+        *masterR++       += tmp * _toMaster;
         
         //*reverb++        += tmp * _toReverb;
         //*sidechain++     += tmp * _toSidechain;

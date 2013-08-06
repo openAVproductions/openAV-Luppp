@@ -47,6 +47,11 @@ void Looper::setRecord(int scene, bool r)
   clips[scene].recording(r);
 }
 
+void Looper::play(int scene, bool r)
+{
+  clips[scene].playing(r);
+}
+
 LooperClip* Looper::getClip(int scene)
 {
   return &clips[scene];
@@ -210,7 +215,6 @@ void Looper::process(int nframes, Buffers* buffers)
       if ( clips[clip].recordSpaceAvailable() <  LOOPER_SAMPLES_BEFORE_REQUEST &&
            !clips[clip].newBufferInTransit() )
       {
-        printf("requesting new buffer now\n");
         EventLooperClipRequestBuffer e( track, clip, clips[clip].audioBufferSize() + 44100 * 4);
         writeToGuiRingbuffer( &e );
         clips[clip].newBufferInTransit(true);
@@ -219,6 +223,7 @@ void Looper::process(int nframes, Buffers* buffers)
       // copy data from input buffer to recording buffer
       float* input = buffers->audio[Buffers::MASTER_INPUT];
       clips[clip].record( nframes, input, 0 );
+      
     }
     else if ( clips[clip].playing() )
     {

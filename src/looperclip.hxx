@@ -112,6 +112,7 @@ class LooperClip
     }
     
     bool loaded(){return _loaded;}
+    void playing(bool p){_playing = p;}
     bool playing(){return _playing;}
     bool recording(){return _recording;}
     void recording(bool r){_recording = r;}

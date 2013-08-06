@@ -39,6 +39,7 @@ class Looper : public AudioProcessor, public TimeObserver
     
     void queuePlayScene( int sc );
     
+    void play(int scene, bool r);
     void setRecord(int scene, bool r);
     
     
