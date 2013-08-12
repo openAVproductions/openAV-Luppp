@@ -49,7 +49,14 @@ void Looper::setRecord(int scene, bool r)
 
 void Looper::play(int scene, bool r)
 {
-  clips[scene].playing(r);
+  if ( r )
+  {
+    for(int i = 0; i < NSCENES; i++)
+    {
+      clips[scene].playing(false);
+    }
+    clips[scene].playing(true);
+  }
 }
 
 LooperClip* Looper::getClip(int scene)
@@ -185,7 +192,7 @@ void Looper::process(int nframes, Buffers* buffers)
     if ( clips[clip].recording() )
     {
       if ( clips[clip].recordSpaceAvailable() <  LOOPER_SAMPLES_BEFORE_REQUEST &&
-           !clips[clip].newBufferInTransit() )
+          !clips[clip].newBufferInTransit() )
       {
         EventLooperClipRequestBuffer e( track, clip, clips[clip].audioBufferSize() + 44100 * 4);
         writeToGuiRingbuffer( &e );
@@ -206,7 +213,7 @@ void Looper::process(int nframes, Buffers* buffers)
         out[i] = clips[clip].getSample();
       }
       
-      // update UI of progress
+      // FIXME: should user ControllerUpdater
       if ( uiUpdateCounter > uiUpdateConstant )
       {
         jack->getControllerUpdater()->setTrackSceneProgress(track, clip, clips[clip].getProgress() );

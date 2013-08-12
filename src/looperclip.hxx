@@ -53,8 +53,6 @@ class LooperClip
       _buffer = ab;
       
       _playhead = 0;
-      
-      _playing = true;
     }
     
     /// used to update the size of the buffer for this looperclip. The current
@@ -99,7 +97,10 @@ class LooperClip
     
     unsigned long recordSpaceAvailable()
     {
-      return _buffer->getData().size() - _recordhead;
+      if ( _buffer )
+        return _buffer->getData().size() - _recordhead;
+      
+      return 0;
     }
     
     size_t audioBufferSize()

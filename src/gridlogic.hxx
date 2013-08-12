@@ -54,6 +54,9 @@ class GridLogic : public TimeObserver
     /// button release / click-release event
     void released( int track, int scene );
     
+    /// GUI load event
+    void load(int track, int scene);
+    
     /// resend entire grid state to controllers
     void updateState();
     

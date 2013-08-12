@@ -38,6 +38,12 @@ void GridLogic::released( int track, int scene )
   jack->getControllerUpdater()->setSceneState(track, scene, state[track*NSCENES + scene] );
 }
 
+void GridLogic::load(int track, int scene)
+{
+  state[track*NSCENES + scene] = STATE_LOADED;
+  jack->getControllerUpdater()->setSceneState(track, scene, state[track*NSCENES + scene] );
+}
+
 
 void GridLogic::updateState()
 {

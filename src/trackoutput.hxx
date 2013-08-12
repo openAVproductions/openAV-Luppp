@@ -105,7 +105,6 @@ class TrackOutput : public AudioProcessor
         *sidechain++     += tmp * _toSidechain;
         *postSidechain++ += tmp * _toPostSidechain;
       }
-      
     }
     
     ~TrackOutput()

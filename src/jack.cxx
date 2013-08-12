@@ -189,9 +189,9 @@ int Jack::process (jack_nframes_t nframes)
   }
   
   
-  metronome->process( nframes, &buffers );
+  //metronome->process( nframes, &buffers );
   
-  /*
+  
   // process fx
   float* buf[] = {
     buffers.audio[Buffers::REVERB],
@@ -205,7 +205,8 @@ int Jack::process (jack_nframes_t nframes)
     reverbMeter->process(nframes, buffers.audio[Buffers::REVERB], buffers.audio[Buffers::REVERB] );
     reverb->process( nframes, &buf[0], &buf[2] );
   }
-  */
+  
+  
   
   // db meter on master output, then memcpy to JACK
   masterMeter->process(nframes, buffers.audio[Buffers::MASTER_OUT_L], buffers.audio[Buffers::MASTER_OUT_R] );
@@ -223,8 +224,14 @@ int Jack::process (jack_nframes_t nframes)
   
   for(int i = 0; i < buffers.nframes; i++)
   {
-    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = buffers.audio[Buffers::MASTER_OUT_L][i];
-    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = buffers.audio[Buffers::MASTER_OUT_R][i];
+    float tmp = 0.f;
+    for(int t = 0; t < NTRACKS; t++)
+    {
+      tmp += buffers.audio[Buffers::TRACK_0 + t][i];
+    }
+    
+    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = tmp;
+    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = tmp;
   }
   
   /*
