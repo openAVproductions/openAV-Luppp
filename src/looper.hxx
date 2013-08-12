@@ -32,9 +32,6 @@ class Looper : public AudioProcessor, public TimeObserver
     
     void midi(unsigned char* data);
     
-    void bar();
-    void beat();
-    
     void setFpb(int f) { /*fpb = f;*/ }
     
     void queuePlayScene( int sc );

@@ -164,45 +164,17 @@ void Looper::setRequestedBuffer(int s, AudioBuffer* ab)
 void Looper::setSample(int scene, AudioBuffer* ab)
 {
   clips[scene].load( ab );
-  /*
-  vector<float>& buf = ab->getData();
-  if ( buf.size() > SAMPLE_SIZE )
-  {
-    EventGuiPrint e( "Looper setSample() ERROR size > incoming sample" );
-    writeToGuiRingbuffer( &e );
-  }
-  else
-  {
-    char buffer [50];
-    sprintf (buffer, "Looper setSample() writing to scene %i",scene);
-    EventGuiPrint e( buffer );
-    writeToGuiRingbuffer( &e );
-    
-    numBeats = ab->getBeats();
-    float* s = &sample[sc];
-    float* b = &buf[0];
-    for (unsigned int i = 0; i < buf.size(); i++)
-    {
-      *s++ = *b++;
-    }
-    
-    endPoint = buf.size();
-    lastWrittenSampleIndex = buf.size();
-    
-    //memcpy( &sample[0], &buf[0], buf.size() ); // copy sample data to pre-allocated buffer
-  }
-  */
+  
+  char buffer [50];
+  sprintf (buffer, "Looper setSample() writing to scene %i",scene);
+  EventGuiPrint e( buffer );
+  writeToGuiRingbuffer( &e );
 }
 
 void Looper::process(int nframes, Buffers* buffers)
 {
   float* in  = buffers->audio[Buffers::MASTER_INPUT];
-  
-  // FIXME:
-  // using the track output causes distortion: clipping / not proper writing.
-  // writing to master fixes issue, so its due to trackOutput or Looper writing...?
-  //float* out = buffers->audio[Buffers::TRACK_0 + track];
-  float* out = buffers->audio[Buffers::MASTER_OUT_R];
+  float* out = buffers->audio[Buffers::TRACK_0 + track];
   
   // process each clip individually: this allows for playback of one clip,
   // while another clip records.
@@ -288,78 +260,6 @@ void Looper::process(int nframes, Buffers* buffers)
       }
     }
   }
-  */
-}
-
-
-void Looper::bar()
-{
-  /*
-  int barTmpState = state;
-  // queue stop recording -> stop recording, now calculate beats in loop
-  if ( stopRecordOnBar )
-  {
-    stopRecordOnBar = false;
-  }
-  
-  if ( playedBeats >= numBeats )
-  {
-    playPoint = 0;
-    playedBeats = 0;
-  }
-  
-  if ( state == STATE_PLAY_QUEUED )
-  {
-    EventGuiPrint e( "Looper Q->Playing" );
-    writeToGuiRingbuffer( &e );
-    state = STATE_PLAYING;
-    playPoint = 0;
-    endPoint = lastWrittenSampleIndex;
-    
-    EventLooperState e2( track, scene, STATE_PLAYING );
-    writeToGuiRingbuffer( &e2 );
-  }
-  if ( state == STATE_RECORD_QUEUED )
-  {
-    EventGuiPrint e( "Looper Q->Recording" );
-    writeToGuiRingbuffer( &e );
-    
-    EventLooperState e2( track, scene, STATE_RECORDING );
-    writeToGuiRingbuffer( &e2 );
-    
-    state = STATE_RECORDING;
-    playPoint = 0;
-    endPoint = 0;
-    lastWrittenSampleIndex = 0;
-  }
-  if ( state == STATE_STOP_QUEUED )
-  {
-    EventGuiPrint e( "Looper Q->Stopped" );
-    writeToGuiRingbuffer( &e );
-    
-    EventLooperState e2( track, scene, STATE_STOPPED );
-    writeToGuiRingbuffer( &e2 );
-    
-    state = STATE_STOPPED;
-    endPoint = lastWrittenSampleIndex;
-  }
-  
-  if ( barTmpState != state )
-  {
-    updateControllers();
-  }
-  */
-}
-
-void Looper::beat()
-{
-  /*
-  if (state == STATE_RECORDING || stopRecordOnBar )
-  {
-    numBeats++;
-  }
-  playedBeats++;
-  * 
   */
 }
 

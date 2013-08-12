@@ -1,6 +1,8 @@
 
 === NEW
 
+- Remove TimeObserver obligation from Looper, not needed as GridLogic handles Time now
+
 - Add AudioBuffer soundfile writer in order to check contents (looper distortion bug)
 
 - Update recording mechanism to request buffers when they're getting full
