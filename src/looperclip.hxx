@@ -142,7 +142,7 @@ class LooperClip
     
     float getProgress()
     {
-      if ( _buffer )
+      if ( _buffer && _playing )
       {
         return float(_playhead) / _buffer->getData().size();
       }

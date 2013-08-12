@@ -2,14 +2,6 @@
 #ifndef LUPPP_JACK_H
 #define LUPPP_JACK_H
 
-/*
-    jack.hxx
-  
-  This code contains the JACK client.
-  It allows reading / writing of audio / midi.
-  
-*/
-
 // Library
 #include <vector>
 #include <cstring>
@@ -29,9 +21,12 @@
 #include "dsp/dsp_reverb.hxx"
 #include "dsp/dsp_dbmeter.hxx"
 
-
 using namespace std;
 
+/** Jack
+  This code contains the JACK client.
+  It allows reading / writing of audio / midi.
+**/
 class Jack
 {
   public:
