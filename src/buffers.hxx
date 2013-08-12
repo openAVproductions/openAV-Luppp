@@ -10,13 +10,8 @@ class Buffers
   public:
     Buffers()
     {
-      for(int i = 0; i < 32; i++)
-      {
-        audio[i] = 0;
-        midi [i] = 0;
-      }
-      //memset( audio, 0, sizeof(float*)*32);
-      //memset( midi , 0, sizeof(void *)*32);
+      memset( audio, 0, sizeof(float*)*32);
+      memset( midi , 0, sizeof(void *)*32);
     }
     float* audio[32];
     void*  midi [32];
@@ -24,8 +19,10 @@ class Buffers
     enum BUFFER {
       // AUDIO
       MASTER_INPUT  = 0,
+      
       MASTER_OUT_L = 1,
       MASTER_OUT_R = 2,
+      
       JACK_MASTER_OUT_L = 3,
       JACK_MASTER_OUT_R = 4,
       

@@ -72,8 +72,10 @@ class Jack
     vector<TrackOutput*>    trackOutputs;
     vector<MidiObserver*>   midiObservers;
     
-    int nframes;
-    int samplerate;
+    // internal audio buffers
+    vector<float> masterL;
+    vector<float> masterR;
+    
     
     // FX
     Reverb* reverb;

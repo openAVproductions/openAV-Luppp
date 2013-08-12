@@ -9,7 +9,7 @@
  *  The logic code for the luppp tracks / grid resides here. This logic is
  *  separtated from the Looper class so it can be repurposed by different
  *  controllers and input devices. The UI and eg. APC / Launchpad all have a
- *  similar grid style interface: implementing the logic in each is not good.
+ *  similar grid style interface: the logic is implemented here once.
  * 
  *  The class sends Looper messages to change its state, thus abstracting away
  *  the details of the Looper control, and exposing its functionality using a

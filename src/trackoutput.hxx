@@ -2,6 +2,7 @@
 #ifndef LUPPP_TRACK_OUTPUT_H
 #define LUPPP_TRACK_OUTPUT_H
 
+#include <iostream>
 #include <stdio.h>
 
 #include "config.hxx"
@@ -20,8 +21,8 @@ class TrackOutput : public AudioProcessor
       previousInChain(ap),
       dbMeter(44100)
     {
-      printf("trackOutput ID: %i\n", track);
-      
+      printf("trackOutput ID: %i, ap = ", track );
+      std::cout << ap << std::endl;
       
       
       // UI update
@@ -64,11 +65,8 @@ class TrackOutput : public AudioProcessor
       // zero track buffer
       memset( &_trackBuffer[0], 0, nframes );
       
-      if ( previousInChain )
-      {
-        buffers->audio[Buffers::TRACK_0 + track] = &_trackBuffer[0];
-        previousInChain->process( nframes, buffers );
-      }
+      buffers->audio[Buffers::TRACK_0 + track] = &_trackBuffer[0];
+      previousInChain->process( nframes, buffers );
       
       
       // run the meter
@@ -86,7 +84,6 @@ class TrackOutput : public AudioProcessor
       
       
       /// copy audio data into reverb / sidechain / master buffers
-      float* trackBuf      = buffers->audio[Buffers::TRACK_0 + track];
       float* reverb        = buffers->audio[Buffers::REVERB];
       float* sidechain     = buffers->audio[Buffers::SIDECHAIN];
       float* postSidechain = buffers->audio[Buffers::POST_SIDECHAIN];
@@ -98,15 +95,15 @@ class TrackOutput : public AudioProcessor
       {
         float tmp = _trackBuffer[i];
         
-        *masterL++       += tmp * _toMaster;
-        *masterR++       += tmp * _toMaster;
+        masterL[i]       += tmp * _toMaster;
+        masterR[i]       += tmp * _toMaster;
         
-        //*reverb++        += tmp * _toReverb;
-        //*sidechain++     += tmp * _toSidechain;
-        //*postSidechain++ += tmp * _toPostSidechain;
+        masterL++;
+        masterR++;
         
-        
-        trackBuf++;
+        *reverb++        += tmp * _toReverb;
+        *sidechain++     += tmp * _toSidechain;
+        *postSidechain++ += tmp * _toPostSidechain;
       }
       
     }

@@ -26,7 +26,7 @@ class Metronome : public TimeObserver
       // samples per cycle of 
       float scale = 2 * 3.1415 / endPoint;
       
-      /*And fill it up*/
+      // And fill it up
       for(int i=0;i < endPoint*40;i++){
         beatSample[i]= sin(i*scale);
         barSample [i]= sin(i*scale*1.5);
@@ -68,7 +68,8 @@ class Metronome : public TimeObserver
       if ( not active )
         return;
       
-      float* out = buffers->audio[Buffers::MASTER_OUT_L];
+      float* outL = buffers->audio[Buffers::MASTER_OUT_L];
+      float* outR = buffers->audio[Buffers::MASTER_OUT_R];
       
       float* sample = &beatSample[0];
       if( playBar ) { sample = &barSample[0]; playBar = false; }
@@ -77,9 +78,10 @@ class Metronome : public TimeObserver
       {
         if ( playPoint < endPoint )
         {
-          out[i] += sample[playPoint++];
+          outL[i] += sample[playPoint];
+          outR[i] += sample[playPoint];
+          playPoint++;
         }
-        
       }
     }
   

@@ -74,6 +74,7 @@ void handleGuiEvents()
             EventTrackSignalLevel ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTrackSignalLevel) );
             if ( ev.track < 0 ) {
+              printf("%f\t%f\n", ev.left, ev.right);
               gui->getMasterTrack()->getVolume()->amplitude( ev.left, ev.right );
             } else {
               gui->getTrack(ev.track)->getVolume()->amplitude( ev.left, ev.right ); }

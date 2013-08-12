@@ -22,7 +22,7 @@ Jack::Jack() :
   logic( new Logic() ),
   gridLogic( new GridLogic() )
 {
-  // open the client
+  /// open the client
   client = jack_client_open ( "Luppp", JackNullOption , 0 , 0 );
   
   buffers.nframes = jack_get_buffer_size( client );
@@ -31,21 +31,22 @@ Jack::Jack() :
   uiUpdateCounter  = buffers.samplerate / 30;
   uiUpdateConstant = buffers.samplerate / 30;
   
+  masterInput  = jack_port_register( client,
+                          "master_in",
+                          JACK_DEFAULT_AUDIO_TYPE,
+                          JackPortIsInput,
+                          0 );
+  
   masterOutputL = jack_port_register( client,
                           "master_left",
                           JACK_DEFAULT_AUDIO_TYPE,
                           JackPortIsOutput,
                           0 );
+  
   masterOutputR = jack_port_register( client,
                           "master_right",
                           JACK_DEFAULT_AUDIO_TYPE,
                           JackPortIsOutput,
-                          0 );
-  
-  masterInput  = jack_port_register( client,
-                          "master_in",
-                          JACK_DEFAULT_AUDIO_TYPE,
-                          JackPortIsInput,
                           0 );
   
   masterMidiInput  = jack_port_register( client,
@@ -67,24 +68,30 @@ Jack::Jack() :
                           0 );
   
   
+  masterL.resize( buffers.nframes );
+  masterR.resize( buffers.nframes );
+  
   /// prepare internal buffers
-  buffers.audio[Buffers::REVERB]         = new float( nframes );
-  buffers.audio[Buffers::SIDECHAIN]      = new float( nframes );
-  buffers.audio[Buffers::POST_SIDECHAIN] = new float( nframes );
-  buffers.audio[Buffers::MASTER_OUT_L]   = new float( nframes );
-  buffers.audio[Buffers::MASTER_OUT_R]   = new float( nframes );
+  buffers.audio[Buffers::REVERB]         = new float( buffers.nframes );
+  buffers.audio[Buffers::SIDECHAIN]      = new float( buffers.nframes );
+  buffers.audio[Buffers::POST_SIDECHAIN] = new float( buffers.nframes );
+  
+  buffers.audio[Buffers::MASTER_OUT_L]   = &masterL[0]; //new float( buffers.nframes );
+  buffers.audio[Buffers::MASTER_OUT_R]   = &masterR[0]; //new float( buffers.nframes );
+  
+  
+  cout << "master L buffer = " << *buffers.audio[Buffers::MASTER_OUT_L] << endl
+       << "master R buffer = " << *buffers.audio[Buffers::MASTER_OUT_R] << endl
+       << "difference = " << *buffers.audio[Buffers::MASTER_OUT_R] - *buffers.audio[Buffers::MASTER_OUT_L] << endl;
+  
   
   for(int i = 0; i < NTRACKS; i++)
   {
-    //buffers.audio[Buffers::TRACK_0 + i]   = new float( nframes );
-    
     loopers.push_back( new Looper(i) );
     trackOutputs.push_back( new TrackOutput(i, loopers.back() ) );
     
     timeManager.registerObserver( loopers.back() );
   }
-  
-  //timeManager.registerObserver( &metronome );
   
   /// setup FX
   reverb = new Reverb( buffers.samplerate );
@@ -128,7 +135,7 @@ void Jack::activate()
 
 int Jack::process (jack_nframes_t nframes)
 {
-  // get buffers
+  /// get buffers
   buffers.audio[Buffers::MASTER_INPUT]        = (float*)jack_port_get_buffer( masterInput    , nframes );
   buffers.audio[Buffers::JACK_MASTER_OUT_L]   = (float*)jack_port_get_buffer( masterOutputL  , nframes );
   buffers.audio[Buffers::JACK_MASTER_OUT_R]   = (float*)jack_port_get_buffer( masterOutputR  , nframes );
@@ -136,26 +143,23 @@ int Jack::process (jack_nframes_t nframes)
   buffers.midi [Buffers::APC_INPUT]           = (void*) jack_port_get_buffer( apcMidiInput   , nframes );
   buffers.midi [Buffers::APC_OUTPUT]          = (void*) jack_port_get_buffer( apcMidiOutput  , nframes );
   
-  
-  memset( buffers.audio[Buffers::JACK_MASTER_OUT_L]     , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::JACK_MASTER_OUT_R]     , 0, sizeof(float) * nframes );
-  
-  memset( buffers.audio[Buffers::MASTER_OUT_L]     , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::MASTER_OUT_R]     , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::JACK_MASTER_OUT_L] , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::JACK_MASTER_OUT_R] , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::MASTER_OUT_L]      , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::MASTER_OUT_R]      , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::REVERB]            , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::SIDECHAIN]         , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::POST_SIDECHAIN]    , 0, sizeof(float) * nframes );
   
-  
   jack_midi_clear_buffer( buffers.midi[Buffers::APC_OUTPUT] );
   
-  // do events from the ringbuffer
+  
+  /// do events from the ringbuffer
   handleDspEvents();
   
-  // process incoming MIDI
+  
+  /// process incoming MIDI
   jack_midi_event_t in_event;
-  
-  
   int masterMidiInputIndex = 0;
   int event_count = (int) jack_midi_get_event_count( buffers.midi[Buffers::MASTER_MIDI_INPUT] );
   
@@ -168,7 +172,7 @@ int Jack::process (jack_nframes_t nframes)
     EventGuiPrint e( buffer );
     writeToGuiRingbuffer( &e );
     
-    // check each looper for MIDI match
+    // run each event trought the midiObservers vector
     for( int i = 0; i < midiObservers.size(); i++ )
     {
       midiObservers.at(i)->midi( (unsigned char*) &in_event.buffer[0] );
@@ -178,16 +182,16 @@ int Jack::process (jack_nframes_t nframes)
     masterMidiInputIndex++;
   }
   
-  // process each track, starting at output and working up signal path
+  /// process each track, starting at output and working up signal path
   for(uint i = 0; i < NTRACKS; i++)
   {
-    //loopers.at(i)->process( nframes, &buffers );
     trackOutputs.at(i)->process( nframes, &buffers );
   }
   
   
   metronome->process( nframes, &buffers );
   
+  /*
   // process fx
   float* buf[] = {
     buffers.audio[Buffers::REVERB],
@@ -201,6 +205,7 @@ int Jack::process (jack_nframes_t nframes)
     reverbMeter->process(nframes, buffers.audio[Buffers::REVERB], buffers.audio[Buffers::REVERB] );
     reverb->process( nframes, &buf[0], &buf[2] );
   }
+  */
   
   // db meter on master output, then memcpy to JACK
   masterMeter->process(nframes, buffers.audio[Buffers::MASTER_OUT_L], buffers.audio[Buffers::MASTER_OUT_R] );
@@ -216,15 +221,25 @@ int Jack::process (jack_nframes_t nframes)
   uiUpdateCounter += nframes;
   
   
+  for(int i = 0; i < buffers.nframes; i++)
+  {
+    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = buffers.audio[Buffers::MASTER_OUT_L][i];
+    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = buffers.audio[Buffers::MASTER_OUT_R][i];
+  }
+  
+  /*
   // memcpy the internal MASTER_OUTPUT buffer to the JACK_MASTER_OUTPUT
   memcpy( buffers.audio[Buffers::JACK_MASTER_OUT_L],
           buffers.audio[Buffers::MASTER_OUT_L],
+          //buffers.audio[Buffers::TRACK_7],
           sizeof(float)*nframes);
   
   memcpy( buffers.audio[Buffers::JACK_MASTER_OUT_R],
           buffers.audio[Buffers::MASTER_OUT_R],
+          //buffers.audio[Buffers::TRACK_7],
           //buffers.audio[Buffers::REVERB],  // uncomment to listen to reverb send only
           sizeof(float)*nframes);
+  */
   
   return false;
 }

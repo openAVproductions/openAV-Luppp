@@ -32,7 +32,7 @@ class LooperClip
       _playing = false;
       _recording = false;
       
-      _buffer = new AudioBuffer(44100);
+      _buffer = 0; //new AudioBuffer(44100);
       _newBufferInTransit = false;
       
       _playhead   = 0;
