@@ -5,6 +5,17 @@
 
 extern Jack* jack;
 
+
+const char* StateString[8] = {
+  "empty",
+  "playing",
+  "play queued",
+  "loaded",
+  "stop queued",
+  "recording",
+  "record queued"
+};
+
 GridLogic::GridLogic()
 {
   

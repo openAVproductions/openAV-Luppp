@@ -36,17 +36,6 @@ namespace Worker
     return 0;
   }
   
-  /// allocates a new audiobuffer of the desired size and returns it
-  static AudioBuffer* allocateNewBuffer(int size)
-  {
-    AudioBuffer* ab = new AudioBuffer();
-    
-    std::vector<float> buf( size, 0.f );
-    
-    ab->nonRtSetSample( buf );
-    
-    return ab;
-  }
 }
 
 #endif // LUPPP_WORKER_H

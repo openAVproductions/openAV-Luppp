@@ -323,6 +323,8 @@ class SidechainGain : public Fl_Slider
           return Fl_Widget::handle(event);
       }
       */
+      
+      return 0;
     }
     
   private:

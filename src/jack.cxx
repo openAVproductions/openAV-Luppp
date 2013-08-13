@@ -14,16 +14,17 @@ using namespace std;
 extern int jackSamplerate;
 
 Jack::Jack() :
-  clientActive(false),
-  client( 0 ),
-  controllerUpdater( new ControllerUpdater() ),
+  client( jack_client_open ( "Luppp", JackNullOption , 0 , 0 ) ),
   timeManager(),
   metronome( new Metronome() ),
   logic( new Logic() ),
-  gridLogic( new GridLogic() )
+  gridLogic( new GridLogic() ),
+  controllerUpdater( new ControllerUpdater() ),
+  
+  clientActive(false)
 {
   /// open the client
-  client = jack_client_open ( "Luppp", JackNullOption , 0 , 0 );
+  //client = ;
   
   buffers.nframes = jack_get_buffer_size( client );
   buffers.samplerate = jack_get_sample_rate( client );
@@ -173,7 +174,7 @@ int Jack::process (jack_nframes_t nframes)
     writeToGuiRingbuffer( &e );
     
     // run each event trought the midiObservers vector
-    for( int i = 0; i < midiObservers.size(); i++ )
+    for(unsigned int i = 0; i < midiObservers.size(); i++ )
     {
       midiObservers.at(i)->midi( (unsigned char*) &in_event.buffer[0] );
     }
@@ -183,7 +184,7 @@ int Jack::process (jack_nframes_t nframes)
   }
   
   /// process each track, starting at output and working up signal path
-  for(uint i = 0; i < NTRACKS; i++)
+  for(unsigned int i = 0; i < NTRACKS; i++)
   {
     trackOutputs.at(i)->process( nframes, &buffers );
   }
@@ -222,7 +223,7 @@ int Jack::process (jack_nframes_t nframes)
   uiUpdateCounter += nframes;
   
   
-  for(int i = 0; i < buffers.nframes; i++)
+  for(unsigned int i = 0; i < buffers.nframes; i++)
   {
     float tmp = 0.f;
     for(int t = 0; t < NTRACKS; t++)

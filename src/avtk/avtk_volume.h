@@ -97,11 +97,6 @@ class Volume : public Fl_Slider
         //cairo_set_source_rgb( cr, 28 / 255.f,  28 / 255.f ,  28 / 255.f  );
         cairo_fill( cr );
         
-        
-        // set up dashed lines, 1 px off, 1 px on
-        double dashes[1];
-        dashes[0] = 2.0;
-        
         //cairo_set_dash ( cr, dashes, 1, 0.0);
         cairo_set_line_width( cr, 1.0);
         

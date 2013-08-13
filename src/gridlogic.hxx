@@ -36,16 +36,6 @@ class GridLogic : public TimeObserver
       STATE_RECORD_QUEUED,
     };
     
-    const char* StateString[8] = {
-      "empty",
-      "playing",
-      "play queued",
-      "loaded",
-      "stop queued",
-      "recording",
-      "record queued"
-    };
-    
     GridLogic();
     
     /// button press / click event
@@ -68,6 +58,7 @@ class GridLogic : public TimeObserver
     /// contains the current state of each grid square
     State state[NTRACKS*NSCENES];
     
+    static const char* StateString[8];
     
 };
 

@@ -61,6 +61,8 @@ class Jack
     void writeApcOutput( unsigned char* data );
   
   private:
+    jack_client_t* client;
+    
     Buffers             buffers;
     TimeManager         timeManager;
     Metronome*          metronome;
@@ -84,7 +86,6 @@ class Jack
     
     // JACK member variables
     bool clientActive;
-    jack_client_t* client;
     
     jack_port_t*  masterInput;
     jack_port_t*  masterOutputL;

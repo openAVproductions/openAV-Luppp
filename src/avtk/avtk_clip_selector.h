@@ -32,7 +32,7 @@
 
 #include "../worker.hxx"
 #include "../looper.hxx"
-#include "../audiobuffer.hxx"./
+#include "../audiobuffer.hxx"
 #include "../eventhandler.hxx"
 
 

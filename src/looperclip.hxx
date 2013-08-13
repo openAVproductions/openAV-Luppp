@@ -75,7 +75,6 @@ class LooperClip
         writeToGuiRingbuffer( &e );
       }
       
-      printf("New buffer  size = %i\n", ab->getData().size() );
       _buffer = ab;
       
       _newBufferInTransit = false;

@@ -180,7 +180,6 @@ void Looper::setSample(int scene, AudioBuffer* ab)
 
 void Looper::process(int nframes, Buffers* buffers)
 {
-  float* in  = buffers->audio[Buffers::MASTER_INPUT];
   float* out = buffers->audio[Buffers::TRACK_0 + track];
   
   // process each clip individually: this allows for playback of one clip,
@@ -239,7 +238,7 @@ void Looper::process(int nframes, Buffers* buffers)
       }
       playPoint += 1.0; //playbackSpeed;
       
-      //*out++ = sin( playPoint * 440 * 6.24 );
+      //out++ = sin( playPoint * 440 * 6.24 );
       *trk = tmpBuffer[i];
       *out++ = *trk++;
     }
@@ -254,18 +253,6 @@ void Looper::process(int nframes, Buffers* buffers)
       writeToGuiRingbuffer( &e );
     }
     uiUpdateCounter += nframes;
-  }
-  /*
-  // stopRecordOnBar ensures we record right up to the bar measure
-  else if ( state == STATE_RECORDING || stopRecordOnBar )
-  {
-    for(int i = 0; i < nframes; i++)
-    {
-      if ( lastWrittenSampleIndex < SAMPLE_SIZE )
-      {
-        sample[lastWrittenSampleIndex++] = in[i];
-      }
-    }
   }
   */
 }
