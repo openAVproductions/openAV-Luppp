@@ -27,7 +27,7 @@ class TimeManager
       
       cout << "TimeManager() done" << endl;
     }
-    
+    int getFpb(){return fpb;}
     void setBpm(float bpm)
     {
       //cout << "setBpm() " << bpm << endl;

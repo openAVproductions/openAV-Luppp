@@ -43,6 +43,7 @@ namespace Event
     LOOPER_STATE,
     LOOPER_PROGRESS,
     LOOPER_LOOP_LENGTH,
+    LOOPER_LOOP_USE_AS_TEMPO,
     
     METRONOME_ACTIVE,
     
@@ -194,6 +195,19 @@ class EventLooperLoopLength : public EventBase
     int beats;
     EventLooperLoopLength(){}
     EventLooperLoopLength(int t, int s, int b) : track(t), scene(s), beats(b) {}
+};
+
+class EventLooperUseAsTempo : public EventBase
+{
+  public:
+    int type() { return int(LOOPER_LOOP_USE_AS_TEMPO); }
+    uint32_t size() { return sizeof(EventLooperUseAsTempo); }
+    
+    int track;
+    int scene;
+    int beats;
+    EventLooperUseAsTempo(){}
+    EventLooperUseAsTempo(int t, int s) : track(t), scene(s){}
 };
 
 class EventLooperLoad : public EventBase

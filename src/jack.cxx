@@ -230,8 +230,8 @@ int Jack::process (jack_nframes_t nframes)
       tmp += buffers.audio[Buffers::TRACK_0 + t][i];
     }
     
-    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = tmp + buffers.audio[Buffers::MASTER_OUT_L][i];
-    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = tmp + buffers.audio[Buffers::MASTER_OUT_R][i];
+    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = tmp; // + buffers.audio[Buffers::MASTER_OUT_L][i];
+    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = tmp; // + buffers.audio[Buffers::MASTER_OUT_R][i];
   }
   
   /*

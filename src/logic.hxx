@@ -28,6 +28,7 @@ class Logic
     void trackRecordArm(int t, bool v);
     void trackSend(int t, int send, float v);
     
+    void looperUseAsTempo(int t, int s);
     void looperClipLenght(int t, int s, int l);
 };
 

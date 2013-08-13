@@ -336,6 +336,7 @@ class ClipSelector : public Fl_Button
                   {"32"},
                   {0},
                 { "Record" },
+                { "Use as tempo" },
                 { 0 }
               };
               Fl_Menu_Item *m = (Fl_Menu_Item*) rclick_menu->popup(Fl::event_x(), Fl::event_y(), 0, 0, 0);
@@ -365,6 +366,11 @@ class ClipSelector : public Fl_Button
                 writeToDspRingbuffer( &e );
               } else if ( strcmp(m->label(), "32") == 0 ) {
                 EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,32);
+                writeToDspRingbuffer( &e );
+              }
+              else if ( strcmp(m->label(), "Use as tempo") == 0 )
+              {
+                EventLooperUseAsTempo e (ID, clipNum);
                 writeToDspRingbuffer( &e );
               }
               else if ( strcmp(m->label(), "Record") == 0 )

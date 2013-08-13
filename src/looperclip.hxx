@@ -169,7 +169,7 @@ class LooperClip
       if ( _buffer && _playing )
       {
         float p = float(_playhead) / _recordhead;
-        printf("LooperClip progress %f\n", p );
+        //printf("LooperClip progress %f\n", p );
         return p;
       }
       return 0.f;
