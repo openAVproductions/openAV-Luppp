@@ -2,8 +2,8 @@
 #ifndef LUPPP_AUDIOBUFFER_H
 #define LUPPP_AUDIOBUFFER_H
 
-// System
 #include <vector>
+#include <iostream>
 
 /// AudioBuffer stores float samples in a big vector.
 class AudioBuffer
@@ -32,6 +32,7 @@ class AudioBuffer
     
     void setBeats(int b)
     {
+      printf("AudioBuffer now has %i beats\n", b );
       numBeats = b;
     }
     

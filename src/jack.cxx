@@ -179,7 +179,6 @@ int Jack::process (jack_nframes_t nframes)
       midiObservers.at(i)->midi( (unsigned char*) &in_event.buffer[0] );
     }
     
-    
     masterMidiInputIndex++;
   }
   
@@ -190,7 +189,7 @@ int Jack::process (jack_nframes_t nframes)
   }
   
   
-  //metronome->process( nframes, &buffers );
+  metronome->process( nframes, &buffers );
   
   
   // process fx
@@ -231,8 +230,8 @@ int Jack::process (jack_nframes_t nframes)
       tmp += buffers.audio[Buffers::TRACK_0 + t][i];
     }
     
-    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = tmp;
-    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = tmp;
+    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = tmp + buffers.audio[Buffers::MASTER_OUT_L][i];
+    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = tmp + buffers.audio[Buffers::MASTER_OUT_R][i];
   }
   
   /*

@@ -190,9 +190,10 @@ class EventLooperLoopLength : public EventBase
     uint32_t size() { return sizeof(EventLooperLoopLength); }
     
     int track;
-    float scale;
+    int scene;
+    int beats;
     EventLooperLoopLength(){}
-    EventLooperLoopLength(int t, float s) : track(t), scale(s){}
+    EventLooperLoopLength(int t, int s, int b) : track(t), scene(s), beats(b) {}
 };
 
 class EventLooperLoad : public EventBase

@@ -49,13 +49,19 @@ void Looper::setRecord(int scene, bool r)
 
 void Looper::play(int scene, bool r)
 {
+  for(int i = 0; i < NSCENES; i++)
+  {
+    clips[i].playing(false);
+  }
+  
+  
   if ( r )
   {
-    for(int i = 0; i < NSCENES; i++)
-    {
-      clips[scene].playing(false);
-    }
     clips[scene].playing(true);
+  }
+  else
+  {
+    jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0.f );
   }
 }
 
@@ -212,7 +218,6 @@ void Looper::process(int nframes, Buffers* buffers)
         out[i] = clips[clip].getSample();
       }
       
-      // FIXME: should user ControllerUpdater
       if ( uiUpdateCounter > uiUpdateConstant )
       {
         jack->getControllerUpdater()->setTrackSceneProgress(track, clip, clips[clip].getProgress() );

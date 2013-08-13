@@ -26,7 +26,9 @@ class Logic
     
     void trackVolume(int t, float v);
     void trackRecordArm(int t, bool v);
-    void trackSend(int t, int send, float v); 
+    void trackSend(int t, int send, float v);
+    
+    void looperClipLenght(int t, int s, int l);
 };
 
 #endif // LUPPP_LOGIC_H

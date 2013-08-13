@@ -111,8 +111,16 @@ class LooperClip
       return 0;
     }
     
+    void setBeats(int beats)
+    {
+      if ( _buffer )
+      {
+        _buffer->setBeats( beats );
+      }
+    }
+    
     bool loaded(){return _loaded;}
-    void playing(bool p){_playing = p;}
+    void playing(bool p){_playing = p; _playhead = 0; }
     bool playing(){return _playing;}
     bool recording(){return _recording;}
     void recording(bool r){_recording = r;}

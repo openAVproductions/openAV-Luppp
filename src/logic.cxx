@@ -33,3 +33,8 @@ void Logic::trackSend(int t, int send, float v)
   jack->getTrackOutput( t )->setSend( send, v );
   jack->getControllerUpdater()->setTrackSend( t, send, v );
 }
+
+void Logic::looperClipLenght(int t, int s, int l)
+{
+  jack->getLooper( t )->getClip( s )->setBeats(l);
+}

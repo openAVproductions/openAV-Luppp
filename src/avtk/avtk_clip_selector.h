@@ -349,22 +349,22 @@ class ClipSelector : public Fl_Button
                 loadClip( clipNum, "---" );
               }
               else if ( strcmp(m->label(), "1") == 0 ) {
-                EventLooperLoopLength e = EventLooperLoopLength(ID, 1);
+                EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,1);
                 writeToDspRingbuffer( &e );
               } else if ( strcmp(m->label(), "2") == 0 ) {
-                EventLooperLoopLength e = EventLooperLoopLength(ID, 2);
+                EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,2);
                 writeToDspRingbuffer( &e );
               } else if ( strcmp(m->label(), "4") == 0 ) {
-                EventLooperLoopLength e = EventLooperLoopLength(ID, 4);
+                EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,4);
                 writeToDspRingbuffer( &e );
               } else if ( strcmp(m->label(), "8") == 0 ) {
-                EventLooperLoopLength e = EventLooperLoopLength(ID, 8);
+                EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,8);
                 writeToDspRingbuffer( &e );
               } else if ( strcmp(m->label(), "16") == 0 ) {
-                EventLooperLoopLength e = EventLooperLoopLength(ID, 16);
+                EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,16);
                 writeToDspRingbuffer( &e );
               } else if ( strcmp(m->label(), "32") == 0 ) {
-                EventLooperLoopLength e = EventLooperLoopLength(ID, 32);
+                EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,32);
                 writeToDspRingbuffer( &e );
               }
               else if ( strcmp(m->label(), "Record") == 0 )
