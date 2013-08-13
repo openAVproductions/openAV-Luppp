@@ -39,15 +39,15 @@ class LooperClip
       _recordhead = 0;
     }
     
-    /// loads a sample: eg from disk
+    /// loads a sample: eg from disk, unloading current sample if necessary
     void load( AudioBuffer* ab )
     {
       _loaded = true;
       
       if ( _buffer )
       {
-        // unload old buffer!
-        printf("LooperClip: FIXME:TODO de-allocate old sample here!\n");
+        EventDeallocateBuffer e( _buffer );
+        writeToGuiRingbuffer( &e );
       }
       
       _buffer = ab;
@@ -68,8 +68,6 @@ class LooperClip
         {
           ab->getData().at(i) = _buffer->getData().at( i );
         }
-        
-        // Send Deallocate event for _buffer *here* *now*
         
         EventDeallocateBuffer e( _buffer );
         writeToGuiRingbuffer( &e );

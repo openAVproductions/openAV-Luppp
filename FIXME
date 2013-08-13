@@ -3,6 +3,3 @@
 
 =TimeManager class, auto register TimeObservers with it.
   Segfaulting on register in constructor
-
-=LooperClip setRequestedBuffer()
-  // Send Deallocate event for _buffer *here* *now*

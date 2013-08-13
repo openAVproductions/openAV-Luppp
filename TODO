@@ -5,8 +5,6 @@
 
 - Add AudioBuffer soundfile writer in order to check contents (looper distortion bug)
 
-- Update recording mechanism to request buffers when they're getting full
-
 - Update GUI threading to become controller independant, allowing a
 ControllerUpdater instance run in the UI thread, updating each Controller
 subclass instance. This affords OSC user-interfaces, as well a the GUI, as well
