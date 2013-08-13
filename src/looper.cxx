@@ -27,6 +27,8 @@ Looper::Looper(int t) :
     clips[i] = LooperClip();
   }
   
+  fpb = 22050;
+  
   // init faust pitch shift variables
   fSamplingFreq = 44100;
   IOTA = 0;
@@ -45,6 +47,14 @@ Looper::Looper(int t) :
 void Looper::setRecord(int scene, bool r)
 {
   clips[scene].recording(r);
+  
+  if ( !r )
+  {
+    // set beats based on recording duration
+    int beats = (clips[scene].getBufferLenght() / fpb) + 1;
+    clips[scene].setBeats( beats );
+    printf("stop record, has %i beats\n", beats );
+  }
 }
 
 void Looper::play(int scene, bool r)
@@ -211,15 +221,26 @@ void Looper::process(int nframes, Buffers* buffers)
     }
     else if ( clips[clip].playing() )
     {
-      //printf("Looper %i playing()\n", track );
       // copy data into tmpBuffer, then pitch-stretch into track buffer
+      long targetFrames = clips[clip].getBeats() * fpb;
+      long actualFrames = clips[clip].getBufferLenght();
+      float playSpeed = 1.0;
+      
+      if ( targetFrames != 0 && actualFrames != 0 )
+      {
+        playSpeed = float(actualFrames) / targetFrames;
+      }
+      
       for(int i = 0; i < nframes; i++ )
       {
-        out[i] = clips[clip].getSample();
+        out[i] = clips[clip].getSample(playSpeed);
       }
+      
+      //printf("Looper %i playing(), speed = %f\n", track, playSpeed );
       
       if ( uiUpdateCounter > uiUpdateConstant )
       {
+        
         jack->getControllerUpdater()->setTrackSceneProgress(track, clip, clips[clip].getProgress() );
         uiUpdateCounter = 0;
       }

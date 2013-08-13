@@ -53,6 +53,9 @@ class LooperClip
       _buffer = ab;
       
       _playhead = 0;
+      
+      // set the endpoint to the buffer's size
+      _recordhead = _buffer->getData().size();
     }
     
     /// used to update the size of the buffer for this looperclip. The current
@@ -117,20 +120,35 @@ class LooperClip
       }
     }
     
+    int getBeats()
+    {
+      if ( _buffer )
+        return _buffer->getBeats();
+      
+      return 0;
+    }
+    
+    long getBufferLenght()
+    {
+      return _recordhead;
+    }
+    
     bool loaded(){return _loaded;}
     void playing(bool p){_playing = p; _playhead = 0; }
     bool playing(){return _playing;}
     bool recording(){return _recording;}
-    void recording(bool r){_recording = r;}
+    void recording(bool r) {_recording = r;}
     
     void newBufferInTransit(bool n){_newBufferInTransit = n;}
     bool newBufferInTransit(){return _newBufferInTransit;}
     
-    float getSample()
+    float getSample(float playSpeed)
     {
       if ( _buffer )
       {
-        if ( _playhead >= _buffer->getData().size() || _playhead < 0  )
+        if ( _playhead >= _recordhead ||
+             _playhead >= _buffer->getData().size() ||
+             _playhead < 0  )
         {
           _playhead = 0;
           printf("looper resetting playhead\n");
@@ -138,7 +156,7 @@ class LooperClip
         
         std::vector<float>& v = _buffer->getData();
         float tmp = v.at(_playhead);
-        _playhead++;
+        _playhead += playSpeed;
         
         return tmp;
       }
@@ -150,7 +168,9 @@ class LooperClip
     {
       if ( _buffer && _playing )
       {
-        return float(_playhead) / _buffer->getData().size();
+        float p = float(_playhead) / _recordhead;
+        printf("LooperClip progress %f\n", p );
+        return p;
       }
       return 0.f;
     }
@@ -162,8 +182,8 @@ class LooperClip
     
     bool _newBufferInTransit;
     
-    size_t _playhead;
-    size_t _recordhead;
+    float _playhead;
+    float _recordhead;
     AudioBuffer* _buffer;
 };
 
