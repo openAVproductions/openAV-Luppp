@@ -180,13 +180,19 @@ int Jack::process (jack_nframes_t nframes)
   
   metronome->process( nframes, &buffers );
   
-  /*
-  if ( reverb->getActive() )
+  
+  // process fx
+  float* buf[] = {
+    buffers.audio[Buffers::REVERB],
+    buffers.audio[Buffers::REVERB]
+  };
+  
+  //if ( reverb->getActive() )
   {
     reverbMeter->process(nframes, buffers.audio[Buffers::REVERB], buffers.audio[Buffers::REVERB] );
-    reverb->process( nframes, &buf[0], &buf[2] );
+    reverb->process( nframes, &buf[0], &buf[0] );
   }
-  */
+  
   
   
   
@@ -203,36 +209,17 @@ int Jack::process (jack_nframes_t nframes)
   
   uiUpdateCounter += nframes;
   
+  
   for(unsigned int i = 0; i < buffers.nframes; i++)
   {
-    float master = 0.f;
-    float rev = 0.f;
+    float rev = buffers.audio[Buffers::REVERB][i];
     
-    for(int t = 0; t < NTRACKS; t++)
-    {
-      master += buffers.audio[Buffers::TRACK_0 + t][i] * trackOutputs[t]->getMaster();
-    }
-    /*
-    // process fx
-    float* buf[] = {
-      buffers.audio[Buffers::REVERB],
-      buffers.audio[Buffers::REVERB],
-      &master,
-      &master,
-    };
-    
-    //if ( reverb->getActive() )
-    {
-      reverbMeter->process(nframes, buffers.audio[Buffers::REVERB], buffers.audio[Buffers::REVERB] );
-      reverb->process( 1, &buf[0], &buf[2] );
-    }
-    */
-    
-    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = master;
-    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = master;
+    buffers.audio[Buffers::MASTER_OUT_L][i] += rev;
+    buffers.audio[Buffers::MASTER_OUT_R][i] += rev;
   }
   
-  /*
+  
+  
   // memcpy the internal MASTER_OUTPUT buffer to the JACK_MASTER_OUTPUT
   memcpy( buffers.audio[Buffers::JACK_MASTER_OUT_L],
           buffers.audio[Buffers::MASTER_OUT_L],
@@ -244,7 +231,6 @@ int Jack::process (jack_nframes_t nframes)
           //buffers.audio[Buffers::TRACK_7],
           //buffers.audio[Buffers::REVERB],  // uncomment to listen to reverb send only
           sizeof(float)*nframes);
-  */
   
   return false;
 }

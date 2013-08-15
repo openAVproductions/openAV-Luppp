@@ -85,10 +85,11 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
   
   for(unsigned int i = 0; i < nframes; i++)
   {
-    float tmp = trackBuffer[i];
+    // * master for "post-fader" sends
+    float tmp = trackBuffer[i] * _toMaster;
     
-    masterL[i]       += tmp * _toMaster;
-    masterR[i]       += tmp * _toMaster;
+    masterL[i]       += tmp;
+    masterR[i]       += tmp;
     
     reverb[i]        += tmp * _toReverb;
     sidechain[i]     += tmp * _toSidechain;

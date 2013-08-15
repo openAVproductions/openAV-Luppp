@@ -29,7 +29,7 @@ class Reverb // : Effect
       if( d > 1.0 ) d = 1.0f;
       if( d < 0.0 ) d = 0.0f;
       
-      fslider1 = (1-d) * 18500 + 1500.f;
+      _damping = (1-d) * 18500 + 1500.f;
     }
     
     void rt60(float rt)
@@ -37,7 +37,7 @@ class Reverb // : Effect
       if( rt > 1.0 ) rt = 1.0f;
       if( rt < 0.0 ) rt = 0.0f;
       
-      fslider0 = 1 + rt * 5;
+      _rt60 = 1 + rt * 5;
     }
     
     void dryWet(float dw)
@@ -49,11 +49,11 @@ class Reverb // : Effect
     
     void process (int count, float** input, float** output)
     {
-      float 	fSlow0 = fslider0;
+      float 	fSlow0 = _rt60;
       float 	fSlow1 = expf((fConst2 / fSlow0));
       float 	fSlow2 = faustpower<2>(fSlow1);
       float 	fSlow3 = (1.0f - fSlow2);
-      float 	fSlow4 = cosf((fConst3 * fslider1));
+      float 	fSlow4 = cosf((fConst3 * _damping));
       float 	fSlow5 = (1.0f - (fSlow4 * fSlow2));
       float 	fSlow6 = sqrtf(max(0.f, ((faustpower<2>(fSlow5) / faustpower<2>(fSlow3)) - 1.0f)));
       float 	fSlow7 = (fSlow5 / fSlow3);
@@ -249,11 +249,11 @@ class Reverb // : Effect
   
   private:
     float _dryWet;
-    float fslider0;
+    float _rt60;
     int iConst0;
     float fConst1;
     float fConst2;
-    float fslider1;
+    float _damping;
     float fConst3;
     float fConst4;
     float fConst5;
@@ -350,14 +350,14 @@ class Reverb // : Effect
     /// Long nasty function setting initial values
     void init(int samplingFreq)
     {
-      // dry by default!
-      _dryWet = 0.0;
+      // wet by default!
+      _dryWet = 1;
       
-      fslider0 = 3.0f;
+      _rt60 = 5.0f;
       iConst0 = min(192000, max(1, samplingFreq));
       fConst1 = floorf((0.5f + (0.174713f * iConst0)));
       fConst2 = ((0 - (6.907755278982138f * fConst1)) / iConst0);
-      fslider1 = 6e+03f;
+      _damping = 10000.f;
       fConst3 = (6.283185307179586f / float(iConst0));
       fConst4 = (1.0f / tanf((1256.6370614359173f / iConst0)));
       fConst5 = (1 + fConst4);
