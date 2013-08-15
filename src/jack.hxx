@@ -20,6 +20,7 @@
 
 #include "dsp/dsp_reverb.hxx"
 #include "dsp/dsp_dbmeter.hxx"
+#include "dsp/dsp_sidechain_gain.hxx"
 
 using namespace std;
 

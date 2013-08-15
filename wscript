@@ -39,6 +39,8 @@ def build(bld):
              'src/controller/apc.cxx',
              'src/controller/gui.cxx',
              
+             'src/dsp/dsp_sidechain_gain.cxx',
+             
              'src/eventhandlergui.cxx',
              'src/eventhandlerdsp.cxx']
   
