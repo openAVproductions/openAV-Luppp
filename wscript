@@ -25,6 +25,8 @@ def build(bld):
              'src/jack.cxx',
              'src/gtrack.cxx',
              'src/looper.cxx',
+             'src/looperclip.cxx',
+             'src/trackoutput.cxx',
              
              'src/logic.cxx',
              'src/gridlogic.cxx',
