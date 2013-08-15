@@ -134,7 +134,7 @@ void Jack::activate()
 
 int Jack::process (jack_nframes_t nframes)
 {
-  /*
+  
   /// get buffers
   buffers.audio[Buffers::MASTER_INPUT]        = (float*)jack_port_get_buffer( masterInput    , nframes );
   buffers.audio[Buffers::JACK_MASTER_OUT_L]   = (float*)jack_port_get_buffer( masterOutputL  , nframes );
@@ -152,18 +152,14 @@ int Jack::process (jack_nframes_t nframes)
   memset( buffers.audio[Buffers::POST_SIDECHAIN]    , 0, sizeof(float) * nframes );
   
   jack_midi_clear_buffer( buffers.midi[Buffers::APC_OUTPUT] );
-  */
   
   /// do events from the ringbuffer
   handleDspEvents();
-  
-  /*
   
   /// process incoming MIDI
   jack_midi_event_t in_event;
   int masterMidiInputIndex = 0;
   int event_count = (int) jack_midi_get_event_count( buffers.midi[Buffers::MASTER_MIDI_INPUT] );
-  
   while ( masterMidiInputIndex < event_count )
   {
     jack_midi_event_get(&in_event, buffers.midi[Buffers::MASTER_MIDI_INPUT], masterMidiInputIndex);
@@ -181,7 +177,6 @@ int Jack::process (jack_nframes_t nframes)
     
     masterMidiInputIndex++;
   }
-  */
   
   /// process each track, starting at output and working up signal path
   for(unsigned int i = 0; i < NTRACKS; i++)
@@ -190,7 +185,7 @@ int Jack::process (jack_nframes_t nframes)
   }
   
   
-  metronome->process( nframes, &buffers );
+  //metronome->process( nframes, &buffers );
   
   /*
   if ( reverb->getActive() )
@@ -240,8 +235,8 @@ int Jack::process (jack_nframes_t nframes)
     }
     */
     
-    //buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = master;
-    //buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = master;
+    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = master;
+    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = master;
   }
   
   /*

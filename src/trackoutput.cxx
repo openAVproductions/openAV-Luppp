@@ -1,6 +1,10 @@
 
 #include "trackoutput.hxx"
 
+// valgrind no access code
+//#include <valgrind/memcheck.h>
+//VALGRIND_MAKE_MEM_NOACCESS( &_trackBuffer[0] , MAX_BUFFER_SIZE );
+
 TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
   AudioProcessor(),
   track(t),
@@ -10,7 +14,8 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
   //printf("trackOutput ID: %i, ap = ", track );
   //std::cout << ap << std::endl;
   
-  //_trackBuffer.resize( MAX_BUFFER_SIZE );
+  _trackBuffer.resize( MAX_BUFFER_SIZE );
+  
   
   // UI update
   uiUpdateConstant = 44100 / 30;
