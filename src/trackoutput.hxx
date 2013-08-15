@@ -26,7 +26,7 @@ class TrackOutput : public AudioProcessor
     void setSend( int send, float value );
     
     /// copies the track output to master buffer, sidechain & post-side buffer
-    void process(int nframes, Buffers* buffers);
+    void process(unsigned int nframes, Buffers* buffers);
     
     ~TrackOutput();
   

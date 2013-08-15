@@ -196,7 +196,7 @@ void Looper::setSample(int scene, AudioBuffer* ab)
   writeToGuiRingbuffer( &e );
 }
 
-void Looper::process(int nframes, Buffers* buffers)
+void Looper::process(unsigned int nframes, Buffers* buffers)
 {
   float* out = buffers->audio[Buffers::TRACK_0 + track];
   
@@ -233,7 +233,7 @@ void Looper::process(int nframes, Buffers* buffers)
         playSpeed = float(actualFrames) / targetFrames;
       }
       
-      for(int i = 0; i < nframes; i++ )
+      for(unsigned int i = 0; i < nframes; i++ )
       {
         out[i] = clips[clip].getSample(playSpeed);
       }

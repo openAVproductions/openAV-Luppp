@@ -43,7 +43,7 @@ class Looper : public AudioProcessor, public TimeObserver
     LooperClip* getClip(int scene);
     
     void updateControllers();
-    void process(int nframes, Buffers* buffers);
+    void process(unsigned int nframes, Buffers* buffers);
   
   private:
     const int track;

@@ -53,7 +53,7 @@ void TrackOutput::setSend( int send, float value )
   
 }
 
-void TrackOutput::process(int nframes, Buffers* buffers)
+void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 {
   // get & zero track buffer
   float* trackBuffer = buffers->audio[Buffers::TRACK_0 + track];
@@ -85,7 +85,7 @@ void TrackOutput::process(int nframes, Buffers* buffers)
   float* masterL       = buffers->audio[Buffers::MASTER_OUT_L];
   float* masterR       = buffers->audio[Buffers::MASTER_OUT_R];
   
-  for(int i = 0; i < nframes; i++)
+  for(unsigned int i = 0; i < nframes; i++)
   {
     float tmp = trackBuffer[i];
     
