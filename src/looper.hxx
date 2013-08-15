@@ -54,12 +54,13 @@ class Looper : public AudioProcessor, public TimeObserver
     
     int fpb;
     
-    float* tmpRecordBuffer;
+    //vector<float> tmpRecordBuffer;
     LooperClip clips[10];
     
     // Pitch Shifting
     void pitchShift(int count, float* input, float* output);
     vector<float> tmpBuffer;
+    
     int    IOTA;
     float  fVec0[65536];
     float  semitoneShift;

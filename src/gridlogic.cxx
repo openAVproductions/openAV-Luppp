@@ -18,7 +18,10 @@ const char* StateString[8] = {
 
 GridLogic::GridLogic()
 {
-  
+  for( int i = 0; i < NTRACKS*NSCENES; i++ )
+  {
+    state[i] = STATE_EMPTY;
+  }
 }
 
 

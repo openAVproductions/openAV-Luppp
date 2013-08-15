@@ -19,8 +19,8 @@ Looper::Looper(int t) :
   uiUpdateCounter(44100/30.f)
 {
   // pre-zero the internal sample
-  tmpRecordBuffer = (float*)malloc( sizeof(float) * MAX_BUFFER_SIZE );
-  memset( tmpRecordBuffer, 0, sizeof(float) * MAX_BUFFER_SIZE );
+  //tmpRecordBuffer = (float*)malloc( sizeof(float) * MAX_BUFFER_SIZE );
+  //memset( tmpRecordBuffer, 0, sizeof(float) * MAX_BUFFER_SIZE );
   
   for(int i = 0; i < 10; i++ )
   {
@@ -33,7 +33,7 @@ Looper::Looper(int t) :
   fSamplingFreq = 44100;
   IOTA = 0;
   
-  tmpBuffer.resize(MAX_BUFFER_SIZE);
+  //tmpRecordBuffer.resize(MAX_BUFFER_SIZE);
   
   for (int i=0; i<65536; i++)
     fVec0[i] = 0;
@@ -48,6 +48,7 @@ void Looper::setRecord(int scene, bool r)
 {
   clips[scene].recording(r);
   
+  /*
   if ( !r )
   {
     // set beats based on recording duration
@@ -55,6 +56,7 @@ void Looper::setRecord(int scene, bool r)
     clips[scene].setBeats( beats );
     printf("stop record, has %i beats\n", beats );
   }
+  */
 }
 
 void Looper::play(int scene, bool r)

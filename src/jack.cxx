@@ -20,12 +20,8 @@ Jack::Jack() :
   logic( new Logic() ),
   gridLogic( new GridLogic() ),
   controllerUpdater( new ControllerUpdater() ),
-  
   clientActive(false)
 {
-  /// open the client
-  //client = ;
-  
   buffers.nframes = jack_get_buffer_size( client );
   buffers.samplerate = jack_get_sample_rate( client );
   
@@ -81,9 +77,9 @@ Jack::Jack() :
   buffers.audio[Buffers::MASTER_OUT_R]   = &masterR[0]; //new float( buffers.nframes );
   
   
-  cout << "master L buffer = " << *buffers.audio[Buffers::MASTER_OUT_L] << endl
-       << "master R buffer = " << *buffers.audio[Buffers::MASTER_OUT_R] << endl
-       << "difference = " << *buffers.audio[Buffers::MASTER_OUT_R] - *buffers.audio[Buffers::MASTER_OUT_L] << endl;
+  cout << "master L buffer = " << buffers.audio[Buffers::MASTER_OUT_L] << endl
+       << "master R buffer = " << buffers.audio[Buffers::MASTER_OUT_R] << endl
+       << "difference = " << buffers.audio[Buffers::MASTER_OUT_R] - buffers.audio[Buffers::MASTER_OUT_L] << endl;
   
   
   for(int i = 0; i < NTRACKS; i++)
@@ -96,6 +92,8 @@ Jack::Jack() :
   
   /// setup FX
   reverb = new Reverb( buffers.samplerate );
+  reverb->dryWet( 0.5 );
+  
   reverbMeter = new DBMeter( buffers.samplerate );
   masterMeter = new DBMeter( buffers.samplerate );
   
@@ -136,6 +134,7 @@ void Jack::activate()
 
 int Jack::process (jack_nframes_t nframes)
 {
+  /*
   /// get buffers
   buffers.audio[Buffers::MASTER_INPUT]        = (float*)jack_port_get_buffer( masterInput    , nframes );
   buffers.audio[Buffers::JACK_MASTER_OUT_L]   = (float*)jack_port_get_buffer( masterOutputL  , nframes );
@@ -153,11 +152,12 @@ int Jack::process (jack_nframes_t nframes)
   memset( buffers.audio[Buffers::POST_SIDECHAIN]    , 0, sizeof(float) * nframes );
   
   jack_midi_clear_buffer( buffers.midi[Buffers::APC_OUTPUT] );
-  
+  */
   
   /// do events from the ringbuffer
   handleDspEvents();
   
+  /*
   
   /// process incoming MIDI
   jack_midi_event_t in_event;
@@ -181,6 +181,7 @@ int Jack::process (jack_nframes_t nframes)
     
     masterMidiInputIndex++;
   }
+  */
   
   /// process each track, starting at output and working up signal path
   for(unsigned int i = 0; i < NTRACKS; i++)
@@ -191,20 +192,13 @@ int Jack::process (jack_nframes_t nframes)
   
   metronome->process( nframes, &buffers );
   
-  
-  // process fx
-  float* buf[] = {
-    buffers.audio[Buffers::REVERB],
-    buffers.audio[Buffers::REVERB],
-    buffers.audio[Buffers::REVERB],
-    buffers.audio[Buffers::REVERB],
-  };
-  
+  /*
   if ( reverb->getActive() )
   {
     reverbMeter->process(nframes, buffers.audio[Buffers::REVERB], buffers.audio[Buffers::REVERB] );
     reverb->process( nframes, &buf[0], &buf[2] );
   }
+  */
   
   
   
@@ -221,17 +215,33 @@ int Jack::process (jack_nframes_t nframes)
   
   uiUpdateCounter += nframes;
   
-  
   for(unsigned int i = 0; i < buffers.nframes; i++)
   {
-    float tmp = 0.f;
+    float master = 0.f;
+    float rev = 0.f;
+    
     for(int t = 0; t < NTRACKS; t++)
     {
-      tmp += buffers.audio[Buffers::TRACK_0 + t][i];
+      master += buffers.audio[Buffers::TRACK_0 + t][i] * trackOutputs[t]->getMaster();
     }
+    /*
+    // process fx
+    float* buf[] = {
+      buffers.audio[Buffers::REVERB],
+      buffers.audio[Buffers::REVERB],
+      &master,
+      &master,
+    };
     
-    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = tmp; // + buffers.audio[Buffers::MASTER_OUT_L][i];
-    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = tmp; // + buffers.audio[Buffers::MASTER_OUT_R][i];
+    //if ( reverb->getActive() )
+    {
+      reverbMeter->process(nframes, buffers.audio[Buffers::REVERB], buffers.audio[Buffers::REVERB] );
+      reverb->process( 1, &buf[0], &buf[2] );
+    }
+    */
+    
+    //buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = master;
+    //buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = master;
   }
   
   /*
@@ -253,7 +263,7 @@ int Jack::process (jack_nframes_t nframes)
 
 void Jack::setReverb( bool a, float d, float s )
 {
-  reverb->setActive( a );
+  //reverb->setActive( a );
   reverb->damping( d );
   reverb->rt60( d );
 }

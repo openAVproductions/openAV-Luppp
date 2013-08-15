@@ -24,26 +24,14 @@ class Reverb // : Effect
     int getNumInputs() { return 2; }
     int getNumOutputs(){ return 2; }
     
-    void setActive(bool a)
-    {
-      active = a;
-    }
-    
-    bool getActive()
-    {
-      return active;
-    }
-    
-    /// set HF damping, 0-1
     void damping(float d)
     {
       if( d > 1.0 ) d = 1.0f;
       if( d < 0.0 ) d = 0.0f;
       
-      fslider1 = d * 18500 + 1500.f;
+      fslider1 = (1-d) * 18500 + 1500.f;
     }
     
-    /// set size, 0-1
     void rt60(float rt)
     {
       if( rt > 1.0 ) rt = 1.0f;
@@ -52,11 +40,15 @@ class Reverb // : Effect
       fslider0 = 1 + rt * 5;
     }
     
-    void process(int count, float** input, float** output)
+    void dryWet(float dw)
     {
-      if ( !active )
-        return;
-      
+      if( dw > 1.0 ) dw = 1.0f;
+      if( dw < 0.0 ) dw = 0.0f;
+      _dryWet = dw;
+    }
+    
+    void process (int count, float** input, float** output)
+    {
       float 	fSlow0 = fslider0;
       float 	fSlow1 = expf((fConst2 / fSlow0));
       float 	fSlow2 = faustpower<2>(fSlow1);
@@ -210,8 +202,14 @@ class Reverb // : Effect
         float fTemp16 = (fRec9 + fRec17);
         fRec6[0] = (0 - ((fRec8[1] + (fRec16[1] + (fRec28[1] + (fRec32[1] + (fRec33 + (fRec29 + fTemp16)))))) - (fRec12[1] + (fRec20[1] + (fRec24[1] + (fRec36[1] + (fRec37 + (fRec25 + fTemp15))))))));
         fRec7[0] = (0 - ((fRec8[1] + (fRec16[1] + (fRec24[1] + (fRec36[1] + (fRec37 + (fRec25 + fTemp16)))))) - (fRec12[1] + (fRec20[1] + (fRec28[1] + (fRec32[1] + (fRec33 + (fRec29 + fTemp15))))))));
-        output0[i] = (float)(0.37f * (fRec1[0] + fRec2[0]));
-        output1[i] = (float)(0.37f * (fRec1[0] - fRec2[0]));
+        
+        
+        float reverb0 = (float)(0.37f * (fRec1[0] + fRec2[0]));
+        float reverb1 = (float)(0.37f * (fRec1[0] - fRec2[0]));
+        
+        output0[i] = (input0[i] * (1-_dryWet)) + (reverb0 * _dryWet );
+        output1[i] = (input1[i] * (1-_dryWet)) + (reverb1 * _dryWet );
+        
         // post processing
         fRec7[2] = fRec7[1]; fRec7[1] = fRec7[0];
         fRec6[2] = fRec6[1]; fRec6[1] = fRec6[0];
@@ -250,7 +248,7 @@ class Reverb // : Effect
     }
   
   private:
-    bool active;
+    float _dryWet;
     float fslider0;
     int iConst0;
     float fConst1;
@@ -352,7 +350,9 @@ class Reverb // : Effect
     /// Long nasty function setting initial values
     void init(int samplingFreq)
     {
-      active = 0;
+      // dry by default!
+      _dryWet = 0.0;
+      
       fslider0 = 3.0f;
       iConst0 = min(192000, max(1, samplingFreq));
       fConst1 = floorf((0.5f + (0.174713f * iConst0)));
