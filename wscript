@@ -28,6 +28,7 @@ def build(bld):
              'src/looperclip.cxx',
              'src/trackoutput.cxx',
              'src/timemanager.cxx',
+             'src/metronome.cxx',
              
              'src/logic.cxx',
              'src/gridlogic.cxx',
