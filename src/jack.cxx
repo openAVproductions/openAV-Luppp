@@ -69,9 +69,9 @@ Jack::Jack() :
   masterR.resize( buffers.nframes );
   
   /// prepare internal buffers
-  buffers.audio[Buffers::REVERB]         = new float( buffers.nframes );
-  buffers.audio[Buffers::SIDECHAIN]      = new float( buffers.nframes );
-  buffers.audio[Buffers::POST_SIDECHAIN] = new float( buffers.nframes );
+  buffers.audio[Buffers::REVERB]         = new float[ buffers.nframes ];
+  buffers.audio[Buffers::SIDECHAIN]      = new float[ buffers.nframes ];
+  buffers.audio[Buffers::POST_SIDECHAIN] = new float[ buffers.nframes ];
   
   buffers.audio[Buffers::MASTER_OUT_L]   = &masterL[0]; //new float( buffers.nframes );
   buffers.audio[Buffers::MASTER_OUT_R]   = &masterR[0]; //new float( buffers.nframes );
