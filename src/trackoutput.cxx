@@ -14,9 +14,6 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
   //printf("trackOutput ID: %i, ap = ", track );
   //std::cout << ap << std::endl;
   
-  _trackBuffer.resize( MAX_BUFFER_SIZE );
-  
-  
   // UI update
   uiUpdateConstant = 44100 / 30;
   uiUpdateCounter  = 44100 / 30;
@@ -58,16 +55,16 @@ void TrackOutput::setSend( int send, float value )
 
 void TrackOutput::process(int nframes, Buffers* buffers)
 {
-  // zero track buffer
-  memset( &_trackBuffer[0], 0, nframes );
+  // get & zero track buffer
+  float* trackBuffer = buffers->audio[Buffers::TRACK_0 + track];
+  memset( trackBuffer, 0, nframes );
   
-  buffers->audio[Buffers::TRACK_0 + track] = &_trackBuffer[0];
+  // call process() up the chain
   previousInChain->process( nframes, buffers );
   
   
   // run the meter
-  float* buf = &_trackBuffer[0];
-  dbMeter.process( nframes, buf, buf );
+  dbMeter.process( nframes, trackBuffer, trackBuffer );
   
   if (uiUpdateCounter > uiUpdateConstant )
   {
@@ -90,7 +87,7 @@ void TrackOutput::process(int nframes, Buffers* buffers)
   
   for(int i = 0; i < nframes; i++)
   {
-    float tmp = _trackBuffer[i];
+    float tmp = trackBuffer[i];
     
     masterL[i]       += tmp * _toMaster;
     masterR[i]       += tmp * _toMaster;

@@ -65,27 +65,20 @@ Jack::Jack() :
                           0 );
   
   
-  masterL.resize( buffers.nframes );
-  masterR.resize( buffers.nframes );
-  
   /// prepare internal buffers
   buffers.audio[Buffers::REVERB]         = new float[ buffers.nframes ];
   buffers.audio[Buffers::SIDECHAIN]      = new float[ buffers.nframes ];
   buffers.audio[Buffers::POST_SIDECHAIN] = new float[ buffers.nframes ];
   
-  buffers.audio[Buffers::MASTER_OUT_L]   = &masterL[0]; //new float( buffers.nframes );
-  buffers.audio[Buffers::MASTER_OUT_R]   = &masterR[0]; //new float( buffers.nframes );
-  
-  
-  cout << "master L buffer = " << buffers.audio[Buffers::MASTER_OUT_L] << endl
-       << "master R buffer = " << buffers.audio[Buffers::MASTER_OUT_R] << endl
-       << "difference = " << buffers.audio[Buffers::MASTER_OUT_R] - buffers.audio[Buffers::MASTER_OUT_L] << endl;
-  
+  buffers.audio[Buffers::MASTER_OUT_L]   = new float[ buffers.nframes ];
+  buffers.audio[Buffers::MASTER_OUT_R]   = new float[ buffers.nframes ];
   
   for(int i = 0; i < NTRACKS; i++)
   {
     loopers.push_back( new Looper(i) );
     trackOutputs.push_back( new TrackOutput(i, loopers.back() ) );
+    
+    buffers.audio[Buffers::TRACK_0 + i] = new float[ buffers.nframes ];
     
     timeManager.registerObserver( loopers.back() );
   }
@@ -185,7 +178,7 @@ int Jack::process (jack_nframes_t nframes)
   }
   
   
-  //metronome->process( nframes, &buffers );
+  metronome->process( nframes, &buffers );
   
   /*
   if ( reverb->getActive() )

@@ -33,8 +33,6 @@ class TrackOutput : public AudioProcessor
   private:
     int track;
     
-    std::vector<float> _trackBuffer;
-    
     float _toMaster;
     
     float _toReverb;
