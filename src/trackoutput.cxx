@@ -50,7 +50,6 @@ void TrackOutput::setSend( int send, float value )
         _toPostSidechain = value;
         break;
   }
-  
 }
 
 void TrackOutput::process(unsigned int nframes, Buffers* buffers)
@@ -76,7 +75,6 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
   
   uiUpdateCounter += nframes;
   
-  
   // copy audio data into reverb / sidechain / master buffers
   float* reverb        = buffers->audio[Buffers::REVERB];
   float* sidechain     = buffers->audio[Buffers::SIDECHAIN];
@@ -92,12 +90,9 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
     masterL[i]       += tmp * _toMaster;
     masterR[i]       += tmp * _toMaster;
     
-    masterL++;
-    masterR++;
-    
-    *reverb++        += tmp * _toReverb;
-    *sidechain++     += tmp * _toSidechain;
-    *postSidechain++ += tmp * _toPostSidechain;
+    reverb[i]        += tmp * _toReverb;
+    sidechain[i]     += tmp * _toSidechain;
+    postSidechain[i] += tmp * _toPostSidechain;
   }
 }
 
