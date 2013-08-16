@@ -27,9 +27,9 @@ void LupppGUI::recordArm(int t, bool enabled)
   
 }
 
-void LupppGUI::fxReverbSend(int t, float r)
+void LupppGUI::trackSend(int t, int send, float r)
 {
-  EventTrackSend e( t, SEND_REV, r );
+  EventTrackSend e( t, static_cast<Event::SEND_TYPE>(send), r );
   writeToGuiRingbuffer( &e );
 }
 

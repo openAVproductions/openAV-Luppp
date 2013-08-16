@@ -30,19 +30,13 @@ class Looper : public AudioProcessor, public TimeObserver
     /// Used for infinite lenght recording
     void setRequestedBuffer(int s, AudioBuffer* ab);
     
-    void midi(unsigned char* data);
-    
     void setFpb(int f) { fpb = f; }
-    
-    void queuePlayScene( int sc );
     
     void play(int scene, bool r);
     void setRecord(int scene, bool r);
     
-    
     LooperClip* getClip(int scene);
     
-    void updateControllers();
     void process(unsigned int nframes, Buffers* buffers);
   
   private:

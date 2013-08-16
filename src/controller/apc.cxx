@@ -154,17 +154,14 @@ void ccChange( int track, int cc, float value )
     
     /// Device Control
     case 16: {
-        EventTrackSend e( track, SEND_SIDE, value );
-        writeToGuiRingbuffer( &e ); }
-        break;
+        jack->getLogic()->trackSend( track, SEND_SIDE, value );
+        break; }
     case 17: {
-        EventTrackSend e( track, SEND_POST, value );
-        writeToGuiRingbuffer( &e ); }
-        break;
+        jack->getLogic()->trackSend( track, SEND_POST, value );
+        break; }
     case 18: {
-        EventTrackSend e( track, SEND_REV, value );
-        writeToGuiRingbuffer( &e ); }
-        break;
+        jack->getLogic()->trackSend( track, SEND_REV, value );
+        break; }
   }
 }
 

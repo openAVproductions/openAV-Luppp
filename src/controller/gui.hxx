@@ -16,7 +16,7 @@ class LupppGUI : public Controller
     
     void masterVolume(float f);
     
-    void fxReverbSend(int t, float r);
+    void trackSend(int t, int send, float r);
     
     void tapTempo( bool b );
     

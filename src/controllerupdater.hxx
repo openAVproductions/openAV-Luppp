@@ -53,7 +53,7 @@ class ControllerUpdater
     void setTrackSend(int t, int send, float v)
     {
       for(unsigned int i = 0; i < c.size(); i++)
-        c.at(i)->fxTrackSend(t, send, v);
+        c.at(i)->trackSend(t, send, v);
     }
     
     void setSceneState(int t, int clip, GridLogic::State s)

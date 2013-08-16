@@ -20,7 +20,7 @@ class Controller
     virtual void masterVolume(float f){};
     
     /// FX
-    virtual void fxTrackSend(int t, int send, float v){};
+    virtual void trackSend(int t, int send, float v){};
     
     /// Time
     virtual void tapTempo(bool b){};

@@ -11,9 +11,6 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
   previousInChain(ap),
   dbMeter(44100)
 {
-  //printf("trackOutput ID: %i, ap = ", track );
-  //std::cout << ap << std::endl;
-  
   // UI update
   uiUpdateConstant = 44100 / 30;
   uiUpdateCounter  = 44100 / 30;
