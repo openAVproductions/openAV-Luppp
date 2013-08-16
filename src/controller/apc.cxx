@@ -144,13 +144,11 @@ void ccChange( int track, int cc, float value )
   {
     /// Track faders
     case 7: {
-        EventTrackVol e( track, value );
-        writeToGuiRingbuffer( &e ); }
-        break;
+        jack->getLogic()->trackVolume( track, value );
+        break; }
     case 14: { // master
-        EventTrackVol e( -1, value );
-        writeToGuiRingbuffer( &e ); }
-        break;
+        jack->getLogic()->trackVolume( -1, value );
+        break; }
     
     /// Device Control
     case 16: {

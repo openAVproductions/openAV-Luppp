@@ -54,6 +54,7 @@ class Jack
       midiObservers.push_back( mo );
     }
     
+    void masterVolume( float vol ){masterVol = vol;}
     
     /// sets reverb bus parameters
     void setReverb( bool e, float d, float s );
@@ -80,6 +81,7 @@ class Jack
     SidechainGain* sidechainGain;
     DBMeter* reverbMeter;
     DBMeter* masterMeter;
+    float masterVol;
     
     // JACK member variables
     bool clientActive;

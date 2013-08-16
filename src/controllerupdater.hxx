@@ -44,6 +44,12 @@ class ControllerUpdater
         c.at(i)->mute(t,b);
     }
     
+    void masterVolume(float v)
+    {
+      for(unsigned int i = 0; i < c.size(); i++)
+        c.at(i)->masterVolume(v);
+    }
+    
     void setTrackSceneProgress(int t, int s, float p)
     {
       for(unsigned int i = 0; i < c.size(); i++)

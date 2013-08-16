@@ -64,6 +64,7 @@ Jack::Jack() :
                           JackPortIsOutput,
                           0 );
   
+  masterVol = 0.77;
   
   /// prepare internal buffers
   buffers.audio[Buffers::REVERB]         = new float[ buffers.nframes ];
@@ -211,11 +212,13 @@ int Jack::process (jack_nframes_t nframes)
   /// mix reverb & post-sidechain in
   for(unsigned int i = 0; i < buffers.nframes; i++)
   {
+    float L    = buffers.audio[Buffers::MASTER_OUT_L][i];
+    float R    = buffers.audio[Buffers::MASTER_OUT_R][i];
     float rev  = buffers.audio[Buffers::REVERB][i];
     float post = buffers.audio[Buffers::POST_SIDECHAIN][i];
     
-    buffers.audio[Buffers::MASTER_OUT_L][i] += rev + post;
-    buffers.audio[Buffers::MASTER_OUT_R][i] += rev + post;
+    buffers.audio[Buffers::MASTER_OUT_L][i] = (L + rev + post) * masterVol;
+    buffers.audio[Buffers::MASTER_OUT_R][i] = (R + rev + post) * masterVol;
   }
   
   
