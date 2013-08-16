@@ -90,8 +90,11 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
     masterR[i]       += tmp * _toMaster * (1-_toPostSidechain);
     
     reverb[i]        += tmp * _toReverb * _toMaster;
-    sidechain[i]     += tmp * _toSidechain * _toMaster;
     postSidechain[i] += tmp * _toPostSidechain * _toMaster;
+    
+    // turning down an element in the mix should *NOT* influence sidechaining
+    sidechain[i]     += tmp * _toSidechain;
+    
   }
 }
 

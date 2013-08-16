@@ -129,7 +129,9 @@ float LooperClip::getSample(float playSpeed)
          _playhead < 0  )
     {
       _playhead = 0;
-      printf("looper resetting playhead\n");
+      
+      EventGuiPrint e( "LooperClip resetting _playhead" );
+      writeToGuiRingbuffer( &e );
     }
     
     std::vector<float>& v = _buffer->getData();

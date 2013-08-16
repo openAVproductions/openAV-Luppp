@@ -136,10 +136,10 @@ class ClipSelector : public Fl_Button
         case GridLogic::STATE_LOADED:
             clips[clipNum].load();
             clips[clipNum].unqueue();
-            printf("clipSelector setState() clip %i = STATE_LOADED\n", clipNum);
+            //printf("clipSelector setState() clip %i = STATE_LOADED\n", clipNum);
             break;
         case GridLogic::STATE_PLAYING:
-            printf("clipSelector setState() clip %i = STATE_PLAYING\n", clipNum);
+            //printf("clipSelector setState() clip %i = STATE_PLAYING\n", clipNum);
             for(int i = 0; i < numClips; i++ )
               clips[clipNum].stop();
             clips[clipNum].unqueue();
@@ -149,20 +149,20 @@ class ClipSelector : public Fl_Button
             for(int i = 0; i < numClips; i++ )
               clips[clipNum].unqueue();
             clips[clipNum].queue();
-            printf("clipSelector setState() clip %i = STATE_PLAY_QUEUED\n", clipNum);
+            //printf("clipSelector setState() clip %i = STATE_PLAY_QUEUED\n", clipNum);
             break;
         case GridLogic::STATE_RECORDING:
             for(int i = 0; i < numClips; i++ )
               clips[clipNum].stopRecord();
             clips[clipNum].unqueue();
             clips[clipNum].record();
-            printf("clipSelector setState() clip %i = STATE_RECORDING\n", clipNum);
+            //printf("clipSelector setState() clip %i = STATE_RECORDING\n", clipNum);
             break;
         case GridLogic::STATE_RECORD_QUEUED:
             for(int i = 0; i < numClips; i++ )
               clips[clipNum].unqueue();
             clips[clipNum].queue();
-            printf("clipSelector setState() clip %i = STATE_RECORD_QUEUED\n", clipNum);
+            //printf("clipSelector setState() clip %i = STATE_RECORD_QUEUED\n", clipNum);
             break;
         /*
         case GridLogic::STATE_STOPPED:
@@ -171,7 +171,7 @@ class ClipSelector : public Fl_Button
             break;
         */
         case GridLogic::STATE_STOP_QUEUED:
-            printf("clipSelector setState() clip %i = STATE_STOP_QUEUED\n", clipNum);
+            //printf("clipSelector setState() clip %i = STATE_STOP_QUEUED\n", clipNum);
             clips[clipNum].stopRecord();
             clips[clipNum].stop();
             clips[clipNum].queue();

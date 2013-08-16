@@ -61,13 +61,14 @@ void GridLogic::load(int track, int scene)
 
 void GridLogic::updateState()
 {
-  printf("GridLogic::updateState() stub" );
+  //printf("GridLogic::updateState() stub" );
 }
 
 
 void GridLogic::bar()
 {
-  printf("GridLogic::bar()\n" );
+  EventGuiPrint e( "GridLogic::bar()\n" );
+  writeToGuiRingbuffer( &e );
   
   /// iterate over all clips, if they're set to QUEUED, set to the next state
   for( int i = 0; i < NTRACKS*NSCENES; i++ )
