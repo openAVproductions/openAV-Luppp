@@ -86,14 +86,15 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
   for(unsigned int i = 0; i < nframes; i++)
   {
     // * master for "post-fader" sends
-    float tmp = trackBuffer[i] * _toMaster;
+    float tmp = trackBuffer[i];
     
-    masterL[i]       += tmp;
-    masterR[i]       += tmp;
+    // post-sidechain *moves* signal between "before/after" ducking, not add!
+    masterL[i]       += tmp * _toMaster * (1-_toPostSidechain);
+    masterR[i]       += tmp * _toMaster * (1-_toPostSidechain);
     
-    reverb[i]        += tmp * _toReverb;
-    sidechain[i]     += tmp * _toSidechain;
-    postSidechain[i] += tmp * _toPostSidechain;
+    reverb[i]        += tmp * _toReverb * _toMaster;
+    sidechain[i]     += tmp * _toSidechain * _toMaster;
+    postSidechain[i] += tmp * _toPostSidechain * _toMaster;
   }
 }
 

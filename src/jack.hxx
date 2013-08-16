@@ -77,6 +77,7 @@ class Jack
     
     // FX
     Reverb* reverb;
+    SidechainGain* sidechainGain;
     DBMeter* reverbMeter;
     DBMeter* masterMeter;
     

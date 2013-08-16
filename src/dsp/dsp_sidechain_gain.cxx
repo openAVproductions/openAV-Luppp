@@ -5,6 +5,11 @@
 #include <cmath>
 
 SidechainGain::SidechainGain(int rate) :
+  /// initial control values
+  controlThreshold(0.2),
+  controlReduction(1),
+  controlReleaseTime(0.5),
+  
   /// filter state init
   w(10.0f / (rate * 0.02)),
   a(0.07f),
@@ -12,9 +17,9 @@ SidechainGain::SidechainGain(int rate) :
   g1(0.0f),
   g2(0.0f),
   
+  
   peakFrameCounter(0),
   peakCountDuration( rate / 4 ),
-  
   currentTarget(0)
 {
 }
@@ -26,7 +31,7 @@ void SidechainGain::process(unsigned int n_samples, float** inputs, float** outp
   float* inR  = inputs[1];
   float* side = inputs[2];
   float* outL = outputs[0];
-  float* outR = outputs[0];
+  float* outR = outputs[1];
   
   /// control inputs
   float threshold   = controlThreshold;

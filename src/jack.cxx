@@ -85,7 +85,10 @@ Jack::Jack() :
   
   /// setup FX
   reverb = new Reverb( buffers.samplerate );
-  reverb->dryWet( 0.5 );
+  reverb->dryWet( 1 );
+  
+  sidechainGain = new SidechainGain( buffers.samplerate );
+  
   
   reverbMeter = new DBMeter( buffers.samplerate );
   masterMeter = new DBMeter( buffers.samplerate );
@@ -177,16 +180,11 @@ int Jack::process (jack_nframes_t nframes)
     trackOutputs.at(i)->process( nframes, &buffers );
   }
   
-  
-  metronome->process( nframes, &buffers );
-  
-  
-  // process fx
+  /// process reverb
   float* buf[] = {
     buffers.audio[Buffers::REVERB],
     buffers.audio[Buffers::REVERB]
   };
-  
   //if ( reverb->getActive() )
   {
     reverbMeter->process(nframes, buffers.audio[Buffers::REVERB], buffers.audio[Buffers::REVERB] );
@@ -194,9 +192,34 @@ int Jack::process (jack_nframes_t nframes)
   }
   
   
+  /// process sidechain gaining
+  float* sidechainBuf[] = {
+    // input
+    buffers.audio[Buffers::MASTER_OUT_L],
+    buffers.audio[Buffers::MASTER_OUT_R],
+    buffers.audio[Buffers::SIDECHAIN],
+    // output
+    buffers.audio[Buffers::MASTER_OUT_L],
+    buffers.audio[Buffers::MASTER_OUT_R]
+  };
+  
+  sidechainGain->process( nframes, &sidechainBuf[0], &sidechainBuf[3] );
+  
+  /// metro signal after sidechain-gain, so its loud on the beats
+  metronome->process( nframes, &buffers );
+  
+  /// mix reverb & post-sidechain in
+  for(unsigned int i = 0; i < buffers.nframes; i++)
+  {
+    float rev  = buffers.audio[Buffers::REVERB][i];
+    float post = buffers.audio[Buffers::POST_SIDECHAIN][i];
+    
+    buffers.audio[Buffers::MASTER_OUT_L][i] += rev + post;
+    buffers.audio[Buffers::MASTER_OUT_R][i] += rev + post;
+  }
   
   
-  // db meter on master output, then memcpy to JACK
+  /// db meter on master
   masterMeter->process(nframes, buffers.audio[Buffers::MASTER_OUT_L], buffers.audio[Buffers::MASTER_OUT_R] );
   
   if ( uiUpdateCounter > uiUpdateConstant )
@@ -210,16 +233,6 @@ int Jack::process (jack_nframes_t nframes)
   uiUpdateCounter += nframes;
   
   
-  for(unsigned int i = 0; i < buffers.nframes; i++)
-  {
-    float rev = buffers.audio[Buffers::REVERB][i];
-    
-    buffers.audio[Buffers::MASTER_OUT_L][i] += rev;
-    buffers.audio[Buffers::MASTER_OUT_R][i] += rev;
-  }
-  
-  
-  
   // memcpy the internal MASTER_OUTPUT buffer to the JACK_MASTER_OUTPUT
   memcpy( buffers.audio[Buffers::JACK_MASTER_OUT_L],
           buffers.audio[Buffers::MASTER_OUT_L],
@@ -228,7 +241,7 @@ int Jack::process (jack_nframes_t nframes)
   
   memcpy( buffers.audio[Buffers::JACK_MASTER_OUT_R],
           buffers.audio[Buffers::MASTER_OUT_R],
-          //buffers.audio[Buffers::TRACK_7],
+          //buffers.audio[Buffers::POST_SIDECHAIN],
           //buffers.audio[Buffers::REVERB],  // uncomment to listen to reverb send only
           sizeof(float)*nframes);
   
