@@ -40,19 +40,25 @@ class LooperClip
     
     unsigned long recordSpaceAvailable();
     
-    size_t audioBufferSize();
+    
     
     void setBeats(int beats);
     
-    int getBeats();
     
-    long getBufferLenght();
-    
+    /// get clip state
     bool loaded();
-    void playing(bool p);
     bool playing();
     bool recording();
-    void recording(bool r);
+    
+    /// get buffer details
+    int  getBeats();
+    long getBufferLenght();
+    size_t audioBufferSize();
+    
+    /// set clip state
+    void play();
+    void stop();
+    void record();
     
     void newBufferInTransit(bool n);
     bool newBufferInTransit();
@@ -63,8 +69,8 @@ class LooperClip
   
   private:
     bool _loaded;
-    bool _recording;
     bool _playing;
+    bool _recording;
     
     bool _newBufferInTransit;
     

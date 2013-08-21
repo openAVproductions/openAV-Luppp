@@ -80,22 +80,19 @@ void GridLogic::bar()
     if      ( state[i] == STATE_PLAY_QUEUED )
     {
       state[i] = STATE_PLAYING;
-      jack->getLooper( track )->setRecord( scene, false);
-      jack->getLooper( track )->play( scene, true);
+      jack->getLooper( track )->getClip( scene )->play();
       change = true;
     }
     else if ( state[i] == STATE_STOP_QUEUED ) 
     {
       state[i] = STATE_LOADED;
-      jack->getLooper( track )->setRecord( scene, false);
-      jack->getLooper( track )->play( scene, false);
+      jack->getLooper( track )->getClip( scene )->stop();
       change = true;
     }
     else if ( state[i] == STATE_RECORD_QUEUED ) 
     {
       state[i] = STATE_RECORDING;
-      jack->getLooper( track )->setRecord( scene, true);
-      jack->getLooper( track )->play( scene, false);
+      jack->getLooper( track )->getClip( scene )->record();
       change = true;
     }
     

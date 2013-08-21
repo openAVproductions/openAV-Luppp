@@ -111,18 +111,52 @@ long LooperClip::getBufferLenght()
   return _recordhead;
 }
 
-bool LooperClip::loaded(){return _loaded;}
-void LooperClip::playing(bool p){_playing = p; _playhead = 0; }
-bool LooperClip::playing(){return _playing;}
-bool LooperClip::recording(){return _recording;}
-void LooperClip::recording(bool r) {_recording = r;}
+bool LooperClip::loaded()
+{
+  return _loaded;
+}
+
+void LooperClip::play()
+{
+  _playing = true;
+  _playhead = 0;
+}
+void LooperClip::stop()
+{
+  _playing = false;
+  _playhead = 0;
+}
+
+bool LooperClip::playing()
+{
+  return _playing;
+}
+
+bool LooperClip::recording()
+{
+  return _recording;
+}
+
+
+void LooperClip::record()
+{
+  /*
+  if ( !r && duration )
+  {
+    setBeats( duration );
+  }
+  */
+  _recording = true;
+  _playing = false;
+}
+
 
 void LooperClip::newBufferInTransit(bool n){_newBufferInTransit = n;}
 bool LooperClip::newBufferInTransit(){return _newBufferInTransit;}
 
 float LooperClip::getSample(float playSpeed)
 {
-  if ( _buffer )
+  if ( _buffer && _buffer->getData().size() > 0 )
   {
     if ( _playhead >= _recordhead ||
          _playhead >= _buffer->getData().size() ||

@@ -16,6 +16,7 @@ class AudioBuffer
     AudioBuffer(unsigned long size)
     {
       //ID = id;
+      numBeats = 4;
       buffer.resize(size);
     }
     

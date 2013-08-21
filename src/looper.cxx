@@ -44,39 +44,6 @@ Looper::Looper(int t) :
   crossfadeSize = 1000;
 }
 
-void Looper::setRecord(int scene, bool r)
-{
-  clips[scene].recording(r);
-  
-  /*
-  if ( !r )
-  {
-    // set beats based on recording duration
-    int beats = (clips[scene].getBufferLenght() / fpb) + 1;
-    clips[scene].setBeats( beats );
-    printf("stop record, has %i beats\n", beats );
-  }
-  */
-}
-
-void Looper::play(int scene, bool r)
-{
-  for(int i = 0; i < NSCENES; i++)
-  {
-    clips[i].playing(false);
-  }
-  
-  
-  if ( r )
-  {
-    clips[scene].playing(true);
-  }
-  else
-  {
-    jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0.f );
-  }
-}
-
 LooperClip* Looper::getClip(int scene)
 {
   return &clips[scene];
@@ -100,8 +67,6 @@ void Looper::setSample(int scene, AudioBuffer* ab)
 
 void Looper::process(unsigned int nframes, Buffers* buffers)
 {
-  float* out = buffers->audio[Buffers::TRACK_0 + track];
-  
   // process each clip individually: this allows for playback of one clip,
   // while another clip records.
   for ( int clip = 0; clip < NSCENES; clip++ )
@@ -121,7 +86,6 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
       // copy data from input buffer to recording buffer
       float* input = buffers->audio[Buffers::MASTER_INPUT];
       clips[clip].record( nframes, input, 0 );
-      
     }
     else if ( clips[clip].playing() )
     {
@@ -134,6 +98,8 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
       {
         playSpeed = float(actualFrames) / targetFrames;
       }
+      
+      float* out = buffers->audio[Buffers::TRACK_0 + track];
       
       for(unsigned int i = 0; i < nframes; i++ )
       {
