@@ -187,20 +187,24 @@ void LooperClip::queueRecord()
   _playing = false;
 }
 
-
-bool LooperClip::playing()
+GridLogic::State LooperClip::getState()
 {
-  return _playing;
-}
-
-bool LooperClip::recording()
-{
-  return _recording;
-}
-
-bool LooperClip::loaded()
-{
-  return _loaded;
+  GridLogic::State s = GridLogic::STATE_EMPTY;
+  
+  if      ( _loaded       )
+    s = GridLogic::STATE_STOPPED;
+  else if ( _playing      )
+    s = GridLogic::STATE_PLAYING;
+  else if ( _recording    )
+    s = GridLogic::STATE_RECORDING;
+  else if ( _queuePlay    )
+    s = GridLogic::STATE_PLAY_QUEUED;
+  else if ( _queueStop    )
+    s = GridLogic::STATE_STOP_QUEUED;
+  else if ( _queueRecord  )
+    s = GridLogic::STATE_RECORD_QUEUED;
+  
+  return s;
 }
 
 void LooperClip::newBufferInTransit(bool n)

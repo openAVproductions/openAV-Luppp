@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include "config.hxx"
+#include "gridlogic.hxx"
 
 class AudioBuffer;
 
@@ -38,13 +39,12 @@ class LooperClip
     /// TimeObserver overrides
     void bar();
     
-    /// get clip state
-    bool loaded();
-    bool playing();
-    bool recording();
+    /// analyses current _playing _recording vars, returns the current State
+    GridLogic::State getState();
     
     /// get buffer details
     int   getBeats();
+    float getProgress();
     long  getBufferLenght();
     size_t audioBufferSize();
     
@@ -52,7 +52,6 @@ class LooperClip
     void  queuePlay();
     void  queueStop();
     void  queueRecord();
-    float getProgress();
     
     /// set buffer state
     void setBeats(int beats);
