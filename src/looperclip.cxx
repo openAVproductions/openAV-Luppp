@@ -3,15 +3,24 @@
 
 #include <stdio.h>
 #include "config.hxx"
+#include "jack.hxx"
 #include "event.hxx"
 #include "eventhandler.hxx"
 #include "audiobuffer.hxx"
 
-LooperClip::LooperClip()
+extern Jack* jack;
+
+LooperClip::LooperClip(int t, int s) :
+  track(t),
+  scene(s)
 {
-  _loaded = false;
-  _playing = false;
-  _recording = false;
+  _loaded     = false;
+  _playing    = false;
+  _recording  = false;
+  
+  _queuePlay  = false;
+  _queueStop  = false;
+  _queueRecord= false;
   
   _buffer = 0; //new AudioBuffer(44100);
   _newBufferInTransit = false;
@@ -37,6 +46,12 @@ void LooperClip::load( AudioBuffer* ab )
   
   // set the endpoint to the buffer's size
   _recordhead = _buffer->getData().size();
+  
+  char buffer [50];
+  sprintf (buffer, "LooperClip::load() track %i, scene %i",track, scene);
+  EventGuiPrint e( buffer );
+  writeToGuiRingbuffer( &e );
+  
 }
 
 void LooperClip::setRequestedBuffer( AudioBuffer* ab )
@@ -111,11 +126,54 @@ long LooperClip::getBufferLenght()
   return _recordhead;
 }
 
+void LooperClip::bar()
+{
+  bool change = false;
+  GridLogic::State s = GridLogic::STATE_EMPTY;
+  
+  if ( _queuePlay && _loaded )
+  {
+    _playing = true;
+    s = GridLogic::STATE_PLAYING;
+    _recording = false;
+    _queuePlay = false;
+    change = true;
+    
+    _playhead = 0;
+  }
+  else if ( _queueStop )
+  {
+    _playing   = false;
+    s = GridLogic::STATE_STOPPED;
+    _recording = false;
+    _queueStop = false;
+    change = true;
+  }
+  else if ( _queueRecord )
+  {
+    _recording   = true;
+    s = GridLogic::STATE_RECORDING;
+    _playing     = false;
+    _queueRecord = false;
+    change = true;
+    
+    _recordhead = 0;
+  }
+  
+  if ( change )
+  {
+    jack->getControllerUpdater()->setSceneState(track, scene, s );
+  }
+  
+  _playhead = 0;
+}
+
 
 void LooperClip::queuePlay()
 {
-  _playing = true;
-  _playhead = 0;
+  _queuePlay = true;
+  _queueStop = false;
+  _queueRecord = false;
 }
 void LooperClip::queueStop()
 {

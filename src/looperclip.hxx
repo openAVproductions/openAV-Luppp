@@ -26,7 +26,7 @@ class AudioBuffer;
 class LooperClip
 {
   public:
-    LooperClip();
+    LooperClip(int track, int scene);
     
     /// loads a sample: eg from disk, unloading current sample if necessary
     void load( AudioBuffer* ab );
@@ -34,6 +34,9 @@ class LooperClip
     /// audio functionality
     float getSample(float playSpeed);
     void record(int count, float* L, float* R);
+    
+    /// TimeObserver overrides
+    void bar();
     
     /// get clip state
     bool loaded();
@@ -66,6 +69,8 @@ class LooperClip
     void setRequestedBuffer( AudioBuffer* ab );
   
   private:
+    int track, scene;
+    
     /** Luppp needs more than the current state of the clip to accuratly handle
      *  it. The current state of the grid is kept up-to-date by GridLogic
      *  abstracting detail away, sending GridLogic::State to Controllers.
@@ -73,6 +78,10 @@ class LooperClip
     bool _loaded;
     bool _playing;
     bool _recording;
+    
+    bool _queuePlay;
+    bool _queueStop;
+    bool _queueRecord;
     
     bool _newBufferInTransit;
     

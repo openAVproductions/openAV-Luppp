@@ -24,7 +24,7 @@ Looper::Looper(int t) :
   
   for(int i = 0; i < 10; i++ )
   {
-    clips[i] = LooperClip();
+    clips[i] = new LooperClip(track, i);
   }
   
   fpb = 22050;
@@ -46,23 +46,12 @@ Looper::Looper(int t) :
 
 LooperClip* Looper::getClip(int scene)
 {
-  return &clips[scene];
+  return clips[scene];
 }
 
 void Looper::setRequestedBuffer(int s, AudioBuffer* ab)
 {
-  clips[s].setRequestedBuffer( ab );
-}
-
-
-void Looper::setSample(int scene, AudioBuffer* ab)
-{
-  clips[scene].load( ab );
-  
-  char buffer [50];
-  sprintf (buffer, "Looper setSample() writing to scene %i",scene);
-  EventGuiPrint e( buffer );
-  writeToGuiRingbuffer( &e );
+  clips[s]->setRequestedBuffer( ab );
 }
 
 void Looper::process(unsigned int nframes, Buffers* buffers)
@@ -73,25 +62,25 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
   {
     // handle state of clip, and do what needs doing:
     // record into buffer, play from buffer, etc
-    if ( clips[clip].recording() )
+    if ( clips[clip]->recording() )
     {
-      if ( clips[clip].recordSpaceAvailable() <  LOOPER_SAMPLES_BEFORE_REQUEST &&
-          !clips[clip].newBufferInTransit() )
+      if ( clips[clip]->recordSpaceAvailable() <  LOOPER_SAMPLES_BEFORE_REQUEST &&
+          !clips[clip]->newBufferInTransit() )
       {
-        EventLooperClipRequestBuffer e( track, clip, clips[clip].audioBufferSize() + 44100 * 4);
+        EventLooperClipRequestBuffer e( track, clip, clips[clip]->audioBufferSize() + 44100 * 4);
         writeToGuiRingbuffer( &e );
-        clips[clip].newBufferInTransit(true);
+        clips[clip]->newBufferInTransit(true);
       }
       
       // copy data from input buffer to recording buffer
       float* input = buffers->audio[Buffers::MASTER_INPUT];
-      clips[clip].record( nframes, input, 0 );
+      clips[clip]->record( nframes, input, 0 );
     }
-    else if ( clips[clip].playing() )
+    else if ( clips[clip]->playing() )
     {
       // copy data into tmpBuffer, then pitch-stretch into track buffer
-      long targetFrames = clips[clip].getBeats() * fpb;
-      long actualFrames = clips[clip].getBufferLenght();
+      long targetFrames = clips[clip]->getBeats() * fpb;
+      long actualFrames = clips[clip]->getBufferLenght();
       float playSpeed = 1.0;
       
       if ( targetFrames != 0 && actualFrames != 0 )
@@ -103,7 +92,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
       
       for(unsigned int i = 0; i < nframes; i++ )
       {
-        out[i] = clips[clip].getSample(playSpeed);
+        out[i] = clips[clip]->getSample(playSpeed);
       }
       
       //printf("Looper %i playing(), speed = %f\n", track, playSpeed );
@@ -111,7 +100,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
       if ( uiUpdateCounter > uiUpdateConstant )
       {
         
-        jack->getControllerUpdater()->setTrackSceneProgress(track, clip, clips[clip].getProgress() );
+        jack->getControllerUpdater()->setTrackSceneProgress(track, clip, clips[clip]->getProgress() );
         uiUpdateCounter = 0;
       }
       uiUpdateCounter += nframes;

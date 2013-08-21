@@ -56,10 +56,7 @@ class GridLogic : public TimeObserver
     void bar();
     void beat();
   
-  private:
-    /// contains the current state of each grid square
-    State state[NTRACKS*NSCENES];
-    
+    /// for debug purposes: use static_cast<int>(GridLogic::State) to access
     static const char* StateString[8];
     
 };

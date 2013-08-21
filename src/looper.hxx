@@ -23,9 +23,6 @@ class Looper : public AudioProcessor, public TimeObserver
   public:
     Looper(int t);
     
-    /// *sets* the sample
-    void setSample(int c, AudioBuffer* ab);
-    
     /// *sets* the new audiobuffer, but the content gets copied to the new buffer.
     /// Used for infinite lenght recording
     void setRequestedBuffer(int s, AudioBuffer* ab);
@@ -49,7 +46,7 @@ class Looper : public AudioProcessor, public TimeObserver
     int fpb;
     
     //vector<float> tmpRecordBuffer;
-    LooperClip clips[10];
+    LooperClip* clips[10];
     
     // Pitch Shifting
     void pitchShift(int count, float* input, float* output);

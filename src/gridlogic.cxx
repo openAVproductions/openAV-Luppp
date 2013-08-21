@@ -11,7 +11,7 @@ const char* StateString[8] = {
   "empty",
   "playing",
   "play queued",
-  "loaded",
+  "stopped",
   "stop queued",
   "recording",
   "record queued"
@@ -21,7 +21,7 @@ GridLogic::GridLogic()
 {
   for( int i = 0; i < NTRACKS*NSCENES; i++ )
   {
-    state[i] = STATE_EMPTY;
+    //state[i] = STATE_EMPTY;
   }
 }
 
@@ -29,7 +29,7 @@ GridLogic::GridLogic()
 void GridLogic::pressed( int track, int scene )
 {
   //printf("before press state = %s\n", StateString[ int(state[track*NTRACKS + scene]) ] );
-  
+  /*
   if ( state[track*NSCENES + scene] == STATE_EMPTY )
     state[track*NSCENES + scene] = STATE_RECORD_QUEUED;
   
@@ -45,18 +45,19 @@ void GridLogic::pressed( int track, int scene )
   //printf("after press state = %s\n", StateString[ int(state[track*NSCENES + scene]) ] );
   
   jack->getControllerUpdater()->setSceneState(track, scene, state[track*NSCENES + scene]);
+  */
 }
 
 
 void GridLogic::released( int track, int scene )
 {
-  jack->getControllerUpdater()->setSceneState(track, scene, state[track*NSCENES + scene] );
+  //jack->getControllerUpdater()->setSceneState(track, scene, state[track*NSCENES + scene] );
 }
 
 void GridLogic::load(int track, int scene, AudioBuffer* ab)
 {
   jack->getLooper( track )->getClip( scene )->load( ab );
-  jack->getControllerUpdater()->setSceneState(track, scene, state[track*NSCENES + scene] );
+  //jack->getControllerUpdater()->setSceneState(track, scene, state[track*NSCENES + scene] );
 }
 
 
@@ -76,30 +77,6 @@ void GridLogic::bar()
   {
     int track = i / NSCENES;
     int scene = i - track * NSCENES;
-    bool change = false;
-    
-    if      ( state[i] == STATE_PLAY_QUEUED )
-    {
-      jack->getLooper( track )->getClip( scene )->queuePlay();
-      change = true;
-    }
-    else if ( state[i] == STATE_STOP_QUEUED )
-    {
-      state[i] = STATE_STOPPED;
-      jack->getLooper( track )->getClip( scene )->queueStop();
-      change = true;
-    }
-    else if ( state[i] == STATE_RECORD_QUEUED )
-    {
-      state[i] = STATE_RECORDING;
-      jack->getLooper( track )->getClip( scene )->queueRecord();
-      change = true;
-    }
-    
-    if ( change )
-    {
-      jack->getControllerUpdater()->setSceneState(track, scene, state[track*NSCENES + scene] );
-    }
   }
 }
 
