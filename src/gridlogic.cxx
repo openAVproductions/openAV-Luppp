@@ -33,7 +33,7 @@ void GridLogic::pressed( int track, int scene )
   if ( state[track*NSCENES + scene] == STATE_EMPTY )
     state[track*NSCENES + scene] = STATE_RECORD_QUEUED;
   
-  if ( state[track*NSCENES + scene] == STATE_LOADED )
+  if ( state[track*NSCENES + scene] == STATE_STOPPED )
     state[track*NSCENES + scene] = STATE_PLAY_QUEUED;
   
   if ( state[track*NSCENES + scene] == STATE_PLAYING )
@@ -80,20 +80,19 @@ void GridLogic::bar()
     
     if      ( state[i] == STATE_PLAY_QUEUED )
     {
-      state[i] = STATE_PLAYING;
-      jack->getLooper( track )->getClip( scene )->play();
+      jack->getLooper( track )->getClip( scene )->queuePlay();
       change = true;
     }
-    else if ( state[i] == STATE_STOP_QUEUED ) 
+    else if ( state[i] == STATE_STOP_QUEUED )
     {
-      state[i] = STATE_LOADED;
-      jack->getLooper( track )->getClip( scene )->stop();
+      state[i] = STATE_STOPPED;
+      jack->getLooper( track )->getClip( scene )->queueStop();
       change = true;
     }
-    else if ( state[i] == STATE_RECORD_QUEUED ) 
+    else if ( state[i] == STATE_RECORD_QUEUED )
     {
       state[i] = STATE_RECORDING;
-      jack->getLooper( track )->getClip( scene )->record();
+      jack->getLooper( track )->getClip( scene )->queueRecord();
       change = true;
     }
     
@@ -101,7 +100,6 @@ void GridLogic::bar()
     {
       jack->getControllerUpdater()->setSceneState(track, scene, state[track*NSCENES + scene] );
     }
-    
   }
 }
 

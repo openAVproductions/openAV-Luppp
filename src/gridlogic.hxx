@@ -32,7 +32,7 @@ class GridLogic : public TimeObserver
       STATE_EMPTY = 0,
       STATE_PLAYING,
       STATE_PLAY_QUEUED,
-      STATE_LOADED,
+      STATE_STOPPED,
       STATE_STOP_QUEUED,
       STATE_RECORDING,
       STATE_RECORD_QUEUED,

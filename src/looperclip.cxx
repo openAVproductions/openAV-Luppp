@@ -9,8 +9,6 @@
 
 LooperClip::LooperClip()
 {
-  _state = GridLogic::STATE_EMPTY;
-  
   _loaded = false;
   _playing = false;
   _recording = false;
@@ -113,21 +111,24 @@ long LooperClip::getBufferLenght()
   return _recordhead;
 }
 
-bool LooperClip::loaded()
-{
-  return _loaded;
-}
 
-void LooperClip::play()
+void LooperClip::queuePlay()
 {
   _playing = true;
   _playhead = 0;
 }
-void LooperClip::stop()
+void LooperClip::queueStop()
 {
   _playing = false;
   _playhead = 0;
 }
+
+void LooperClip::queueRecord()
+{
+  _recording = true;
+  _playing = false;
+}
+
 
 bool LooperClip::playing()
 {
@@ -139,22 +140,20 @@ bool LooperClip::recording()
   return _recording;
 }
 
-
-void LooperClip::record()
+bool LooperClip::loaded()
 {
-  /*
-  if ( !r && duration )
-  {
-    setBeats( duration );
-  }
-  */
-  _recording = true;
-  _playing = false;
+  return _loaded;
 }
 
+void LooperClip::newBufferInTransit(bool n)
+{
+  _newBufferInTransit = n;
+}
 
-void LooperClip::newBufferInTransit(bool n){_newBufferInTransit = n;}
-bool LooperClip::newBufferInTransit(){return _newBufferInTransit;}
+bool LooperClip::newBufferInTransit()
+{
+  return _newBufferInTransit;
+}
 
 float LooperClip::getSample(float playSpeed)
 {

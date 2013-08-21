@@ -73,7 +73,7 @@ void AkaiAPC::setSceneState(int t, int clip, GridLogic::State s)
     case GridLogic::STATE_PLAY_QUEUED:   data[2] = 2; break;
     case GridLogic::STATE_RECORDING:     data[2] = 3; break;
     case GridLogic::STATE_RECORD_QUEUED: data[2] = 4; break;
-    case GridLogic::STATE_LOADED:        data[2] = 5; break;
+    case GridLogic::STATE_STOPPED:       data[2] = 5; break;
     case GridLogic::STATE_STOP_QUEUED:   data[2] = 6; break;
   }
   

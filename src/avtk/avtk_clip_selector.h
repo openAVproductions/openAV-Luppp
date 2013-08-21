@@ -133,10 +133,10 @@ class ClipSelector : public Fl_Button
       {
         case GridLogic::STATE_EMPTY:
             break;
-        case GridLogic::STATE_LOADED:
+        case GridLogic::STATE_STOPPED:
             clips[clipNum].load();
             clips[clipNum].unqueue();
-            //printf("clipSelector setState() clip %i = STATE_LOADED\n", clipNum);
+            //printf("clipSelector setState() clip %i = STATE_STOPPED\n", clipNum);
             break;
         case GridLogic::STATE_PLAYING:
             //printf("clipSelector setState() clip %i = STATE_PLAYING\n", clipNum);
@@ -164,12 +164,6 @@ class ClipSelector : public Fl_Button
             clips[clipNum].queue();
             //printf("clipSelector setState() clip %i = STATE_RECORD_QUEUED\n", clipNum);
             break;
-        /*
-        case GridLogic::STATE_STOPPED:
-            clips[clipNum].stop();
-            printf("clipSelector setState() clip %i = STATE_STOPPED\n", clipNum);
-            break;
-        */
         case GridLogic::STATE_STOP_QUEUED:
             //printf("clipSelector setState() clip %i = STATE_STOP_QUEUED\n", clipNum);
             clips[clipNum].stopRecord();

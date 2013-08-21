@@ -5,8 +5,6 @@
 #include <stdio.h>
 #include "config.hxx"
 
-#include "gridlogic.hxx"
-
 class AudioBuffer;
 
 /** LooperClip
@@ -33,16 +31,9 @@ class LooperClip
     /// loads a sample: eg from disk, unloading current sample if necessary
     void load( AudioBuffer* ab );
     
-    /// used to update the size of the buffer for this looperclip. The current
-    /// data is copied into the new buffer, then the smaller buffer is sent
-    /// for de-allocation
-    void setRequestedBuffer( AudioBuffer* ab );
-    
+    /// audio functionality
+    float getSample(float playSpeed);
     void record(int count, float* L, float* R);
-    
-    unsigned long recordSpaceAvailable();
-    
-    void setBeats(int beats);
     
     /// get clip state
     bool loaded();
@@ -50,27 +41,35 @@ class LooperClip
     bool recording();
     
     /// get buffer details
-    int  getBeats();
-    long getBufferLenght();
+    int   getBeats();
+    long  getBufferLenght();
     size_t audioBufferSize();
     
     /// set clip state
-    void play();
-    void stop();
-    void record();
+    void  queuePlay();
+    void  queueStop();
+    void  queueRecord();
+    float getProgress();
     
+    /// set buffer state
+    void setBeats(int beats);
+    
+    /// Luppp internal buffer resizing
     void newBufferInTransit(bool n);
     bool newBufferInTransit();
+    size_t recordSpaceAvailable();
     
-    float getSample(float playSpeed);
-    
-    float getProgress();
+    /** used to update the size of the buffer for this looperclip. The current
+     *  data is copied into the new buffer, then the smaller buffer is sent
+     *  for de-allocation.
+    **/
+    void setRequestedBuffer( AudioBuffer* ab );
   
   private:
-    // internally, Luppp needs more than just the current state of the clip to
-    // accuratly handle it. Hence some bools are purposed: the *current*
-    // state of the grid is kept up to date by GridLogic.
-    GridLogic::State _state;
+    /** Luppp needs more than the current state of the clip to accuratly handle
+     *  it. The current state of the grid is kept up-to-date by GridLogic
+     *  abstracting detail away, sending GridLogic::State to Controllers.
+    **/
     bool _loaded;
     bool _playing;
     bool _recording;
