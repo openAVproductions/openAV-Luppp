@@ -334,8 +334,9 @@ class ClipSelector : public Fl_Button
                   {"8"},
                   {"16"},
                   {"32"},
+                  {"64"},
                   {0},
-                { "Record" },
+                //{ "Record" },
                 { "Use as tempo" },
                 { 0 }
               };
@@ -366,6 +367,9 @@ class ClipSelector : public Fl_Button
                 writeToDspRingbuffer( &e );
               } else if ( strcmp(m->label(), "32") == 0 ) {
                 EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,32);
+                writeToDspRingbuffer( &e );
+              } else if ( strcmp(m->label(), "64") == 0 ) {
+                EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,64);
                 writeToDspRingbuffer( &e );
               }
               else if ( strcmp(m->label(), "Use as tempo") == 0 )
