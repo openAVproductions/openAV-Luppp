@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include "config.hxx"
 
+#include "gridlogic.hxx"
+
 class AudioBuffer;
 
 /** LooperClip
@@ -40,10 +42,7 @@ class LooperClip
     
     unsigned long recordSpaceAvailable();
     
-    
-    
     void setBeats(int beats);
-    
     
     /// get clip state
     bool loaded();
@@ -68,6 +67,10 @@ class LooperClip
     float getProgress();
   
   private:
+    // internally, Luppp needs more than just the current state of the clip to
+    // accuratly handle it. Hence some bools are purposed: the *current*
+    // state of the grid is kept up to date by GridLogic.
+    GridLogic::State _state;
     bool _loaded;
     bool _playing;
     bool _recording;

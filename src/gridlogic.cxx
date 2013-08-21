@@ -2,6 +2,7 @@
 #include "gridlogic.hxx"
 
 #include "jack.hxx"
+#include "audiobuffer.hxx"
 
 extern Jack* jack;
 
@@ -52,9 +53,9 @@ void GridLogic::released( int track, int scene )
   jack->getControllerUpdater()->setSceneState(track, scene, state[track*NSCENES + scene] );
 }
 
-void GridLogic::load(int track, int scene)
+void GridLogic::load(int track, int scene, AudioBuffer* ab)
 {
-  state[track*NSCENES + scene] = STATE_LOADED;
+  jack->getLooper( track )->getClip( scene )->load( ab );
   jack->getControllerUpdater()->setSceneState(track, scene, state[track*NSCENES + scene] );
 }
 
@@ -99,7 +100,6 @@ void GridLogic::bar()
     if ( change )
     {
       jack->getControllerUpdater()->setSceneState(track, scene, state[track*NSCENES + scene] );
-      //printf("GridLogic::bar(), i = %i, track %i, scene %i\n", i, track, scene );
     }
     
   }

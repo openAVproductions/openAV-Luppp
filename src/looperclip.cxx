@@ -9,6 +9,8 @@
 
 LooperClip::LooperClip()
 {
+  _state = GridLogic::STATE_EMPTY;
+  
   _loaded = false;
   _playing = false;
   _recording = false;

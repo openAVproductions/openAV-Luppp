@@ -5,6 +5,8 @@
 #include "config.hxx"
 #include "observer/time.hxx"
 
+class AudioBuffer;
+
 /** GridLogic
  *  The logic code for the luppp tracks / grid resides here. This logic is
  *  separtated from the Looper class so it can be repurposed by different
@@ -45,7 +47,7 @@ class GridLogic : public TimeObserver
     void released( int track, int scene );
     
     /// GUI load event
-    void load(int track, int scene);
+    void load(int track, int scene, AudioBuffer* ab);
     
     /// resend entire grid state to controllers
     void updateState();

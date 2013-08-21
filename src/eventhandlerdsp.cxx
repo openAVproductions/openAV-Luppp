@@ -56,9 +56,7 @@ void handleDspEvents()
           if ( availableRead >= sizeof(EventLooperLoad) ) {
             EventLooperLoad ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventLooperLoad) );
-            Looper* l = jack->getLooper( ev.track );
-            l->setSample( ev.clip, (AudioBuffer*)ev.audioBuffer );
-            jack->getGridLogic()->load( ev.track, ev.clip );
+            jack->getGridLogic()->load( ev.track, ev.clip, (AudioBuffer*)ev.audioBuffer );
           } break; }
         case Event::METRONOME_ACTIVE: {
           if ( availableRead >= sizeof(EventMetronomeActive) ) {
