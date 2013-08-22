@@ -41,6 +41,8 @@ class RadialStatus : public Fl_Slider
       
       label = _label;
       
+      previousAngle = -1;
+      
       _r = 1.0;
       _g = 0.48;
       _b = 0.0;
@@ -53,10 +55,15 @@ class RadialStatus : public Fl_Slider
       mouseOver = false;
     }
     
+    bool _recording;
+    void recording(bool r){_recording = r; redraw();}
+    
     bool mouseOver;
     bool highlight;
     int x, y, w, h;
     const char* label;
+    
+    int previousAngle;
     
     float _r, _g, _b;       // foreground colour
     float _bgr, _bgg, _bgb; // background colour
@@ -78,7 +85,11 @@ class RadialStatus : public Fl_Slider
     
     void draw()
     {
-      if (damage() & FL_DAMAGE_ALL)
+      // check that its a new "segment" to redraw
+      int newAngle = (value() * 16);
+      
+      if (damage() & FL_DAMAGE_ALL &&
+          previousAngle != newAngle )
       {
         cairo_t *cr = Fl::cairo_cc();
         
@@ -87,7 +98,7 @@ class RadialStatus : public Fl_Slider
         int xc = (w) / 2.f;
         int yc = (h) / 2.f;
         
-        float angle = value();
+        float angle = newAngle / 16.f;
         
         /*
         // draw background quadrants
@@ -99,18 +110,21 @@ class RadialStatus : public Fl_Slider
         }
         */
         
-        if ( angle > 0.001 )
+        cairo_set_line_cap ( cr, CAIRO_LINE_CAP_ROUND );
+        //cairo_move_to( cr, x + xc, y + yc );
+        cairo_arc( cr, x + xc, y + yc, xc - 10, -(3.1415/2), angle * 6.28 - (3.1415/2) );
+        cairo_set_source_rgba (cr, 0.0, 0.0, 0.0, 0.8 );
+        cairo_set_line_width(cr, 13.2);
+        cairo_stroke_preserve(cr);
+        
+        cairo_set_source_rgba (cr, 1.0, 0.48, 0.0, 1 );
+        cairo_set_line_width(cr, 8.2);
+        cairo_stroke(cr);
+        
+        // recording?
+        if ( _recording )
         {
-          cairo_set_line_cap ( cr, CAIRO_LINE_CAP_ROUND );
-          //cairo_move_to( cr, x + xc, y + yc );
-          cairo_arc( cr, x + xc, y + yc, xc - 10, -(3.1415/2), angle * 6.28 - (3.1415/2) );
-          cairo_set_source_rgba (cr, 0.0, 0.0, 0.0, 0.8 );
-          cairo_set_line_width(cr, 13.2);
-          cairo_stroke_preserve(cr);
           
-          cairo_set_source_rgba (cr, 1.0, 0.48, 0.0, 1 );
-          cairo_set_line_width(cr, 8.2);
-          cairo_stroke(cr);
         }
         
         // inside circle

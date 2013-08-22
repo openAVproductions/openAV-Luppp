@@ -149,6 +149,8 @@ void LooperClip::bar()
     _recording = false;
     _queueStop = false;
     change = true;
+    // set "progress" to zero, as we're stopped!
+    jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0 );
   }
   else if ( _queueRecord )
   {

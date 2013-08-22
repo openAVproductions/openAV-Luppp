@@ -58,7 +58,6 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
   // call process() up the chain
   previousInChain->process( nframes, buffers );
   
-  
   // run the meter
   dbMeter.process( nframes, trackBuffer, trackBuffer );
   
