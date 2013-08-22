@@ -6,6 +6,6 @@ extern Jack* jack;
 
 TimeObserver::TimeObserver()
 {
-  //jack->getTimeManager()->registerObserver( this );
+  jack->getTimeManager()->registerObserver( this );
 }
 

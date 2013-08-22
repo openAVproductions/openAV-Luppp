@@ -37,7 +37,6 @@ class Jack
     int getBuffersize();
     int getSamplerate();
     
-    
     /// get functions for components owned by Jack 
     Looper*             getLooper(int t) {return loopers.at(t); }
     Metronome*          getMetronome(){return metronome;}

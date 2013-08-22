@@ -13,7 +13,6 @@ extern Jack* jack;
 LupppGUI::LupppGUI() :
   Controller()
 {
-  
 }
 
 void LupppGUI::masterVolume(float f)

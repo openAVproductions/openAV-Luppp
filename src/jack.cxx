@@ -13,17 +13,28 @@ using namespace std;
 
 int AudioBuffer::privateID = 0;
 
+// static pointer from main.
+extern Jack* jack;
+
 extern int jackSamplerate;
 
 Jack::Jack() :
   client( jack_client_open ( "Luppp", JackNullOption , 0 , 0 ) ),
   timeManager(),
-  metronome( new Metronome() ),
-  logic( new Logic() ),
-  gridLogic( new GridLogic() ),
   controllerUpdater( new ControllerUpdater() ),
   clientActive(false)
 {
+  jack = this;
+  // construct Observer classes here, not in the initializer list as the Jack*
+  // will be 0x0 until then.
+  metronome = new Metronome();
+  logic = new Logic();
+  gridLogic = new GridLogic();
+  
+  Controller* c = new AkaiAPC();
+  Controller* g = new LupppGUI();
+  
+  
   buffers.nframes = jack_get_buffer_size( client );
   buffers.samplerate = jack_get_sample_rate( client );
   
@@ -116,15 +127,17 @@ Jack::Jack() :
 
 void Jack::activate()
 {
+  /*
   // move to "settings" class or so
   Controller* c = new AkaiAPC();
   controllerUpdater->registerController( c );
   Controller* g = new LupppGUI();
   controllerUpdater->registerController( g );
+  */
   
   // move to time class, get instantiate order right
-  jack->getTimeManager()->registerObserver( metronome );
-  jack->getTimeManager()->registerObserver( gridLogic );
+  //jack->getTimeManager()->registerObserver( metronome );
+  //jack->getTimeManager()->registerObserver( gridLogic );
   
   jack_activate( client );
   jack_transport_start(client);

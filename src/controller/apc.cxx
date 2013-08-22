@@ -13,7 +13,6 @@ AkaiAPC::AkaiAPC() :
   Controller(),
   MidiObserver("apc")
 {
-  
 }
 
 void AkaiAPC::recordArm(int t, bool enabled)

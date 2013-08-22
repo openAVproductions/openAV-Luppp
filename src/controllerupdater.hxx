@@ -28,12 +28,10 @@ using namespace std;
 class ControllerUpdater
 {
   public:
-    ControllerUpdater() {}
+    ControllerUpdater(){}
     
     void registerController( Controller* controller )
     {
-      std::cout << "ControllerUpdater registering " << controller->getName()
-                << endl;
       c.push_back( controller );
     }
     
