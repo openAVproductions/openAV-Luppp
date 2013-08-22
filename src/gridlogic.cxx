@@ -7,7 +7,7 @@
 extern Jack* jack;
 
 
-const char* StateString[8] = {
+const char* GridLogic::StateString[8] = {
   "empty",
   "playing",
   "play queued",
@@ -28,24 +28,29 @@ GridLogic::GridLogic()
 
 void GridLogic::pressed( int track, int scene )
 {
-  //printf("before press state = %s\n", StateString[ int(state[track*NTRACKS + scene]) ] );
-  /*
-  if ( state[track*NSCENES + scene] == STATE_EMPTY )
-    state[track*NSCENES + scene] = STATE_RECORD_QUEUED;
+  LooperClip* lc = jack->getLooper( track )->getClip( scene );
+  GridLogic::State s = lc->getState();
   
-  if ( state[track*NSCENES + scene] == STATE_STOPPED )
-    state[track*NSCENES + scene] = STATE_PLAY_QUEUED;
+  printf("before press state = %s\n", StateString[ int(s) ] );
   
-  if ( state[track*NSCENES + scene] == STATE_PLAYING )
-    state[track*NSCENES + scene] = STATE_STOP_QUEUED;
+  if ( s == STATE_EMPTY )
+    lc->queueRecord();
   
-  if ( state[track*NSCENES + scene] == STATE_RECORDING )
-    state[track*NSCENES + scene] = STATE_STOP_QUEUED;
+  if ( s == STATE_STOPPED )
+    lc->queuePlay();
   
-  //printf("after press state = %s\n", StateString[ int(state[track*NSCENES + scene]) ] );
+  if ( s == STATE_PLAYING )
+    lc->queueStop();
   
-  jack->getControllerUpdater()->setSceneState(track, scene, state[track*NSCENES + scene]);
-  */
+  if ( s == STATE_RECORDING )
+    lc->queueStop();
+  
+  
+  s = lc->getState();
+  
+  printf("after press state = %s\n", StateString[ int(s) ] );
+  
+  jack->getControllerUpdater()->setSceneState(track, scene, s );
 }
 
 
@@ -77,6 +82,14 @@ void GridLogic::bar()
   {
     int track = i / NSCENES;
     int scene = i - track * NSCENES;
+    jack->getLooper( track )->getClip( scene )->bar();
+    
+    GridLogic::State s = jack->getLooper( track )->getClip( scene )->getState();
+    
+    if ( s != STATE_EMPTY )
+    {
+      printf("%i, %i:after bar() state = %s\n", track, scene, StateString[ int(s) ] );
+    }
   }
 }
 

@@ -86,6 +86,8 @@ void LooperClip::record(int count, float* L, float* R)
       _recordhead++;
     }
   }
+  
+  _loaded = true;
 }
 
 unsigned long LooperClip::recordSpaceAvailable()
@@ -164,44 +166,44 @@ void LooperClip::bar()
   {
     jack->getControllerUpdater()->setSceneState(track, scene, s );
   }
-  
-  _playhead = 0;
 }
 
 
 void LooperClip::queuePlay()
 {
-  _queuePlay = true;
-  _queueStop = false;
+  _queuePlay   = true;
+  _queueStop   = false;
   _queueRecord = false;
 }
 void LooperClip::queueStop()
 {
-  _playing = false;
-  _playhead = 0;
+  _queueStop   = true;
+  _queuePlay   = false;
+  _queueRecord = false;
 }
 
 void LooperClip::queueRecord()
 {
-  _recording = true;
-  _playing = false;
+  _queueRecord = true;
+  _queuePlay   = false;
+  _queueStop   = false;
 }
 
 GridLogic::State LooperClip::getState()
 {
   GridLogic::State s = GridLogic::STATE_EMPTY;
   
-  if      ( _loaded       )
+  if ( _loaded       )
     s = GridLogic::STATE_STOPPED;
-  else if ( _playing      )
+  if ( _playing      )
     s = GridLogic::STATE_PLAYING;
-  else if ( _recording    )
+  if ( _recording    )
     s = GridLogic::STATE_RECORDING;
-  else if ( _queuePlay    )
+  if ( _queuePlay    )
     s = GridLogic::STATE_PLAY_QUEUED;
-  else if ( _queueStop    )
+  if ( _queueStop    )
     s = GridLogic::STATE_STOP_QUEUED;
-  else if ( _queueRecord  )
+  if ( _queueRecord  )
     s = GridLogic::STATE_RECORD_QUEUED;
   
   return s;
