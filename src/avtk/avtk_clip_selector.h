@@ -44,39 +44,28 @@ namespace Avtk
 class ClipState
 {
   public:
-    ClipState()
-    {
-      _loaded = false;
-      _playing = false;
-      _queued = false;
-      _recording = false;
-      name = "";
-    }
+    ClipState() :
+      state(GridLogic::STATE_EMPTY),
+      name("")
+    {}
     
-    void load(std::string n = "")
+    void setName(std::string n = "---")
     {
-      _loaded = true;
       name = n;
     }
-    void play(){_playing = true;}
-    void stop(){_playing = false; _recording = false;}
-    void queue(){_queued = true;}
-    void unqueue(){_queued = false;}
-    void stopQueue(){_queued = false;}
-    void record(){_recording = true; _loaded = true;}
-    void stopRecord(){_recording = false;}
     
-    bool loaded(){return _loaded;}
-    bool playing(){return _playing;}
-    bool queued() {return _queued;}
-    bool recording(){return _recording;}
+    GridLogic::State getState()
+    {
+      return state;
+    }
+    void setState(GridLogic::State s)
+    {
+      state = s;
+    }
     std::string getName(){return name;}
   
   private:
-    bool _loaded;
-    bool _playing;
-    bool _queued;
-    bool _recording;
+    GridLogic::State state;
     std::string name;
 };
 
@@ -115,20 +104,12 @@ class ClipSelector : public Fl_Button
       ID = id;
     }
     
-    /** calling this function marks a clip as loaded, optionally with name
-     parameter. Recording won't provide a name, or "..." or something
-    **/
-    void loadClip( int clip, std::string name = "" )
-    {
-      clips[clip].load(name);
-    }
-    
     /** converts the Looper::State into the UI represnted ClipSelector state.
      * It puts some of the data into clips[], and stores unique state into the class.
     **/
     void setState( int clipNum, GridLogic::State s )
     {
-      
+      /*
       switch(s)
       {
         case GridLogic::STATE_EMPTY:
@@ -171,6 +152,8 @@ class ClipSelector : public Fl_Button
             clips[clipNum].queue();
             break;
       }
+      */
+      clips[clipNum].setState( s );
       
       redraw();
     }
@@ -204,7 +187,7 @@ class ClipSelector : public Fl_Button
           
           cairo_rectangle( cr, x+2, drawY, clipHeight-4, clipHeight - 4 );
           
-          if ( clips[i].recording() )
+          if ( clips[i].getState() == GridLogic::STATE_RECORDING )
           {
             cairo_set_source_rgba(cr, 1.f,  0 / 255.f ,  0 / 255.f, 1.f);
             cairo_fill(cr);
@@ -212,7 +195,7 @@ class ClipSelector : public Fl_Button
             cairo_set_source_rgba(cr, 0, 0, 0, 1.f);
             cairo_fill(cr);
           }
-          else if ( clips[i].playing() )
+          else if ( clips[i].getState() == GridLogic::STATE_PLAYING )
           {
             cairo_set_source_rgba(cr, 0.0, 1.0,   0, 1.f );
             cairo_fill(cr);
@@ -233,7 +216,9 @@ class ClipSelector : public Fl_Button
             cairo_fill(cr);
           }
           */
-          else if ( clips[i].queued() )
+          else if ( clips[i].getState() == GridLogic::STATE_PLAY_QUEUED ||
+                    clips[i].getState() == GridLogic::STATE_STOP_QUEUED ||
+                    clips[i].getState() == GridLogic::STATE_RECORD_QUEUED )
           {
             cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 1 );
             cairo_fill(cr);
@@ -245,7 +230,7 @@ class ClipSelector : public Fl_Button
             cairo_set_line_width(cr, 2.8f);
             cairo_stroke(cr);
           }
-          else if ( clips[i].loaded() )
+          else if ( clips[i].getState() == GridLogic::STATE_STOPPED )
           {
             cairo_set_source_rgba(cr, 1.0, 0.6,   0, 1.f);
             cairo_fill(cr);

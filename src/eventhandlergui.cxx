@@ -100,6 +100,7 @@ void handleGuiEvents()
             EventGridState ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventGridState) );
             gui->getTrack(ev.track)->getClipSelector()->setState( ev.scene, ev.state );
+            //gui->getTrack(ev.track)->getRadialStatus()->setState( ev.scene, ev.state );
           } break; }
         
         case Event::TRACK_SEND: {
