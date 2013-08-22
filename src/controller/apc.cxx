@@ -159,6 +159,7 @@ void ccChange( int track, int cc, float value )
         jack->getLogic()->trackVolume( -1, value );
         break; }
     
+    
     /// Device Control
     case 16: {
         jack->getLogic()->trackSend( track, SEND_SIDE, value );
@@ -168,6 +169,13 @@ void ccChange( int track, int cc, float value )
         break; }
     case 18: {
         jack->getLogic()->trackSend( track, SEND_REV, value );
+        break; }
+    
+    case 64: { // FootSwitch 1
+        
+        break; }
+    case 67:  { // FootSwitch 2
+        
         break; }
   }
 }
