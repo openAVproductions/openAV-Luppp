@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cd .build/
-
-gdb ./luppp5
+set -e
+tup upd
+gdb --dir=src/ ./luppp
