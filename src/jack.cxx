@@ -5,11 +5,13 @@
 #include <cstring>
 #include <iostream>
 
+#include "audiobuffer.hxx"
 #include "eventhandler.hxx"
-
 #include "controller/gui.hxx"
 
 using namespace std;
+
+int AudioBuffer::privateID = 0;
 
 extern int jackSamplerate;
 

@@ -22,7 +22,7 @@ LooperClip::LooperClip(int t, int s) :
   _queueStop  = false;
   _queueRecord= false;
   
-  _buffer = 0; //new AudioBuffer(44100);
+  _buffer = new AudioBuffer(44100);
   _newBufferInTransit = false;
   
   _playhead   = 0;
@@ -64,6 +64,8 @@ void LooperClip::setRequestedBuffer( AudioBuffer* ab )
     {
       ab->getData().at(i) = _buffer->getData().at( i );
     }
+    
+    ab->setBeats( _buffer->getBeats() );
     
     EventDeallocateBuffer e( _buffer );
     writeToGuiRingbuffer( &e );
@@ -160,6 +162,13 @@ void LooperClip::bar()
     change = true;
     
     _recordhead = 0;
+  }
+  
+  if ( _recording )
+  {
+    
+    // FIXME: assumes 4 beats in a bar
+    _buffer->setBeats( _buffer->getBeats() + 4 );
   }
   
   if ( change )

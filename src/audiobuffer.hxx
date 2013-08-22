@@ -11,21 +11,22 @@ class AudioBuffer
   public:
     AudioBuffer()
     {
-      //ID = privateID++;
+      ID = privateID++;
+      numBeats = 0;
     }
     AudioBuffer(unsigned long size)
     {
       //ID = id;
-      numBeats = 4;
+      numBeats = 0;
       buffer.resize(size);
     }
     
-    /*
+    
     int getID()
     {
       return ID;
     }
-    */
+    
     int getBeats()
     {
       return numBeats;
@@ -48,8 +49,8 @@ class AudioBuffer
     }
   
   protected:
-    //static int privateID;
-    //int ID;
+    static int privateID;
+    int ID;
     
     int numBeats;
     
