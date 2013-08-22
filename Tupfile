@@ -1,11 +1,4 @@
 
-# Tup build file for Luppp
-
-CFLAGS += -g -Wall -march=native -msse -mfpmath=sse -ffast-math
-
-INCLUDES  += `pkg-config --cflags jack sndfile cairomm-1.0 ntk ntk_images`
 LDFLAGS   += `pkg-config --libs   jack sndfile cairomm-1.0 ntk ntk_images`
 
-: foreach src/*.cxx src/observer/*.cxx src/dsp/*.cxx src/controller/*.cxx |> g++ $(CFLAGS) -c %f $(INCLUDES)  -o %o   |> %B.o
-
-: *.o |> g++ %f $(LDFLAGS) -o %o |> luppp
+: src/*.o |> g++ %f $(LDFLAGS) -o %o |> luppp

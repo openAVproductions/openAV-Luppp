@@ -4,6 +4,6 @@
 
 planning/*
 
-*.o
 .tup/*
-/luppp
+src/*.o
+luppp
