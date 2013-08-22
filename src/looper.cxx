@@ -100,7 +100,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
         pitchShift( 1, &tmp, &out[i] );
       }
       
-      printf("Looper %i playing(), speed = %f\n", track, playSpeed );
+      //printf("Looper %i playing(), speed = %f\n", track, playSpeed );
       
       if ( uiUpdateCounter > uiUpdateConstant )
       {

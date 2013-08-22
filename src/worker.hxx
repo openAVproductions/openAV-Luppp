@@ -9,10 +9,28 @@
 
 #include "audiobuffer.hxx"
 
+//#include "libjson/libjson.h"
+
 using namespace std;
 
 namespace Worker
 {
+  /*
+  static void writeStuff()
+  {
+    
+    
+    JSONNode n(JSON_NODE);
+    n.push_back(JSONNode("String Node", "String Value"));
+    n.push_back(JSONNode("Integer Node", 42));
+    n.push_back(JSONNode("Floating Point Node", 3.14));
+    n.push_back(JSONNode("Boolean Node", true));
+    std::string jc = n.write_formatted();
+    std::cout << jc << std::endl;
+    
+    
+  }
+  */
   /// loads a sample into a new AudioBuffer, returning the buffer
   static AudioBuffer* loadSample( string path )
   {

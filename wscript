@@ -44,5 +44,7 @@ def build(bld):
              'src/eventhandlergui.cxx',
              'src/eventhandlerdsp.cxx']
   
-  bld.program(source = sources, target='luppp5', use='JACK NTK SNDFILE')
+  bld.program(source = sources,
+              target='luppp5',
+              use='JACK NTK SNDFILE')
 
