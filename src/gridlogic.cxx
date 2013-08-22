@@ -30,28 +30,38 @@ void GridLogic::launchScene( int scene )
 {
   for(unsigned int t = 0; t < NTRACKS; t++ )
   {
-    for(unsigned int s = 0; s < NSCENES; s++ )
+    for(int s = 0; s < NSCENES; s++ )
     {
       LooperClip* lc = jack->getLooper( t )->getClip( s );
       if ( s == scene )
+      {
         lc->queuePlay();
-      //else
-      //lc->queueStop();
+        jack->getControllerUpdater()->setSceneState( t, s, lc->getState() );
+      }
+      else
+      {
+        bool current = lc->playing();
+        lc->queueStop();
+        bool next    = lc->playing();
+        if ( current != next )
+        {
+          jack->getControllerUpdater()->setSceneState( t, s, lc->getState() );
+        }
+      }
     }
-    
-    
   }
   
   /*
   for(unsigned int s = 0; s < NSCENES; s++ )
   {
-    jack->getControllerUpdater()->setSceneState( -1, s, s );
+    
   }
   */
 }
 
 void GridLogic::pressed( int track, int scene )
 {
+  // get the clip, do the "press" action based on current state.
   LooperClip* lc = jack->getLooper( track )->getClip( scene );
   GridLogic::State s = lc->getState();
 
@@ -70,13 +80,10 @@ void GridLogic::pressed( int track, int scene )
   if ( s == STATE_RECORDING )
     lc->queueStop();
   
-  
   s = lc->getState();
-
 #ifdef DEBUG_CLIP
   printf("GridLogic::pressed() after press state = %s\n", StateString[ int(s) ] );
 #endif
-
   jack->getControllerUpdater()->setSceneState(track, scene, s );
 }
 

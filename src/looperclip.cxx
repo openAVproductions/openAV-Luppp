@@ -142,7 +142,7 @@ void LooperClip::bar()
     
     _playhead = 0;
   }
-  else if ( _queueStop )
+  else if ( _queueStop && _loaded )
   {
     _playing   = false;
     s = GridLogic::STATE_STOPPED;
@@ -161,6 +161,12 @@ void LooperClip::bar()
     change = true;
     
     _recordhead = 0;
+  }
+  else if ( _queuePlay )
+  {
+    // clip was queued, but there's nothing loaded
+    _queuePlay = false;
+    change = true;
   }
   
   if ( _recording )
