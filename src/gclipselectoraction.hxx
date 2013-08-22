@@ -30,16 +30,18 @@ static string choose_file()
   return path;
 }
 
-static void clipSelectorLoad(int track, int scene)
+static int clipSelectorLoad(int track, int scene)
 {
   string filePathName = choose_file();
   
   if ( strcmp( filePathName.c_str(), "" ) == 0 )
-    return;
+    return -1;
   
   AudioBuffer* ab = Worker::loadSample( filePathName );
   EventLooperLoad e = EventLooperLoad( track, scene, ab );
   writeToDspRingbuffer( &e );
+  
+  return 0;
 }
 
 #endif // LUPPP_G_CLIP_SELECTOR_ACTION_H

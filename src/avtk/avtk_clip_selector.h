@@ -114,13 +114,16 @@ class ClipSelector : public Fl_Button
     **/
     void setState( int clipNum, GridLogic::State s )
     {
+      cout << "setState clipNum = " << clipNum << "  state = " << s << endl;
       switch(s)
       {
         case GridLogic::STATE_RECORDING:
             clips[clipNum].setName();
             break;
-        case GridLogic::STATE_EMPTY:
         case GridLogic::STATE_STOPPED:
+            clips[clipNum].setName();
+            break;
+        case GridLogic::STATE_EMPTY:
         case GridLogic::STATE_PLAYING:
         case GridLogic::STATE_PLAY_QUEUED:
         case GridLogic::STATE_RECORD_QUEUED:
@@ -286,7 +289,7 @@ class ClipSelector : public Fl_Button
               {
                 { "Load" },
                 { "Bars",  0,   0, 0, FL_SUBMENU },
-                  {"1"},
+                  {"1       "},
                   {"2"},
                   {"4"},
                   {"8"},
@@ -305,8 +308,12 @@ class ClipSelector : public Fl_Button
               }
               else if ( strcmp(m->label(), "Load") == 0 )
               {
-                clipSelectorLoad( ID, clipNum );
-                //loadClip( clipNum, "---" );
+                int loadFail = clipSelectorLoad( ID, clipNum );
+                if ( !loadFail )
+                {
+                  clips[clipNum].setName();
+                  clips[clipNum].setState(GridLogic::STATE_STOPPED);
+                }
               }
               else if ( strcmp(m->label(), "1") == 0 ) {
                 EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,1);
