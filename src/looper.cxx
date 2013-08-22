@@ -60,11 +60,9 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
   // while another clip records.
   for ( int clip = 0; clip < NSCENES; clip++ )
   {
-    GridLogic::State s = clips[clip]->getState();
-    
     // handle state of clip, and do what needs doing:
     // record into buffer, play from buffer, etc
-    if ( s == GridLogic::STATE_RECORDING )
+    if ( clips[clip]->recording() )
     {
       if ( clips[clip]->recordSpaceAvailable() <  LOOPER_SAMPLES_BEFORE_REQUEST &&
           !clips[clip]->newBufferInTransit() )
@@ -78,7 +76,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
       float* input = buffers->audio[Buffers::MASTER_INPUT];
       clips[clip]->record( nframes, input, 0 );
     }
-    else if ( s == GridLogic::STATE_PLAYING )
+    else if ( clips[clip]->playing() )
     {
       // copy data into tmpBuffer, then pitch-stretch into track buffer
       long targetFrames = clips[clip]->getBeats() * fpb;

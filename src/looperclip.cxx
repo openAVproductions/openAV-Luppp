@@ -215,6 +215,16 @@ GridLogic::State LooperClip::getState()
   return s;
 }
 
+bool LooperClip::playing()
+{
+  return _playing;
+}
+
+bool LooperClip::recording()
+{
+  return _recording;
+}
+
 void LooperClip::newBufferInTransit(bool n)
 {
   _newBufferInTransit = n;

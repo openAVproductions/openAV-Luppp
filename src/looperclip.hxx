@@ -41,6 +41,8 @@ class LooperClip
     
     /// analyses current _playing _recording vars, returns the current State
     GridLogic::State getState();
+    bool playing();
+    bool recording();
     
     /// get buffer details
     int   getBeats();
