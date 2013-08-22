@@ -27,6 +27,8 @@ Looper::Looper(int t) :
     clips[i] = new LooperClip(track, i);
   }
   
+  tmpBuffer.resize( MAX_BUFFER_SIZE );
+  
   fpb = 22050;
   
   // init faust pitch shift variables
@@ -92,14 +94,16 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
       
       for(unsigned int i = 0; i < nframes; i++ )
       {
-        out[i] = clips[clip]->getSample(playSpeed);
+        float tmp = clips[clip]->getSample(playSpeed);
+        
+        // write the pitch-shifted signal to the track buffer
+        pitchShift( 1, &tmp, &out[i] );
       }
       
-      //printf("Looper %i playing(), speed = %f\n", track, playSpeed );
+      printf("Looper %i playing(), speed = %f\n", track, playSpeed );
       
       if ( uiUpdateCounter > uiUpdateConstant )
       {
-        
         jack->getControllerUpdater()->setTrackSceneProgress(track, clip, clips[clip]->getProgress() );
         uiUpdateCounter = 0;
       }
@@ -162,7 +166,7 @@ void Looper::pitchShift(int count, float* input, float* output)
     float fTemp4 = (fSlow0 + fRec0[0]);
     int iTemp5 = int(fTemp4);
     
-    *output++ += (float)(((1 - fTemp3) * (((fTemp4 - iTemp5) * 
+    *output++ = (float)(((1 - fTemp3) * (((fTemp4 - iTemp5) * 
     fVec0[(IOTA-int((int((1 + iTemp5)) & 65535)))&65535]) + ((0 - ((
     fRec0[0] + fSlow3) - iTemp5)) * fVec0[(IOTA-int((iTemp5 & 65535)))
     &65535]))) + (fTemp3 * (((fRec0[0] - iTemp1) * fVec0[(IOTA-int((int(

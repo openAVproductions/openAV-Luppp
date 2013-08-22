@@ -53,7 +53,7 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 {
   // get & zero track buffer
   float* trackBuffer = buffers->audio[Buffers::TRACK_0 + track];
-  memset( trackBuffer, 0, nframes );
+  memset( trackBuffer, 0, sizeof(float)*nframes );
   
   // call process() up the chain
   previousInChain->process( nframes, buffers );
