@@ -1,0 +1,9 @@
+
+# Tup build file for Luppp
+
+#INCLUDES  += 
+#LDFLAGS   += `pkg-config --libs jack sndfile cairomm-1.0 ntk ntk_images`
+
+: foreach src/*.cxx src/observer/*.cxx src/dsp/*.cxx src/controller/*.cxx |> g++ -Wall -c %f -pthread -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -pthread -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -I/usr/include/cairomm-1.0 -I/usr/lib/cairomm-1.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/sigc++-2.0/include -I/usr/include/ntk -I/usr/include/cairo -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng15  -o %o   |> %B.o
+
+: *.o |> g++ %f -ljack -lpthread -lrt -lsndfile -lcairomm-1.0 -lsigc-2.0 -lntk -lntk_images -lntk -lcairo  -o %o |> lup

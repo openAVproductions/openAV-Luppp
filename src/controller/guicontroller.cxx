@@ -1,6 +1,6 @@
 
 
-#include "gui.hxx"
+#include "guicontroller.hxx"
 
 #include <iostream>
 

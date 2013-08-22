@@ -7,7 +7,7 @@
 
 #include "audiobuffer.hxx"
 #include "eventhandler.hxx"
-#include "controller/gui.hxx"
+#include "controller/guicontroller.hxx"
 
 using namespace std;
 
