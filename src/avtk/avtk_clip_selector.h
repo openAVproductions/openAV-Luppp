@@ -181,29 +181,33 @@ class ClipSelector : public Fl_Button
             cairo_set_source_rgba(cr, 0, 0, 0, 1.f);
             cairo_fill(cr);
           }
-          /*
-          else if ( i == stopQueuedClip )
-          {
-            cairo_set_source_rgba(cr, 0 / 255.f,  0 / 255.f ,  0 / 255.f, 1.0);
-            cairo_fill(cr);
-            cairo_rectangle( cr, x+9, drawY+8, 9, 9 );
-            cairo_set_source_rgba(cr, 1, 1, 1, 0.6);
-            cairo_fill(cr);
-          }
-          */
-          else if ( clips[i].getState() == GridLogic::STATE_PLAY_QUEUED ||
-                    clips[i].getState() == GridLogic::STATE_STOP_QUEUED ||
-                    clips[i].getState() == GridLogic::STATE_RECORD_QUEUED )
+          else if ( clips[i].getState() == GridLogic::STATE_PLAY_QUEUED )
           {
             cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 1 );
             cairo_fill(cr);
-            cairo_move_to( cr, x+11, drawY+8  );
-            cairo_line_to( cr, x+11, drawY+18 );
-            cairo_move_to( cr, x+17, drawY+8  );
-            cairo_line_to( cr, x+17, drawY+18 );
+            cairo_move_to( cr, x+10, drawY+8 );
+            cairo_line_to( cr, x+19, drawY+13 );
+            cairo_line_to( cr, x+10, drawY+18 );
+            cairo_close_path(cr);
             cairo_set_source_rgba(cr, 0, 0, 0, 1.f);
-            cairo_set_line_width(cr, 2.8f);
+            cairo_fill(cr);
+          }
+          else if ( clips[i].getState() == GridLogic::STATE_STOP_QUEUED )
+          {
+            cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 1 );
+            cairo_fill(cr);
+            cairo_arc( cr, x+14, drawY+13, 4.3, 0, 6.29 );
+            cairo_set_source_rgba(cr, 0, 0, 0, 1.f);
+            cairo_set_line_width(cr, 2.2f);
             cairo_stroke(cr);
+          }
+          else if ( clips[i].getState() == GridLogic::STATE_RECORD_QUEUED )
+          {
+            cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 1 );
+            cairo_fill(cr);
+            cairo_arc( cr, x+14, drawY+13, 4.3, 0, 6.29 );
+            cairo_set_source_rgba(cr, 0, 0, 0, 1.f);
+            cairo_fill(cr);
           }
           else if ( clips[i].getState() == GridLogic::STATE_STOPPED )
           {
