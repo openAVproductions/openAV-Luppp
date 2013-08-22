@@ -27,11 +27,13 @@ void AkaiAPC::recordArm(int t, bool enabled)
 
 void AkaiAPC::progress(int t, int s, float f)
 {
+  /*
   unsigned char data[3];
   data[0] = 176;
   data[1] = 48; // record enable LED
   data[2] = 127 * f;
   jack->writeApcOutput( &data[0] );
+  */
 }
 
 void AkaiAPC::fxTrackSend(int t, int send, float v)
@@ -103,6 +105,14 @@ void noteOn( int track, int note, int vel )
   
   switch( note )
   {
+    case 82: // Master Scene Clips
+    case 83: 
+    case 84: 
+    case 85: 
+    case 86: {
+        jack->getGridLogic()->launchScene(note - 82);
+        } break;
+    
     case 99: { // tap tempo
         jack->getLogic()->tapTempo();
         jack->getControllerUpdater()->tapTempo( true );
