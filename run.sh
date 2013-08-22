@@ -1,7 +1,6 @@
 #!/bin/bash
 
-cd .build/
+xterm -e "sleep 1 && aj-snapshot -r .ajsnapshot" &
 
-#xterm -e "sleep 1 && aj-snapshot -r luppp5apc.ajs" &
+./luppp
 
-./luppp5

@@ -6,3 +6,4 @@ planning/*
 
 *.o
 .tup/*
+/luppp
