@@ -16,11 +16,17 @@ class AudioBuffer
     }
     AudioBuffer(unsigned long size)
     {
-      //ID = id;
+      /// no ID assigned: it *takes* the one from the previous buffer!
       numBeats = 0;
       buffer.resize(size);
     }
     
+    /// this function is used for "resizing" an exisiting buffer, and should
+    /// not be called for any other reason.
+    void setID(int id)
+    {
+      ID = id;
+    }
     
     int getID()
     {

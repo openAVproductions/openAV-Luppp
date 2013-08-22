@@ -59,12 +59,9 @@ void LooperClip::setRequestedBuffer( AudioBuffer* ab )
   if ( _buffer )
   {
     size_t size = _buffer->getData().size();
+    memcpy( &ab->getData().at(0), &_buffer->getData().at(0), sizeof(float)*size);
     
-    for(size_t i = 0; i < size; i++)
-    {
-      ab->getData().at(i) = _buffer->getData().at( i );
-    }
-    
+    ab->setID   ( _buffer->getID()    );
     ab->setBeats( _buffer->getBeats() );
     
     EventDeallocateBuffer e( _buffer );
