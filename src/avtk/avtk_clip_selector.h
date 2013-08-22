@@ -54,15 +54,20 @@ class ClipState
       name = n;
     }
     
-    GridLogic::State getState()
-    {
-      return state;
-    }
     void setState(GridLogic::State s)
     {
       state = s;
     }
-    std::string getName(){return name;}
+    
+    std::string getName()
+    {
+      return name;
+    }
+    
+    GridLogic::State getState()
+    {
+      return state;
+    }
   
   private:
     GridLogic::State state;
@@ -109,50 +114,20 @@ class ClipSelector : public Fl_Button
     **/
     void setState( int clipNum, GridLogic::State s )
     {
-      /*
       switch(s)
       {
-        case GridLogic::STATE_EMPTY:
-            break;
-        case GridLogic::STATE_STOPPED:
-            clips[clipNum].load();
-            clips[clipNum].unqueue();
-            //printf("clipSelector setState() clip %i = STATE_STOPPED\n", clipNum);
-            break;
-        case GridLogic::STATE_PLAYING:
-            //printf("clipSelector setState() clip %i = STATE_PLAYING\n", clipNum);
-            for(int i = 0; i < numClips; i++ )
-              clips[clipNum].stop();
-            clips[clipNum].unqueue();
-            clips[clipNum].play();
-            break;
-        case GridLogic::STATE_PLAY_QUEUED:
-            for(int i = 0; i < numClips; i++ )
-              clips[clipNum].unqueue();
-            clips[clipNum].queue();
-            //printf("clipSelector setState() clip %i = STATE_PLAY_QUEUED\n", clipNum);
-            break;
         case GridLogic::STATE_RECORDING:
-            for(int i = 0; i < numClips; i++ )
-              clips[clipNum].stopRecord();
-            clips[clipNum].unqueue();
-            clips[clipNum].record();
-            //printf("clipSelector setState() clip %i = STATE_RECORDING\n", clipNum);
+            clips[clipNum].setName();
             break;
+        case GridLogic::STATE_EMPTY:
+        case GridLogic::STATE_STOPPED:
+        case GridLogic::STATE_PLAYING:
+        case GridLogic::STATE_PLAY_QUEUED:
         case GridLogic::STATE_RECORD_QUEUED:
-            for(int i = 0; i < numClips; i++ )
-              clips[clipNum].unqueue();
-            clips[clipNum].queue();
-            //printf("clipSelector setState() clip %i = STATE_RECORD_QUEUED\n", clipNum);
-            break;
         case GridLogic::STATE_STOP_QUEUED:
-            //printf("clipSelector setState() clip %i = STATE_STOP_QUEUED\n", clipNum);
-            clips[clipNum].stopRecord();
-            clips[clipNum].stop();
-            clips[clipNum].queue();
-            break;
+        default: break;
       }
-      */
+      
       clips[clipNum].setState( s );
       
       redraw();
