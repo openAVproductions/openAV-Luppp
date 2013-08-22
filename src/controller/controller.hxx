@@ -10,7 +10,7 @@
 class Controller
 {
   public:
-    /// registers subclass instance with ControllerUpdater.
+    /// registers subclass instance with ControllerUpdater
     Controller();
     
     virtual ~Controller(){};

@@ -158,7 +158,9 @@ void handleGuiEvents()
             AudioBuffer* ab = new AudioBuffer(ev.numElements);
             EventLooperClipRequestBuffer returnEvent(ev.track, ev.scene, ab);
             writeToDspRingbuffer( &returnEvent );
+#ifdef DEBUG_BUFFER
             printf("new buffer going to track %i, scene %i\n",ev.track, ev.scene);
+#endif
           } break; }
         case Event::DEALLOCATE_BUFFER: {
           if ( availableRead >= sizeof(EventDeallocateBuffer) ) {

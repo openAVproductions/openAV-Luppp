@@ -116,15 +116,15 @@ class ClipSelector : public Fl_Button
     **/
     void setState( int clipNum, GridLogic::State s )
     {
+#ifdef DEBUG_CLIP
       cout << "setState clipNum = " << clipNum << "  state = " << s << endl;
+#endif
       switch(s)
       {
         case GridLogic::STATE_RECORDING:
             clips[clipNum].setName();
             break;
         case GridLogic::STATE_STOPPED:
-            //clips[clipNum].setName();
-            break;
         case GridLogic::STATE_EMPTY:
         case GridLogic::STATE_PLAYING:
         case GridLogic::STATE_PLAY_QUEUED:

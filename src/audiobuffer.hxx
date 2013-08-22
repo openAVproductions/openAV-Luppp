@@ -40,7 +40,9 @@ class AudioBuffer
     
     void setBeats(int b)
     {
+#ifdef DEBUG_BUFFER
       printf("AudioBuffer now has %i beats\n", b );
+#endif
       numBeats = b;
     }
     
