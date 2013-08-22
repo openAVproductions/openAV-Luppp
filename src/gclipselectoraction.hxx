@@ -33,6 +33,10 @@ static string choose_file()
 static void clipSelectorLoad(int track, int scene)
 {
   string filePathName = choose_file();
+  
+  if ( strcmp( filePathName.c_str(), "" ) == 0 )
+    return;
+  
   AudioBuffer* ab = Worker::loadSample( filePathName );
   EventLooperLoad e = EventLooperLoad( track, scene, ab );
   writeToDspRingbuffer( &e );

@@ -342,7 +342,7 @@ class ClipSelector : public Fl_Button
               else if ( strcmp(m->label(), "Load") == 0 )
               {
                 clipSelectorLoad( ID, clipNum );
-                loadClip( clipNum, "---" );
+                //loadClip( clipNum, "---" );
               }
               else if ( strcmp(m->label(), "1") == 0 ) {
                 EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,1);
