@@ -124,7 +124,12 @@ class RadialStatus : public Fl_Slider
         // recording?
         if ( _recording )
         {
-          
+          cairo_set_source_rgba(cr,1.0,0.0,0.0, 0.5);
+          cairo_arc(cr, x + xc, y + yc, 30, 0, 2 * 3.1415);
+          cairo_fill_preserve(cr);
+          cairo_set_source_rgba(cr,0.0,0.0,0.0, 0.8);
+          cairo_set_line_width(cr, 2.2);
+          cairo_stroke(cr);
         }
         
         // inside circle
