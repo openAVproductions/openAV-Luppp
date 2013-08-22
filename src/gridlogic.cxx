@@ -26,6 +26,30 @@ GridLogic::GridLogic()
 }
 
 
+void GridLogic::launchScene( int scene )
+{
+  for(unsigned int t = 0; t < NTRACKS; t++ )
+  {
+    for(unsigned int s = 0; s < NSCENES; s++ )
+    {
+      LooperClip* lc = jack->getLooper( t )->getClip( s );
+      if ( s == scene )
+        lc->queuePlay();
+      //else
+      //lc->queueStop();
+    }
+    
+    
+  }
+  
+  /*
+  for(unsigned int s = 0; s < NSCENES; s++ )
+  {
+    jack->getControllerUpdater()->setSceneState( -1, s, s );
+  }
+  */
+}
+
 void GridLogic::pressed( int track, int scene )
 {
   LooperClip* lc = jack->getLooper( track )->getClip( scene );

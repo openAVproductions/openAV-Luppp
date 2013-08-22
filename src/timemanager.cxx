@@ -20,8 +20,6 @@ TimeManager::TimeManager():
   tapTempo[0] = 0;
   tapTempo[1] = 0;
   tapTempo[2] = 0;
-  
-  cout << "TimeManager() done" << endl;
 }
 
 

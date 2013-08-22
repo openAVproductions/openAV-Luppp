@@ -32,6 +32,7 @@ namespace Event
     
     GRID_EVENT, // press / release events
     GRID_STATE, // state of one block
+    GRID_LAUNCH_SCENE,
     
     TRACK_SEND,
     TRACK_SIGNAL_LEVEL,
@@ -127,6 +128,18 @@ class EventGridState : public EventBase
     
     EventGridState(){};
     EventGridState(int t, int s, GridLogic::State st): track(t), scene(s), state(st) {}
+};
+
+class EventGridLaunchScene : public EventBase
+{
+  public:
+    int type() { return int(GRID_LAUNCH_SCENE); }
+    uint32_t size() { return sizeof(EventGridLaunchScene); }
+    
+    int scene;
+    
+    EventGridLaunchScene(){};
+    EventGridLaunchScene(int s): scene(s){}
 };
 
 class EventFxReverb : public EventBase

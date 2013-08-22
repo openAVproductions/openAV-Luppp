@@ -79,7 +79,7 @@ class ClipSelector : public Fl_Button
   public:
     
     
-    ClipSelector(int _x, int _y, int _w, int _h, const char *_label):
+    ClipSelector(int _x, int _y, int _w, int _h, const char *_label, bool master = false):
         Fl_Button(_x, _y, _w, _h, _label)
     {
       x = _x;
@@ -88,6 +88,7 @@ class ClipSelector : public Fl_Button
       h = _h;
       
       label = _label;
+      _master = master;
       
       highlight = false;
       mouseOver = false;
@@ -99,6 +100,7 @@ class ClipSelector : public Fl_Button
     static const int numClips = 10;
     ClipState clips[numClips];
     
+    bool _master;
     bool mouseOver;
     bool highlight;
     int x, y, w, h;
@@ -121,7 +123,7 @@ class ClipSelector : public Fl_Button
             clips[clipNum].setName();
             break;
         case GridLogic::STATE_STOPPED:
-            clips[clipNum].setName();
+            //clips[clipNum].setName();
             break;
         case GridLogic::STATE_EMPTY:
         case GridLogic::STATE_PLAYING:
@@ -285,6 +287,14 @@ class ClipSelector : public Fl_Button
             // handle right clicks: popup menu
             if ( Fl::event_state(FL_BUTTON3) )
             {
+              if ( _master )
+              {
+                
+                redraw();
+                return 1;
+              }
+              
+              
               Fl_Menu_Item rclick_menu[] =
               {
                 { "Load" },
@@ -353,6 +363,14 @@ class ClipSelector : public Fl_Button
             }
             else
             {
+              if ( _master )
+              {
+                EventGridLaunchScene e( clipNum );
+                writeToDspRingbuffer( &e );
+                redraw();
+                return 1;
+              }
+              
               // write "pressed" event for this track,scene
               EventGridEvent e( ID, clipNum, true );
               writeToDspRingbuffer( &e );

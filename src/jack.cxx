@@ -282,7 +282,7 @@ void Jack::writeApcOutput( unsigned char* data )
   }
   else
   {
-    EventGuiPrint e( "__FILE__ __LINE__ Buffer not valid" );
+    EventGuiPrint e( "Jack::writeApcOutput(): Buffer full!" );
     writeToGuiRingbuffer( &e );
   }
 }

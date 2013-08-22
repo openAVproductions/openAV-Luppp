@@ -52,6 +52,12 @@ void handleDspEvents()
               jack->getGridLogic()->released( ev.track, ev.scene );
           } break; }
         
+        case Event::GRID_LAUNCH_SCENE: {
+            EventGridLaunchScene ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventGridLaunchScene) );
+            jack->getGridLogic()->launchScene( ev.scene );
+            break; }
+        
         case Event::LOOPER_LOAD: {
           if ( availableRead >= sizeof(EventLooperLoad) ) {
             EventLooperLoad ev;

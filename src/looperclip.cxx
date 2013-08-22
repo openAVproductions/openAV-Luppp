@@ -181,13 +181,12 @@ void LooperClip::queuePlay()
 {
   _queuePlay   = true;
   _queueStop   = false;
-  _queueRecord = false;
 }
+
 void LooperClip::queueStop()
 {
   _queueStop   = true;
   _queuePlay   = false;
-  _queueRecord = false;
 }
 
 void LooperClip::queueRecord()

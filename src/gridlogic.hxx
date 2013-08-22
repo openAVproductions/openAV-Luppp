@@ -46,6 +46,9 @@ class GridLogic : public TimeObserver
     /// button release / click-release event
     void released( int track, int scene );
     
+    /// master controls, launches a horizontal scene with one event
+    void launchScene( int scene );
+    
     /// GUI load event
     void load(int track, int scene, AudioBuffer* ab);
     
