@@ -27,12 +27,15 @@ class Controller
     /// Time
     virtual void tapTempo(bool b){};
     
+    
+    
     /// track functionality
     virtual void mute(int t, bool b){};
     virtual void volume(int t, float f){};
     virtual void progress(int t, int s, float f){};
     virtual void recordArm(int t, bool r){};
     virtual void setSceneState(int track, int scene, GridLogic::State s){};
+    virtual void launchScene( int scene ){};
 };
 
 #endif // LUPPP_CONTROLLER_H

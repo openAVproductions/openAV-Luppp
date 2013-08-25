@@ -81,6 +81,24 @@ void AkaiAPC::setSceneState(int t, int clip, GridLogic::State s)
   jack->writeApcOutput( &data[0] );
 }
 
+void AkaiAPC::launchScene( int s )
+{
+  unsigned char data[3];
+  
+  for(int i = 0; i < 5; i++ )
+  {
+    data[0] = 128;
+    data[1] = 82 + i; // scene play
+    data[2] = 0;
+    jack->writeApcOutput( &data[0] );
+  }
+  
+  data[0] = 144;
+  data[1] = 82 + s;
+  data[2] = 127;
+  jack->writeApcOutput( &data[0] );
+}
+
 void AkaiAPC::mute(int t, bool b)
 {
   
@@ -92,7 +110,7 @@ void AkaiAPC::volume(int t, float f)
   
 }
 
-void noteOn( int track, int note, int vel )
+void AkaiAPC::noteOn( int track, int note, int vel )
 {
   printf("apc noteOn: t = %i, n = %i, vel = %i\n", track, note, vel);
   if ( note >= 53 && note <= 57 )
@@ -130,7 +148,7 @@ void noteOn( int track, int note, int vel )
   
 }
 
-void noteOff( int track, int note, int vel )
+void AkaiAPC::noteOff( int track, int note, int vel )
 {
   printf("apc noteOff: t = %i, n = %i, vel = %i\n", track, note, vel);
   if ( note >= 53 && note <= 57 )
@@ -138,16 +156,25 @@ void noteOff( int track, int note, int vel )
     jack->getGridLogic()->released( track, note - 53 );
   }
   
-    switch( note )
+  switch( note )
   {
     case 99: { // tap tempo
         EventTimeTempoTap e(false);
         writeToGuiRingbuffer( &e );
         } break; 
+    
+    case 82: // scene launch
+    case 83:
+    case 84:
+    case 85:
+    case 86: {
+        int s = jack->getGridLogic()->getLaunchedScene();
+        launchScene( s );
+        } break ;
   }
 }
 
-void ccChange( int track, int cc, float value )
+void AkaiAPC::ccChange( int track, int cc, float value )
 {
   switch( cc )
   {

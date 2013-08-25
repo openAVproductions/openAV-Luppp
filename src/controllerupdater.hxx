@@ -60,6 +60,12 @@ class ControllerUpdater
         c.at(i)->trackSend(t, send, v);
     }
     
+    void launchScene( int scene )
+    {
+      for(unsigned int i = 0; i < c.size(); i++)
+        c.at(i)->launchScene(scene);
+    }
+    
     void setSceneState(int t, int clip, GridLogic::State s)
     {
       for(unsigned int i = 0; i < c.size(); i++)

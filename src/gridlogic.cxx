@@ -19,10 +19,12 @@ const char* GridLogic::StateString[8] = {
 
 GridLogic::GridLogic()
 {
-  for( int i = 0; i < NTRACKS*NSCENES; i++ )
-  {
-    //state[i] = STATE_EMPTY;
-  }
+  sceneLaunch = 0;
+}
+
+int GridLogic::getLaunchedScene()
+{
+  return sceneLaunch;
 }
 
 
@@ -51,12 +53,9 @@ void GridLogic::launchScene( int scene )
     }
   }
   
-  /*
-  for(unsigned int s = 0; s < NSCENES; s++ )
-  {
-    
-  }
-  */
+  sceneLaunch = scene;
+  
+  jack->getControllerUpdater()->launchScene( scene );
 }
 
 void GridLogic::pressed( int track, int scene )
@@ -66,7 +65,7 @@ void GridLogic::pressed( int track, int scene )
   GridLogic::State s = lc->getState();
 
 #ifdef DEBUG_CLIP
-  printf("GridLogic::pressed() before press state = %s\n", StateString[ int(s) ] );
+  printf("GridLogic::pressed() before press state = %s\n", StateString[ int(scene) ] );
 #endif 
   if ( s == STATE_EMPTY )
     lc->queueRecord();

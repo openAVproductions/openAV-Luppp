@@ -48,6 +48,7 @@ class GridLogic : public TimeObserver
     
     /// master controls, launches a horizontal scene with one event
     void launchScene( int scene );
+    int  getLaunchedScene();
     
     /// GUI load event
     void load(int track, int scene, AudioBuffer* ab);
@@ -62,6 +63,9 @@ class GridLogic : public TimeObserver
     /// for debug purposes: use static_cast<int>(GridLogic::State) to access
     static const char* StateString[8];
     
+  private:
+    /// holds last scene launch
+    int sceneLaunch;
 };
 
 #endif // LUPPP_GRID_LOGIC_H
