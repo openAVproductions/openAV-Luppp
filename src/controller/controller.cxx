@@ -12,3 +12,5 @@ Controller::Controller()
 {
   jack->getControllerUpdater()->registerController( this );
 }
+
+void Controller::reset(){};

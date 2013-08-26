@@ -27,8 +27,6 @@ class Controller
     /// Time
     virtual void tapTempo(bool b){};
     
-    
-    
     /// track functionality
     virtual void mute(int t, bool b){};
     virtual void volume(int t, float f){};
@@ -36,6 +34,9 @@ class Controller
     virtual void recordArm(int t, bool r){};
     virtual void setSceneState(int track, int scene, GridLogic::State s){};
     virtual void launchScene( int scene ){};
+    
+    /// reset controller
+    virtual void reset();
 };
 
 #endif // LUPPP_CONTROLLER_H
