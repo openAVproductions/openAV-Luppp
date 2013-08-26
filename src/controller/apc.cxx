@@ -37,27 +37,33 @@ void AkaiAPC::progress(int t, int s, float f)
 
 void AkaiAPC::trackSend(int t, int send, float v)
 {
-  unsigned char data[3];
-  data[0] = 176 + t;
-  
-  if ( data[0] >= 184)
+  if ( t >= NTRACKS)
   {
     // master track
     return;
   }
   
-  switch( send )
+  unsigned char data[3];
+  
+  if ( send == SEND_SIDE )
   {
-    case SEND_REV:
-      data[1] = 18; break;
-    case SEND_POST:
-      data[1] = 17; break;
-    case SEND_SIDE:
-      data[1] = 16; break;
-    default:
-      break;
+    data[0] = 144 + t;
+    data[1] = 49;
+    data[2] = v > 0.5 ? 127 : 0 ;
   }
-  data[2] = 127 * v;
+  else if ( send == SEND_POST )
+  {
+    data[0] = 176 + t;
+    data[1] = 16;
+    data[2] = 127 * v;
+  }
+  else if ( send == SEND_REV )
+  {
+    data[0] = 176 + t;
+    data[1] = 17;
+    data[2] = 127 * v;
+  }
+  
   jack->writeApcOutput( &data[0] );
 }
 
@@ -122,6 +128,10 @@ void AkaiAPC::noteOn( int track, int note, int vel )
   
   switch( note )
   {
+    case 49: { // solo / cue
+        jack->getLogic()->trackSend(track, SEND_SIDE, 1);
+        }
+    
     case 82: // Master Scene Clips
     case 83: 
     case 84: 
@@ -158,6 +168,10 @@ void AkaiAPC::noteOff( int track, int note, int vel )
   
   switch( note )
   {
+    case 49: { // solo / cue
+        jack->getLogic()->trackSend(track, SEND_SIDE, 0);
+        }
+    
     case 99: { // tap tempo
         EventTimeTempoTap e(false);
         writeToGuiRingbuffer( &e );
@@ -191,7 +205,7 @@ void AkaiAPC::ccChange( int track, int cc, float value )
       
       /// Device Control
       case 16: {
-          jack->getLogic()->trackSend( track, SEND_SIDE, value );
+          //jack->getLogic()->trackSend( track, SEND_SIDE, value );
           break; }
       case 17: {
           jack->getLogic()->trackSend( track, SEND_POST, value );

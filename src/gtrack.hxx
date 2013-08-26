@@ -14,6 +14,7 @@
 #include "avtk/avtk_volume.h"
 #include "avtk/avtk_button.h"
 #include "avtk/avtk_background.h"
+#include "avtk/avtk_light_button.h"
 #include "avtk/avtk_clip_selector.h"
 #include "avtk/avtk_radial_status.h"
 
@@ -52,28 +53,22 @@ class GTrack : public Fl_Group
       
       volume(x+66, y +425, 36, 166, ""),
       
-      side(x+21, y +435 +  0, 30, 30, "Side"),
+      side(x+11, y +427 +  0, 50, 25, "Side"),
+      
       post(x+21, y +435 + 50, 30, 30, "Post"),
       rev (x+21, y +440 +100, 30, 30, "Verb")
-      
-      //progress(x+5, y+ 26, 100, 10, "Source UI")
     {
       ID = privateID++;
       
       clipSel.setID( ID );
       
-      rev.callback( gtrack_reverb_cb, this );
       side.callback( gtrack_side_cb, this );
+      side.setColor( 0, 0.6, 1 );
+      
+      rev.callback( gtrack_reverb_cb, this );
       post.callback( gtrack_post_cb, this );
       
       volume.callback( gtrack_vol_cb, this );
-      
-      /*
-      progress.maximum(1.0f);
-      progress.minimum(0.0f);
-      progress.color( FL_BLACK );
-      progress.selection_color( FL_BLUE );
-      */
       
       volBox.maximum(1.0f);
       volBox.minimum(0.0f);
@@ -102,11 +97,9 @@ class GTrack : public Fl_Group
     
     Avtk::Volume volume;
     
-    Avtk::Dial   side;
+    Avtk::LightButton side;
     Avtk::Dial   post;
     Avtk::Dial   rev;
-    
-    //Fl_Progress  progress;
     
     static int privateID;
 };
@@ -118,13 +111,23 @@ void gtrack_reverb_cb(Fl_Widget *w, void *data)
   writeToDspRingbuffer( &e );
   printf("track %i reverb send %f\n", track->ID, ((Avtk::Dial*)w)->value() );
 }
+
+
 void gtrack_side_cb(Fl_Widget *w, void *data)
 {
+  /*
   GTrack* track = (GTrack*) data;
-  EventTrackSend e( track->ID, SEND_SIDE, ((Avtk::Dial*)w)->value() );
+  
+  bool b = ((Avtk::Dial*)w)->value();
+  float v = float( b );
+  printf("track %i post send %s, %f\n", track->ID, b ? "true" : "false", v );
+  
+  EventTrackSend e( track->ID, SEND_SIDE, v );
   writeToDspRingbuffer( &e );
-  printf("track %i post send %f\n", track->ID, ((Avtk::Dial*)w)->value() );
+  */
 }
+
+
 void gtrack_post_cb(Fl_Widget *w, void *data)
 {
   GTrack* track = (GTrack*) data;
