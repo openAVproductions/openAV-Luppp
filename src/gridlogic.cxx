@@ -77,6 +77,9 @@ void GridLogic::pressed( int track, int scene )
     lc->queueStop();
   
   if ( s == STATE_RECORDING )
+    lc->queuePlay();
+  
+  if ( s == STATE_PLAY_QUEUED )
     lc->queueStop();
   
   s = lc->getState();
