@@ -22,7 +22,7 @@ LooperClip::LooperClip(int t, int s) :
   _queueStop  = false;
   _queueRecord= false;
   
-  _buffer = new AudioBuffer(44100);
+  _buffer = new AudioBuffer(4410);
   _newBufferInTransit = false;
   
   _playhead   = 0;
