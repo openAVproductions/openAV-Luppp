@@ -35,7 +35,7 @@ void AkaiAPC::progress(int t, int s, float f)
   */
 }
 
-void AkaiAPC::fxTrackSend(int t, int send, float v)
+void AkaiAPC::trackSend(int t, int send, float v)
 {
   unsigned char data[3];
   data[0] = 176 + t;

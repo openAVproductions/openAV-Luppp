@@ -23,7 +23,7 @@ class AkaiAPC : public Controller, public MidiObserver
     void setSceneState(int track, int clip, GridLogic::State s);
     
     /// track FX
-    void fxTrackSend(int t, int send, float v);
+    void trackSend(int t, int send, float v);
     
     void midi(unsigned char* data);
     
