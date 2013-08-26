@@ -35,6 +35,11 @@ class ControllerUpdater
       c.push_back( controller );
     }
     
+    void reset()
+    {
+      for(unsigned int i = 0; i < c.size(); i++)
+        c.at(i)->reset();
+    }
     
     void mute(int t, bool b)
     {

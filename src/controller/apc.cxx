@@ -11,7 +11,10 @@ extern Jack* jack;
 
 AkaiAPC::AkaiAPC() :
   Controller(),
-  MidiObserver("apc")
+  MidiObserver("apc"),
+  shiftPressed(false),
+  footpedalTrack(0),
+  footpedalScene(0)
 {
 }
 
@@ -121,7 +124,13 @@ void AkaiAPC::noteOn( int track, int note, int vel )
   printf("apc noteOn: t = %i, n = %i, vel = %i\n", track, note, vel);
   if ( note >= 53 && note <= 57 )
   {
-    jack->getGridLogic()->pressed( track, note - 53 );
+    if ( shiftPressed )
+    {
+      footpedalTrack = track;
+      footpedalScene = note - 53;
+    }
+    else
+      jack->getGridLogic()->pressed( track, note - 53 );
     return;
   }
   
@@ -139,6 +148,10 @@ void AkaiAPC::noteOn( int track, int note, int vel )
     case 86: {
         jack->getGridLogic()->launchScene(note - 82);
         } break;
+    
+    case 98:  { // Shift
+        shiftPressed = true;
+        break; }
     
     case 99: { // tap tempo
         jack->getLogic()->tapTempo();
@@ -185,6 +198,10 @@ void AkaiAPC::noteOff( int track, int note, int vel )
         int s = jack->getGridLogic()->getLaunchedScene();
         launchScene( s );
         } break ;
+    
+    case 98:  { // Shift
+        shiftPressed = false;
+        break; }
   }
 }
 
@@ -215,8 +232,16 @@ void AkaiAPC::ccChange( int track, int cc, float value )
           break; }
       
       case 64: { // FootSwitch 1
-          
-          break; }
+          if ( value > 0.5 )
+          {
+            printf("footpedal press %i, %i\n", footpedalTrack, footpedalScene );
+            jack->getGridLogic()->pressed( footpedalTrack, footpedalScene );
+          }
+          else
+          {
+            printf("footpedal release %i, %i\n", footpedalTrack, footpedalScene );
+            jack->getGridLogic()->released( footpedalTrack, footpedalScene );
+          } break; }
       case 67:  { // FootSwitch 2
           
           break; }
@@ -250,5 +275,19 @@ void AkaiAPC::midi(unsigned char* data)
   else if ( b1 >= 176 && b1 < 176 + 16 ) // CC
   {
     ccChange( b1 - 176, b2, data[2] / 127.f );
+  }
+}
+
+
+void AkaiAPC::reset()
+{
+  unsigned char data[3];
+  // setup "volume" style rotary display
+  for(int i = 0; i < NTRACKS; i++)
+  {
+    data[0] = 176 + i;
+    data[1] = 0x19;
+    data[2] = 2;
+    jack->writeApcOutput( &data[0] );
   }
 }

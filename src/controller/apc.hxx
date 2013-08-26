@@ -25,9 +25,16 @@ class AkaiAPC : public Controller, public MidiObserver
     /// track FX
     void trackSend(int t, int send, float v);
     
+    void reset();
+    
     void midi(unsigned char* data);
     
   private:
+    bool shiftPressed;
+    
+    int footpedalTrack;
+    int footpedalScene;
+    
     /// for handling events
     void ccChange( int track, int cc, float value );
     void noteOff( int track, int note, int vel );
