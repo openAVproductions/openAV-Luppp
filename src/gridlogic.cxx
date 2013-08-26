@@ -82,6 +82,9 @@ void GridLogic::pressed( int track, int scene )
   if ( s == STATE_PLAY_QUEUED )
     lc->queueStop();
   
+  if ( s == STATE_STOP_QUEUED )
+    lc->queuePlay();
+  
   s = lc->getState();
 #ifdef DEBUG_CLIP
   printf("GridLogic::pressed() after press state = %s\n", StateString[ int(s) ] );
@@ -92,7 +95,8 @@ void GridLogic::pressed( int track, int scene )
 
 void GridLogic::released( int track, int scene )
 {
-  //jack->getControllerUpdater()->setSceneState(track, scene, state[track*NSCENES + scene] );
+  GridLogic::State s = jack->getLooper( track )->getClip( scene )->getState();
+  jack->getControllerUpdater()->setSceneState(track, scene, s );
 }
 
 void GridLogic::load(int track, int scene, AudioBuffer* ab)
