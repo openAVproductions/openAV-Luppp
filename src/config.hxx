@@ -3,11 +3,14 @@
 #define LUPPP_CONFIG_H
 
 ///     DEBUG OPTIONS
+// Track operations
+#define DEBUG_TRACKS    1
+
 // Clip selection / queueing
 #define DEBUG_CLIP      1
+
 // Buffer loading / resizing
 #define DEBUG_BUFFER    1
-
 
 
 /// General Options

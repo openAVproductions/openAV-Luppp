@@ -38,20 +38,18 @@ class Jack
     int getSamplerate();
     
     /// get functions for components owned by Jack 
-    Looper*             getLooper(int t) {return loopers.at(t); }
-    Metronome*          getMetronome(){return metronome;}
+    Looper*             getLooper(int t);
+    TrackOutput*        getTrackOutput(int t);
+    
     Logic*              getLogic(){return logic;}
+    Metronome*          getMetronome(){return metronome;}
     GridLogic*          getGridLogic(){return gridLogic;}
-    TrackOutput*        getTrackOutput(int t){return trackOutputs.at(t);}
     TimeManager*        getTimeManager(){return &timeManager;}
     ControllerUpdater*  getControllerUpdater(){return controllerUpdater;}
     
     /// register MIDI observers: they're called when a MIDI message arrives on
     /// a port they're watching
-    void registerMidiObserver( MidiObserver* mo )
-    {
-      midiObservers.push_back( mo );
-    }
+    void registerMidiObserver( MidiObserver* mo );
     
     void masterVolume( float vol ){masterVol = vol;}
     

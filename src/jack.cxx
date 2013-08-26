@@ -144,6 +144,42 @@ void Jack::activate()
 }
 
 
+TrackOutput* Jack::getTrackOutput(int t)
+{
+  if ( t >= 0 && t < NTRACKS )
+    return trackOutputs.at(t);
+#ifdef DEBUG_TRACKS
+  else
+  {
+    printf( "Jack::getTrackOutput() returning 0x0: invalid track requested!\n" );
+  }
+#endif
+  
+  return 0;
+}
+
+
+Looper* Jack::getLooper(int t)
+{
+  if ( t >= 0 && t < NTRACKS )
+    return loopers.at(t);
+#ifdef DEBUG_TRACKS
+  else
+  {
+    printf( "Jack::getLooper() returning 0x0: invalid track requested!\n" );
+  }
+#endif
+  
+  return 0;
+}
+
+
+void Jack::registerMidiObserver( MidiObserver* mo )
+{
+  midiObservers.push_back( mo );
+}
+
+
 int Jack::process (jack_nframes_t nframes)
 {
   

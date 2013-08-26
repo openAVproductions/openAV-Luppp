@@ -1,5 +1,7 @@
 
 === NEW
+-Update SIDE control to blue button
+-Add track recordArm functionality to record over loaded loops
 
 - Remove TimeObserver obligation from Looper, not needed as GridLogic handles Time now
 
