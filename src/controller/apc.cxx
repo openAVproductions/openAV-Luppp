@@ -176,34 +176,46 @@ void AkaiAPC::noteOff( int track, int note, int vel )
 
 void AkaiAPC::ccChange( int track, int cc, float value )
 {
-  switch( cc )
+  if ( track >= 0 && track < NTRACKS )
   {
-    /// Track faders
-    case 7: {
-        jack->getLogic()->trackVolume( track, value );
-        break; }
-    case 14: { // master
-        jack->getLogic()->trackVolume( -1, value );
-        break; }
-    
-    
-    /// Device Control
-    case 16: {
-        jack->getLogic()->trackSend( track, SEND_SIDE, value );
-        break; }
-    case 17: {
-        jack->getLogic()->trackSend( track, SEND_POST, value );
-        break; }
-    case 18: {
-        jack->getLogic()->trackSend( track, SEND_REV, value );
-        break; }
-    
-    case 64: { // FootSwitch 1
-        
-        break; }
-    case 67:  { // FootSwitch 2
-        
-        break; }
+    switch( cc )
+    {
+      /// Track faders
+      case 7: {
+          jack->getLogic()->trackVolume( track, value );
+          break; }
+      case 14: { // master
+          jack->getLogic()->trackVolume( -1, value );
+          break; }
+      
+      
+      /// Device Control
+      case 16: {
+          jack->getLogic()->trackSend( track, SEND_SIDE, value );
+          break; }
+      case 17: {
+          jack->getLogic()->trackSend( track, SEND_POST, value );
+          break; }
+      case 18: {
+          jack->getLogic()->trackSend( track, SEND_REV, value );
+          break; }
+      
+      case 64: { // FootSwitch 1
+          
+          break; }
+      case 67:  { // FootSwitch 2
+          
+          break; }
+    }
+  }
+  else
+  // tracks outside normal track range
+  // handle master track buttons etc here
+  {
+    if ( cc == 16 ) // master device control select
+    {
+      
+    }
   }
 }
 
