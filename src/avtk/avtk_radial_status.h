@@ -100,51 +100,40 @@ class RadialStatus : public Fl_Slider
         
         float angle = newAngle / 16.f;
         
-        /*
-        // draw background quadrants
-        int nbeats = 4;
-        for(int i = 0; i < nbeats; i ++ )
-        {
-          cairo_set_source_rgba(cr, 0.0, 0.0, 1.f, 1);
-          float start = (i-1) * (3.1415*2)/nbeats;
-        }
-        */
-        
         cairo_set_line_cap ( cr, CAIRO_LINE_CAP_ROUND );
         //cairo_move_to( cr, x + xc, y + yc );
         cairo_arc( cr, x + xc, y + yc, xc - 10, -(3.1415/2), angle * 6.28 - (3.1415/2) );
-        cairo_set_source_rgba (cr, 0.0, 0.0, 0.0, 0.8 );
-        cairo_set_line_width(cr, 13.2);
+        cairo_set_source_rgba (cr, 0.0, 0.0, 0.0, 0.5 );
+        cairo_set_line_width(cr, 12);
         cairo_stroke_preserve(cr);
         
         cairo_set_source_rgba (cr, 1.0, 0.48, 0.0, 1 );
         cairo_set_line_width(cr, 8.2);
         cairo_stroke(cr);
         
+        
         // recording?
         if ( _recording )
         {
-          cairo_set_source_rgba(cr,1.0,0.0,0.0, 0.5);
+          cairo_set_source_rgba(cr,1.0,0.0,0.0, 0.8);
           cairo_arc(cr, x + xc, y + yc, 30, 0, 2 * 3.1415);
           cairo_fill_preserve(cr);
           cairo_set_source_rgba(cr,0.0,0.0,0.0, 0.8);
           cairo_set_line_width(cr, 2.2);
           cairo_stroke(cr);
+          
+          // color of internal dot depending on rec state
+          cairo_set_source_rgba(cr,0.0,0.0,0.0, 1);
+        }
+        else
+        {
+          cairo_set_source_rgba(cr,0.3,0.3,0.3, 1);
         }
         
         // inside circle
-        cairo_set_source_rgba(cr,0.3,0.3,0.3, 1);
         cairo_arc(cr, x + xc, y + yc, 10, 0, 2 * 3.1415);
         cairo_set_line_width(cr, 4.2);
         cairo_fill(cr);
-        
-        /*
-        cairo_move_to (cr,x + xc, y + yc);
-        cairo_set_source_rgba (cr, 1.0, 0.48, 0.0, 1);
-        cairo_rotate ( cr, angle * 6.28 );
-        cairo_rel_line_to ( cr,0, - (yc - 11) );
-        cairo_stroke(cr);
-        */
         
         cairo_restore( cr );
         

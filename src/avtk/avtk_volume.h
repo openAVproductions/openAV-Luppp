@@ -59,7 +59,17 @@ class Volume : public Fl_Slider
       value( 0.78f );
     }
     
-    void amplitude  (float aL, float aR) {ampL = aL; ampR = aR; redraw();}
+    void amplitude  (float aL, float aR)
+    {
+      // only redraw if changed more than 0.05
+      if ( abs(ampL - aL) > 0.05 ||
+           abs(ampR - aR) > 0.05 )
+      {
+        ampL = aL;
+        ampR = aR;
+        redraw();
+      }
+    }
     void compression(float c) {compress = c; redraw();}
     
     bool active;
