@@ -88,10 +88,10 @@ void handleGuiEvents()
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTrackVol) );
             if ( ev.track < 0 )
             {
-              gui->getMasterTrack()->getVolume()->value( ev.vol );
+              gui->getMasterTrack()->getVolume()->fader( ev.vol );
             }
             else
-              gui->getTrack(ev.track)->getVolume()->value( ev.vol );
+              gui->getTrack(ev.track)->getVolume()->fader( ev.vol );
           } break; }
         
         

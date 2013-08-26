@@ -130,7 +130,7 @@ void AkaiAPC::noteOn( int track, int note, int vel )
   {
     case 49: { // solo / cue
         jack->getLogic()->trackSend(track, SEND_SIDE, 1);
-        }
+        } break;
     
     case 82: // Master Scene Clips
     case 83: 

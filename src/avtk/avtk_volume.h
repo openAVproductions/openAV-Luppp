@@ -59,11 +59,18 @@ class Volume : public Fl_Slider
       value( 0.78f );
     }
     
+    void fader( float f )
+    {
+      // redraw on larger value change
+      if ( fabsf( value() - f ) > 0.05 )
+        value( f );
+    }
+    
     void amplitude  (float aL, float aR)
     {
       // only redraw if changed more than 0.05
-      if ( abs(ampL - aL) > 0.05 ||
-           abs(ampR - aR) > 0.05 )
+      if ( fabsf(ampL - aL) > 0.05 ||
+           fabsf(ampR - aR) > 0.05 )
       {
         ampL = aL;
         ampR = aR;
