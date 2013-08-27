@@ -6,6 +6,7 @@
 
 #include "jack.hxx"
 #include "audiobuffer.hxx"
+#include "worker.hxx"
 
 // include the header.c file in the planning dir:
 // its the GIMP .c export of the LUPPP header image 
@@ -89,6 +90,8 @@ int Gui::show()
   window.show();
   
   gui_static_read_rb( this );
+  
+  Worker::save("dummyPath", "dummyName");
   
   return Fl::run();
 }

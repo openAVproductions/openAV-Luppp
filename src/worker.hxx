@@ -9,28 +9,36 @@
 
 #include "audiobuffer.hxx"
 
-//#include "libjson/libjson.h"
+#include "cjson/cJSON.h"
 
 using namespace std;
 
 namespace Worker
 {
-  /*
-  static void writeStuff()
+  
+  static void save(std::string path, std::string sessionName)
   {
+    cJSON *root, *fmt;
+    char* out;
     
+    root=cJSON_CreateObject();
+    cJSON_AddItemToObject(root, "session", cJSON_CreateString( sessionName.c_str() ));
+    cJSON_AddItemToObject(root, "format", fmt=cJSON_CreateObject() );
     
-    JSONNode n(JSON_NODE);
-    n.push_back(JSONNode("String Node", "String Value"));
-    n.push_back(JSONNode("Integer Node", 42));
-    n.push_back(JSONNode("Floating Point Node", 3.14));
-    n.push_back(JSONNode("Boolean Node", true));
-    std::string jc = n.write_formatted();
-    std::cout << jc << std::endl;
+    cJSON_AddStringToObject(fmt,"type",    "rect");
+    cJSON_AddNumberToObject(fmt,"width",    1920);
+    cJSON_AddNumberToObject(fmt,"height",    1080);
     
+    cJSON_AddFalseToObject (fmt,"interlace");
+    cJSON_AddNumberToObject(fmt,"frame rate",  24);
     
+    cJSON_AddNumberToObject( root, "version", 1 );
+    
+    out=cJSON_Print(root);
+    
+    cout << out << endl;
   }
-  */
+  
   /// loads a sample into a new AudioBuffer, returning the buffer
   static AudioBuffer* loadSample( string path )
   {
