@@ -30,7 +30,8 @@ void Logic::trackVolume(int t, float v)
 
 void Logic::trackRecordArm(int t, bool v)
 {
-  
+  jack->getTrackOutput( t )->recordArm( v );
+  jack->getControllerUpdater()->recordArm( t, v );
 }
 
 

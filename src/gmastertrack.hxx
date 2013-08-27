@@ -66,7 +66,8 @@ class GMasterTrack : public Fl_Group
       title( strdup(l) ),
       bg( x, y , w, h, title ),
       
-      clipSel(x + 5, y + 26 + 102, 140, 294,""),
+      // with "true" master flag: won't influence grid
+      clipSel(x + 5, y + 26 + 102, 140, 294,"", true),
       
       source(x+5, y+26, 140, 100, ""),
       volBox(x+5, y+422, 140, 172, ""),
@@ -166,6 +167,10 @@ class GMasterTrack : public Fl_Group
     Avtk::Volume* getVolume()
     {
       return &volume;
+    }
+    Avtk::ClipSelector* getClipSelector()
+    {
+      return &clipSel;
     }
     Avtk::Reverb* getReverb()
     {

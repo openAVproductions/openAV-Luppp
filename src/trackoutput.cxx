@@ -8,6 +8,7 @@
 TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
   AudioProcessor(),
   track(t),
+  _recordArm(false),
   previousInChain(ap),
   dbMeter(44100)
 {

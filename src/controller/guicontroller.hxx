@@ -24,6 +24,7 @@ class LupppGUI : public Controller
     void volume(int t, float f);
     void progress(int t, int s, float p);
     void recordArm(int t, bool b);
+    void launchScene( int scene );
     void setSceneState(int track, int clip, GridLogic::State s);
     
 };

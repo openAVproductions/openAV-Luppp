@@ -105,6 +105,14 @@ void handleGuiEvents()
             else
               gui->getTrack(ev.track)->getRadialStatus()->recording( false );
           } break; }
+        case Event::GRID_LAUNCH_SCENE: {
+          if ( availableRead >= sizeof(EventGridLaunchScene) ) {
+            EventGridLaunchScene ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventGridLaunchScene) );
+            for(int i = 0; i < NSCENES; i++)
+              gui->getMasterTrack()->getClipSelector()->setState( i, GridLogic::STATE_EMPTY );
+            gui->getMasterTrack()->getClipSelector()->setState( ev.scene, GridLogic::STATE_PLAYING );
+          } break; }
         
         case Event::TRACK_SEND: {
           if ( availableRead >= sizeof(EventTrackSend) ) {

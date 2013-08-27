@@ -137,6 +137,9 @@ void AkaiAPC::noteOn( int track, int note, int vel )
   
   switch( note )
   {
+    case 48: { // record
+        jack->getLogic()->trackRecordArm(track, true);
+        } break;
     case 49: { // solo / cue
         jack->getLogic()->trackSend(track, SEND_SIDE, 1);
         } break;
@@ -181,6 +184,9 @@ void AkaiAPC::noteOff( int track, int note, int vel )
   
   switch( note )
   {
+    case 48: { // record
+        jack->getLogic()->trackRecordArm(track, false);
+        } break;
     case 49: { // solo / cue
         jack->getLogic()->trackSend(track, SEND_SIDE, 0);
         }

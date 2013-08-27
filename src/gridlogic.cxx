@@ -61,29 +61,39 @@ void GridLogic::launchScene( int scene )
 void GridLogic::pressed( int track, int scene )
 {
   // get the clip, do the "press" action based on current state.
-  LooperClip* lc = jack->getLooper( track )->getClip( scene );
+  LooperClip* lc  = jack->getLooper( track )->getClip( scene );
+  TrackOutput* to = jack->getTrackOutput( track );
   GridLogic::State s = lc->getState();
 
 #ifdef DEBUG_CLIP
   printf("GridLogic::pressed() before press state = %s\n", StateString[ int(scene) ] );
 #endif 
-  if ( s == STATE_EMPTY )
+  
+  if ( to->recordArm() && !lc->recording() )
+  {
     lc->queueRecord();
-  
-  if ( s == STATE_STOPPED )
-    lc->queuePlay();
-  
-  if ( s == STATE_PLAYING )
-    lc->queueStop();
-  
-  if ( s == STATE_RECORDING )
-    lc->queuePlay();
-  
-  if ( s == STATE_PLAY_QUEUED )
-    lc->queueStop();
-  
-  if ( s == STATE_STOP_QUEUED )
-    lc->queuePlay();
+    to->recordArm(false);
+  }
+  else
+  {
+    if ( s == STATE_EMPTY )
+      lc->queueRecord();
+    
+    if ( s == STATE_STOPPED )
+      lc->queuePlay();
+    
+    if ( s == STATE_PLAYING )
+      lc->queueStop();
+    
+    if ( s == STATE_RECORDING )
+      lc->queuePlay();
+    
+    if ( s == STATE_PLAY_QUEUED )
+      lc->queueStop();
+    
+    if ( s == STATE_STOP_QUEUED )
+      lc->queuePlay();
+  }
   
   s = lc->getState();
 #ifdef DEBUG_CLIP
@@ -130,7 +140,7 @@ void GridLogic::bar()
     GridLogic::State s = jack->getLooper( track )->getClip( scene )->getState();
     if ( s != STATE_EMPTY )
     {
-      printf("%i, %i:after bar() state = %s\n", track, scene, StateString[ int(s) ] );
+      //printf("%i, %i:after bar() state = %s\n", track, scene, StateString[ int(s) ] );
     }
 #endif
   }

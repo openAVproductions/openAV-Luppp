@@ -38,6 +38,12 @@ void LupppGUI::setSceneState(int t, int clip, GridLogic::State s)
   writeToGuiRingbuffer( &e );
 }
 
+void LupppGUI::launchScene( int scene )
+{
+  EventGridLaunchScene e( scene );
+  writeToGuiRingbuffer( &e );
+}
+
 void LupppGUI::mute(int t, bool b)
 {
   

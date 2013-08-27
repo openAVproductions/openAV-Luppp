@@ -171,7 +171,6 @@ void LooperClip::bar()
   
   if ( _recording )
   {
-    
     // FIXME: assumes 4 beats in a bar
     _buffer->setBeats( _buffer->getBeats() + 4 );
   }

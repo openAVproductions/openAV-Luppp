@@ -22,6 +22,15 @@ class TrackOutput : public AudioProcessor
     
     float getMaster();
     
+    bool recordArm()
+    {
+      return _recordArm;
+    }
+    void recordArm(bool r)
+    {
+      _recordArm = r;
+    }
+    
     /// set send
     void setSend( int send, float value );
     
@@ -32,6 +41,8 @@ class TrackOutput : public AudioProcessor
   
   private:
     int track;
+    
+    bool  _recordArm;
     
     float _toMaster;
     
