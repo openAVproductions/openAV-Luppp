@@ -13,7 +13,6 @@ using namespace std;
 
 namespace Worker
 {
-  
   /// loads a sample into a new AudioBuffer, returning the buffer
   static AudioBuffer* loadSample( string path )
   {
@@ -36,6 +35,17 @@ namespace Worker
     
     return 0;
   }
+  
+  
+  static int writeSample( string path, AudioBuffer* ab )
+  {
+    SndfileHandle outfile( path, SFM_WRITE, SF_FORMAT_WAV | SF_FORMAT_FLOAT, 1, 44100);
+    
+    cout << "Worker::writeSample() " << path << " size: " << ab->getData().size() << endl;
+    outfile.write( &ab->getData()[0], ab->getData().size() );
+  }
+  
+  
   
 }
 

@@ -18,6 +18,8 @@ class DiskWriter
   public:
     DiskWriter();
     
+    void initialize( std::string path, std::string sessionName );
+    
     /// writes a single audio buffer to disk
     void writeAudioBuffer(int track, int scene, AudioBuffer* ab );
     
@@ -25,7 +27,11 @@ class DiskWriter
   
   private:
     cJSON* session;
-    cJSON* audioConfig;
+    cJSON* sample;
+    
+    std::string sessionName;
+    std::string sessionPath;
+    
 };
 
 #endif // LUPPP_DISK_WRITER_H
