@@ -18,23 +18,34 @@ namespace Worker
   
   static void save(std::string path, std::string sessionName)
   {
-    cJSON *root, *fmt;
-    char* out;
     
-    root=cJSON_CreateObject();
+    cJSON *root = cJSON_CreateObject();
     cJSON_AddItemToObject(root, "session", cJSON_CreateString( sessionName.c_str() ));
-    cJSON_AddItemToObject(root, "format", fmt=cJSON_CreateObject() );
+    cJSON_AddNumberToObject( root, "version_major", 1 );
+    cJSON_AddNumberToObject( root, "version_minor", 0 );
+    cJSON_AddNumberToObject( root, "version_patch", 0 );
     
-    cJSON_AddStringToObject(fmt,"type",    "rect");
-    cJSON_AddNumberToObject(fmt,"width",    1920);
-    cJSON_AddNumberToObject(fmt,"height",    1080);
     
-    cJSON_AddFalseToObject (fmt,"interlace");
-    cJSON_AddNumberToObject(fmt,"frame rate",  24);
+    cJSON_AddNumberToObject( root, "bpm", 120 );
     
-    cJSON_AddNumberToObject( root, "version", 1 );
+    for(int t = 0; t < NTRACKS; t++ )
+    {
+      cJSON* track = cJSON_CreateObject();
+      cJSON_AddItemToObject(root, "track", track );
+      
+      cJSON_AddNumberToObject(track,"ID", t);
+      
+      for(int s = 0; s < NSCENES; s++ )
+      {
+        cJSON* clip = cJSON_CreateObject();
+        cJSON_AddItemToObject(track, "clip", clip );
+        
+        cJSON_AddNumberToObject(clip,"ID", s);
+        cJSON_AddStringToObject(clip,"file",    "filenameHere.wav");
+      }
+    }
     
-    out=cJSON_Print(root);
+    char* out = cJSON_Print(root);
     
     cout << out << endl;
   }
