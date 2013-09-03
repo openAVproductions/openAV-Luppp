@@ -47,7 +47,7 @@ namespace Worker
     
     char* out = cJSON_Print(root);
     
-    cout << out << endl;
+    //cout << out << endl;
   }
   
   /// loads a sample into a new AudioBuffer, returning the buffer

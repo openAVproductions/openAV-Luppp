@@ -11,6 +11,7 @@
 extern Jack* jack;
 
 LooperClip::LooperClip(int t, int s) :
+  SaveAble(),
   track(t),
   scene(s)
 {

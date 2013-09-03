@@ -1,6 +1,10 @@
 
 #include "save.hxx"
 
+#include <iostream>
+
+using namespace std;
+
 Save::Save()
 {
   
@@ -8,6 +12,7 @@ Save::Save()
 
 void Save::registerSaveable(SaveAble* s)
 {
+  //cout << "Save::registerSaveable() " << s << endl;
   saveables.push_back( s );
 }
 

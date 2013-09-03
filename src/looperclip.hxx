@@ -3,6 +3,7 @@
 #define LUPPP_LOOPER_CLIP_H
 
 #include <stdio.h>
+#include "save/saveable.hxx"
 #include "config.hxx"
 #include "gridlogic.hxx"
 
@@ -23,8 +24,10 @@ class AudioBuffer;
  * Each clip has its properties like length and bars/beats, so the Looper knows
  * to dynamically stretch / process the audio appropriately. Controllers and the
  * UI are updated from this data.
+ * 
+ * This class inherits from SaveAble to save its state.
 **/
-class LooperClip
+class LooperClip : public SaveAble
 {
   public:
     LooperClip(int track, int scene);
