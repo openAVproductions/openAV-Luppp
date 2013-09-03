@@ -99,11 +99,20 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventSaveBuffer) ) {
             EventSaveBuffer ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventSaveBuffer) );
-            // stream buffer to disk, add to JSON
-            
+#ifdef DEBUG_SAVE
             cout << "EventSaveBuffer: " << ev.track << " " << ev.scene << " " << ev.ab->getID() << endl;
-            
-            
+#endif
+            gui->getDiskWriter()->writeAudioBuffer( ev.track, ev.scene, ev.ab );
+          } break; }
+          
+        case Event::SAVE_FINISH: {
+          if ( availableRead >= sizeof(EventSaveFinish) ) {
+            EventSaveFinish ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventSaveFinish) );
+#ifdef DEBUG_SAVE
+            cout << "EventSaveFinish!" << endl;
+#endif
+            gui->getDiskWriter()->writeSession("path", "sessionName");
           } break; }
         
         

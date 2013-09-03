@@ -18,6 +18,13 @@ class SaveAble
     
     /// this function is called when the user initiates a save action
     virtual void save();
+    
+    /// this function *must* be called by each sub-class when it is *finished*
+    /// its save action. Once each Saveable is done, the final save is OK-ed.
+    static void done();
+  
+  private:
+    static int savesDone;
 };
 
 #endif // LUPPP_SAVEABLE_H

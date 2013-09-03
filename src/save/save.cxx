@@ -2,6 +2,8 @@
 #include "save.hxx"
 
 #include <iostream>
+#include "../event.hxx"
+#include "../eventhandler.hxx"
 
 using namespace std;
 
@@ -23,4 +25,17 @@ void Save::save()
   {
     saveables.at(i)->save(); 
   }
+  
+  // now each SaveAble has reqested save state, but not yet *saved* its state.
+  // we need a way to determine if the saves are flushed.
+}
+
+void Save::finish()
+{
+  // trigger the GUI to write the metadata to disk, as each component of the
+  // engine is done saving
+  
+  EventSaveFinish e;
+  writeToGuiRingbuffer( &e );
+  
 }

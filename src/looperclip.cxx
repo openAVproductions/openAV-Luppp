@@ -44,7 +44,10 @@ void LooperClip::save()
     EventRequestSaveBuffer e2( track, scene, _buffer->getData().size() );
     writeToGuiRingbuffer( &e2 );
   }
-  
+  else
+  {
+    SaveAble::done();
+  }
 }
 
 /// loads a sample: eg from disk, unloading current sample if necessary
@@ -104,6 +107,8 @@ void LooperClip::recieveSaveBuffer( AudioBuffer* saveBuffer )
   
   EventSaveBuffer e ( track, scene, saveBuffer );
   writeToGuiRingbuffer( &e );
+  
+  SaveAble::done();
 }
 
 

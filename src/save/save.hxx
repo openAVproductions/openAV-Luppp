@@ -17,7 +17,15 @@ class Save
     
     void save();
     
+    /// called when each part is finished, and we can flush the metadata to disk
+    void finish();
+    
     void registerSaveable(SaveAble* s);
+    
+    int getNumSaveables()
+    {
+      return saveables.size();
+    }
     
   private:
     std::vector<SaveAble*> saveables;

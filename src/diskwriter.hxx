@@ -4,6 +4,8 @@
 
 #include <string>
 
+#include "cjson/cJSON.h"
+
 class AudioBuffer;
 
 /** DiskWriter
@@ -22,7 +24,8 @@ class DiskWriter
     void writeSession( std::string path, std::string sessionName );
   
   private:
-    
+    cJSON* session;
+    cJSON* audioConfig;
 };
 
 #endif // LUPPP_DISK_WRITER_H

@@ -31,6 +31,7 @@ namespace Event
     RECORD,
     
     SAVE,       // save action
+    SAVE_FINISH,// save action finished, flush metadata to disk
     SAVE_BUFFER,// save an individual AudioBuffer* to disk
     
     REQUEST_SAVE_BUFFER, // gets an audioBuffer of a certain size
@@ -114,6 +115,15 @@ class EventSave : public EventBase
     uint32_t size() { return sizeof(EventSave); }
     
     EventSave(){};
+};
+
+class EventSaveFinish : public EventBase
+{
+  public:
+    int type() { return int(SAVE_FINISH); }
+    uint32_t size() { return sizeof(EventSaveFinish); }
+    
+    EventSaveFinish(){};
 };
 
 class EventGridEvent : public EventBase

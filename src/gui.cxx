@@ -49,7 +49,8 @@ static void gui_static_read_rb(void* inst)
 }
 
 Gui::Gui() :
-    window(1110,650)
+    window(1110,650),
+    diskWriter( new DiskWriter )
 {
   window.color(FL_BLACK);
   window.label("Luppp");
@@ -90,8 +91,6 @@ int Gui::show()
   window.show();
   
   gui_static_read_rb( this );
-  
-  Worker::save("dummyPath", "dummyName");
   
   return Fl::run();
 }

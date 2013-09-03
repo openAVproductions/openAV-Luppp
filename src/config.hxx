@@ -15,6 +15,8 @@
 // Logic : Warning NON RT!
 #define DEBUG_LOGIC     1
 
+// Saving state
+#define DEBUG_SAVE      1
 
 /// General Options
 #define NTRACKS 8
