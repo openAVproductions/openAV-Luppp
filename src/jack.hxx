@@ -9,6 +9,8 @@
 #include <jack/midiport.h>
 #include <jack/transport.h>
 
+#include "save/save.hxx"
+
 #include "logic.hxx"
 #include "config.hxx"
 #include "looper.hxx"
@@ -41,6 +43,7 @@ class Jack
     Looper*             getLooper(int t);
     TrackOutput*        getTrackOutput(int t);
     
+    Save*               getSave(){return save;}
     Logic*              getLogic(){return logic;}
     Metronome*          getMetronome(){return metronome;}
     GridLogic*          getGridLogic(){return gridLogic;}
@@ -65,6 +68,7 @@ class Jack
     Buffers             buffers;
     TimeManager         timeManager;
     Metronome*          metronome;
+    Save*               save;
     Logic*              logic;
     GridLogic*          gridLogic;
     ControllerUpdater*  controllerUpdater;

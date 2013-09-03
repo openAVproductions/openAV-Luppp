@@ -22,6 +22,7 @@ Jack::Jack() :
   client( jack_client_open ( "Luppp", JackNullOption , 0 , 0 ) ),
   timeManager(),
   controllerUpdater( new ControllerUpdater() ),
+  save( new Save() ),
   clientActive(false)
 {
   jack = this;
