@@ -34,21 +34,22 @@ void DiskWriter::initialize(std::string path, std::string name )
 
 void DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
 {
+  // get the filename
+  stringstream filename;
+  filename << "t_" << track << "_s_" << scene << ".wav";
+  
   // add the track / scene / name combo to session JSON node
   cJSON* clip = cJSON_CreateObject();
   cJSON_AddItemToObject(session, "clip", clip );
   
   cJSON_AddNumberToObject(clip,"track", track);
   cJSON_AddNumberToObject(clip,"scene", scene);
-  cJSON_AddStringToObject(clip,"file", "filenameHere.wav");
+  cJSON_AddStringToObject(clip,"file", filename.str().c_str());
   
   
   // add the AudioBuffer metadata to the sample JSON node
   cJSON* sampleClip = cJSON_CreateObject();
   cJSON_AddItemToObject(sample, "sample", sampleClip );
-  
-  stringstream filename;
-  filename << "t_" << track << "_s_" << scene << ".wav";
   
   cJSON_AddStringToObject(sampleClip,"file", filename.str().c_str() );
   cJSON_AddNumberToObject(sampleClip,"beats", ab->getBeats() );
