@@ -30,7 +30,10 @@ namespace Event
     MASTER_VOL,
     RECORD,
     
-    SAVE,
+    SAVE,       // save action
+    SAVE_BUFFER,// save an individual AudioBuffer* to disk
+    
+    REQUEST_SAVE_BUFFER, // gets an audioBuffer of a certain size
     
     GRID_EVENT, // press / release events
     GRID_STATE, // state of one block
@@ -330,6 +333,41 @@ class EventLooperClipRequestBuffer : public EventBase
     EventLooperClipRequestBuffer(): track(0), scene(0), numElements(0), ab(0) {}
     EventLooperClipRequestBuffer(int t, int s, int siz): track(t), scene(s), numElements(siz), ab(0) {}
     EventLooperClipRequestBuffer(int t, int s, AudioBuffer* a): track(t), scene(s), numElements(0), ab(a) {}
+};
+
+
+class EventSaveBuffer : public EventBase
+{
+  public:
+    int type() { return int(SAVE_BUFFER); }
+    uint32_t size() { return sizeof(EventSaveBuffer); }
+    
+    int track;
+    int scene;
+    // pointer to the AudioBuffer to be saved
+    AudioBuffer* ab;
+    
+    EventSaveBuffer(): track(0), scene(0), ab(0) {}
+    EventSaveBuffer(int t, int s, AudioBuffer* a): track(t), scene(s), ab(a) {}
+};
+
+class EventRequestSaveBuffer : public EventBase
+{
+  public:
+    int type() { return int(REQUEST_SAVE_BUFFER); }
+    uint32_t size() { return sizeof(EventRequestSaveBuffer); }
+    
+    int track;
+    int scene;
+    
+    size_t bufferSize;
+    
+    // pointer to the AudioBuffer to be saved
+    AudioBuffer* ab;
+    
+    EventRequestSaveBuffer(): track(0), scene(0), ab(0) {}
+    EventRequestSaveBuffer(int t, int s, size_t si): track(t), scene(s), bufferSize(si), ab(0) {}
+    EventRequestSaveBuffer(int t, int s, AudioBuffer* a): track(t), scene(s), ab(a) {}
 };
 
 class EventDeallocateBuffer : public EventBase

@@ -33,10 +33,18 @@ LooperClip::LooperClip(int t, int s) :
 
 void LooperClip::save()
 {
-  char buffer [50];
-  sprintf (buffer, "LooperClip::save() track %i, scene %i", track,scene);
-  EventGuiPrint e( buffer );
-  writeToGuiRingbuffer( &e );
+  // ensure there is something in the buffer to be saved
+  if ( _loaded )
+  {
+    char buffer [50];
+    sprintf (buffer, "LooperClip::save() track %i, scene %i", track,scene);
+    EventGuiPrint e( buffer );
+    writeToGuiRingbuffer( &e );
+    
+    EventRequestSaveBuffer e2( track, scene, _buffer->getData().size() );
+    writeToGuiRingbuffer( &e2 );
+  }
+  
 }
 
 /// loads a sample: eg from disk, unloading current sample if necessary
@@ -82,6 +90,22 @@ void LooperClip::setRequestedBuffer( AudioBuffer* ab )
   
   _newBufferInTransit = false;
 }
+
+
+
+void LooperClip::recieveSaveBuffer( AudioBuffer* saveBuffer )
+{
+  // copy current contents into save buffer,
+  size_t size = _buffer->getData().size();
+  memcpy( &saveBuffer->getData().at(0), &_buffer->getData().at(0), sizeof(float)*size);
+  
+  saveBuffer->setID   ( _buffer->getID()    );
+  saveBuffer->setBeats( _buffer->getBeats() );
+  
+  EventSaveBuffer e ( track, scene, saveBuffer );
+  writeToGuiRingbuffer( &e );
+}
+
 
 
 void LooperClip::record(int count, float* L, float* R)

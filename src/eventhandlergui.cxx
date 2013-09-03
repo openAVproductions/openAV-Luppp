@@ -95,6 +95,18 @@ void handleGuiEvents()
           } break; }
         
         
+        case Event::SAVE_BUFFER: {
+          if ( availableRead >= sizeof(EventSaveBuffer) ) {
+            EventSaveBuffer ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventSaveBuffer) );
+            // stream buffer to disk, add to JSON
+            
+            cout << "EventSaveBuffer: " << ev.track << " " << ev.scene << " " << ev.ab->getID() << endl;
+            
+            
+          } break; }
+        
+        
         case Event::GRID_STATE: {
           if ( availableRead >= sizeof(EventGridState) ) {
             EventGridState ev;
@@ -170,6 +182,29 @@ void handleGuiEvents()
             printf("new buffer going to track %i, scene %i\n",ev.track, ev.scene);
 #endif
           } break; }
+        
+        case Event::REQUEST_SAVE_BUFFER: {
+          if ( availableRead >= sizeof(EventRequestSaveBuffer) ) {
+            EventRequestSaveBuffer ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventRequestSaveBuffer) );
+#ifdef DEBUG_BUFFER
+            printf("Save buffer to track %i, scene %i\n",ev.track, ev.scene);
+#endif
+            /// allocate a new AudioBuffer with ev.numElements, pass back to DSP
+            AudioBuffer* ab = new AudioBuffer(ev.bufferSize);
+            
+            if ( ab )
+            {
+              cout << "Save buffer sent with t s ab* " << ev.track << " " << ev.scene << " " << ab << endl;
+              EventRequestSaveBuffer returnEvent( ev.track, ev.scene, ab);
+              writeToDspRingbuffer( &returnEvent );
+            }
+            else
+            {
+              cout << "error allocating save buffer!" << endl;
+            }
+          } break; }
+        
         case Event::DEALLOCATE_BUFFER: {
           if ( availableRead >= sizeof(EventDeallocateBuffer) ) {
             EventDeallocateBuffer ev;

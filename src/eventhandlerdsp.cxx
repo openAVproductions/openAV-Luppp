@@ -144,6 +144,14 @@ void handleDspEvents()
             jack->getLooper( ev.track )->setRequestedBuffer( ev.scene, ev.ab );
           } break; }
         
+        case Event::REQUEST_SAVE_BUFFER: {
+          if ( availableRead >= sizeof(EventRequestSaveBuffer) ) {
+            EventRequestSaveBuffer ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventRequestSaveBuffer) );
+            cout << "Save buffer sent with t s ab* " << ev.track << " " << ev.scene << " " << ev.ab << endl;
+            jack->getLooper( ev.track )->getClip(ev.scene)->recieveSaveBuffer( ev.ab );
+          } break; }
+        
         default:
           {
             cout << "DSP: Unkown message!! Will clog ringbuffer" << endl;

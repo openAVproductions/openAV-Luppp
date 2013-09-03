@@ -74,6 +74,9 @@ class LooperClip : public SaveAble
      *  for de-allocation.
     **/
     void setRequestedBuffer( AudioBuffer* ab );
+    
+    /// used for saving the contents of this buffer to disk
+    void recieveSaveBuffer( AudioBuffer* ab );
   
   private:
     int track, scene;
