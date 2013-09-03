@@ -18,6 +18,7 @@ void Save::registerSaveable(SaveAble* s)
 
 void Save::save()
 {
+  cout << " Save::save() " << endl;
   for( unsigned int i = 0; i < saveables.size(); i++)
   {
     saveables.at(i)->save(); 

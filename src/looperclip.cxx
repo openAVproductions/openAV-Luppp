@@ -30,6 +30,15 @@ LooperClip::LooperClip(int t, int s) :
   _recordhead = 0;
 }
 
+
+void LooperClip::save()
+{
+  char buffer [50];
+  sprintf (buffer, "LooperClip::save() track %i, scene %i", track,scene);
+  EventGuiPrint e( buffer );
+  writeToGuiRingbuffer( &e );
+}
+
 /// loads a sample: eg from disk, unloading current sample if necessary
 void LooperClip::load( AudioBuffer* ab )
 {

@@ -30,6 +30,8 @@ namespace Event
     MASTER_VOL,
     RECORD,
     
+    SAVE,
+    
     GRID_EVENT, // press / release events
     GRID_STATE, // state of one block
     GRID_LAUNCH_SCENE,
@@ -100,6 +102,15 @@ class EventTrackVol : public EventBase
       track = t;
       vol = v;
     }
+};
+
+class EventSave : public EventBase
+{
+  public:
+    int type() { return int(SAVE); }
+    uint32_t size() { return sizeof(EventSave); }
+    
+    EventSave(){};
 };
 
 class EventGridEvent : public EventBase

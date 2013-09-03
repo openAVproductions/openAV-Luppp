@@ -42,6 +42,9 @@ class LooperClip : public SaveAble
     /// TimeObserver overrides
     void bar();
     
+    /// SaveAble overrides
+    void save();
+    
     /// analyses current _playing _recording vars, returns the current State
     GridLogic::State getState();
     bool playing();
