@@ -52,9 +52,8 @@ void DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
   
   // add the AudioBuffer metadata to the sample JSON node
   cJSON* sampleClip = cJSON_CreateObject();
-  cJSON_AddItemToObject(sample, "sample", sampleClip );
+  cJSON_AddItemToObject(sample, filename.str().c_str(), sampleClip );
   
-  cJSON_AddStringToObject(sampleClip,"file", filename.str().c_str() );
   cJSON_AddNumberToObject(sampleClip,"beats", ab->getBeats() );
   
   // write the AudioBuffer contents to <path>/samples/  as  <name>.wav

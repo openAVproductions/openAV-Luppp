@@ -19,7 +19,7 @@ DiskReader::DiskReader()
   // TODO : get from user input
   
   stringstream s;
-  s << getenv("HOME") << "/" << "sessionName" << "/";
+  s << getenv("HOME") << "/" << "sessionName";
   readSession( s.str() );
 };
 
@@ -28,36 +28,48 @@ void DiskReader::readSession( std::string path )
   cout << "DiskReader::readSession() " << path << endl;
   sessionPath = path;
   
-  char *sampleChar;
-  std::string sessionString;
-  
-  
   stringstream s;
-  s << path << "session.luppp";
+  s << path << "/session.luppp";
   
-  cout << "session path " << s.str().c_str() << endl;
+  stringstream samplePath;
+  samplePath << path << "/samples/sample.cfg";
   
+  cout << "session path: " << s.str() << endl;
+  cout << "sample path:  " << samplePath.str() << endl;
   
-  // open file, store entire contents into string
+  // open session, read all
   std::ifstream file( s.str().c_str(), std::ios_base::in|std::ios_base::ate);
   long file_length = file.tellg();
   file.seekg(0, std::ios_base::beg);
   file.clear();
-  char *string = new char[file_length];
-  file.read(string, file_length);
+  char *sessionString = new char[file_length];
+  file.read(sessionString, file_length);
   
-  cout << "sessionFile string:\n " << string << endl;
+  // open sample, read all
+  std::ifstream sampleFile( samplePath.str().c_str(), std::ios_base::in|std::ios_base::ate);
+  file_length = sampleFile.tellg();
+  sampleFile.seekg(0, std::ios_base::beg);
+  sampleFile.clear();
+  char *sampleString = new char[file_length];
+  sampleFile.read(sampleString, file_length);
+  
+  //cout << "sessionFile string:\n " << sessionString << endl;
+  //cout << "sampleFile string: \n " << sampleString << endl;
   
   
-  session = cJSON_Parse( string );
-  
-  if (!session)
-  {
-    printf("Error before: [%s]\n",cJSON_GetErrorPtr());
+  // create cJSON nodes from strings
+  session = cJSON_Parse( sessionString );
+  if (!session) {
+    printf("Error in Session JSON before: [%s]\n",cJSON_GetErrorPtr());
     return;
   }
+  sample  = cJSON_Parse( sampleString );
+  if (!sample) {
+    printf("Error in Sample JSON before: [%s]\n",cJSON_GetErrorPtr());
+    return;
+  }
+  //cout << "readSample: " << cJSON_Print( sample ) << endl;
   
-  //cout << "readSession: " << cJSON_Print( session ) << endl;
   
   
   cJSON* clip = cJSON_GetObjectItem( session, "clip");
@@ -76,40 +88,35 @@ void DiskReader::readSession( std::string path )
         sampleFilePath.str() << endl;
 #endif
     
-    
-    
     // load it
     AudioBuffer* ab = Worker::loadSample( sampleFilePath.str() );
     EventLooperLoad e = EventLooperLoad( t, s, ab );
     writeToDspRingbuffer( &e );
+    
+    cJSON* sampleFile = cJSON_GetObjectItem( sample, file->valuestring );
+    if ( sampleFile )
+    {
+      cJSON* beats = cJSON_GetObjectItem( sampleFile, "beats" );
+      
+      cout << "Clip @ " << t << " " << s << " gets " << beats->valuedouble << " beats."<< endl;
+      EventLooperLoopLength e = EventLooperLoopLength( t, s, beats->valueint );
+      writeToDspRingbuffer( &e );
+    }
+    else
+    {
+      cout << "Wanring: Sample " << file->valuestring << " has no entry for beats." << endl;
+    }
   }
   else
   {
     cout << "DiskReader: Error getting clip" << endl;
   }
   
-  
-  
-  /*
-  for( int i = 0; i < cJSON_GetArraySize( session ); i++ )
-  {
-    cJSON* subitem = cJSON_GetArrayItem( session, i);
-    
-    
-    
-   name = cJSON_GetObjectItem(subitem, "name");
-   index = cJSON_GetObjectItem(subitem, "index");
-   optional = cJSON_GetObjectItem(subitem, "optional"); 
-    
-    cout << "i = " << i << "  session: " << subitem->valueint << endl;
-    
-  }*/
-  
-  
-  
+  // cleanup
   cJSON_Delete( session );
+  cJSON_Delete( sample  );
   
-  
-  free ( string );
+  free ( sessionString );
+  free ( sampleString  );
   
 }
