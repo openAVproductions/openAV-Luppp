@@ -8,6 +8,8 @@
 #include "audiobuffer.hxx"
 #include "worker.hxx"
 
+#include <FL/fl_ask.H>
+
 // include the header.c file in the planning dir:
 // its the GIMP .c export of the LUPPP header image 
 #include "../planning/header.c"
@@ -48,6 +50,55 @@ static void gui_static_read_rb(void* inst)
   Fl::repeat_timeout( 1 / 30.f, &gui_static_read_rb, inst);
 }
 
+static void gui_header_callback(Fl_Widget *w, void *data)
+{
+  if ( Fl::event_x() > 130 )
+  {
+    return;
+  }
+  
+  Fl_Menu_Item rclick_menu[] =
+  {
+    { "Load" },
+    { "Save    " },
+    { 0 }
+  };
+  
+  Fl_Menu_Item *m = (Fl_Menu_Item*) rclick_menu->popup( 10, 38, 0, 0, 0);
+  
+  if ( !m )
+  {
+      return;
+  }
+  else if ( strcmp(m->label(), "Load") == 0 )
+  {
+    cout << "Load clicked" << endl;
+    Fl_Native_File_Chooser fnfc;
+    fnfc.title("Load Session");
+    fnfc.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
+    fnfc.directory( getenv("HOME") );
+    
+    switch ( fnfc.show() )
+    {
+      case -1: //printf("ERROR: %s\\n", fnfc.errmsg());
+          break;  // ERROR
+      case  1: //printf("CANCEL\\n");
+          break;  // CANCEL
+      default: printf("Loading session directory %s\n", fnfc.filename());
+          gui->getDiskReader()->readSession( fnfc.filename() );
+          break;
+    }
+  }
+  else if ( strcmp(m->label(), "Save    ") == 0 ) {
+    
+    const char* name = fl_input( "Save session as", "lupppSession" );
+    cout << "Save clicked, name = " << name << endl;
+    
+    EventSave e;
+    //writeToDspRingbuffer( &e );
+  }
+}
+
 Gui::Gui() :
     window(1110,650),
     diskReader( new DiskReader ),
@@ -59,6 +110,7 @@ Gui::Gui() :
   
   Avtk::Image* headerImage = new Avtk::Image(0,0,1110,36,"header.png");
   headerImage->setPixbuf( header.pixel_data, 4 );
+  headerImage->callback( gui_header_callback, this );
   
   tooltipLabel = new Fl_Box(130, 25, 500, 20, "");
   tooltipLabel->labelcolor( FL_LIGHT2 );

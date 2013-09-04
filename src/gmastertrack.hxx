@@ -48,10 +48,7 @@ static void gmastertrack_button_callback(Fl_Widget *w, void *data) {
   }
   else if ( strcmp( w->label(), "Tap" ) == 0 )
   {
-    //Avtk::Button* b = (Avtk::Button*)w;
-    //EventTimeTempoTap e;
-    //writeToDspRingbuffer( &e );
-    EventSave e;
+    EventTimeTempoTap e;
     writeToDspRingbuffer( &e );
   }
   else

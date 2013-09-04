@@ -16,11 +16,6 @@ using namespace std;
 
 DiskReader::DiskReader()
 {
-  // TODO : get from user input
-  
-  stringstream s;
-  s << getenv("HOME") << "/" << "sessionName";
-  readSession( s.str() );
 };
 
 void DiskReader::readSession( std::string path )
