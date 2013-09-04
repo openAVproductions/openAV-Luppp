@@ -112,7 +112,8 @@ void GridLogic::released( int track, int scene )
 void GridLogic::load(int track, int scene, AudioBuffer* ab)
 {
   jack->getLooper( track )->getClip( scene )->load( ab );
-  //jack->getControllerUpdater()->setSceneState(track, scene, state[track*NSCENES + scene] );
+  GridLogic::State s = jack->getLooper( track )->getClip( scene )->getState();
+  jack->getControllerUpdater()->setSceneState(track, scene, s );
 }
 
 
