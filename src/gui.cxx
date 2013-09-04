@@ -50,6 +50,7 @@ static void gui_static_read_rb(void* inst)
 
 Gui::Gui() :
     window(1110,650),
+    diskReader( new DiskReader ),
     diskWriter( new DiskWriter )
 {
   window.color(FL_BLACK);

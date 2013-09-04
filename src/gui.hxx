@@ -9,8 +9,10 @@
 #include "config.hxx"
 #include "gtrack.hxx"
 #include "gunittrack.hxx"
-#include "diskwriter.hxx"
 #include "gmastertrack.hxx"
+
+#include "diskwriter.hxx"
+#include "diskreader.hxx"
 
 #include <vector>
 #include <string>
@@ -26,6 +28,7 @@ class Gui
     GMasterTrack* getMasterTrack(){return master;}
     
     DiskWriter* getDiskWriter(){return diskWriter;}
+    DiskReader* getDiskReader(){return diskReader;}
     
     // for pushing strings to tooltip area
     void setTooltip( std::string s );
@@ -34,6 +37,7 @@ class Gui
     Fl_Double_Window    window;
     Fl_Box*             box;
     
+    DiskReader*         diskReader;
     DiskWriter*         diskWriter;
     
     GMasterTrack*       master;

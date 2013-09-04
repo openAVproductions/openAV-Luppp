@@ -18,6 +18,9 @@
 // Saving state
 #define DEBUG_SAVE      1
 
+// Loading state
+#define DEBUG_LOAD      1
+
 /// General Options
 #define NTRACKS 8
 #define NSCENES 10

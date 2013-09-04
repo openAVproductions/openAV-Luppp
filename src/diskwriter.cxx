@@ -24,6 +24,9 @@ void DiskWriter::initialize(std::string path, std::string name )
   session = cJSON_CreateObject();
   sample  = cJSON_CreateObject();
   
+  cJSON* lupppSession = cJSON_CreateObject();
+  cJSON_AddItemToObject(session, "lupppSession", lupppSession );
+  
   // add session metadata
   cJSON_AddItemToObject  ( session, "session", cJSON_CreateString( sessionName.c_str() ));
   cJSON_AddNumberToObject( session, "version_major", 1 );
@@ -85,7 +88,7 @@ void DiskWriter::writeSession( std::string path, std::string sessionName )
   int sampleDirError  = mkdir( sampleDir.str().c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
   
   stringstream sessionLuppp;
-  sessionLuppp << sessionDir.str() << "/" << sessionName << ".luppp";
+  sessionLuppp << sessionDir.str() << "/session.luppp";
   
   //cout << "Session dir: " << sessionDir.str() << "\n" << "Sample dir : " << sampleDir.str() << endl;
   
