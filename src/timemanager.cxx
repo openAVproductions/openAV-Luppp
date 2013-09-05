@@ -31,7 +31,7 @@ int TimeManager::getFpb()
 
 void TimeManager::setBpm(float bpm)
 {
-  //cout << "setBpm() " << bpm << endl;
+  cout << "setBpm() " << bpm << endl;
   setFpb( 44100 / bpm * 60 );
 }
 
@@ -62,6 +62,10 @@ void TimeManager::registerObserver(TimeObserver* o)
   //cout << "registerObserver() " << o << endl;
   observers.push_back(o);
   o->setFpb( fpb );
+  
+  int bpm = (44100 * 60) / fpb;
+  EventTimeBPM e2( bpm );
+  writeToGuiRingbuffer( &e2 );
 }
 
 void TimeManager::tap()

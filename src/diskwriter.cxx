@@ -65,8 +65,12 @@ void DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
   path << sessionPath << "/" << sessionName << "/samples/" << filename.str();
   
   SndfileHandle outfile( path.str(), SFM_WRITE, SF_FORMAT_WAV | SF_FORMAT_FLOAT, 1, 44100);
-  cout << "Worker::writeSample() " << path.str() << " size: " << ab->getData().size() << endl;
-  outfile.write( &ab->getData()[0], ab->getData().size() );
+  cout << "Worker::writeSample() " << path.str() << " size: " << ab->getAudioFrames() << endl;
+  
+  // FIXME: the size of the buffer is bigger than the audio contained in it:
+  // calculate the length that needs saving using getBeats() * framesPerBeat
+  
+  outfile.write( &ab->getData()[0], ab->getAudioFrames() );
   
   // de allocate the AudioBuffer
   delete ab;

@@ -17,11 +17,13 @@ class AudioBuffer
     {
       ID = privateID++;
       numBeats = 0;
+      audioFrames = 0;
     }
     AudioBuffer(unsigned long size)
     {
       /// no ID assigned: it *takes* the one from the previous buffer!
       numBeats = 0;
+      audioFrames = 0;
       buffer.resize(size);
     }
     
@@ -63,6 +65,19 @@ class AudioBuffer
       numBeats = b;
     }
     
+    void setAudioFrames(long af)
+    {
+      audioFrames = af;
+#ifdef DEBUG_BUFFER
+      cout << "AudioBuffer " << ID << " has "  << audioFrames << " audioFrames\n" << endl;
+#endif
+    }
+    
+    long getAudioFrames()
+    {
+      return audioFrames;
+    }
+    
     std::vector<float>& getData()
     {
       return buffer;
@@ -78,6 +93,10 @@ class AudioBuffer
     int ID;
     
     int numBeats;
+    
+    /// holds the number of samples that are usable audio, as opposed to
+    /// buffer.size(), which also has non-used space at the end.
+    long audioFrames;
     
     char name[20];
     

@@ -33,6 +33,7 @@ void DiskReader::loadSample( int track, int scene, string path )
   infile.read( &buf[0] , infile.frames() );
   
   // set the data
+  ab->setAudioFrames( infile.frames() );
   ab->nonRtSetSample( buf );
   
   cout << "Worker: loadSample() " << path << " size: " << infile.frames() << endl;
@@ -154,6 +155,8 @@ void DiskReader::readMaster()
     // bpm
     { 
       cJSON* bpm = cJSON_GetObjectItem( master, "bpm");
+      cout << "Session: BPM " << bpm->valuedouble << " int " << bpm->valueint << endl; 
+      
       EventTimeBPM e( bpm->valuedouble );
       writeToDspRingbuffer( &e );
     }

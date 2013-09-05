@@ -37,11 +37,11 @@ void LooperClip::save()
   if ( _loaded )
   {
     char buffer [50];
-    sprintf (buffer, "LooperClip::save() track %i, scene %i", track,scene);
+    sprintf (buffer, "LC::save() track %i, scene %i", track,scene);
     EventGuiPrint e( buffer );
     writeToGuiRingbuffer( &e );
     
-    EventRequestSaveBuffer e2( track, scene, _buffer->getData().size() );
+    EventRequestSaveBuffer e2( track, scene, _buffer->getAudioFrames() );
     writeToGuiRingbuffer( &e2 );
   }
   else
@@ -69,7 +69,7 @@ void LooperClip::load( AudioBuffer* ab )
   _recordhead = _buffer->getData().size();
   
   char buffer [50];
-  sprintf (buffer, "LooperClip::load() track %i, scene %i",track, scene);
+  sprintf (buffer, "LC::load() t %i, s %i, aF %i",track, scene, int(_buffer->getAudioFrames()) );
   EventGuiPrint e( buffer );
   writeToGuiRingbuffer( &e );
   
@@ -99,11 +99,12 @@ void LooperClip::setRequestedBuffer( AudioBuffer* ab )
 void LooperClip::recieveSaveBuffer( AudioBuffer* saveBuffer )
 {
   // copy current contents into save buffer,
-  size_t size = _buffer->getData().size();
-  memcpy( &saveBuffer->getData().at(0), &_buffer->getData().at(0), sizeof(float)*size);
+  size_t framesBySize = _buffer->getAudioFrames();
+  memcpy( &saveBuffer->getData().at(0), &_buffer->getData().at(0), sizeof(float)*framesBySize);
   
   saveBuffer->setID   ( _buffer->getID()    );
   saveBuffer->setBeats( _buffer->getBeats() );
+  saveBuffer->setAudioFrames( _buffer->getAudioFrames() );
   
   EventSaveBuffer e ( track, scene, saveBuffer );
   writeToGuiRingbuffer( &e );
@@ -217,6 +218,7 @@ void LooperClip::bar()
   {
     // FIXME: assumes 4 beats in a bar
     _buffer->setBeats( _buffer->getBeats() + 4 );
+    _buffer->setAudioFrames( jack->getTimeManager()->getFpb() * _buffer->getBeats() );
   }
   
   if ( change )
