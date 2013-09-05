@@ -38,8 +38,10 @@ class DiskReader
     std::string sessionPath;
     
     // convinience functions
-    void readGrid();
+    void readTracks();
     void readMaster();
+    void readScenes(int t, cJSON* track);
+    
 };
 
 #endif // LUPPP_DISK_READER_H

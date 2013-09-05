@@ -137,7 +137,8 @@ void DiskReader::readSession( std::string path )
   //cout << "sample:  " << cJSON_Print( sample  ) << endl;
   
   
-  readGrid();
+  readTracks();
+  
   readMaster();
   
   // cleanup
@@ -189,7 +190,36 @@ void DiskReader::readMaster()
   
 }
 
-void DiskReader::readGrid()
+
+void DiskReader::readScenes(int t, cJSON* track)
+{
+  cJSON* clips = cJSON_GetObjectItem( track, "clips");
+  if ( clips )
+  {
+    
+    int nClips = cJSON_GetArraySize( clips );
+    for(int s = 0; s < nClips; s++ )
+    {
+      // get metadata for Clip
+      cJSON* clip = cJSON_GetArrayItem( clips, s );
+      
+      if ( !strcmp(clip->valuestring, "") == 0 )
+      {
+        stringstream sampleFilePath;
+        sampleFilePath << sessionPath << "/samples/" << clip->valuestring;
+#ifdef DEBUG_STATE
+    cout << "clip t " << t << " s " << s << " path " << sampleFilePath.str() << endl;
+#endif
+        // load it, checking for sample.cfg, and using metadata if there
+        loadSample( t, s, sampleFilePath.str() );
+      }
+    
+    } // nClips loop
+  
+  } 
+}
+
+void DiskReader::readTracks()
 {
   cJSON* tracks = cJSON_GetObjectItem( session, "tracks");
   if ( tracks )
@@ -199,30 +229,8 @@ void DiskReader::readGrid()
     {
       cJSON* track = cJSON_GetArrayItem( tracks, t );
       
-      cJSON* clips = cJSON_GetObjectItem( track, "clips");
-      if ( clips )
-      {
-        
-        int nClips = cJSON_GetArraySize( clips );
-        for(int s = 0; s < nClips; s++ )
-        {
-          // get metadata for Clip
-          cJSON* clip = cJSON_GetArrayItem( clips, s );
-          
-          if ( !strcmp(clip->valuestring, "") == 0 )
-          {
-            stringstream sampleFilePath;
-            sampleFilePath << sessionPath << "/samples/" << clip->valuestring;
-#ifdef DEBUG_STATE
-        cout << "clip t " << t << " s " << s << " path " << sampleFilePath.str() << endl;
-#endif
-            // load it, checking for sample.cfg, and using metadata if there
-            loadSample( t, s, sampleFilePath.str() );
-          }
-        
-        } // nClips loop
+      readScenes( t, track );
       
-      } 
     } // nTracks loop
     
   }
