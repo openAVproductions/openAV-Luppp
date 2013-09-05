@@ -74,7 +74,6 @@ void DiskWriter::writeMaster()
   
   cJSON_AddNumberToObject( masterTrack, "fader", master->getVolume()->value() );
   
-  
   // scene names
   Avtk::ClipSelector* clipSelector = master->getClipSelector();
   cJSON* sceneNames = cJSON_CreateArray();
@@ -89,12 +88,13 @@ void DiskWriter::writeMaster()
   Avtk::Reverb* rev = master->getReverb();
   cJSON* reverb = cJSON_CreateObject();
   cJSON_AddItemToObject( masterTrack, "reverb", reverb );
+  cJSON_AddNumberToObject( reverb, "active", rev->getActive() );
   cJSON_AddNumberToObject( reverb, "size", rev->size() );
   cJSON_AddNumberToObject( reverb, "wet", rev->wet() );
   cJSON_AddNumberToObject( reverb, "damping", rev->damping() );
   
-  cJSON_AddNumberToObject( reverb, "wet", rev->wet() );
-  cJSON_AddNumberToObject( reverb, "damping", rev->damping() );
+  //cJSON_AddNumberToObject( reverb, "wet", rev->wet() );
+  //cJSON_AddNumberToObject( reverb, "damping", rev->damping() );
   
 }
 
@@ -124,7 +124,7 @@ void DiskWriter::writeSession( std::string path, std::string sessionName )
     
     // add track metadata: volumes, sends etc
     cJSON_AddNumberToObject( track, "ID", t );
-    cJSON_AddNumberToObject( track, "volume", 0.4 );
+    cJSON_AddNumberToObject( track, "fader", 0.4 );
     
     // write clipData vector into clip placeholder
     cJSON* clips = cJSON_CreateArray();

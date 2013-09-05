@@ -65,7 +65,7 @@ void DiskReader::readSession( std::string path )
   
   
   readGrid();
-  
+  readMaster();
   
   // cleanup
   cJSON_Delete( session );
@@ -81,7 +81,27 @@ void DiskReader::readMaster()
   cJSON* master = cJSON_GetObjectItem( session, "master");
   if ( master )
   {
-    cJSON* volume = cJSON_GetObjectItem( master, "volume");
+    
+    // fader
+    { 
+      cJSON* fader = cJSON_GetObjectItem( master, "fader");
+      EventTrackVol e( -1, fader->valuedouble );
+      writeToDspRingbuffer( &e );
+    }
+    // reverb
+    {
+      cJSON* reverb = cJSON_GetObjectItem( master, "reverb");
+      
+      cJSON* active  = cJSON_GetObjectItem( master, "active");
+      cJSON* size    = cJSON_GetObjectItem( master, "wet");
+      cJSON* wet     = cJSON_GetObjectItem( master, "dry");
+      cJSON* damping = cJSON_GetObjectItem( master, "damping");
+      
+      EventFxReverb e(  active->valuedouble, size->valuedouble,
+                        wet->valuedouble, damping->valuedouble );
+      writeToDspRingbuffer( &e );
+    }
+    
     
     
   }

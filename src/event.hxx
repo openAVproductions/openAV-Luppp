@@ -174,13 +174,14 @@ class EventFxReverb : public EventBase
     int type() { return int(FX_REVERB); }
     uint32_t size() { return sizeof(EventFxReverb); }
     
-    int track;
     bool enable;
-    float damping;
+    
     float rtSize;
+    float wet;
+    float damping;
     
     EventFxReverb(){};
-    EventFxReverb(int t, bool e, float d, float s): track(t), enable(e), damping(d), rtSize(s) {}
+    EventFxReverb(bool e, float s, float w, float d): enable(e), rtSize(s), wet(w), damping(d) {}
 };
 
 class EventTrackSend : public EventBase

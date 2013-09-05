@@ -27,7 +27,7 @@ static void gmastertrack_reverb_cb(Fl_Widget *w, void *data)
 {
   int enable = ((Avtk::Reverb*)w)->getActive();
   printf("reverb enable %i\n",enable);
-  EventFxReverb e = EventFxReverb( -1, enable, 0.5, 0.5 );
+  EventFxReverb e = EventFxReverb( enable, 0.5, 0.5, 0.5 );
   writeToDspRingbuffer( &e );
 }
 
