@@ -92,16 +92,18 @@ void DiskReader::readMaster()
     {
       cJSON* reverb = cJSON_GetObjectItem( master, "reverb");
       
-      cJSON* active  = cJSON_GetObjectItem( master, "active");
-      cJSON* size    = cJSON_GetObjectItem( master, "wet");
-      cJSON* wet     = cJSON_GetObjectItem( master, "dry");
-      cJSON* damping = cJSON_GetObjectItem( master, "damping");
+      cJSON* active  = cJSON_GetObjectItem( reverb, "active");
+      cJSON* size    = cJSON_GetObjectItem( reverb, "size");
+      cJSON* wet     = cJSON_GetObjectItem( reverb, "wet");
+      cJSON* damping = cJSON_GetObjectItem( reverb, "damping");
       
-      EventFxReverb e(  active->valuedouble, size->valuedouble,
-                        wet->valuedouble, damping->valuedouble );
-      writeToDspRingbuffer( &e );
+      if ( active && size && wet && damping )
+      {
+        EventFxReverb e(  active->valuedouble, size->valuedouble,
+                          wet->valuedouble, damping->valuedouble );
+        writeToDspRingbuffer( &e );
+      }
     }
-    
     
     
   }
