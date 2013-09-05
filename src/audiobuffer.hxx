@@ -21,6 +21,7 @@ class AudioBuffer
     }
     AudioBuffer(unsigned long size)
     {
+      // FIXME recorded buffers don't get an ID, using garbage IDs 
       /// no ID assigned: it *takes* the one from the previous buffer!
       numBeats = 0;
       audioFrames = 0;

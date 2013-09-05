@@ -50,6 +50,27 @@ void LooperClip::save()
   }
 }
 
+void LooperClip::reset()
+{
+  // TODO make the LooperClip reset to initial state
+  /*
+  if ( _loaded )
+  {
+    char buffer [50];
+    sprintf (buffer, "LC::save() track %i, scene %i", track,scene);
+    EventGuiPrint e( buffer );
+    writeToGuiRingbuffer( &e );
+    
+    EventRequestSaveBuffer e2( track, scene, _buffer->getAudioFrames() );
+    writeToGuiRingbuffer( &e2 );
+  }
+  else
+  {
+    SaveAble::done();
+  }
+  */
+}
+
 /// loads a sample: eg from disk, unloading current sample if necessary
 void LooperClip::load( AudioBuffer* ab )
 {
