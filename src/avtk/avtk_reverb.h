@@ -55,6 +55,10 @@ class Reverb : public Fl_Slider
     void wet(float v) { amp = v; redraw(); }
     void damping(float v){damp = v; redraw();}
     
+    float size(){return s;}
+    float wet (){return amp;}
+    float damping(){return damp;}
+    
     bool getActive(){return active;}
     void setActive(bool a){active = a; redraw();}
     

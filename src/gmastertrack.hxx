@@ -71,8 +71,6 @@ class GMasterTrack : public Fl_Group
       source(x+5, y+26, 140, 100, ""),
       volBox(x+5, y+422, 140, 172, ""),
       
-      
-      
       tapTempo(x + 25 + 52, y + 26 + 4, 63, 29,"Tap"),
       metronomeButton(x + 9,y + 26 + 4, 64, 29,"Metro"),
       
@@ -126,7 +124,7 @@ class GMasterTrack : public Fl_Group
       source.color( FL_BLACK );
       source.selection_color( FL_BLUE );
       
-      volume.amplitude( 0.75, 0.8 );
+      volume.amplitude( 0.0, 0.0 );
       
       end(); // close the group
     }

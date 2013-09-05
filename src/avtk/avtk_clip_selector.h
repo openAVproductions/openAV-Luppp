@@ -151,6 +151,11 @@ class ClipSelector : public Fl_Button
       redraw();
     }
     
+    std::string clipName(int clip)
+    {
+      return clips[clip].getName();
+    }
+    
     void draw()
     {
       if (damage() & FL_DAMAGE_ALL)

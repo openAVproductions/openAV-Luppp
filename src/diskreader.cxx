@@ -48,10 +48,6 @@ void DiskReader::readSession( std::string path )
   char *sampleString = new char[file_length];
   sampleFile.read(sampleString, file_length);
   
-  //cout << "sessionFile string:\n " << sessionString << endl;
-  //cout << "sampleFile string: \n " << sampleString << endl;
-  
-  
   // create cJSON nodes from strings
   session = cJSON_Parse( sessionString );
   if (!session) {
@@ -63,10 +59,38 @@ void DiskReader::readSession( std::string path )
     printf("Error in Sample JSON before: [%s]\n",cJSON_GetErrorPtr());
     return;
   }
-  //cout << "readSample: " << cJSON_Print( sample ) << endl;
+  
+  //cout << "session: " << cJSON_Print( session ) << endl;
+  //cout << "sample:  " << cJSON_Print( sample  ) << endl;
   
   
+  readGrid();
   
+  
+  // cleanup
+  cJSON_Delete( session );
+  cJSON_Delete( sample  );
+  
+  free ( sessionString );
+  free ( sampleString  );
+  
+}
+
+void DiskReader::readMaster()
+{
+  cJSON* master = cJSON_GetObjectItem( session, "master");
+  if ( master )
+  {
+    cJSON* volume = cJSON_GetObjectItem( master, "volume");
+    
+    
+  }
+  
+  
+}
+
+void DiskReader::readGrid()
+{
   cJSON* tracks = cJSON_GetObjectItem( session, "tracks");
   if ( tracks )
   {
@@ -88,7 +112,7 @@ void DiskReader::readSession( std::string path )
           if ( !strcmp(clip->valuestring, "") == 0 )
           {
             stringstream sampleFilePath;
-            sampleFilePath << path << "/samples/" << clip->valuestring;
+            sampleFilePath << sessionPath << "/samples/" << clip->valuestring;
 #ifdef DEBUG_LOAD
         cout << "clip " << sampleFilePath.str() << endl;
 #endif
@@ -115,8 +139,7 @@ void DiskReader::readSession( std::string path )
         
         } // nClips loop
       
-      }
-        
+      } 
     } // nTracks loop
     
   }
@@ -124,12 +147,4 @@ void DiskReader::readSession( std::string path )
   {
     cout << "DiskReader: Error getting clip" << endl;
   }
-  
-  // cleanup
-  cJSON_Delete( session );
-  cJSON_Delete( sample  );
-  
-  free ( sessionString );
-  free ( sampleString  );
-  
 }

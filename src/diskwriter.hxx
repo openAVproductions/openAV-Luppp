@@ -46,6 +46,8 @@ class DiskWriter
     
     std::vector<ClipData> clipData;
     
+    // convienice functions for code separation
+    void writeMaster();
 };
 
 #endif // LUPPP_DISK_WRITER_H

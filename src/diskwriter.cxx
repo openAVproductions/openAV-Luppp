@@ -9,7 +9,11 @@
 #include <cstdlib>
 #include <sys/stat.h>
 
+#include "gui.hxx"
 #include "worker.hxx"
+#include "gmastertrack.hxx"
+
+extern Gui* gui;
 
 using namespace std;
 
@@ -61,6 +65,39 @@ void DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
   delete ab;
 }
 
+void DiskWriter::writeMaster()
+{
+  // Master track stuff
+  cJSON* masterTrack = cJSON_CreateObject();
+  cJSON_AddItemToObject(session, "master", masterTrack );
+  GMasterTrack* master = gui->getMasterTrack();
+  
+  cJSON_AddNumberToObject( masterTrack, "fader", master->getVolume()->value() );
+  
+  
+  // scene names
+  Avtk::ClipSelector* clipSelector = master->getClipSelector();
+  cJSON* sceneNames = cJSON_CreateArray();
+  cJSON_AddItemToObject( masterTrack, "sceneNames", sceneNames );
+  for(int i = 0; i < NSCENES; i++)
+  {
+    cJSON* sceneName = cJSON_CreateString( clipSelector->clipName(i).c_str() );
+    cJSON_AddItemToArray( sceneNames, sceneName );
+  }
+  
+  // reverb
+  Avtk::Reverb* rev = master->getReverb();
+  cJSON* reverb = cJSON_CreateObject();
+  cJSON_AddItemToObject( masterTrack, "reverb", reverb );
+  cJSON_AddNumberToObject( reverb, "size", rev->size() );
+  cJSON_AddNumberToObject( reverb, "wet", rev->wet() );
+  cJSON_AddNumberToObject( reverb, "damping", rev->damping() );
+  
+  cJSON_AddNumberToObject( reverb, "wet", rev->wet() );
+  cJSON_AddNumberToObject( reverb, "damping", rev->damping() );
+  
+}
+
 void DiskWriter::writeSession( std::string path, std::string sessionName )
 {
   // add session metadata
@@ -70,9 +107,7 @@ void DiskWriter::writeSession( std::string path, std::string sessionName )
   cJSON_AddNumberToObject( session, "version_patch", 0 );
   cJSON_AddNumberToObject( session, "bpm", 120 );
   
-  // Master track stuff
-  cJSON* masterTrack = cJSON_CreateObject();
-  cJSON_AddItemToObject(session, "master", masterTrack );
+  writeMaster();
   
   
   

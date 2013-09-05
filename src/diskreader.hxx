@@ -33,6 +33,10 @@ class DiskReader
     
     std::string sessionName;
     std::string sessionPath;
+    
+    // convinience functions
+    void readGrid();
+    void readMaster();
 };
 
 #endif // LUPPP_DISK_READER_H
