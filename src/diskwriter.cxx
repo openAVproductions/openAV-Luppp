@@ -25,9 +25,6 @@ void DiskWriter::initialize(std::string path, std::string name )
   session = cJSON_CreateObject();
   sample  = cJSON_CreateObject();
   
-  cJSON* lupppSession = cJSON_CreateObject();
-  cJSON_AddItemToObject(session, "lupppSession", lupppSession );
-  
   // add session metadata
   cJSON_AddItemToObject  ( session, "session", cJSON_CreateString( sessionName.c_str() ));
   cJSON_AddNumberToObject( session, "version_major", 1 );
@@ -74,14 +71,14 @@ void DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
 void DiskWriter::writeSession( std::string path, std::string sessionName )
 {
   // add JSON "tracks" array
-  cJSON* trackArray = cJSON_CreateObject();
+  cJSON* trackArray = cJSON_CreateArray();
   cJSON_AddItemToObject(session, "tracks", trackArray );
   
   // write tracks into JSON tracks array
   for(int t = 0; t < NTRACKS; t++)
   {
     cJSON* track = cJSON_CreateObject();
-    cJSON_AddItemToObject( trackArray, "track", track );
+    cJSON_AddItemToArray( trackArray, track );
     
     // add track metadata: volumes, sends etc
     cJSON_AddNumberToObject( track, "ID", t );
@@ -90,16 +87,23 @@ void DiskWriter::writeSession( std::string path, std::string sessionName )
     // write clipData vector into clip placeholder
     cJSON* clips = cJSON_CreateArray();
     cJSON_AddItemToObject( track, "clips", clips );
+    
+    
+    
     for(int s = 0; s < NSCENES; s++)
     {
-      //handle each clip
+      // add empty string to array
+      cJSON* clip = cJSON_CreateString( "" );
+      cJSON_AddItemToArray( clips, clip );
+      
+      // replace blank string if clip exists
       for(int i = 0; i < clipData.size(); i++)
       {
         if ( clipData.at(i).track == t &&
              clipData.at(i).scene == s )
         {
-          cJSON* clip = cJSON_CreateString( clipData.at(i).name.c_str() );
-          cJSON_AddItemToArray( clips, clip );
+          cJSON* newClip = cJSON_CreateString( clipData.at(i).name.c_str() );
+          cJSON_ReplaceItemInArray( clips, s, newClip );
         }
       }
       

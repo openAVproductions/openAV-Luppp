@@ -91,7 +91,7 @@ static void gui_header_callback(Fl_Widget *w, void *data)
   }
   else if ( strcmp(m->label(), "Save    ") == 0 ) {
     
-    const char* name = fl_input( "Save session as", "lupppSession" );
+    const char* name = fl_input( "Save session as", "sessionName" );
     if ( name )
     {
       cout << "Save clicked, name = " << name << endl;

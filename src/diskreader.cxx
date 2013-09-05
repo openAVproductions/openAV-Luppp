@@ -67,40 +67,58 @@ void DiskReader::readSession( std::string path )
   
   
   
-  cJSON* clip = cJSON_GetObjectItem( session, "clip");
-  if ( clip )
+  cJSON* tracks = cJSON_GetObjectItem( session, "tracks");
+  if ( tracks )
   {
-    // get metadata for Clip
-    cJSON* track = cJSON_GetObjectItem( clip, "track");
-    cJSON* scene = cJSON_GetObjectItem( clip, "scene");
-    cJSON* file  = cJSON_GetObjectItem( clip, "file");
-    int t = track->valueint;
-    int s = scene->valueint;
-    stringstream sampleFilePath;
-    sampleFilePath << path << "/samples/" << file->valuestring;
-#ifdef DEBUG_LOAD
-    cout << "clip has track " << t << " scene " << s << "  file: " <<
-        sampleFilePath.str() << endl;
-#endif
-    
-    // load it
-    AudioBuffer* ab = Worker::loadSample( sampleFilePath.str() );
-    EventLooperLoad e = EventLooperLoad( t, s, ab );
-    writeToDspRingbuffer( &e );
-    
-    cJSON* sampleFile = cJSON_GetObjectItem( sample, file->valuestring );
-    if ( sampleFile )
+    int nTracks = cJSON_GetArraySize( tracks );
+    for(int t = 0; t < nTracks; t++ )
     {
-      cJSON* beats = cJSON_GetObjectItem( sampleFile, "beats" );
+      cJSON* track = cJSON_GetArrayItem( tracks, t );
       
-      cout << "Clip @ " << t << " " << s << " gets " << beats->valuedouble << " beats."<< endl;
-      EventLooperLoopLength e = EventLooperLoopLength( t, s, beats->valueint );
-      writeToDspRingbuffer( &e );
-    }
-    else
-    {
-      cout << "Wanring: Sample " << file->valuestring << " has no entry for beats." << endl;
-    }
+      cJSON* clips = cJSON_GetObjectItem( track, "clips");
+      if ( clips )
+      {
+        
+        int nClips = cJSON_GetArraySize( clips );
+        for(int s = 0; s < nClips; s++ )
+        {
+          // get metadata for Clip
+          cJSON* clip = cJSON_GetArrayItem( clips, s );
+          
+          if ( !strcmp(clip->valuestring, "") == 0 )
+          {
+            stringstream sampleFilePath;
+            sampleFilePath << path << "/samples/" << clip->valuestring;
+#ifdef DEBUG_LOAD
+        cout << "clip " << sampleFilePath.str() << endl;
+#endif
+            
+            // load it
+            AudioBuffer* ab = Worker::loadSample( sampleFilePath.str() );
+            EventLooperLoad e = EventLooperLoad( t, s, ab );
+            writeToDspRingbuffer( &e );
+            
+            // retrieve sample metadata from sample.cfg using filename as key
+            cJSON* sampleFile = cJSON_GetObjectItem( sample, clip->valuestring );
+            if ( sampleFile )
+            {
+              cJSON* beats = cJSON_GetObjectItem( sampleFile, "beats" );
+              
+              cout << "Clip @ " << t << " " << s << " gets " << beats->valuedouble << " beats."<< endl;
+              EventLooperLoopLength e = EventLooperLoopLength( t, s, beats->valueint );
+              writeToDspRingbuffer( &e );
+            }
+            else {
+              cout << "Wanring: Sample " << clip->valuestring << " has no entry for beats." << endl;
+            }
+          }
+        
+        } // nClips loop
+      
+      }
+        
+    } // nTracks loop
+    
   }
   else
   {
