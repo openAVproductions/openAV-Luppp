@@ -24,13 +24,6 @@ void DiskWriter::initialize(std::string path, std::string name )
   
   session = cJSON_CreateObject();
   sample  = cJSON_CreateObject();
-  
-  // add session metadata
-  cJSON_AddItemToObject  ( session, "session", cJSON_CreateString( sessionName.c_str() ));
-  cJSON_AddNumberToObject( session, "version_major", 1 );
-  cJSON_AddNumberToObject( session, "version_minor", 0 );
-  cJSON_AddNumberToObject( session, "version_patch", 0 );
-  cJSON_AddNumberToObject( session, "bpm", 120 );
 }
 
 void DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
@@ -70,6 +63,20 @@ void DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
 
 void DiskWriter::writeSession( std::string path, std::string sessionName )
 {
+  // add session metadata
+  cJSON_AddItemToObject  ( session, "session", cJSON_CreateString( sessionName.c_str() ));
+  cJSON_AddNumberToObject( session, "version_major", 1 );
+  cJSON_AddNumberToObject( session, "version_minor", 0 );
+  cJSON_AddNumberToObject( session, "version_patch", 0 );
+  cJSON_AddNumberToObject( session, "bpm", 120 );
+  
+  // Master track stuff
+  cJSON* masterTrack = cJSON_CreateObject();
+  cJSON_AddItemToObject(session, "master", masterTrack );
+  
+  
+  
+  
   // add JSON "tracks" array
   cJSON* trackArray = cJSON_CreateArray();
   cJSON_AddItemToObject(session, "tracks", trackArray );
