@@ -231,6 +231,25 @@ void DiskReader::readTracks()
       
       readScenes( t, track );
       
+      // fader
+      { 
+        cJSON* fader = cJSON_GetObjectItem( track, "fader");
+        EventTrackVol e( t, fader->valuedouble );
+        writeToDspRingbuffer( &e );
+      }
+      // sends
+      { 
+        cJSON* side = cJSON_GetObjectItem( track, "side");
+        cJSON* post = cJSON_GetObjectItem( track, "post");
+        cJSON* rev  = cJSON_GetObjectItem( track, "reverb");
+        EventTrackSend e1( t, SEND_SIDE, side->valuedouble );
+        EventTrackSend e2( t, SEND_POST, post->valuedouble );
+        EventTrackSend e3( t, SEND_REV, rev->valuedouble );
+        writeToDspRingbuffer( &e1 );
+        writeToDspRingbuffer( &e2 );
+        writeToDspRingbuffer( &e3 );
+      }
+      
     } // nTracks loop
     
   }

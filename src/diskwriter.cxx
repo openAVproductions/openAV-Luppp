@@ -137,7 +137,11 @@ void DiskWriter::writeSession( std::string path, std::string sessionName )
     
     // add track metadata: volumes, sends etc
     cJSON_AddNumberToObject( track, "ID", t );
-    cJSON_AddNumberToObject( track, "fader", 0.4 );
+    
+    cJSON_AddNumberToObject( track, "fader", gui->getTrack(t)->getVolume()->value() );
+    cJSON_AddNumberToObject( track, "side", gui->getTrack(t)->side.value() );
+    cJSON_AddNumberToObject( track, "post", gui->getTrack(t)->post.value() );
+    cJSON_AddNumberToObject( track, "reverb", gui->getTrack(t)->rev.value() );
     
     // write clipData vector into clip placeholder
     cJSON* clips = cJSON_CreateArray();
