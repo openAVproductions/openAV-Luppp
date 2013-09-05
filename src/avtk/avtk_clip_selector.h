@@ -29,7 +29,6 @@
 #include <sstream>
 
 #include "../gridlogic.hxx"
-#include "../gclipselectoraction.hxx"
 
 #include "../worker.hxx"
 #include "../looper.hxx"
@@ -51,7 +50,7 @@ class ClipState
       name("")
     {}
     
-    void setName(std::string n = "---")
+    void setName(std::string n)
     {
       name = n;
     }
@@ -255,9 +254,9 @@ class ClipSelector : public Fl_Button
           cairo_stroke(cr);
           
           // clip name
-          cairo_move_to( cr, x + clipHeight + 10, drawY + 16 );
-          cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 1 );
-          cairo_set_font_size( cr, 10 );
+          cairo_move_to( cr, x + clipHeight + 10, drawY + 17 );
+          cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 0.9 );
+          cairo_set_font_size( cr, 11 );
           cairo_show_text( cr, clips[i].getName().c_str() );
           
           drawY += clipHeight;
@@ -339,12 +338,29 @@ class ClipSelector : public Fl_Button
               }
               else if ( strcmp(m->label(), "Load") == 0 )
               {
-                int loadFail = clipSelectorLoad( ID, clipNum );
-                if ( !loadFail )
-                {
-                  clips[clipNum].setName();
-                  clips[clipNum].setState(GridLogic::STATE_STOPPED);
+                // FIXME: refactor
+                string path;
+                Fl_Native_File_Chooser fnfc;
+                fnfc.title("Pick a file");
+                fnfc.type(Fl_Native_File_Chooser::BROWSE_FILE);
+                //fnfc.filter("Wav\t*.wav");
+                fnfc.directory( getenv("HOME") ); // default directory to use
+                // Show native chooser
+                switch ( fnfc.show() ) {
+                   case -1: printf("ERROR: %s\n", fnfc.errmsg());    break;  // ERROR
+                   case  1: printf("CANCEL\n");                      break;  // CANCEL
+                   default: printf("Loading directory: %s\n", fnfc.filename());
+                      // update path and load it
+                      path = fnfc.filename();
+                      break;
                 }
+                
+                if ( strcmp( path.c_str(), "" ) == 0 )
+                  return 0;
+                
+                AudioBuffer* ab = Worker::loadSample( path );
+                EventLooperLoad e = EventLooperLoad( ID, clipNum, ab );
+                writeToDspRingbuffer( &e );
               }
               else if ( strcmp(m->label(), "1") == 0 ) {
                 EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,1);

@@ -33,6 +33,16 @@ class AudioBuffer
       return ID;
     }
     
+    void setName(const char* n)
+    {
+      if ( strlen(n) > 19 )
+#ifdef DEBUG_BUFFER
+      printf("AudioBuffer setName too long!\n" );
+#endif      return;
+      
+      memcpy( name, n, sizeof(char)* 20 ); 
+    }
+    
     int getBeats()
     {
       return numBeats;
@@ -61,6 +71,8 @@ class AudioBuffer
     int ID;
     
     int numBeats;
+    
+    char name[20];
     
     std::vector<float> buffer;
 };
