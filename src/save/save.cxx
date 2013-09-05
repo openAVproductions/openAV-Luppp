@@ -20,14 +20,24 @@ void Save::registerSaveable(SaveAble* s)
 
 void Save::save()
 {
+#ifdef DEBUG_SAVE
   cout << " Save::save() " << endl;
+#endif
   for( unsigned int i = 0; i < saveables.size(); i++)
   {
     saveables.at(i)->save(); 
   }
-  
-  // now each SaveAble has reqested save state, but not yet *saved* its state.
-  // we need a way to determine if the saves are flushed.
+}
+
+void Save::reset()
+{
+#ifdef DEBUG_SAVE
+  cout << " Save::reset() " << endl;
+#endif
+  for( unsigned int i = 0; i < saveables.size(); i++)
+  {
+    saveables.at(i)->reset(); 
+  }
 }
 
 void Save::finish()

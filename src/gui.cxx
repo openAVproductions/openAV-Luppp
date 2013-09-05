@@ -45,8 +45,10 @@ static void gui_header_callback(Fl_Widget *w, void *data)
   
   Fl_Menu_Item rclick_menu[] =
   {
-    { "Load" },
-    { "Save    " },
+    { "New Session" },
+    { "Load Session" },
+    { "Save Session   ", 0, 0, 0, FL_MENU_DIVIDER},
+    { "Quit" },
     { 0 }
   };
   
@@ -56,7 +58,16 @@ static void gui_header_callback(Fl_Widget *w, void *data)
   {
       return;
   }
-  else if ( strcmp(m->label(), "Load") == 0 )
+  else if ( strcmp(m->label(), "New Session") == 0 )
+  {
+    int yes = fl_ask("Start a new session?","");
+    if ( yes )
+    {
+      EventSaveReset ev;
+      writeToDspRingbuffer( &ev );
+    }
+  }
+  else if ( strcmp(m->label(), "Load Session") == 0 )
   {
     cout << "Load clicked" << endl;
     Fl_Native_File_Chooser fnfc;
@@ -75,7 +86,7 @@ static void gui_header_callback(Fl_Widget *w, void *data)
           break;
     }
   }
-  else if ( strcmp(m->label(), "Save    ") == 0 )
+  else if ( strcmp(m->label(), "Save Session   ") == 0 )
   {
     const char* name = fl_input( "Save session as", "sessionName" );
     if ( name )

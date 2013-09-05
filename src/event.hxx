@@ -31,6 +31,7 @@ namespace Event
     RECORD,
     
     SAVE,       // save action
+    SAVE_RESET, // reset all state
     SAVE_FINISH,// save action finished, flush metadata to disk
     SAVE_BUFFER,// save an individual AudioBuffer* to disk
     
@@ -114,9 +115,16 @@ class EventSave : public EventBase
     int type() { return int(SAVE); }
     uint32_t size() { return sizeof(EventSave); }
     
-    int waste;
+    EventSave() {}
+};
+
+class EventSaveReset : public EventBase
+{
+  public:
+    int type() { return int(SAVE_RESET); }
+    uint32_t size() { return sizeof(EventSaveReset); }
     
-    EventSave() : waste(0) {}
+    EventSaveReset() {}
 };
 
 class EventSaveFinish : public EventBase

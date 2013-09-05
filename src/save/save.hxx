@@ -15,7 +15,11 @@ class Save
   public:
     Save();
     
+    /// called to initiate a save on all SaveAbles
     void save();
+    
+    /// called to initiate a reset on all SaveAbles
+    void reset();
     
     /// called when each part is finished, and we can flush the metadata to disk
     void finish();

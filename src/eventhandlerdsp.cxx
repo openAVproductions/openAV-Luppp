@@ -35,10 +35,16 @@ void handleDspEvents()
       switch ( e->type() )
       {
         case Event::SAVE: {
-          if ( availableRead >= sizeof(EventMasterVol) ) {
-            EventMasterVol ev(0);
-            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMasterVol) );
+          if ( availableRead >= sizeof(EventSave) ) {
+            EventSave ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventSave) );
             jack->getSave()->save();
+          } break; }
+        case Event::SAVE_RESET: {
+          if ( availableRead >= sizeof(EventSaveReset) ) {
+            EventSaveReset ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventSaveReset) );
+            jack->getSave()->reset();
           } break; }
         
         case Event::MASTER_VOL: {
