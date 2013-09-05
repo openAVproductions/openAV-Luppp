@@ -92,10 +92,13 @@ static void gui_header_callback(Fl_Widget *w, void *data)
   else if ( strcmp(m->label(), "Save    ") == 0 ) {
     
     const char* name = fl_input( "Save session as", "lupppSession" );
-    cout << "Save clicked, name = " << name << endl;
-    
-    EventSave e;
-    //writeToDspRingbuffer( &e );
+    if ( name )
+    {
+      cout << "Save clicked, name = " << name << endl;
+      gui->getDiskWriter()->initialize( getenv("HOME"), name );
+      EventSave e;
+      writeToDspRingbuffer( &e );
+    }
   }
 }
 

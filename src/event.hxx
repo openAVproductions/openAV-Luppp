@@ -114,7 +114,9 @@ class EventSave : public EventBase
     int type() { return int(SAVE); }
     uint32_t size() { return sizeof(EventSave); }
     
-    EventSave(){};
+    int waste;
+    
+    EventSave() : waste(0) {}
 };
 
 class EventSaveFinish : public EventBase

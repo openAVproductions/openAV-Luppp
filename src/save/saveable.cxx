@@ -19,8 +19,9 @@ void SaveAble::done()
 {
   savesDone++;
   
-  if ( savesDone == jack->getSave()->getNumSaveables() )
+  if ( savesDone >= jack->getSave()->getNumSaveables() )
   {
     jack->getSave()->finish();
+    savesDone = 0; // reset in case of another save before quit
   }
 }

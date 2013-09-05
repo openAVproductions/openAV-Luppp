@@ -13,7 +13,6 @@ using namespace std;
 
 DiskWriter::DiskWriter()
 {
-  initialize( getenv("HOME"), "sessionName" );
 };
 
 void DiskWriter::initialize(std::string path, std::string name )
@@ -64,10 +63,8 @@ void DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
   
   Worker::writeSample( path.str(), ab );
   
-  
-  
   // de allocate the AudioBuffer here!!
-  
+  delete ab;
 }
 
 void DiskWriter::writeSession( std::string path, std::string sessionName )
