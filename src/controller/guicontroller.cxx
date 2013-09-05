@@ -55,6 +55,12 @@ void LupppGUI::tapTempo( bool b )
   writeToGuiRingbuffer( &e );
 }
 
+void LupppGUI::bpm(int bpm)
+{
+  EventTimeBPM e(bpm);
+  writeToGuiRingbuffer( &e );
+}
+
 void LupppGUI::volume(int t, float f)
 {
   EventTrackVol e( t, f );

@@ -41,10 +41,15 @@ void TimeManager::setFpb(float f)
   fpb = f;
   //cout << "setFpb() " << fpb << endl;
   
+  int bpm = (44100 * 60) / f;
+  
   char buffer [50];
-  sprintf (buffer, "TM, setFpb() %i", int(f) );
+  sprintf (buffer, "TM, setFpb() %i, bpm = %i", int(f), int(bpm) );
   EventGuiPrint e( buffer );
   writeToGuiRingbuffer( &e );
+  
+  EventTimeBPM e2( bpm );
+  writeToGuiRingbuffer( &e2 );
   
   for(uint i = 0; i < observers.size(); i++)
   {

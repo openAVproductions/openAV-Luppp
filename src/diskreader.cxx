@@ -151,6 +151,12 @@ void DiskReader::readMaster()
   if ( master )
   {
     
+    // bpm
+    { 
+      cJSON* bpm = cJSON_GetObjectItem( master, "bpm");
+      EventTimeBPM e( bpm->valuedouble );
+      writeToDspRingbuffer( &e );
+    }
     // fader
     { 
       cJSON* fader = cJSON_GetObjectItem( master, "fader");

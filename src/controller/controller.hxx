@@ -25,6 +25,7 @@ class Controller
     virtual void trackSend(int t, int send, float v){};
     
     /// Time
+    virtual void bpm(int bpm){};
     virtual void tapTempo(bool b){};
     
     /// track functionality

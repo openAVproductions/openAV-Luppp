@@ -161,6 +161,9 @@ class GMasterTrack : public Fl_Group
       
     }
     
+    // FIXME: refactor into time class?
+    int bpm;
+    
     Avtk::Volume* getVolume()
     {
       return &volume;
