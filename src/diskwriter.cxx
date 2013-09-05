@@ -10,8 +10,9 @@
 #include <sys/stat.h>
 
 #include "gui.hxx"
-#include "worker.hxx"
 #include "gmastertrack.hxx"
+
+#include <sndfile.hh>
 
 extern Gui* gui;
 
@@ -59,7 +60,10 @@ void DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
   // or alternatively t_<track>_s_<scene>.wav
   stringstream path;
   path << sessionPath << "/" << sessionName << "/samples/" << filename.str();
-  Worker::writeSample( path.str(), ab );
+  
+  SndfileHandle outfile( path.str(), SFM_WRITE, SF_FORMAT_WAV | SF_FORMAT_FLOAT, 1, 44100);
+  cout << "Worker::writeSample() " << path << " size: " << ab->getData().size() << endl;
+  outfile.write( &ab->getData()[0], ab->getData().size() );
   
   // de allocate the AudioBuffer
   delete ab;
@@ -139,7 +143,7 @@ void DiskWriter::writeSession( std::string path, std::string sessionName )
       cJSON_AddItemToArray( clips, clip );
       
       // replace blank string if clip exists
-      for(int i = 0; i < clipData.size(); i++)
+      for(unsigned int i = 0; i < clipData.size(); i++)
       {
         if ( clipData.at(i).track == t &&
              clipData.at(i).scene == s )

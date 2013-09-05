@@ -10,13 +10,38 @@
 
 #include "event.hxx"
 #include "eventhandler.hxx"
-#include "worker.hxx"
+
+#include "audiobuffer.hxx"
+
+#include <sndfile.hh>
 
 using namespace std;
 
 DiskReader::DiskReader()
 {
 };
+
+AudioBuffer* DiskReader::loadSample( string path )
+{
+  SndfileHandle infile( path, SFM_READ );
+  
+  AudioBuffer* ab = new AudioBuffer();
+  
+  std::vector<float> buf( infile.frames(), 0.f );
+  
+  infile.read( &buf[0] , infile.frames() );
+  
+  // read data from file
+  ab->setBeats(4);
+  ab->nonRtSetSample( buf );
+  
+  cout << "Worker: loadSample() " << path << " size: " << infile.frames() << endl;
+  
+  if ( infile.frames() > 0 )
+    return ab;
+  
+  return 0;
+}
 
 void DiskReader::readSession( std::string path )
 {
@@ -140,7 +165,7 @@ void DiskReader::readGrid()
 #endif
             
             // load it
-            AudioBuffer* ab = Worker::loadSample( sampleFilePath.str() );
+            AudioBuffer* ab = loadSample( sampleFilePath.str() );
             EventLooperLoad e = EventLooperLoad( t, s, ab );
             writeToDspRingbuffer( &e );
             

@@ -25,6 +25,10 @@ class DiskReader
   public:
     DiskReader();
     
+    /// loads a sample into a new AudioBuffer, returning the buffer
+    AudioBuffer* loadSample( std::string path );
+    
+    /// reads a session from disk, parsing and restoring state
     void readSession( std::string path );
   
   private:

@@ -30,8 +30,7 @@ class Gui
     DiskWriter* getDiskWriter(){return diskWriter;}
     DiskReader* getDiskReader(){return diskReader;}
     
-    // for pushing strings to tooltip area
-    void setTooltip( std::string s );
+    void selectLoadSample( int track, int clip );
   
   private:
     Fl_Double_Window    window;

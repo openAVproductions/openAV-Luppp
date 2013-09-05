@@ -3,7 +3,11 @@
 #define LUPPP_AUDIOBUFFER_H
 
 #include <vector>
+#include <string>
+#include <cstring>
 #include <iostream>
+
+using namespace std;
 
 /// AudioBuffer stores float samples in a big vector.
 class AudioBuffer
@@ -36,9 +40,12 @@ class AudioBuffer
     void setName(const char* n)
     {
       if ( strlen(n) > 19 )
+      {
 #ifdef DEBUG_BUFFER
-      printf("AudioBuffer setName too long!\n" );
-#endif      return;
+        cout << "AudioBuffer setName too long!" << endl;
+#endif
+        return;
+      }
       
       memcpy( name, n, sizeof(char)* 20 ); 
     }
@@ -51,7 +58,7 @@ class AudioBuffer
     void setBeats(int b)
     {
 #ifdef DEBUG_BUFFER
-      printf("AudioBuffer now has %i beats\n", b );
+      cout << "AudioBuffer now has " << b << " beats\n" << endl;
 #endif
       numBeats = b;
     }

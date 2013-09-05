@@ -6,7 +6,6 @@
 
 #include "jack.hxx"
 #include "audiobuffer.hxx"
-#include "worker.hxx"
 
 #include <FL/fl_ask.H>
 
@@ -22,19 +21,6 @@ int GMasterTrack::privateID = 0;
 using namespace std;
 
 extern Gui* gui;
-
-
-void luppp_tooltip(std::string s)
-{
-  return;
-  //gui->setTooltip(s);
-}
-
-void Gui::setTooltip( std::string s )
-{
-  tooltip = s;
-  tooltipLabel->label( tooltip.c_str() );
-}
 
 void close_cb(Fl_Widget*o, void*) {
    if ((Fl::event() == FL_KEYDOWN || Fl::event() == FL_SHORTCUT)
@@ -101,6 +87,34 @@ static void gui_header_callback(Fl_Widget *w, void *data)
     }
   }
 }
+
+void Gui::selectLoadSample( int track, int scene )
+{
+  // FIXME: refactor
+  string path;
+  Fl_Native_File_Chooser fnfc;
+  fnfc.title("Pick a file");
+  fnfc.type(Fl_Native_File_Chooser::BROWSE_FILE);
+  //fnfc.filter("Wav\t*.wav");
+  fnfc.directory( getenv("HOME") ); // default directory to use
+  // Show native chooser
+  switch ( fnfc.show() ) {
+     case -1: printf("ERROR: %s\n", fnfc.errmsg());    break;  // ERROR
+     case  1: printf("CANCEL\n");                      break;  // CANCEL
+     default: printf("Loading directory: %s\n", fnfc.filename());
+        // update path and load it
+        path = fnfc.filename();
+        break;
+  }
+  
+  if ( strcmp( path.c_str(), "" ) == 0 )
+    return;
+  
+  AudioBuffer* ab = diskReader->loadSample( path );
+  EventLooperLoad e = EventLooperLoad( track, scene, ab );
+  writeToDspRingbuffer( &e );
+}
+
 
 Gui::Gui() :
     window(1110,650),

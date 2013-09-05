@@ -15,12 +15,11 @@
 #include "avtk/avtk_button.h"
 #include "avtk/avtk_background.h"
 #include "avtk/avtk_light_button.h"
-#include "avtk/avtk_clip_selector.h"
 #include "avtk/avtk_radial_status.h"
 
+#include "avtk/clipselector.hxx"
 
 #include "config.hxx"
-#include "worker.hxx"
 #include "audiobuffer.hxx"
 #include "eventhandler.hxx"
 
