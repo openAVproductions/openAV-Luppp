@@ -48,6 +48,9 @@ class LooperClip : public SaveAble
     /// analyses current _playing _recording vars, returns the current State
     GridLogic::State getState();
     bool playing();
+    bool getLoaded();
+    bool getQueueStop();
+    bool getQueuePlay();
     bool recording();
     
     /// get buffer details
@@ -57,7 +60,7 @@ class LooperClip : public SaveAble
     size_t audioBufferSize();
     
     /// set clip state
-    void  queuePlay();
+    void  queuePlay(bool=true);
     void  queueStop();
     void  queueRecord();
     

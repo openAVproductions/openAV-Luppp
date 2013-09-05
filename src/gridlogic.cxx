@@ -42,11 +42,10 @@ void GridLogic::launchScene( int scene )
       }
       else
       {
-        bool current = lc->playing();
-        lc->queueStop();
-        bool next    = lc->playing();
-        if ( current != next )
+        // this scene may need to be updated: 
+        if ( lc->getQueuePlay() )
         {
+          lc->queuePlay(false);
           jack->getControllerUpdater()->setSceneState( t, s, lc->getState() );
         }
       }

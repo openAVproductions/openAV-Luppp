@@ -228,9 +228,9 @@ void LooperClip::bar()
 }
 
 
-void LooperClip::queuePlay()
+void LooperClip::queuePlay(bool qP)
 {
-  _queuePlay   = true;
+  _queuePlay   = qP;
   _queueStop   = false;
 }
 
@@ -270,6 +270,21 @@ GridLogic::State LooperClip::getState()
 bool LooperClip::playing()
 {
   return _playing;
+}
+
+bool LooperClip::getQueueStop()
+{
+  return _queueStop;
+}
+
+bool LooperClip::getQueuePlay()
+{
+  return _queuePlay;
+}
+
+bool LooperClip::getLoaded()
+{
+  return _loaded;
 }
 
 bool LooperClip::recording()
