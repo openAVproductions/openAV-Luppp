@@ -26,6 +26,7 @@
 #include <FL/Fl_Button.H>
 
 #include <string>
+#include <sstream>
 
 #include "../gridlogic.hxx"
 #include "../gclipselectoraction.hxx"
@@ -35,6 +36,7 @@
 #include "../audiobuffer.hxx"
 #include "../eventhandler.hxx"
 
+using namespace std;
 
 extern void luppp_tooltip(std::string s);
 
@@ -89,6 +91,17 @@ class ClipSelector : public Fl_Button
       
       label = _label;
       _master = master;
+      
+      if ( _master )
+      {
+        for(int i = 0; i < 10; i++ )
+        {
+          stringstream s;
+          s << i + 1;
+          clips[i].setName( s.str() );
+        }
+        
+      }
       
       highlight = false;
       mouseOver = false;
@@ -289,6 +302,10 @@ class ClipSelector : public Fl_Button
             {
               if ( _master )
               {
+                // ask new name for clip, then 
+                const char* name = fl_input( "Scene name: ", clips[clipNum].getName().c_str() );
+                if ( name )
+                  clips[clipNum].setName( name );
                 
                 redraw();
                 return 1;
