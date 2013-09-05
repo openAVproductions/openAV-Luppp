@@ -110,9 +110,8 @@ void Gui::selectLoadSample( int track, int scene )
   if ( strcmp( path.c_str(), "" ) == 0 )
     return;
   
-  AudioBuffer* ab = diskReader->loadSample( path );
-  EventLooperLoad e = EventLooperLoad( track, scene, ab );
-  writeToDspRingbuffer( &e );
+  // diskReader loads sample, and parses for sample.cfg
+  diskReader->loadSample( track, scene, path );
 }
 
 

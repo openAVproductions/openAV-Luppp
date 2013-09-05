@@ -3,9 +3,11 @@
 
 #include <sstream>
 #include <fstream>
+//#include <cstring>
 #include <iostream>
-#include <cstring>
-#include <cstdlib>
+#include <stdlib.h>
+#include <libgen.h>
+
 #include <sys/stat.h>
 
 #include "event.hxx"
@@ -21,26 +23,82 @@ DiskReader::DiskReader()
 {
 };
 
-AudioBuffer* DiskReader::loadSample( string path )
+void DiskReader::loadSample( int track, int scene, string path )
 {
   SndfileHandle infile( path, SFM_READ );
   
   AudioBuffer* ab = new AudioBuffer();
   
-  std::vector<float> buf( infile.frames(), 0.f );
-  
+  std::vector<float> buf( infile.frames() );
   infile.read( &buf[0] , infile.frames() );
   
-  // read data from file
-  ab->setBeats(4);
+  // set the data
   ab->nonRtSetSample( buf );
   
   cout << "Worker: loadSample() " << path << " size: " << infile.frames() << endl;
   
-  if ( infile.frames() > 0 )
-    return ab;
   
-  return 0;
+  if ( infile.frames() > 0 )
+  {
+    char* basePath = strdup( path.c_str() );
+    stringstream base;
+    base << dirname( basePath ) << "/sample.cfg";
+    
+    // open sample, read all
+    cout << "loading sample metadata file " << base.str().c_str() << endl;
+    std::ifstream sampleFile( base.str().c_str(), std::ios_base::in|std::ios_base::ate);
+    long file_length = sampleFile.tellg();
+    sampleFile.seekg(0, std::ios_base::beg);
+    sampleFile.clear();
+    char *sampleString = new char[file_length];
+    sampleFile.read(sampleString, file_length);
+    
+    cout << "Sample file:" << endl << sampleString << endl;
+    cout << "Sample file (parsed):" << endl << cJSON_Parse( sampleString ) << endl;
+    
+    cJSON* sampleJson = cJSON_Parse( sampleString );
+    
+    if (!sampleJson) {
+      printf("Error in Sample JSON before: [%s]\n",cJSON_GetErrorPtr());
+      return;
+    }
+    
+    cout << "sampleJson OK" << endl;
+    
+    // retrieve sample metadata from sample.cfg using filename as key
+    
+    char* tmp = strdup( path.c_str() );
+    
+    char* baseName = basename( tmp );
+    
+    cout << "tmp " << tmp << " baseName " << baseName << endl;
+    
+    cJSON* sample = cJSON_GetObjectItem( sampleJson, baseName );
+    
+    
+    if ( sample )
+    {
+      cJSON* beats = cJSON_GetObjectItem( sample, "beats" );
+      
+      cout << "Clip @ " << track << " " << scene << " gets " << beats->valuedouble << " beats."<< endl;
+      ab->setBeats( beats->valuedouble );
+    }
+    else
+    {
+      cout << "Wanring: sample.cfg has no entry for beats." << endl;
+    }
+    
+    // write audioBuffer to DSP
+    EventLooperLoad e = EventLooperLoad( track, scene, ab );
+    writeToDspRingbuffer( &e );
+    
+    
+    cJSON_Delete( sampleJson );
+    free ( sampleString  );
+    free ( tmp );
+    free( basePath );
+  }
+  
 }
 
 void DiskReader::readSession( std::string path )
@@ -65,23 +123,12 @@ void DiskReader::readSession( std::string path )
   char *sessionString = new char[file_length];
   file.read(sessionString, file_length);
   
-  // open sample, read all
-  std::ifstream sampleFile( samplePath.str().c_str(), std::ios_base::in|std::ios_base::ate);
-  file_length = sampleFile.tellg();
-  sampleFile.seekg(0, std::ios_base::beg);
-  sampleFile.clear();
-  char *sampleString = new char[file_length];
-  sampleFile.read(sampleString, file_length);
+
   
   // create cJSON nodes from strings
   session = cJSON_Parse( sessionString );
   if (!session) {
     printf("Error in Session JSON before: [%s]\n",cJSON_GetErrorPtr());
-    return;
-  }
-  sample  = cJSON_Parse( sampleString );
-  if (!sample) {
-    printf("Error in Sample JSON before: [%s]\n",cJSON_GetErrorPtr());
     return;
   }
   
@@ -94,10 +141,7 @@ void DiskReader::readSession( std::string path )
   
   // cleanup
   cJSON_Delete( session );
-  cJSON_Delete( sample  );
-  
   free ( sessionString );
-  free ( sampleString  );
   
 }
 
@@ -161,27 +205,10 @@ void DiskReader::readGrid()
             stringstream sampleFilePath;
             sampleFilePath << sessionPath << "/samples/" << clip->valuestring;
 #ifdef DEBUG_LOAD
-        cout << "clip " << sampleFilePath.str() << endl;
+        cout << "clip t " << t << " s " << s << " path " << sampleFilePath.str() << endl;
 #endif
-            
-            // load it
-            AudioBuffer* ab = loadSample( sampleFilePath.str() );
-            EventLooperLoad e = EventLooperLoad( t, s, ab );
-            writeToDspRingbuffer( &e );
-            
-            // retrieve sample metadata from sample.cfg using filename as key
-            cJSON* sampleFile = cJSON_GetObjectItem( sample, clip->valuestring );
-            if ( sampleFile )
-            {
-              cJSON* beats = cJSON_GetObjectItem( sampleFile, "beats" );
-              
-              cout << "Clip @ " << t << " " << s << " gets " << beats->valuedouble << " beats."<< endl;
-              EventLooperLoopLength e = EventLooperLoopLength( t, s, beats->valueint );
-              writeToDspRingbuffer( &e );
-            }
-            else {
-              cout << "Wanring: Sample " << clip->valuestring << " has no entry for beats." << endl;
-            }
+            // load it, checking for sample.cfg, and using metadata if there
+            loadSample( t, s, sampleFilePath.str() );
           }
         
         } // nClips loop

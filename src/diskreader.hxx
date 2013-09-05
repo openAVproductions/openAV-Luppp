@@ -26,14 +26,13 @@ class DiskReader
     DiskReader();
     
     /// loads a sample into a new AudioBuffer, returning the buffer
-    AudioBuffer* loadSample( std::string path );
+    void loadSample( int track, int scene, std::string path );
     
     /// reads a session from disk, parsing and restoring state
     void readSession( std::string path );
   
   private:
     cJSON* session;
-    cJSON* sample;
     
     std::string sessionName;
     std::string sessionPath;
