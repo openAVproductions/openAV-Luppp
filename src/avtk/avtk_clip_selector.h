@@ -135,8 +135,6 @@ class ClipSelector : public Fl_Button
       switch(s)
       {
         case GridLogic::STATE_RECORDING:
-            clips[clipNum].setName();
-            break;
         case GridLogic::STATE_STOPPED:
         case GridLogic::STATE_EMPTY:
         case GridLogic::STATE_PLAYING:
@@ -331,6 +329,7 @@ class ClipSelector : public Fl_Button
                   {0},
                 //{ "Record" },
                 { "Use as tempo" },
+                { "Rename" },
                 { 0 }
               };
               Fl_Menu_Item *m = (Fl_Menu_Item*) rclick_menu->popup(Fl::event_x(), Fl::event_y(), 0, 0, 0);
@@ -373,6 +372,12 @@ class ClipSelector : public Fl_Button
               {
                 EventLooperUseAsTempo e (ID, clipNum);
                 writeToDspRingbuffer( &e );
+              }
+              else if ( strcmp(m->label(), "Rename") == 0 )
+              {
+                const char* name = fl_input( "Scene name: ", clips[clipNum].getName().c_str() );
+                if ( name )
+                  clips[clipNum].setName( name );
               }
               else if ( strcmp(m->label(), "Record") == 0 )
               {
