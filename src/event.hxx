@@ -30,10 +30,10 @@ namespace Event
     MASTER_VOL,
     RECORD,
     
-    SAVE,       // save action
-    SAVE_RESET, // reset all state
-    SAVE_FINISH,// save action finished, flush metadata to disk
-    SAVE_BUFFER,// save an individual AudioBuffer* to disk
+    STATE_SAVE,       // save action
+    STATE_RESET, // reset all state
+    STATE_SAVE_FINISH,// save action finished, flush metadata to disk
+    STATE_SAVE_BUFFER,// save an individual AudioBuffer* to disk
     
     REQUEST_SAVE_BUFFER, // gets an audioBuffer of a certain size
     
@@ -109,31 +109,31 @@ class EventTrackVol : public EventBase
     }
 };
 
-class EventSave : public EventBase
+class EventStateSave : public EventBase
 {
   public:
-    int type() { return int(SAVE); }
-    uint32_t size() { return sizeof(EventSave); }
+    int type() { return int(STATE_SAVE); }
+    uint32_t size() { return sizeof(EventStateSave); }
     
-    EventSave() {}
+    EventStateSave() {}
 };
 
-class EventSaveReset : public EventBase
+class EventStateReset : public EventBase
 {
   public:
-    int type() { return int(SAVE_RESET); }
-    uint32_t size() { return sizeof(EventSaveReset); }
+    int type() { return int(STATE_RESET); }
+    uint32_t size() { return sizeof(EventStateReset); }
     
-    EventSaveReset() {}
+    EventStateReset() {}
 };
 
-class EventSaveFinish : public EventBase
+class EventStateSaveFinish : public EventBase
 {
   public:
-    int type() { return int(SAVE_FINISH); }
-    uint32_t size() { return sizeof(EventSaveFinish); }
+    int type() { return int(STATE_SAVE_FINISH); }
+    uint32_t size() { return sizeof(EventStateSaveFinish); }
     
-    EventSaveFinish(){};
+    EventStateSaveFinish(){};
 };
 
 class EventGridEvent : public EventBase
@@ -357,19 +357,19 @@ class EventLooperClipRequestBuffer : public EventBase
 };
 
 
-class EventSaveBuffer : public EventBase
+class EventStateSaveBuffer : public EventBase
 {
   public:
-    int type() { return int(SAVE_BUFFER); }
-    uint32_t size() { return sizeof(EventSaveBuffer); }
+    int type() { return int(STATE_SAVE_BUFFER); }
+    uint32_t size() { return sizeof(EventStateSaveBuffer); }
     
     int track;
     int scene;
     // pointer to the AudioBuffer to be saved
     AudioBuffer* ab;
     
-    EventSaveBuffer(): track(0), scene(0), ab(0) {}
-    EventSaveBuffer(int t, int s, AudioBuffer* a): track(t), scene(s), ab(a) {}
+    EventStateSaveBuffer(): track(0), scene(0), ab(0) {}
+    EventStateSaveBuffer(int t, int s, AudioBuffer* a): track(t), scene(s), ab(a) {}
 };
 
 class EventRequestSaveBuffer : public EventBase

@@ -103,20 +103,20 @@ void handleGuiEvents()
           } break; }
         
         
-        case Event::SAVE_BUFFER: {
-          if ( availableRead >= sizeof(EventSaveBuffer) ) {
-            EventSaveBuffer ev;
-            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventSaveBuffer) );
+        case Event::STATE_SAVE_BUFFER: {
+          if ( availableRead >= sizeof(EventStateSaveBuffer) ) {
+            EventStateSaveBuffer ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventStateSaveBuffer) );
 #ifdef DEBUG_SAVE
             cout << "EventSaveBuffer: " << ev.track << " " << ev.scene << " " << ev.ab->getID() << endl;
 #endif
             gui->getDiskWriter()->writeAudioBuffer( ev.track, ev.scene, ev.ab );
           } break; }
           
-        case Event::SAVE_FINISH: {
-          if ( availableRead >= sizeof(EventSaveFinish) ) {
-            EventSaveFinish ev;
-            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventSaveFinish) );
+        case Event::STATE_SAVE_FINISH: {
+          if ( availableRead >= sizeof(EventStateSaveFinish) ) {
+            EventStateSaveFinish ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventStateSaveFinish) );
 #ifdef DEBUG_SAVE
             cout << "EventSaveFinish!" << endl;
 #endif

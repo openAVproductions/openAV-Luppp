@@ -213,7 +213,7 @@ void DiskReader::readGrid()
           {
             stringstream sampleFilePath;
             sampleFilePath << sessionPath << "/samples/" << clip->valuestring;
-#ifdef DEBUG_LOAD
+#ifdef DEBUG_STATE
         cout << "clip t " << t << " s " << s << " path " << sampleFilePath.str() << endl;
 #endif
             // load it, checking for sample.cfg, and using metadata if there

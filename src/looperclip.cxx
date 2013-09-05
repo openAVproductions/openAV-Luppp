@@ -11,7 +11,7 @@
 extern Jack* jack;
 
 LooperClip::LooperClip(int t, int s) :
-  SaveAble(),
+  Stately(),
   track(t),
   scene(s)
 {
@@ -46,7 +46,7 @@ void LooperClip::save()
   }
   else
   {
-    SaveAble::done();
+    Stately::done();
   }
 }
 
@@ -127,10 +127,10 @@ void LooperClip::recieveSaveBuffer( AudioBuffer* saveBuffer )
   saveBuffer->setBeats( _buffer->getBeats() );
   saveBuffer->setAudioFrames( _buffer->getAudioFrames() );
   
-  EventSaveBuffer e ( track, scene, saveBuffer );
+  EventStateSaveBuffer e ( track, scene, saveBuffer );
   writeToGuiRingbuffer( &e );
   
-  SaveAble::done();
+  Stately::done();
 }
 
 

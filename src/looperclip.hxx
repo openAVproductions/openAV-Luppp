@@ -3,7 +3,7 @@
 #define LUPPP_LOOPER_CLIP_H
 
 #include <stdio.h>
-#include "save/saveable.hxx"
+#include "state/stately.hxx"
 #include "config.hxx"
 #include "gridlogic.hxx"
 
@@ -27,7 +27,7 @@ class AudioBuffer;
  * 
  * This class inherits from SaveAble to save its state.
 **/
-class LooperClip : public SaveAble
+class LooperClip : public Stately
 {
   public:
     LooperClip(int track, int scene);

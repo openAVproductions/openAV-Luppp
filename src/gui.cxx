@@ -63,7 +63,7 @@ static void gui_header_callback(Fl_Widget *w, void *data)
     int yes = fl_ask("Start a new session?","");
     if ( yes )
     {
-      EventSaveReset ev;
+      EventStateReset ev;
       writeToDspRingbuffer( &ev );
     }
   }
@@ -93,7 +93,7 @@ static void gui_header_callback(Fl_Widget *w, void *data)
     {
       cout << "Save clicked, name = " << name << endl;
       gui->getDiskWriter()->initialize( getenv("HOME"), name );
-      EventSave e;
+      EventStateSave e;
       writeToDspRingbuffer( &e );
     }
   }
