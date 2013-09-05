@@ -322,6 +322,7 @@ int Jack::getSamplerate()
 
 void Jack::writeApcOutput( unsigned char* data )
 {
+  // FIXME: MIDI output needs a QUEUE structure, so we can send more data to the APC "at once"
   void* apcOutput   = buffers.midi[Buffers::APC_OUTPUT];
   
   unsigned char* buf = jack_midi_event_reserve( apcOutput, 0, 3);

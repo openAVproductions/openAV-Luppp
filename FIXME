@@ -1,5 +1,0 @@
-
-=TrackOutput, progress should use Logic, not write events to GUI
-
-=TimeManager class, auto register TimeObservers with it.
-  Segfaulting on register in constructor
