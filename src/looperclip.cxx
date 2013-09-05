@@ -199,6 +199,11 @@ void LooperClip::bar()
     _queueRecord = false;
     change = true;
     
+    if ( _buffer )
+    {
+      _buffer->setBeats( 0 );
+    }
+    
     _recordhead = 0;
   }
   else if ( _queuePlay )
