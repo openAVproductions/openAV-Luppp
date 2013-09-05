@@ -64,7 +64,6 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
   
   if (uiUpdateCounter > uiUpdateConstant )
   {
-    // FIXME: should be using ControllerUpdater
     EventTrackSignalLevel e( track, dbMeter.getLeftDB() * _toMaster, dbMeter.getRightDB() * _toMaster );
     writeToGuiRingbuffer( &e );
     uiUpdateCounter = 0;

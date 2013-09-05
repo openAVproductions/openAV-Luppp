@@ -13,7 +13,14 @@ SaveAble::SaveAble()
   jack->getSave()->registerSaveable( this );
 }
 
-void SaveAble::save(){};
+
+void SaveAble::reset()
+{
+}
+
+void SaveAble::save()
+{
+}
 
 void SaveAble::done()
 {

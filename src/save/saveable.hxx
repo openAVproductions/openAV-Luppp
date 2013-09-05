@@ -16,6 +16,9 @@ class SaveAble
   public:
     SaveAble();
     
+    /// this function being called resets the state of the instance to blank
+    virtual void reset();
+    
     /// this function is called when the user initiates a save action
     virtual void save();
     
