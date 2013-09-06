@@ -30,6 +30,8 @@ class AkaiAPC : public Controller, public MidiObserver
     void midi(unsigned char* data);
     
   private:
+    int _port;
+    
     bool shiftPressed;
     
     int footpedalTrack;

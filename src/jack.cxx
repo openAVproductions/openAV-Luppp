@@ -32,9 +32,6 @@ Jack::Jack() :
   logic = new Logic();
   gridLogic = new GridLogic();
   
-  Controller* c = new AkaiAPC();
-  Controller* g = new LupppGUI();
-  
   
   buffers.nframes = jack_get_buffer_size( client );
   buffers.samplerate = jack_get_sample_rate( client );
@@ -64,18 +61,6 @@ Jack::Jack() :
                           "midi_in",
                           JACK_DEFAULT_MIDI_TYPE,
                           JackPortIsInput,
-                          0 );
-  
-  apcMidiInput  = jack_port_register( client,
-                          "apc_in",
-                          JACK_DEFAULT_MIDI_TYPE,
-                          JackPortIsInput,
-                          0 );
-  
-  apcMidiOutput  = jack_port_register( client,
-                          "apc_out",
-                          JACK_DEFAULT_MIDI_TYPE,
-                          JackPortIsOutput,
                           0 );
   
   masterVol = 0.77;
@@ -128,6 +113,9 @@ Jack::Jack() :
 
 void Jack::activate()
 {
+  Controller* c = new AkaiAPC();
+  Controller* g = new LupppGUI();
+  
   /*
   // move to "settings" class or so
   Controller* c = new AkaiAPC();
@@ -175,9 +163,39 @@ Looper* Jack::getLooper(int t)
 }
 
 
-void Jack::registerMidiObserver( MidiObserver* mo )
+void Jack::registerMidiObserver( MidiObserver* mo, std::string name )
 {
+  cout << "Jack::registerMidiObserver() " << name << endl;
+  
+  // register the observer
   midiObservers.push_back( mo );
+  
+  //set the index of the MIDI controller port on the MidiObserver
+  midiObservers.back()->port( midiObservers.size() - 1 );
+  
+  // register new MIDI I/O ports for this controller
+  stringstream s;
+  s << name << "_in";
+  jack_port_t* tmp = jack_port_register(client,
+                                        s.str().c_str(),
+                                        JACK_DEFAULT_MIDI_TYPE,
+                                        JackPortIsInput,
+                                        0 );
+  
+  midiObserverInputBuffers.push_back( 0 );
+  midiObserverInputPorts.push_back( tmp );
+
+  stringstream s2;
+  s2 << name << "_out";
+  cout << s2.str() << endl;
+  tmp  = jack_port_register( client,
+                            s2.str().c_str(),
+                            JACK_DEFAULT_MIDI_TYPE,
+                            JackPortIsOutput,
+                            0 );
+  
+  midiObserverOutputBuffers.push_back( 0 );
+  midiObserverOutputPorts.push_back( tmp );
 }
 
 
@@ -189,8 +207,6 @@ int Jack::process (jack_nframes_t nframes)
   buffers.audio[Buffers::JACK_MASTER_OUT_L]   = (float*)jack_port_get_buffer( masterOutputL  , nframes );
   buffers.audio[Buffers::JACK_MASTER_OUT_R]   = (float*)jack_port_get_buffer( masterOutputR  , nframes );
   buffers.midi [Buffers::MASTER_MIDI_INPUT]   = (void*) jack_port_get_buffer( masterMidiInput, nframes );
-  buffers.midi [Buffers::APC_INPUT]           = (void*) jack_port_get_buffer( apcMidiInput   , nframes );
-  buffers.midi [Buffers::APC_OUTPUT]          = (void*) jack_port_get_buffer( apcMidiOutput  , nframes );
   
   memset( buffers.audio[Buffers::JACK_MASTER_OUT_L] , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::JACK_MASTER_OUT_R] , 0, sizeof(float) * nframes );
@@ -199,8 +215,6 @@ int Jack::process (jack_nframes_t nframes)
   memset( buffers.audio[Buffers::REVERB]            , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::SIDECHAIN]         , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::POST_SIDECHAIN]    , 0, sizeof(float) * nframes );
-  
-  jack_midi_clear_buffer( buffers.midi[Buffers::APC_OUTPUT] );
   
   /// do events from the ringbuffer
   handleDspEvents();
@@ -218,13 +232,30 @@ int Jack::process (jack_nframes_t nframes)
     EventGuiPrint e( buffer );
     writeToGuiRingbuffer( &e );
     
-    // run each event trought the midiObservers vector
-    for(unsigned int i = 0; i < midiObservers.size(); i++ )
-    {
-      midiObservers.at(i)->midi( (unsigned char*) &in_event.buffer[0] );
-    }
-    
     masterMidiInputIndex++;
+  }
+  
+  /// process each MidiObserver registered MIDI port
+  for(unsigned int i = 0; i < midiObservers.size(); i++ )
+  {
+    midiObserverInputBuffers.at( i ) =
+        (void*) jack_port_get_buffer( midiObserverInputPorts.at(i), nframes );
+    
+    midiObserverOutputBuffers.at( i ) =
+        (void*) jack_port_get_buffer( midiObserverOutputPorts.at(i), nframes );
+    jack_midi_clear_buffer( midiObserverOutputBuffers.at( i ) );
+    
+    
+    jack_midi_event_t in_event;
+    int index = 0;
+    int event_count = (int) jack_midi_get_event_count( midiObserverInputBuffers.at( i ) );
+    while ( index < event_count )
+    {
+      jack_midi_event_get(&in_event, midiObserverInputBuffers.at( i ), index);
+      midiObservers.at(i)->midi( (unsigned char*) &in_event.buffer[0] );
+      printf( "APC MIDI %i %i %i\n", int(in_event.buffer[0]), int(in_event.buffer[1]), int(in_event.buffer[2]) );
+      index++;
+    }
   }
   
   /// process each track, starting at output and working up signal path
@@ -320,12 +351,12 @@ int Jack::getSamplerate()
   return jack_get_sample_rate( client );
 }
 
-void Jack::writeApcOutput( unsigned char* data )
+void Jack::midiObserverWriteMIDI( int portIndex, unsigned char* data )
 {
   // FIXME: MIDI output needs a QUEUE structure, so we can send more data to the APC "at once"
-  void* apcOutput   = buffers.midi[Buffers::APC_OUTPUT];
+  void* portBuffer = midiObserverOutputBuffers.at(portIndex);
   
-  unsigned char* buf = jack_midi_event_reserve( apcOutput, 0, 3);
+  unsigned char* buf = jack_midi_event_reserve( portBuffer, 0, 3);
   if( buf != 0 )
   {
     memcpy( buf, data, sizeof( unsigned char ) * 3);

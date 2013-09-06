@@ -20,6 +20,17 @@ class MidiObserver
     /// gets called with each MIDI message from the controller. Deal with its
     /// input here, and route to the appropriate function in Luppp
     virtual void midi(unsigned char* data) = 0;
+    
+    /// sets the port number for this instance. Used when writing MIDI messages
+    /// to identify the port, using Jack::midiObserverWriteMIDI()
+    void port(int index);
+    
+    /// returns the port index to the subclass when needed
+    int port();
+  
+  private:
+    int portIndex;
+  
 };
 
 #endif // LUPPP_MIDI_OBSERVER_H

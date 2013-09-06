@@ -52,15 +52,17 @@ class Jack
     
     /// register MIDI observers: they're called when a MIDI message arrives on
     /// a port they're watching
-    void registerMidiObserver( MidiObserver* mo );
+    void registerMidiObserver( MidiObserver* mo, std::string name );
+    
+    /// writes MIDI messages to a MidiObserver's port
+    void midiObserverWriteMIDI( int portIndex, unsigned char* data );
+    
     
     void masterVolume( float vol ){masterVol = vol;}
     
     /// sets reverb bus parameters
     void setReverb( bool e, float d, float s );
     
-    /// writes MIDI messages to APC port
-    void writeApcOutput( unsigned char* data );
   
   private:
     jack_client_t* client;
@@ -75,7 +77,13 @@ class Jack
     
     vector<Looper*>         loopers;
     vector<TrackOutput*>    trackOutputs;
+    
+    // FIXME: refactor MidiObserver ports / buffers into one class, single vector
     vector<MidiObserver*>   midiObservers;
+    vector<jack_port_t*>    midiObserverInputPorts;
+    vector<jack_port_t*>    midiObserverOutputPorts;
+    vector<void*>           midiObserverInputBuffers;
+    vector<void*>           midiObserverOutputBuffers;
     
     // FX
     Reverb* reverb;

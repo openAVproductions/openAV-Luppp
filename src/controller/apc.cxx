@@ -16,7 +16,9 @@ AkaiAPC::AkaiAPC() :
   footpedalTrack(0),
   footpedalScene(0)
 {
+  _port = port();
 }
+
 
 void AkaiAPC::recordArm(int t, bool enabled)
 {
@@ -24,7 +26,7 @@ void AkaiAPC::recordArm(int t, bool enabled)
   data[0] = 144 + t;
   data[1] = 48; // record enable LED
   data[2] = enabled ? 127 : 0;
-  jack->writeApcOutput( &data[0] );
+  jack->midiObserverWriteMIDI( _port,  &data[0] );
 }
 
 void AkaiAPC::progress(int t, int s, float f)
@@ -34,7 +36,7 @@ void AkaiAPC::progress(int t, int s, float f)
   data[0] = 176;
   data[1] = 48; // record enable LED
   data[2] = 127 * f;
-  jack->writeApcOutput( &data[0] );
+  jack->midiObserverWriteMIDI( _port,  &data[0] );
   */
 }
 
@@ -67,7 +69,7 @@ void AkaiAPC::trackSend(int t, int send, float v)
     data[2] = 127 * v;
   }
   
-  jack->writeApcOutput( &data[0] );
+  jack->midiObserverWriteMIDI( _port,  &data[0] );
 }
 
 void AkaiAPC::setSceneState(int t, int clip, GridLogic::State s)
@@ -87,7 +89,7 @@ void AkaiAPC::setSceneState(int t, int clip, GridLogic::State s)
     case GridLogic::STATE_STOP_QUEUED:   data[2] = 6; break;
   }
   
-  jack->writeApcOutput( &data[0] );
+  jack->midiObserverWriteMIDI( _port,  &data[0] );
 }
 
 void AkaiAPC::launchScene( int s )
@@ -99,13 +101,13 @@ void AkaiAPC::launchScene( int s )
     data[0] = 128;
     data[1] = 82 + i; // scene play
     data[2] = 0;
-    jack->writeApcOutput( &data[0] );
+    jack->midiObserverWriteMIDI( _port,  &data[0] );
   }
   
   data[0] = 144;
   data[1] = 82 + s;
   data[2] = 127;
-  jack->writeApcOutput( &data[0] );
+  jack->midiObserverWriteMIDI( _port,  &data[0] );
 }
 
 void AkaiAPC::mute(int t, bool b)
@@ -225,6 +227,10 @@ void AkaiAPC::ccChange( int track, int cc, float value )
           jack->getLogic()->trackVolume( -1, value );
           break; }
       
+      /// X-Fader
+      case 15: {
+          jack->getTimeManager()->setBpm( 60 + value * 180 );
+          break; }
       
       /// Device Control
       case 16: {
@@ -236,6 +242,7 @@ void AkaiAPC::ccChange( int track, int cc, float value )
       case 18: {
           jack->getLogic()->trackSend( track, SEND_REV, value );
           break; }
+      
       
       case 64: { // FootSwitch 1
           if ( value > 0.5 )
@@ -294,6 +301,6 @@ void AkaiAPC::reset()
     data[0] = 176 + i;
     data[1] = 0x19;
     data[2] = 2;
-    jack->writeApcOutput( &data[0] );
+    jack->midiObserverWriteMIDI( _port,  &data[0] );
   }
 }
