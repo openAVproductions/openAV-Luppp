@@ -67,7 +67,7 @@ class LooperClip : public Stately
     void  queueStop();
     void  queueRecord();
     
-    void  neutralize(); // removes all queue states
+    void  neutralize(); // removes all play || record states if on
     bool  somethingQueued(); // returns true if any state is queued
     
     /// set buffer state

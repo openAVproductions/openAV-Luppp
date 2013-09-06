@@ -256,7 +256,6 @@ void LooperClip::bar()
 void LooperClip::neutralize()
 {
   _queuePlay = false;
-  _queueStop = false;
   _queueRecord = false;
 }
 
