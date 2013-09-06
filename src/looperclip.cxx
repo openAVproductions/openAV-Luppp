@@ -253,10 +253,25 @@ void LooperClip::bar()
   }
 }
 
+void LooperClip::neutralize()
+{
+  _queuePlay = false;
+  _queueStop = false;
+  _queueRecord = false;
+}
+
+bool LooperClip::somethingQueued()
+{
+  if ( _queuePlay || _queueStop || _queueRecord )
+  {
+    return true;
+  }
+  return false;
+}
 
 void LooperClip::queuePlay(bool qP)
 {
-  _queuePlay   = qP;
+  _queuePlay   = true;
   _queueStop   = false;
 }
 

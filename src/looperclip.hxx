@@ -67,6 +67,9 @@ class LooperClip : public Stately
     void  queueStop();
     void  queueRecord();
     
+    void  neutralize(); // removes all queue states
+    bool  somethingQueued(); // returns true if any state is queued
+    
     /// set buffer state
     void setBeats(int beats);
     
