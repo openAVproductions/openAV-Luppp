@@ -98,6 +98,21 @@ void GridLogic::pressed( int track, int scene )
       lc->queuePlay();
   }
   
+  // check state of new clip, if getQueuePlay() == true, queueStop() all other scenes
+  if ( lc->getQueuePlay() )
+  {
+    for(int i = 0; i < NSCENES; i++)
+    {
+      LooperClip* ilc = jack->getLooper( track )->getClip( i );
+      if ( ilc->playing() )
+      {
+        ilc->queueStop();
+        jack->getControllerUpdater()->setSceneState(track, i, ilc->getState() );
+      }
+    }
+  }
+  
+  
   s = lc->getState();
 #ifdef DEBUG_CLIP
   printf("GridLogic::pressed() after press state = %s\n", StateString[ int(s) ] );
