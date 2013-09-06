@@ -17,6 +17,9 @@ class MidiObserver
     /// registers class with jack's MIDI handling, with MIDI port name
     MidiObserver( std::string portName );
     
+    /// name string to show in UI
+    virtual std::string getName() = 0;
+    
     /// gets called with each MIDI message from the controller. Deal with its
     /// input here, and route to the appropriate function in Luppp
     virtual void midi(unsigned char* data) = 0;

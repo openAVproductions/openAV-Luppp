@@ -8,6 +8,7 @@
 #include "audiobuffer.hxx"
 #include "eventhandler.hxx"
 #include "controller/guicontroller.hxx"
+#include "controller/genericmidi.hxx"
 
 using namespace std;
 
@@ -114,6 +115,8 @@ Jack::Jack() :
 void Jack::activate()
 {
   Controller* c = new AkaiAPC();
+  Controller* m = new GenericMIDI();
+  
   Controller* g = new LupppGUI();
   
   /*
@@ -187,7 +190,6 @@ void Jack::registerMidiObserver( MidiObserver* mo, std::string name )
 
   stringstream s2;
   s2 << name << "_out";
-  cout << s2.str() << endl;
   tmp  = jack_port_register( client,
                             s2.str().c_str(),
                             JACK_DEFAULT_MIDI_TYPE,
@@ -253,7 +255,7 @@ int Jack::process (jack_nframes_t nframes)
     {
       jack_midi_event_get(&in_event, midiObserverInputBuffers.at( i ), index);
       midiObservers.at(i)->midi( (unsigned char*) &in_event.buffer[0] );
-      printf( "APC MIDI %i %i %i\n", int(in_event.buffer[0]), int(in_event.buffer[1]), int(in_event.buffer[2]) );
+      printf( "%s MIDI %i %i %i\n", midiObservers.at(i)->getName().c_str(), int(in_event.buffer[0]), int(in_event.buffer[1]), int(in_event.buffer[2]) );
       index++;
     }
   }
