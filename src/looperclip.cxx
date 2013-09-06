@@ -145,10 +145,25 @@ void LooperClip::record(int count, float* L, float* R)
   // write "count" samples into current buffer.
   if ( _buffer )
   {
+    size_t size = _buffer->getData().size();
+    
     for(int i = 0; i < count; i++)
     {
-      _buffer->getData().at( _recordhead ) = *L++;
-      _recordhead++;
+      if ( _recordhead < size )
+      {
+        _buffer->getData().at( _recordhead ) = *L++;
+        _recordhead++;
+      }
+      else
+      {
+        // break: this is *BAD*, audio data is lost but the buffer isn't here
+        // yet to hold new audio data so there's no option. This has only been
+        // experienced during development / testing, not actual usage.
+        char buffer [50];
+        sprintf (buffer, "LooperClip t %i, s %i, Error: out of mem!",track, scene );
+        EventGuiPrint e( buffer );
+        writeToGuiRingbuffer( &e );
+      }
     }
   }
   
