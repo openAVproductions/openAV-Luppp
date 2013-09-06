@@ -78,6 +78,11 @@ std::string ClipSelector::clipName(int clip)
   return clips[clip].getName();
 }
 
+void ClipSelector::clipName(int clip, std::string name)
+{
+  clips[clip].setName( name );
+}
+
 void ClipSelector::draw()
 {
   if (damage() & FL_DAMAGE_ALL)

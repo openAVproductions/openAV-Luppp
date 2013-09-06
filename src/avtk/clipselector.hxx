@@ -97,6 +97,7 @@ class ClipSelector : public Fl_Button
     **/
     void setState( int clipNum, GridLogic::State s );
     
+    void clipName(int clip, std::string name);
     std::string clipName(int clip);
     
     void draw();

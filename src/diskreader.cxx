@@ -3,19 +3,20 @@
 
 #include <sstream>
 #include <fstream>
-//#include <cstring>
 #include <iostream>
 #include <stdlib.h>
 #include <libgen.h>
-
 #include <sys/stat.h>
 
+#include "gui.hxx"
 #include "event.hxx"
-#include "eventhandler.hxx"
-
 #include "audiobuffer.hxx"
+#include "eventhandler.hxx"
+#include "gmastertrack.hxx"
 
 #include <sndfile.hh>
+
+extern Gui* gui;
 
 using namespace std;
 
@@ -156,7 +157,6 @@ void DiskReader::readMaster()
   cJSON* master = cJSON_GetObjectItem( session, "master");
   if ( master )
   {
-    
     // bpm
     { 
       cJSON* bpm = cJSON_GetObjectItem( master, "bpm");
@@ -187,6 +187,25 @@ void DiskReader::readMaster()
         writeToDspRingbuffer( &e );
       }
     }
+    
+    // sceneNames
+    {
+      cJSON* names = cJSON_GetObjectItem( master, "sceneNames");
+      if ( names )
+      {
+        GMasterTrack* master = gui->getMasterTrack();
+        Avtk::ClipSelector* clipSelector = master->getClipSelector();
+        int nscenes = cJSON_GetArraySize( names );
+        for(int s = 0; s < nscenes; s++ )
+        {
+          cJSON* name = cJSON_GetArrayItem( names, s );
+          clipSelector->clipName( s, name->valuestring );
+        }
+        clipSelector->redraw();
+      }
+    }
+    
+    
     
     
   }
