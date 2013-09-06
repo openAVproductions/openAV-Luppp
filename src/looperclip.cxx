@@ -75,12 +75,15 @@ void LooperClip::reset()
   {
     //SaveAble::done();
   }
+  
+  init();
 }
 
 /// loads a sample: eg from disk, unloading current sample if necessary
 void LooperClip::load( AudioBuffer* ab )
 {
   _loaded = true;
+  _recording = false;
   
   if ( _buffer )
   {
@@ -163,6 +166,8 @@ void LooperClip::record(int count, float* L, float* R)
         sprintf (buffer, "LooperClip t %i, s %i, Error: out of mem!",track, scene );
         EventGuiPrint e( buffer );
         writeToGuiRingbuffer( &e );
+        
+        break;
       }
     }
   }
