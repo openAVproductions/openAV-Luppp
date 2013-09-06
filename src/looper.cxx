@@ -96,6 +96,9 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
       {
         float tmp = clips[clip]->getSample(playSpeed);
         
+        float deltaPitch = 12 * log ( playSpeed ) / log (2);
+        semitoneShift = -deltaPitch;
+        
         // write the pitch-shifted signal to the track buffer
         pitchShift( 1, &tmp, &out[i] );
       }
