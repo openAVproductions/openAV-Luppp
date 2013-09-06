@@ -64,28 +64,12 @@ void ClipSelector::setID( int id )
 
 
 
-/** converts the Looper::State into the UI represnted ClipSelector state.
- * It puts some of the data into clips[], and stores unique state into the class.
-**/
 void ClipSelector::setState( int clipNum, GridLogic::State s )
 {
 #ifdef DEBUG_CLIP
-  cout << "setState clipNum = " << clipNum << "  state = " << s << endl;
+  cout << "ClipSelector::setState() t = " << ID << " clipNum = " << clipNum << "  state = " << s << endl;
 #endif
-  switch(s)
-  {
-    case GridLogic::STATE_RECORDING:
-    case GridLogic::STATE_STOPPED:
-    case GridLogic::STATE_EMPTY:
-    case GridLogic::STATE_PLAYING:
-    case GridLogic::STATE_PLAY_QUEUED:
-    case GridLogic::STATE_RECORD_QUEUED:
-    case GridLogic::STATE_STOP_QUEUED:
-    default: break;
-  }
-  
   clips[clipNum].setState( s );
-  
   redraw();
 }
 

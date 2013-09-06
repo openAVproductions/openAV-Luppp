@@ -5,6 +5,10 @@
 #include "../event.hxx"
 #include "../eventhandler.hxx"
 
+#include "../jack.hxx"
+
+extern Jack* jack;
+
 using namespace std;
 
 State::State()
@@ -37,6 +41,8 @@ void State::reset()
   {
     statelys.at(i)->reset(); 
   }
+  
+  jack->getGridLogic()->updateState();
 }
 
 void State::finish()

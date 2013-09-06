@@ -67,6 +67,8 @@ class GTrack : public Fl_Group
       rev.callback( gtrack_reverb_cb, this );
       post.callback( gtrack_post_cb, this );
       
+      post.value( 1.0 );
+      
       volume.callback( gtrack_vol_cb, this );
       
       volBox.maximum(1.0f);

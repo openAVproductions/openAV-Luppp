@@ -119,8 +119,17 @@ void GridLogic::load(int track, int scene, AudioBuffer* ab)
 void GridLogic::updateState()
 {
   //printf("GridLogic::updateState() stub" );
+  for(int t = 0; t < NTRACKS; t++)
+  {
+    for(int s = 0; s < NSCENES; s++)
+    {
+      GridLogic::State st = jack->getLooper( t )->getClip( s )->getState();
+      EventGuiPrint e( GridLogic::StateString[st] );
+      writeToGuiRingbuffer( &e );
+      jack->getControllerUpdater()->setSceneState(t, s, st );
+    }
+  }
 }
-
 
 void GridLogic::bar()
 {

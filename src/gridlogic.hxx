@@ -68,4 +68,6 @@ class GridLogic : public TimeObserver
     int sceneLaunch;
 };
 
+
+
 #endif // LUPPP_GRID_LOGIC_H

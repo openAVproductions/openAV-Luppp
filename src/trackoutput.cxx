@@ -19,7 +19,7 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
   _toReverb        = 0.0;
   _toMaster        = 0.8;
   _toSidechain     = 0.0;
-  _toPostSidechain = 0.0;
+  _toPostSidechain = 1.0;
 }
 
 

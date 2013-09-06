@@ -15,6 +15,12 @@ LooperClip::LooperClip(int t, int s) :
   track(t),
   scene(s)
 {
+  _buffer = new AudioBuffer(4410);
+  init();
+}
+
+void LooperClip::init()
+{
   _loaded     = false;
   _playing    = false;
   _recording  = false;
@@ -23,13 +29,15 @@ LooperClip::LooperClip(int t, int s) :
   _queueStop  = false;
   _queueRecord= false;
   
-  _buffer = new AudioBuffer(4410);
+  if ( _buffer )
+  {
+    _buffer->init();
+  }
   _newBufferInTransit = false;
   
   _playhead   = 0;
   _recordhead = 0;
 }
-
 
 void LooperClip::save()
 {
@@ -53,22 +61,20 @@ void LooperClip::save()
 void LooperClip::reset()
 {
   // TODO make the LooperClip reset to initial state
-  /*
   if ( _loaded )
   {
     char buffer [50];
-    sprintf (buffer, "LC::save() track %i, scene %i", track,scene);
+    sprintf (buffer, "LC::reset() track %i, scene %i", track,scene);
     EventGuiPrint e( buffer );
     writeToGuiRingbuffer( &e );
     
-    EventRequestSaveBuffer e2( track, scene, _buffer->getAudioFrames() );
-    writeToGuiRingbuffer( &e2 );
+    //EventRequestSaveBuffer e2( track, scene, _buffer->getAudioFrames() );
+    //writeToGuiRingbuffer( &e2 );
   }
   else
   {
-    SaveAble::done();
+    //SaveAble::done();
   }
-  */
 }
 
 /// loads a sample: eg from disk, unloading current sample if necessary
@@ -93,7 +99,6 @@ void LooperClip::load( AudioBuffer* ab )
   sprintf (buffer, "LC::load() t %i, s %i, aF %i",track, scene, int(_buffer->getAudioFrames()) );
   EventGuiPrint e( buffer );
   writeToGuiRingbuffer( &e );
-  
 }
 
 void LooperClip::setRequestedBuffer( AudioBuffer* ab )

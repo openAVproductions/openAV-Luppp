@@ -32,6 +32,8 @@ class LooperClip : public Stately
   public:
     LooperClip(int track, int scene);
     
+    void init();
+    
     /// loads a sample: eg from disk, unloading current sample if necessary
     void load( AudioBuffer* ab );
     
