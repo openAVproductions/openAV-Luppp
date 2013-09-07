@@ -218,6 +218,14 @@ void LooperClip::bar()
   bool change = false;
   GridLogic::State s = GridLogic::STATE_EMPTY;
   
+  // first update the buffer, as time has passed
+  if ( _recording )
+  {
+    // FIXME: assumes 4 beats in a bar
+    _buffer->setBeats( _buffer->getBeats() + 4 );
+    _buffer->setAudioFrames( jack->getTimeManager()->getFpb() * _buffer->getBeats() );
+  }
+  
   if ( _queuePlay && _loaded )
   {
     _playing = true;
@@ -258,13 +266,6 @@ void LooperClip::bar()
     // clip was queued, but there's nothing loaded
     _queuePlay = false;
     change = true;
-  }
-  
-  if ( _recording )
-  {
-    // FIXME: assumes 4 beats in a bar
-    _buffer->setBeats( _buffer->getBeats() + 4 );
-    _buffer->setAudioFrames( jack->getTimeManager()->getFpb() * _buffer->getBeats() );
   }
   
   if ( change )
