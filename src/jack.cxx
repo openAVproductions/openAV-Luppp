@@ -230,7 +230,7 @@ int Jack::process (jack_nframes_t nframes)
     jack_midi_event_get(&in_event, buffers.midi[Buffers::MASTER_MIDI_INPUT], masterMidiInputIndex);
     
     char buffer [50];
-    sprintf (buffer, "MIDI %i %i %i", int(in_event.buffer[0]), int(in_event.buffer[1]), int(in_event.buffer[2]) );
+    //sprintf (buffer, "MIDI %i %i %i", int(in_event.buffer[0]), int(in_event.buffer[1]), int(in_event.buffer[2]) );
     EventGuiPrint e( buffer );
     writeToGuiRingbuffer( &e );
     
@@ -255,7 +255,7 @@ int Jack::process (jack_nframes_t nframes)
     {
       jack_midi_event_get(&in_event, midiObserverInputBuffers.at( i ), index);
       midiObservers.at(i)->midi( (unsigned char*) &in_event.buffer[0] );
-      printf( "%s MIDI %i %i %i\n", midiObservers.at(i)->getName().c_str(), int(in_event.buffer[0]), int(in_event.buffer[1]), int(in_event.buffer[2]) );
+      //printf( "%s MIDI %i %i %i\n", midiObservers.at(i)->getName().c_str(), int(in_event.buffer[0]), int(in_event.buffer[1]), int(in_event.buffer[2]) );
       index++;
     }
   }
