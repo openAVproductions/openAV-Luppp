@@ -76,6 +76,7 @@ void GridLogic::pressed( int track, int scene )
   {
     lc->queueRecord();
     to->recordArm(false);
+    jack->getControllerUpdater()->recordArm( track, false );
   }
   else
   {
@@ -103,11 +104,20 @@ void GridLogic::pressed( int track, int scene )
   {
     for(int i = 0; i < NSCENES; i++)
     {
-      LooperClip* ilc = jack->getLooper( track )->getClip( i );
-      if ( ilc->playing() )
+      // exclude current scene
+      if ( i != scene )
       {
-        ilc->queueStop();
-        jack->getControllerUpdater()->setSceneState(track, i, ilc->getState() );
+        LooperClip* ilc = jack->getLooper( track )->getClip( i );
+        if ( ilc->somethingQueued() )
+        {
+          ilc->neutralize();
+          jack->getControllerUpdater()->setSceneState(track, i, ilc->getState() );
+        }
+        else if ( ilc->playing() )
+        {
+          ilc->queueStop();
+          jack->getControllerUpdater()->setSceneState(track, i, ilc->getState() );
+        }
       }
     }
   }
