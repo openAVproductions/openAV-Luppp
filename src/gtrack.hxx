@@ -11,12 +11,12 @@
 #include <FL/Fl_Native_File_Chooser.H>
 
 #include "avtk/avtk_dial.h"
-#include "avtk/avtk_volume.h"
 #include "avtk/avtk_button.h"
 #include "avtk/avtk_background.h"
 #include "avtk/avtk_light_button.h"
 #include "avtk/avtk_radial_status.h"
 
+#include "avtk/volume.hxx"
 #include "avtk/clipselector.hxx"
 
 #include "config.hxx"
