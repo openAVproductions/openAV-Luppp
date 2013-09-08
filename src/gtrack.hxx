@@ -31,6 +31,7 @@ static void gtrack_post_cb(Fl_Widget *w, void *data);
 static void gtrack_reverb_cb(Fl_Widget *w, void *data);
 extern void gtrack_button_callback(Fl_Widget *w, void *data);
 
+// FIXME: Refactor into .hxx .cxx
 class GTrack : public Fl_Group
 {
   public:

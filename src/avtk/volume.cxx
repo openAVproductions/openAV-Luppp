@@ -126,23 +126,32 @@ void Volume::draw()
     
     
     // audio level
-    cairo_rectangle(cr, x+w*0.15, y+h*(1-ampL), 9.9, h - h*(1-ampL) );
-    cairo_rectangle(cr, x+w*0.56, y+h*(1-ampR), 9.9, h - h*(1-ampR) );
-    
+    if ( orientationHorizontal )
+    {
+      ampL = 0.75;
+      ampR = 0.95;
+      cairo_rectangle(cr, x, y+h*0.15, w * ampL, 9.9 );
+      cairo_rectangle(cr, x, y+h*0.56, w * ampR, 9.9 );
+    }
+    else
+    {
+      cairo_rectangle(cr, x+w*0.15, y+h*(1-ampL), 9.9, h - h*(1-ampL) );
+      cairo_rectangle(cr, x+w*0.56, y+h*(1-ampR), 9.9, h - h*(1-ampR) );
+    }
     cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 0.21 );
     cairo_fill_preserve( cr );
     cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 1 );
     cairo_stroke(cr);
     
-    // compression
-    //cairo_rectangle(cr, x+w*0.45, y+h - h*(1-ampL), 8.9, h*(1-ampL));
-    
     // fader
-    cairo_rectangle(cr, x+5, y+2+(h-24)*(1-value()), w-10, 20);
+    if ( orientationHorizontal )
+      cairo_rectangle(cr, x+2+(w-24)*(1-value()), y+5, 20, h-10);
+    else
+      cairo_rectangle(cr, x+5, y+2+(h-24)*(1-value()), w-10, 20);
+    
     cairo_set_source_rgba( cr,  1.0f, 0.48, 0.f, 1);
     cairo_set_line_width(cr, 1.9);
     cairo_stroke( cr );
-    
     
     // stroke outline
     cairo_rectangle(cr, x, y, w, h);
@@ -183,10 +192,12 @@ int Volume::handle(int event)
             mouseClicked = true;
           }
           
-          float deltaY = mouseClickedY - Fl::event_y();
+          float delta = (mouseClickedY - Fl::event_y() ) / float(h);
+          if ( orientationHorizontal )
+            delta = (mouseClickedX - Fl::event_x() ) / float(w);
           
           float valY = value();
-          valY += deltaY / h;
+          valY += delta;
           
           if ( valY > 1.0 ) valY = 1.0;
           if ( valY < 0.0 ) valY = 0.0;

@@ -58,6 +58,7 @@ static void gmastertrack_button_callback(Fl_Widget *w, void *data) {
   }
 }
 
+// FIXME: Refactor in .hxx .cxx
 class GMasterTrack : public Fl_Group
 {
   public:
@@ -71,12 +72,14 @@ class GMasterTrack : public Fl_Group
       
       source(x+5, y+26, 140, 100, ""),
       volBox(x+5, y+422, 140, 172, ""),
-      
+      /*
       tapTempo(x + 25 + 52, y + 26 + 4, 63, 29,"Tap"),
       metronomeButton(x + 9,y + 26 + 4, 64, 29,"Metro"),
-      
+      */
       sidechain(x+9, y +428, 94, 94, ""),
       reverb   (x+9, y +527, 94, 62, ""),
+      
+      inputVolume(x + 9,y + 26 + 4, w - 18, 29,""),
       
       volume(x+106, y +425, 36, 166, "")
     {
@@ -84,14 +87,16 @@ class GMasterTrack : public Fl_Group
       
       bar = 0;
       
+      inputVolume.setOrientationHorizontal();
+      /*
       tapTempo.callback( gmastertrack_button_callback, &ID );
       metronomeButton.callback( gmastertrack_button_callback, 0 );
-      
+      */
       reverb.callback( gmastertrack_reverb_cb, 0 );
       
-      tapTempo.setBgColor( 0, 0, 0 );
+      //tapTempo.setBgColor( 0, 0, 0 );
       //metronomeButton.setBgColor( 0, 0, 0 );
-      metronomeButton.setColor( 0.4, 0.4, 0.4 );
+      //metronomeButton.setColor( 0.4, 0.4, 0.4 );
       //metronomeButton.setOutlineColor( 0.4, 0.4, 0.4 );
       
       for(int i = 0; i < 4; i++)
@@ -132,7 +137,7 @@ class GMasterTrack : public Fl_Group
     
     void setTapTempo( bool b )
     {
-      tapTempo.setHighlight( b );
+      //tapTempo.setHighlight( b );
     }
     
     void setBarBeat(int b, int beat)
@@ -197,15 +202,17 @@ class GMasterTrack : public Fl_Group
     
     Fl_Progress  source;
     Fl_Progress  volBox;
-    
+    /*
     Avtk::Button tapTempo;
     Avtk::LightButton metronomeButton;
-    
+    */
     Avtk::LightButton* beatLights[8];
     
     Avtk::SidechainGain sidechain;
     Avtk::Reverb        reverb;
+    Avtk::Volume        inputVolume;
     Avtk::Volume        volume;
+    
     
     static int privateID;
 };
