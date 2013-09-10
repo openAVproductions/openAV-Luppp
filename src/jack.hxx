@@ -89,6 +89,7 @@ class Jack
     Reverb* reverb;
     SidechainGain* sidechainGain;
     DBMeter* reverbMeter;
+    DBMeter* inputMeter;
     DBMeter* masterMeter;
     float masterVol;
     

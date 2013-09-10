@@ -93,6 +93,7 @@ Jack::Jack() :
   
   reverbMeter = new DBMeter( buffers.samplerate );
   masterMeter = new DBMeter( buffers.samplerate );
+  inputMeter  = new DBMeter( buffers.samplerate );
   
   /// setup JACK callbacks
   if ( jack_set_process_callback( client,
@@ -307,13 +308,16 @@ int Jack::process (jack_nframes_t nframes)
   }
   
   
-  /// db meter on master
+  /// db meter on master input & output
+  inputMeter->process( nframes, buffers.audio[Buffers::MASTER_INPUT], buffers.audio[Buffers::MASTER_INPUT]);
   masterMeter->process(nframes, buffers.audio[Buffers::MASTER_OUT_L], buffers.audio[Buffers::MASTER_OUT_R] );
   
   if ( uiUpdateCounter > uiUpdateConstant )
   {
     EventTrackSignalLevel e(-1, masterMeter->getLeftDB(), masterMeter->getRightDB() );
     writeToGuiRingbuffer( &e );
+    EventTrackSignalLevel e2(-2, inputMeter->getLeftDB(), inputMeter->getRightDB() );
+    writeToGuiRingbuffer( &e2 );
     
     uiUpdateCounter = 0;
   }

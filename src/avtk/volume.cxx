@@ -128,8 +128,6 @@ void Volume::draw()
     // audio level
     if ( orientationHorizontal )
     {
-      ampL = 0.75;
-      ampR = 0.95;
       cairo_rectangle(cr, x, y+h*0.15, w * ampL, 9.9 );
       cairo_rectangle(cr, x, y+h*0.56, w * ampR, 9.9 );
     }
