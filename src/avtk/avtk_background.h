@@ -32,6 +32,7 @@
 namespace Avtk
 {
 
+// FIXME: Refactor to .hxx .cxx
 class Background : public Fl_Widget
 {
   public:
@@ -45,8 +46,6 @@ class Background : public Fl_Widget
       
       label = strdup(_label);
       
-      //printf("AVTK background label: %s\n", label );
-      
       highlight = false;
     }
     bool highlight;
@@ -59,6 +58,7 @@ class Background : public Fl_Widget
         free( (char*) label);
       
       label = strdup( l );
+      redraw();
     }
     const char* getLabel()
     {
@@ -80,26 +80,6 @@ class Background : public Fl_Widget
         cairo_rectangle( cr, x, y, w, h);
         cairo_set_source_rgba( cr, 28 / 255.f,  28 / 255.f ,  28 / 255.f , 1 );
         cairo_fill( cr );
-        
-        /*
-        // set up dashed lines, 1 px off, 1 px on
-        double dashes[1];
-        dashes[0] = 2.0;
-        
-        cairo_set_dash ( cr, dashes, 1, 0.0);
-        cairo_set_line_width( cr, 1.0);
-        
-        // loop over each 2nd line, drawing dots
-        for ( int i = x; i < x + w; i += 4 )
-        {
-          cairo_move_to( cr, i, y );
-          cairo_line_to( cr, i, y + h );
-        }
-        
-        cairo_set_source_rgba( cr,  28 / 255.f,  28 / 255.f ,  28 / 255.f , 0.5 );
-        cairo_stroke(cr);
-        cairo_set_dash ( cr, dashes, 0, 0.0);
-        */
         
         // draw header
           // backing

@@ -262,6 +262,11 @@ void DiskReader::readTracks()
       
       readScenes( t, track );
       
+      // name
+      { 
+        cJSON* name = cJSON_GetObjectItem( track, "name");
+        gui->getTrack(t)->bg.setLabel( name->valuestring );
+      }
       // fader
       { 
         cJSON* fader = cJSON_GetObjectItem( track, "fader");

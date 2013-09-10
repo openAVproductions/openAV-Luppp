@@ -134,6 +134,7 @@ void DiskWriter::writeSession( std::string path, std::string sessionName )
     
     // add track metadata: volumes, sends etc
     cJSON_AddNumberToObject( track, "ID", t );
+    cJSON_AddStringToObject( track, "name", gui->getTrack(t)->bg.getLabel() );
     
     cJSON_AddNumberToObject( track, "fader", gui->getTrack(t)->getVolume()->value() );
     cJSON_AddNumberToObject( track, "side", gui->getTrack(t)->side.value() );
