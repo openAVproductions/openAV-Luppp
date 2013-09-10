@@ -56,7 +56,7 @@
   </client>
   <client name="alsa_pcm">
     <port name="Akai-APC40/midi_capture_1">
-      <connection port="Luppp:midi_in" />
+      <connection port="Luppp:apc_in" />
     </port>
   </client>
 </jack>
