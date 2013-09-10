@@ -35,16 +35,7 @@ class GTrack : public Fl_Group
     
     GTrack(int x, int y, int w, int h, const char* l = 0 );
     
-    ~GTrack()
-    {
-      free(title);
-    }
-    
-    int handle( int );
-    
     int ID;
-    
-    char* title;
     
     Avtk::Background bg;
     

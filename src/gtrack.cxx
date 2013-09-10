@@ -10,8 +10,7 @@ static void gtrack_reverb_cb(Fl_Widget *w, void *data);
 
 GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
   Fl_Group(x, y, w, h),
-  title( strdup(l) ),
-  bg( x, y , w, h, title ),
+  bg( x, y , w, h, l ),
   
   radial( x+5, y+ 26, 100, 100, ""),
   
@@ -50,32 +49,6 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
   
   end(); // close the group
 }
-
-int GTrack::handle( int event )
-{
-  // highjack right-click on track title for renaming
-  if ( event == FL_PUSH )
-  {
-    if ( Fl::event_y() < y() + 20 )
-    {
-      if ( Fl::event_state(FL_BUTTON3) )
-      {
-        const char* name = fl_input( "Track name: ", "" );
-        if ( name )
-        {
-          bg.setLabel( name );
-          redraw();
-        }
-        return 1;
-      }
-    }
-  }
-  else
-  {
-    return 0;
-  }
-}
-
 
 void gtrack_reverb_cb(Fl_Widget *w, void *data)
 {

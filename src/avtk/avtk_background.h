@@ -23,8 +23,9 @@
 #ifndef AVTK_BACKGROUND_H
 #define AVTK_BACKGROUND_H
 
-
 #include <FL/Fl_Widget.H>
+#include <FL/fl_ask.H>
+
 #include <valarray>
 #include <string>
 
@@ -42,7 +43,7 @@ class Background : public Fl_Widget
       w = _w;
       h = _h;
       
-      label = _label;
+      label = strdup(_label);
       
       //printf("AVTK background label: %s\n", label );
       
@@ -54,7 +55,9 @@ class Background : public Fl_Widget
     
     void setLabel(const char* l)
     {
-      free( (char*) label);
+      if( label )
+        free( (char*) label);
+      
       label = strdup( l );
     }
     const char* getLabel()
@@ -138,12 +141,21 @@ class Background : public Fl_Widget
     
     int handle(int event)
     {
-      return 0;
-      
       switch(event)
       {
         case FL_PUSH:
-          highlight = 0;
+          if ( Fl::event_state(FL_BUTTON3) && Fl::event_y() < y + 20 )
+          {
+            const char* name = fl_input( "Track name: ", "" );
+            if ( name )
+            {
+              free( (char*) label );
+              label = strdup( name );
+              redraw();
+            }
+            return 1;
+          }
+          
           redraw();
           return 1;
         case FL_DRAG: {
