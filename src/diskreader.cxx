@@ -174,17 +174,25 @@ void DiskReader::readMaster()
     // reverb
     {
       cJSON* reverb = cJSON_GetObjectItem( master, "reverb");
-      
-      cJSON* active  = cJSON_GetObjectItem( reverb, "active");
-      cJSON* size    = cJSON_GetObjectItem( reverb, "size");
-      cJSON* wet     = cJSON_GetObjectItem( reverb, "wet");
-      cJSON* damping = cJSON_GetObjectItem( reverb, "damping");
-      
-      if ( active && size && wet && damping )
+      if ( reverb )
       {
-        EventFxReverb e(  active->valuedouble, size->valuedouble,
-                          wet->valuedouble, damping->valuedouble );
-        writeToDspRingbuffer( &e );
+        cJSON* active  = cJSON_GetObjectItem( reverb, "active");
+        cJSON* size    = cJSON_GetObjectItem( reverb, "size");
+        cJSON* wet     = cJSON_GetObjectItem( reverb, "wet");
+        cJSON* damping = cJSON_GetObjectItem( reverb, "damping");
+        
+        if ( active && size && wet && damping )
+        {
+          EventFxReverb e(  active->valuedouble, size->valuedouble,
+                            wet->valuedouble, damping->valuedouble );
+          writeToDspRingbuffer( &e );
+        }
+      }
+      else
+      {
+#ifdef DEBUG_STATE
+        cout << "Session has no reverb element" << endl;
+#endif
       }
     }
     

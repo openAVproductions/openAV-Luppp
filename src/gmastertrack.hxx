@@ -39,7 +39,6 @@ class GMasterTrack : public Fl_Group
     Avtk::Volume* getInputVolume();
     Avtk::Volume* getVolume();
     Avtk::ClipSelector* getClipSelector();
-    // Avtk::Reverb* getReverb()
     
     ~GMasterTrack();
     
@@ -57,19 +56,16 @@ class GMasterTrack : public Fl_Group
     
     Fl_Progress  source;
     Fl_Progress  volBox;
-    /*
+    
     Avtk::Button tapTempo;
     Avtk::LightButton metronomeButton;
-    */
-    Avtk::LightButton* beatLights[8];
+    Avtk::Dial   tempoDial;
+    Avtk::Button aboutButton;
     
-    
-    Avtk::SidechainGain sidechain;
-    Avtk::Reverb        reverb;
+    Avtk::LightButton* beatLights[4];
     
     Avtk::Volume        inputVolume;
     Avtk::Volume        volume;
-    
     
     static int privateID;
 };
