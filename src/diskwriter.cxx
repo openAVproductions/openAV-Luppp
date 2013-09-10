@@ -98,6 +98,7 @@ void DiskWriter::writeMaster()
   }
   
   // reverb
+  /*
   Avtk::Reverb* rev = master->getReverb();
   cJSON* reverb = cJSON_CreateObject();
   cJSON_AddItemToObject( masterTrack, "reverb", reverb );
@@ -105,6 +106,7 @@ void DiskWriter::writeMaster()
   cJSON_AddNumberToObject( reverb, "size", rev->size() );
   cJSON_AddNumberToObject( reverb, "wet", rev->wet() );
   cJSON_AddNumberToObject( reverb, "damping", rev->damping() );
+  */
   
   //cJSON_AddNumberToObject( reverb, "wet", rev->wet() );
   //cJSON_AddNumberToObject( reverb, "damping", rev->damping() );
