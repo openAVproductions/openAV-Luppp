@@ -30,25 +30,23 @@ class GMasterTrack : public Fl_Group
   public:
     GMasterTrack(int x, int y, int w, int h, const char* l = 0 );
     
+    int  getBpm();
+    void setBpm( int bpm );
     void setTapTempo( bool b );
     void setBarBeat(int b, int beat);
-    
-    // FIXME: refactor into time class?
-    int bpm;
     
     Avtk::Volume* getInputVolume();
     Avtk::Volume* getVolume();
     Avtk::ClipSelector* getClipSelector();
     
     ~GMasterTrack();
-    
   
   private:
     int ID;
+    char* title;
     
     int bar;
-    
-    char* title;
+    int bpm;
     
     Avtk::Background bg;
     
@@ -60,7 +58,7 @@ class GMasterTrack : public Fl_Group
     Avtk::Button tapTempo;
     Avtk::LightButton metronomeButton;
     Avtk::Dial   tempoDial;
-    Avtk::Button aboutButton;
+    Avtk::Dial   metroVol;
     
     Avtk::LightButton* beatLights[4];
     

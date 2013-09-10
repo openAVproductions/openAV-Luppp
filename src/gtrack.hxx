@@ -40,6 +40,8 @@ class GTrack : public Fl_Group
       free(title);
     }
     
+    int handle( int );
+    
     int ID;
     
     char* title;
@@ -54,6 +56,8 @@ class GTrack : public Fl_Group
     
     Avtk::Volume volume;
     
+    Avtk::LightButton active;
+    Avtk::LightButton recEnable;
     Avtk::LightButton side;
     Avtk::Dial   post;
     Avtk::Dial   rev;

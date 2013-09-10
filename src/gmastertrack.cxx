@@ -1,16 +1,6 @@
 
 #include "gmastertrack.hxx"
 
-/*
-static void gmastertrack_reverb_cb(Fl_Widget *w, void *data)
-{
-  int enable = ((Avtk::Reverb*)w)->getActive();
-  printf("reverb enable %i\n",enable);
-  EventFxReverb e = EventFxReverb( enable, 0.5, 0.5, 0.5 );
-  writeToDspRingbuffer( &e );
-}
-*/
-
 static void gmastertrack_button_callback(Fl_Widget *w, void *data) {
   if ( strcmp( w->label(), "Metro" ) == 0 )
   {
@@ -51,8 +41,8 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   tapTempo       ( x + w * 2/4.f - 18, y + 426 + 41 * 0, 44,38, "Tap"),
   metronomeButton( x + w * 2/4.f - 18, y + 426 + 41 * 1, 44, 38,"Metro"),
   
-  tempoDial      ( x + w * 2/4.f - 18, y + 426 + 41 * 2, 44, 38,"BPM"),
-  aboutButton    ( x + w * 2/4.f - 18, y + 426 + 41 * 3, 44, 38,"About"),
+  tempoDial      ( x + w * 2/4.f - 18, y + 426 + 41 * 2, 45, 36,"BPM"),
+  metroVol       ( x + w * 2/4.f - 18, y + 426 + 41 * 3, 45, 36,"MtroVol"),
   
   inputVolume(x + 9,y + 26 + 4, w - 18, 29,""),
   volume(x+106, y +425, 36, 166, "")
@@ -65,10 +55,9 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   
   tapTempo.callback( gmastertrack_button_callback, &ID );
   metronomeButton.callback( gmastertrack_button_callback, 0 );
-  //tapTempo.setBgColor( 0, 0, 0 );
-  //metronomeButton.setBgColor( 0, 0, 0 );
-  //metronomeButton.setColor( 0.4, 0.4, 0.4 );
-  //metronomeButton.setOutlineColor( 0.4, 0.4, 0.4 );
+  
+  tempoDial.align( FL_ALIGN_CENTER );
+  metroVol.align( FL_ALIGN_CENTER );
   
   for(int i = 0; i < 4; i++)
   {
@@ -92,9 +81,20 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   end(); // close the group
 }
 
+void GMasterTrack::setBpm( int b )
+{
+  bpm = b;
+  tempoDial.value( ( bpm - 60 ) / 140.f );
+}
+
+int GMasterTrack::getBpm()
+{
+  return bpm;
+}
+
 void GMasterTrack::setTapTempo( bool b )
 {
-  //tapTempo.setHighlight( b );
+  tapTempo.setHighlight( b );
 }
 
 void GMasterTrack::setBarBeat(int b, int beat)

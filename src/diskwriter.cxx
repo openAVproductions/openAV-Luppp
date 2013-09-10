@@ -84,8 +84,7 @@ void DiskWriter::writeMaster()
   GMasterTrack* master = gui->getMasterTrack();
   
   cJSON_AddNumberToObject( masterTrack, "fader", master->getVolume()->value() );
-  cJSON_AddNumberToObject( masterTrack, "bpm", gui->getMasterTrack()->bpm );
-  
+  cJSON_AddNumberToObject( masterTrack, "bpm", gui->getMasterTrack()->getBpm() );
   
   // scene names
   Avtk::ClipSelector* clipSelector = master->getClipSelector();
@@ -108,9 +107,6 @@ void DiskWriter::writeMaster()
   cJSON_AddNumberToObject( reverb, "damping", rev->damping() );
   */
   
-  //cJSON_AddNumberToObject( reverb, "wet", rev->wet() );
-  //cJSON_AddNumberToObject( reverb, "damping", rev->damping() );
-  
 }
 
 void DiskWriter::writeSession( std::string path, std::string sessionName )
@@ -122,9 +118,8 @@ void DiskWriter::writeSession( std::string path, std::string sessionName )
   cJSON_AddNumberToObject( session, "version_minor", 0 );
   cJSON_AddNumberToObject( session, "version_patch", 0 );
   
+  
   writeMaster();
-  
-  
   
   
   // add JSON "tracks" array
@@ -168,11 +163,9 @@ void DiskWriter::writeSession( std::string path, std::string sessionName )
         }
       }
       
-      
-    } 
+    }
     
   }
-  
   
   
   // write session.luppp JSON node to <path>/<sessionName>.luppp
@@ -192,12 +185,10 @@ void DiskWriter::writeSession( std::string path, std::string sessionName )
   sessionLuppp << sessionDir.str() << "/session.luppp";
   
   //cout << "Session dir: " << sessionDir.str() << "\n" << "Sample dir : " << sampleDir.str() << endl;
-  
   ofstream sessionFile;
   sessionFile.open ( sessionLuppp.str().c_str() );
   sessionFile << cJSON_Print( session );
   sessionFile.close();
-  
   
   // write the sample JSON node to <path>/samples/sample.cfg
   stringstream sampleConfig;

@@ -52,6 +52,16 @@ class Background : public Fl_Widget
     int x, y, w, h;
     const char* label;
     
+    void setLabel(const char* l)
+    {
+      free( (char*) label);
+      label = strdup( l );
+    }
+    const char* getLabel()
+    {
+      return label;
+    }
+    
     void draw()
     {
       if (damage() & FL_DAMAGE_ALL)

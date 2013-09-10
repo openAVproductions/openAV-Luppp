@@ -20,9 +20,11 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
   volBox(x+5, y+422, 100, 172, ""),
   volume(x+66, y +425, 36, 166, ""),
   
-  side(x+11, y +427 +  0, 50, 25, "Side"),
-  post(x+21, y +435 + 50, 30, 30, "Post"),
-  rev (x+21, y +440 +100, 30, 30, "Verb")
+  active   (x+11, y +427 +  0, 50, 25, "Active"),
+  side     (x+11, y +427 + 27, 50, 25, "Side"),
+  recEnable(x+11, y +427 + 54, 50, 25, "Rec"),
+  post     (x+21, y +435 + 70, 30, 30, "Post"),
+  rev      (x+21, y +440 +110, 30, 30, "Verb")
 {
   ID = privateID++;
   
@@ -30,6 +32,9 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
   
   side.callback( gtrack_side_cb, this );
   side.setColor( 0, 0.6, 1 );
+  
+  active.setColor( 0, 1.0, 0.0 );
+  recEnable.setColor( 1, 0.0, 0.0 );
   
   rev.callback( gtrack_reverb_cb, this );
   post.callback( gtrack_post_cb, this );
@@ -44,6 +49,31 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
   volBox.selection_color( FL_BLUE );
   
   end(); // close the group
+}
+
+int GTrack::handle( int event )
+{
+  // highjack right-click on track title for renaming
+  if ( event == FL_PUSH )
+  {
+    if ( Fl::event_y() < y() + 20 )
+    {
+      if ( Fl::event_state(FL_BUTTON3) )
+      {
+        const char* name = fl_input( "Track name: ", "" );
+        if ( name )
+        {
+          bg.setLabel( name );
+          redraw();
+        }
+        return 1;
+      }
+    }
+  }
+  else
+  {
+    return 0;
+  }
 }
 
 

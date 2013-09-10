@@ -100,7 +100,7 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventTimeBPM) ) {
             EventTimeBPM ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTimeBPM) );
-            gui->getMasterTrack()->bpm = ev.bpm;
+            gui->getMasterTrack()->setBpm( ev.bpm );
           } break; }
         
         
