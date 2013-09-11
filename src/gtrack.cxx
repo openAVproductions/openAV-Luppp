@@ -60,16 +60,27 @@ void gtrack_reverb_cb(Fl_Widget *w, void *data)
 
 void gtrack_side_cb(Fl_Widget *w, void *data)
 {
-  /*
   GTrack* track = (GTrack*) data;
   
-  bool b = ((Avtk::Dial*)w)->value();
-  float v = float( b );
-  printf("track %i post send %s, %f\n", track->ID, b ? "true" : "false", v );
+  Avtk::LightButton* d = (Avtk::LightButton*)w;
+  //d->value( d->value() );
   
-  EventTrackSend e( track->ID, SEND_SIDE, v );
-  writeToDspRingbuffer( &e );
-  */
+  
+  bool b = d->value();
+  if ( b < 0.5 )
+  {
+    EventTrackSend e( track->ID, SEND_SIDE, 1.0f );
+    writeToDspRingbuffer( &e );
+  }
+  else
+  {
+    EventTrackSend e( track->ID, SEND_SIDE, 0.0f );
+    writeToDspRingbuffer( &e );
+  }
+  
+  printf("track %i post send %s\n", track->ID, b ? "true" : "false" );
+  
+  
 }
 
 

@@ -144,7 +144,7 @@ class LightButton : public Fl_Button
           }
           return 1;
         case FL_PUSH:
-          _highlight = 1;
+          
           do_callback();
           return 1;
         case FL_DRAG: {
