@@ -42,9 +42,12 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   metronomeButton( x + w * 2/4.f - 18, y + 426 + 41 * 1, 44, 38,"Metro"),
   
   tempoDial      ( x + w * 2/4.f - 18, y + 426 + 41 * 2, 45, 36,"BPM"),
-  metroVol       ( x + w * 2/4.f - 18, y + 426 + 41 * 3, 45, 36,"MtroVol"),
-  
+  returnVol      ( x + w * 2/4.f - 18, y + 426 + 41 * 3, 45, 36,"Return"),
+    
   inputVolume(x + 9,y + 26 + 4, w - 18, 29,""),
+  inputToRecord(x + 9,y + 26 + 35, w / 2, 29,"to REC"),
+  inputToMix   (x + 9,y + 26 + 64, w / 2, 29,"to MIX"),
+  
   volume(x+106, y +425, 36, 166, "")
 {
   ID = privateID++;
@@ -57,7 +60,7 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   metronomeButton.callback( gmastertrack_button_callback, 0 );
   
   tempoDial.align( FL_ALIGN_CENTER );
-  metroVol.align( FL_ALIGN_CENTER );
+  returnVol.align( FL_ALIGN_CENTER );
   
   for(int i = 0; i < 4; i++)
   {

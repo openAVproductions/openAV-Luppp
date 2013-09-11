@@ -47,9 +47,9 @@ class GTrack : public Fl_Group
     
     Avtk::Volume volume;
     
-    Avtk::LightButton active;
-    Avtk::LightButton recEnable;
+    //Avtk::LightButton active;
     Avtk::LightButton side;
+    //Avtk::LightButton recEnable;
     Avtk::Dial   post;
     Avtk::Dial   rev;
     

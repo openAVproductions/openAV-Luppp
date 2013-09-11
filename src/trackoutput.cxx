@@ -72,9 +72,9 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
   uiUpdateCounter += nframes;
   
   // copy audio data into reverb / sidechain / master buffers
-  float* reverb        = buffers->audio[Buffers::REVERB];
-  float* sidechain     = buffers->audio[Buffers::SIDECHAIN];
-  float* postSidechain = buffers->audio[Buffers::POST_SIDECHAIN];
+  float* reverb        = buffers->audio[Buffers::SEND];
+  float* sidechain     = buffers->audio[Buffers::SIDECHAIN_KEY];
+  float* postSidechain = buffers->audio[Buffers::SIDECHAIN_SIGNAL];
   
   float* masterL       = buffers->audio[Buffers::MASTER_OUT_L];
   float* masterR       = buffers->audio[Buffers::MASTER_OUT_R];

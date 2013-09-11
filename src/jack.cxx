@@ -46,6 +46,18 @@ Jack::Jack() :
                           JackPortIsInput,
                           0 );
   
+  masterReturnL = jack_port_register( client,
+                          "master_return_left",
+                          JACK_DEFAULT_AUDIO_TYPE,
+                          JackPortIsInput,
+                          0 );
+  
+  masterReturnR = jack_port_register( client,
+                          "master_return_right",
+                          JACK_DEFAULT_AUDIO_TYPE,
+                          JackPortIsInput,
+                          0 );
+  
   masterOutputL = jack_port_register( client,
                           "master_left",
                           JACK_DEFAULT_AUDIO_TYPE,
@@ -54,6 +66,24 @@ Jack::Jack() :
   
   masterOutputR = jack_port_register( client,
                           "master_right",
+                          JACK_DEFAULT_AUDIO_TYPE,
+                          JackPortIsOutput,
+                          0 );
+  
+  sendOutput    = jack_port_register( client,
+                          "send_out",
+                          JACK_DEFAULT_AUDIO_TYPE,
+                          JackPortIsOutput,
+                          0 );
+  
+  sidechainKeyOutput= jack_port_register( client,
+                          "sidechain_key",
+                          JACK_DEFAULT_AUDIO_TYPE,
+                          JackPortIsOutput,
+                          0 );
+  
+  sidechainSignalOutput= jack_port_register( client,
+                          "sidechain_signal",
                           JACK_DEFAULT_AUDIO_TYPE,
                           JackPortIsOutput,
                           0 );
@@ -67,9 +97,9 @@ Jack::Jack() :
   masterVol = 0.77;
   
   /// prepare internal buffers
-  buffers.audio[Buffers::REVERB]         = new float[ buffers.nframes ];
-  buffers.audio[Buffers::SIDECHAIN]      = new float[ buffers.nframes ];
-  buffers.audio[Buffers::POST_SIDECHAIN] = new float[ buffers.nframes ];
+  buffers.audio[Buffers::SEND]           = new float[ buffers.nframes ];
+  buffers.audio[Buffers::SIDECHAIN_KEY]  = new float[ buffers.nframes ];
+  buffers.audio[Buffers::SIDECHAIN_SIGNAL]=new float[ buffers.nframes ];
   
   buffers.audio[Buffers::MASTER_OUT_L]   = new float[ buffers.nframes ];
   buffers.audio[Buffers::MASTER_OUT_R]   = new float[ buffers.nframes ];
@@ -84,14 +114,7 @@ Jack::Jack() :
     timeManager.registerObserver( loopers.back() );
   }
   
-  /// setup FX
-  reverb = new Reverb( buffers.samplerate );
-  reverb->dryWet( 1 );
-  
-  sidechainGain = new SidechainGain( buffers.samplerate );
-  
-  
-  reverbMeter = new DBMeter( buffers.samplerate );
+  /// setup DSP instances
   masterMeter = new DBMeter( buffers.samplerate );
   inputMeter  = new DBMeter( buffers.samplerate );
   
@@ -207,6 +230,8 @@ int Jack::process (jack_nframes_t nframes)
   
   /// get buffers
   buffers.audio[Buffers::MASTER_INPUT]        = (float*)jack_port_get_buffer( masterInput    , nframes );
+  buffers.audio[Buffers::MASTER_RETURN_L]     = (float*)jack_port_get_buffer( masterReturnL  , nframes );
+  buffers.audio[Buffers::MASTER_RETURN_R]     = (float*)jack_port_get_buffer( masterReturnR  , nframes );
   buffers.audio[Buffers::JACK_MASTER_OUT_L]   = (float*)jack_port_get_buffer( masterOutputL  , nframes );
   buffers.audio[Buffers::JACK_MASTER_OUT_R]   = (float*)jack_port_get_buffer( masterOutputR  , nframes );
   buffers.midi [Buffers::MASTER_MIDI_INPUT]   = (void*) jack_port_get_buffer( masterMidiInput, nframes );
@@ -215,9 +240,9 @@ int Jack::process (jack_nframes_t nframes)
   memset( buffers.audio[Buffers::JACK_MASTER_OUT_R] , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::MASTER_OUT_L]      , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::MASTER_OUT_R]      , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::REVERB]            , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::SIDECHAIN]         , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::POST_SIDECHAIN]    , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::SEND]              , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::SIDECHAIN_KEY]     , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::SIDECHAIN_SIGNAL]  , 0, sizeof(float) * nframes );
   
   /// do events from the ringbuffer
   handleDspEvents();
@@ -267,32 +292,7 @@ int Jack::process (jack_nframes_t nframes)
     trackOutputs.at(i)->process( nframes, &buffers );
   }
   
-  /// process reverb
-  float* buf[] = {
-    buffers.audio[Buffers::REVERB],
-    buffers.audio[Buffers::REVERB]
-  };
-  //if ( reverb->getActive() )
-  {
-    reverbMeter->process(nframes, buffers.audio[Buffers::REVERB], buffers.audio[Buffers::REVERB] );
-    reverb->process( nframes, &buf[0], &buf[0] );
-  }
-  
-  
-  /// process sidechain gaining
-  float* sidechainBuf[] = {
-    // input
-    buffers.audio[Buffers::MASTER_OUT_L],
-    buffers.audio[Buffers::MASTER_OUT_R],
-    buffers.audio[Buffers::SIDECHAIN],
-    // output
-    buffers.audio[Buffers::MASTER_OUT_L],
-    buffers.audio[Buffers::MASTER_OUT_R]
-  };
-  
-  sidechainGain->process( nframes, &sidechainBuf[0], &sidechainBuf[3] );
-  
-  /// metro signal after sidechain-gain, so its loud on the beats
+  /// metro signal
   metronome->process( nframes, &buffers );
   
   /// mix reverb & post-sidechain in
@@ -300,11 +300,11 @@ int Jack::process (jack_nframes_t nframes)
   {
     float L    = buffers.audio[Buffers::MASTER_OUT_L][i];
     float R    = buffers.audio[Buffers::MASTER_OUT_R][i];
-    float rev  = buffers.audio[Buffers::REVERB][i];
-    float post = buffers.audio[Buffers::POST_SIDECHAIN][i];
+    float returnL = buffers.audio[Buffers::MASTER_RETURN_L][i];
+    float returnR = buffers.audio[Buffers::MASTER_RETURN_R][i];
     
-    buffers.audio[Buffers::MASTER_OUT_L][i] = (L + rev + post) * masterVol;
-    buffers.audio[Buffers::MASTER_OUT_R][i] = (R + rev + post) * masterVol;
+    buffers.audio[Buffers::MASTER_OUT_L][i] = (L + returnL) * masterVol;
+    buffers.audio[Buffers::MASTER_OUT_R][i] = (R + returnR) * masterVol;
   }
   
   
@@ -334,17 +334,10 @@ int Jack::process (jack_nframes_t nframes)
   memcpy( buffers.audio[Buffers::JACK_MASTER_OUT_R],
           buffers.audio[Buffers::MASTER_OUT_R],
           //buffers.audio[Buffers::POST_SIDECHAIN],
-          //buffers.audio[Buffers::REVERB],  // uncomment to listen to reverb send only
+          //buffers.audio[Buffers::SEND],  // uncomment to listen to reverb send only
           sizeof(float)*nframes);
   
   return false;
-}
-
-void Jack::setReverb( bool a, float d, float s )
-{
-  //reverb->setActive( a );
-  reverb->damping( d );
-  reverb->rt60( d );
 }
 
 int Jack::getBuffersize()

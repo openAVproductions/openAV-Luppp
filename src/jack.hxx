@@ -57,11 +57,8 @@ class Jack
     /// writes MIDI messages to a MidiObserver's port
     void midiObserverWriteMIDI( int portIndex, unsigned char* data );
     
-    
+    /// set the master volume
     void masterVolume( float vol ){masterVol = vol;}
-    
-    /// sets reverb bus parameters
-    void setReverb( bool e, float d, float s );
     
   
   private:
@@ -86,9 +83,6 @@ class Jack
     vector<void*>           midiObserverOutputBuffers;
     
     // FX
-    Reverb* reverb;
-    SidechainGain* sidechainGain;
-    DBMeter* reverbMeter;
     DBMeter* inputMeter;
     DBMeter* masterMeter;
     float masterVol;
@@ -99,9 +93,13 @@ class Jack
     jack_port_t*  masterInput;
     jack_port_t*  masterOutputL;
     jack_port_t*  masterOutputR;
+    jack_port_t*  masterReturnL;
+    jack_port_t*  masterReturnR;
     
-    jack_port_t*  apcMidiInput;
-    jack_port_t*  apcMidiOutput;
+    jack_port_t*  sidechainKeyOutput;
+    jack_port_t*  sidechainSignalOutput;
+    jack_port_t*  sendOutput;
+    
     jack_port_t*  masterMidiInput;
     
     // JACK callbacks

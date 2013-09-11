@@ -58,11 +58,15 @@ class GMasterTrack : public Fl_Group
     Avtk::Button tapTempo;
     Avtk::LightButton metronomeButton;
     Avtk::Dial   tempoDial;
-    Avtk::Dial   metroVol;
+    
+    Avtk::Dial   returnVol;
     
     Avtk::LightButton* beatLights[4];
     
     Avtk::Volume        inputVolume;
+    Avtk::LightButton   inputToRecord;
+    Avtk::LightButton   inputToMix;
+    
     Avtk::Volume        volume;
     
     static int privateID;
