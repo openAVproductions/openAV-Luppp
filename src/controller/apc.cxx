@@ -44,7 +44,7 @@ void AkaiAPC::trackSend(int t, int send, float v)
 {
   if ( t >= NTRACKS)
   {
-    // master track
+    // master track, no sidechains / sends
     return;
   }
   
@@ -52,9 +52,10 @@ void AkaiAPC::trackSend(int t, int send, float v)
   
   if ( send == SEND_SIDE )
   {
-    data[0] = 144 + t;
+    int tmp = v > 0.5 ? 144 : 128;
+    data[0] = tmp  + t;
     data[1] = 49;
-    data[2] = v > 0.5 ? 127 : 0 ;
+    data[2] = 127 ;
   }
   else if ( send == SEND_POST )
   {
@@ -67,6 +68,10 @@ void AkaiAPC::trackSend(int t, int send, float v)
     data[0] = 176 + t;
     data[1] = 17;
     data[2] = 127 * v;
+  }
+  else
+  {
+    cout << "AkaiAPC::trackSend() unknown send!" << endl;
   }
   
   jack->midiObserverWriteMIDI( _port,  &data[0] );

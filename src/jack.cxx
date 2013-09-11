@@ -143,18 +143,6 @@ void Jack::activate()
   
   Controller* g = new LupppGUI();
   
-  /*
-  // move to "settings" class or so
-  Controller* c = new AkaiAPC();
-  controllerUpdater->registerController( c );
-  Controller* g = new LupppGUI();
-  controllerUpdater->registerController( g );
-  */
-  
-  // move to time class, get instantiate order right
-  //jack->getTimeManager()->registerObserver( metronome );
-  //jack->getTimeManager()->registerObserver( gridLogic );
-  
   jack_activate( client );
   jack_transport_start(client);
 }
@@ -369,7 +357,7 @@ void Jack::midiObserverWriteMIDI( int portIndex, unsigned char* data )
   if( buf != 0 )
   {
     memcpy( buf, data, sizeof( unsigned char ) * 3);
-    //cout << "writeApcOutput " << int(buf[0]) << ", " << int(buf[1]) << ", " << int(buf[2]) << endl;
+    cout << "midiObserverWriteMIDI portID " << portIndex << "  " << int(buf[0]) << ", " << int(buf[1]) << ", " << int(buf[2]) << endl;
   }
   else
   {
