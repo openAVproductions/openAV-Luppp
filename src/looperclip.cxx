@@ -15,7 +15,8 @@ LooperClip::LooperClip(int t, int s) :
   track(t),
   scene(s)
 {
-  _buffer = new AudioBuffer(4410);
+  _buffer = new AudioBuffer();
+  _buffer->nonRtResize( 4410 );
   init();
 }
 

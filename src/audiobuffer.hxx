@@ -92,6 +92,10 @@ class AudioBuffer
     {
       buffer.swap(sample);
     }
+    void nonRtResize(unsigned long size)
+    {
+        buffer.resize(size);
+    }
   
   protected:
     static int privateID;

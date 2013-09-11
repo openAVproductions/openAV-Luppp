@@ -204,7 +204,7 @@ int GridLogic::runTests()
   return Catch::Session().run( 1, &tmp );
 }
 
-TEST_CASE( "Gridlogic press", "[gridlogic]" )
+TEST_CASE( "Gridlogic press events", "[gridlogic]" )
 {
   for(int t = 0; t < NTRACKS; t++)
   {
@@ -215,6 +215,15 @@ TEST_CASE( "Gridlogic press", "[gridlogic]" )
     lc->bar();
     REQUIRE( lc->getQueuePlay() == false );
   }
+  
+  int t = 0;
+  int s = 0;
+  
+  LooperClip* lc  = jack->getLooper( t )->getClip( s );
+  lc->init();
+  jack->getGridLogic()->pressed( t, s );
+  REQUIRE( lc->playing() == false );
+  
 }
 #endif
 
