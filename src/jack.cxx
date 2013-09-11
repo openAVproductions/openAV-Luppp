@@ -232,8 +232,13 @@ int Jack::process (jack_nframes_t nframes)
   buffers.audio[Buffers::MASTER_INPUT]        = (float*)jack_port_get_buffer( masterInput    , nframes );
   buffers.audio[Buffers::MASTER_RETURN_L]     = (float*)jack_port_get_buffer( masterReturnL  , nframes );
   buffers.audio[Buffers::MASTER_RETURN_R]     = (float*)jack_port_get_buffer( masterReturnR  , nframes );
+  
+  buffers.audio[Buffers::JACK_SEND_OUT]       = (float*)jack_port_get_buffer( sendOutput     , nframes );
   buffers.audio[Buffers::JACK_MASTER_OUT_L]   = (float*)jack_port_get_buffer( masterOutputL  , nframes );
   buffers.audio[Buffers::JACK_MASTER_OUT_R]   = (float*)jack_port_get_buffer( masterOutputR  , nframes );
+  buffers.audio[Buffers::JACK_SIDECHAIN_KEY]   = (float*)jack_port_get_buffer(sidechainKeyOutput,nframes);
+  buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL]=(float*)jack_port_get_buffer(sidechainSignalOutput,nframes);
+  
   buffers.midi [Buffers::MASTER_MIDI_INPUT]   = (void*) jack_port_get_buffer( masterMidiInput, nframes );
   
   memset( buffers.audio[Buffers::JACK_MASTER_OUT_L] , 0, sizeof(float) * nframes );
@@ -305,6 +310,11 @@ int Jack::process (jack_nframes_t nframes)
     
     buffers.audio[Buffers::MASTER_OUT_L][i] = (L + returnL) * masterVol;
     buffers.audio[Buffers::MASTER_OUT_R][i] = (R + returnR) * masterVol;
+    
+    /// write SEND content to JACK port
+    buffers.audio[Buffers::JACK_SEND_OUT][i] = buffers.audio[Buffers::SEND][i];
+    buffers.audio[Buffers::JACK_SIDECHAIN_KEY][i] = buffers.audio[Buffers::SIDECHAIN_KEY][i];
+    buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL][i] = buffers.audio[Buffers::SIDECHAIN_SIGNAL][i];
   }
   
   

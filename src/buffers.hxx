@@ -20,33 +20,36 @@ class Buffers
       // AUDIO
       MASTER_INPUT  = 0,
       
-      MASTER_OUT_L = 1,
-      MASTER_OUT_R = 2,
+      MASTER_OUT_L,
+      MASTER_OUT_R,
       
-      JACK_MASTER_OUT_L = 3,
-      JACK_MASTER_OUT_R = 4,
+      JACK_SEND_OUT,
+      JACK_MASTER_OUT_L,
+      JACK_MASTER_OUT_R,
+      JACK_SIDECHAIN_KEY,
+      JACK_SIDECHAIN_SIGNAL,
       
-      SEND = 5,
-      SIDECHAIN_KEY = 6,
-      SIDECHAIN_SIGNAL = 7,
+      SEND,
+      SIDECHAIN_KEY,
+      SIDECHAIN_SIGNAL,
       
-      MASTER_RETURN_L = 8,
-      MASTER_RETURN_R = 9,
+      MASTER_RETURN_L,
+      MASTER_RETURN_R,
       
       // MIDI
-      MASTER_MIDI_INPUT = 10,
+      MASTER_MIDI_INPUT,
       
       // track buffers: they are the "working" buffers per track:
       // the end result is mixed into the master output, while each
       // stage along the way the amplitude etc can be analysed
-      TRACK_0 = 11,
-      TRACK_1 = 12,
-      TRACK_2 = 13,
-      TRACK_3 = 14,
-      TRACK_4 = 15,
-      TRACK_5 = 16,
-      TRACK_6 = 17,
-      TRACK_7 = 18,
+      TRACK_0,
+      TRACK_1,
+      TRACK_2,
+      TRACK_3,
+      TRACK_4,
+      TRACK_5,
+      TRACK_6,
+      TRACK_7,
     };
     
     // Jack details
