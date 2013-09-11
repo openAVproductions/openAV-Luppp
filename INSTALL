@@ -1,11 +1,17 @@
-
 To build this sofware:
 
-./waf configure
-./waf
+# Fedora 19
+
+## Dependencies
+  su -c 'yum install -y jack-audio-connection-kit-devel libsndfile-devel gtkmm24-devel fluidsynth-devel libconfig-devel lilv-devel suil-devel ladspa-devel'
+
+
+# Installation
+  ./waf configure
+  ./waf
 
 To run the program:
-./run
+  ./run
 
 To debug (ie: run in gdb)
-./debug
+  ./debug
