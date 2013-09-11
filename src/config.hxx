@@ -2,6 +2,10 @@
 #ifndef LUPPP_CONFIG_H
 #define LUPPP_CONFIG_H
 
+///     TEST OPTIONS
+#define BUILD_TESTS     1
+
+
 ///     DEBUG OPTIONS
 // Track operations
 #define DEBUG_TRACKS    1
@@ -17,6 +21,7 @@
 
 // State save / load
 #define DEBUG_STATE     1
+
 
 /// General Options
 #define NTRACKS 8

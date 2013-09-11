@@ -9,6 +9,7 @@
 #include "eventhandler.hxx"
 #include "controller/guicontroller.hxx"
 #include "controller/genericmidi.hxx"
+#include "controller/apc.hxx"
 
 using namespace std;
 

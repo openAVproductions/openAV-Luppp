@@ -5,7 +5,6 @@
 #include <vector>
 #include <iostream>
 
-#include "controller/apc.hxx"
 #include "controller/controller.hxx"
 
 #include "gridlogic.hxx"

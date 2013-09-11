@@ -63,6 +63,10 @@ class GridLogic : public TimeObserver
     /// for debug purposes: use static_cast<int>(GridLogic::State) to access
     static const char* StateString[8];
     
+#ifdef BUILD_TESTS
+    int runTests();
+#endif
+
   private:
     /// holds last scene launch
     int sceneLaunch;

@@ -24,6 +24,8 @@
 #include "dsp/dsp_dbmeter.hxx"
 #include "dsp/dsp_sidechain_gain.hxx"
 
+class MidiObserver;
+
 using namespace std;
 
 /** Jack
