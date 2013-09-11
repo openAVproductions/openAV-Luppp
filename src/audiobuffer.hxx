@@ -6,6 +6,8 @@
 #include <string>
 #include <cstring>
 #include <iostream>
+#include <sstream>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -30,7 +32,11 @@ class AudioBuffer
     {
       numBeats = 0;
       audioFrames = 0;
-    }
+      memset( name, 0, sizeof(char)*20 );
+      stringstream s;
+      s << ID;
+      sprintf ( name, "%s\n", s.str().c_str() );
+      }
     
     /// this function is used for "resizing" an exisiting buffer, and should
     /// not be called for any other reason.
@@ -95,6 +101,14 @@ class AudioBuffer
     void nonRtResize(unsigned long size)
     {
         buffer.resize(size);
+    }
+    
+    friend ostream& operator<<(ostream& o, const AudioBuffer& a)
+    {
+      o << "AudioBuffer " << a.name <<
+            " beats: " << a.numBeats <<
+            " audioFrames: " << a.audioFrames << endl;
+      return o;
     }
   
   protected:

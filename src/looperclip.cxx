@@ -78,6 +78,7 @@ void LooperClip::reset()
   }
   
   init();
+  cout << *_buffer << endl;
 }
 
 /// loads a sample: eg from disk, unloading current sample if necessary
@@ -120,6 +121,8 @@ void LooperClip::setRequestedBuffer( AudioBuffer* ab )
   }
   
   _buffer = ab;
+  
+  cout << *_buffer << endl;
   
   _newBufferInTransit = false;
 }
