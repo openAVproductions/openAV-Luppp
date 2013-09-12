@@ -1,10 +1,10 @@
 
 # Tup build file for Luppp
+#
+CFLAGS += -g -Wall -march=native -msse -mfpmath=sse -ffast-math  -fprofile-arcs -ftest-coverage
 
-CFLAGS += -g -Wall -march=native -msse -mfpmath=sse -ffast-math
-
-INCLUDES  += `pkg-config --cflags jack sndfile cairomm-1.0 ntk ntk_images`
+INCLUDES += `pkg-config --cflags jack sndfile cairomm-1.0 ntk ntk_images`
 
 : foreach *.cxx observer/*.cxx state/*.cxx cjson/*.c dsp/*.cxx controller/*.cxx \
-avtk/*.cxx |> g++ $(CFLAGS) -c %f $(INCLUDES)  -o %o   |> %B.o
+avtk/*.cxx |> ^c^ g++ $(CFLAGS) -c %f $(INCLUDES)  -o %o   |> %B.o | %B.gcno
 

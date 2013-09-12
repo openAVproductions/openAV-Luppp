@@ -6,28 +6,30 @@
 #define NAME "Luppp"
 
 ///     TEST OPTIONS
-#define BUILD_TESTS     1
+#define BUILD_TESTS             1
 
+// only works with BUILD TESTS
+#define BUILD_COVERAGE_TEST     1
 
 ///     DEBUG OPTIONS
 // Track operations
-#define DEBUG_TRACKS    1
+#define DEBUG_TRACKS            1
 
 // Clip selection / queueing
-#define DEBUG_CLIP      1
+#define DEBUG_CLIP              1
 
 // Buffer loading / resizing
-#define DEBUG_BUFFER    1
+#define DEBUG_BUFFER            1
 
 // Logic : Warning NON RT!
-#define DEBUG_LOGIC     1
+#define DEBUG_LOGIC             1
 
 // State save / load
-#define DEBUG_STATE     1
+#define DEBUG_STATE             1
 
 
 ///     COMPILE OPTIONS
-#define DEBUG_KILL_ON_ERR 1
+#define DEBUG_KILL_ON_ERR       1
 
 
 /// General Options
