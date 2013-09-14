@@ -7,3 +7,6 @@ planning/*
 .tup/*
 src/*.o
 luppp
+
+testBuild/*
+releaseBuild/*

@@ -1,5 +1,8 @@
 
 LDFLAGS +=`pkg-config --libs   jack sndfile cairomm-1.0 ntk ntk_images`
+
+ifeq (@(LUPPP_BUILD_TESTS),y)
 LDFLAGS +=-lgcov
+endif
 
 : src/*.o |> g++ %f $(LDFLAGS) -o %o |> luppp

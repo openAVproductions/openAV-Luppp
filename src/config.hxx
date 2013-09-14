@@ -2,16 +2,12 @@
 #ifndef LUPPP_CONFIG_H
 #define LUPPP_CONFIG_H
 
+
 ///     PROGAM WIDE DEFINES
 #define NAME "Luppp"
 
-///     TEST OPTIONS
-#define BUILD_TESTS             1
 
-// only works with BUILD TESTS
-#define BUILD_COVERAGE_TEST     1
-
-///     DEBUG OPTIONS
+///     DEBUG
 // Track operations
 #define DEBUG_TRACKS            1
 
@@ -28,11 +24,7 @@
 #define DEBUG_STATE             1
 
 
-///     COMPILE OPTIONS
-#define DEBUG_KILL_ON_ERR       1
-
-
-/// General Options
+///     GENERAL
 #define NTRACKS 8
 #define NSCENES 10
 #define MAX_BUFFER_SIZE 1024
@@ -42,6 +34,8 @@
 
 /// include debug.hxx for printing convienience
 #include "debug.hxx"
+
+
 
 #endif // LUPPP_CONFIG_H
 
