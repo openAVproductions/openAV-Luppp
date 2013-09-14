@@ -1,19 +1,21 @@
 
 #include "gmastertrack.hxx"
 
-static void gmastertrack_button_callback(Fl_Widget *w, void *data) {
+static void gmastertrack_tempoDial_callback(Fl_Widget *w, void *data)
+{
+  Avtk::Dial* b = (Avtk::Dial*)w;
+  float bpm = b->value() * 160 + 60; // 60 - 220
+  EventTimeBPM e = EventTimeBPM( bpm );
+  writeToDspRingbuffer( &e );
+}
+
+static void gmastertrack_button_callback(Fl_Widget *w, void *data)
+{
   if ( strcmp( w->label(), "Metro" ) == 0 )
   {
     Avtk::Button* b = (Avtk::Button*)w;
     b->value( !b->value() );
     EventMetronomeActive e = EventMetronomeActive( b->value() );
-    writeToDspRingbuffer( &e );
-  }
-  else if ( strcmp( w->label(), "BPM" ) == 0 )
-  {
-    Avtk::Dial* b = (Avtk::Dial*)w;
-    float bpm = b->value() * 160 + 60; // 60 - 220
-    EventTimeBPM e = EventTimeBPM( bpm );
     writeToDspRingbuffer( &e );
   }
   else if ( strcmp( w->label(), "Tap" ) == 0 )
@@ -59,6 +61,8 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   tapTempo.callback( gmastertrack_button_callback, &ID );
   metronomeButton.callback( gmastertrack_button_callback, 0 );
   
+  tempoDial.callback( gmastertrack_tempoDial_callback, 0 );
+  
   tempoDial.align( FL_ALIGN_CENTER );
   returnVol.align( FL_ALIGN_CENTER );
   
@@ -87,7 +91,7 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
 void GMasterTrack::setBpm( int b )
 {
   bpm = b;
-  tempoDial.value( ( bpm - 60 ) / 140.f );
+  tempoDial.value( ( bpm - 60 ) / 160.f );
 }
 
 int GMasterTrack::getBpm()

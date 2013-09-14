@@ -6,3 +6,7 @@ LDFLAGS +=-lgcov
 endif
 
 : src/*.o |> g++ %f $(LDFLAGS) -o %o |> luppp
+
+ifeq (@(LUPPP_BUILD_TESTS),y)
+: | luppp |> generateHTML.sh |>
+endif
