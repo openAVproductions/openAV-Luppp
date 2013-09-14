@@ -7,6 +7,7 @@
 # Run program, the runtime determines the output!
 
 # Run gcov on each file, it shows output data:
+#cp -r ../../src/* ./
 gcov -r -b *.gcda
 
 # Make lcov update the stats in its info file
