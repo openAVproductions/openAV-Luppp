@@ -297,6 +297,7 @@ void LooperClip::queuePlay(bool qP)
 {
   _queuePlay   = true;
   _queueStop   = false;
+  _queueRecord = false;
 }
 
 void LooperClip::queueStop()

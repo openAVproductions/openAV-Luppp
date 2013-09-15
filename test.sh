@@ -18,10 +18,25 @@ set -e
 rm -rf buildTest/src/
 
 tup upd buildTest/
+if [ $? -eq 0 ]; then
+    notify-send -t 5 "Luppp: Compiled successfully..."
+    echo OK
+else
+    notify-send -t 0 --urgency=critical "Luppp: Compilation FAILURE!"
+    echo FAIL
+fi
 
 cd buildTest/
 
 ./luppp
+
+if [ $? -eq 0 ]; then
+    notify-send -t 5 "Luppp: Tests passed successfully..."
+    echo OK
+else
+    notify-send -t 5 -u critical "Luppp: Test FAILURE!"
+    echo FAIL
+fi
 
 cd src
 
@@ -30,4 +45,5 @@ cp -r ../../src/* ./
 lcov --directory . --capture --output-file lcov.info
 genhtml lcov.info
 
-firefox index.html
+notify-send -t 5 "Luppp: Test data available..."
+firefox src/index.html

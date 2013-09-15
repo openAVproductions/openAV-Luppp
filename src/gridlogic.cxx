@@ -4,11 +4,6 @@
 #include "jack.hxx"
 #include "audiobuffer.hxx"
 
-#ifdef BUILD_TESTS
-#define CATCH_CONFIG_RUNNER
-#include "catch.hxx"
-#endif
-
 extern Jack* jack;
 
 const char* GridLogic::StateString[8] = {
@@ -199,36 +194,4 @@ void GridLogic::beat()
   
   
 }
-
-
-
-#ifdef BUILD_TESTS
-int GridLogic::runTests()
-{
-  char* const tmp = "-s";
-  return Catch::Session().run( 1, &tmp );
-}
-
-TEST_CASE( "Gridlogic press events", "[gridlogic]" )
-{
-  for(int t = 0; t < NTRACKS; t++)
-  {
-    LooperClip* lc  = jack->getLooper( t )->getClip( 0 );
-    GridLogic::State s1 = lc->getState();
-    lc->queuePlay();
-    REQUIRE( lc->getQueuePlay() == true );
-    lc->bar();
-    REQUIRE( lc->getQueuePlay() == false );
-  }
-  
-  int t = 0;
-  int s = 0;
-  
-  LooperClip* lc  = jack->getLooper( t )->getClip( s );
-  lc->init();
-  jack->getGridLogic()->pressed( t, s );
-  REQUIRE( lc->playing() == false );
-  
-}
-#endif
 

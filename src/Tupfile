@@ -11,16 +11,17 @@ INCLUDES += `pkg-config --cflags jack sndfile cairomm-1.0 ntk ntk_images`
 ifeq (@(LUPPP_BUILD_TESTS),y)
 CFLAGS += -fprofile-arcs -ftest-coverage -DBUILD_TESTS -DBUILD_COVERAGE_TEST -DDEBUG_KILL_ON_ERR
 OUTPUT += | %B.gcno
+: foreach tests/*.cxx    |> ^c^ g++ $(CFLAGS) -c %f $(INCLUDES) -o %o |> $(OUTPUT)
 endif
 
 
 # COMPILE
-#: foreach *.cxx observer/*.cxx state/*.cxx cjson/*.c dsp/*.cxx controller/*.cxx avtk/*.cxx |> ^c^ g++ $(CFLAGS) -c %f $(INCLUDES) -o %o |> $(OUTPUT)
-
+: foreach *.cxx             |> ^c^ g++ $(CFLAGS) -c %f $(INCLUDES) -o %o |> $(OUTPUT)
 : foreach avtk/*.cxx        |> ^c^ g++ $(CFLAGS) -c %f $(INCLUDES) -o %o |> $(OUTPUT)
 : foreach controller/*.cxx  |> ^c^ g++ $(CFLAGS) -c %f $(INCLUDES) -o %o |> $(OUTPUT)
 : foreach dsp/*.cxx         |> ^c^ g++ $(CFLAGS) -c %f $(INCLUDES) -o %o |> $(OUTPUT)
 : foreach cjson/*.c         |> ^c^ g++ $(CFLAGS) -c %f $(INCLUDES) -o %o |> $(OUTPUT)
 : foreach state/*.cxx       |> ^c^ g++ $(CFLAGS) -c %f $(INCLUDES) -o %o |> $(OUTPUT)
 : foreach observer/*.cxx    |> ^c^ g++ $(CFLAGS) -c %f $(INCLUDES) -o %o |> $(OUTPUT)
-: foreach *.cxx             |> ^c^ g++ $(CFLAGS) -c %f $(INCLUDES) -o %o |> $(OUTPUT)
+
+
