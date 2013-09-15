@@ -10,7 +10,7 @@ LDFLAGS +=-lgcov
 endif
 
 # LINK
-: src/*.o |> g++ %f $(LDFLAGS) -o %o |> luppp
+: src/*.o |>  ^c^  g++ %f $(LDFLAGS) -o %o |> luppp
 
 
 # POST
