@@ -8,5 +8,5 @@ planning/*
 src/*.o
 luppp
 
-testBuild/*
-releaseBuild/*
+build/*
+buildTest/*

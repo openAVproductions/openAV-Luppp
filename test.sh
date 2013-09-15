@@ -15,11 +15,11 @@
 
 set -e
 
-rm -r testBuild/src/
+rm -rf buildTest/src/
 
-tup upd testBuild/
+tup upd buildTest/
 
-cd testBuild/
+cd buildTest/
 
 ./luppp
 
