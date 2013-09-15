@@ -16,8 +16,19 @@ endif
 # POST
 ifeq (@(LUPPP_BUILD_TESTS),y)
 
-# run the tests: the program quits itself after tests are finished
-: | luppp |> ./luppp && touch lupppDone.running |> lupppDone.running
+# run the tests:
+#  Luppp quits after tests are finished
+#  gcov scrapes .gcna / .gcdo files, produces .gcov files
+#  cp source files into dir: needed for analysis by lcov
+#  lcov scrapes .gcov files into lcov.info
+#  genhtml produces index.html from lcov.info
+
+: | luppp |> ./luppp &&\
+  gcov -r -b * &&\
+  cp -r *.cxx ../../src/* ./ &&\
+  #lcov --directory . -zerocounters && \
+  lcov --directory . --capture --output-file lcov.info && \
+  genhtml lcov.info |>
 
 # Analyse coverage using gcov
 #: foreach src/*.gcda | lupppDone.running |> echo %b |> %B.gcno
@@ -25,9 +36,10 @@ ifeq (@(LUPPP_BUILD_TESTS),y)
 #: foreach src/*.c | lupppDone.running |> gcov -r -b %f |> %B.c.gcov
 #: foreach src/*.gcda | lupppDone.running |> gcov -r -b %f |> %B.cxx.gcov | %B.hxx.gcov
 
+# cp -r *.cxx ../../src/* ./
+
 # Create lcov info file
-#: src/*.gcno |> lcov --directory . -zerocounters &&\
-#    lcov --directory . --capture --output-file lcov.info |>
+#: src/*.gcno |> lcov --directory . -zerocounters && lcov --directory . --capture --output-file lcov.info |>
 
 # Generate HTML report
 #: |> genhtml lcov.info |>
