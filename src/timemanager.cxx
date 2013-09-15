@@ -9,6 +9,10 @@
 
 #include "observer/time.hxx"
 
+#include "jack.hxx"
+
+extern Jack* jack;
+
 using namespace std;
 
 TimeManager::TimeManager():
@@ -32,7 +36,7 @@ int TimeManager::getFpb()
 void TimeManager::setBpm(float bpm)
 {
   cout << "setBpm() " << bpm << endl;
-  setFpb( 44100 / bpm * 60 );
+  setFpb( jack->getSamplerate() / bpm * 60 );
 }
 
 

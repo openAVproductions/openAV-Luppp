@@ -10,5 +10,4 @@ LDFLAGS +=-lgcov
 endif
 
 # LINK
-: src/*.o |>  ^c^  g++ %f $(LDFLAGS) -o %o && touch luppp.newBuild |> luppp | luppp.newBuild
-
+: src/*.o |>  ^c^  g++ %f $(LDFLAGS) -o %o |> luppp
