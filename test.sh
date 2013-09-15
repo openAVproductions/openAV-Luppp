@@ -13,6 +13,12 @@
 #  lcov scrapes .gcov files into lcov.info
 #  genhtml produces index.html from lcov.info
 
+set -e
+
+rm -r testBuild/src/
+
+tup upd testBuild/
+
 cd testBuild/
 
 ./luppp
