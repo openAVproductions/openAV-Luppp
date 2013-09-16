@@ -49,7 +49,6 @@ int main(int argc, char** argv)
 #endif
   // FIXME: Reset the state of GUI / GridLogic here. Create a "new session"?
 #endif
-  cout << "Done testing... launching Luppp." << endl;
   jack->activate();
   gui->show();
 }

@@ -29,7 +29,8 @@ int GridLogic::runTests()
   jack->getGridLogic()->launchScene( s );
   QUNIT_IS_TRUE( jack->getGridLogic()->getLaunchedScene() == s );
   
-  /// PAD STATE CHECKS
+  /*
+  /// PAD STATE CHECKSfds
   // empty -> recording
   lc->init();
   QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_EMPTY );
@@ -56,7 +57,7 @@ int GridLogic::runTests()
   QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_PLAY_QUEUED );
   jack->getGridLogic()->bar();
   QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_PLAYING );
-  
+  */
   
   return qunit.errors();
 }

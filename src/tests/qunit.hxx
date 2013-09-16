@@ -125,7 +125,6 @@ namespace QUnit {
           cout << QUNIT_COLOUR_ERROR;
         }
         cout << ( ok ? "OK" : "FAILED" ) << QUNIT_COLOUR_RESET << "/" << func << "(): ";
-        //cout << QUNIT_COLOUR_RESET;
         if( compare ) {
             const std::string cmp = ( result ? "==" : "!=" );
             cout << "compare {" << str1 << "} " << cmp << " {" <<  str2 << "} "

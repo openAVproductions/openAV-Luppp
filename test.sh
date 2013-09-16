@@ -13,18 +13,29 @@
 #  lcov scrapes .gcov files into lcov.info
 #  genhtml produces index.html from lcov.info
 
-set -e
+#set -e
 
-rm -rf buildTest/src/
 
-tup upd buildTest/
-if [ $? -eq 0 ]; then
-    notify-send -t 5 "Luppp: Compiled successfully..."
-    echo OK
-else
-    notify-send -t 0 --urgency=critical "Luppp: Compilation FAILURE!"
-    echo FAIL
+FILE=buildTest/build.success
+
+rm -f $(FILE)
+
+tup upd buildTest/ ;
+
+
+if [ ! -f $FILE ]; then
+    echo "File not found!"
 fi
+
+if [ -f $FILE ];
+then
+   echo "File $FILE exists."
+else
+   notify-send -t 0 --urgency=critical "Luppp: Compilation FAILURE!"
+   exit
+fi
+
+sleep 1
 
 cd buildTest/
 
@@ -46,4 +57,4 @@ lcov --directory . --capture --output-file lcov.info
 genhtml lcov.info
 
 notify-send -t 5 "Luppp: Test data available..."
-firefox src/index.html
+#firefox src/index.html

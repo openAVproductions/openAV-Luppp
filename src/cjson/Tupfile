@@ -13,4 +13,4 @@ CFLAGS += -fprofile-arcs -ftest-coverage -DBUILD_TESTS -DBUILD_COVERAGE_TEST -DD
 endif
 
 # COMPILE
-: foreach *.c |> ^c^ g++ $(CFLAGS) -c %f $(INCLUDES) -o %o |> $(OUTPUT)
+: foreach *.c |> g++ $(CFLAGS) -c %f $(INCLUDES) -o %o |> $(OUTPUT)
