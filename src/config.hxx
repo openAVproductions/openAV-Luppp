@@ -31,10 +31,12 @@
 // nsamples remaining during recording before Looper requests larger buffer
 #define LOOPER_SAMPLES_BEFORE_REQUEST 44100
 
+#define LUPPP_RETURN_OK 0
+#define LUPPP_RETURN_ERROR 1
 
-/// include debug.hxx for printing convienience
+
+///     debug.hxx for printing convienience
 #include "debug.hxx"
-
 
 
 #endif // LUPPP_CONFIG_H

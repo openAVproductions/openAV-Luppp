@@ -33,9 +33,13 @@ class DiskWriter
     void initialize( std::string path, std::string sessionName );
     
     /// writes a single audio buffer to disk
-    void writeAudioBuffer(int track, int scene, AudioBuffer* ab );
+    int writeAudioBuffer(int track, int scene, AudioBuffer* ab );
     
-    void writeSession( std::string path, std::string sessionName );
+    int writeSession( std::string path, std::string sessionName );
+  
+#ifdef BUILD_TESTS
+    int runTests();
+#endif
   
   private:
     cJSON* session;

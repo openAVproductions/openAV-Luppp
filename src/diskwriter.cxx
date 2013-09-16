@@ -31,7 +31,7 @@ void DiskWriter::initialize(std::string path, std::string name )
   sample  = cJSON_CreateObject();
 }
 
-void DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
+int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
 {
   // get the filename
   stringstream filename;
@@ -74,6 +74,8 @@ void DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
   
   // de allocate the AudioBuffer
   delete ab;
+  
+  return LUPPP_RETURN_OK;
 }
 
 void DiskWriter::writeMaster()
@@ -109,7 +111,7 @@ void DiskWriter::writeMaster()
   
 }
 
-void DiskWriter::writeSession( std::string path, std::string sessionName )
+int DiskWriter::writeSession( std::string path, std::string sessionName )
 {
   // add session metadata
   cJSON_AddItemToObject  ( session, "session", cJSON_CreateString( sessionName.c_str() ));
@@ -202,4 +204,6 @@ void DiskWriter::writeSession( std::string path, std::string sessionName )
   
   // clear the clipData, clean page for next save
   clipData.clear();
+  
+  return LUPPP_RETURN_OK;
 }

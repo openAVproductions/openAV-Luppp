@@ -38,15 +38,16 @@ int main(int argc, char** argv)
   jack = new Jack();
   
 #ifdef BUILD_TESTS
+  // test offline functionality
+  gui->getDiskWriter()->runTests();
+  // test realtime functionality
   jack->getGridLogic()->runTests();
   
 #ifdef BUILD_COVERAGE_TEST
   LUPPP_NOTE("%s","Done testing, quitting!");
   return 0;
 #endif
-  
   // FIXME: Reset the state of GUI / GridLogic here. Create a "new session"?
-  
 #endif
   cout << "Done testing... launching Luppp." << endl;
   jack->activate();

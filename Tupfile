@@ -10,4 +10,4 @@ LDFLAGS +=-lgcov
 endif
 
 # LINK
-: src/*.o |>  ^c^  g++ %f $(LDFLAGS) -o %o |> luppp
+: src/*.o src/avtk/*.o src/cjson/*.o src/controller/*.o src/dsp/*.o src/observer/*.o src/state/*.o src/tests/*.o |>  ^c^  g++ %f $(LDFLAGS) -o %o |> luppp
