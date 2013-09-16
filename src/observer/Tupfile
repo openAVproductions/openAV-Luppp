@@ -1,9 +1,0 @@
-
-# Tup build file for Luppp
-
-# GENERAL
-CFLAGS += -g -Wall -march=native -msse -mfpmath=sse -ffast-math
-INCLUDES += `pkg-config --cflags jack sndfile cairomm-1.0 ntk ntk_images`
-
-# COMPILE
-: foreach *.cxx             |> ^c^ g++ $(CFLAGS) -c %f $(INCLUDES) -o %o |> %B.o
