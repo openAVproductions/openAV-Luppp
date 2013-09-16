@@ -1,12 +1,16 @@
-.waf*
-.lock*
-.build*
 
 planning/*
 
-.tup/*
 src/*.o
 luppp
 
 build/*
 buildTest/*
+/CMakeCache.txt
+/cmake_install.cmake
+/Makefile
+/src/cmake_install.cmake
+/src/liblibluppp.a
+/src/Makefile
+CMakeFiles/*
+src/CMakeFiles/*
