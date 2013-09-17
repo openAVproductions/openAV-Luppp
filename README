@@ -1,1 +1,25 @@
     Repo for Luppp5
+
+This version of Luppp is a total re-write on the previously announced and released
+version that is available on github. It is redesigned from scratch to handle RT
+better, and scale better.
+
+This version depends on the following libraries: please ensure the -dev versions are installed.
+JACK
+NTK
+CAIRO
+SNDFILE
+
+
+=== INSTALL
+Run the following commands from the top directory to configure & install Luppp:
+cmake .
+make
+./run.sh
+
+
+
+
+=== Errors
+Please report errors on IRC, to harryhaaren in #lad on FreeNode.net, or email
+harryhaaren@gmail.com. This is a temporary arrangement until a release is made.
