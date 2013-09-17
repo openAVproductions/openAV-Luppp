@@ -60,8 +60,8 @@ static void gui_header_callback(Fl_Widget *w, void *data)
   }
   else if ( strcmp(m->label(), "New Session") == 0 )
   {
-    int yes = fl_ask("Start a new session?","");
-    if ( yes )
+    int no = fl_choice("Start a new session?","Cancel","Yes",0);
+    if ( no )
     {
       EventStateReset ev;
       writeToDspRingbuffer( &ev );
@@ -131,6 +131,7 @@ Gui::Gui() :
     diskReader( new DiskReader ),
     diskWriter( new DiskWriter )
 {
+  LUPPP_NOTE( "%s", "Gui()" );
   window.color(FL_BLACK);
   window.label("Luppp");
   //window.callback( close_cb, 0 );

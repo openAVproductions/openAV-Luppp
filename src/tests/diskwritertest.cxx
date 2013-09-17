@@ -14,7 +14,7 @@ extern Gui* gui;
 
 int DiskWriter::runTests()
 {
-  QUnit::UnitTest qunit( QUnit::verbose );
+  QUnit::UnitTest qunit( QUnit::normal );
   //AudioBuffer ab;
   //QUNIT_IS_TRUE( gui->getDiskWriter()->writeAudioBuffer(0, 0, &ab) == LUPPP_RETURN_OK );
   

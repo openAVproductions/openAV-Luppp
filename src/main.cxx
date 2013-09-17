@@ -45,16 +45,28 @@ int main(int argc, char** argv)
   rbToDsp = jack_ringbuffer_create( 5000 * sizeof(EventBase));
   rbToGui = jack_ringbuffer_create( 5000 * sizeof(EventBase));
   
-  gui = new Gui();
-  jack = new Jack();
-  
 #ifdef BUILD_TESTS
   if ( runTests )
   {
+    // setup the testing Gui / JACK
+    gui = new Gui();
+    jack = new Jack();
+    
     // test offline functionality
     gui->getDiskWriter()->runTests();
+    
+    
+    delete gui;
+    delete jack;
+    
+    gui = new Gui();
+    jack = new Jack();
+    
     // test realtime functionality
     jack->getGridLogic()->runTests();
+    
+    delete gui;
+    delete jack;
     
 #ifdef BUILD_COVERAGE_TEST
     if ( stopAfterTest )
@@ -66,6 +78,11 @@ int main(int argc, char** argv)
   }
   // FIXME: Reset the state of GUI / GridLogic here. Create a "new session"?
 #endif
+  
+  // setup the "real" GUI / JACK
+  gui = new Gui();
+  jack = new Jack();
+  
   jack->activate();
   gui->show();
 }

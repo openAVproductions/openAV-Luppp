@@ -25,6 +25,7 @@
 #include <sstream>
 #include <string>
 #include <iostream>
+#include <libgen.h>
 using namespace std;
 
 #define QUNIT_COLOUR_PASS  "\033[1;32m"
@@ -117,20 +118,23 @@ namespace QUnit {
 
         if( (ok && !(verboseLevel_ > normal)) || verboseLevel_ == silent )
             return;
-  
-        cout << file << ( ok ? ";" : ":" ) << line << ": ";
+        
+        
+        char* baseFile = strdup(file);
+        cout << basename(baseFile) << " " << line << " : ";
+        free( baseFile );
         if ( ok ) {
           cout << QUNIT_COLOUR_PASS;
         } else {
           cout << QUNIT_COLOUR_ERROR;
         }
-        cout << ( ok ? "OK" : "FAILED" ) << QUNIT_COLOUR_RESET << "/" << func << "(): ";
+        cout << ( ok ? "OK" : "FAILED" ) << QUNIT_COLOUR_RESET << " : ";
         if( compare ) {
             const std::string cmp = ( result ? "==" : "!=" );
             cout << "compare {" << str1 << "} " << cmp << " {" <<  str2 << "} "
                  << "got {\"" << val1 << "\"} " << cmp << " {\"" << val2 << "\"}";
         } else {
-            cout << "evaluate {" << str1 << "} == " << val1;
+            cout << str1 << " == " << val1;
         }
         cout << std::endl;
     }

@@ -18,11 +18,6 @@ const char* GridLogic::StateString[8] = {
 
 GridLogic::GridLogic()
 {
-  LUPPP_NOTE( "%s", "GridLogic() note" );
-  LUPPP_WARN( "%s", "GridLogic() warn" );
-  //LUPPP_KILL( "%s", "GridLogic() kill" );
-  //luppp_debug( "GridLogic", __FILE__, __LINE__ );
-  //luppp_debug( "GridLogic", __FILE__, __LINE__, "%s", "Starting up..." );
   sceneLaunch = 0;
 }
 

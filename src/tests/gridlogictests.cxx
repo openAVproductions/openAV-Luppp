@@ -15,14 +15,10 @@ extern Jack* jack;
 
 int GridLogic::runTests()
 {
-  QUnit::UnitTest qunit( QUnit::verbose );
+  QUnit::UnitTest qunit( QUnit::normal );
   int t = 0;
   int s = 0;
   LooperClip* lc  = jack->getLooper( t )->getClip( s );
-  
-  /// LA
-  lc->init();
-  GridLogic::State s1 = lc->getState();
   
   /// SCENE LAUNCH
   lc->init();
@@ -30,7 +26,7 @@ int GridLogic::runTests()
   QUNIT_IS_TRUE( jack->getGridLogic()->getLaunchedScene() == s );
   
   
-  /// PAD STATE CHECKSfds
+  /// PAD STATE CHECKS
   // empty -> recording
   lc->init();
   QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_EMPTY );
