@@ -11,16 +11,20 @@
 #include "qunit.hxx"
 
 extern Gui* gui;
+extern bool testsPassed;
 
 int DiskWriter::runTests()
 {
   QUnit::UnitTest qunit( QUnit::normal );
-  //AudioBuffer ab;
-  //QUNIT_IS_TRUE( gui->getDiskWriter()->writeAudioBuffer(0, 0, &ab) == LUPPP_RETURN_OK );
   
+  // set the session path to /tmp for test writing
+  
+  
+  AudioBuffer ab(440);
+  QUNIT_IS_TRUE( gui->getDiskWriter()->writeAudioBuffer(0, 0, &ab) == LUPPP_RETURN_OK );
   QUNIT_IS_TRUE( gui->getDiskWriter()->writeSession("/tmp","luppTestSession") == LUPPP_RETURN_OK );
   
-  return 0;
+  return qunit.errors();
 }
 
 #endif

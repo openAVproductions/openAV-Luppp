@@ -48,22 +48,18 @@ int main(int argc, char** argv)
 #ifdef BUILD_TESTS
   if ( runTests )
   {
+    // counts failures
+    int testResult = 0;
+    
     // setup the testing Gui / JACK
     gui = new Gui();
     jack = new Jack();
     
     // test offline functionality
-    gui->getDiskWriter()->runTests();
-    
-    
-    delete gui;
-    delete jack;
-    
-    gui = new Gui();
-    jack = new Jack();
+    testResult += gui->getDiskWriter()->runTests();
     
     // test realtime functionality
-    jack->getGridLogic()->runTests();
+    testResult += jack->getGridLogic()->runTests();
     
     delete gui;
     delete jack;
@@ -71,8 +67,7 @@ int main(int argc, char** argv)
 #ifdef BUILD_COVERAGE_TEST
     if ( stopAfterTest )
     {
-      LUPPP_NOTE("%s","Done testing, quitting!");
-      return 0;
+      return testResult;
     }
 #endif
   }
@@ -85,5 +80,7 @@ int main(int argc, char** argv)
   
   jack->activate();
   gui->show();
+  
+  return 0;
 }
 

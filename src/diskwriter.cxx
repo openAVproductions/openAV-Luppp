@@ -24,8 +24,8 @@ DiskWriter::DiskWriter()
 
 void DiskWriter::initialize(std::string path, std::string name )
 {
-  sessionPath = path;
-  sessionName = name;
+  sessionPath = getenv("HOME");
+  sessionName = "lupppSession";
   
   session = cJSON_CreateObject();
   sample  = cJSON_CreateObject();
@@ -37,19 +37,8 @@ int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
   stringstream filename;
   filename << "t_" << track << "_s_" << scene << ".wav";
   
-  /*
-  // add the track / scene / name combo to session JSON node
-  cJSON* clip = cJSON_CreateObject();
-  cJSON_AddItemToObject(session, "clip", clip );
-  
-  cJSON_AddNumberToObject(clip,"track", track);
-  cJSON_AddNumberToObject(clip,"scene", scene);
-  cJSON_AddStringToObject(clip,"file", filename.str().c_str());
-  */
-  
   // store the clip in clipData, we will write the session JSON for it in writeSession
   clipData.push_back( ClipData( track, scene, filename.str() ) );
-  
   
   // add the AudioBuffer metadata to the sample JSON node
   cJSON* sampleClip = cJSON_CreateObject();
@@ -62,18 +51,19 @@ int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
   // FIXME: trim trailing  /  sessionPath from session path if its there
   
   stringstream path;
-  path << sessionPath << "/" << sessionName << "/samples/" << filename.str();
+  path << sessionPath << sessionName << "/samples/" << filename.str();
   
   SndfileHandle outfile( path.str(), SFM_WRITE, SF_FORMAT_WAV | SF_FORMAT_FLOAT, 1, 44100);
   cout << "Worker::writeSample() " << path.str() << " size: " << ab->getAudioFrames() << endl;
   
   // FIXME: the size of the buffer is bigger than the audio contained in it:
   // calculate the length that needs saving using getBeats() * framesPerBeat
-  
-  outfile.write( &ab->getData()[0], ab->getAudioFrames() );
-  
-  // de allocate the AudioBuffer
-  delete ab;
+  if ( ab->getAudioFrames() > 0 )
+    outfile.write( &ab->getData()[0], ab->getAudioFrames() );
+  else
+  {
+    LUPPP_WARN("%s","Sample has zero samples");
+  }
   
   return LUPPP_RETURN_OK;
 }
@@ -97,17 +87,6 @@ void DiskWriter::writeMaster()
     cJSON* sceneName = cJSON_CreateString( clipSelector->clipName(i).c_str() );
     cJSON_AddItemToArray( sceneNames, sceneName );
   }
-  
-  // reverb
-  /*
-  Avtk::Reverb* rev = master->getReverb();
-  cJSON* reverb = cJSON_CreateObject();
-  cJSON_AddItemToObject( masterTrack, "reverb", reverb );
-  cJSON_AddNumberToObject( reverb, "active", rev->getActive() );
-  cJSON_AddNumberToObject( reverb, "size", rev->size() );
-  cJSON_AddNumberToObject( reverb, "wet", rev->wet() );
-  cJSON_AddNumberToObject( reverb, "damping", rev->damping() );
-  */
   
 }
 

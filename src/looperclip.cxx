@@ -69,8 +69,8 @@ void LooperClip::reset()
     EventGuiPrint e( buffer );
     writeToGuiRingbuffer( &e );
     
-    //EventRequestSaveBuffer e2( track, scene, _buffer->getAudioFrames() );
-    //writeToGuiRingbuffer( &e2 );
+    // set "progress" to zero as there's no clip anymore
+    jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0 );
   }
   else
   {
@@ -78,7 +78,7 @@ void LooperClip::reset()
   }
   
   init();
-  cout << *_buffer << endl;
+  //cout << *_buffer << endl;
 }
 
 /// loads a sample: eg from disk, unloading current sample if necessary

@@ -112,6 +112,8 @@ void handleGuiEvents()
             cout << "EventSaveBuffer: " << ev.track << " " << ev.scene << " " << ev.ab->getID() << endl;
 #endif
             gui->getDiskWriter()->writeAudioBuffer( ev.track, ev.scene, ev.ab );
+            // de allocate the AudioBuffer
+            delete ev.ab;
           } break; }
           
         case Event::STATE_SAVE_FINISH: {

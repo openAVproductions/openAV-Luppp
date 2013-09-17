@@ -60,8 +60,8 @@ static void gui_header_callback(Fl_Widget *w, void *data)
   }
   else if ( strcmp(m->label(), "New Session") == 0 )
   {
-    int no = fl_choice("Start a new session?","Cancel","Yes",0);
-    if ( no )
+    int yes = fl_choice("Start a new session?","Cancel","Yes",0);
+    if ( yes )
     {
       EventStateReset ev;
       writeToDspRingbuffer( &ev );
@@ -128,8 +128,8 @@ void Gui::selectLoadSample( int track, int scene )
 
 Gui::Gui() :
     window(1110,650),
-    diskReader( new DiskReader ),
-    diskWriter( new DiskWriter )
+    diskReader( new DiskReader() ),
+    diskWriter( new DiskWriter() )
 {
   LUPPP_NOTE( "%s", "Gui()" );
   window.color(FL_BLACK);
