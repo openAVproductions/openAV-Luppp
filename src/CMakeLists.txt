@@ -18,19 +18,23 @@ pkg_check_modules(SNDFILE sndfile)
 include_directories( ${SNDFILE_INCLUDE_DIRS}  )
 link_directories   ( ${SNDFILE_LIBRARY_DIRS}  )
 
-# Add flags
-#set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -O0 -ggdb")
+# Check build type, adding coverage flags if needed
+IF(BUILD_TESTS)
+  ADD_DEFINITIONS(-DBUILD_TESTS)
+  ADD_DEFINITIONS(-DBUILD_COVERAGE_TEST)
+  
+  SET(CMAKE_CXX_FLAGS "-g -O0 -Wall -fprofile-arcs -ftest-coverage")
+  SET(CMAKE_C_FLAGS "-g -O0 -Wall -W -fprofile-arcs -ftest-coverage")
+  SET(CMAKE_EXE_LINKER_FLAGS "-fprofile-arcs -ftest-coverage")
+ENDIF(BUILD_TESTS)
 
-#SET(GCC_COVERAGE_COMPILE_FLAGS "-fprofile-arcs -ftest-coverage")
-#SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
 
-#SET(GCC_COVERAGE_LINK_FLAGS    "-lgcov")
-#SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
-
-# Add files
+# Add all files
 FILE(GLOB sources *.cxx  avtk/*.cxx cjson/*.c controller/*.cxx dsp/*.cxx observer/*.cxx state/*.cxx tests/*.cxx)
 
+# Compile binary
 add_executable (luppp ${sources} )
+
 
 # Linking
 target_link_libraries( luppp ${JACK_LIBRARIES}     )
@@ -38,4 +42,7 @@ target_link_libraries( luppp ${NTK_LIBRARIES}      )
 target_link_libraries( luppp ${CAIRO_LIBRARIES}    )
 target_link_libraries( luppp ${SNDFILE_LIBRARIES}  )
 
-#target_link_libraries( luppp gcov)
+# Check build type, linking with gcov for code analysis if needed
+IF(BUILD_TESTS)
+  target_link_libraries(luppp gcov)
+ENDIF(BUILD_TESTS)
