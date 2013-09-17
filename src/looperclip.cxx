@@ -170,6 +170,9 @@ void LooperClip::record(int count, float* L, float* R)
         sprintf (buffer, "LooperClip t %i, s %i, Error: out of mem!",track, scene );
         EventGuiPrint e( buffer );
         writeToGuiRingbuffer( &e );
+#ifdef BUILD_TESTS
+        LUPPP_WARN("%s","buffer has no space");
+#endif
         
         break;
       }

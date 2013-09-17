@@ -15,7 +15,7 @@ extern Jack* jack;
 
 int GridLogic::runTests()
 {
-  QUnit::UnitTest qunit( QUnit::normal );
+  QUnit::UnitTest qunit( QUnit::normal, true );
   int t = 0;
   int s = 0;
   LooperClip* lc  = jack->getLooper( t )->getClip( s );
@@ -35,6 +35,10 @@ int GridLogic::runTests()
   QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_RECORD_QUEUED );
   jack->getGridLogic()->bar();
   QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_RECORDING );
+  
+  float buffer[64];
+  lc->record(64, &buffer[0], &buffer[0]);
+  
   // recording -> playing
   jack->getGridLogic()->pressed( t, s );
   jack->getGridLogic()->released( t, s );

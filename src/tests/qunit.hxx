@@ -25,6 +25,8 @@
 #include <sstream>
 #include <string>
 #include <iostream>
+#include <sstream>
+#include <cstdlib>
 #include <libgen.h>
 using namespace std;
 
@@ -53,7 +55,7 @@ namespace QUnit {
     class UnitTest {
         
     public:
-        UnitTest( int verboseLevel );
+        UnitTest( int verboseLevel, bool openFail = false );
         ~UnitTest();
           
         void verboseLevel(int level);
@@ -71,10 +73,12 @@ namespace QUnit {
         int verboseLevel_;
         int errors_;
         int tests_;
+        
+        bool openFileOnFail;
     };
   
-    inline UnitTest::UnitTest( int verboseLevel)
-        : verboseLevel_(verboseLevel) , errors_(0) , tests_(0) {
+    inline UnitTest::UnitTest( int verboseLevel, bool openFail )
+        : verboseLevel_(verboseLevel) , errors_(0) , tests_(0), openFileOnFail(openFail) {
     }
   
     inline UnitTest::~UnitTest() {
@@ -123,12 +127,22 @@ namespace QUnit {
         char* baseFile = strdup(file);
         cout << basename(baseFile) << " " << line << " : ";
         free( baseFile );
-        if ( ok ) {
-          cout << QUNIT_COLOUR_PASS;
-        } else {
-          cout << QUNIT_COLOUR_ERROR;
+        if ( ok )
+        {
+          cout << QUNIT_COLOUR_PASS << "OK";
         }
-        cout << ( ok ? "OK" : "FAILED" ) << QUNIT_COLOUR_RESET << " : ";
+        else
+        {
+          cout << QUNIT_COLOUR_ERROR << "FAILED";
+          if ( openFileOnFail )
+          {
+            std::stringstream s;
+            
+            s << "geany" << file << " --line " << line;
+            system( s.str().c_str() );
+          }
+        }
+        cout << QUNIT_COLOUR_RESET << " : ";
         if( compare ) {
             const std::string cmp = ( result ? "==" : "!=" );
             cout << "compare {" << str1 << "} " << cmp << " {" <<  str2 << "} "
