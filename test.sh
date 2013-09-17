@@ -16,6 +16,14 @@
 #set -e
 
 
+./bin/luppp -test -stopAfterTest
+
+
+
+
+exit
+#####################################
+
 FILE=buildTest/build.success
 
 rm -f $(FILE)

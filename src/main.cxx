@@ -24,6 +24,17 @@ Jack* jack = 0;
 
 int main(int argc, char** argv)
 {
+  bool runTests = false;
+  bool stopAfterTest = false;
+  for(int i = 0; i < argc; i++)
+  {
+    if ( strcmp(argv[i], "-test" ) == 0 ) {
+      runTests = true;
+    } else if ( strcmp( argv[i], "-stopAfterTest") == 0 ) {
+      stopAfterTest = true;
+    }
+  }
+  
   // setup the environment
   AVOIDDENORMALS();
   
@@ -38,15 +49,21 @@ int main(int argc, char** argv)
   jack = new Jack();
   
 #ifdef BUILD_TESTS
-  // test offline functionality
-  gui->getDiskWriter()->runTests();
-  // test realtime functionality
-  jack->getGridLogic()->runTests();
-  
+  if ( runTests )
+  {
+    // test offline functionality
+    gui->getDiskWriter()->runTests();
+    // test realtime functionality
+    jack->getGridLogic()->runTests();
+    
 #ifdef BUILD_COVERAGE_TEST
-  LUPPP_NOTE("%s","Done testing, quitting!");
-  return 0;
+    if ( stopAfterTest )
+    {
+      LUPPP_NOTE("%s","Done testing, quitting!");
+      return 0;
+    }
 #endif
+  }
   // FIXME: Reset the state of GUI / GridLogic here. Create a "new session"?
 #endif
   jack->activate();
