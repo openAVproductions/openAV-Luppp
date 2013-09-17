@@ -195,6 +195,7 @@ void DiskReader::readMaster()
 #endif
       }
     }
+    // TODO add samplerate to session JSON
     
     // sceneNames
     {

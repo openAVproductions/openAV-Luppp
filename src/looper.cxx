@@ -14,10 +14,11 @@ extern Jack* jack;
 Looper::Looper(int t) :
   AudioProcessor(),
   TimeObserver(),
-  track(t),
-  uiUpdateConstant(44100/30.f),
-  uiUpdateCounter(44100/30.f)
+  track(t)
 {
+  uiUpdateConstant= jack->getSamplerate() / 30.f;
+  uiUpdateCounter = jack->getSamplerate() / 30.f;
+  
   // pre-zero the internal sample
   //tmpRecordBuffer = (float*)malloc( sizeof(float) * MAX_BUFFER_SIZE );
   //memset( tmpRecordBuffer, 0, sizeof(float) * MAX_BUFFER_SIZE );
@@ -69,7 +70,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
       if ( clips[clip]->recordSpaceAvailable() <  LOOPER_SAMPLES_BEFORE_REQUEST &&
           !clips[clip]->newBufferInTransit() )
       {
-        EventLooperClipRequestBuffer e( track, clip, clips[clip]->audioBufferSize() + 44100 * 4);
+        EventLooperClipRequestBuffer e( track, clip, clips[clip]->audioBufferSize() + LOOPER_SAMPLES_UPDATE_SIZE);
         writeToGuiRingbuffer( &e );
         clips[clip]->newBufferInTransit(true);
       }

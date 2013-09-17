@@ -49,7 +49,7 @@ class Jack
     Logic*              getLogic(){return logic;}
     Metronome*          getMetronome(){return metronome;}
     GridLogic*          getGridLogic(){return gridLogic;}
-    TimeManager*        getTimeManager(){return &timeManager;}
+    TimeManager*        getTimeManager(){return timeManager;}
     ControllerUpdater*  getControllerUpdater(){return controllerUpdater;}
     
     /// register MIDI observers: they're called when a MIDI message arrives on
@@ -67,7 +67,7 @@ class Jack
     jack_client_t* client;
     
     Buffers             buffers;
-    TimeManager         timeManager;
+    TimeManager*        timeManager;
     Metronome*          metronome;
     State*              state;
     Logic*              logic;

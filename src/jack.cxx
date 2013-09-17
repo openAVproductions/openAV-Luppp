@@ -22,7 +22,6 @@ extern int jackSamplerate;
 
 Jack::Jack() :
   client( jack_client_open ( "Luppp", JackNullOption , 0 , 0 ) ),
-  timeManager(),
   controllerUpdater( new ControllerUpdater() ),
   state( new State() ),
   clientActive(false)
@@ -30,10 +29,10 @@ Jack::Jack() :
   jack = this;
   // construct Observer classes here, not in the initializer list as the Jack*
   // will be 0x0 until then.
+  timeManager = new TimeManager(),
   metronome = new Metronome();
   logic = new Logic();
   gridLogic = new GridLogic();
-  
   
   buffers.nframes = jack_get_buffer_size( client );
   buffers.samplerate = jack_get_sample_rate( client );
@@ -112,7 +111,7 @@ Jack::Jack() :
     
     buffers.audio[Buffers::TRACK_0 + i] = new float[ buffers.nframes ];
     
-    timeManager.registerObserver( loopers.back() );
+    timeManager->registerObserver( loopers.back() );
   }
   
   /// setup DSP instances
@@ -378,7 +377,7 @@ int Jack::timebase(jack_transport_state_t state,
   buffers.transportState    =&state;
   
   // update "time" from JACK master, or write master?
-  timeManager.process( &buffers );
+  timeManager->process( &buffers );
   
   return 0;
 }

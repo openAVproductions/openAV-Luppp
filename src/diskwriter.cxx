@@ -77,6 +77,8 @@ void DiskWriter::writeMaster()
   
   cJSON_AddNumberToObject( masterTrack, "fader", master->getVolume()->value() );
   cJSON_AddNumberToObject( masterTrack, "bpm", gui->getMasterTrack()->getBpm() );
+  // TODO add samplerate to session JSON
+  //cJSON_AddNumberToObject( masterTrack, "samplerate", gui->getMasterTrack()->getBpm() );
   
   // scene names
   Avtk::ClipSelector* clipSelector = master->getClipSelector();

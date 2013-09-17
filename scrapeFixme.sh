@@ -8,3 +8,5 @@ grep -irn "FIXME" src/ >> FIXME
 
 echo -e "\n\n\n===> TODO" >> FIXME 
 grep -irn "TODO" src/ >> FIXME 
+
+geany FIXME

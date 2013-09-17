@@ -30,6 +30,7 @@
 #define MAX_BUFFER_SIZE 1024
 // nsamples remaining during recording before Looper requests larger buffer
 #define LOOPER_SAMPLES_BEFORE_REQUEST 44100
+#define LOOPER_SAMPLES_UPDATE_SIZE    44100
 
 #define LUPPP_RETURN_OK 0
 #define LUPPP_RETURN_ERROR 1

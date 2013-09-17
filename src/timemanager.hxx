@@ -28,6 +28,8 @@ class TimeManager
     void process(Buffers* buffers);
   
   private:
+    int samplerate;
+    
     float fpb;
     int oldBeat;
     

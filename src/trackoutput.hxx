@@ -56,7 +56,7 @@ class TrackOutput : public AudioProcessor
     // Metering variables
     long uiUpdateCounter;
     long uiUpdateConstant;
-    DBMeter dbMeter;
+    DBMeter* dbMeter;
   
 };
 

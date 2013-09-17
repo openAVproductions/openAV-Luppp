@@ -4,9 +4,11 @@
 #include <cmath>
 #include <iostream>
 
+#include "jack.hxx"
 #include "buffers.hxx"
-
 #include "observer/time.hxx"
+
+extern Jack* jack;
 
 using namespace std;
 
@@ -17,7 +19,7 @@ Metronome::Metronome() :
   playPoint  (0)
 {
   // create beat and bar samples
-  endPoint = (44100.f/441);
+  endPoint = ( jack->getSamplerate() / 441 );
   // samples per cycle of 
   float scale = 2 * 3.1415 / endPoint;
   

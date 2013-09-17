@@ -1,20 +1,20 @@
 
 #include "trackoutput.hxx"
 
-// valgrind no access code
-//#include <valgrind/memcheck.h>
-//VALGRIND_MAKE_MEM_NOACCESS( &_trackBuffer[0] , MAX_BUFFER_SIZE );
+#include "jack.hxx"
+extern Jack* jack;
 
 TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
   AudioProcessor(),
   track(t),
   _recordArm(false),
-  previousInChain(ap),
-  dbMeter(44100)
+  previousInChain(ap)
 {
   // UI update
-  uiUpdateConstant = 44100 / 30;
-  uiUpdateCounter  = 44100 / 30;
+  uiUpdateConstant = jack->getSamplerate() / 30;
+  uiUpdateCounter  = jack->getSamplerate() / 30;
+  
+  dbMeter = new DBMeter( jack->getSamplerate() );
   
   _toReverb        = 0.0;
   _toMaster        = 0.8;
@@ -60,11 +60,11 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
   previousInChain->process( nframes, buffers );
   
   // run the meter
-  dbMeter.process( nframes, trackBuffer, trackBuffer );
+  dbMeter->process( nframes, trackBuffer, trackBuffer );
   
   if (uiUpdateCounter > uiUpdateConstant )
   {
-    EventTrackSignalLevel e( track, dbMeter.getLeftDB() * _toMaster, dbMeter.getRightDB() * _toMaster );
+    EventTrackSignalLevel e( track, dbMeter->getLeftDB() * _toMaster, dbMeter->getRightDB() * _toMaster );
     writeToGuiRingbuffer( &e );
     uiUpdateCounter = 0;
   }

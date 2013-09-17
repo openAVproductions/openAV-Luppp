@@ -16,10 +16,13 @@ extern Jack* jack;
 using namespace std;
 
 TimeManager::TimeManager():
-    fpb(22050),
     oldBeat(0),
     observers()
 {
+  samplerate = jack->getSamplerate();
+  // 120 BPM default
+  fpb = samplerate / 2;
+  
   tapTempoPos = 0;
   tapTempo[0] = 0;
   tapTempo[1] = 0;
@@ -36,7 +39,7 @@ int TimeManager::getFpb()
 void TimeManager::setBpm(float bpm)
 {
   cout << "setBpm() " << bpm << endl;
-  setFpb( jack->getSamplerate() / bpm * 60 );
+  setFpb( samplerate / bpm * 60 );
 }
 
 
@@ -45,7 +48,7 @@ void TimeManager::setFpb(float f)
   fpb = f;
   //cout << "setFpb() " << fpb << endl;
   
-  int bpm = (44100 * 60) / f;
+  int bpm = ( samplerate * 60) / f;
   
   char buffer [50];
   sprintf (buffer, "TM, setFpb() %i, bpm = %i", int(f), int(bpm) );
@@ -67,7 +70,7 @@ void TimeManager::registerObserver(TimeObserver* o)
   observers.push_back(o);
   o->setFpb( fpb );
   
-  int bpm = (44100 * 60) / fpb;
+  int bpm = ( samplerate * 60) / fpb;
   EventTimeBPM e2( bpm );
   writeToGuiRingbuffer( &e2 );
 }
@@ -75,8 +78,7 @@ void TimeManager::registerObserver(TimeObserver* o)
 void TimeManager::tap()
 {
   // reset tap tempo to "first tap" if more than 5 secs elapsed since last tap
-  int sr = 44100;
-  if ( tapTempo[0] < frame - sr * 5 )
+  if ( tapTempo[0] < frame - samplerate * 5 )
   {
     tapTempoPos = 0;
   }
@@ -154,7 +156,7 @@ void TimeManager::process(Buffers* buffers)
   
   buffers->transportPosition->ticks_per_beat = 1920;
   
-  int bpm = int(buffers->samplerate * fpb / 60.0);
+  int bpm = int( samplerate * fpb / 60.0);
   buffers->transportPosition->beats_per_minute = bpm;
 }
 
