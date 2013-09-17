@@ -7,13 +7,13 @@
 extern Jack* jack;
 
 const char* GridLogic::StateString[8] = {
-  "empty",
-  "playing",
-  "play queued",
-  "stopped",
-  "stop queued",
-  "recording",
-  "record queued"
+  "Empty",
+  "Playing",
+  "Play queued",
+  "Stopped",
+  "Stop queued",
+  "Recording",
+  "Record queued"
 };
 
 GridLogic::GridLogic()
@@ -96,6 +96,13 @@ void GridLogic::pressed( int track, int scene )
     
     if ( s == STATE_STOP_QUEUED )
       lc->queuePlay();
+    
+    // don't re-trigger if already playing!
+    if ( s == STATE_STOP_QUEUED && lc->playing() )
+      lc->neutralize();
+    
+    if ( s == STATE_RECORD_QUEUED )
+      lc->neutralize();
   }
   
   // check state of new clip, if getQueuePlay() == true, queueStop() all other scenes

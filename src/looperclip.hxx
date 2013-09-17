@@ -87,6 +87,11 @@ class LooperClip : public Stately
     /// used for saving the contents of this buffer to disk
     void recieveSaveBuffer( AudioBuffer* ab );
   
+#ifdef BUILD_TESTS
+    // used only in test cases
+    void setState( bool load, bool play, bool rec, bool qPlay, bool qStop, bool qRec );
+#endif
+  
   private:
     int track, scene;
     

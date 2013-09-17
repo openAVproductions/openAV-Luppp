@@ -18,7 +18,6 @@
 make && ./bin/luppp -test -stopAfterTest
 if [ $? -eq 0 ]; then
     notify-send -t 5 "Luppp: Tests passed..."
-    echo OK
 else
     notify-send -t 10 -u critical "Luppp: Build / Test Failed!"
 fi

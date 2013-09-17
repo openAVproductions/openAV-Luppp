@@ -406,3 +406,16 @@ float LooperClip::getProgress()
   }
   return 0.f;
 }
+
+#ifdef BUILD_TESTS
+void LooperClip::setState( bool load, bool play, bool rec, bool qPlay, bool qStop, bool qRec )
+{
+  _loaded       = load;
+  _playing      = play;
+  _recording    = rec;
+    
+  _queuePlay    = qPlay;
+  _queueStop    = qStop;
+  _queueRecord  = qRec;
+}
+#endif
