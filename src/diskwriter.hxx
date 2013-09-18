@@ -37,6 +37,9 @@ class DiskWriter
     
     /// flush the JSON to disk, finalizing the save
     int writeSession();
+    
+    std::string getLastSaveName();
+    std::string getLastSavePath();
   
 #ifdef BUILD_TESTS
     int runTests();

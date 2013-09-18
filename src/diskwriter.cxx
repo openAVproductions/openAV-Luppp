@@ -22,12 +22,26 @@ DiskWriter::DiskWriter()
 {
   session = cJSON_CreateObject();
   sample  = cJSON_CreateObject();
+  
+  sessionPath = getenv("HOME");
+  sessionName = "lupppSession";
+  
 };
 
 void DiskWriter::initialize(std::string path, std::string name )
 {
-  sessionPath = getenv("HOME");
+  sessionPath = path;
   sessionName = name;
+}
+
+std::string DiskWriter::getLastSaveName()
+{
+  return sessionName;
+}
+
+std::string DiskWriter::getLastSavePath()
+{
+  return sessionPath;
 }
 
 int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )

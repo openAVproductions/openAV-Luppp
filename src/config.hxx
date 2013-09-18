@@ -23,6 +23,8 @@
 // State save / load
 #define DEBUG_STATE             1
 
+// Jack print controller out MIDI
+#define DEBUG_MIDI              1
 
 ///     GENERAL
 #define NTRACKS 8

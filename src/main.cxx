@@ -26,6 +26,8 @@ int main(int argc, char** argv)
 {
   bool runTests = false;
   bool stopAfterTest = false;
+  if(runTests == stopAfterTest){} // warning
+  
   for(int i = 0; i < argc; i++)
   {
     if ( strcmp(argv[i], "-test" ) == 0 ) {
@@ -34,6 +36,7 @@ int main(int argc, char** argv)
       stopAfterTest = true;
     }
   }
+  
   
   // setup the environment
   AVOIDDENORMALS();
