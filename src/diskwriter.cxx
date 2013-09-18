@@ -199,5 +199,14 @@ int DiskWriter::writeSession()
   // clear the clipData, clean page for next save
   clipData.clear();
   
+  
+  // reset the cJSON objects
+  cJSON_Delete( session );
+  cJSON_Delete( sample  );
+  
+  session = cJSON_CreateObject();
+  sample  = cJSON_CreateObject();
+  
+  
   return LUPPP_RETURN_OK;
 }
