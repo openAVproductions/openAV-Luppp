@@ -9,11 +9,43 @@ static void gmastertrack_tempoDial_callback(Fl_Widget *w, void *data)
   writeToDspRingbuffer( &e );
 }
 
+static void gmastertrack_recordVol_callback(Fl_Widget *w, void *data)
+{
+  //Avtk::Dial* b = (Avtk::Dial*)w;
+  //b->value( !b->value() );
+  //EventMetronomeActive e = EventMetronomeActive( b->value() );
+  //writeToDspRingbuffer( &e );
+}
+
+static void gmastertrack_mixVol_callback(Fl_Widget *w, void *data)
+{
+  //Avtk::Dial* b = (Avtk::Dial*)w;
+  //b->value( !b->value() );
+  //EventMetronomeActive e = EventMetronomeActive( b->value() );
+  //writeToDspRingbuffer( &e );
+}
+
+static void gmastertrack_recordButton_callback(Fl_Widget *w, void *data)
+{
+  Avtk::LightButton* b = (Avtk::LightButton*)w;
+  b->value( !b->value() );
+  //EventMetronomeActive e = EventMetronomeActive( b->value() );
+  //writeToDspRingbuffer( &e );
+}
+
+static void gmastertrack_mixButton_callback(Fl_Widget *w, void *data)
+{
+  Avtk::LightButton* b = (Avtk::LightButton*)w;
+  b->value( !b->value() );
+  //EventMetronomeActive e = EventMetronomeActive( b->value() );
+  //writeToDspRingbuffer( &e );
+}
+
 static void gmastertrack_button_callback(Fl_Widget *w, void *data)
 {
   if ( strcmp( w->label(), "Metro" ) == 0 )
   {
-    Avtk::Button* b = (Avtk::Button*)w;
+    Avtk::LightButton* b = (Avtk::LightButton*)w;
     b->value( !b->value() );
     EventMetronomeActive e = EventMetronomeActive( b->value() );
     writeToDspRingbuffer( &e );
@@ -45,10 +77,13 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   
   tempoDial      ( x + w * 2/4.f - 18, y + 426 + 41 * 2, 45, 36,"BPM"),
   returnVol      ( x + w * 2/4.f - 18, y + 426 + 41 * 3, 45, 36,"Return"),
-    
+  
   inputVolume(x + 9,y + 26 + 4, w - 18, 29,""),
-  inputToRecord(x + 9,y + 26 + 35, w / 2, 29,"to REC"),
-  inputToMix   (x + 9,y + 26 + 64, w / 2, 29,"to MIX"),
+  inputToRecord(x + 9,y + 26 + 36, w * 0.6, 29,"to Record"),
+  inputToMix   (x + 9,y + 26 + 68, w * 0.6, 29,"to Master"),
+  
+  inputToRecordVol(x + w*0.6,y + 26 + 36, w / 2, 29,""),
+  inputToMixVol   (x + w*0.6,y + 26 + 68, w / 2, 29,""),
   
   volume(x+106, y +425, 36, 166, "")
 {
@@ -60,8 +95,12 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   
   tapTempo.callback( gmastertrack_button_callback, &ID );
   metronomeButton.callback( gmastertrack_button_callback, 0 );
+  inputToRecord.callback( gmastertrack_recordButton_callback, 0 );
+  inputToMix.callback   ( gmastertrack_mixButton_callback, 0 );
   
   tempoDial.callback( gmastertrack_tempoDial_callback, 0 );
+  inputToRecordVol.callback( gmastertrack_recordVol_callback, 0 );
+  inputToMixVol.callback   ( gmastertrack_mixVol_callback, 0 );
   
   tempoDial.align( FL_ALIGN_CENTER );
   returnVol.align( FL_ALIGN_CENTER );

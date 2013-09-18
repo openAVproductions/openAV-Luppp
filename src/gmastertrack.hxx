@@ -66,6 +66,8 @@ class GMasterTrack : public Fl_Group
     Avtk::Volume        inputVolume;
     Avtk::LightButton   inputToRecord;
     Avtk::LightButton   inputToMix;
+    Avtk::Dial          inputToRecordVol;
+    Avtk::Dial          inputToMixVol;
     
     Avtk::Volume        volume;
     
