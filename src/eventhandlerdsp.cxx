@@ -81,7 +81,7 @@ void handleDspEvents()
           if ( availableRead >= sizeof(EventMetronomeActive) ) {
             EventMetronomeActive ev(false);
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMetronomeActive) );
-            jack->getMetronome()->setActive(ev.active);
+            jack->getLogic()->metronomeEnable(ev.active);
           } break; }
         case Event::LOOPER_STATE: {
           if ( availableRead >= sizeof(EventLooperState) ) {

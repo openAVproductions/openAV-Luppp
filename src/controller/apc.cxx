@@ -97,6 +97,18 @@ void AkaiAPC::setSceneState(int t, int clip, GridLogic::State s)
   jack->midiObserverWriteMIDI( _port,  &data[0] );
 }
 
+void AkaiAPC::metronomeEnable(bool b)
+{
+  unsigned char data[3];
+  data[0] = 144;
+  data[1] = 65;
+  data[2] = 127;
+  
+  if ( !b )
+    data[0] = 128;
+  jack->midiObserverWriteMIDI( _port,  &data[0] );
+}
+
 void AkaiAPC::launchScene( int s )
 {
   unsigned char data[3];
@@ -151,6 +163,10 @@ void AkaiAPC::noteOn( int track, int note, int vel )
         jack->getLogic()->trackSend(track, SEND_SIDE, 1);
         } break;
     
+    case 65: { // metronome button
+        jack->getLogic()->metronomeEnable( true );
+        } break;
+    
     case 82: // Master Scene Clips
     case 83: 
     case 84: 
@@ -198,6 +214,10 @@ void AkaiAPC::noteOff( int track, int note, int vel )
         jack->getLogic()->trackSend(track, SEND_SIDE, 0);
         }
     
+    case 65: { // metronome button
+        jack->getLogic()->metronomeEnable( false );
+        } break;
+    
     case 99: { // tap tempo
         EventTimeTempoTap e(false);
         writeToGuiRingbuffer( &e );
@@ -234,7 +254,7 @@ void AkaiAPC::ccChange( int track, int cc, float value )
       
       /// X-Fader
       case 15: {
-          jack->getTimeManager()->setBpm( 60 + value * 180 );
+          //jack->getTimeManager()->setBpm( 60 + value * 180 );
           break; }
       
       /// Device Control

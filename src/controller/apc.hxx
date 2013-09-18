@@ -14,6 +14,9 @@ class AkaiAPC : public Controller, public MidiObserver
     
     std::string getName(){return "Akai APC";}
     
+    /// global state
+    void metronomeEnable(bool b);
+    
     /// track actions
     void mute(int t, bool b);
     void volume(int t, float f);

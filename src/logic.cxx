@@ -14,6 +14,12 @@ void Logic::tapTempo()
   jack->getTimeManager()->tap();
 }
 
+void Logic::metronomeEnable(bool b)
+{
+  jack->getMetronome()->setActive(b);
+  jack->getControllerUpdater()->metronomeEnable( b );
+}
+
 void Logic::trackVolume(int t, float v)
 {
   if ( t < 0 ) // master track

@@ -91,6 +91,11 @@ class ControllerUpdater
     {
       for(unsigned int i = 0; i < c.size(); i++) c.at(i)->tapTempo(b);
     }
+    
+    void metronomeEnable(bool b)
+    {
+      for(unsigned int i = 0; i < c.size(); i++) c.at(i)->metronomeEnable(b);
+    }
   
   private:
     std::vector<Controller*> c;

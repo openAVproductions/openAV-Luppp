@@ -91,6 +91,7 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   
   bar = 0;
   
+  inputVolume.value(0.5);
   inputVolume.setOrientationHorizontal();
   
   tapTempo.callback( gmastertrack_button_callback, &ID );
@@ -101,6 +102,11 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   tempoDial.callback( gmastertrack_tempoDial_callback, 0 );
   inputToRecordVol.callback( gmastertrack_recordVol_callback, 0 );
   inputToMixVol.callback   ( gmastertrack_mixVol_callback, 0 );
+  
+  inputToMix.value( 1 );
+  inputToMixVol.value( 1 );
+  inputToRecord.value( 1 );
+  inputToRecordVol.value( 1 );
   
   tempoDial.align( FL_ALIGN_CENTER );
   returnVol.align( FL_ALIGN_CENTER );

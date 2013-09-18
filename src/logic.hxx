@@ -24,6 +24,8 @@ class Logic
     
     void tapTempo();
     
+    void metronomeEnable(bool b);
+    
     void trackVolume(int t, float v);
     void trackRecordArm(int t, bool v);
     void trackSend(int t, int send, float v);

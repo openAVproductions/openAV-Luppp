@@ -19,22 +19,23 @@ class Controller
     virtual std::string getName() = 0;
     
     /// master
-    virtual void masterVolume(float f){};
+    virtual void masterVolume(float f){}
+    virtual void metronomeEnable(bool b){}
     
     /// FX
-    virtual void trackSend(int t, int send, float v){};
+    virtual void trackSend(int t, int send, float v){}
     
     /// Time
-    virtual void bpm(int bpm){};
-    virtual void tapTempo(bool b){};
+    virtual void bpm(int bpm){}
+    virtual void tapTempo(bool b){}
     
     /// track functionality
-    virtual void mute(int t, bool b){};
-    virtual void volume(int t, float f){};
-    virtual void progress(int t, int s, float f){};
-    virtual void recordArm(int t, bool r){};
-    virtual void setSceneState(int track, int scene, GridLogic::State s){};
-    virtual void launchScene( int scene ){};
+    virtual void mute(int t, bool b){}
+    virtual void volume(int t, float f){}
+    virtual void progress(int t, int s, float f){}
+    virtual void recordArm(int t, bool r){}
+    virtual void setSceneState(int track, int scene, GridLogic::State s){}
+    virtual void launchScene( int scene ){}
     
     /// reset controller
     virtual void reset();
