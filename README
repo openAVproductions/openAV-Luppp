@@ -13,10 +13,10 @@ SNDFILE
 
 === INSTALL
 Run the following commands from the top directory to configure & install Luppp:
-cmake .
-make
-./run.sh
 
+cd build
+./compile.sh
+./run.sh
 
 
 
