@@ -357,7 +357,9 @@ void Jack::midiObserverWriteMIDI( int portIndex, unsigned char* data )
   if( buf != 0 )
   {
     memcpy( buf, data, sizeof( unsigned char ) * 3);
+#ifdef DEBUG_MIDI
     cout << "midiObserverWriteMIDI portID " << portIndex << "  " << int(buf[0]) << ", " << int(buf[1]) << ", " << int(buf[2]) << endl;
+#endif
   }
   else
   {
