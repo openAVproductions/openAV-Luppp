@@ -50,6 +50,7 @@ void AkaiAPC::trackSend(int t, int send, float v)
   
   unsigned char data[3];
   
+  /*
   if ( send == SEND_SIDE )
   {
     int tmp = v > 0.5 ? 144 : 128;
@@ -57,7 +58,8 @@ void AkaiAPC::trackSend(int t, int send, float v)
     data[1] = 49;
     data[2] = 127 ;
   }
-  else if ( send == SEND_POST )
+  */
+  if ( send == SEND_POST )
   {
     data[0] = 176 + t;
     data[1] = 16;
@@ -66,7 +68,7 @@ void AkaiAPC::trackSend(int t, int send, float v)
   else if ( send == SEND_REV )
   {
     data[0] = 176 + t;
-    data[1] = 17;
+    data[1] = 20;
     data[2] = 127 * v;
   }
   else
@@ -259,13 +261,28 @@ void AkaiAPC::ccChange( int track, int cc, float value )
       
       /// Device Control
       case 16: {
-          //jack->getLogic()->trackSend( track, SEND_SIDE, value );
-          break; }
-      case 17: {
           jack->getLogic()->trackSend( track, SEND_POST, value );
           break; }
+      case 17: {
+          //jack->getLogic()->trackSend( track, SEND_SIDE, value );
+          break; }
       case 18: {
+          //jack->getLogic()->trackSend( track, SEND_SIDE, value );
+          break; }
+      case 19: {
+          //jack->getLogic()->trackSend( track, SEND_SIDE, value );
+          break; }
+      case 20: {
           jack->getLogic()->trackSend( track, SEND_REV, value );
+          break; }
+      case 21: {
+          //jack->getLogic()->trackSend( track, SEND_REV, value );
+          break; }
+      case 22: {
+          //jack->getLogic()->trackSend( track, SEND_REV, value );
+          break; }
+      case 23: {
+          //jack->getLogic()->trackSend( track, SEND_REV, value );
           break; }
       
       
