@@ -36,12 +36,5 @@ void luppp_debug( int warnLevel, const char* name, const char* file, const char*
   }
   printf( "\n" );
   
-#ifdef DEBUG_KILL_ON_ERR
-  if ( warnLevel == DEBUG_LEVEL_KILL )
-  {
-    assert(false);
-  }
-#endif
-  
 }
 

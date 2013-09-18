@@ -28,6 +28,11 @@ IF(BUILD_TESTS)
   SET(CMAKE_EXE_LINKER_FLAGS "-fprofile-arcs -ftest-coverage")
 ENDIF(BUILD_TESTS)
 
+IF(RELEASE_BUILD)
+  SET(CMAKE_CXX_FLAGS "-g -O2 -Wall  -ffast-math")
+  SET(CMAKE_C_FLAGS "-g -O2 -Wall -W  -ffast-math")
+ENDIF(RELEASE_BUILD)
+
 
 # Add all files
 FILE(GLOB sources *.cxx  avtk/*.cxx cjson/*.c controller/*.cxx dsp/*.cxx observer/*.cxx state/*.cxx tests/*.cxx)

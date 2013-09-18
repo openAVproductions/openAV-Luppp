@@ -35,7 +35,8 @@ class DiskWriter
     /// writes a single audio buffer to disk
     int writeAudioBuffer(int track, int scene, AudioBuffer* ab );
     
-    int writeSession( std::string path, std::string sessionName );
+    /// flush the JSON to disk, finalizing the save
+    int writeSession();
   
 #ifdef BUILD_TESTS
     int runTests();

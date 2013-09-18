@@ -123,7 +123,7 @@ void handleGuiEvents()
 #ifdef DEBUG_SAVE
             cout << "EventSaveFinish!" << endl;
 #endif
-            gui->getDiskWriter()->writeSession("path", "sessionName");
+            gui->getDiskWriter()->writeSession();
           } break; }
         
         

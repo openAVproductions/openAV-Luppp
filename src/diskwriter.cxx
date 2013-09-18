@@ -20,15 +20,14 @@ using namespace std;
 
 DiskWriter::DiskWriter()
 {
+  session = cJSON_CreateObject();
+  sample  = cJSON_CreateObject();
 };
 
 void DiskWriter::initialize(std::string path, std::string name )
 {
   sessionPath = getenv("HOME");
-  sessionName = "lupppSession";
-  
-  session = cJSON_CreateObject();
-  sample  = cJSON_CreateObject();
+  sessionName = name;
 }
 
 int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
@@ -51,7 +50,7 @@ int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
   // FIXME: trim trailing  /  sessionPath from session path if its there
   
   stringstream path;
-  path << sessionPath << sessionName << "/samples/" << filename.str();
+  path << sessionPath << "/" << sessionName << "/samples/" << filename.str();
   
   SndfileHandle outfile( path.str(), SFM_WRITE, SF_FORMAT_WAV | SF_FORMAT_FLOAT, 1, 44100);
   cout << "Worker::writeSample() " << path.str() << " size: " << ab->getAudioFrames() << endl;
@@ -92,7 +91,7 @@ void DiskWriter::writeMaster()
   
 }
 
-int DiskWriter::writeSession( std::string path, std::string sessionName )
+int DiskWriter::writeSession()
 {
   // add session metadata
   cJSON_AddItemToObject  ( session, "session", cJSON_CreateString( sessionName.c_str() ));
@@ -154,7 +153,7 @@ int DiskWriter::writeSession( std::string path, std::string sessionName )
   
   // write session.luppp JSON node to <path>/<sessionName>.luppp
   stringstream sessionDir;
-  sessionDir << getenv("HOME") << "/" << sessionName;
+  sessionDir << sessionPath << "/" << sessionName;
   int sessionDirError = mkdir( sessionDir.str().c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
   if ( sessionDirError )
   {
