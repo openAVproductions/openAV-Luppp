@@ -64,7 +64,9 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
   
   if (uiUpdateCounter > uiUpdateConstant )
   {
-    EventTrackSignalLevel e( track, dbMeter->getLeftDB() * _toMaster, dbMeter->getRightDB() * _toMaster );
+    float l = dbMeter->getLeftDB() * _toMaster;
+    float r = dbMeter->getRightDB() * _toMaster;
+    EventTrackSignalLevel e( track, l, r );
     writeToGuiRingbuffer( &e );
     uiUpdateCounter = 0;
   }
