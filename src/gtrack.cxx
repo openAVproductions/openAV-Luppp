@@ -19,11 +19,14 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
   volBox(x+5, y+422, 100, 172, ""),
   volume(x+66, y +425, 36, 166, ""),
   
-  //active   (x+11, y +427 +  0, 50, 25, ""), // active
-  side     (x+11, y +427 + 00, 50, 25, "Key"),
-  //recEnable(x+11, y +427 + 54, 50, 25, ""), // record
-  post     (x+21, y +435 + 35, 30, 30, "X-Side"),
-  rev      (x+21, y +440 + 100, 30, 30, "Snd")
+  rev      (x+21, y +430 +  0, 30, 30, ""),
+  active   (x+11, y +430 + 32, 50, 25, "Snd"), // active
+  
+  post     (x+21, y +430 + 69, 30, 30, ""),
+  side     (x+11, y +430 + 101, 50, 25, "Key"),
+  
+  recEnable(x+11, y +430 + 132, 50, 25, "Rec") // record
+  
 {
   ID = privateID++;
   
@@ -32,8 +35,8 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
   side.callback( gtrack_side_cb, this );
   side.setColor( 0, 0.6, 1 );
   
-  //active.setColor( 0, 0.0, 0.0 );
-  //recEnable.setColor( 0, 0.0, 0.0 );
+  active.setColor( 0, 1.0, 0.0 );
+  recEnable.setColor( 1, 0.0, 0.0 );
   
   rev.callback( gtrack_reverb_cb, this );
   post.callback( gtrack_post_cb, this );
