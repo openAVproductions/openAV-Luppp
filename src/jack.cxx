@@ -357,10 +357,31 @@ void Jack::inputTo(INPUT_TO to, float v)
     case INPUT_TO_SEND:
         inputToSendVol = v;
         break;
+    case INPUT_TO_XSIDE:
+        inputToXSideVol = v;
+        break;
     default:
         break;
   }
-  printf("%f\n", masterVol);
+  printf("%f\n", v);
+}
+
+void Jack::inputToActive(INPUT_TO to, bool a)
+{
+  switch ( to )
+  {
+    case INPUT_TO_MIX:
+        inputToMixEnable = a;
+        break;
+    case INPUT_TO_SEND:
+        inputToSendEnable = a;
+        break;
+    case INPUT_TO_XSIDE:
+        inputToXSideEnable = a;
+        break;
+    default:
+        break;
+  }
 }
 
 int Jack::getBuffersize()

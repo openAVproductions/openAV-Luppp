@@ -62,6 +62,7 @@ class Jack
     /// set the master volume
     void masterVolume( float vol );
     void inputTo(INPUT_TO to, float v);
+    void inputToActive(INPUT_TO to, bool a);
     
   
   private:
@@ -93,7 +94,10 @@ class Jack
     
     float inputToMixVol;
     float inputToSendVol;
-    float inputToSideVol;
+    float inputToXSideVol;
+    float inputToMixEnable;
+    float inputToSendEnable;
+    float inputToXSideEnable;
     
     // JACK member variables
     bool clientActive;

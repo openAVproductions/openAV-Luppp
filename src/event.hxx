@@ -39,6 +39,7 @@ namespace Event
   enum {
     MASTER_VOL,
     MASTER_INPUT_TO,
+    MASTER_INPUT_TO_ACTIVE,
     MASTER_RETURN,
     RECORD,
     
@@ -101,6 +102,18 @@ class EventMasterInputTo : public EventBase
     float value;
     EventMasterInputTo() : value(-1){}
     EventMasterInputTo(INPUT_TO p, float v) : place(p), value(v){}
+};
+
+class EventMasterInputToActive : public EventBase
+{
+  public:
+    int type() { return int(MASTER_INPUT_TO_ACTIVE); }
+    uint32_t size() { return sizeof(EventMasterInputToActive); }
+    
+    INPUT_TO place;
+    bool active;
+    EventMasterInputToActive() : active(false){}
+    EventMasterInputToActive(INPUT_TO p, bool a) : place(p), active(a){}
 };
 
 class EventMasterVol : public EventBase

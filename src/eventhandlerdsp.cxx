@@ -66,6 +66,12 @@ void handleDspEvents()
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMasterInputTo) );
             jack->getLogic()->masterInputTo( ev.place, ev.value );
           } break; }
+        case Event::MASTER_INPUT_TO_ACTIVE: {
+          if ( availableRead >= sizeof(EventMasterInputToActive) ) {
+            EventMasterInputToActive ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMasterInputToActive) );
+            jack->getLogic()->masterInputToActive( ev.place, ev.active );
+          } break; }
         
         // ========= GRID =====
         case Event::GRID_EVENT: {
