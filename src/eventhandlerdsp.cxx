@@ -60,6 +60,12 @@ void handleDspEvents()
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMasterReturn) );
             //jack->getLogic()->trackSend( ev.track, ev.send, ev.value );
           } break; }
+        case Event::MASTER_INPUT_TO: {
+          if ( availableRead >= sizeof(EventMasterInputTo) ) {
+            EventMasterInputTo ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMasterInputTo) );
+            jack->getLogic()->masterInputTo( ev.place, ev.value );
+          } break; }
         
         // ========= GRID =====
         case Event::GRID_EVENT: {
@@ -144,6 +150,7 @@ void handleDspEvents()
             jack->getLogic()->trackVolume( ev.track, ev.vol );
             break; }
           }
+          
         case Event::TRACK_SEND: {
           if ( availableRead >= sizeof(EventTrackSend) ) {
             EventTrackSend ev;

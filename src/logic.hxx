@@ -26,6 +26,7 @@ class Logic
     
     void metronomeEnable(bool b);
     
+    void masterInputTo( int inputTo, float v);
     void masterReturn(int t, int send, float v);
     
     void trackVolume(int t, float v);

@@ -20,6 +20,11 @@ void Logic::metronomeEnable(bool b)
   jack->getControllerUpdater()->metronomeEnable( b );
 }
 
+void Logic::masterInputTo( int inputTo, float v)
+{
+  
+}
+
 void Logic::trackVolume(int t, float v)
 {
   if ( t < 0 ) // master track

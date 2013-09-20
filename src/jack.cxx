@@ -345,6 +345,21 @@ int Jack::process (jack_nframes_t nframes)
 void Jack::masterVolume(float vol)
 {
   masterVol = vol;
+}
+
+void Jack::inputTo(INPUT_TO to, float v)
+{
+  switch ( to )
+  {
+    case INPUT_TO_MIX:
+        inputToMixVol = v;
+        break;
+    case INPUT_TO_SEND:
+        inputToSendVol = v;
+        break;
+    default:
+        break;
+  }
   printf("%f\n", masterVol);
 }
 

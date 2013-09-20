@@ -17,20 +17,20 @@ static void gmastertrack_volume_callback(Fl_Widget *w, void *data)
   writeToDspRingbuffer( &e );
 }
 
-static void gmastertrack_keyVol_callback(Fl_Widget *w, void *data)
+static void gmastertrack_xSideVol_callback(Fl_Widget *w, void *data)
 {
-  //Avtk::Dial* b = (Avtk::Dial*)w;
-  //b->value( !b->value() );
-  //EventMetronomeActive e = EventMetronomeActive( b->value() );
-  //writeToDspRingbuffer( &e );
+  Avtk::Dial* b = (Avtk::Dial*)w;
+  float v = b->value();
+  EventMasterInputTo e = EventMasterInputTo( INPUT_TO_XSIDE, v );
+  writeToDspRingbuffer( &e );
 }
 
 static void gmastertrack_mixVol_callback(Fl_Widget *w, void *data)
 {
-  //Avtk::Dial* b = (Avtk::Dial*)w;
-  //b->value( !b->value() );
-  //EventMetronomeActive e = EventMetronomeActive( b->value() );
-  //writeToDspRingbuffer( &e );
+  Avtk::Dial* b = (Avtk::Dial*)w;
+  float v = b->value();
+  EventMasterInputTo e = EventMasterInputTo( INPUT_TO_MIX, v );
+  writeToDspRingbuffer( &e );
 }
 
 static void gmastertrack_sidchainKeyButton_callback(Fl_Widget *w, void *data)
@@ -47,6 +47,22 @@ static void gmastertrack_mixButton_callback(Fl_Widget *w, void *data)
   b->value( !b->value() );
   //EventMetronomeActive e = EventMetronomeActive( b->value() );
   //writeToDspRingbuffer( &e );
+}
+
+static void gmastertrack_sendButton_callback(Fl_Widget *w, void *data)
+{
+  Avtk::LightButton* b = (Avtk::LightButton*)w;
+  b->value( !b->value() );
+  //EventMetronomeActive e = EventMetronomeActive( b->value() );
+  //writeToDspRingbuffer( &e );
+}
+
+static void gmastertrack_sendVol_callback(Fl_Widget *w, void *data)
+{
+  Avtk::Dial* b = (Avtk::Dial*)w;
+  float v = b->value();
+  EventMasterInputTo e = EventMasterInputTo( INPUT_TO_SEND, v );
+  writeToDspRingbuffer( &e );
 }
 
 static void gmastertrack_button_callback(Fl_Widget *w, void *data)
@@ -113,15 +129,16 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   
   tempoDial.callback( gmastertrack_tempoDial_callback, 0 );
   
-  inputToSidechainKey.value( 0 );
   inputToSidechainKey.setColor( 0, 0.6, 1 );
   inputToSidechainKey.callback( gmastertrack_sidchainKeyButton_callback, 0 );
   inputToSidechainSignalVol.value( 0 );
   
-  inputToMix.value( 1 );
-  inputToMixVol.value( 1 );
-  inputToSidechainSignalVol.callback( gmastertrack_keyVol_callback, 0 );
+  //inputToMix.setColor( 0, 0.0, 0 );
   inputToMixVol.callback   ( gmastertrack_mixVol_callback, 0 );
+  
+  inputToSend.setColor( 0, 1.0, 0 );
+  inputToSidechainSignalVol.callback( gmastertrack_xSideVol_callback, 0 );
+  
   
   tempoDial.align( FL_ALIGN_CENTER );
   returnVol.align( FL_ALIGN_CENTER );

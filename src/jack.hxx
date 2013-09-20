@@ -61,6 +61,7 @@ class Jack
     
     /// set the master volume
     void masterVolume( float vol );
+    void inputTo(INPUT_TO to, float v);
     
   
   private:
@@ -88,6 +89,11 @@ class Jack
     DBMeter* inputMeter;
     DBMeter* masterMeter;
     float masterVol;
+    float inputVol;
+    
+    float inputToMixVol;
+    float inputToSendVol;
+    float inputToSideVol;
     
     // JACK member variables
     bool clientActive;

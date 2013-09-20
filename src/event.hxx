@@ -31,8 +31,9 @@ namespace Event
   };
   enum INPUT_TO
   {
-    INPUT_TO_RECORD = 0,
+    INPUT_TO_SEND = 0,
     INPUT_TO_MIX,
+    INPUT_TO_XSIDE,
   };
   
   enum {
@@ -96,9 +97,10 @@ class EventMasterInputTo : public EventBase
     int type() { return int(MASTER_INPUT_TO); }
     uint32_t size() { return sizeof(EventMasterInputTo); }
     
-    int send;
-    float vol;
-    EventMasterInputTo(int s, float v) : send(s), vol(v){}
+    INPUT_TO place;
+    float value;
+    EventMasterInputTo() : value(-1){}
+    EventMasterInputTo(INPUT_TO p, float v) : place(p), value(v){}
 };
 
 class EventMasterVol : public EventBase
