@@ -64,9 +64,15 @@ class GMasterTrack : public Fl_Group
     Avtk::LightButton* beatLights[4];
     
     Avtk::Volume        inputVolume;
-    Avtk::LightButton   inputToRecord;
+    
+    
+    Avtk::LightButton   inputToSidechainKey;
+    Avtk::Dial          inputToSidechainSignalVol;
+    
+    Avtk::LightButton   inputToSend;
+    Avtk::Dial          inputToSendVol;
+    
     Avtk::LightButton   inputToMix;
-    Avtk::Dial          inputToRecordVol;
     Avtk::Dial          inputToMixVol;
     
     Avtk::Volume        volume;

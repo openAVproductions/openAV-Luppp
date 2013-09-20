@@ -22,8 +22,8 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
   //active   (x+11, y +427 +  0, 50, 25, ""), // active
   side     (x+11, y +427 + 00, 50, 25, "Key"),
   //recEnable(x+11, y +427 + 54, 50, 25, ""), // record
-  post     (x+21, y +435 + 35, 30, 30, "to Side"),
-  rev      (x+21, y +440 + 100, 30, 30, "Send")
+  post     (x+21, y +435 + 35, 30, 30, "X-Side"),
+  rev      (x+21, y +440 + 100, 30, 30, "Snd")
 {
   ID = privateID++;
   

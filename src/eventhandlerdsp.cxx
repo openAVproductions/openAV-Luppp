@@ -127,14 +127,16 @@ void handleDspEvents()
           } break; }
         
         // ======== FX ===========
-        case Event::FX_REVERB: {
+        
+        case Event::FX_REVERB: break;
+        /*{
           if ( availableRead >= sizeof(EventFxReverb) ) {
             EventFxReverb ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventFxReverb) );
             // TODO implement reverb
             break; }
           }
-        
+        */
         case Event::TRACK_VOLUME: {
           if ( availableRead >= sizeof(EventTrackVol) ) {
             EventTrackVol ev;

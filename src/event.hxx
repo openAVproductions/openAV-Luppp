@@ -29,9 +29,15 @@ namespace Event
   {
     RETURN_REV = 0,
   };
+  enum INPUT_TO
+  {
+    INPUT_TO_RECORD = 0,
+    INPUT_TO_MIX,
+  };
   
   enum {
     MASTER_VOL,
+    MASTER_INPUT_TO,
     MASTER_RETURN,
     RECORD,
     
@@ -82,6 +88,17 @@ class EventBase
     
     virtual int type() = 0;
     virtual uint32_t size() = 0;
+};
+
+class EventMasterInputTo : public EventBase
+{
+  public:
+    int type() { return int(MASTER_INPUT_TO); }
+    uint32_t size() { return sizeof(EventMasterInputTo); }
+    
+    int send;
+    float vol;
+    EventMasterInputTo(int s, float v) : send(s), vol(v){}
 };
 
 class EventMasterVol : public EventBase
