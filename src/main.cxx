@@ -84,7 +84,6 @@ int main(int argc, char** argv)
     }
 #endif
   }
-  // FIXME: Reset the state of GUI / GridLogic here. Create a "new session"?
 #endif
   
   // setup the "real" GUI / JACK
