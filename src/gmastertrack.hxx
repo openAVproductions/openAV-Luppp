@@ -65,12 +65,11 @@ class GMasterTrack : public Fl_Group
     
     Avtk::Volume        inputVolume;
     
+    Avtk::LightButton   inputToSend;
+    Avtk::Dial          inputToSendVol;
     
     Avtk::LightButton   inputToSidechainKey;
     Avtk::Dial          inputToSidechainSignalVol;
-    
-    Avtk::LightButton   inputToSend;
-    Avtk::Dial          inputToSendVol;
     
     Avtk::LightButton   inputToMix;
     Avtk::Dial          inputToMixVol;

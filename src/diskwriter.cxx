@@ -178,6 +178,9 @@ int DiskWriter::writeSession()
   sampleDir << sessionDir.str() << "/samples";
   int sampleDirError  = mkdir( sampleDir.str().c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
   
+  // FIXME: error check mkdir for error return
+  if ( sampleDirError ) {}
+  
   stringstream sessionLuppp;
   sessionLuppp << sessionDir.str() << "/session.luppp";
   

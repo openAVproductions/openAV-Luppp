@@ -23,8 +23,8 @@ IF(BUILD_TESTS)
   ADD_DEFINITIONS(-DBUILD_TESTS)
   ADD_DEFINITIONS(-DBUILD_COVERAGE_TEST)
   
-  SET(CMAKE_CXX_FLAGS "-g -O0 -Wall -fprofile-arcs -ftest-coverage")
-  SET(CMAKE_C_FLAGS "-g -O0 -Wall -W -fprofile-arcs -ftest-coverage")
+  SET(CMAKE_CXX_FLAGS "-g -O0 -Wall -Wextra -fprofile-arcs -ftest-coverage")
+  SET(CMAKE_C_FLAGS "-g -O0 -Wall -Wextra -W -fprofile-arcs -ftest-coverage")
   SET(CMAKE_EXE_LINKER_FLAGS "-fprofile-arcs -ftest-coverage")
 ENDIF(BUILD_TESTS)
 

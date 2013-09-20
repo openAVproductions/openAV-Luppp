@@ -38,13 +38,13 @@ void GenericMIDI::recordArm(int t, bool enabled)
 
 void GenericMIDI::progress(int t, int s, float f)
 {
-  /*
+  
   unsigned char data[3];
   data[0] = 176;
   data[1] = 48; // record enable LED
   data[2] = 127 * f;
   jack->midiObserverWriteMIDI( _port,  &data[0] );
-  *
+  
 }
 
 void GenericMIDI::trackSend(int t, int send, float v)
@@ -286,6 +286,10 @@ void GenericMIDI::midi(unsigned char* data)
   int b1 = data[0];
   int b2 = data[1];
   int b3 = data[2];
+  
+  // TODO: Generic MIDI needs MIDI map from JSON
+  // FIXME: used variables
+  if ( b2 == b3 ) {}
   
   if ( b1 >= 144 && b1 < 144 + 16 ) // NOTE_ON
   {

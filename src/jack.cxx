@@ -22,8 +22,8 @@ extern int jackSamplerate;
 
 Jack::Jack() :
   client( jack_client_open ( "Luppp", JackNullOption , 0 , 0 ) ),
-  controllerUpdater( new ControllerUpdater() ),
   state( new State() ),
+  controllerUpdater( new ControllerUpdater() ),
   clientActive(false)
 {
   jack = this;
@@ -142,6 +142,11 @@ void Jack::activate()
   Controller* m = new GenericMIDI();
   
   Controller* g = new LupppGUI();
+  
+  if ( !c || !m || !g )
+  {
+    LUPPP_WARN("%s","Error creating Controller subclass instance");
+  }
   
   jack_activate( client );
   jack_transport_start(client);
