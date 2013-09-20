@@ -9,6 +9,14 @@ static void gmastertrack_tempoDial_callback(Fl_Widget *w, void *data)
   writeToDspRingbuffer( &e );
 }
 
+static void gmastertrack_volume_callback(Fl_Widget *w, void *data)
+{
+  Avtk::Volume* b = (Avtk::Volume*)w;
+  float v = b->value();
+  EventMasterVol e( v );
+  writeToDspRingbuffer( &e );
+}
+
 static void gmastertrack_recordVol_callback(Fl_Widget *w, void *data)
 {
   //Avtk::Dial* b = (Avtk::Dial*)w;
@@ -129,6 +137,7 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   source.color( FL_BLACK );
   
   volume.amplitude( 0.0, 0.0 );
+  volume.callback( gmastertrack_volume_callback, 0 );
   
   end(); // close the group
 }

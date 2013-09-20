@@ -25,9 +25,14 @@ namespace Event
     SEND_SIDE,
     SEND_POST,
   };
+  enum RETURN_TYPE
+  {
+    RETURN_REV = 0,
+  };
   
   enum {
     MASTER_VOL,
+    MASTER_RETURN,
     RECORD,
     
     STATE_SAVE,       // save action
@@ -90,6 +95,19 @@ class EventMasterVol : public EventBase
     {
       vol = v;
     }
+};
+
+class EventMasterReturn : public EventBase
+{
+  public:
+    int type() { return int(MASTER_RETURN); }
+    uint32_t size() { return sizeof(EventMasterReturn); }
+    
+    RETURN_TYPE ret;
+    float value;
+    
+    EventMasterReturn(){};
+    EventMasterReturn(RETURN_TYPE s, float v): ret(s), value(v){}
 };
 
 class EventTrackVol : public EventBase

@@ -94,7 +94,7 @@ Jack::Jack() :
                           JackPortIsInput,
                           0 );
   
-  masterVol = 0.77;
+  masterVol = 0.0f;
   
   /// prepare internal buffers
   buffers.audio[Buffers::SEND]           = new float[ buffers.nframes ];
@@ -326,7 +326,6 @@ int Jack::process (jack_nframes_t nframes)
   // memcpy the internal MASTER_OUTPUT buffer to the JACK_MASTER_OUTPUT
   memcpy( buffers.audio[Buffers::JACK_MASTER_OUT_L],
           buffers.audio[Buffers::MASTER_OUT_L],
-          //buffers.audio[Buffers::TRACK_7],
           sizeof(float)*nframes);
   
   memcpy( buffers.audio[Buffers::JACK_MASTER_OUT_R],
@@ -336,6 +335,12 @@ int Jack::process (jack_nframes_t nframes)
           sizeof(float)*nframes);
   
   return false;
+}
+
+void Jack::masterVolume(float vol)
+{
+  masterVol = vol;
+  printf("%f\n", masterVol);
 }
 
 int Jack::getBuffersize()

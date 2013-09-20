@@ -47,11 +47,18 @@ void handleDspEvents()
             jack->getState()->reset();
           } break; }
         
+        // ========= MASTER ===
         case Event::MASTER_VOL: {
           if ( availableRead >= sizeof(EventMasterVol) ) {
             EventMasterVol ev(0);
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMasterVol) );
-            //jack->masterVolume = ev.vol;
+            jack->masterVolume( ev.vol );
+          } break; }
+        case Event::MASTER_RETURN: {
+          if ( availableRead >= sizeof(EventMasterReturn) ) {
+            EventMasterReturn ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMasterReturn) );
+            //jack->getLogic()->trackSend( ev.track, ev.send, ev.value );
           } break; }
         
         // ========= GRID =====
@@ -141,6 +148,7 @@ void handleDspEvents()
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackSend) );
             jack->getLogic()->trackSend( ev.track, ev.send, ev.value );
           } break; }
+          
         
         // ========= LUPPP INTERNAL =====
         case Event::LOOPER_REQUEST_BUFFER: {

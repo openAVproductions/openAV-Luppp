@@ -60,7 +60,7 @@ class Jack
     void midiObserverWriteMIDI( int portIndex, unsigned char* data );
     
     /// set the master volume
-    void masterVolume( float vol ){masterVol = vol;}
+    void masterVolume( float vol );
     
   
   private:
