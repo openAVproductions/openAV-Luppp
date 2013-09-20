@@ -39,6 +39,7 @@ class GridLogic : public TimeObserver
     };
     
     GridLogic();
+    ~GridLogic(){};
     
     /// button press / click event
     void pressed( int track, int scene );

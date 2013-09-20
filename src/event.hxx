@@ -78,6 +78,8 @@ namespace Event
     
     LOOPER_REQUEST_BUFFER,
     DEALLOCATE_BUFFER,
+    
+    QUIT,
   };
 };
 
@@ -92,6 +94,14 @@ class EventBase
     
     virtual int type() = 0;
     virtual uint32_t size() = 0;
+};
+
+class EventQuit : public EventBase
+{
+  public:
+    int type() { return int(QUIT); }
+    uint32_t size() { return sizeof(EventQuit); }
+    EventQuit(){}
 };
 
 class EventMasterInputTo : public EventBase

@@ -7,6 +7,7 @@ class TimeObserver
   public:
     /// registers with TimeManager
     TimeObserver();
+    virtual ~TimeObserver(){};
     
     virtual void setFpb(int fpb){};
     

@@ -115,6 +115,8 @@ Jack::Jack() :
   }
   
   /// setup DSP instances
+  inputVol = 1.0f;
+  masterVol = 0.75f;
   masterMeter = new DBMeter( buffers.samplerate );
   inputMeter  = new DBMeter( buffers.samplerate );
   
@@ -135,6 +137,20 @@ Jack::Jack() :
   }
 }
 
+Jack::~Jack()
+{
+  jack_client_close(client);
+  
+  delete timeManager;
+  delete metronome;
+  delete state;
+  delete logic;
+  delete gridLogic;
+  delete controllerUpdater;
+  
+  delete inputMeter;
+  delete masterMeter;
+}
 
 void Jack::activate()
 {
@@ -152,6 +168,23 @@ void Jack::activate()
   jack_transport_start(client);
 }
 
+void Jack::quit()
+{
+  // turn off process()
+  jack_deactivate( client );
+  
+  // unregister JACK ports
+  for(unsigned int i = 0; i < midiObservers.size(); i++)
+  {
+    unregisterMidiObserver( midiObservers.at(i) );
+  }
+  
+  LUPPP_NOTE("%s","Quit JACK graph.");
+  
+  // ping UI that JACK thread is finished shutting down
+  EventQuit e;
+  writeToGuiRingbuffer( &e );
+}
 
 TrackOutput* Jack::getTrackOutput(int t)
 {
@@ -185,7 +218,7 @@ Looper* Jack::getLooper(int t)
 
 void Jack::registerMidiObserver( MidiObserver* mo, std::string name )
 {
-  cout << "Jack::registerMidiObserver() " << name << endl;
+  LUPPP_NOTE("%s: %s","Jack::registerMidiObserver() ", name.c_str() );
   
   // register the observer
   midiObservers.push_back( mo );
@@ -215,6 +248,27 @@ void Jack::registerMidiObserver( MidiObserver* mo, std::string name )
   
   midiObserverOutputBuffers.push_back( 0 );
   midiObserverOutputPorts.push_back( tmp );
+}
+
+void Jack::unregisterMidiObserver( MidiObserver* mo )
+{
+  cout << "Jack::unregisterMidiObserver()" << endl;
+  
+  // remove MIDI I/O ports
+  jack_port_unregister(client, midiObserverInputPorts .at( mo->port() ) );
+  jack_port_unregister(client, midiObserverOutputPorts.at( mo->port() ) );
+  
+  
+  /* // indeces for other instances can't change!
+  midiObserverInputBuffers.push_back( 0 );
+  midiObserverInputPorts.push_back( tmp );
+  
+  midiObserverOutputBuffers.push_back( 0 );
+  midiObserverOutputPorts.push_back( tmp );
+  */
+  
+  // unregister the observer
+  midiObservers.push_back( mo );
 }
 
 

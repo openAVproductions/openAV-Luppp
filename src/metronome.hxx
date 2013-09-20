@@ -15,6 +15,7 @@ class Metronome : public TimeObserver
 {
   public:
     Metronome();
+    ~Metronome(){};
     
     void setActive(bool a);
     

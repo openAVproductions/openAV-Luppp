@@ -97,6 +97,35 @@ static void gui_header_callback(Fl_Widget *w, void *data)
       writeToDspRingbuffer( &e );
     }
   }
+  else if ( strcmp(m->label(), "Quit") == 0 )
+  {
+    int choice = fl_choice("Really Quit?","Cancel","Just Quit","Save & Quit",0);
+    //cout << choice << endl;
+    if ( choice == 2 ) // SAVE & QUIT
+    {
+      const char* name = fl_input( "Save session as", gui->getDiskWriter()->getLastSaveName().c_str() );
+      if ( name )
+      {
+        cout << "Save clicked, name = " << name << endl;
+        gui->getDiskWriter()->initialize( getenv("HOME"), name );
+        EventStateSave e;
+        writeToDspRingbuffer( &e );
+      }
+      else
+      {
+        return;
+      }
+    }
+    else if ( choice == 1 ) // JUST QUIT
+    {
+      EventQuit e;
+      writeToDspRingbuffer( &e );
+    }
+    else
+    {
+      return;
+    }
+  }
 }
 
 void Gui::selectLoadSample( int track, int scene )

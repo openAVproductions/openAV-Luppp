@@ -36,8 +36,12 @@ class Jack
 {
   public:
     Jack();
+    ~Jack();
     
     void activate();
+    /// quits the JACK client, destroying ports etc. Call only on exit of Luppp.
+    void quit();
+    
     int getBuffersize();
     int getSamplerate();
     
@@ -55,6 +59,8 @@ class Jack
     /// register MIDI observers: they're called when a MIDI message arrives on
     /// a port they're watching
     void registerMidiObserver( MidiObserver* mo, std::string name );
+    /// remove a MidiObserver, deregistering ports
+    void unregisterMidiObserver( MidiObserver* mo );
     
     /// writes MIDI messages to a MidiObserver's port
     void midiObserverWriteMIDI( int portIndex, unsigned char* data );

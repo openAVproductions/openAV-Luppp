@@ -34,6 +34,14 @@ void handleDspEvents()
     {
       switch ( e->type() )
       {
+        case Event::QUIT: {
+          if ( availableRead >= sizeof(EventQuit) ) {
+            EventQuit ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventQuit) );
+            jack->quit();
+          } break; }
+        
+        // ========= SAVE =====
         case Event::STATE_SAVE: {
           if ( availableRead >= sizeof(EventStateSave) ) {
             EventStateSave ev;
