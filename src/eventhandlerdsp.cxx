@@ -39,6 +39,9 @@ void handleDspEvents()
             EventQuit ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventQuit) );
             jack->quit();
+            // we want to *quit* *fast*: remaining events don't matter!
+            return;
+            
           } break; }
         
         // ========= SAVE =====

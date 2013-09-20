@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <unistd.h>
+#include <signal.h>
 
 #include <jack/ringbuffer.h>
 
@@ -10,6 +11,8 @@
 #include "jack.hxx"
 #include "event.hxx"
 #include "denormals.hxx"
+
+int signalHanlderInt = 0;
 
 char* processDspMem = 0;
 char* processGuiMem = 0;
@@ -20,6 +23,12 @@ jack_ringbuffer_t* rbToGui = 0;
 // global static pointers, for access from EventHandlerGui and EventHandlerDsp
 Gui * gui  = 0;
 Jack* jack = 0;
+
+
+void signalHanlder(int signum)
+{
+  signalHanlderInt = signum;
+}
 
 
 int main(int argc, char** argv)
@@ -37,9 +46,10 @@ int main(int argc, char** argv)
     }
   }
   
-  
   // setup the environment
   AVOIDDENORMALS();
+  signal(SIGINT , signalHanlder);
+  signal(SIGTERM, signalHanlder);
   
   // allocate data to read from
   processDspMem = (char*)malloc( sizeof(EventBase) );

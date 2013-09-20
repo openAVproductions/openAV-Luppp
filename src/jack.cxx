@@ -139,8 +139,6 @@ Jack::Jack() :
 
 Jack::~Jack()
 {
-  jack_client_close(client);
-  
   delete timeManager;
   delete metronome;
   delete state;
@@ -170,20 +168,9 @@ void Jack::activate()
 
 void Jack::quit()
 {
-  // turn off process()
   jack_deactivate( client );
-  
-  // unregister JACK ports
-  for(unsigned int i = 0; i < midiObservers.size(); i++)
-  {
-    unregisterMidiObserver( midiObservers.at(i) );
-  }
-  
-  LUPPP_NOTE("%s","Quit JACK graph.");
-  
-  // ping UI that JACK thread is finished shutting down
-  EventQuit e;
-  writeToGuiRingbuffer( &e );
+  jack_client_close( client );
+  LUPPP_NOTE("%s","Quit JACK.");
 }
 
 TrackOutput* Jack::getTrackOutput(int t)
@@ -268,7 +255,7 @@ void Jack::unregisterMidiObserver( MidiObserver* mo )
   */
   
   // unregister the observer
-  midiObservers.push_back( mo );
+  //midiObservers.push_back( mo );
 }
 
 

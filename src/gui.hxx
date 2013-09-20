@@ -24,6 +24,10 @@ class Gui
   public:
     Gui();
     int show();
+    
+    int quit();
+    bool askQuit();
+    
     GTrack* getTrack(int id);
     GMasterTrack* getMasterTrack(){return master;}
     

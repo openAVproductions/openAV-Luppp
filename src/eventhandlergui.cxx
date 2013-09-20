@@ -35,6 +35,14 @@ void handleGuiEvents()
       
       switch ( e->type() )
       {
+        case Event::QUIT: {
+          if ( availableRead >= sizeof(EventQuit) ) {
+            EventQuit ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventQuit) );
+            gui->quit();
+            LUPPP_NOTE("%s","GUI QUIT");
+          } break; }
+        
         case Event::MASTER_VOL: {
           if ( availableRead >= sizeof(EventMasterVol) ) {
             EventMasterVol ev(0);
