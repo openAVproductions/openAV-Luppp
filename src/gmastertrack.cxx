@@ -17,6 +17,14 @@ static void gmastertrack_volume_callback(Fl_Widget *w, void *data)
   writeToDspRingbuffer( &e );
 }
 
+static void gmastertrack_inputVolume_callback(Fl_Widget *w, void *data)
+{
+  Avtk::Volume* b = (Avtk::Volume*)w;
+  float v = b->value();
+  EventMasterInputVol e( v );
+  writeToDspRingbuffer( &e );
+}
+
 static void gmastertrack_sidchainKeyButton_callback(Fl_Widget *w, void *data)
 {
   Avtk::LightButton* b = (Avtk::LightButton*)w;
@@ -128,6 +136,8 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   
   inputVolume.value(0.5);
   inputVolume.setOrientationHorizontal();
+  
+  inputVolume.callback( gmastertrack_inputVolume_callback, 0 );
   
   tapTempo.callback( gmastertrack_button_callback, &ID );
   metronomeButton.callback( gmastertrack_button_callback, 0 );

@@ -38,6 +38,7 @@ namespace Event
   
   enum {
     MASTER_VOL,
+    MASTER_INPUT_VOL,
     MASTER_INPUT_TO,
     MASTER_INPUT_TO_ACTIVE,
     MASTER_RETURN,
@@ -122,11 +123,16 @@ class EventMasterVol : public EventBase
     int type() { return int(MASTER_VOL); }
     uint32_t size() { return sizeof(EventMasterVol); }
     float vol;
-    
-    EventMasterVol(float v)
-    {
-      vol = v;
-    }
+    EventMasterVol(float v = 0) : vol(v){}
+};
+
+class EventMasterInputVol : public EventBase
+{
+  public:
+    int type() { return int(MASTER_INPUT_VOL); }
+    uint32_t size() { return sizeof(EventMasterInputVol); }
+    float vol;
+    EventMasterInputVol(float v = 0) : vol(v){}
 };
 
 class EventMasterReturn : public EventBase

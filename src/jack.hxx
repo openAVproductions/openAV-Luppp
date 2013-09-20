@@ -59,7 +59,8 @@ class Jack
     /// writes MIDI messages to a MidiObserver's port
     void midiObserverWriteMIDI( int portIndex, unsigned char* data );
     
-    /// set the master volume
+    /// set the master i/o volume / sends
+    void inputVolume( float vol );
     void masterVolume( float vol );
     void inputTo(INPUT_TO to, float v);
     void inputToActive(INPUT_TO to, bool a);
@@ -89,8 +90,10 @@ class Jack
     // FX
     DBMeter* inputMeter;
     DBMeter* masterMeter;
-    float masterVol;
+    
     float inputVol;
+    float masterVol;
+    
     
     float inputToMixVol;
     float inputToSendVol;

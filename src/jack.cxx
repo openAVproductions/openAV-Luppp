@@ -347,6 +347,11 @@ void Jack::masterVolume(float vol)
   masterVol = vol;
 }
 
+void Jack::inputVolume(float v)
+{
+  inputVol = v * 2;
+}
+
 void Jack::inputTo(INPUT_TO to, float v)
 {
   switch ( to )
