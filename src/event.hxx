@@ -34,6 +34,7 @@ namespace Event
     INPUT_TO_SEND = 0,
     INPUT_TO_MIX,
     INPUT_TO_XSIDE,
+    INPUT_TO_SIDE_KEY,
   };
   
   enum {

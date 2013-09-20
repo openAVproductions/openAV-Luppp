@@ -293,14 +293,36 @@ int Jack::process (jack_nframes_t nframes)
   /// metro signal
   metronome->process( nframes, &buffers );
   
-  /// mix reverb & post-sidechain in
+  /// mix input, reverb & post-sidechain in
   for(unsigned int i = 0; i < buffers.nframes; i++)
   {
+    float input= buffers.audio[Buffers::MASTER_INPUT][i] * inputVol;
+    
     float L    = buffers.audio[Buffers::MASTER_OUT_L][i];
     float R    = buffers.audio[Buffers::MASTER_OUT_R][i];
     float returnL = buffers.audio[Buffers::MASTER_RETURN_L][i];
     float returnR = buffers.audio[Buffers::MASTER_RETURN_R][i];
     
+    if ( inputToMixEnable )
+    {
+      // if sending to mix, scale by volume *and* by XSide send
+      float tmp = input * inputToMixVol * (1-inputToXSideVol);
+      L += tmp;
+      R += tmp;
+    }
+    if ( inputToSendEnable )
+    {
+      // post-mix-send amount: hence * inputToMixVol
+      buffers.audio[Buffers::SEND][i] += input * inputToSendVol * inputToMixVol;
+    }
+    if ( inputToKeyEnable )
+    {
+      buffers.audio[Buffers::SIDECHAIN_KEY][i] += input;
+    }
+    
+    buffers.audio[Buffers::SIDECHAIN_SIGNAL][i] += input * inputToXSideVol;
+    
+    /// mixdown returns into master buffers
     buffers.audio[Buffers::MASTER_OUT_L][i] = (L + returnL) * masterVol;
     buffers.audio[Buffers::MASTER_OUT_R][i] = (R + returnR) * masterVol;
     
@@ -317,9 +339,10 @@ int Jack::process (jack_nframes_t nframes)
   
   if ( uiUpdateCounter > uiUpdateConstant )
   {
+    // instead of scaling whole buffer, just scale output by vol
     EventTrackSignalLevel e(-1, masterMeter->getLeftDB(), masterMeter->getRightDB() );
     writeToGuiRingbuffer( &e );
-    EventTrackSignalLevel e2(-2, inputMeter->getLeftDB(), inputMeter->getRightDB() );
+    EventTrackSignalLevel e2(-2, inputMeter->getLeftDB() * inputVol, inputMeter->getRightDB() * inputVol );
     writeToGuiRingbuffer( &e2 );
     
     uiUpdateCounter = 0;
@@ -368,7 +391,6 @@ void Jack::inputTo(INPUT_TO to, float v)
     default:
         break;
   }
-  printf("%f\n", v);
 }
 
 void Jack::inputToActive(INPUT_TO to, bool a)
@@ -381,8 +403,8 @@ void Jack::inputToActive(INPUT_TO to, bool a)
     case INPUT_TO_SEND:
         inputToSendEnable = a;
         break;
-    case INPUT_TO_XSIDE:
-        inputToXSideEnable = a;
+    case INPUT_TO_SIDE_KEY:
+        inputToKeyEnable = a;
         break;
     default:
         break;

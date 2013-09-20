@@ -98,9 +98,10 @@ class Jack
     float inputToMixVol;
     float inputToSendVol;
     float inputToXSideVol;
-    float inputToMixEnable;
-    float inputToSendEnable;
-    float inputToXSideEnable;
+    
+    bool  inputToKeyEnable;
+    bool  inputToMixEnable;
+    bool  inputToSendEnable;
     
     // JACK member variables
     bool clientActive;

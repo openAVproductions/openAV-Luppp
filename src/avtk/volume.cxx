@@ -143,7 +143,7 @@ void Volume::draw()
     
     // fader
     if ( orientationHorizontal )
-      cairo_rectangle(cr, x+2+(w-24)*(1-value()), y+5, 20, h-10);
+      cairo_rectangle(cr, x+2+(w-24)*(value()), y+5, 20, h-10);
     else
       cairo_rectangle(cr, x+5, y+2+(h-24)*(1-value()), w-10, 20);
     
@@ -191,8 +191,9 @@ int Volume::handle(int event)
           }
           
           float delta = (mouseClickedY - Fl::event_y() ) / float(h);
+          // handle the x / y swap, and the inverting of direction (mouseX / Y relative)
           if ( orientationHorizontal )
-            delta = (mouseClickedX - Fl::event_x() ) / float(w);
+            delta = ( Fl::event_x() - mouseClickedX ) / float(w);
           
           float valY = value();
           valY += delta;
@@ -200,7 +201,6 @@ int Volume::handle(int event)
           if ( valY > 1.0 ) valY = 1.0;
           if ( valY < 0.0 ) valY = 0.0;
           
-          //handle_drag( value + deltaY );
           set_value( valY );
           
           mouseClickedX = Fl::event_x();

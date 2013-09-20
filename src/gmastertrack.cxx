@@ -29,8 +29,8 @@ static void gmastertrack_sidchainKeyButton_callback(Fl_Widget *w, void *data)
 {
   Avtk::LightButton* b = (Avtk::LightButton*)w;
   b->value( !b->value() );
-  //EventMetronomeActive e = EventMetronomeActive( b->value() );
-  //writeToDspRingbuffer( &e );
+  EventMasterInputToActive e( INPUT_TO_SIDE_KEY, b->value() );
+  writeToDspRingbuffer( &e );
   printf("Key button\n");
 }
 
@@ -38,8 +38,8 @@ static void gmastertrack_mixButton_callback(Fl_Widget *w, void *data)
 {
   Avtk::LightButton* b = (Avtk::LightButton*)w;
   b->value( !b->value() );
-  //EventMetronomeActive e = EventMetronomeActive( b->value() );
-  //writeToDspRingbuffer( &e );
+  EventMasterInputToActive e( INPUT_TO_MIX, b->value() );
+  writeToDspRingbuffer( &e );
   printf("Mix button\n");
 }
 
@@ -47,8 +47,8 @@ static void gmastertrack_sendButton_callback(Fl_Widget *w, void *data)
 {
   Avtk::LightButton* b = (Avtk::LightButton*)w;
   b->value( !b->value() );
-  //EventMetronomeActive e = EventMetronomeActive( b->value() );
-  //writeToDspRingbuffer( &e );
+  EventMasterInputToActive e( INPUT_TO_SEND, b->value() );
+  writeToDspRingbuffer( &e );
   printf("Send button\n");
 
 }
