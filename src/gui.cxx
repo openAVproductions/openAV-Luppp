@@ -31,8 +31,6 @@ static void signalChecker(void*)
   if ( signalHanlderInt )
   {
     // Luppp recieved either a SIGTERM or SIGINT: quit gracefully
-    jack->quit();
-    LUPPP_NOTE("%s %i %s","Recieved signal ", signalHanlderInt, ": quitting!");
     gui->quit();
   }
   else
@@ -46,15 +44,11 @@ void close_cb(Fl_Widget*o, void*)
   if ( (Fl::event() == FL_KEYDOWN || Fl::event() == FL_SHORTCUT) && Fl::event_key() == FL_Escape)
   {
     // on excape, as about quitting
-    bool quit = gui->askQuit();
-    if ( quit )
-    {
-      o->hide();
-    }
+    gui->askQuit();
   }
   else
   {
-    o->hide();
+    gui->quit();
   }
 }
 static void gui_static_read_rb(void* inst)
@@ -215,43 +209,16 @@ int Gui::show()
 
 int Gui::quit()
 {
+  jack->quit();
   window.hide();
-  
-  return 0;
+  exit(0);
 }
 
-// return 0 == ignore
-// return 1 == quit
-bool Gui::askQuit()
+void Gui::askQuit()
 {
-  int choice = fl_choice("Really Quit?","Cancel","Just Quit","Save & Quit",0);
-  //cout << choice << endl;
-  if ( choice == 2 ) // SAVE & QUIT
+  int quit = fl_choice("Really Quit?","Cancel","Quit",0);
+  if ( quit ) // JUST QUIT
   {
-    const char* name = fl_input( "Save session as", gui->getDiskWriter()->getLastSaveName().c_str() );
-    if ( name )
-    {
-      cout << "Save clicked, name = " << name << endl;
-      gui->getDiskWriter()->initialize( getenv("HOME"), name );
-      EventStateSave e;
-      writeToDspRingbuffer( &e );
-      
-      // mark "quit on finish save" flag in GUI
-      return false;
-    }
-    else
-    {
-      return true;
-    }
-  }
-  else if ( choice == 1 ) // JUST QUIT
-  {
-    cout << "GUI just quit " << endl;
-    jack->quit();
-    return true;
-  }
-  else
-  {
-    return false;
+    gui->quit();
   }
 }

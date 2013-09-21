@@ -26,7 +26,7 @@ class Gui
     int show();
     
     int quit();
-    bool askQuit();
+    void askQuit();
     
     GTrack* getTrack(int id);
     GMasterTrack* getMasterTrack(){return master;}
