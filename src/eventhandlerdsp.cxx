@@ -194,7 +194,7 @@ void handleDspEvents()
           if ( availableRead >= sizeof(EventRequestSaveBuffer) ) {
             EventRequestSaveBuffer ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventRequestSaveBuffer) );
-            cout << "Save buffer sent with t s ab* " << ev.track << " " << ev.scene << " " << ev.ab << endl;
+            //cout << "Save buffer sent with t s ab* " << ev.track << " " << ev.scene << " " << ev.ab << endl;
             jack->getLooper( ev.track )->getClip(ev.scene)->recieveSaveBuffer( ev.ab );
           } break; }
         

@@ -82,7 +82,7 @@ void DiskReader::loadSample( int track, int scene, string path )
       }
       else
       {
-        cout << "Wanring: sample.cfg has no entry for beats." << endl;
+        cout << "Warning: sample.cfg has no entry for beats." << endl;
       }
       
       cJSON_Delete( sampleJson );
@@ -160,7 +160,7 @@ void DiskReader::readMaster()
     // bpm
     { 
       cJSON* bpm = cJSON_GetObjectItem( master, "bpm");
-      cout << "Session: BPM " << bpm->valuedouble << " int " << bpm->valueint << endl; 
+      LUPPP_NOTE("%s %i","Session: BPM ",bpm->valueint); 
       
       EventTimeBPM e( bpm->valuedouble );
       writeToDspRingbuffer( &e );
@@ -240,7 +240,7 @@ void DiskReader::readScenes(int t, cJSON* track)
         stringstream sampleFilePath;
         sampleFilePath << sessionPath << "/samples/" << clip->valuestring;
 #ifdef DEBUG_STATE
-    cout << "clip t " << t << " s " << s << " path " << sampleFilePath.str() << endl;
+        //LUPPP_NOTE << "clip t " << t << " s " << s << " path " << sampleFilePath.str() << endl;
 #endif
         // load it, checking for sample.cfg, and using metadata if there
         loadSample( t, s, sampleFilePath.str() );

@@ -122,7 +122,7 @@ void LooperClip::setRequestedBuffer( AudioBuffer* ab )
   
   _buffer = ab;
   
-  cout << *_buffer << endl;
+  //cout << *_buffer << endl;
   
   _newBufferInTransit = false;
 }

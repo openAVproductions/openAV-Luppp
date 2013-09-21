@@ -73,7 +73,7 @@ void AkaiAPC::trackSend(int t, int send, float v)
   }
   else
   {
-    cout << "AkaiAPC::trackSend() unknown send!" << endl;
+    //cout << "AkaiAPC::trackSend() unknown send!" << endl;
   }
   
   jack->midiObserverWriteMIDI( _port,  &data[0] );
@@ -142,7 +142,9 @@ void AkaiAPC::volume(int t, float f)
 
 void AkaiAPC::noteOn( int track, int note, int vel )
 {
+#ifdef DEBUG_CONTROLLER
   printf("apc noteOn: t = %i, n = %i, vel = %i\n", track, note, vel);
+#endif
   if ( note >= 53 && note <= 57 )
   {
     if ( shiftPressed )
@@ -201,7 +203,9 @@ void AkaiAPC::noteOn( int track, int note, int vel )
 
 void AkaiAPC::noteOff( int track, int note, int vel )
 {
+#ifdef DEBUG_CONTROLLER
   printf("apc noteOff: t = %i, n = %i, vel = %i\n", track, note, vel);
+#endif
   if ( note >= 53 && note <= 57 )
   {
     jack->getGridLogic()->released( track, note - 53 );
@@ -289,12 +293,12 @@ void AkaiAPC::ccChange( int track, int cc, float value )
       case 64: { // FootSwitch 1
           if ( value > 0.5 )
           {
-            printf("footpedal press %i, %i\n", footpedalTrack, footpedalScene );
+            //printf("footpedal press %i, %i\n", footpedalTrack, footpedalScene );
             jack->getGridLogic()->pressed( footpedalTrack, footpedalScene );
           }
           else
           {
-            printf("footpedal release %i, %i\n", footpedalTrack, footpedalScene );
+            //printf("footpedal release %i, %i\n", footpedalTrack, footpedalScene );
             jack->getGridLogic()->released( footpedalTrack, footpedalScene );
           } break; }
       case 67:  { // FootSwitch 2

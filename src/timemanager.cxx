@@ -38,7 +38,9 @@ int TimeManager::getFpb()
 
 void TimeManager::setBpm(float bpm)
 {
+#ifdef DEBUG_TIME
   cout << "setBpm() " << bpm << endl;
+#endif
   setFpb( samplerate / bpm * 60 );
 }
 
