@@ -26,10 +26,14 @@ class DiskReader
     DiskReader();
     
     /// loads a sample into a new AudioBuffer, returning the buffer
-    void loadSample( int track, int scene, std::string path );
+    int loadSample( int track, int scene, std::string path );
     
     /// reads a session from disk, parsing and restoring state
-    void readSession( std::string path );
+    int readSession( std::string path );
+    
+#ifdef BUILD_TESTS
+    int runTests();
+#endif
   
   private:
     cJSON* sessionJson;
@@ -38,10 +42,9 @@ class DiskReader
     std::string sessionPath;
     
     // convinience functions
-    void readTracks();
-    void readMaster();
-    void readScenes(int t, cJSON* track);
-    
+    int readTracks();
+    int readMaster();
+    int readScenes(int t, cJSON* track);
 };
 
 #endif // LUPPP_DISK_READER_H

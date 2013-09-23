@@ -69,6 +69,7 @@ int main(int argc, char** argv)
     jack = new Jack();
     
     // test offline functionality
+    testResult += gui->getDiskReader()->runTests();
     testResult += gui->getDiskWriter()->runTests();
     
     // test realtime functionality

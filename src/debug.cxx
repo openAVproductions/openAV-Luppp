@@ -7,7 +7,7 @@
 void luppp_debug( int warnLevel, const char* name, const char* file, const char* func, int line,
                   const char* format, ... )
 {
-  if ( warnLevel == DEBUG_LEVEL_KILL )
+  if ( warnLevel == DEBUG_LEVEL_ERROR )
   {
     printf( "[\033[1;31m%s\033[0m] %s:%i: ", NAME, func, line );
   }

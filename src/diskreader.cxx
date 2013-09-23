@@ -8,6 +8,7 @@
 #include <libgen.h>
 #include <sys/stat.h>
 
+#include "config.hxx"
 #include "gui.hxx"
 #include "event.hxx"
 #include "audiobuffer.hxx"
@@ -25,9 +26,8 @@ DiskReader::DiskReader()
 {
 };
 
-void DiskReader::loadSample( int track, int scene, string path )
+int DiskReader::loadSample( int track, int scene, string path )
 {
-  
   /// load the sample
   SndfileHandle infile( path, SFM_READ );
   std::vector<float> buf( infile.frames() );
@@ -93,8 +93,8 @@ void DiskReader::loadSample( int track, int scene, string path )
       
       cJSON* audioJson = cJSON_Parse( sampleString );
       if (!audioJson) {
-        printf("Error in Sample JSON before: [%s]\n",cJSON_GetErrorPtr());
-        return;
+        LUPPP_ERROR("%s %s","Error in Sample JSON before: ", cJSON_GetErrorPtr() );
+        return LUPPP_RETURN_ERROR;
       }
       
       // retrieve sample metadata from sample.cfg using filename as key
@@ -121,6 +121,7 @@ void DiskReader::loadSample( int track, int scene, string path )
     else
     {
       LUPPP_WARN("%s %s","DiskReader::loadSample() empty or no sample.cfg found at ",base.str().c_str() );
+      return LUPPP_RETURN_WARNING;
     }
     
     free( basePath );
@@ -130,9 +131,11 @@ void DiskReader::loadSample( int track, int scene, string path )
     writeToDspRingbuffer( &e );
   }
   
+  return LUPPP_RETURN_OK;
+  
 }
 
-void DiskReader::readSession( std::string path )
+int DiskReader::readSession( std::string path )
 {
   cout << "DiskReader::readSession() " << path << endl;
   sessionPath = path;
@@ -157,21 +160,23 @@ void DiskReader::readSession( std::string path )
   // create cJSON nodes from strings
   sessionJson = cJSON_Parse( sessionString );
   if (!sessionJson) {
-    LUPPP_WARN("%s %s", "Error in Session JSON before: ", cJSON_GetErrorPtr() );
-    return;
+    LUPPP_ERROR("%s %s", "Error in Session JSON before: ", cJSON_GetErrorPtr() );
+    return LUPPP_RETURN_ERROR;
   }
   
   
-  readTracks();
+  int tr = readTracks();
   
-  readMaster();
+  int mr = readMaster();
   
   // cleanup
   cJSON_Delete( sessionJson );
   free ( sessionString );
+  
+  return LUPPP_RETURN_OK;
 }
 
-void DiskReader::readMaster()
+int DiskReader::readMaster()
 {
   cJSON* master = cJSON_GetObjectItem( sessionJson, "master");
   if ( master )
@@ -233,16 +238,18 @@ void DiskReader::readMaster()
       }
     }
     
-    
-    
-    
+  }
+  else
+  {
+    LUPPP_ERROR("%s", "Error getting master from JSON" );
+    return LUPPP_RETURN_ERROR;
   }
   
-  
+  return LUPPP_RETURN_OK;
 }
 
 
-void DiskReader::readScenes(int t, cJSON* track)
+int DiskReader::readScenes(int t, cJSON* track)
 {
   cJSON* clips = cJSON_GetObjectItem( track, "clips");
   if ( clips )
@@ -266,11 +273,12 @@ void DiskReader::readScenes(int t, cJSON* track)
       }
     
     } // nClips loop
+  }
   
-  } 
+  return LUPPP_RETURN_OK;
 }
 
-void DiskReader::readTracks()
+int DiskReader::readTracks()
 {
   cJSON* tracks = cJSON_GetObjectItem( sessionJson, "tracks");
   if ( tracks )
@@ -307,10 +315,11 @@ void DiskReader::readTracks()
       }
       
     } // nTracks loop
-    
   }
   else
   {
-    cout << "DiskReader: Error getting clip" << endl;
+    LUPPP_ERROR("%s", "Error getting clip" );
+    return LUPPP_RETURN_ERROR;
   }
+  return LUPPP_RETURN_OK;
 }

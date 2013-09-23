@@ -1,0 +1,76 @@
+{
+	"session":	"lupppTest",
+	"version_major":	1,
+	"version_minor":	0,
+	"version_patch":	0,
+	"master":	{
+		"fader":	0.780000,
+		"bpm":	120,
+		"sceneNames":	["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+	},
+	"tracks":	[{
+			"ID":	0,
+			"name":	"Track 1",
+			"fader":	0.780000,
+			"side":	0,
+			"post":	0,
+			"reverb":	0,
+			"clips":	["", "", "", "", "", "", "", "", "", ""]
+		}, {
+			"ID":	1,
+			"name":	"Track 2",
+			"fader":	0.780000,
+			"side":	0,
+			"post":	0,
+			"reverb":	0,
+			"clips":	["", "", "", "", "", "", "", "", "", ""]
+		}, {
+			"ID":	2,
+			"name":	"Track 3",
+			"fader":	0.780000,
+			"side":	0,
+			"post":	0,
+			"reverb":	0,
+			"clips":	["", "", "", "", "", "", "", "", "", ""]
+		}, {
+			"ID":	3,
+			"name":	"Track 4",
+			"fader":	0.780000,
+			"side":	0,
+			"post":	0,
+			"reverb":	0,
+			"clips":	["", "", "", "", "", "", "", "", "", ""]
+		}, {
+			"ID":	4,
+			"name":	"Track 5",
+			"fader":	0.780000,
+			"side":	0,
+			"post":	0,
+			"reverb":	0,
+			"clips":	["", "", "", "", "", "", "", "", "", ""]
+		}, {
+			"ID":	5,
+			"name":	"Track 6",
+			"fader":	0.780000,
+			"side":	0,
+			"post":	0,
+			"reverb":	0,
+			"clips":	["", "", "", "", "", "", "", "", "", ""]
+		}, {
+			"ID":	6,
+			"name":	"Track 7",
+			"fader":	0.780000,
+			"side":	0,
+			"post":	0,
+			"reverb":	0,
+			"clips":	["", "", "", "", "", "", "", "", "", ""]
+		}, {
+			"ID":	7,
+			"name":	"Track 8",
+			"fader":	0.780000,
+			"side":	0,
+			"post":	0,
+			"reverb":	0,
+			"clips":	["", "", "", "", "", "", "", "", "", ""]
+		}]
+}

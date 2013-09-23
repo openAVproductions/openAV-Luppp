@@ -10,6 +10,9 @@ trap 'err_handle' ERR
 
 set -e
 
+# setup environment: Copy material for tests to /tmp
+cp -r ../src/tests/lupppTestMaterial /tmp
+
 cmake -DBUILD_TESTS=1 ../
 
 make -j 2
