@@ -79,6 +79,8 @@ namespace Event
     LOOPER_REQUEST_BUFFER,
     DEALLOCATE_BUFFER,
     
+    SAMPLERATE,
+    
     QUIT,
   };
 };
@@ -102,6 +104,15 @@ class EventQuit : public EventBase
     int type() { return int(QUIT); }
     uint32_t size() { return sizeof(EventQuit); }
     EventQuit(){}
+};
+
+class EventSamplerate : public EventBase
+{
+  public:
+    int type() { return int(SAMPLERATE); }
+    uint32_t size() { return sizeof(EventSamplerate); }
+    int samplerate;
+    EventSamplerate(int sr = 0): samplerate(sr){}
 };
 
 class EventMasterInputTo : public EventBase

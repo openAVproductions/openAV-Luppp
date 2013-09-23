@@ -18,6 +18,10 @@ pkg_check_modules(SNDFILE sndfile)
 include_directories( ${SNDFILE_INCLUDE_DIRS}  )
 link_directories   ( ${SNDFILE_LIBRARY_DIRS}  )
 
+pkg_check_modules(SAMPLERATE samplerate)
+include_directories( ${SAMPLERATE_INCLUDE_DIRS}  )
+link_directories   ( ${SAMPLERATE_LIBRARY_DIRS}  )
+
 # Check build type, adding coverage flags if needed
 IF(BUILD_TESTS)
   ADD_DEFINITIONS(-DBUILD_TESTS)
@@ -46,6 +50,7 @@ target_link_libraries( luppp ${JACK_LIBRARIES}     )
 target_link_libraries( luppp ${NTK_LIBRARIES}      )
 target_link_libraries( luppp ${CAIRO_LIBRARIES}    )
 target_link_libraries( luppp ${SNDFILE_LIBRARIES}  )
+target_link_libraries(luppp ${SAMPLERATE_LIBRARIES})
 
 # Check build type, linking with gcov for code analysis if needed
 IF(BUILD_TESTS)

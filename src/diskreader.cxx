@@ -15,6 +15,7 @@
 #include "gmastertrack.hxx"
 
 #include <sndfile.hh>
+#include <samplerate.h>
 
 extern Gui* gui;
 
@@ -32,6 +33,40 @@ void DiskReader::loadSample( int track, int scene, string path )
   
   std::vector<float> buf( infile.frames() );
   infile.read( &buf[0] , infile.frames() );
+  
+  
+  
+  
+  // resample?
+  if ( infile.samplerate() != gui->samplerate )
+  {
+    LUPPP_NOTE("%s%i%s%i", "Resampling from ", infile.samplerate(), " to ", gui->samplerate);
+    
+    float resampleRatio = infile.samplerate() / gui->samplerate;
+    std::vector<float> resampled( infile.frames() * resampleRatio );
+    
+    SRC_DATA data;
+    data.data_in  = &buf[0];
+    data.data_out = &resampled[0];
+    
+    data.input_frames = infile.frames();
+    data.output_frames = infile.frames() * resampleRatio;
+    
+    data.end_of_input = 0;
+    data.src_ratio = resampleRatio;
+    
+    int ret = src_simple ( &data, SRC_SINC_BEST_QUALITY, 1 );
+    
+    LUPPP_NOTE("%s%i%s%i", "Resampling finished, used ", data.input_frames_used, " of ", infile.frames());
+    
+    // exchange buffers, so we now use the resampled audio
+    buf.swap( resampled );
+  }
+  
+  
+  
+  
+  
   
   // set the data
   ab->setAudioFrames( infile.frames() );

@@ -37,6 +37,9 @@ Jack::Jack() :
   buffers.nframes = jack_get_buffer_size( client );
   buffers.samplerate = jack_get_sample_rate( client );
   
+  EventSamplerate e(buffers.samplerate);
+  writeToGuiRingbuffer( &e );
+  
   uiUpdateCounter  = buffers.samplerate / 30;
   uiUpdateConstant = buffers.samplerate / 30;
   

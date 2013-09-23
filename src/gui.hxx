@@ -36,6 +36,8 @@ class Gui
     
     void selectLoadSample( int track, int clip );
   
+    int samplerate;
+  
   private:
     Fl_Double_Window    window;
     Fl_Box*             box;

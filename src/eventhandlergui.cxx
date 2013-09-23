@@ -39,8 +39,16 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventQuit) ) {
             EventQuit ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventQuit) );
-            gui->quit();
             LUPPP_NOTE("%s","GUI QUIT");
+            gui->quit();
+          } break; }
+        
+        case Event::SAMPLERATE: {
+          if ( availableRead >= sizeof(EventSamplerate) ) {
+            EventSamplerate ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventSamplerate) );
+            gui->samplerate = ev.samplerate;
+            LUPPP_NOTE("%s %i","Gui Samplerate: ", gui->samplerate);
           } break; }
         
         case Event::MASTER_VOL: {
