@@ -18,7 +18,6 @@ class LupppGUI : public Controller
     
     void trackSend(int t, int send, float r);
     
-    
     void bpm(int bpm);
     void tapTempo( bool b );
     

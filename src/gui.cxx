@@ -112,7 +112,7 @@ static void gui_header_callback(Fl_Widget *w, void *data)
     if ( name )
     {
       gui->getDiskWriter()->initialize( getenv("HOME"), name );
-      LUPPP_NOTE("%s %s","Saving session as ", name.c_str() );
+      LUPPP_NOTE("%s %s","Saving session as ", name );
       EventStateSave e;
       writeToDspRingbuffer( &e );
     }

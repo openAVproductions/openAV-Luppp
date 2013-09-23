@@ -34,6 +34,16 @@ float TrackOutput::getMaster()
 }
 
 
+bool TrackOutput::recordArm()
+{
+  return _recordArm;
+}
+
+void TrackOutput::recordArm(bool r)
+{
+  _recordArm = r;
+}
+
 void TrackOutput::setSend( int send, float value )
 {
   switch( send )

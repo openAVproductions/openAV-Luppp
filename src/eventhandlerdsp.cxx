@@ -173,6 +173,14 @@ void handleDspEvents()
             jack->getLogic()->trackVolume( ev.track, ev.vol );
             break; }
           }
+        
+        case Event::TRACK_RECORD_ARM: {
+          if ( availableRead >= sizeof(EventTrackRecordArm) ) {
+            EventTrackRecordArm ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackRecordArm) );
+            jack->getLogic()->trackRecordArm( ev.track, ev.recordArm );
+            break; }
+          }
           
         case Event::TRACK_SEND: {
           if ( availableRead >= sizeof(EventTrackSend) ) {

@@ -21,9 +21,10 @@ void LupppGUI::masterVolume(float f)
   writeToGuiRingbuffer( &e );
 }
 
-void LupppGUI::recordArm(int t, bool enabled)
+void LupppGUI::recordArm(int t, bool r)
 {
-  
+  EventTrackRecordArm e( t, r );
+  writeToGuiRingbuffer( &e );
 }
 
 void LupppGUI::trackSend(int t, int send, float r)

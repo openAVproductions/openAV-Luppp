@@ -110,7 +110,15 @@ void handleGuiEvents()
             else
               gui->getTrack(ev.track)->getVolume()->fader( ev.vol );
           } break; }
-          
+        
+                
+        case Event::TRACK_RECORD_ARM: {
+          if ( availableRead >= sizeof(EventTrackRecordArm) ) {
+            EventTrackRecordArm ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTrackRecordArm) );
+            gui->getTrack(ev.track)->recordArm( ev.recordArm );
+            break; }
+          }
           
         case Event::TIME_BPM: {
           if ( availableRead >= sizeof(EventTimeBPM) ) {

@@ -59,6 +59,7 @@ namespace Event
     TRACK_SEND,
     TRACK_SIGNAL_LEVEL,
     TRACK_VOLUME,
+    TRACK_RECORD_ARM,
     
     FX_REVERB,
     
@@ -184,6 +185,23 @@ class EventTrackVol : public EventBase
     {
       track = t;
       vol = v;
+    }
+};
+
+class EventTrackRecordArm : public EventBase
+{
+  public:
+    int type() { return int(TRACK_RECORD_ARM); }
+    uint32_t size() { return sizeof(EventTrackRecordArm); }
+    
+    int track;
+    float recordArm;
+    
+    EventTrackRecordArm(){};
+    EventTrackRecordArm(int t, bool r)
+    {
+      track = t;
+      recordArm = r;
     }
 };
 
