@@ -49,8 +49,10 @@ class DiskWriter
     cJSON* session;
     cJSON* sample;
     
+    bool foldersCreated;
     std::string sessionName;
-    std::string sessionPath;
+    std::string sampleDir;
+    std::string sessionDir;
     
     std::vector<ClipData> clipData;
     

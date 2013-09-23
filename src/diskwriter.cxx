@@ -23,15 +23,41 @@ DiskWriter::DiskWriter()
   session = cJSON_CreateObject();
   sample  = cJSON_CreateObject();
   
-  sessionPath = getenv("HOME");
+  sessionDir = getenv("HOME");
   sessionName = "lupppSession";
-  
+  foldersCreated = false;
 };
 
 void DiskWriter::initialize(std::string path, std::string name )
 {
-  sessionPath = path;
   sessionName = name;
+  
+  // write session.luppp JSON node to <path>/<sessionName>.luppp
+  stringstream sessionDirStream;
+  sessionDirStream << path << "/" << sessionName;
+  sessionDir = sessionDirStream.str();
+  
+  int sessionDirError = mkdir( sessionDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
+  if ( sessionDirError )
+  {
+    // handle by using different filename?
+    LUPPP_WARN("%s","Error creating session directory");
+  }
+  
+  stringstream sampleDirStream;
+  sampleDirStream << sessionDir << "/samples";
+  sampleDir = sampleDirStream.str();
+  LUPPP_WARN("%s %s","Creating audio dir ", sampleDir.c_str() );
+  
+  int sampleDirError  = mkdir( sampleDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
+  
+  // FIXME: error check mkdir for error return
+  if ( sampleDirError )
+  {
+    LUPPP_WARN("%s","Error creating sample directory");
+  }
+  
+  foldersCreated = true;
 }
 
 std::string DiskWriter::getLastSaveName()
@@ -41,11 +67,17 @@ std::string DiskWriter::getLastSaveName()
 
 std::string DiskWriter::getLastSavePath()
 {
-  return sessionPath;
+  return sessionDir;
 }
 
 int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
 {
+  if ( !foldersCreated )
+  {
+    LUPPP_WARN("%s", "Session folders not created yet, while trying to write audioBuffers.");
+    return LUPPP_RETURN_ERROR;
+  }
+  
   // get the filename
   stringstream filename;
   filename << "t_" << track << "_s_" << scene << ".wav";
@@ -64,7 +96,7 @@ int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
   // FIXME: trim trailing  /  sessionPath from session path if its there
   
   stringstream path;
-  path << sessionPath << "/" << sessionName << "/samples/" << filename.str();
+  path << sampleDir << "/" << filename.str();
   
   SndfileHandle outfile( path.str(), SFM_WRITE, SF_FORMAT_WAV | SF_FORMAT_FLOAT, 1, 44100);
   cout << "Worker::writeSample() " << path.str() << " size: " << ab->getAudioFrames() << endl;
@@ -107,6 +139,12 @@ void DiskWriter::writeMaster()
 
 int DiskWriter::writeSession()
 {
+  if ( !foldersCreated )
+  {
+    LUPPP_WARN("%s", "Session folders not created yet, while trying to write session.");
+    return LUPPP_RETURN_ERROR;
+  }
+  
   // add session metadata
   cJSON_AddItemToObject  ( session, "session", cJSON_CreateString( sessionName.c_str() ));
   
@@ -165,34 +203,18 @@ int DiskWriter::writeSession()
   }
   
   
-  // write session.luppp JSON node to <path>/<sessionName>.luppp
-  stringstream sessionDir;
-  sessionDir << sessionPath << "/" << sessionName;
-  int sessionDirError = mkdir( sessionDir.str().c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
-  if ( sessionDirError )
-  {
-    // handle by using different filename?
-  }
-  
-  stringstream sampleDir;
-  sampleDir << sessionDir.str() << "/samples";
-  int sampleDirError  = mkdir( sampleDir.str().c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
-  
-  // FIXME: error check mkdir for error return
-  if ( sampleDirError ) {}
   
   stringstream sessionLuppp;
-  sessionLuppp << sessionDir.str() << "/session.luppp";
-  
+  sessionLuppp << sessionDir << "/session.luppp";
   //cout << "Session dir: " << sessionDir.str() << "\n" << "Sample dir : " << sampleDir.str() << endl;
   ofstream sessionFile;
   sessionFile.open ( sessionLuppp.str().c_str() );
   sessionFile << cJSON_Print( session );
   sessionFile.close();
   
-  // write the sample JSON node to <path>/samples/sample.cfg
+  // write the sample JSON node to <samplePath>/sample.cfg
   stringstream sampleConfig;
-  sampleConfig << sampleDir.str() << "/sample.cfg";
+  sampleConfig << sampleDir << "/sample.cfg";
   
   ofstream sampleFile;
   sampleFile.open ( sampleConfig.str().c_str() );
