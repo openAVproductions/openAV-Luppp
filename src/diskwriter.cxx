@@ -31,6 +31,7 @@ DiskWriter::DiskWriter()
 void DiskWriter::initialize(std::string path, std::string name )
 {
   sessionName = name;
+  sessionPath = path;
   
   // write session.luppp JSON node to <path>/<sessionName>.luppp
   stringstream sessionDirStream;
@@ -67,7 +68,7 @@ std::string DiskWriter::getLastSaveName()
 
 std::string DiskWriter::getLastSavePath()
 {
-  return sessionDir;
+  return sessionPath;
 }
 
 int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )

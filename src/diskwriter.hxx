@@ -51,6 +51,7 @@ class DiskWriter
     
     bool foldersCreated;
     std::string sessionName;
+    std::string sessionPath;
     std::string audioDir;
     std::string sessionDir;
     
