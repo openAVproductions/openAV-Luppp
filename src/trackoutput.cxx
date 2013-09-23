@@ -16,10 +16,15 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
   
   dbMeter = new DBMeter( jack->getSamplerate() );
   
-  _toReverb        = 0.0;
   _toMaster        = 0.8;
+  
+  _toReverb        = 0.0;
   _toSidechain     = 0.0;
   _toPostSidechain = 0.0;
+  
+  _toReverbActive        = 0;
+  _toSidechainActive     = 0;
+  _toPostSidechainActive = 0;
 }
 
 
@@ -44,6 +49,22 @@ void TrackOutput::recordArm(bool r)
   _recordArm = r;
 }
 
+void TrackOutput::setSendActive( int send, bool a )
+{
+  switch( send )
+  {
+    case SEND_REV:
+        _toReverbActive = a;
+        break;
+    case SEND_SIDE:
+        _toSidechainActive = a;
+        break;
+    case SEND_POST:
+        _toPostSidechainActive = a;
+        break;
+  }
+}
+
 void TrackOutput::setSend( int send, float value )
 {
   switch( send )
@@ -52,7 +73,8 @@ void TrackOutput::setSend( int send, float value )
         _toReverb = value;
         break;
     case SEND_SIDE:
-        _toSidechain = value;
+        // setSendActive() handles on/off for this send
+        //_toSidechain = value;
         break;
     case SEND_POST:
         _toPostSidechain = value;
@@ -100,15 +122,20 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
     masterL[i]       += tmp * _toMaster * (1-_toPostSidechain);
     masterR[i]       += tmp * _toMaster * (1-_toPostSidechain);
     
-    reverb[i]        += tmp * _toReverb * _toMaster;
-    postSidechain[i] += tmp * _toPostSidechain * _toMaster;
+    if ( _toReverbActive )
+      reverb[i]        += tmp * _toReverb * _toMaster;
+    
+    if ( _toPostSidechainActive )
+      postSidechain[i] += tmp * _toPostSidechain * _toMaster;
     
     // turning down an element in the mix should *NOT* influence sidechaining
-    sidechain[i]     += tmp * _toSidechain;
+    if ( _toSidechainActive )
+      sidechain[i]     += tmp;
     
   }
 }
 
 TrackOutput::~TrackOutput()
 {
+  delete dbMeter;
 }

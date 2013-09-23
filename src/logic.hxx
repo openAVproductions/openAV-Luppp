@@ -34,12 +34,13 @@ class Logic
     
     void masterReturn(int t, int send, float v);
     
-    void trackVolume(int t, float v);
-    void trackRecordArm(int t, bool v);
-    void trackSend(int t, int send, float v);
+    void trackVolume(int track, float volume);
+    void trackRecordArm(int track, bool armed);
+    void trackSendActive(int track, int send, bool active);
+    void trackSend(int track, int send, float value);
     
-    void looperUseAsTempo(int t, int s);
-    void looperClipLenght(int t, int s, int l);
+    void looperUseAsTempo(int track, int scene);
+    void looperClipLenght(int track, int scene, int lenght);
 };
 
 #endif // LUPPP_LOGIC_H

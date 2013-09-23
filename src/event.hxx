@@ -57,6 +57,7 @@ namespace Event
     GRID_LAUNCH_SCENE,
     
     TRACK_SEND,
+    TRACK_SEND_ACTIVE,
     TRACK_SIGNAL_LEVEL,
     TRACK_VOLUME,
     TRACK_RECORD_ARM,
@@ -300,6 +301,20 @@ class EventTrackSend : public EventBase
     
     EventTrackSend(){};
     EventTrackSend(int t, SEND_TYPE s, float v): track(t), send(s), value(v){}
+};
+
+class EventTrackSendActive : public EventBase
+{
+  public:
+    int type() { return int(TRACK_SEND_ACTIVE); }
+    uint32_t size() { return sizeof(EventTrackSendActive); }
+    
+    int track;
+    SEND_TYPE send;
+    bool active;
+    
+    EventTrackSendActive(){};
+    EventTrackSendActive(int t, SEND_TYPE s, bool a): track(t), send(s), active(a){}
 };
 
 class EventLooperState : public EventBase

@@ -92,6 +92,7 @@ void gtrack_post_cb(Fl_Widget *w, void *data)
   writeToDspRingbuffer( &e );
   printf("track %i side send %f\n", track->ID, ((Avtk::Dial*)w)->value() );
 }
+
 void gtrack_vol_cb(Fl_Widget *w, void *data)
 {
   GTrack* track = (GTrack*) data;
@@ -99,25 +100,25 @@ void gtrack_vol_cb(Fl_Widget *w, void *data)
   writeToDspRingbuffer( &e );
   printf("track %i vol %f\n", track->ID, ((Avtk::Dial*)w)->value() );
 }
+
+
 void gtrack_active_cb(Fl_Widget *w, void *data)
 {
   GTrack* track = (GTrack*) data;
   Avtk::LightButton* d = (Avtk::LightButton*)w;
   bool b = d->value();
   d->value( !b );
-  /*
   if ( b < 0.5 )
   {
-    EventTrackSend e( track->ID, SEND_SIDE, 1.0f );
+    EventTrackSendActive e( track->ID, SEND_REV, 1.0f );
     writeToDspRingbuffer( &e );
   }
   else
   {
-    EventTrackSend e( track->ID, SEND_SIDE, 0.0f );
+    EventTrackSendActive e( track->ID, SEND_REV, 0.0f );
     writeToDspRingbuffer( &e );
   }
-  printf("track %i post send %s\n", track->ID, b ? "true" : "false" );
-  */
+  printf("track %i reverb send %s\n", track->ID, b ? "true" : "false" );
 }
 void gtrack_record_cb(Fl_Widget *w, void *data)
 {

@@ -142,8 +142,6 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   tapTempo.callback( gmastertrack_button_callback, &ID );
   metronomeButton.callback( gmastertrack_button_callback, 0 );
   
-  
-  
   tempoDial.callback( gmastertrack_tempoDial_callback, 0 );
   
   inputToSend.setColor( 0, 1.0, 0 );
@@ -165,7 +163,7 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   
   for(int i = 0; i < 4; i++)
   {
-    beatLights[i]   = new Avtk::LightButton( x + 11, y + 426 + 41 * i, 38, 38, "" );
+    beatLights[i]   = new Avtk::LightButton( x + 11, y + 427 + 41 * i, 38, 38, "" );
   }
   beatLights[0]->setColor( 1.0, 0.0 , 0.0 );
   beatLights[1]->setColor( 1.0, 0.48, 0.0 );

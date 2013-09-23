@@ -12,6 +12,10 @@
 #include "eventhandler.hxx"
 #include "dsp/dsp_dbmeter.hxx"
 
+/** TrackOutput
+ *  This class is used to mix down each track, and produce output: that output
+ *  exists in the master outputs and send buffers.
+**/
 class TrackOutput : public AudioProcessor
 {
   public:
@@ -27,6 +31,7 @@ class TrackOutput : public AudioProcessor
     
     /// set send
     void setSend( int send, float value );
+    void setSendActive( int send, bool active );
     
     /// copies the track output to master buffer, sidechain & post-side buffer
     void process(unsigned int nframes, Buffers* buffers);
@@ -43,6 +48,10 @@ class TrackOutput : public AudioProcessor
     float _toReverb;
     float _toSidechain;
     float _toPostSidechain;
+    
+    bool _toReverbActive;
+    bool _toSidechainActive;
+    bool _toPostSidechainActive;
     
     /// Pointer to "previous" processor: the graph is backwards
     AudioProcessor* previousInChain;

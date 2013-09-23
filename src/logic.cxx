@@ -56,6 +56,11 @@ void Logic::trackRecordArm(int t, bool v)
 }
 
 
+void Logic::trackSendActive(int t, int s, bool v)
+{
+  jack->getTrackOutput( t )->setSendActive( s, v );
+}
+
 void Logic::trackSend(int t, int send, float v)
 {
 #ifdef DEBUG_LOGIC

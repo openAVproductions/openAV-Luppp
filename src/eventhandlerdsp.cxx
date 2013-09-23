@@ -182,6 +182,13 @@ void handleDspEvents()
             break; }
           }
           
+        case Event::TRACK_SEND_ACTIVE: {
+          if ( availableRead >= sizeof(EventTrackSendActive) ) {
+            EventTrackSendActive ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackSendActive) );
+            jack->getLogic()->trackSendActive( ev.track, ev.send, ev.active );
+          } break; }
+        
         case Event::TRACK_SEND: {
           if ( availableRead >= sizeof(EventTrackSend) ) {
             EventTrackSend ev;
