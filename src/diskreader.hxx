@@ -32,7 +32,7 @@ class DiskReader
     void readSession( std::string path );
   
   private:
-    cJSON* session;
+    cJSON* sessionJson;
     
     std::string sessionName;
     std::string sessionPath;

@@ -44,7 +44,7 @@ void DiskReader::loadSample( int track, int scene, string path )
   {
     char* basePath = strdup( path.c_str() );
     stringstream base;
-    base << dirname( basePath ) << "/sample.cfg";
+    base << dirname( basePath ) << "/audio.cfg";
     
     // open sample, read all
 #ifdef DEBUG_STATE
@@ -82,7 +82,7 @@ void DiskReader::loadSample( int track, int scene, string path )
       }
       else
       {
-        cout << "Warning: sample.cfg has no entry for beats." << endl;
+        cout << "Warning: audio.cfg has no entry for beats." << endl;
       }
       
       cJSON_Delete( sampleJson );
@@ -129,17 +129,12 @@ void DiskReader::readSession( std::string path )
   char *sessionString = new char[file_length];
   file.read(sessionString, file_length);
   
-
-  
   // create cJSON nodes from strings
-  session = cJSON_Parse( sessionString );
-  if (!session) {
-    printf("Error in Session JSON before: [%s]\n",cJSON_GetErrorPtr());
+  sessionJson = cJSON_Parse( sessionString );
+  if (!sessionJson) {
+    LUPPP_WARN("%s %s", "Error in Session JSON before: ", cJSON_GetErrorPtr() );
     return;
   }
-  
-  //cout << "session: " << cJSON_Print( session ) << endl;
-  //cout << "sample:  " << cJSON_Print( sample  ) << endl;
   
   
   readTracks();
@@ -147,14 +142,13 @@ void DiskReader::readSession( std::string path )
   readMaster();
   
   // cleanup
-  cJSON_Delete( session );
+  cJSON_Delete( sessionJson );
   free ( sessionString );
-  
 }
 
 void DiskReader::readMaster()
 {
-  cJSON* master = cJSON_GetObjectItem( session, "master");
+  cJSON* master = cJSON_GetObjectItem( sessionJson, "master");
   if ( master )
   {
     // bpm
@@ -238,9 +232,9 @@ void DiskReader::readScenes(int t, cJSON* track)
       if ( !strcmp(clip->valuestring, "") == 0 )
       {
         stringstream sampleFilePath;
-        sampleFilePath << sessionPath << "/samples/" << clip->valuestring;
+        sampleFilePath << sessionPath << "/audio/" << clip->valuestring;
 #ifdef DEBUG_STATE
-        //LUPPP_NOTE << "clip t " << t << " s " << s << " path " << sampleFilePath.str() << endl;
+        LUPPP_NOTE << "clip t " << t << " s " << s << " path " << sampleFilePath.str() << endl;
 #endif
         // load it, checking for sample.cfg, and using metadata if there
         loadSample( t, s, sampleFilePath.str() );
@@ -253,7 +247,7 @@ void DiskReader::readScenes(int t, cJSON* track)
 
 void DiskReader::readTracks()
 {
-  cJSON* tracks = cJSON_GetObjectItem( session, "tracks");
+  cJSON* tracks = cJSON_GetObjectItem( sessionJson, "tracks");
   if ( tracks )
   {
     int nTracks = cJSON_GetArraySize( tracks );
