@@ -27,17 +27,14 @@ DiskReader::DiskReader()
 
 void DiskReader::loadSample( int track, int scene, string path )
 {
+  
+  /// load the sample
   SndfileHandle infile( path, SFM_READ );
-  
-  AudioBuffer* ab = new AudioBuffer();
-  
   std::vector<float> buf( infile.frames() );
   infile.read( &buf[0] , infile.frames() );
   
   
-  
-  
-  // resample?
+  /// resample?
   if ( infile.samplerate() != gui->samplerate )
   {
     LUPPP_NOTE("%s%i%s%i", "Resampling from ", infile.samplerate(), " to ", gui->samplerate);
@@ -59,20 +56,17 @@ void DiskReader::loadSample( int track, int scene, string path )
     
     LUPPP_NOTE("%s%i%s%i", "Resampling finished, from ", data.input_frames_used, " to ", data.output_frames_gen );
     
-    // exchange buffers, so we now use the resampled audio
+    /// exchange buffers, so buf contains the resampled audio
     buf.swap( resampled );
   }
   
   
-  
-  
-  
-  
-  // set the data
+  /// create buffer, and set the data
+  AudioBuffer* ab = new AudioBuffer();
   ab->setAudioFrames( buf.size() );
   ab->nonRtSetSample( buf );
   
-  cout << "DiskReader::loadSample() " << path << " size: " << buf.size() << endl;
+  //cout << "DiskReader::loadSample() " << path << endl;
   
   
   if ( infile.frames() > 0 )
@@ -81,7 +75,7 @@ void DiskReader::loadSample( int track, int scene, string path )
     stringstream base;
     base << dirname( basePath ) << "/audio.cfg";
     
-    // open sample, read all
+    /// open audio.cfg, reading whole file
 #ifdef DEBUG_STATE
     cout << "loading sample metadata file " << base.str().c_str() << endl;
 #endif
@@ -97,8 +91,8 @@ void DiskReader::loadSample( int track, int scene, string path )
       //cout << "Sample file:" << endl << sampleString << endl;
       //cout << "Sample file (parsed):" << endl << cJSON_Parse( sampleString ) << endl;
       
-      cJSON* sampleJson = cJSON_Parse( sampleString );
-      if (!sampleJson) {
+      cJSON* audioJson = cJSON_Parse( sampleString );
+      if (!audioJson) {
         printf("Error in Sample JSON before: [%s]\n",cJSON_GetErrorPtr());
         return;
       }
@@ -108,7 +102,7 @@ void DiskReader::loadSample( int track, int scene, string path )
       char* baseName = basename( tmp );
       //cout << "tmp " << tmp << " baseName " << baseName << endl;
       
-      cJSON* sample = cJSON_GetObjectItem( sampleJson, baseName );
+      cJSON* sample = cJSON_GetObjectItem( audioJson, baseName );
       if ( sample )
       {
         cJSON* beats = cJSON_GetObjectItem( sample, "beats" );
@@ -120,7 +114,7 @@ void DiskReader::loadSample( int track, int scene, string path )
         cout << "Warning: audio.cfg has no entry for beats." << endl;
       }
       
-      cJSON_Delete( sampleJson );
+      cJSON_Delete( audioJson );
       free ( sampleString  );
       free ( tmp );
     }
