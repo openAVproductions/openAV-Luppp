@@ -46,12 +46,12 @@ class DiskWriter
 #endif
   
   private:
-    cJSON* session;
-    cJSON* sample;
+    cJSON* sessionJson;
+    cJSON* audioJson;
     
     bool foldersCreated;
     std::string sessionName;
-    std::string sampleDir;
+    std::string audioDir;
     std::string sessionDir;
     
     std::vector<ClipData> clipData;

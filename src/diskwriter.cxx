@@ -20,8 +20,8 @@ using namespace std;
 
 DiskWriter::DiskWriter()
 {
-  session = cJSON_CreateObject();
-  sample  = cJSON_CreateObject();
+  sessionJson = cJSON_CreateObject();
+  audioJson   = cJSON_CreateObject();
   
   sessionDir = getenv("HOME");
   sessionName = "lupppSession";
@@ -44,15 +44,15 @@ void DiskWriter::initialize(std::string path, std::string name )
     LUPPP_WARN("%s","Error creating session directory");
   }
   
-  stringstream sampleDirStream;
-  sampleDirStream << sessionDir << "/samples";
-  sampleDir = sampleDirStream.str();
-  LUPPP_WARN("%s %s","Creating audio dir ", sampleDir.c_str() );
+  stringstream audioDirStream;
+  audioDirStream << sessionDir << "/audio";
+  audioDir = audioDirStream.str();
+  LUPPP_NOTE("%s %s","Creating audio dir ", audioDir.c_str() );
   
-  int sampleDirError  = mkdir( sampleDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
+  int audioDirError  = mkdir( audioDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
   
   // FIXME: error check mkdir for error return
-  if ( sampleDirError )
+  if ( audioDirError )
   {
     LUPPP_WARN("%s","Error creating sample directory");
   }
@@ -87,16 +87,16 @@ int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
   
   // add the AudioBuffer metadata to the sample JSON node
   cJSON* sampleClip = cJSON_CreateObject();
-  cJSON_AddItemToObject(sample, filename.str().c_str(), sampleClip );
+  cJSON_AddItemToObject(audioJson, filename.str().c_str(), sampleClip );
   cJSON_AddNumberToObject(sampleClip,"beats", ab->getBeats() );
   
-  // write the AudioBuffer contents to <path>/samples/  as  <name>.wav
+  // write the AudioBuffer contents to <path>/audio/  as  <name>.wav
   // or alternatively t_<track>_s_<scene>.wav
   
   // FIXME: trim trailing  /  sessionPath from session path if its there
   
   stringstream path;
-  path << sampleDir << "/" << filename.str();
+  path << audioDir << "/" << filename.str();
   
   SndfileHandle outfile( path.str(), SFM_WRITE, SF_FORMAT_WAV | SF_FORMAT_FLOAT, 1, 44100);
   cout << "Worker::writeSample() " << path.str() << " size: " << ab->getAudioFrames() << endl;
@@ -117,7 +117,7 @@ void DiskWriter::writeMaster()
 {
   // Master track stuff
   cJSON* masterTrack = cJSON_CreateObject();
-  cJSON_AddItemToObject(session, "master", masterTrack );
+  cJSON_AddItemToObject(sessionJson, "master", masterTrack );
   GMasterTrack* master = gui->getMasterTrack();
   
   cJSON_AddNumberToObject( masterTrack, "fader", master->getVolume()->value() );
@@ -146,11 +146,11 @@ int DiskWriter::writeSession()
   }
   
   // add session metadata
-  cJSON_AddItemToObject  ( session, "session", cJSON_CreateString( sessionName.c_str() ));
+  cJSON_AddItemToObject  ( sessionJson, "session", cJSON_CreateString( sessionName.c_str() ));
   
-  cJSON_AddNumberToObject( session, "version_major", 1 );
-  cJSON_AddNumberToObject( session, "version_minor", 0 );
-  cJSON_AddNumberToObject( session, "version_patch", 0 );
+  cJSON_AddNumberToObject( sessionJson, "version_major", 1 );
+  cJSON_AddNumberToObject( sessionJson, "version_minor", 0 );
+  cJSON_AddNumberToObject( sessionJson, "version_patch", 0 );
   
   
   writeMaster();
@@ -158,7 +158,7 @@ int DiskWriter::writeSession()
   
   // add JSON "tracks" array
   cJSON* trackArray = cJSON_CreateArray();
-  cJSON_AddItemToObject(session, "tracks", trackArray );
+  cJSON_AddItemToObject(sessionJson, "tracks", trackArray );
   
   // write tracks into JSON tracks array
   for(int t = 0; t < NTRACKS; t++)
@@ -206,31 +206,31 @@ int DiskWriter::writeSession()
   
   stringstream sessionLuppp;
   sessionLuppp << sessionDir << "/session.luppp";
-  //cout << "Session dir: " << sessionDir.str() << "\n" << "Sample dir : " << sampleDir.str() << endl;
+  //cout << "Session dir: " << sessionDir.str() << "\n" << "Sample dir : " << audioDir.str() << endl;
   ofstream sessionFile;
   sessionFile.open ( sessionLuppp.str().c_str() );
-  sessionFile << cJSON_Print( session );
+  sessionFile << cJSON_Print( sessionJson );
   sessionFile.close();
   
   // write the sample JSON node to <samplePath>/sample.cfg
-  stringstream sampleConfig;
-  sampleConfig << sampleDir << "/sample.cfg";
+  stringstream audioCfg;
+  audioCfg << audioDir << "/audio.cfg";
   
-  ofstream sampleFile;
-  sampleFile.open ( sampleConfig.str().c_str() );
-  sampleFile << cJSON_Print( sample );
-  sampleFile.close();
+  ofstream audioCfgFile;
+  audioCfgFile.open ( audioCfg.str().c_str() );
+  audioCfgFile << cJSON_Print( audioJson );
+  audioCfgFile.close();
   
   // clear the clipData, clean page for next save
   clipData.clear();
   
   
   // reset the cJSON objects
-  cJSON_Delete( session );
-  cJSON_Delete( sample  );
+  cJSON_Delete( sessionJson );
+  cJSON_Delete( audioJson   );
   
-  session = cJSON_CreateObject();
-  sample  = cJSON_CreateObject();
+  sessionJson = cJSON_CreateObject();
+  audioJson   = cJSON_CreateObject();
   
   
   return LUPPP_RETURN_OK;
