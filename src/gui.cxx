@@ -53,7 +53,6 @@ void close_cb(Fl_Widget*o, void*)
 }
 static void gui_static_read_rb(void* inst)
 {
-  //cout << "read gui" << endl;
   handleGuiEvents();
   Fl::repeat_timeout( 1 / 30.f, &gui_static_read_rb, inst);
 }
@@ -91,7 +90,6 @@ static void gui_header_callback(Fl_Widget *w, void *data)
   }
   else if ( strcmp(m->label(), "Load Session") == 0 )
   {
-    cout << "Load clicked" << endl;
     Fl_Native_File_Chooser fnfc;
     fnfc.title("Load Session");
     fnfc.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
@@ -113,8 +111,8 @@ static void gui_header_callback(Fl_Widget *w, void *data)
     const char* name = fl_input( "Save session as", gui->getDiskWriter()->getLastSaveName().c_str() );
     if ( name )
     {
-      cout << "Save clicked, name = " << name << endl;
       gui->getDiskWriter()->initialize( getenv("HOME"), name );
+      LUPPP_NOTE("%s %s","Saving session as ", name.c_str() );
       EventStateSave e;
       writeToDspRingbuffer( &e );
     }

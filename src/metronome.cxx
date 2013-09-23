@@ -49,7 +49,6 @@ void Metronome::bar()
 void Metronome::beat()
 {
   playPoint = 0;
-  //cout << "Looper " << track << " got beat()" << flush;
 }
 
 void Metronome::setFpb(int f)

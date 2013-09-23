@@ -1,12 +1,15 @@
 rm FIXME
 
 echo -e "\n===> Samplerate hardcoded:\n" > FIXME 
-grep -irn "44100" src/ >> FIXME
+grep -irnI "44100" src/ >> FIXME
 
 echo -e "\n\n\n===> FIXME" >> FIXME 
-grep -irn "FIXME" src/ >> FIXME
+grep -irnI "FIXME" src/ >> FIXME
 
 echo -e "\n\n\n===> TODO" >> FIXME 
-grep -irn "TODO" src/ >> FIXME 
+grep -irnI "TODO" src/ >> FIXME 
+
+echo -e "\n\n\n===> Prints" >> FIXME 
+grep -irnI "cout" src/ >> FIXME 
 
 geany FIXME

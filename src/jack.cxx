@@ -128,7 +128,7 @@ Jack::Jack() :
                                   static_process,
                                   static_cast<void*>(this)) )
   {
-    cerr << "Jack() error setting process callback" << endl;
+    LUPPP_ERROR("%s","Error setting process callback");
   }
   
   if ( jack_set_timebase_callback(client,
@@ -136,7 +136,7 @@ Jack::Jack() :
                                   (JackTimebaseCallback)static_timebase,
                                   static_cast<void*>(this)) )
   {
-    cerr << "Jack() error setting timebase callback" << endl;
+    LUPPP_ERROR("%s","Error setting timebase callback");
   }
 }
 

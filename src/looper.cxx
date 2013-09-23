@@ -33,7 +33,7 @@ Looper::Looper(int t) :
   fpb = 22050;
   
   // init faust pitch shift variables
-  fSamplingFreq = 44100;
+  fSamplingFreq = jack->getSamplerate();
   IOTA = 0;
   
   //tmpRecordBuffer.resize(MAX_BUFFER_SIZE);

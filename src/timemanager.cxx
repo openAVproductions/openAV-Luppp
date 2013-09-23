@@ -39,7 +39,7 @@ int TimeManager::getFpb()
 void TimeManager::setBpm(float bpm)
 {
 #ifdef DEBUG_TIME
-  cout << "setBpm() " << bpm << endl;
+  LUPPP_NOTE("%s %f","setBpm()",bpm);
 #endif
   setFpb( samplerate / bpm * 60 );
 }
@@ -48,7 +48,7 @@ void TimeManager::setBpm(float bpm)
 void TimeManager::setFpb(float f)
 {
   fpb = f;
-  //cout << "setFpb() " << fpb << endl;
+  //LUPPP_NOTE("%s %f","setFpb()", fpb);
   
   int bpm = ( samplerate * 60) / f;
   
@@ -68,7 +68,7 @@ void TimeManager::setFpb(float f)
 
 void TimeManager::registerObserver(TimeObserver* o)
 {
-  //cout << "registerObserver() " << o << endl;
+  //LUPPP_NOTE("%s","registerObserver()");
   observers.push_back(o);
   o->setFpb( fpb );
   
