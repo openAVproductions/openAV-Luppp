@@ -21,13 +21,15 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
   volBox(x+5, y+422, 100, 172, ""),
   volume(x+66, y +425, 36, 166, ""),
   
-  rev      (x+21, y +430 +  0, 30, 30, ""),
+  
   active   (x+11, y +430 + 32, 50, 25, "Snd"), // active
   
-  post     (x+21, y +430 + 69, 30, 30, ""),
   side     (x+11, y +430 + 101, 50, 25, "Key"),
   
-  recEnable(x+11, y +430 + 132, 50, 25, "Rec") // record
+  recEnable(x+11, y +430 + 132, 50, 25, "Rec"), // record
+  post     (x+21, y +430 + 69, 30, 30, ""),
+  
+  rev      (x+21, y +430 +  0, 30, 30, "")
 {
   ID = privateID++;
   
@@ -99,7 +101,7 @@ void gtrack_vol_cb(Fl_Widget *w, void *data)
 }
 void gtrack_active_cb(Fl_Widget *w, void *data)
 {
-  GTrack* track = (GTrack*) data;
+  //GTrack* track = (GTrack*) data;
   Avtk::LightButton* d = (Avtk::LightButton*)w;
   bool b = d->value();
   d->value( !b );
@@ -119,7 +121,7 @@ void gtrack_active_cb(Fl_Widget *w, void *data)
 }
 void gtrack_record_cb(Fl_Widget *w, void *data)
 {
-  GTrack* track = (GTrack*) data;
+  //GTrack* track = (GTrack*) data;
   Avtk::LightButton* d = (Avtk::LightButton*)w;
   bool b = d->value();
   d->value( !b );
