@@ -42,7 +42,7 @@ void DiskReader::loadSample( int track, int scene, string path )
   {
     LUPPP_NOTE("%s%i%s%i", "Resampling from ", infile.samplerate(), " to ", gui->samplerate);
     
-    float resampleRatio = infile.samplerate() / gui->samplerate;
+    float resampleRatio = infile.samplerate() / float(gui->samplerate);
     std::vector<float> resampled( infile.frames() * resampleRatio );
     
     SRC_DATA data;
@@ -57,7 +57,7 @@ void DiskReader::loadSample( int track, int scene, string path )
     
     int ret = src_simple ( &data, SRC_SINC_BEST_QUALITY, 1 );
     
-    LUPPP_NOTE("%s%i%s%i", "Resampling finished, used ", data.input_frames_used, " of ", infile.frames());
+    LUPPP_NOTE("%s%i%s%i", "Resampling finished, from ", data.input_frames_used, " to ", data.output_frames_gen );
     
     // exchange buffers, so we now use the resampled audio
     buf.swap( resampled );
@@ -69,10 +69,10 @@ void DiskReader::loadSample( int track, int scene, string path )
   
   
   // set the data
-  ab->setAudioFrames( infile.frames() );
+  ab->setAudioFrames( buf.size() );
   ab->nonRtSetSample( buf );
   
-  //cout << "DiskReader::loadSample() " << path << " size: " << infile.frames() << endl;
+  cout << "DiskReader::loadSample() " << path << " size: " << buf.size() << endl;
   
   
   if ( infile.frames() > 0 )
@@ -126,9 +126,7 @@ void DiskReader::loadSample( int track, int scene, string path )
     }
     else
     {
-#ifdef DEBUG_STATE
-      cout << "DiskReader::loadSample() empty or no sample.cfg found" << endl;
-#endif
+      LUPPP_WARN("%s %s","DiskReader::loadSample() empty or no sample.cfg found at ",base.str().c_str() );
     }
     
     free( basePath );
@@ -136,8 +134,6 @@ void DiskReader::loadSample( int track, int scene, string path )
     // write audioBuffer to DSP
     EventLooperLoad e = EventLooperLoad( track, scene, ab );
     writeToDspRingbuffer( &e );
-      
-    
   }
   
 }
