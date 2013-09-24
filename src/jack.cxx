@@ -156,7 +156,7 @@ Jack::~Jack()
 void Jack::activate()
 {
   Controller* c = new AkaiAPC();
-  Controller* m = new GenericMIDI("testPath","testName");
+  Controller* m = new GenericMIDI("testController.cfg","testName");
   
   Controller* g = new LupppGUI();
   

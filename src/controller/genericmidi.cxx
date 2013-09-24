@@ -363,15 +363,15 @@ int GenericMIDI::loadController( std::string file )
     }
     else
     {
-      cout << "Warning: audio.cfg has no entry for beats." << endl;
+      cout << "Warning: controller.cfg has no entry for MIDI inputs." << endl;
     }
     
     cJSON_Delete( controllerJson );
-    free ( sampleString  );
+    delete[] sampleString;
   }
   else
   {
-    LUPPP_WARN("%s %s","No controller definition found in ", file.c_str() );
+    LUPPP_WARN("%s %s","No controller file found at ", file.c_str() );
     return LUPPP_RETURN_WARNING;
   }
   
