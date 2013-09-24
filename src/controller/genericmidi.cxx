@@ -3,10 +3,15 @@
 #include "genericmidi.hxx"
 
 #include <string>
+#include <sstream>
+#include <fstream>
 #include <iostream>
 
 #include "../jack.hxx"
 #include "../gridlogic.hxx"
+
+#include "../cjson/cJSON.h"
+
 
 extern Jack* jack;
 
@@ -330,8 +335,46 @@ void GenericMIDI::reset()
 
 int GenericMIDI::loadController( std::string file )
 {
-  
   LUPPP_NOTE("%s%s","Loading controller : ", file.c_str() );
+  
+  /// open and read whole file
+#ifdef DEBUG_CONTROLLER
+  cout << "loading controller file " << file.c_str() << endl;
+#endif
+  std::ifstream sampleFile( file.c_str(), std::ios_base::in|std::ios_base::ate);
+  long file_length = sampleFile.tellg();
+  if ( file_length > 0 )
+  {
+    sampleFile.seekg(0, std::ios_base::beg);
+    sampleFile.clear();
+    char *sampleString = new char[file_length];
+    sampleFile.read(sampleString, file_length);
+    
+    cJSON* controllerJson = cJSON_Parse( sampleString );
+    if (!controllerJson) {
+      LUPPP_ERROR("%s %s","Error in Sample JSON before: ", cJSON_GetErrorPtr() );
+      return LUPPP_RETURN_ERROR;
+    }
+    
+    cJSON* control = cJSON_GetObjectItem( controllerJson, "midiIn" );
+    if ( control )
+    {
+      LUPPP_NOTE("%s,%i","num MIDI inputs: ", control->valueint );
+    }
+    else
+    {
+      cout << "Warning: audio.cfg has no entry for beats." << endl;
+    }
+    
+    cJSON_Delete( controllerJson );
+    free ( sampleString  );
+  }
+  else
+  {
+    LUPPP_WARN("%s %s","No controller definition found in ", file.c_str() );
+    return LUPPP_RETURN_WARNING;
+  }
+  
   
   return LUPPP_RETURN_OK;
 }

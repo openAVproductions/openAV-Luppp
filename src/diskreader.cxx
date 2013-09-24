@@ -120,7 +120,7 @@ int DiskReader::loadSample( int track, int scene, string path )
     }
     else
     {
-      LUPPP_WARN("%s %s","DiskReader::loadSample() empty or no sample.cfg found at ",base.str().c_str() );
+      LUPPP_WARN("%s %s","Empty or no sample.cfg found at ",base.str().c_str() );
       return LUPPP_RETURN_WARNING;
     }
     
