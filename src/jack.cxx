@@ -156,7 +156,10 @@ Jack::~Jack()
 void Jack::activate()
 {
   Controller* c = new AkaiAPC();
-  Controller* m = new GenericMIDI("testController.cfg","testName");
+  
+  // TODO: Add GUI dialog to add controllers, and insert them into the controller map.
+  // Watch out for RT stuff, loading file, registering ports etc: before activate?!
+  //Controller* m = new GenericMIDI("/tmp/lupppTestMaterial/testController.cfg","testName");
   
   Controller* g = new LupppGUI();
   
