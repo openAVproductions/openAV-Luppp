@@ -24,6 +24,7 @@ class Controller
     
     /// FX
     virtual void trackSend(int t, int send, float v){}
+    virtual void trackSendActive(int t, int send, bool a){}
     
     /// Time
     virtual void bpm(int bpm){}

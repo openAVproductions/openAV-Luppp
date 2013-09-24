@@ -27,6 +27,8 @@ class AkaiAPC : public Controller, public MidiObserver
     
     /// track FX
     void trackSend(int t, int send, float v);
+    void trackSendActive(int t, int send, bool a);
+    
     
     void reset();
     

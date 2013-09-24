@@ -73,12 +73,12 @@ void gtrack_side_cb(Fl_Widget *w, void *data)
   bool b = d->value();
   if ( b < 0.5 )
   {
-    EventTrackSend e( track->ID, SEND_SIDE, 1.0f );
+    EventTrackSendActive e( track->ID, SEND_SIDE, true );
     writeToDspRingbuffer( &e );
   }
   else
   {
-    EventTrackSend e( track->ID, SEND_SIDE, 0.0f );
+    EventTrackSendActive e( track->ID, SEND_SIDE, false );
     writeToDspRingbuffer( &e );
   }
   printf("track %i post send %s\n", track->ID, b ? "off" : "on" );

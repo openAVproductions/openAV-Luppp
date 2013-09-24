@@ -33,6 +33,12 @@ void LupppGUI::trackSend(int t, int send, float r)
   writeToGuiRingbuffer( &e );
 }
 
+void LupppGUI::trackSendActive(int t, int send, bool a)
+{
+  EventTrackSendActive e( t, static_cast<Event::SEND_TYPE>(send), a );
+  writeToGuiRingbuffer( &e );
+}
+
 void LupppGUI::setSceneState(int t, int clip, GridLogic::State s)
 {
   EventGridState e( t, clip, s );

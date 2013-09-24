@@ -7,12 +7,24 @@
 
 #include "../observer/midi.hxx"
 
+class MidiBinding
+{
+  public:
+    MidiBinding(unsigned char b1, unsigned char b2) : status(b1), data(b2) {}
+  
+  private:
+    unsigned char status;
+    unsigned char data;
+};
+
 class GenericMIDI : public Controller, public MidiObserver
 {
   public:
-    GenericMIDI();
+    /// Loads a <controller>.cfg JSON file as a MIDI map. The name parameter is
+    /// the name of the JACK MIDI ports that are registered for the object.
+    GenericMIDI(std::string file, std::string name);
     
-    std::string getName(){return "Generic MIDI controller";}
+    std::string getName();
     
     /// track actions
     //void mute(int t, bool b);
@@ -35,6 +47,10 @@ class GenericMIDI : public Controller, public MidiObserver
     
   private:
     int _port;
+    
+    std::string name;
+    
+    int loadController(std::string controllerFile);
     /*
     bool shiftPressed;
     
@@ -48,5 +64,5 @@ class GenericMIDI : public Controller, public MidiObserver
     */
 };
 
-#endif // LUPPP_APC_H
+#endif // LUPPP_GENERIC_MIDI_H
 

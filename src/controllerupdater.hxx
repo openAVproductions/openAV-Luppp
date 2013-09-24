@@ -58,6 +58,11 @@ class ControllerUpdater
         c.at(i)->progress(t,s,p);
     }
     
+    void setTrackSendActive(int t, int send, bool v)
+    {
+      for(unsigned int i = 0; i < c.size(); i++)
+        c.at(i)->trackSendActive(t, send, v);
+    }
     void setTrackSend(int t, int send, float v)
     {
       for(unsigned int i = 0; i < c.size(); i++)

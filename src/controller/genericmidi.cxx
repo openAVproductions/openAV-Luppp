@@ -2,6 +2,7 @@
 
 #include "genericmidi.hxx"
 
+#include <string>
 #include <iostream>
 
 #include "../jack.hxx"
@@ -9,11 +10,20 @@
 
 extern Jack* jack;
 
-GenericMIDI::GenericMIDI() :
+GenericMIDI::GenericMIDI(std::string file, std::string name) :
   Controller(),
-  MidiObserver("generic")
+  MidiObserver(name)
 {
   _port = port();
+  
+  /// load the JSON config file
+  loadController( file );
+  
+}
+
+std::string GenericMIDI::getName()
+{
+  return name;
 }
 
 void GenericMIDI::volume(int t, float f)
@@ -23,10 +33,6 @@ void GenericMIDI::volume(int t, float f)
 
 
 /*
-
-
-
-
 void GenericMIDI::recordArm(int t, bool enabled)
 {
   unsigned char data[3];
@@ -319,4 +325,13 @@ void GenericMIDI::reset()
     jack->midiObserverWriteMIDI( _port,  &data[0] );
   }
   */
+}
+
+
+int GenericMIDI::loadController( std::string file )
+{
+  
+  LUPPP_NOTE("%s%s","Loading controller : ", file.c_str() );
+  
+  return LUPPP_RETURN_OK;
 }

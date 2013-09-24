@@ -79,6 +79,20 @@ void AkaiAPC::trackSend(int t, int send, float v)
   jack->midiObserverWriteMIDI( _port,  &data[0] );
 }
 
+void AkaiAPC::trackSendActive(int t, int send, bool a)
+{
+  unsigned char data[3];
+  if ( a )
+    data[0] = 0x90;
+  else
+    data[0] = 0x80;
+  
+  data[1] = 0x30;
+  data[2] = 0x7F;
+  
+  jack->midiObserverWriteMIDI( _port,  &data[0] );
+}
+
 void AkaiAPC::setSceneState(int t, int clip, GridLogic::State s)
 {
   unsigned char data[3];

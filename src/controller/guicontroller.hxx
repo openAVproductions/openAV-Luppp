@@ -17,6 +17,7 @@ class LupppGUI : public Controller
     void masterVolume(float f);
     
     void trackSend(int t, int send, float r);
+    void trackSendActive(int t, int send, bool a);
     
     void bpm(int bpm);
     void tapTempo( bool b );
