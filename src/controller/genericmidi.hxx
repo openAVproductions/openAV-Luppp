@@ -5,7 +5,7 @@
 
 #include "controller.hxx"
 
-#include <map>
+#include <vector>
 
 #include "../observer/midi.hxx"
 
@@ -15,11 +15,12 @@ typedef std::string LupppAction;
 class MidiBinding
 {
   public:
-    MidiBinding(unsigned char b1, unsigned char b2) : status(b1), data(b2) {}
-  
-  private:
+    MidiBinding(unsigned char b1, unsigned char b2, LupppAction act) : status(b1), data(b2), action(act) {}
+    
     unsigned char status;
     unsigned char data;
+    
+    LupppAction action;
 };
 
 class GenericMIDI : public Controller, public MidiObserver
@@ -55,11 +56,9 @@ class GenericMIDI : public Controller, public MidiObserver
     
     std::string name;
     
-    /// contains a list of 
-    std::multimap<MidiBinding,LupppAction> midiToAction;
-    
-    /// contains list of 
-    std::multimap<LupppAction,MidiBinding> actionToMidi;
+    /// contains midi binding instances
+    std::vector<MidiBinding> midiToAction;
+    std::vector<MidiBinding> actionToMidi;
     
     int loadController(std::string controllerFile);
     /*

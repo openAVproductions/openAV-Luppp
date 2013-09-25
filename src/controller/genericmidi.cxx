@@ -292,15 +292,23 @@ void GenericMIDI::ccChange( int track, int cc, float value )
 */
 
 
-void GenericMIDI::midi(unsigned char* data)
+void GenericMIDI::midi(unsigned char* midi)
 {
-  int b1 = data[0];
-  int b2 = data[1];
-  int b3 = data[2];
+  int status = midi[0];
+  int data   = midi[1];
+  int value  = midi[2];
   
-  // TODO: Generic MIDI needs MIDI map from JSON
-  // FIXME: used variables
+  LUPPP_WARN("called %i %i %i", status, data, value );
   
+  // iterate over bindings, execute binding action if matches
+  for(int i = 0; i < midiToAction.size(); i++)
+  {
+    if ( midiToAction.at(i).status == status &&
+         midiToAction.at(i).data   == data )
+    {
+      LUPPP_WARN("Executing action %s",midiToAction.at(i).action.c_str() );
+    }
+  }
   
 }
 
@@ -366,7 +374,9 @@ int GenericMIDI::loadController( std::string file )
         cJSON* data   = cJSON_GetObjectItem( binding, "data"   );
         cJSON* action = cJSON_GetObjectItem( binding, "action" );
         
-        LUPPP_NOTE("Binding from status %i %i  %s", status->valueint, data->valueint, action->valuestring); 
+        LUPPP_NOTE("Binding from status %i %i  %s", status->valueint, data->valueint, action->valuestring);
+        
+        midiToAction.push_back( MidiBinding(status->valueint, data->valueint, action->valuestring ) );
       }
     }
     else
