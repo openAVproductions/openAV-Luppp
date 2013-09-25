@@ -36,7 +36,11 @@ class Gui
     DiskWriter* getDiskWriter(){return diskWriter;}
     DiskReader* getDiskReader(){return diskReader;}
     
+    /// used to load samples into the grid
     void selectLoadSample( int track, int clip );
+    
+    /// allows the user to select a Controller definition
+    static void selectLoadController(Fl_Widget* w, void*);
   
     int samplerate;
   

@@ -1,6 +1,7 @@
 
 #include "gui.hxx"
 #include "avtk/avtk_image.h"
+#include "avtk/avtk_button.h"
 
 #include <sstream>
 
@@ -147,6 +148,39 @@ void Gui::showOptions()
   optionWindow->show();
 }
 
+void Gui::selectLoadController(Fl_Widget* w, void*)
+{
+  // FIXME: refactor
+  string path;
+  Fl_Native_File_Chooser fnfc;
+  fnfc.title("Pick a controller definition");
+  fnfc.type(Fl_Native_File_Chooser::BROWSE_FILE);
+  fnfc.filter("Controllers\t*.ctlr");
+  fnfc.directory( getenv("HOME") ); // default directory to use
+  // Show native chooser
+  switch ( fnfc.show() ) {
+     case -1: printf("ERROR: %s\n", fnfc.errmsg());    break;  // ERROR
+     case  1: printf("CANCEL\n");                      break;  // CANCEL
+     default: printf("Loading controller at %s\n", fnfc.filename());
+        path = fnfc.filename();
+        break;
+  }
+  
+  if ( strcmp( path.c_str(), "" ) == 0 )
+    return;
+  
+  // TODO: Event Message to tell JACK to add a controller:
+  /* Issues:
+   * GenericMidi inherits MidiObserver: which auto registers with Jack. Removing
+   * the auto-register is nasty, is there a way to handle this?
+   * Creating the GenericMIDI instance in the RT thread cannot be done, loads .ctlr file.
+   * 
+   * 
+   *
+   */
+  
+}
+
 void Gui::selectLoadSample( int track, int scene )
 {
   // FIXME: refactor
@@ -217,7 +251,8 @@ Gui::Gui() :
   
   // setup Options dialog
   optionWindow = new Fl_Window(400,300,"Options");
-  Fl_Box* optionLabel = new Fl_Box(130, 25, 500, 20, "Options");
+  Avtk::Button* ctlrButton = new Avtk::Button(5, 25, 200, 20, "Add Controller");
+  ctlrButton->callback( selectLoadController );
   optionWindow->end();
   
 }
