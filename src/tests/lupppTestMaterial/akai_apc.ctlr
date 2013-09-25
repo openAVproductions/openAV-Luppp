@@ -1,0 +1,22 @@
+{
+  "midiIn" : 1,
+  "midiOut" : 1,
+  
+  "author" : "testControllerAuthor",
+  "description" : "testControllerDescription",
+  "link" : "www.openavproductions.com/luppp#akaiapc40",
+  
+  "bindings" : [
+    {
+      "status" : 176,
+      "data" : 7,
+      "action" : "track0sendAmount"
+    },
+    
+    {
+      "status" : 144,
+      "data" : 53,
+      "action" : "gridPressTrack0Scene0"
+    }
+  ]
+}
