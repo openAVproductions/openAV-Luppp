@@ -5,7 +5,12 @@
 
 #include "controller.hxx"
 
+#include <map>
+
 #include "../observer/midi.hxx"
+
+/// for future compatibility, LupppAction might be a string mapped to a unique number
+typedef std::string LupppAction;
 
 class MidiBinding
 {
@@ -49,6 +54,12 @@ class GenericMIDI : public Controller, public MidiObserver
     int _port;
     
     std::string name;
+    
+    /// contains a list of 
+    std::multimap<MidiBinding,LupppAction> midiToAction;
+    
+    /// contains list of 
+    std::multimap<LupppAction,MidiBinding> actionToMidi;
     
     int loadController(std::string controllerFile);
     /*

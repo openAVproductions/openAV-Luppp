@@ -300,20 +300,8 @@ void GenericMIDI::midi(unsigned char* data)
   
   // TODO: Generic MIDI needs MIDI map from JSON
   // FIXME: used variables
-  if ( b2 == b3 ) {}
   
-  if ( b1 >= 144 && b1 < 144 + 16 ) // NOTE_ON
-  {
-    //noteOn( b1 - 144, b2, b3 );
-  }
-  else if ( b1 >= 128 && b1 < 128 + 16 ) // NOTE_OFF
-  {
-    //noteOff( b1 - 128, b2, b3 );
-  }
-  else if ( b1 >= 176 && b1 < 176 + 16 ) // CC
-  {
-    //ccChange( b1 - 176, b2, data[2] / 127.f );
-  }
+  
 }
 
 
@@ -364,6 +352,27 @@ int GenericMIDI::loadController( std::string file )
     else
     {
       cout << "Warning: controller.cfg has no entry for MIDI inputs." << endl;
+    }
+    
+    cJSON* bindings = cJSON_GetObjectItem( controllerJson, "bindings");
+    if ( bindings )
+    {
+      int nBindings = cJSON_GetArraySize( bindings );
+      for(int i = 0; i < nBindings; i++ )
+      {
+        cJSON* binding = cJSON_GetArrayItem( bindings, i );
+        
+        cJSON* status = cJSON_GetObjectItem( binding, "status" );
+        cJSON* data   = cJSON_GetObjectItem( binding, "data"   );
+        cJSON* action = cJSON_GetObjectItem( binding, "action" );
+        
+        LUPPP_NOTE("Binding from status %i %i  %s", status->valueint, data->valueint, action->valuestring); 
+      }
+    }
+    else
+    {
+      LUPPP_WARN("%s %s","No controller bindings found at ", file.c_str() );
+      return LUPPP_RETURN_WARNING;
     }
     
     cJSON_Delete( controllerJson );
