@@ -10,7 +10,15 @@ extern Jack* jack;
 
 #include "audiobuffer.hxx"
 
+
+#include <stdlib.h>
+#include <FL/Fl.H>
 #include <FL/fl_ask.H>
+#include <FL/Fl_Window.H>
+#include <FL/Fl_Group.H>
+#include <FL/Fl_Wizard.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Multiline_Output.H>
 
 // include the header.c file in the planning dir:
 // its the GIMP .c export of the LUPPP header image 
@@ -57,6 +65,11 @@ static void gui_static_read_rb(void* inst)
   Fl::repeat_timeout( 1 / 30.f, &gui_static_read_rb, inst);
 }
 
+
+void back_cb(Fl_Widget*,void* data) { ((Fl_Wizard*)data)->prev(); }
+void next_cb(Fl_Widget*,void* data) { ((Fl_Wizard*)data)->next(); }
+void done_cb(Fl_Widget*,void* data) { ((Fl_Wizard*)data)->hide(); }
+
 static void gui_header_callback(Fl_Widget *w, void *data)
 {
   if ( Fl::event_x() > 130 )
@@ -69,6 +82,7 @@ static void gui_header_callback(Fl_Widget *w, void *data)
     { "New Session" },
     { "Load Session" },
     { "Save Session   ", 0, 0, 0, FL_MENU_DIVIDER},
+    { "Options", 0, 0, 0, FL_MENU_DIVIDER},
     { "Quit" },
     { 0 }
   };
@@ -116,6 +130,47 @@ static void gui_header_callback(Fl_Widget *w, void *data)
       EventStateSave e;
       writeToDspRingbuffer( &e );
     }
+  }
+  else if ( strcmp(m->label(), "Options") == 0 )
+  {
+    Fl_Window* G_win = new Fl_Window(400,300,"Example Wizard");
+    Fl_Wizard* G_wiz = new Fl_Wizard(0,0,400,300);
+    
+    // Wizard: page 1
+    {
+        Fl_Group *g = new Fl_Group(0,0,400,300);
+        Fl_Button *next = new Fl_Button(290,265,100,25,"Next"); next->callback(next_cb,(void*)G_wiz);
+        Fl_Multiline_Output *out = new Fl_Multiline_Output(10,30,400-20,300-80,"Welcome");
+        out->labelsize(20);
+        out->align(FL_ALIGN_TOP|FL_ALIGN_LEFT);
+        out->value("This is First page");
+        g->end();
+    }
+    // Wizard: page 2
+    {
+        Fl_Group *g = new Fl_Group(0,0,400,300);
+        Fl_Button *next = new Fl_Button(290,265,100,25,"Next"); next->callback(next_cb,(void*)G_wiz);
+        Fl_Button *back = new Fl_Button(180,265,100,25,"Back"); back->callback(back_cb,(void*)G_wiz);
+        Fl_Multiline_Output *out = new Fl_Multiline_Output(10,30,400-20,300-80,"Terms And Conditions");
+        out->labelsize(20);
+        out->align(FL_ALIGN_TOP|FL_ALIGN_LEFT);
+        out->value("This is the Second page");
+        g->end();
+    }
+    // Wizard: page 3
+    {
+        Fl_Group *g = new Fl_Group(0,0,400,300);
+        Fl_Button *done = new Fl_Button(290,265,100,25,"Finish");
+        Fl_Button *back = new Fl_Button(180,265,100,25,"Back"); back->callback(back_cb,(void*)G_wiz);
+        Fl_Multiline_Output *out = new Fl_Multiline_Output(10,30,400-20,300-80,"Finish");
+        out->labelsize(20);
+        out->align(FL_ALIGN_TOP|FL_ALIGN_LEFT);
+        out->value("This is the Last page");
+        g->end();
+    }
+    G_wiz->end();
+    G_win->end();
+    G_win->show();
   }
   else if ( strcmp(m->label(), "Quit") == 0 )
   {
