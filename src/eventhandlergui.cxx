@@ -220,7 +220,8 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventGuiPrint) ) {
             EventGuiPrint ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventGuiPrint) );
-            cout << "DSP: " << ev.getMessage() << endl;
+            //cout << "DSP: " << ev.getMessage() << endl;
+            LUPPP_DSP("%s", ev.getMessage() );
           } break; }
         case Event::TIME_BAR_BEAT: {
           if ( availableRead >= sizeof(EventTimeBarBeat) ) {

@@ -169,7 +169,7 @@ void GridLogic::updateState()
 void GridLogic::bar()
 {
 #ifdef DEBUG_CLIP
-  EventGuiPrint e( "GridLogic::bar()\n" );
+  EventGuiPrint e( "GridLogic::bar()" );
   writeToGuiRingbuffer( &e );
 #endif
   

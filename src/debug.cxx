@@ -9,21 +9,21 @@ void luppp_debug( int warnLevel, const char* name, const char* file, const char*
 {
   if ( warnLevel == DEBUG_LEVEL_ERROR )
   {
-    printf( "[\033[1;31m%s\033[0m] %s:%i: ", NAME, func, line );
+    printf( "[\033[1;31m%s\033[0m] %s:%i: ", name, func, line );
   }
   else if ( warnLevel == DEBUG_LEVEL_WARN )
   {
-    printf( "[\033[1;33m%s\033[0m] %s:%i: ", NAME, func, line );
+    printf( "[\033[1;33m%s\033[0m] %s:%i: ", name, func, line );
   }
   else if ( warnLevel == DEBUG_LEVEL_TEST )
   {
 #ifdef BUILD_TESTS
-    printf( "[\033[1;33m%s\033[0m] %s:%i: ", NAME, func, line );
+    printf( "[\033[1;33m%s\033[0m] %s:%i: ", name, func, line );
 #endif
   }
   else // NOTE
   {
-    printf( "[\033[1;32m%s\033[0m] %s:%i: ", NAME, func, line );
+    printf( "[\033[1;32m%s\033[0m] %s:%i: ", name, func, line );
   }
   printf( "\033[0m" );
   
