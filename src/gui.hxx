@@ -28,6 +28,8 @@ class Gui
     int quit();
     void askQuit();
     
+    void showOptions();
+    
     GTrack* getTrack(int id);
     GMasterTrack* getMasterTrack(){return master;}
     
@@ -41,6 +43,8 @@ class Gui
   private:
     Fl_Double_Window    window;
     Fl_Box*             box;
+    
+    Fl_Window* optionWindow;
     
     DiskReader*         diskReader;
     DiskWriter*         diskWriter;

@@ -65,13 +65,14 @@ static void gui_static_read_rb(void* inst)
   Fl::repeat_timeout( 1 / 30.f, &gui_static_read_rb, inst);
 }
 
-
-void back_cb(Fl_Widget*,void* data) { ((Fl_Wizard*)data)->prev(); }
-void next_cb(Fl_Widget*,void* data) { ((Fl_Wizard*)data)->next(); }
-void done_cb(Fl_Widget*,void* data) { ((Fl_Wizard*)data)->hide(); }
+void option_controller_cb(Fl_Widget*,void* data)
+{
+  LUPPP_NOTE("%s","Controller cb");
+}
 
 static void gui_header_callback(Fl_Widget *w, void *data)
 {
+  Gui* g = (Gui*)data;
   if ( Fl::event_x() > 130 )
   {
     return;
@@ -133,49 +134,17 @@ static void gui_header_callback(Fl_Widget *w, void *data)
   }
   else if ( strcmp(m->label(), "Options") == 0 )
   {
-    Fl_Window* G_win = new Fl_Window(400,300,"Example Wizard");
-    Fl_Wizard* G_wiz = new Fl_Wizard(0,0,400,300);
-    
-    // Wizard: page 1
-    {
-        Fl_Group *g = new Fl_Group(0,0,400,300);
-        Fl_Button *next = new Fl_Button(290,265,100,25,"Next"); next->callback(next_cb,(void*)G_wiz);
-        Fl_Multiline_Output *out = new Fl_Multiline_Output(10,30,400-20,300-80,"Welcome");
-        out->labelsize(20);
-        out->align(FL_ALIGN_TOP|FL_ALIGN_LEFT);
-        out->value("This is First page");
-        g->end();
-    }
-    // Wizard: page 2
-    {
-        Fl_Group *g = new Fl_Group(0,0,400,300);
-        Fl_Button *next = new Fl_Button(290,265,100,25,"Next"); next->callback(next_cb,(void*)G_wiz);
-        Fl_Button *back = new Fl_Button(180,265,100,25,"Back"); back->callback(back_cb,(void*)G_wiz);
-        Fl_Multiline_Output *out = new Fl_Multiline_Output(10,30,400-20,300-80,"Terms And Conditions");
-        out->labelsize(20);
-        out->align(FL_ALIGN_TOP|FL_ALIGN_LEFT);
-        out->value("This is the Second page");
-        g->end();
-    }
-    // Wizard: page 3
-    {
-        Fl_Group *g = new Fl_Group(0,0,400,300);
-        Fl_Button *done = new Fl_Button(290,265,100,25,"Finish");
-        Fl_Button *back = new Fl_Button(180,265,100,25,"Back"); back->callback(back_cb,(void*)G_wiz);
-        Fl_Multiline_Output *out = new Fl_Multiline_Output(10,30,400-20,300-80,"Finish");
-        out->labelsize(20);
-        out->align(FL_ALIGN_TOP|FL_ALIGN_LEFT);
-        out->value("This is the Last page");
-        g->end();
-    }
-    G_wiz->end();
-    G_win->end();
-    G_win->show();
+    g->showOptions();
   }
   else if ( strcmp(m->label(), "Quit") == 0 )
   {
-    gui->askQuit();
+    g->askQuit();
   }
+}
+
+void Gui::showOptions()
+{
+  optionWindow->show();
 }
 
 void Gui::selectLoadSample( int track, int scene )
@@ -244,6 +213,13 @@ Gui::Gui() :
   master = new GMasterTrack(8 + i * 118, 40, 150, 600, "Master");
   
   window.end();
+  
+  
+  // setup Options dialog
+  optionWindow = new Fl_Window(400,300,"Options");
+  Fl_Box* optionLabel = new Fl_Box(130, 25, 500, 20, "Options");
+  optionWindow->end();
+  
 }
 
 GTrack* Gui::getTrack(int id)
