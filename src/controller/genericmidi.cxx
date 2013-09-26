@@ -19,11 +19,11 @@ GenericMIDI::GenericMIDI(std::string file, std::string name) :
   Controller(),
   MidiObserver(name)
 {
+  // FIXME: this port is the input port, gotta fix the output port ID number
   _port = port();
   
   /// load the JSON config file
   loadController( file );
-  
 }
 
 std::string GenericMIDI::getName()
@@ -397,7 +397,7 @@ int GenericMIDI::loadController( std::string file )
         // collect event metadata
         cJSON* track  = cJSON_GetObjectItem( binding, "track"  );
         
-        LUPPP_NOTE("Input Binding from status %i %i  %s", status->valueint, data->valueint, action->valuestring);
+        LUPPP_NOTE("Binding from %i %i  %s", status->valueint, data->valueint, action->valuestring);
         
         midiToAction.push_back( Binding(status->valueint, data->valueint, action->valuestring ) );
         
@@ -427,7 +427,7 @@ int GenericMIDI::loadController( std::string file )
         cJSON* status = cJSON_GetObjectItem( binding, "status" );
         cJSON* data   = cJSON_GetObjectItem( binding, "data"   );
         
-        LUPPP_NOTE("Feedback Binding from status %i %i  %s", status->valueint, data->valueint, action->valuestring);
+        LUPPP_NOTE("Binding from %s to %i %i", action->valuestring, status->valueint, data->valueint );
         
         actionToMidi.push_back( Binding(status->valueint, data->valueint, action->valuestring ) );
       }
