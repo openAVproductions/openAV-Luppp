@@ -296,7 +296,7 @@ void GenericMIDI::midi(unsigned char* midi)
 {
   int status = midi[0];
   int data   = midi[1];
-  int value  = midi[2];
+  float value  = midi[2] / 127.f;
   
   LUPPP_WARN("called %i %i %i", status, data, value );
   
@@ -306,7 +306,12 @@ void GenericMIDI::midi(unsigned char* midi)
     if ( midiToAction.at(i).status == status &&
          midiToAction.at(i).data   == data )
     {
-      LUPPP_WARN("Executing action %s",midiToAction.at(i).action.c_str() );
+      //LUPPP_NOTE("Executing action %s",midiToAction.at(i).action.c_str() );
+      if( midiToAction.at(i).action.compare("track0volume") == 0 )
+      {
+        LUPPP_NOTE("track0volume");
+        jack->getLogic()->trackVolume( 0, value );
+      }
     }
   }
   

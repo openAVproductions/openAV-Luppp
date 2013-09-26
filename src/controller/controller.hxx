@@ -7,6 +7,11 @@
 
 #include "../gridlogic.hxx"
 
+/** Controller
+ *  This is the base class for any device that interacts with Luppp.
+ *  Overriding the virtual functions allows the subclass to be notified about
+ *  that event type. To provide input, #include gridlogic.hxx and logic.hxx
+**/
 class Controller
 {
   public:
