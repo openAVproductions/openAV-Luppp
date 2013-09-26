@@ -298,20 +298,23 @@ void GenericMIDI::midi(unsigned char* midi)
   int data   = midi[1];
   float value  = midi[2] / 127.f;
   
-  LUPPP_WARN("called %i %i %i", status, data, value );
+  //LUPPP_NOTE("called %i %i %f", status, data, value );
   
   // iterate over bindings, execute binding action if matches
-  for(int i = 0; i < midiToAction.size(); i++)
+  for(unsigned int i = 0; i < midiToAction.size(); i++)
   {
     if ( midiToAction.at(i).status == status &&
          midiToAction.at(i).data   == data )
     {
-      //LUPPP_NOTE("Executing action %s",midiToAction.at(i).action.c_str() );
-      if( midiToAction.at(i).action.compare("track0volume") == 0 )
-      {
-        LUPPP_NOTE("track0volume");
-        jack->getLogic()->trackVolume( 0, value );
+      Binding& b = midiToAction.at(i);
+      //LUPPP_NOTE("Executing action %s", b.action.c_str() );
+      
+      if( b.action.compare("track:volume") == 0 ) {
+        jack->getLogic()->trackVolume( b.track, value );
       }
+      
+      
+      
     }
   }
   
@@ -331,6 +334,15 @@ void GenericMIDI::reset()
     jack->midiObserverWriteMIDI( _port,  &data[0] );
   }
   */
+}
+
+void GenericMIDI::launchScene( int scene )
+{
+  unsigned char data[3];
+  data[0] = 144;
+  data[1] = 82 + scene;
+  data[2] = 127;
+  jack->midiObserverWriteMIDI( _port,  &data[0] );
 }
 
 
@@ -364,24 +376,34 @@ int GenericMIDI::loadController( std::string file )
     }
     else
     {
-      cout << "Warning: controller.cfg has no entry for MIDI inputs." << endl;
+      cout << "Warning: controller.ctlr has no entry for MIDI inputs." << endl;
     }
     
-    cJSON* bindings = cJSON_GetObjectItem( controllerJson, "bindings");
-    if ( bindings )
+    
+    
+    cJSON* inputBindings = cJSON_GetObjectItem( controllerJson, "inputBindings");
+    if ( inputBindings )
     {
-      int nBindings = cJSON_GetArraySize( bindings );
+      int nBindings = cJSON_GetArraySize( inputBindings );
       for(int i = 0; i < nBindings; i++ )
       {
-        cJSON* binding = cJSON_GetArrayItem( bindings, i );
+        cJSON* binding = cJSON_GetArrayItem( inputBindings, i );
         
+        // collect essential data
         cJSON* status = cJSON_GetObjectItem( binding, "status" );
         cJSON* data   = cJSON_GetObjectItem( binding, "data"   );
         cJSON* action = cJSON_GetObjectItem( binding, "action" );
         
-        LUPPP_NOTE("Binding from status %i %i  %s", status->valueint, data->valueint, action->valuestring);
+        // collect event metadata
+        cJSON* track  = cJSON_GetObjectItem( binding, "track"  );
         
-        midiToAction.push_back( MidiBinding(status->valueint, data->valueint, action->valuestring ) );
+        LUPPP_NOTE("Input Binding from status %i %i  %s", status->valueint, data->valueint, action->valuestring);
+        
+        midiToAction.push_back( Binding(status->valueint, data->valueint, action->valuestring ) );
+        
+        if ( track )
+          midiToAction.back().track = track->valueint;
+        
       }
     }
     else
@@ -389,6 +411,34 @@ int GenericMIDI::loadController( std::string file )
       LUPPP_WARN("%s %s","No controller bindings found at ", file.c_str() );
       return LUPPP_RETURN_WARNING;
     }
+    
+    
+    
+    cJSON* feedbackBindings = cJSON_GetObjectItem( controllerJson, "feedbackBindings");
+    if ( feedbackBindings )
+    {
+      int nBindings = cJSON_GetArraySize( feedbackBindings );
+      for(int i = 0; i < nBindings; i++ )
+      {
+        cJSON* binding = cJSON_GetArrayItem( feedbackBindings, i );
+        
+        cJSON* action = cJSON_GetObjectItem( binding, "action" );
+        
+        cJSON* status = cJSON_GetObjectItem( binding, "status" );
+        cJSON* data   = cJSON_GetObjectItem( binding, "data"   );
+        
+        LUPPP_NOTE("Feedback Binding from status %i %i  %s", status->valueint, data->valueint, action->valuestring);
+        
+        actionToMidi.push_back( Binding(status->valueint, data->valueint, action->valuestring ) );
+      }
+    }
+    else
+    {
+      LUPPP_WARN("%s %s","No controller bindings found at ", file.c_str() );
+      return LUPPP_RETURN_WARNING;
+    }
+    
+    
     
     cJSON_Delete( controllerJson );
     delete[] sampleString;

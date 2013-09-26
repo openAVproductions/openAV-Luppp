@@ -12,15 +12,20 @@
 /// for future compatibility, LupppAction might be a string mapped to a unique number
 typedef std::string LupppAction;
 
-class MidiBinding
+class Binding
 {
   public:
-    MidiBinding(unsigned char b1, unsigned char b2, LupppAction act) : status(b1), data(b2), action(act) {}
+    Binding(unsigned char b1, unsigned char b2, LupppAction act) : status(b1), data(b2), action(act) {}
     
     unsigned char status;
     unsigned char data;
     
+    /// the action this binding relates to
     LupppAction action;
+    
+    /// arguments to the event: track number, scene number etc
+    int track;
+    int scene;
 };
 
 class GenericMIDI : public Controller, public MidiObserver
@@ -35,6 +40,7 @@ class GenericMIDI : public Controller, public MidiObserver
     /// track actions
     //void mute(int t, bool b);
     
+    void launchScene( int scene );
     
     void volume(int t, float f);
     /*
@@ -57,8 +63,8 @@ class GenericMIDI : public Controller, public MidiObserver
     std::string name;
     
     /// contains midi binding instances
-    std::vector<MidiBinding> midiToAction;
-    std::vector<MidiBinding> actionToMidi;
+    std::vector<Binding> midiToAction;
+    std::vector<Binding> actionToMidi;
     
     int loadController(std::string controllerFile);
     /*
