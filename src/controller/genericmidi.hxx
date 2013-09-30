@@ -28,11 +28,14 @@ class Binding
     int scene;
 };
 
+/** GenericMIDI
+ *  This class is used to load a <controller>.cfg JSON file as a MIDI map.
+ *  The name parameter is the name of the JACK MIDI ports that are registered.
+**/
 class GenericMIDI : public Controller, public MidiObserver
 {
   public:
-    /// Loads a <controller>.cfg JSON file as a MIDI map. The name parameter is
-    /// the name of the JACK MIDI ports that are registered for the object.
+    /// Loads 
     GenericMIDI(std::string file, std::string name);
     
     std::string getName();
@@ -67,12 +70,16 @@ class GenericMIDI : public Controller, public MidiObserver
     std::vector<Binding> actionToMidi;
     
     int loadController(std::string controllerFile);
-    /*
-    bool shiftPressed;
     
+    
+    
+    /// for "sampling" a clip in the grid, and applying events to it:
+    /// footpedal for example
+    bool shiftPressed;
     int footpedalTrack;
     int footpedalScene;
     
+    /*
     /// for handling events
     void ccChange( int track, int cc, float value );
     void noteOff( int track, int note, int vel );

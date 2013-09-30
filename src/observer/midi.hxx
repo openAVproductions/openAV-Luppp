@@ -14,9 +14,11 @@ extern Jack* jack;
 class MidiObserver
 {
   public:
-    /// registers class with jack's MIDI handling, with MIDI port name
-    MidiObserver( std::string portName );
+    MidiObserver();
     virtual ~MidiObserver(){};
+    
+    /// registers class with jack's MIDI handling, with MIDI port name
+    void registerPorts( std::string portName );
     
     /// name string to show in UI
     virtual std::string getName() = 0;

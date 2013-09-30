@@ -17,8 +17,11 @@ extern Jack* jack;
 
 GenericMIDI::GenericMIDI(std::string file, std::string name) :
   Controller(),
-  MidiObserver(name)
+  MidiObserver()
 {
+  // register the JACK MIDI ports
+  registerPorts( name );
+  
   // FIXME: this port is the input port, gotta fix the output port ID number
   _port = port();
   

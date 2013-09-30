@@ -11,11 +11,14 @@ extern Jack* jack;
 
 AkaiAPC::AkaiAPC() :
   Controller(),
-  MidiObserver("apc"),
+  MidiObserver(),
   shiftPressed(false),
   footpedalTrack(0),
   footpedalScene(0)
 {
+  // register the port in JACK
+  registerPorts("apc");
+  
   _port = port();
 }
 
