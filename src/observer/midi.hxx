@@ -30,7 +30,7 @@ class MidiObserver
     
     virtual void midi(unsigned char* data){};
   
-  protected:
+  private:
     // there are jack_port_t* registered ports
     void* jackInputPort;
     void* jackOutputPort;

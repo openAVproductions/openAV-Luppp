@@ -30,6 +30,8 @@ void MidiObserver::registerMidiPorts(std::string name)
                                               JACK_DEFAULT_MIDI_TYPE,
                                               JackPortIsOutput,
                                               0 );
+  
+  LUPPP_NOTE("%i, %i", jackInputPort, jackOutputPort );
 }
 
 void MidiObserver::process(int nframes)
