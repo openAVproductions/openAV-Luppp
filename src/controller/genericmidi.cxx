@@ -20,6 +20,8 @@ GenericMIDI::GenericMIDI(std::string file, std::string name) :
   // load the JSON config file
   loadController( file );
   
+  
+  
   // register the JACK MIDI ports
   //registerPorts( name );
   // FIXME: this port is the input port, gotta fix the output port ID number
@@ -399,14 +401,10 @@ int GenericMIDI::loadController( std::string file )
       return LUPPP_RETURN_ERROR;
     }
     
-    cJSON* control = cJSON_GetObjectItem( controllerJson, "midiIn" );
-    if ( control )
+    cJSON* name = cJSON_GetObjectItem( controllerJson, "name" );
+    if ( name )
     {
-      LUPPP_NOTE("%s,%i","num MIDI inputs: ", control->valueint );
-    }
-    else
-    {
-      cout << "Warning: controller.ctlr has no entry for MIDI inputs." << endl;
+      LUPPP_NOTE("Device %s", name->valuestring );
     }
     
     

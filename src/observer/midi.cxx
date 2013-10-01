@@ -9,8 +9,3 @@ MidiObserver::MidiObserver()
 {
   
 }
-
-void MidiObserver::registerPorts( std::string portName )
-{
-  //jack->registerMidiObserver( this, portName );
-}
