@@ -13,45 +13,26 @@
 
 extern Jack* jack;
 
+
 GenericMIDI::GenericMIDI(std::string file, std::string name) :
   Controller(),
   MidiObserver()
 {
+  // default name for each controller
+  name = "generic";
+  
   // load the JSON config file
   loadController( file );
   
-  
-  
-  // register the JACK MIDI ports
-  //registerPorts( name );
-  // FIXME: this port is the input port, gotta fix the output port ID number
-  //_port = port();
+  registerMidiPorts( name );
 }
 
 
-void GenericMIDI::process(int nframes)
-{
-  // get port buffers and setup
-  void* inputBuffer = (void*) jack_port_get_buffer( (jack_port_t*)jackInputPort, nframes );
-  void* outputBuffer= (void*) jack_port_get_buffer( (jack_port_t*)jackInputPort, nframes );
-  jack_midi_clear_buffer( outputBuffer );
-  
-  jack_midi_event_t in_event;
-  int index = 0;
-  int event_count = (int) jack_midi_get_event_count( inputBuffer );
-  while ( index < event_count )
-  {
-    jack_midi_event_get(&in_event, inputBuffer, index);
-    midi( (unsigned char*) &in_event.buffer[0] );
-    //printf( "%s MIDI %i %i %i\n", midiObservers.at(i)->getName().c_str(), int(in_event.buffer[0]), int(in_event.buffer[1]), int(in_event.buffer[2]) );
-    index++;
-  }
-  
-}
 
 int GenericMIDI::registerComponents()
 {
-
+  // makes JACK add this controller to the midiObservers list
+  jack->registerMidiObserver( this );
 }
 
 std::string GenericMIDI::getName()
@@ -401,10 +382,15 @@ int GenericMIDI::loadController( std::string file )
       return LUPPP_RETURN_ERROR;
     }
     
-    cJSON* name = cJSON_GetObjectItem( controllerJson, "name" );
-    if ( name )
+    cJSON* nameJson = cJSON_GetObjectItem( controllerJson, "name" );
+    if ( nameJson )
     {
-      LUPPP_NOTE("Device %s", name->valuestring );
+      name = nameJson->valuestring;
+      LUPPP_NOTE("Device %s", name.c_str() );
+    }
+    else
+    {
+        LUPPP_NOTE("Has no name field");
     }
     
     

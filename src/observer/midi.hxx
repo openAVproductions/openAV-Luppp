@@ -20,8 +20,15 @@ class MidiObserver
     /// name string to show in UI
     virtual std::string getName() = 0;
     
+    
+    
     /// gets called each process() in JACK
-    virtual void process(int nframes) = 0;
+    void process(int nframes);
+    
+    /// called by the subclass to create MIDI ports
+    void registerMidiPorts(std::string name);
+    
+    virtual void midi(unsigned char* data){};
   
   protected:
     // there are jack_port_t* registered ports

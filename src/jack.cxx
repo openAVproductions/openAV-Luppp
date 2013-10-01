@@ -179,13 +179,6 @@ void Jack::quit()
   LUPPP_NOTE("%s","Quit JACK.");
 }
 
-void Jack::registerNewController(Controller* c)
-{
-  // here we tell the Controller instance to install itself: note this music
-  // occur in the DSP thread: it interacts with the JACK / engine data
-  c->registerComponents();
-}
-
 TrackOutput* Jack::getTrackOutput(int t)
 {
   if ( t >= 0 && t < NTRACKS )
@@ -267,7 +260,7 @@ int Jack::process (jack_nframes_t nframes)
     jack_midi_event_get(&in_event, buffers.midi[Buffers::MASTER_MIDI_INPUT], masterMidiInputIndex);
     
     char buffer [50];
-    //sprintf (buffer, "MIDI %i %i %i", int(in_event.buffer[0]), int(in_event.buffer[1]), int(in_event.buffer[2]) );
+    sprintf (buffer, "MIDI %i %i %i", int(in_event.buffer[0]), int(in_event.buffer[1]), int(in_event.buffer[2]) );
     EventGuiPrint e( buffer );
     writeToGuiRingbuffer( &e );
     

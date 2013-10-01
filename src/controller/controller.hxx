@@ -18,8 +18,7 @@ class Controller
     /// creates the controller instance: this is called in the non-RT thread
     Controller();
     
-    /// registers subclass instance with ControllerUpdater: this is a non-RT
-    /// safe action, 
+    /// allows instance to register MIDI observer type functionality
     virtual int registerComponents(){};
     
     virtual ~Controller(){};
