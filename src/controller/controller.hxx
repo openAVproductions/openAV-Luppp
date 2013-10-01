@@ -15,8 +15,12 @@
 class Controller
 {
   public:
-    /// registers subclass instance with ControllerUpdater
+    /// creates the controller instance: this is called in the non-RT thread
     Controller();
+    
+    /// registers subclass instance with ControllerUpdater: this is a non-RT
+    /// safe action, 
+    virtual int registerComponents(){};
     
     virtual ~Controller(){};
     

@@ -83,6 +83,8 @@ namespace Event
     
     SAMPLERATE,
     
+    CONTROLLER_INSTANCE,
+    
     QUIT,
   };
 };
@@ -115,6 +117,15 @@ class EventSamplerate : public EventBase
     uint32_t size() { return sizeof(EventSamplerate); }
     int samplerate;
     EventSamplerate(int sr = 0): samplerate(sr){}
+};
+
+class EventControllerInstance : public EventBase
+{
+  public:
+    int type() { return int(CONTROLLER_INSTANCE); }
+    uint32_t size() { return sizeof(EventControllerInstance); }
+    void* controller;
+    EventControllerInstance(void* c = 0) : controller(c) {}
 };
 
 class EventMasterInputTo : public EventBase

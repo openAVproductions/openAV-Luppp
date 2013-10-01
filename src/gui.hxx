@@ -28,7 +28,11 @@ class Gui
     int quit();
     void askQuit();
     
+    /// shows the options window
     void showOptions();
+    
+    /// resets the state to "new"
+    void reset();
     
     GTrack* getTrack(int id);
     GMasterTrack* getMasterTrack(){return master;}

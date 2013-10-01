@@ -19,14 +19,19 @@ GenericMIDI::GenericMIDI(std::string file, std::string name) :
   Controller(),
   MidiObserver()
 {
-  // register the JACK MIDI ports
-  registerPorts( name );
-  
-  // FIXME: this port is the input port, gotta fix the output port ID number
-  _port = port();
+
   
   /// load the JSON config file
   loadController( file );
+}
+
+
+int GenericMIDI::registerComponents()
+{
+  // register the JACK MIDI ports
+  //registerPorts( name );
+  // FIXME: this port is the input port, gotta fix the output port ID number
+  //_port = port();
 }
 
 std::string GenericMIDI::getName()

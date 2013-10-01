@@ -38,6 +38,8 @@ class GenericMIDI : public Controller, public MidiObserver
     /// Loads 
     GenericMIDI(std::string file, std::string name);
     
+    int registerComponents();
+    
     std::string getName();
     
     /// track actions

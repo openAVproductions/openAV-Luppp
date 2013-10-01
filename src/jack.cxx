@@ -155,17 +155,17 @@ Jack::~Jack()
 
 void Jack::activate()
 {
-  Controller* m = new AkaiAPC();
+  //Controller* m = new AkaiAPC();
   
   // TODO: Add GUI dialog to add controllers, and insert them into the controller map.
   // Watch out for RT stuff, loading file, registering ports etc: before activate?!
   //Controller* m = new GenericMIDI("akai_apc.ctlr","apc");
   
-  Controller* g = new LupppGUI();
+  Controller* gui = new LupppGUI();
   
-  if ( !m || !g )
+  if ( !gui )
   {
-    LUPPP_WARN("%s","Error creating Controller subclass instance");
+    LUPPP_ERROR("%s","Error creating LupppGUI Controller instance");
   }
   
   jack_activate( client );
@@ -177,6 +177,13 @@ void Jack::quit()
   jack_deactivate( client );
   jack_client_close( client );
   LUPPP_NOTE("%s","Quit JACK.");
+}
+
+void Jack::registerNewController(Controller* c)
+{
+  // here we tell the Controller instance to install itself: note this music
+  // occur in the DSP thread: it interacts with the JACK / engine data
+  c->registerComponents();
 }
 
 TrackOutput* Jack::getTrackOutput(int t)

@@ -11,6 +11,7 @@
 // Internal
 #include "jack.hxx"
 #include "event.hxx"
+#include "controller/controller.hxx"
 #include "eventhandler.hxx"
 
 #include "logic.hxx"
@@ -211,6 +212,13 @@ void handleDspEvents()
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventRequestSaveBuffer) );
             //cout << "Save buffer sent with t s ab* " << ev.track << " " << ev.scene << " " << ev.ab << endl;
             jack->getLooper( ev.track )->getClip(ev.scene)->recieveSaveBuffer( ev.ab );
+          } break; }
+        
+        case Event::CONTROLLER_INSTANCE: {
+          if ( availableRead >= sizeof(EventControllerInstance) ) {
+            EventControllerInstance ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventControllerInstance) );
+            jack->registerNewController( (Controller*)ev.controller );
           } break; }
         
         default:

@@ -10,6 +10,7 @@
 extern Jack* jack;
 
 #include "audiobuffer.hxx"
+#include "controller/genericmidi.hxx"
 
 
 #include <stdlib.h>
@@ -102,6 +103,8 @@ static void gui_header_callback(Fl_Widget *w, void *data)
     {
       EventStateReset ev;
       writeToDspRingbuffer( &ev );
+      
+      
     }
   }
   else if ( strcmp(m->label(), "Load Session") == 0 )
@@ -169,16 +172,11 @@ void Gui::selectLoadController(Fl_Widget* w, void*)
   if ( strcmp( path.c_str(), "" ) == 0 )
     return;
   
-  // TODO: Event Message to tell JACK to add a controller:
-  /* Issues:
-   * GenericMidi inherits MidiObserver: which auto registers with Jack. Removing
-   * the auto-register is nasty, is there a way to handle this?
-   * Creating the GenericMIDI instance in the RT thread cannot be done, loads .ctlr file.
-   * 
-   * 
-   *
-   */
+  LUPPP_NOTE("%s","ADD Controller cb");
+  Controller* c = new GenericMIDI("akai_apc.ctlr","apc");
   
+  EventControllerInstance e(c);
+  writeToDspRingbuffer( &e );
 }
 
 void Gui::selectLoadSample( int track, int scene )

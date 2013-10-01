@@ -45,6 +45,9 @@ class Jack
     int getBuffersize();
     int getSamplerate();
     
+    /// add new controllers
+    void registerNewController(Controller* c);
+    
     /// get functions for components owned by Jack 
     Looper*             getLooper(int t);
     TrackOutput*        getTrackOutput(int t);
