@@ -173,10 +173,18 @@ void Gui::selectLoadController(Fl_Widget* w, void*)
     return;
   
   LUPPP_NOTE("%s","ADD Controller cb");
-  Controller* c = new GenericMIDI("akai_apc.ctlr","apc");
+  Controller* c = new GenericMIDI( path );
   
-  EventControllerInstance e(c);
-  writeToDspRingbuffer( &e );
+  if ( c->status() == Controller::CONTROLLER_OK )
+  {
+    EventControllerInstance e(c);
+    writeToDspRingbuffer( &e );
+  }
+  else
+  {
+    LUPPP_ERROR("Controller initialization failed!");
+  }
+  
 }
 
 void Gui::selectLoadSample( int track, int scene )

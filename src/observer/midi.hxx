@@ -20,7 +20,8 @@ class MidiObserver
     /// name string to show in UI
     virtual std::string getName() = 0;
     
-    
+    /// 
+    int status();
     
     /// gets called each process() in JACK
     void process(int nframes);

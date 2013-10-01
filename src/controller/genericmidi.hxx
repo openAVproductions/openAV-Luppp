@@ -36,9 +36,11 @@ class GenericMIDI : public Controller, public MidiObserver
 {
   public:
     /// Loads 
-    GenericMIDI(std::string file, std::string name);
+    GenericMIDI(std::string file);
     
     int registerComponents();
+    
+    Controller::STATUS status();
     
     std::string getName();
     
@@ -65,7 +67,7 @@ class GenericMIDI : public Controller, public MidiObserver
     void process(int nframes);
     
   private:
-    int _port;
+    STATUS stat;
     
     std::string name;
     

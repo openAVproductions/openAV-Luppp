@@ -7,9 +7,10 @@
 
 extern Jack* jack;
 
-MidiObserver::MidiObserver()
+MidiObserver::MidiObserver() :
+  jackInputPort(0),
+  jackOutputPort(0)
 {
-  
 }
 
 
@@ -31,8 +32,16 @@ void MidiObserver::registerMidiPorts(std::string name)
                                               JackPortIsOutput,
                                               0 );
   
-  LUPPP_NOTE("%i, %i", jackInputPort, jackOutputPort );
+  if ( jackInputPort && jackOutputPort )
+  {
+    LUPPP_NOTE("%i, %i", jackInputPort, jackOutputPort );
+  }
+  else
+  {
+    LUPPP_ERROR("Error registering JACK ports" );
+  }
 }
+
 
 void MidiObserver::process(int nframes)
 {

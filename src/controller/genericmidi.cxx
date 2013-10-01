@@ -14,7 +14,7 @@
 extern Jack* jack;
 
 
-GenericMIDI::GenericMIDI(std::string file, std::string name) :
+GenericMIDI::GenericMIDI(std::string file) :
   Controller(),
   MidiObserver()
 {
@@ -22,17 +22,30 @@ GenericMIDI::GenericMIDI(std::string file, std::string name) :
   name = "generic";
   
   // load the JSON config file
-  loadController( file );
+  int result = loadController( file );
   
-  registerMidiPorts( name );
+  if ( result == LUPPP_RETURN_OK )
+  {
+    registerMidiPorts( name );
+    stat = CONTROLLER_OK;
+  }
+  else
+  {
+    LUPPP_ERROR("Error in loading controller map!" );
+    stat = CONTROLLER_ERROR;
+  }
 }
 
+Controller::STATUS GenericMIDI::status()
+{
+  return stat;
+}
 
 
 int GenericMIDI::registerComponents()
 {
   // makes JACK add this controller to the midiObservers list
-  jack->registerMidiObserver( this );
+  jack->registerMidiObserver( (MidiObserver*)this );
 }
 
 std::string GenericMIDI::getName()

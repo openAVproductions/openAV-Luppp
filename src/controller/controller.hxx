@@ -15,6 +15,12 @@
 class Controller
 {
   public:
+    /// used to report the controller status
+    enum STATUS {
+      CONTROLLER_ERROR = 0,
+      CONTROLLER_OK,
+    };
+    
     /// creates the controller instance: this is called in the non-RT thread
     Controller();
     
@@ -22,6 +28,9 @@ class Controller
     virtual int registerComponents(){};
     
     virtual ~Controller(){};
+    
+    /// get the status of the controller
+    virtual STATUS status(){};
     
     /// name string to show in UI
     virtual std::string getName() = 0;
