@@ -62,6 +62,8 @@ class GenericMIDI : public Controller, public MidiObserver
     
     void midi(unsigned char* data);
     
+    void process(int nframes);
+    
   private:
     int _port;
     

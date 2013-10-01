@@ -17,9 +17,9 @@ AkaiAPC::AkaiAPC() :
   footpedalScene(0)
 {
   // register the port in JACK
-  registerPorts("apc");
+  //registerPorts("apc");
   
-  _port = port();
+  //_port = port();
 }
 
 
@@ -29,7 +29,7 @@ void AkaiAPC::recordArm(int t, bool enabled)
   data[0] = 144 + t;
   data[1] = 48; // record enable LED
   data[2] = enabled ? 127 : 0;
-  jack->midiObserverWriteMIDI( _port,  &data[0] );
+  //jack->midiObserverWriteMIDI( _port,  &data[0] );
 }
 
 void AkaiAPC::progress(int t, int s, float f)
@@ -79,7 +79,7 @@ void AkaiAPC::trackSend(int t, int send, float v)
     //cout << "AkaiAPC::trackSend() unknown send!" << endl;
   }
   
-  jack->midiObserverWriteMIDI( _port,  &data[0] );
+  //jack->midiObserverWriteMIDI( _port,  &data[0] );
 }
 
 void AkaiAPC::trackSendActive(int t, int send, bool a)
@@ -93,7 +93,7 @@ void AkaiAPC::trackSendActive(int t, int send, bool a)
   data[1] = 0x30;
   data[2] = 0x7F;
   
-  jack->midiObserverWriteMIDI( _port,  &data[0] );
+  //jack->midiObserverWriteMIDI( _port,  &data[0] );
 }
 
 void AkaiAPC::setSceneState(int t, int clip, GridLogic::State s)
@@ -113,7 +113,7 @@ void AkaiAPC::setSceneState(int t, int clip, GridLogic::State s)
     case GridLogic::STATE_STOP_QUEUED:   data[2] = 6; break;
   }
   
-  jack->midiObserverWriteMIDI( _port,  &data[0] );
+  //jack->midiObserverWriteMIDI( _port,  &data[0] );
 }
 
 void AkaiAPC::metronomeEnable(bool b)
@@ -125,7 +125,7 @@ void AkaiAPC::metronomeEnable(bool b)
   
   if ( !b )
     data[0] = 128;
-  jack->midiObserverWriteMIDI( _port,  &data[0] );
+  //jack->midiObserverWriteMIDI( _port,  &data[0] );
 }
 
 void AkaiAPC::launchScene( int s )
@@ -137,13 +137,13 @@ void AkaiAPC::launchScene( int s )
     data[0] = 128;
     data[1] = 82 + i; // scene play
     data[2] = 0;
-    jack->midiObserverWriteMIDI( _port,  &data[0] );
+    //jack->midiObserverWriteMIDI( _port,  &data[0] );
   }
   
   data[0] = 144;
   data[1] = 82 + s;
   data[2] = 127;
-  jack->midiObserverWriteMIDI( _port,  &data[0] );
+  //jack->midiObserverWriteMIDI( _port,  &data[0] );
 }
 
 void AkaiAPC::mute(int t, bool b)
@@ -364,6 +364,6 @@ void AkaiAPC::reset()
     data[0] = 176 + i;
     data[1] = 0x19;
     data[2] = 2;
-    jack->midiObserverWriteMIDI( _port,  &data[0] );
+    //jack->midiObserverWriteMIDI( _port,  &data[0] );
   }
 }

@@ -216,58 +216,15 @@ Looper* Jack::getLooper(int t)
 }
 
 
-void Jack::registerMidiObserver( MidiObserver* mo, std::string name )
+void Jack::registerMidiObserver( MidiObserver* mo )
 {
-  LUPPP_NOTE("%s: %s","Jack::registerMidiObserver() ", name.c_str() );
-  
-  // register the observer
+  LUPPP_NOTE("%s: %s","Jack::registerMidiObserver()", ((Controller*)mo)->getName().c_str() );
   midiObservers.push_back( mo );
-  
-  //set the index of the MIDI controller port on the MidiObserver
-  midiObservers.back()->port( midiObservers.size() - 1 );
-  
-  // register new MIDI I/O ports for this controller
-  stringstream s;
-  s << name << "_in";
-  jack_port_t* tmp = jack_port_register(client,
-                                        s.str().c_str(),
-                                        JACK_DEFAULT_MIDI_TYPE,
-                                        JackPortIsInput,
-                                        0 );
-  
-  midiObserverInputBuffers.push_back( 0 );
-  midiObserverInputPorts.push_back( tmp );
-
-  stringstream s2;
-  s2 << name << "_out";
-  tmp  = jack_port_register( client,
-                            s2.str().c_str(),
-                            JACK_DEFAULT_MIDI_TYPE,
-                            JackPortIsOutput,
-                            0 );
-  
-  LUPPP_NOTE("Midi observer %s Output port ID %i", name.c_str(), tmp );
-  
-  midiObserverOutputBuffers.push_back( 0 );
-  midiObserverOutputPorts.push_back( tmp );
 }
 
 void Jack::unregisterMidiObserver( MidiObserver* mo )
 {
-  cout << "Jack::unregisterMidiObserver()" << endl;
-  
-  // remove MIDI I/O ports
-  jack_port_unregister(client, midiObserverInputPorts .at( mo->port() ) );
-  jack_port_unregister(client, midiObserverOutputPorts.at( mo->port() ) );
-  
-  
-  /* // indeces for other instances can't change!
-  midiObserverInputBuffers.push_back( 0 );
-  midiObserverInputPorts.push_back( tmp );
-  
-  midiObserverOutputBuffers.push_back( 0 );
-  midiObserverOutputPorts.push_back( tmp );
-  */
+  LUPPP_NOTE("Jack::unregisterMidiObserver()");
   
   // unregister the observer
   //midiObservers.push_back( mo );
@@ -320,24 +277,7 @@ int Jack::process (jack_nframes_t nframes)
   /// process each MidiObserver registered MIDI port
   for(unsigned int i = 0; i < midiObservers.size(); i++ )
   {
-    midiObserverInputBuffers.at( i ) =
-        (void*) jack_port_get_buffer( midiObserverInputPorts.at(i), nframes );
-    
-    midiObserverOutputBuffers.at( i ) =
-        (void*) jack_port_get_buffer( midiObserverOutputPorts.at(i), nframes );
-    jack_midi_clear_buffer( midiObserverOutputBuffers.at( i ) );
-    
-    
-    jack_midi_event_t in_event;
-    int index = 0;
-    int event_count = (int) jack_midi_get_event_count( midiObserverInputBuffers.at( i ) );
-    while ( index < event_count )
-    {
-      jack_midi_event_get(&in_event, midiObserverInputBuffers.at( i ), index);
-      midiObservers.at(i)->midi( (unsigned char*) &in_event.buffer[0] );
-      //printf( "%s MIDI %i %i %i\n", midiObservers.at(i)->getName().c_str(), int(in_event.buffer[0]), int(in_event.buffer[1]), int(in_event.buffer[2]) );
-      index++;
-    }
+    midiObservers.at(i)->process( nframes );
   }
   
   /// process each track, starting at output and working up signal path
@@ -475,26 +415,6 @@ int Jack::getBuffersize()
 int Jack::getSamplerate()
 {
   return jack_get_sample_rate( client );
-}
-
-void Jack::midiObserverWriteMIDI( int portIndex, unsigned char* data )
-{
-  // FIXME: MIDI output needs a QUEUE structure, so we can send more data to the APC "at once"
-  void* portBuffer = midiObserverOutputBuffers.at(portIndex);
-  
-  unsigned char* buf = jack_midi_event_reserve( portBuffer, 0, 3);
-  if( buf != 0 )
-  {
-    memcpy( buf, data, sizeof( unsigned char ) * 3);
-//#ifdef DEBUG_MIDI
-    cout << "midiObserverWriteMIDI portID " << portIndex << " port* " << portBuffer << "  " << int(buf[0]) << ", " << int(buf[1]) << ", " << int(buf[2]) << endl;
-//#endif
-  }
-  else
-  {
-    EventGuiPrint e( "Jack::writeApcOutput(): Buffer full!" );
-    writeToGuiRingbuffer( &e );
-  }
 }
 
 int Jack::timebase(jack_transport_state_t state,

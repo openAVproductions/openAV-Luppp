@@ -59,14 +59,9 @@ class Jack
     TimeManager*        getTimeManager(){return timeManager;}
     ControllerUpdater*  getControllerUpdater(){return controllerUpdater;}
     
-    /// register MIDI observers: they're called when a MIDI message arrives on
-    /// a port they're watching
-    void registerMidiObserver( MidiObserver* mo, std::string name );
-    /// remove a MidiObserver, deregistering ports
+    /// register a MIDI observer
+    void registerMidiObserver( MidiObserver* mo );
     void unregisterMidiObserver( MidiObserver* mo );
-    
-    /// writes MIDI messages to a MidiObserver's port
-    void midiObserverWriteMIDI( int portIndex, unsigned char* data );
     
     /// set the master i/o volume / sends
     void inputVolume( float vol );

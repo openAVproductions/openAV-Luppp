@@ -9,9 +9,7 @@
 
 #include "../jack.hxx"
 #include "../gridlogic.hxx"
-
 #include "../cjson/cJSON.h"
-
 
 extern Jack* jack;
 
@@ -19,19 +17,39 @@ GenericMIDI::GenericMIDI(std::string file, std::string name) :
   Controller(),
   MidiObserver()
 {
-
-  
-  /// load the JSON config file
+  // load the JSON config file
   loadController( file );
-}
-
-
-int GenericMIDI::registerComponents()
-{
+  
   // register the JACK MIDI ports
   //registerPorts( name );
   // FIXME: this port is the input port, gotta fix the output port ID number
   //_port = port();
+}
+
+
+void GenericMIDI::process(int nframes)
+{
+  // get port buffers and setup
+  void* inputBuffer = (void*) jack_port_get_buffer( (jack_port_t*)jackInputPort, nframes );
+  void* outputBuffer= (void*) jack_port_get_buffer( (jack_port_t*)jackInputPort, nframes );
+  jack_midi_clear_buffer( outputBuffer );
+  
+  jack_midi_event_t in_event;
+  int index = 0;
+  int event_count = (int) jack_midi_get_event_count( inputBuffer );
+  while ( index < event_count )
+  {
+    jack_midi_event_get(&in_event, inputBuffer, index);
+    midi( (unsigned char*) &in_event.buffer[0] );
+    //printf( "%s MIDI %i %i %i\n", midiObservers.at(i)->getName().c_str(), int(in_event.buffer[0]), int(in_event.buffer[1]), int(in_event.buffer[2]) );
+    index++;
+  }
+  
+}
+
+int GenericMIDI::registerComponents()
+{
+
 }
 
 std::string GenericMIDI::getName()
@@ -354,7 +372,7 @@ void GenericMIDI::launchScene( int scene )
   data[0] = 144;
   data[1] = 82 + scene;
   data[2] = 127;
-  jack->midiObserverWriteMIDI( _port,  &data[0] );
+  //jack->midiObserverWriteMIDI( _port,  &data[0] );
 }
 
 
