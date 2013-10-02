@@ -5,6 +5,8 @@
 #include <iostream>
 #include <string>
 
+#include <jack/midiport.h>
+
 class Jack;
 extern Jack* jack;
 
@@ -33,8 +35,8 @@ class MidiObserver
   
   private:
     // there are jack_port_t* registered ports
-    void* jackInputPort;
-    void* jackOutputPort;
+    jack_port_t* jackInputPort;
+    jack_port_t* jackOutputPort;
   
 };
 

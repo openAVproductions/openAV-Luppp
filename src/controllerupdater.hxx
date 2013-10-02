@@ -32,7 +32,6 @@ class ControllerUpdater
     void registerController( Controller* controller )
     {
       c.push_back( controller );
-      controller->registerComponents();
     }
     
     void reset()

@@ -34,6 +34,11 @@ Jack::Jack() :
   logic = new Logic();
   gridLogic = new GridLogic();
   
+  
+  GenericMIDI* tmp = new GenericMIDI("akai_apc.ctlr");
+  //tmp->registerComponents();
+  controllerUpdater->registerController( static_cast<Controller*>(tmp) );
+  
   buffers.nframes = jack_get_buffer_size( client );
   buffers.samplerate = jack_get_sample_rate( client );
   

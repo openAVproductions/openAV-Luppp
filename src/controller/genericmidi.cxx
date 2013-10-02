@@ -45,7 +45,7 @@ Controller::STATUS GenericMIDI::status()
 int GenericMIDI::registerComponents()
 {
   // makes JACK add this controller to the midiObservers list
-  jack->registerMidiObserver( (MidiObserver*)this );
+  jack->registerMidiObserver( static_cast<MidiObserver*>(this) );
 }
 
 std::string GenericMIDI::getName()
