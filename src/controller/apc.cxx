@@ -11,7 +11,7 @@ extern Jack* jack;
 
 AkaiAPC::AkaiAPC() :
   Controller(),
-  MidiObserver(),
+  MidiIO(),
   shiftPressed(false),
   footpedalTrack(0),
   footpedalScene(0)

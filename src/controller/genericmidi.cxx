@@ -16,7 +16,7 @@ extern Jack* jack;
 
 GenericMIDI::GenericMIDI(std::string file) :
   Controller(),
-  MidiObserver()
+  MidiIO()
 {
   // default name for each controller
   name = "generic";

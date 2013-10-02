@@ -1,6 +1,6 @@
 
-#ifndef LUPPP_MIDI_OBSERVER_H
-#define LUPPP_MIDI_OBSERVER_H
+#ifndef LUPPP_MIDI_IO_H
+#define LUPPP_MIDI_IO_H
 
 #include <iostream>
 #include <string>
@@ -10,14 +10,14 @@
 class Jack;
 extern Jack* jack;
 
-/** MidiObserver
+/** MidiIO
  *  A base class for obseriving a MIDI port
 **/
-class MidiObserver
+class MidiIO
 {
   public:
-    MidiObserver();
-    virtual ~MidiObserver(){};
+    MidiIO();
+    virtual ~MidiIO(){};
     
     /// name string to show in UI
     virtual std::string getName() = 0;
@@ -42,4 +42,4 @@ class MidiObserver
   
 };
 
-#endif // LUPPP_MIDI_OBSERVER_H
+#endif // LUPPP_MIDI_IO_H

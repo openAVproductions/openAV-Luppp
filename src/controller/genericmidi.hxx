@@ -32,7 +32,7 @@ class Binding
  *  This class is used to load a <controller>.cfg JSON file as a MIDI map.
  *  The name parameter is the name of the JACK MIDI ports that are registered.
 **/
-class GenericMIDI : public Controller, public MidiObserver
+class GenericMIDI : public Controller, public MidiIO
 {
   public:
     /// Loads 

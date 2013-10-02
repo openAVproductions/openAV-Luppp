@@ -7,7 +7,7 @@
 
 #include "../observer/midi.hxx"
 
-class AkaiAPC : public Controller, public MidiObserver
+class AkaiAPC : public Controller, public MidiIO
 {
   public:
     AkaiAPC();

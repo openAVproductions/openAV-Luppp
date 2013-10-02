@@ -7,15 +7,15 @@
 
 extern Jack* jack;
 
-MidiObserver::MidiObserver() :
+MidiIO::MidiIO() :
   jackInputPort(0),
   jackOutputPort(0)
 {
-  LUPPP_NOTE("MidiObserver %i",this);
+  LUPPP_NOTE("MidiIO %i",this);
 }
 
 
-void MidiObserver::writeMidi( unsigned char* data )
+void MidiIO::writeMidi( unsigned char* data )
 {
   void* portBuffer = jack_port_get_buffer( jackOutputPort, jack->getBuffersize() );
   
@@ -36,7 +36,7 @@ void MidiObserver::writeMidi( unsigned char* data )
   
 }
 
-void MidiObserver::registerMidiPorts(std::string name)
+void MidiIO::registerMidiPorts(std::string name)
 {
   // register the JACK MIDI ports
   stringstream i;
@@ -65,7 +65,7 @@ void MidiObserver::registerMidiPorts(std::string name)
 }
 
 
-void MidiObserver::process(int nframes)
+void MidiIO::process(int nframes)
 {
   // get port buffers and setup
   void* inputBuffer = (void*) jack_port_get_buffer( jackInputPort, nframes );
