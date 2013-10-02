@@ -325,7 +325,7 @@ void GenericMIDI::midi(unsigned char* midi)
   int data   = midi[1];
   float value  = midi[2] / 127.f;
   
-  //LUPPP_NOTE("called %i %i %f", status, data, value );
+  LUPPP_NOTE("GenericMIDI::midi() %i %i %f", status, data, value );
   
   // iterate over bindings, execute binding action if matches
   for(unsigned int i = 0; i < midiToAction.size(); i++)
@@ -373,8 +373,8 @@ void GenericMIDI::launchScene( int scene )
   data[0] = 144;
   data[1] = 82 + scene;
   data[2] = 127;
-  //jack->midiObserverWriteMIDI( _port,  &data[0] );
   LUPPP_NOTE("this = %i GenericMIDI::launchScene()", this );
+  writeMidi( data );
 }
 
 

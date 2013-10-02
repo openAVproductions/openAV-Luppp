@@ -32,6 +32,8 @@ class MidiObserver
     void registerMidiPorts(std::string name);
     
     virtual void midi(unsigned char* data){};
+    
+    void writeMidi( unsigned char* data );
   
   private:
     // there are jack_port_t* registered ports

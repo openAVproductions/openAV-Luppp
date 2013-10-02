@@ -15,6 +15,27 @@ MidiObserver::MidiObserver() :
 }
 
 
+void MidiObserver::writeMidi( unsigned char* data )
+{
+  void* portBuffer = jack_port_get_buffer( jackInputPort, jack->getBuffersize() );
+  
+  unsigned char* buffer = jack_midi_event_reserve( portBuffer, 0, 3);
+  if( buffer == 0 )
+  {
+    std::cout << "Error: APC writeMidi() write buffer == 0" << std::endl;
+    return;
+  }
+  else
+  {
+    cout << "JC::writeMidi() " << int(data[0]) << ", " << int(data[1]) << ", " << int(data[2]) << endl; 
+    //memcpy( buffer, data, sizeof(unsigned char)*3 );
+    buffer[0] = data[0];
+    buffer[1] = data[1];
+    buffer[2] = data[2];
+  }
+  
+}
+
 void MidiObserver::registerMidiPorts(std::string name)
 {
   // register the JACK MIDI ports

@@ -216,7 +216,7 @@ Looper* Jack::getLooper(int t)
 
 void Jack::registerMidiObserver( MidiObserver* mo )
 {
-  LUPPP_NOTE("%s","Jack::registerMidiObserver()" );
+  LUPPP_NOTE("Jack::registerMidiObserver()" );
   midiObservers.push_back( mo );
 }
 
