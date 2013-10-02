@@ -218,7 +218,7 @@ void handleDspEvents()
           if ( availableRead >= sizeof(EventControllerInstance) ) {
             EventControllerInstance ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventControllerInstance) );
-            jack->getControllerUpdater()->registerController( (Controller*)ev.controller );
+            jack->getControllerUpdater()->registerController( static_cast<Controller*>(ev.controller) );
           } break; }
         
         default:

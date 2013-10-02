@@ -67,7 +67,7 @@ void ClipSelector::setID( int id )
 void ClipSelector::setState( int clipNum, GridLogic::State s )
 {
 #ifdef DEBUG_CLIP
-  cout << "ClipSelector::setState() t = " << ID << " clipNum = " << clipNum << "  state = " << s << endl;
+  //cout << "ClipSelector::setState() t = " << ID << " clipNum = " << clipNum << "  state = " << s << endl;
 #endif
   clips[clipNum].setState( s );
   redraw();

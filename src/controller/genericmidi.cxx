@@ -44,8 +44,13 @@ Controller::STATUS GenericMIDI::status()
 
 int GenericMIDI::registerComponents()
 {
-  // makes JACK add this controller to the midiObservers list
-  jack->registerMidiObserver( static_cast<MidiObserver*>(this) );
+  LUPPP_NOTE("registerComponents()" );
+  // makes JACK add this controller to the midiObservers list:
+  // note the static_cast<>() is *needed* here for multiple-inheritance
+  MidiObserver* m = static_cast<MidiObserver*>(this);
+  
+  LUPPP_NOTE("jack->reg()" );
+  jack->registerMidiObserver( m );
 }
 
 std::string GenericMIDI::getName()
@@ -369,6 +374,7 @@ void GenericMIDI::launchScene( int scene )
   data[1] = 82 + scene;
   data[2] = 127;
   //jack->midiObserverWriteMIDI( _port,  &data[0] );
+  LUPPP_NOTE("this = %i GenericMIDI::launchScene()", this );
 }
 
 

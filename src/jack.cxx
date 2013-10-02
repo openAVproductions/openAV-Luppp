@@ -35,9 +35,9 @@ Jack::Jack() :
   gridLogic = new GridLogic();
   
   
-  GenericMIDI* tmp = new GenericMIDI("akai_apc.ctlr");
+  //GenericMIDI* tmp = new GenericMIDI("akai_apc.ctlr");
   //tmp->registerComponents();
-  controllerUpdater->registerController( static_cast<Controller*>(tmp) );
+  //controllerUpdater->registerController( static_cast<Controller*>(tmp) );
   
   buffers.nframes = jack_get_buffer_size( client );
   buffers.samplerate = jack_get_sample_rate( client );
@@ -216,7 +216,7 @@ Looper* Jack::getLooper(int t)
 
 void Jack::registerMidiObserver( MidiObserver* mo )
 {
-  LUPPP_NOTE("%s: %s","Jack::registerMidiObserver()", ((Controller*)mo)->getName().c_str() );
+  LUPPP_NOTE("%s","Jack::registerMidiObserver()" );
   midiObservers.push_back( mo );
 }
 

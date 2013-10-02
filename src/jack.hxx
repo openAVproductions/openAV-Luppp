@@ -85,12 +85,7 @@ class Jack
     vector<Looper*>         loopers;
     vector<TrackOutput*>    trackOutputs;
     
-    // FIXME: refactor MidiObserver ports / buffers into one class, single vector
     vector<MidiObserver*>   midiObservers;
-    vector<jack_port_t*>    midiObserverInputPorts;
-    vector<jack_port_t*>    midiObserverOutputPorts;
-    vector<void*>           midiObserverInputBuffers;
-    vector<void*>           midiObserverOutputBuffers;
     
     // FX
     DBMeter* inputMeter;
