@@ -12,4 +12,7 @@ Controller::Controller()
 {
 }
 
-void Controller::reset(){};
+void Controller::reset()
+{
+}
+

@@ -69,7 +69,7 @@ void MidiObserver::process(int nframes)
 {
   // get port buffers and setup
   void* inputBuffer = (void*) jack_port_get_buffer( jackInputPort, nframes );
-  void* outputBuffer= (void*) jack_port_get_buffer( jackInputPort, nframes );
+  void* outputBuffer= (void*) jack_port_get_buffer( jackOutputPort, nframes );
   jack_midi_clear_buffer( outputBuffer );
   
   jack_midi_event_t in_event;
@@ -79,7 +79,7 @@ void MidiObserver::process(int nframes)
   {
     jack_midi_event_get(&in_event, inputBuffer, index);
     midi( (unsigned char*) &in_event.buffer[0] );
-    //printf( "%s MIDI %i %i %i\n", midiObservers.at(i)->getName().c_str(), int(in_event.buffer[0]), int(in_event.buffer[1]), int(in_event.buffer[2]) );
+    printf( "MIDI %i %i %i\n", int(in_event.buffer[0]), int(in_event.buffer[1]), int(in_event.buffer[2]) );
     index++;
   }
   

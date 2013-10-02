@@ -334,7 +334,7 @@ void GenericMIDI::midi(unsigned char* midi)
          midiToAction.at(i).data   == data )
     {
       Binding& b = midiToAction.at(i);
-      //LUPPP_NOTE("Executing action %s", b.action.c_str() );
+      LUPPP_NOTE("Executing action %s", b.action.c_str() );
       
       if( b.action.compare("track:volume") == 0 ) {
         jack->getLogic()->trackVolume( b.track, value );
