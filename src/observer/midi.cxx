@@ -17,7 +17,7 @@ MidiObserver::MidiObserver() :
 
 void MidiObserver::writeMidi( unsigned char* data )
 {
-  void* portBuffer = jack_port_get_buffer( jackInputPort, jack->getBuffersize() );
+  void* portBuffer = jack_port_get_buffer( jackOutputPort, jack->getBuffersize() );
   
   unsigned char* buffer = jack_midi_event_reserve( portBuffer, 0, 3);
   if( buffer == 0 )

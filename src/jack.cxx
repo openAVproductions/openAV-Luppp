@@ -167,6 +167,7 @@ void Jack::activate()
   //Controller* m = new GenericMIDI("akai_apc.ctlr","apc");
   
   Controller* gui = new LupppGUI();
+  controllerUpdater->registerController( gui );
   
   if ( !gui )
   {
