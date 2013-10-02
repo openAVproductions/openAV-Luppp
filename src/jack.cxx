@@ -215,18 +215,18 @@ Looper* Jack::getLooper(int t)
 }
 
 
-void Jack::registerMidiObserver( MidiObserver* mo )
+void Jack::registerMidiIO( MidiIO* mo )
 {
-  LUPPP_NOTE("Jack::registerMidiObserver()" );
-  midiObservers.push_back( mo );
+  LUPPP_NOTE("Jack::registerMidiIO()" );
+  midiIO.push_back( mo );
 }
 
-void Jack::unregisterMidiObserver( MidiObserver* mo )
+void Jack::unregisterMidiIO( MidiIO* mo )
 {
-  LUPPP_NOTE("Jack::unregisterMidiObserver()");
+  LUPPP_NOTE("Jack::unregisterMidiIO()");
   
   // unregister the observer
-  //midiObservers.push_back( mo );
+  //midiIO.push_back( mo );
 }
 
 
@@ -273,10 +273,10 @@ int Jack::process (jack_nframes_t nframes)
     masterMidiInputIndex++;
   }
   
-  /// process each MidiObserver registered MIDI port
-  for(unsigned int i = 0; i < midiObservers.size(); i++ )
+  /// process each MidiIO registered MIDI port
+  for(unsigned int i = 0; i < midiIO.size(); i++ )
   {
-    midiObservers.at(i)->process( nframes );
+    midiIO.at(i)->process( nframes );
   }
   
   /// process each track, starting at output and working up signal path

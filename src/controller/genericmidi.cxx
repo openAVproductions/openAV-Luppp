@@ -47,10 +47,10 @@ int GenericMIDI::registerComponents()
   LUPPP_NOTE("registerComponents()" );
   // makes JACK add this controller to the midiObservers list:
   // note the static_cast<>() is *needed* here for multiple-inheritance
-  MidiObserver* m = static_cast<MidiObserver*>(this);
+  MidiIO* m = static_cast<MidiIO*>(this);
   
   LUPPP_NOTE("jack->reg()" );
-  jack->registerMidiObserver( m );
+  jack->registerMidiIO( m );
 }
 
 std::string GenericMIDI::getName()

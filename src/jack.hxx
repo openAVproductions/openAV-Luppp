@@ -24,7 +24,7 @@
 #include "dsp/dsp_dbmeter.hxx"
 #include "dsp/dsp_sidechain_gain.hxx"
 
-class MidiObserver;
+class MidiIO;
 
 using namespace std;
 
@@ -57,8 +57,8 @@ class Jack
     ControllerUpdater*  getControllerUpdater(){return controllerUpdater;}
     
     /// register a MIDI observer
-    void registerMidiObserver( MidiObserver* mo );
-    void unregisterMidiObserver( MidiObserver* mo );
+    void registerMidiIO( MidiIO* mo );
+    void unregisterMidiIO( MidiIO* mo );
     
     /// set the master i/o volume / sends
     void inputVolume( float vol );
@@ -85,7 +85,7 @@ class Jack
     vector<Looper*>         loopers;
     vector<TrackOutput*>    trackOutputs;
     
-    vector<MidiObserver*>   midiObservers;
+    vector<MidiIO*>   midiIO;
     
     // FX
     DBMeter* inputMeter;
