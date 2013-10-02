@@ -9,7 +9,6 @@
     event.hxx
   
   This file provides declarations for each type of event that the engine uses.
-  
 */
 
 #include "looper.hxx"
@@ -38,7 +37,7 @@ namespace Event
   };
   
   enum {
-    MASTER_VOL,
+    MASTER_VOL = 0,
     MASTER_INPUT_VOL,
     MASTER_INPUT_TO,
     MASTER_INPUT_TO_ACTIVE,

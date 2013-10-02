@@ -334,8 +334,14 @@ void GenericMIDI::midi(unsigned char* midi)
          midiToAction.at(i).data   == data )
     {
       Binding& b = midiToAction.at(i);
-      LUPPP_NOTE("Executing action %s", b.action.c_str() );
+      LUPPP_NOTE("Executing action %i", b.action );
       
+      switch( b.action )
+      {
+        case Event::TRACK_VOLUME: jack->getLogic()->trackVolume( b.track, value ); break;
+      }
+      
+      /*
       if( b.action.compare("track:volume") == 0 ) {
         jack->getLogic()->trackVolume( b.track, value );
       }
@@ -346,9 +352,7 @@ void GenericMIDI::midi(unsigned char* midi)
         LUPPP_NOTE("Executing action %s v = %f", b.action.c_str(), value );
         //jack->getLogic()->trackVolume( b.track, value );
       }
-      
-      
-      
+      */
     }
   }
   
@@ -428,17 +432,43 @@ int GenericMIDI::loadController( std::string file )
         // collect essential data
         cJSON* status = cJSON_GetObjectItem( binding, "status" );
         cJSON* data   = cJSON_GetObjectItem( binding, "data"   );
-        cJSON* action = cJSON_GetObjectItem( binding, "action" );
+        
+        int action = -1;
+        cJSON* actionJson = cJSON_GetObjectItem( binding, "action" );
         
         // collect event metadata
         cJSON* track  = cJSON_GetObjectItem( binding, "track"  );
         
-        LUPPP_NOTE("Binding from %i %i  %s", status->valueint, data->valueint, action->valuestring);
         
-        midiToAction.push_back( Binding(status->valueint, data->valueint, action->valuestring ) );
+        // get Event::type from string, and store the int representation of it:
+        // this is faster for comparison in the RT callback
+        if ( strcmp( actionJson->valuestring, "track:volume" ) == 0 )
+        {
+          action = Event::TRACK_VOLUME;
+        }
         
-        if ( track )
-          midiToAction.back().track = track->valueint;
+        /*
+        if( b.action.compare("track:volume") == 0 ) {
+          jack->getLogic()->trackVolume( b.track, value );
+        }
+        else if( b.action.compare("track:sendAmount") == 0 ) {
+          jack->getLogic()->trackSend( b.track, SEND_REV, value );
+        }
+        else if( b.action.compare("footpedal") == 0 ) {
+          LUPPP_NOTE("Executing action %s v = %f", b.action.c_str(), value );
+          //jack->getLogic()->trackVolume( b.track, value );
+        }
+        */
+        
+        if ( action != -1 )
+        {
+          LUPPP_NOTE("Binding from %i %i  %s", status->valueint, data->valueint, actionJson->valuestring);
+          
+          midiToAction.push_back( Binding(status->valueint, data->valueint, action ) );
+        
+          if ( track )
+            midiToAction.back().track = track->valueint;
+        }
         
       }
     }
@@ -465,7 +495,7 @@ int GenericMIDI::loadController( std::string file )
         
         LUPPP_NOTE("Binding from %s to %i %i", action->valuestring, status->valueint, data->valueint );
         
-        actionToMidi.push_back( Binding(status->valueint, data->valueint, action->valuestring ) );
+        //actionToMidi.push_back( Binding(status->valueint, data->valueint, action->valuestring ) );
       }
     }
     else

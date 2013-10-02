@@ -10,7 +10,7 @@
 #include "../observer/midi.hxx"
 
 /// for future compatibility, LupppAction might be a string mapped to a unique number
-typedef std::string LupppAction;
+typedef int LupppAction;
 
 class Binding
 {
@@ -20,7 +20,8 @@ class Binding
     unsigned char status;
     unsigned char data;
     
-    /// the action this binding relates to
+    /// the action this binding relates to: this is an integer based on the
+    /// event.hxx enumeration of event types
     LupppAction action;
     
     /// arguments to the event: track number, scene number etc
