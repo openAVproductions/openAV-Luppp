@@ -1,22 +1,79 @@
 {
+  "name" : "Akai APC 40",
+  "author" : "Harry van Haaren",
+  "link" : "www.openavproductions.com/luppp#akaiapc40",
+  
   "midiIn" : 1,
   "midiOut" : 1,
   
-  "author" : "testControllerAuthor",
-  "description" : "testControllerDescription",
-  "link" : "www.openavproductions.com/luppp#akaiapc40",
-  
-  "bindings" : [
+  "inputBindings" : [
     {
       "status" : 176,
       "data" : 7,
-      "action" : "track0sendAmount"
+      "action" : "track:volume",
+      "track" : 0
     },
-    
     {
+      "status" : 176,
+      "data" : 16,
+      "action" : "track:sendAmount",
+      "track" : 0
+    },
+    {
+      "status" : 177,
+      "data" : 7,
+      "action" : "track:volume",
+      "track" : 1
+    },
+    {
+      "status" : 178,
+      "data" : 7,
+      "action" : "track:volume",
+      "track" : 2
+    },
+    {
+      "status" : 179,
+      "data" : 7,
+      "action" : "track:volume",
+      "track" : 3
+    },
+    {
+      "status" : 180,
+      "data" : 7,
+      "action" : "track:volume",
+      "track" : 4
+    },
+    {
+      "status" : 181,
+      "data" : 7,
+      "action" : "track:volume",
+      "track" : 5
+    },
+    {
+      "status" : 182,
+      "data" : 7,
+      "action" : "track:volume",
+      "track" : 6
+    },
+    {
+      "status" : 183,
+      "data" : 7,
+      "action" : "track:volume",
+      "track" : 7
+    },
+    {
+      "status" : 176,
+      "data" : 64,
+      "action" : "footpedal"
+    }
+  ],
+  
+  "feedbackBindings" : [
+    {
+      "action" : "track:launchScene",
+      
       "status" : 144,
-      "data" : 53,
-      "action" : "gridPressTrack0Scene0"
+      "data" : 82
     }
   ]
 }

@@ -339,7 +339,10 @@ void GenericMIDI::midi(unsigned char* midi)
       if( b.action.compare("track:volume") == 0 ) {
         jack->getLogic()->trackVolume( b.track, value );
       }
-      if( b.action.compare("footpedal") == 0 ) {
+      else if( b.action.compare("track:sendAmount") == 0 ) {
+        jack->getLogic()->trackSend( b.track, SEND_REV, value );
+      }
+      else if( b.action.compare("footpedal") == 0 ) {
         LUPPP_NOTE("Executing action %s v = %f", b.action.c_str(), value );
         //jack->getLogic()->trackVolume( b.track, value );
       }
