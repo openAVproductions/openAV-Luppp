@@ -159,7 +159,7 @@ void TimeManager::process(Buffers* buffers)
   
   buffers->transportPosition->ticks_per_beat = 1920;
   
-  int bpm = int( samplerate * fpb / 60.0);
+  int bpm = ( samplerate * 60) / fpb;
   //LUPPP_NOTE("BPM = %i " , bpm );
   buffers->transportPosition->beats_per_minute = bpm;
   

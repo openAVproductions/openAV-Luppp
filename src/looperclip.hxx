@@ -3,7 +3,6 @@
 #define LUPPP_LOOPER_CLIP_H
 
 #include <stdio.h>
-#include <cstdio> // size_t
 #include "state/stately.hxx"
 #include "config.hxx"
 #include "gridlogic.hxx"
@@ -77,7 +76,7 @@ class LooperClip : public Stately
     /// Luppp internal buffer resizing
     void newBufferInTransit(bool n);
     bool newBufferInTransit();
-    size_t recordSpaceAvailable();
+    unsigned long recordSpaceAvailable();
     
     /** used to update the size of the buffer for this looperclip. The current
      *  data is copied into the new buffer, then the smaller buffer is sent
