@@ -261,6 +261,24 @@ Gui::Gui() :
   ctlrButton->callback( selectLoadController );
   optionWindow->end();
   
+  
+  
+  
+  // default controller for testing
+  LUPPP_NOTE("Adding APC40 Controller cb");
+  Controller* c = new GenericMIDI( "akai_apc.ctlr" );
+  
+  if ( c->status() == Controller::CONTROLLER_OK )
+  {
+    EventControllerInstance e(c);
+    writeToDspRingbuffer( &e );
+  }
+  else
+  {
+    LUPPP_ERROR("Controller initialization failed!");
+  }
+  
+  
 }
 
 GTrack* Gui::getTrack(int id)

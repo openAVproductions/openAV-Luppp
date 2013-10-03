@@ -37,43 +37,74 @@ void Logic::masterInputToActive( Event::INPUT_TO inputTo, bool active)
 
 void Logic::trackVolume(int t, float v)
 {
-  if ( t < 0 ) // master track
+  if ( t == -1 ) // master track
   {
     jack->masterVolume(v);
     jack->getControllerUpdater()->masterVolume( v );
   }
-  else
+  else if ( t >= 0 && t < NTRACKS )
   {
     jack->getTrackOutput( t )->setMaster( v );
     jack->getControllerUpdater()->volume( t, v );
+  }
+  else
+  {
+    LUPPP_WARN("invalid track number %i: check controller map has \"track\" field.", t );
   }
 }
 
 void Logic::trackRecordArm(int t, bool v)
 {
-  jack->getTrackOutput( t )->recordArm( v );
-  jack->getControllerUpdater()->recordArm( t, v );
+  if ( t >= 0 && t < NTRACKS )
+  {
+    jack->getTrackOutput( t )->recordArm( v );
+    jack->getControllerUpdater()->recordArm( t, v );
+  }
+  else
+  {
+    LUPPP_WARN("invalid track number %i: check controller map has \"track\" field.", t );
+  }
 }
-
 
 void Logic::trackSendActive(int t, int s, bool v)
 {
-  jack->getTrackOutput( t )->setSendActive( s, v );
-  jack->getControllerUpdater()->setTrackSendActive( t, s, v );
+  if ( t >= 0 && t < NTRACKS )
+  {
+    jack->getTrackOutput( t )->setSendActive( s, v );
+    jack->getControllerUpdater()->setTrackSendActive( t, s, v );
+  }
+  else
+  {
+    LUPPP_WARN("invalid track number %i: check controller map has \"track\" field.", t );
+  }
 }
 
 void Logic::trackSend(int t, int send, float v)
 {
+  if ( t >= 0 && t < NTRACKS )
+  {
 #ifdef DEBUG_LOGIC
-  cout << "Logic::trackSend() " << t << " " << send << " " << v << endl;
+    cout << "Logic::trackSend() " << t << " " << send << " " << v << endl;
 #endif
-  jack->getTrackOutput( t )->setSend( send, v );
-  jack->getControllerUpdater()->setTrackSend( t, send, v );
+    jack->getTrackOutput( t )->setSend( send, v );
+    jack->getControllerUpdater()->setTrackSend( t, send, v );
+  }
+  else
+  {
+    LUPPP_WARN("invalid track number %i: check controller map has \"track\" field.", t );
+  }
 }
 
 void Logic::looperClipLenght(int t, int s, int l)
 {
-  jack->getLooper( t )->getClip( s )->setBeats(l);
+  if ( t >= 0 && t < NTRACKS )
+  {
+    jack->getLooper( t )->getClip( s )->setBeats(l);
+  }
+  else
+  {
+    LUPPP_WARN("invalid track number %i: check controller map has \"track\" field.", t );
+  }
 }
 
 

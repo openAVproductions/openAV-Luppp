@@ -64,9 +64,9 @@ int main(int argc, char** argv)
     // counts failures
     int testResult = 0;
     
-    // setup the testing Gui / JACK
-    gui = new Gui();
+    // setup the testing Gui / JACK: Jack first, then GUI
     jack = new Jack();
+    gui = new Gui();
     
     // test offline functionality
     testResult += gui->getDiskReader()->runTests();
@@ -87,9 +87,11 @@ int main(int argc, char** argv)
   }
 #endif
   
-  // setup the "real" GUI / JACK
-  gui = new Gui();
+  // setup the "real" JACK / Gui: Jack first, then GUI
   jack = new Jack();
+  
+  gui = new Gui();
+  
   
   jack->activate();
   gui->show();
