@@ -7,6 +7,7 @@
 
 #include <vector>
 
+#include "../cjson/cJSON.h"
 #include "../observer/midi.hxx"
 
 /// for future compatibility, LupppAction might be a string mapped to a unique number
@@ -15,7 +16,7 @@ typedef int LupppAction;
 class Binding
 {
   public:
-    Binding(unsigned char b1, unsigned char b2, LupppAction act) : status(b1), data(b2), action(act) {}
+    Binding() : status(0), data(0), action(0), active(false),track(-2),scene(-1),send(-1){}
     
     unsigned char status;
     unsigned char data;
@@ -80,6 +81,8 @@ class GenericMIDI : public Controller, public MidiIO
     
     int loadController(std::string controllerFile);
     
+    /// creates a binding from a cJSON inputBindings / outputBindings object
+    Binding* setupBinding( cJSON* bindings );
     
     
     /// for "sampling" a clip in the grid, and applying events to it:

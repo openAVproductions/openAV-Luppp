@@ -37,7 +37,10 @@ namespace Event
   };
   
   enum {
-    MASTER_VOL = 0,
+    // default event type
+    EVENT_NULL = 0,
+    
+    MASTER_VOL,
     MASTER_INPUT_VOL,
     MASTER_INPUT_TO,
     MASTER_INPUT_TO_ACTIVE,

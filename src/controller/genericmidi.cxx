@@ -9,7 +9,6 @@
 
 #include "../jack.hxx"
 #include "../gridlogic.hxx"
-#include "../cjson/cJSON.h"
 
 extern Jack* jack;
 
@@ -330,25 +329,24 @@ void GenericMIDI::midi(unsigned char* midi)
   // iterate over bindings, execute binding action if matches
   for(unsigned int i = 0; i < midiToAction.size(); i++)
   {
-    Binding& b = *midiToAction.at(i);
+    Binding* b = midiToAction.at(i);
     
-    if ( b.status == status && b.data == data )
+    if ( b->status == status && b->data == data )
     {
+      LUPPP_NOTE("Executing action %i", b->action );
       
-      LUPPP_NOTE("Executing action %i", b.action );
-      
-      switch( b.action )
+      switch( b->action )
       {
-        case Event::TRACK_VOLUME: jack->getLogic()->trackVolume( b.track, value ); break;
-        case Event::TRACK_SEND:   jack->getLogic()->trackSend( b.track, b.send, value ); break;
-        case Event::TRACK_SEND_ACTIVE: jack->getLogic()->trackSendActive( b.track, b.send, b.active ); break;
-        case Event::TRACK_RECORD_ARM: jack->getLogic()->trackRecordArm( b.track, b.active ); break;
+        case Event::TRACK_VOLUME: jack->getLogic()->trackVolume( b->track, value ); break;
+        case Event::TRACK_SEND:   jack->getLogic()->trackSend( b->track, b->send, value ); break;
+        case Event::TRACK_SEND_ACTIVE: jack->getLogic()->trackSendActive( b->track, b->send, b->active ); break;
+        case Event::TRACK_RECORD_ARM: jack->getLogic()->trackRecordArm( b->track, b->active ); break;
         
         case Event::GRID_EVENT:
-            if ( b.active )
-              jack->getGridLogic()->pressed( b.track, b.scene );
+            if ( b->active )
+              jack->getGridLogic()->pressed( b->track, b->scene );
             else
-              jack->getGridLogic()->pressed( b.track, b.scene );
+              jack->getGridLogic()->pressed( b->track, b->scene );
             break;
         
         case Event::MASTER_VOL:   jack->getLogic()->trackVolume( -1     , value ); break;
@@ -440,93 +438,10 @@ int GenericMIDI::loadController( std::string file )
       int nBindings = cJSON_GetArraySize( inputBindings );
       for(int i = 0; i < nBindings; i++ )
       {
-        cJSON* binding = cJSON_GetArrayItem( inputBindings, i );
-        
-        // collect essential data
-        cJSON* status = cJSON_GetObjectItem( binding, "status" );
-        cJSON* data   = cJSON_GetObjectItem( binding, "data"   );
-        
-        // placeholders for information: checked for -1 later
-        int send = -1;
-        
-        int action = -1;
-        cJSON* actionJson = cJSON_GetObjectItem( binding, "action" );
-        
-        // collect event metadata
-        cJSON* track = cJSON_GetObjectItem( binding, "track" );
-        cJSON* scene = cJSON_GetObjectItem( binding, "scene" );
-        
-        int active = -1;
-        cJSON* activeJson  = cJSON_GetObjectItem( binding, "active" );
-        if ( activeJson )
-          active = activeJson->valueint;
-        
-        // get Event::type from string, and store the int representation of it:
-        // this is faster for comparison in the RT callback
-        if ( strcmp( actionJson->valuestring, "track:volume" ) == 0 ) {
-          action = Event::TRACK_VOLUME;
-        } else if ( strcmp( actionJson->valuestring, "track:send" ) == 0 ) {
-          action = Event::TRACK_SEND;
-          send = Event::SEND_POSTFADER;
-        }
-        else if ( strcmp( actionJson->valuestring, "track:xside" ) == 0 ) {
-          action = Event::TRACK_SEND;
-          send = Event::SEND_XSIDE;
-        }
-        else if ( strcmp( actionJson->valuestring, "track:sendactive" ) == 0 ) {
-          action = Event::TRACK_SEND_ACTIVE;
-          send = Event::SEND_POSTFADER;
-        }
-        else if ( strcmp( actionJson->valuestring, "track:keyactive" ) == 0 ) {
-          action = Event::TRACK_SEND_ACTIVE;
-          send = Event::SEND_KEY;
-        }
-        else if ( strcmp( actionJson->valuestring, "track:recordarm" ) == 0 ) {
-          action = Event::TRACK_RECORD_ARM;
-        }
-        
-        else if ( strcmp( actionJson->valuestring, "track:clippressed" ) == 0 ) {
-          action = Event::GRID_EVENT;
-          active = 1; // press event
-        }
-        else if ( strcmp( actionJson->valuestring, "track:clipreleased" ) == 0 ) {
-          action = Event::GRID_EVENT;
-          active = 0; // release event
-        }
-        
-        else if ( strcmp( actionJson->valuestring, "master:volume" ) == 0 ) {
-          action = Event::MASTER_VOL;
-        } 
-        
-        /*
-        if( b.action.compare("track:volume") == 0 ) {
-          jack->getLogic()->trackVolume( b.track, value );
-        }
-        else if( b.action.compare("track:sendAmount") == 0 ) {
-          jack->getLogic()->trackSend( b.track, SEND_POSTFADER, value );
-        }
-        else if( b.action.compare("footpedal") == 0 ) {
-          LUPPP_NOTE("Executing action %s v = %f", b.action.c_str(), value );
-          //jack->getLogic()->trackVolume( b.track, value );
-        }
-        */
-        
-        if ( action != -1 )
-        {
-          LUPPP_NOTE("Binding from %i %i  %s", status->valueint, data->valueint, actionJson->valuestring);
-          
-          midiToAction.push_back( new Binding(status->valueint, data->valueint, action ) );
-          
-          if ( track )
-            midiToAction.back()->track = track->valueint;
-          if ( scene )
-            midiToAction.back()->scene = scene->valueint;
-          if ( send != -1 )
-            midiToAction.back()->send = send;
-          if ( active != -1 )
-            midiToAction.back()->active = active;
-        }
-        
+        cJSON* bindingJson = cJSON_GetArrayItem( inputBindings, i );
+        Binding* tmp = setupBinding( bindingJson );
+        if ( tmp )
+          midiToAction.push_back( tmp );
       }
     }
     else
@@ -575,3 +490,92 @@ int GenericMIDI::loadController( std::string file )
   
   return LUPPP_RETURN_OK;
 }
+
+
+Binding* GenericMIDI::setupBinding( cJSON* binding )
+{
+  // create binding, then fill in data as from JSON.
+  Binding* tmp = new Binding();
+  
+  cJSON* statusJson = cJSON_GetObjectItem( binding, "status" );
+  cJSON* dataJson   = cJSON_GetObjectItem( binding, "data"   );
+  if ( !statusJson || !dataJson )
+  {
+    LUPPP_WARN("Binding doesn't have status / data field: fix .ctlr file");
+    return 0;
+  }
+  
+  cJSON* actionJson = cJSON_GetObjectItem( binding, "action" );
+  if ( !actionJson )
+  {
+    LUPPP_WARN("Binding doesn't have action field: check .ctlr file");
+    return 0;
+  }
+  
+  tmp->status = statusJson->valueint;
+  tmp->data   = dataJson->valueint;
+  
+  if ( strcmp( actionJson->valuestring, "track:volume" ) == 0 ) {
+    tmp->action = Event::TRACK_VOLUME;
+  } else if ( strcmp( actionJson->valuestring, "track:send" ) == 0 ) {
+    tmp->action = Event::TRACK_SEND;
+    tmp->send = Event::SEND_POSTFADER;
+  }
+  else if ( strcmp( actionJson->valuestring, "track:xside" ) == 0 ) {
+    tmp->action = Event::TRACK_SEND;
+    tmp->send = Event::SEND_XSIDE;
+  }
+  else if ( strcmp( actionJson->valuestring, "track:sendactive" ) == 0 ) {
+    tmp->action = Event::TRACK_SEND_ACTIVE;
+    tmp->send = Event::SEND_POSTFADER;
+  }
+  else if ( strcmp( actionJson->valuestring, "track:keyactive" ) == 0 ) {
+    tmp->action = Event::TRACK_SEND_ACTIVE;
+    tmp->send = Event::SEND_KEY;
+  }
+  else if ( strcmp( actionJson->valuestring, "track:recordarm" ) == 0 ) {
+    tmp->action = Event::TRACK_RECORD_ARM;
+  }
+  
+  else if ( strcmp( actionJson->valuestring, "track:clippressed" ) == 0 ) {
+    tmp->action = Event::GRID_EVENT;
+    tmp->active = 1; // press event
+  }
+  else if ( strcmp( actionJson->valuestring, "track:clipreleased" ) == 0 ) {
+    tmp->action = Event::GRID_EVENT;
+    tmp->active = 0; // release event
+  }
+  
+  else if ( strcmp( actionJson->valuestring, "master:volume" ) == 0 ) {
+    tmp->action = Event::MASTER_VOL;
+  } 
+  
+  // check for valid event: otherwise pass
+  if ( tmp->action != Event::EVENT_NULL )
+  {
+    LUPPP_NOTE("Binding from %i %i  %s", statusJson->valueint, dataJson->valueint, actionJson->valuestring);
+    
+    cJSON* track      = cJSON_GetObjectItem( binding, "track"  );
+    cJSON* scene      = cJSON_GetObjectItem( binding, "scene"  );
+    cJSON* activeJson = cJSON_GetObjectItem( binding, "active" );
+    
+    if ( track )
+      tmp->track = track->valueint;
+    if ( scene )
+      tmp->scene = scene->valueint;
+    if ( activeJson )
+      tmp->active = activeJson->valueint;
+    
+    return tmp;
+  }
+  else
+  {
+    LUPPP_WARN("Binding action not recognized: %s", actionJson->valuestring );
+  }
+  
+  return 0;
+  
+}
+
+
+
