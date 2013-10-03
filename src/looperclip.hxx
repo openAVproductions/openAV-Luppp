@@ -3,6 +3,7 @@
 #define LUPPP_LOOPER_CLIP_H
 
 #include <stdio.h>
+#include <cstdio> // size_t
 #include "state/stately.hxx"
 #include "config.hxx"
 #include "gridlogic.hxx"

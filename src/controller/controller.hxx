@@ -25,12 +25,12 @@ class Controller
     Controller();
     
     /// allows instance to register MIDI observer type functionality
-    virtual int registerComponents(){};
+    virtual int registerComponents(){return 0;}
     
     virtual ~Controller(){};
     
     /// get the status of the controller
-    virtual STATUS status(){};
+    virtual STATUS status(){return CONTROLLER_OK;}
     
     /// name string to show in UI
     virtual std::string getName() = 0;
