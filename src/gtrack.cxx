@@ -3,10 +3,10 @@
 #include "gui.hxx"
 
 static void gtrack_vol_cb(Fl_Widget *w, void *data);
-static void gtrack_side_cb(Fl_Widget *w, void *data);
-static void gtrack_post_cb(Fl_Widget *w, void *data);
-static void gtrack_reverb_cb(Fl_Widget *w, void *data);
-static void gtrack_active_cb(Fl_Widget *w, void *data);
+static void gtrack_key_cb(Fl_Widget *w, void *data);
+static void gtrack_xsideDial_cb(Fl_Widget *w, void *data);
+static void gtrack_sendDial_cb(Fl_Widget *w, void *data);
+static void gtrack_send_cb(Fl_Widget *w, void *data);
 static void gtrack_record_cb(Fl_Widget *w, void *data);
 
 
@@ -22,30 +22,34 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
   volume(x+66, y +425, 36, 166, ""),
   
   
-  active   (x+11, y +430 + 32, 50, 25, "Snd"), // active
+  sendDial   (x+21, y +430 +   0, 30, 30, ""),
+  sendActive (x+11, y +430 +  32, 50, 25, "Snd"),
   
-  side     (x+11, y +430 + 101, 50, 25, "Key"),
+  xsideDial    (x+21, y +430 + 69, 30, 30, ""),
+  keyActive  (x+11, y +430 + 101, 50, 25, "Key"),
   
-  recEnable(x+11, y +430 + 132, 50, 25, "Rec"), // record
-  post     (x+21, y +430 + 69, 30, 30, ""),
-  
-  rev      (x+21, y +430 +  0, 30, 30, "")
+  recordActive  (x+11, y +430 + 132, 50, 25, "Rec")
 {
   ID = privateID++;
   
   clipSel.setID( ID );
   
-  side.callback( gtrack_side_cb, this );
-  side.setColor( 0, 0.6, 1 );
+  sendDial.callback( gtrack_sendDial_cb, this );
+  sendActive.setColor( 0, 1.0, 0.0 );
+  sendActive.callback( gtrack_send_cb, this );
   
-  active.setColor( 0, 1.0, 0.0 );
-  active.callback( gtrack_active_cb, this );
-  recEnable.setColor( 1, 0.0, 0.0 );
-  recEnable.callback( gtrack_record_cb, this );
+  xsideDial.callback( gtrack_xsideDial_cb, this );
+  xsideDial.align( FL_ALIGN_BOTTOM );
+  keyActive.callback( gtrack_key_cb, this );
+  keyActive.setColor( 0, 0.6, 1 );
   
-  rev.callback( gtrack_reverb_cb, this );
-  post.callback( gtrack_post_cb, this );
-  post.align( FL_ALIGN_BOTTOM );
+  
+  recordActive.setColor( 1, 0.0, 0.0 );
+  recordActive.callback( gtrack_record_cb, this );
+  
+  
+  
+
   
   volume.callback( gtrack_vol_cb, this );
   
@@ -57,7 +61,23 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
   end(); // close the group
 }
 
-void gtrack_reverb_cb(Fl_Widget *w, void *data)
+float GTrack::getSend(){return sendDial.value(); }
+float GTrack::getXSide(){return xsideDial.value(); }
+
+bool GTrack::getSendActive  (){return sendActive.value(); }
+bool GTrack::getKeyActive   (){return keyActive.value(); }
+bool GTrack::getRecordActive(){return recordActive.value(); }
+
+
+void GTrack::setSend(float s){ sendDial.value( s ); }
+void GTrack::setXSide(float s){ xsideDial.value( s ); }
+
+void GTrack::setSendActive(bool a){ sendActive.value( a ); }
+void GTrack::setKeyActive(bool a){ keyActive.value( a ); }
+void GTrack::setRecordActive(bool a){ recordActive.value( a ); }
+
+
+void gtrack_sendDial_cb(Fl_Widget *w, void *data)
 {
   GTrack* track = (GTrack*) data;
   EventTrackSend e( track->ID, SEND_POSTFADER, ((Avtk::Dial*)w)->value() );
@@ -66,7 +86,7 @@ void gtrack_reverb_cb(Fl_Widget *w, void *data)
 }
 
 
-void gtrack_side_cb(Fl_Widget *w, void *data)
+void gtrack_key_cb(Fl_Widget *w, void *data)
 {
   GTrack* track = (GTrack*) data;
   Avtk::LightButton* d = (Avtk::LightButton*)w;
@@ -85,7 +105,7 @@ void gtrack_side_cb(Fl_Widget *w, void *data)
 }
 
 
-void gtrack_post_cb(Fl_Widget *w, void *data)
+void gtrack_xsideDial_cb(Fl_Widget *w, void *data)
 {
   GTrack* track = (GTrack*) data;
   EventTrackSend e( track->ID, SEND_XSIDE, ((Avtk::Dial*)w)->value() );
@@ -102,7 +122,7 @@ void gtrack_vol_cb(Fl_Widget *w, void *data)
 }
 
 
-void gtrack_active_cb(Fl_Widget *w, void *data)
+void gtrack_send_cb(Fl_Widget *w, void *data)
 {
   GTrack* track = (GTrack*) data;
   Avtk::LightButton* d = (Avtk::LightButton*)w;
@@ -138,7 +158,3 @@ void gtrack_record_cb(Fl_Widget *w, void *data)
   printf("track %i record Arm %s\n", track->ID, b ? "off" : "on" );
 }
 
-void GTrack::recordArm(bool b)
-{
-  recEnable.value( b );
-}

@@ -35,8 +35,24 @@ class GTrack : public Fl_Group
     
     GTrack(int x, int y, int w, int h, const char* l = 0 );
     
-    void recordArm(bool b);
     
+    // getters
+    float getSend();
+    float getXSide();
+    
+    bool getSendActive();
+    bool getKeyActive();
+    bool getRecordActive();
+    
+    // setters
+    void setSend(float s);
+    void setXSide(float s);
+    
+    void setSendActive(bool a);
+    void setKeyActive(bool a);
+    void setRecordActive(bool a);
+    
+  
     int ID;
     
     Avtk::Background bg;
@@ -49,11 +65,15 @@ class GTrack : public Fl_Group
     
     Avtk::Volume volume;
     
-    Avtk::LightButton active;
-    Avtk::LightButton side;
-    Avtk::LightButton recEnable;
-    Avtk::Dial   post;
-    Avtk::Dial   rev;
+  private:
+    Avtk::Dial        sendDial;
+    Avtk::LightButton sendActive;
+    
+    Avtk::Dial        xsideDial;
+    Avtk::LightButton keyActive;
+    
+    Avtk::LightButton recordActive;
+    
     
     static int privateID;
 };

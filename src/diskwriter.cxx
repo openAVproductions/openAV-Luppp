@@ -172,9 +172,13 @@ int DiskWriter::writeSession()
     cJSON_AddStringToObject( track, "name", gui->getTrack(t)->bg.getLabel() );
     
     cJSON_AddNumberToObject( track, "fader", gui->getTrack(t)->getVolume()->value() );
-    cJSON_AddNumberToObject( track, "side", gui->getTrack(t)->side.value() );
-    cJSON_AddNumberToObject( track, "post", gui->getTrack(t)->post.value() );
-    cJSON_AddNumberToObject( track, "reverb", gui->getTrack(t)->rev.value() );
+    
+    
+    cJSON_AddNumberToObject( track, "sendAmount" , gui->getTrack(t)->getSend()       );
+    cJSON_AddNumberToObject( track, "sendActive" , gui->getTrack(t)->getSendActive() );
+    
+    cJSON_AddNumberToObject( track, "xsideAmount", gui->getTrack(t)->getXSide()      );
+    cJSON_AddNumberToObject( track, "keyActive"  , gui->getTrack(t)->getKeyActive()  );
     
     // write clipData vector into clip placeholder
     cJSON* clips = cJSON_CreateArray();

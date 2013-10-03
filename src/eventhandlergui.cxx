@@ -116,7 +116,7 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventTrackRecordArm) ) {
             EventTrackRecordArm ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTrackRecordArm) );
-            gui->getTrack(ev.track)->recordArm( ev.recordArm );
+            gui->getTrack(ev.track)->setRecordActive( ev.recordArm );
             break; }
           }
           
@@ -177,13 +177,14 @@ void handleGuiEvents()
             if ( ev.send == SEND_POSTFADER )
               if ( ev.track < NTRACKS )
               {
-                gui->getTrack(ev.track)->rev.value( ev.value );
+                gui->getTrack(ev.track)->setSend(ev.value );
               }
             if ( ev.send == SEND_XSIDE )
               if (   ev.track < NTRACKS )
               {
-                gui->getTrack(ev.track)->post.value( ev.value );
+                gui->getTrack(ev.track)->setXSide( ev.value );
               }
+            /* SEND_KEY is a boolean: on or off: so no value needed
             if ( ev.send == SEND_KEY )
             {
               if ( ev.track < NTRACKS )
@@ -191,6 +192,7 @@ void handleGuiEvents()
                 gui->getTrack(ev.track)->side.value( ev.value );
               }
             }
+            */
           } break; }
         
         case Event::TRACK_SEND_ACTIVE: {
@@ -200,18 +202,20 @@ void handleGuiEvents()
             if ( ev.send == SEND_POSTFADER )
               if ( ev.track < NTRACKS )
               {
-                gui->getTrack(ev.track)->rev.value( ev.active );
+                gui->getTrack(ev.track)->setSendActive(ev.active );
               }
+            /* XSIDE is always active
             if ( ev.send == SEND_XSIDE )
               if ( ev.track < NTRACKS )
               {
-                gui->getTrack(ev.track)->post.value( ev.active );
+                //gui->getTrack(ev.track)->( ev.active );
               }
+            */
             if ( ev.send == SEND_KEY )
             {
               if ( ev.track < NTRACKS )
               {
-                gui->getTrack(ev.track)->side.value( ev.active );
+                gui->getTrack(ev.track)->setKeyActive( ev.active );
               }
             }
           } break; }

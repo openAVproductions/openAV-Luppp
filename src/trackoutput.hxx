@@ -49,9 +49,9 @@ class TrackOutput : public AudioProcessor
     float _toSidechain;
     float _toPostSidechain;
     
-    bool _toReverbActive;
-    bool _toSidechainActive;
-    bool _toPostSidechainActive;
+    bool _toPostfaderActive;
+    bool _toKeyActive;
+    bool _toXSideActive;
     
     /// Pointer to "previous" processor: the graph is backwards
     AudioProcessor* previousInChain;

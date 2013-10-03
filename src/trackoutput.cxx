@@ -22,9 +22,9 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
   _toSidechain     = 0.0;
   _toPostSidechain = 0.0;
   
-  _toReverbActive        = 0;
-  _toSidechainActive     = 0;
-  _toPostSidechainActive = 0;
+  _toPostfaderActive        = 0;
+  _toKeyActive     = 0;
+  _toXSideActive = 0;
 }
 
 
@@ -54,13 +54,13 @@ void TrackOutput::setSendActive( int send, bool a )
   switch( send )
   {
     case SEND_POSTFADER:
-        _toReverbActive = a;
+        _toPostfaderActive = a;
         break;
     case SEND_KEY:
-        _toSidechainActive = a;
+        _toKeyActive = a;
         break;
     case SEND_XSIDE:
-        _toPostSidechainActive = a;
+        _toXSideActive = a;
         break;
   }
 }
@@ -122,14 +122,14 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
     masterL[i]       += tmp * _toMaster * (1-_toPostSidechain);
     masterR[i]       += tmp * _toMaster * (1-_toPostSidechain);
     
-    if ( _toReverbActive )
+    if ( _toPostfaderActive )
       reverb[i]        += tmp * _toReverb * _toMaster;
     
-    if ( _toPostSidechainActive )
+    if ( _toXSideActive )
       postSidechain[i] += tmp * _toPostSidechain * _toMaster;
     
     // turning down an element in the mix should *NOT* influence sidechaining
-    if ( _toSidechainActive )
+    if ( _toKeyActive )
       sidechain[i]     += tmp;
     
   }
