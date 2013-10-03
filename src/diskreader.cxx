@@ -306,9 +306,9 @@ int DiskReader::readTracks()
         cJSON* side = cJSON_GetObjectItem( track, "side");
         cJSON* post = cJSON_GetObjectItem( track, "post");
         cJSON* rev  = cJSON_GetObjectItem( track, "reverb");
-        EventTrackSend e1( t, SEND_SIDE, side->valuedouble );
-        EventTrackSend e2( t, SEND_POST, post->valuedouble );
-        EventTrackSend e3( t, SEND_REV, rev->valuedouble );
+        EventTrackSend e1( t, SEND_KEY , side->valuedouble );
+        EventTrackSend e2( t, SEND_XSIDE, post->valuedouble );
+        EventTrackSend e3( t, SEND_POSTFADER , rev->valuedouble  );
         writeToDspRingbuffer( &e1 );
         writeToDspRingbuffer( &e2 );
         writeToDspRingbuffer( &e3 );

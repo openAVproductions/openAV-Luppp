@@ -54,7 +54,7 @@ void AkaiAPC::trackSend(int t, int send, float v)
   unsigned char data[3];
   
   /*
-  if ( send == SEND_SIDE )
+  if ( send == SEND_KEY )
   {
     int tmp = v > 0.5 ? 144 : 128;
     data[0] = tmp  + t;
@@ -62,13 +62,13 @@ void AkaiAPC::trackSend(int t, int send, float v)
     data[2] = 127 ;
   }
   */
-  if ( send == SEND_POST )
+  if ( send == SEND_XSIDE )
   {
     data[0] = 176 + t;
     data[1] = 16;
     data[2] = 127 * v;
   }
-  else if ( send == SEND_REV )
+  else if ( send == SEND_POSTFADER )
   {
     data[0] = 176 + t;
     data[1] = 20;
@@ -181,7 +181,7 @@ void AkaiAPC::noteOn( int track, int note, int vel )
         jack->getLogic()->trackRecordArm(track, true);
         } break;
     case 49: { // solo / cue
-        jack->getLogic()->trackSend(track, SEND_SIDE, 1);
+        jack->getLogic()->trackSend(track, SEND_KEY, 1);
         } break;
     
     case 65: { // metronome button
@@ -234,7 +234,7 @@ void AkaiAPC::noteOff( int track, int note, int vel )
         jack->getLogic()->trackRecordArm(track, false);
         } break;
     case 49: { // solo / cue
-        jack->getLogic()->trackSend(track, SEND_SIDE, 0);
+        jack->getLogic()->trackSend(track, SEND_KEY, 0);
         }
     
     case 65: { // metronome button
@@ -282,28 +282,28 @@ void AkaiAPC::ccChange( int track, int cc, float value )
       
       /// Device Control
       case 16: {
-          jack->getLogic()->trackSend( track, SEND_POST, value );
+          jack->getLogic()->trackSend( track, SEND_XSIDE, value );
           break; }
       case 17: {
-          //jack->getLogic()->trackSend( track, SEND_SIDE, value );
+          //jack->getLogic()->trackSend( track, SEND_KEY, value );
           break; }
       case 18: {
-          //jack->getLogic()->trackSend( track, SEND_SIDE, value );
+          //jack->getLogic()->trackSend( track, SEND_KEY, value );
           break; }
       case 19: {
-          //jack->getLogic()->trackSend( track, SEND_SIDE, value );
+          //jack->getLogic()->trackSend( track, SEND_KEY, value );
           break; }
       case 20: {
-          jack->getLogic()->trackSend( track, SEND_REV, value );
+          jack->getLogic()->trackSend( track, SEND_POSTFADER, value );
           break; }
       case 21: {
-          //jack->getLogic()->trackSend( track, SEND_REV, value );
+          //jack->getLogic()->trackSend( track, SEND_POSTFADER, value );
           break; }
       case 22: {
-          //jack->getLogic()->trackSend( track, SEND_REV, value );
+          //jack->getLogic()->trackSend( track, SEND_POSTFADER, value );
           break; }
       case 23: {
-          //jack->getLogic()->trackSend( track, SEND_REV, value );
+          //jack->getLogic()->trackSend( track, SEND_POSTFADER, value );
           break; }
       
       

@@ -95,19 +95,19 @@ void GenericMIDI::trackSend(int t, int send, float v)
   
   unsigned char data[3];
   
-  if ( send == SEND_SIDE )
+  if ( send == SEND_KEY )
   {
     data[0] = 144 + t;
     data[1] = 49;
     data[2] = v > 0.5 ? 127 : 0 ;
   }
-  else if ( send == SEND_POST )
+  else if ( send == SEND_XSIDE )
   {
     data[0] = 176 + t;
     data[1] = 16;
     data[2] = 127 * v;
   }
-  else if ( send == SEND_REV )
+  else if ( send == SEND_POSTFADER )
   {
     data[0] = 176 + t;
     data[1] = 17;
@@ -188,7 +188,7 @@ void GenericMIDI::noteOn( int track, int note, int vel )
         jack->getLogic()->trackRecordArm(track, true);
         } break;
     case 49: { // solo / cue
-        jack->getLogic()->trackSend(track, SEND_SIDE, 1);
+        jack->getLogic()->trackSend(track, SEND_KEY, 1);
         } break;
     
     case 82: // Master Scene Clips
@@ -235,7 +235,7 @@ void GenericMIDI::noteOff( int track, int note, int vel )
         jack->getLogic()->trackRecordArm(track, false);
         } break;
     case 49: { // solo / cue
-        jack->getLogic()->trackSend(track, SEND_SIDE, 0);
+        jack->getLogic()->trackSend(track, SEND_KEY, 0);
         }
     
     case 99: { // tap tempo
@@ -279,13 +279,13 @@ void GenericMIDI::ccChange( int track, int cc, float value )
       
       /// Device Control
       case 16: {
-          //jack->getLogic()->trackSend( track, SEND_SIDE, value );
+          //jack->getLogic()->trackSend( track, SEND_KEY, value );
           break; }
       case 17: {
-          jack->getLogic()->trackSend( track, SEND_POST, value );
+          jack->getLogic()->trackSend( track, SEND_XSIDE, value );
           break; }
       case 18: {
-          jack->getLogic()->trackSend( track, SEND_REV, value );
+          jack->getLogic()->trackSend( track, SEND_POSTFADER, value );
           break; }
       
       
@@ -339,6 +339,11 @@ void GenericMIDI::midi(unsigned char* midi)
       switch( b.action )
       {
         case Event::TRACK_VOLUME: jack->getLogic()->trackVolume( b.track, value ); break;
+        case Event::TRACK_SEND:   jack->getLogic()->trackSend( b.track, b.send, value ); break;
+        case Event::TRACK_SEND_ACTIVE: jack->getLogic()->trackSendActive( b.track, b.send, b.active ); break;
+        case Event::TRACK_RECORD_ARM: jack->getLogic()->trackRecordArm( b.track, b.active ); break;
+        
+        case Event::MASTER_VOL:   jack->getLogic()->trackVolume( -1     , value ); break;
       }
       
       /*
@@ -346,7 +351,7 @@ void GenericMIDI::midi(unsigned char* midi)
         jack->getLogic()->trackVolume( b.track, value );
       }
       else if( b.action.compare("track:sendAmount") == 0 ) {
-        jack->getLogic()->trackSend( b.track, SEND_REV, value );
+        jack->getLogic()->trackSend( b.track, SEND_POSTFADER, value );
       }
       else if( b.action.compare("footpedal") == 0 ) {
         LUPPP_NOTE("Executing action %s v = %f", b.action.c_str(), value );
@@ -433,26 +438,54 @@ int GenericMIDI::loadController( std::string file )
         cJSON* status = cJSON_GetObjectItem( binding, "status" );
         cJSON* data   = cJSON_GetObjectItem( binding, "data"   );
         
+        // placeholders for information: checked for -1 later
+        int send = -1;
+        
         int action = -1;
         cJSON* actionJson = cJSON_GetObjectItem( binding, "action" );
         
         // collect event metadata
         cJSON* track  = cJSON_GetObjectItem( binding, "track"  );
         
+        int active = -1;
+        cJSON* activeJson  = cJSON_GetObjectItem( binding, "active" );
+        if ( activeJson )
+          active = activeJson->valueint;
         
         // get Event::type from string, and store the int representation of it:
         // this is faster for comparison in the RT callback
-        if ( strcmp( actionJson->valuestring, "track:volume" ) == 0 )
-        {
+        if ( strcmp( actionJson->valuestring, "track:volume" ) == 0 ) {
           action = Event::TRACK_VOLUME;
+        } else if ( strcmp( actionJson->valuestring, "track:send" ) == 0 ) {
+          action = Event::TRACK_SEND;
+          send = Event::SEND_POSTFADER;
         }
+        else if ( strcmp( actionJson->valuestring, "track:xside" ) == 0 ) {
+          action = Event::TRACK_SEND;
+          send = Event::SEND_XSIDE;
+        }
+        else if ( strcmp( actionJson->valuestring, "track:sendactive" ) == 0 ) {
+          action = Event::TRACK_SEND_ACTIVE;
+          send = Event::SEND_POSTFADER;
+        }
+        else if ( strcmp( actionJson->valuestring, "track:keyactive" ) == 0 ) {
+          action = Event::TRACK_SEND_ACTIVE;
+          send = Event::SEND_KEY;
+        }
+        else if ( strcmp( actionJson->valuestring, "track:recordarm" ) == 0 ) {
+          action = Event::TRACK_RECORD_ARM;
+        }
+        
+        else if ( strcmp( actionJson->valuestring, "master:volume" ) == 0 ) {
+          action = Event::MASTER_VOL;
+        } 
         
         /*
         if( b.action.compare("track:volume") == 0 ) {
           jack->getLogic()->trackVolume( b.track, value );
         }
         else if( b.action.compare("track:sendAmount") == 0 ) {
-          jack->getLogic()->trackSend( b.track, SEND_REV, value );
+          jack->getLogic()->trackSend( b.track, SEND_POSTFADER, value );
         }
         else if( b.action.compare("footpedal") == 0 ) {
           LUPPP_NOTE("Executing action %s v = %f", b.action.c_str(), value );
@@ -465,9 +498,13 @@ int GenericMIDI::loadController( std::string file )
           LUPPP_NOTE("Binding from %i %i  %s", status->valueint, data->valueint, actionJson->valuestring);
           
           midiToAction.push_back( Binding(status->valueint, data->valueint, action ) );
-        
+          
           if ( track )
             midiToAction.back().track = track->valueint;
+          if ( send != -1 )
+            midiToAction.back().send = send;
+          if ( active != -1 )
+            midiToAction.back().active = active;
         }
         
       }

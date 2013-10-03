@@ -53,13 +53,13 @@ void TrackOutput::setSendActive( int send, bool a )
 {
   switch( send )
   {
-    case SEND_REV:
+    case SEND_POSTFADER:
         _toReverbActive = a;
         break;
-    case SEND_SIDE:
+    case SEND_KEY:
         _toSidechainActive = a;
         break;
-    case SEND_POST:
+    case SEND_XSIDE:
         _toPostSidechainActive = a;
         break;
   }
@@ -69,14 +69,14 @@ void TrackOutput::setSend( int send, float value )
 {
   switch( send )
   {
-    case SEND_REV:
+    case SEND_POSTFADER:
         _toReverb = value;
         break;
-    case SEND_SIDE:
+    case SEND_KEY:
         // setSendActive() handles on/off for this send
         //_toSidechain = value;
         break;
-    case SEND_POST:
+    case SEND_XSIDE:
         _toPostSidechain = value;
         break;
   }

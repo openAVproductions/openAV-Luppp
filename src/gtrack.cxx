@@ -60,7 +60,7 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
 void gtrack_reverb_cb(Fl_Widget *w, void *data)
 {
   GTrack* track = (GTrack*) data;
-  EventTrackSend e( track->ID, SEND_REV, ((Avtk::Dial*)w)->value() );
+  EventTrackSend e( track->ID, SEND_POSTFADER, ((Avtk::Dial*)w)->value() );
   writeToDspRingbuffer( &e );
   printf("track %i reverb send %f\n", track->ID, ((Avtk::Dial*)w)->value() );
 }
@@ -73,12 +73,12 @@ void gtrack_side_cb(Fl_Widget *w, void *data)
   bool b = d->value();
   if ( b < 0.5 )
   {
-    EventTrackSendActive e( track->ID, SEND_SIDE, true );
+    EventTrackSendActive e( track->ID, SEND_KEY, true );
     writeToDspRingbuffer( &e );
   }
   else
   {
-    EventTrackSendActive e( track->ID, SEND_SIDE, false );
+    EventTrackSendActive e( track->ID, SEND_KEY, false );
     writeToDspRingbuffer( &e );
   }
   printf("track %i post send %s\n", track->ID, b ? "off" : "on" );
@@ -88,7 +88,7 @@ void gtrack_side_cb(Fl_Widget *w, void *data)
 void gtrack_post_cb(Fl_Widget *w, void *data)
 {
   GTrack* track = (GTrack*) data;
-  EventTrackSend e( track->ID, SEND_POST, ((Avtk::Dial*)w)->value() );
+  EventTrackSend e( track->ID, SEND_XSIDE, ((Avtk::Dial*)w)->value() );
   writeToDspRingbuffer( &e );
   printf("track %i side send %f\n", track->ID, ((Avtk::Dial*)w)->value() );
 }
@@ -110,12 +110,12 @@ void gtrack_active_cb(Fl_Widget *w, void *data)
   d->value( !b );
   if ( b < 0.5 )
   {
-    EventTrackSendActive e( track->ID, SEND_REV, 1.0f );
+    EventTrackSendActive e( track->ID, SEND_POSTFADER, 1.0f );
     writeToDspRingbuffer( &e );
   }
   else
   {
-    EventTrackSendActive e( track->ID, SEND_REV, 0.0f );
+    EventTrackSendActive e( track->ID, SEND_POSTFADER, 0.0f );
     writeToDspRingbuffer( &e );
   }
   printf("track %i reverb send %s\n", track->ID, b ? "true" : "false" );

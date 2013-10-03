@@ -174,17 +174,17 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventTrackSend) ) {
             EventTrackSend ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTrackSend) );
-            if ( ev.send == SEND_REV )
+            if ( ev.send == SEND_POSTFADER )
               if ( ev.track < NTRACKS )
               {
                 gui->getTrack(ev.track)->rev.value( ev.value );
               }
-            if ( ev.send == SEND_POST )
+            if ( ev.send == SEND_XSIDE )
               if (   ev.track < NTRACKS )
               {
-                //gui->getTrack(ev.track)->post.value( ev.value );
+                gui->getTrack(ev.track)->post.value( ev.value );
               }
-            if ( ev.send == SEND_SIDE )
+            if ( ev.send == SEND_KEY )
             {
               if ( ev.track < NTRACKS )
               {
@@ -197,17 +197,17 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventTrackSendActive) ) {
             EventTrackSendActive ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTrackSendActive) );
-            if ( ev.send == SEND_REV )
+            if ( ev.send == SEND_POSTFADER )
               if ( ev.track < NTRACKS )
               {
                 gui->getTrack(ev.track)->rev.value( ev.active );
               }
-            if ( ev.send == SEND_POST )
+            if ( ev.send == SEND_XSIDE )
               if ( ev.track < NTRACKS )
               {
                 gui->getTrack(ev.track)->post.value( ev.active );
               }
-            if ( ev.send == SEND_SIDE )
+            if ( ev.send == SEND_KEY )
             {
               if ( ev.track < NTRACKS )
               {

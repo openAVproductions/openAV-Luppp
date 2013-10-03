@@ -20,9 +20,9 @@ namespace Event
 {
   enum SEND_TYPE
   {
-    SEND_REV = 0,
-    SEND_SIDE,
-    SEND_POST,
+    SEND_POSTFADER = 0,
+    SEND_KEY,
+    SEND_XSIDE,
   };
   enum RETURN_TYPE
   {

@@ -25,8 +25,10 @@ class Binding
     LupppAction action;
     
     /// arguments to the event: track number, scene number etc
+    int active;
     int track;
     int scene;
+    int send;
 };
 
 /** GenericMIDI
