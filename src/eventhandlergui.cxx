@@ -48,7 +48,7 @@ void handleGuiEvents()
             EventSamplerate ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventSamplerate) );
             gui->samplerate = ev.samplerate;
-            LUPPP_NOTE("%s %i","Gui Samplerate: ", gui->samplerate);
+            //LUPPP_NOTE("%s %i","Gui Samplerate: ", gui->samplerate);
           } break; }
         
         case Event::MASTER_VOL: {
@@ -61,7 +61,7 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventMetronomeActive) ) {
             EventMetronomeActive ev(false);
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventMetronomeActive) );
-            //jack->getMetronome()->setActive(ev.active);
+            //gui->getMetronome()->setActive(ev.active);
           } break; }
         case Event::LOOPER_STATE: {
           if ( availableRead >= sizeof(EventLooperState) ) {
@@ -184,15 +184,6 @@ void handleGuiEvents()
               {
                 gui->getTrack(ev.track)->setXSide( ev.value );
               }
-            /* SEND_KEY is a boolean: on or off: so no value needed
-            if ( ev.send == SEND_KEY )
-            {
-              if ( ev.track < NTRACKS )
-              {
-                gui->getTrack(ev.track)->side.value( ev.value );
-              }
-            }
-            */
           } break; }
         
         case Event::TRACK_SEND_ACTIVE: {
@@ -204,13 +195,6 @@ void handleGuiEvents()
               {
                 gui->getTrack(ev.track)->setSendActive(ev.active );
               }
-            /* XSIDE is always active
-            if ( ev.send == SEND_XSIDE )
-              if ( ev.track < NTRACKS )
-              {
-                //gui->getTrack(ev.track)->( ev.active );
-              }
-            */
             if ( ev.send == SEND_KEY )
             {
               if ( ev.track < NTRACKS )

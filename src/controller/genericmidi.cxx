@@ -343,6 +343,13 @@ void GenericMIDI::midi(unsigned char* midi)
         case Event::TRACK_SEND_ACTIVE: jack->getLogic()->trackSendActive( b.track, b.send, b.active ); break;
         case Event::TRACK_RECORD_ARM: jack->getLogic()->trackRecordArm( b.track, b.active ); break;
         
+        case Event::GRID_EVENT:
+            if ( b.active )
+              jack->getGridLogic()->pressed( b.track, b.scene );
+            else
+              jack->getGridLogic()->pressed( b.track, b.scene );
+            break;
+        
         case Event::MASTER_VOL:   jack->getLogic()->trackVolume( -1     , value ); break;
       }
       
@@ -445,7 +452,8 @@ int GenericMIDI::loadController( std::string file )
         cJSON* actionJson = cJSON_GetObjectItem( binding, "action" );
         
         // collect event metadata
-        cJSON* track  = cJSON_GetObjectItem( binding, "track"  );
+        cJSON* track = cJSON_GetObjectItem( binding, "track" );
+        cJSON* scene = cJSON_GetObjectItem( binding, "scene" );
         
         int active = -1;
         cJSON* activeJson  = cJSON_GetObjectItem( binding, "active" );
@@ -476,6 +484,15 @@ int GenericMIDI::loadController( std::string file )
           action = Event::TRACK_RECORD_ARM;
         }
         
+        else if ( strcmp( actionJson->valuestring, "track:clippressed" ) == 0 ) {
+          action = Event::GRID_EVENT;
+          active = 1; // press event
+        }
+        else if ( strcmp( actionJson->valuestring, "track:clipreleased" ) == 0 ) {
+          action = Event::GRID_EVENT;
+          active = 0; // release event
+        }
+        
         else if ( strcmp( actionJson->valuestring, "master:volume" ) == 0 ) {
           action = Event::MASTER_VOL;
         } 
@@ -501,6 +518,8 @@ int GenericMIDI::loadController( std::string file )
           
           if ( track )
             midiToAction.back().track = track->valueint;
+          if ( scene )
+            midiToAction.back().scene = scene->valueint;
           if ( send != -1 )
             midiToAction.back().send = send;
           if ( active != -1 )
