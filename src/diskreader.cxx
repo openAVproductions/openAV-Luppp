@@ -288,39 +288,66 @@ int DiskReader::readTracks()
     {
       cJSON* track = cJSON_GetArrayItem( tracks, t );
       
-      readScenes( t, track );
-      
-      // name
+      if( !track )
       {
-        cJSON* name = cJSON_GetObjectItem( track, "name");
-        gui->getTrack(t)->bg.setLabel( name->valuestring );
+        LUPPP_WARN("Track %i has no name track saved.", t);
       }
-      // fader
-      { 
-        cJSON* fader = cJSON_GetObjectItem( track, "fader");
-        EventTrackVol e( t, fader->valuedouble );
-        writeToDspRingbuffer( &e );
-      }
-      // sends
-      { 
-        cJSON* send       = cJSON_GetObjectItem( track, "sendAmount");
-        cJSON* sendActive = cJSON_GetObjectItem( track, "sendActive");
+      else
+      {
+        readScenes( t, track );
         
-        cJSON* xside      = cJSON_GetObjectItem( track, "xsideAmount");
-        cJSON* keyActive  = cJSON_GetObjectItem( track, "keyActive");
-        
-        EventTrackSendActive e1( t, SEND_POSTFADER, sendActive->valueint );
-        EventTrackSendActive e2( t, SEND_KEY      , keyActive ->valueint );
-        
-        EventTrackSend e3( t, SEND_XSIDE     , xside->valuedouble );
-        EventTrackSend e4( t, SEND_POSTFADER , send->valuedouble  );
-        
-        
-        writeToDspRingbuffer( &e1 );
-        writeToDspRingbuffer( &e2 );
-        writeToDspRingbuffer( &e3 );
-      }
-      
+        // name
+        {
+          cJSON* name = cJSON_GetObjectItem( track, "name");
+          if( !name )
+          {
+            LUPPP_WARN("Track %i has no name data saved.", t);
+          }
+          else
+          {
+            gui->getTrack(t)->bg.setLabel( name->valuestring );
+          }
+        }
+        // fader
+        { 
+          cJSON* fader = cJSON_GetObjectItem( track, "fader");
+          if( !fader )
+          {
+            LUPPP_WARN("Track %i has no fader data saved.", t);
+          }
+          else
+          {
+            EventTrackVol e( t, fader->valuedouble );
+            writeToDspRingbuffer( &e );
+          }
+        }
+        // sends
+        { 
+          cJSON* send       = cJSON_GetObjectItem( track, "sendAmount");
+          cJSON* sendActive = cJSON_GetObjectItem( track, "sendActive");
+          
+          cJSON* xside      = cJSON_GetObjectItem( track, "xsideAmount");
+          cJSON* keyActive  = cJSON_GetObjectItem( track, "keyActive");
+          
+          if( !send || !sendActive || !xside || !keyActive )
+          {
+            LUPPP_WARN("Track %i has no send data saved.", t);
+          }
+          else
+          {
+            EventTrackSendActive e1( t, SEND_POSTFADER, sendActive->valueint );
+            EventTrackSendActive e2( t, SEND_KEY      , keyActive ->valueint );
+            
+            EventTrackSend e3( t, SEND_XSIDE     , xside->valuedouble );
+            EventTrackSend e4( t, SEND_POSTFADER , send->valuedouble  );
+            
+            
+            writeToDspRingbuffer( &e1 );
+            writeToDspRingbuffer( &e2 );
+            writeToDspRingbuffer( &e3 );
+          }
+        }
+      }// if track
     } // nTracks loop
   }
   else
