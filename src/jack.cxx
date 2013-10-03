@@ -254,6 +254,13 @@ int Jack::process (jack_nframes_t nframes)
   memset( buffers.audio[Buffers::SIDECHAIN_KEY]     , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::SIDECHAIN_SIGNAL]  , 0, sizeof(float) * nframes );
   
+  
+  /// init buffers for each MidiIO
+  for(unsigned int i = 0; i < midiIO.size(); i++ )
+  {
+    midiIO.at(i)->initBuffers( nframes );
+  }
+  
   /// do events from the ringbuffer
   handleDspEvents();
   

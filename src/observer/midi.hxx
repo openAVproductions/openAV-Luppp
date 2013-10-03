@@ -25,6 +25,9 @@ class MidiIO
     /// 
     int status();
     
+    /// gets / clears MIDI buffers
+    void initBuffers(int nframes);
+    
     /// gets called each process() in JACK
     void process(int nframes);
     

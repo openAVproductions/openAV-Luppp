@@ -9,6 +9,15 @@
   "inputBindings" : [
     {
       "status" : 176,
+      "data" : 14,
+      "action" : "master:volume"
+    },
+    
+    
+    {
+      "__COMMENT__" : "track 0",
+      
+      "status" : 176,
       "data" : 7,
       "action" : "track:volume",
       "track" : 0
@@ -16,16 +25,107 @@
     {
       "status" : 176,
       "data" : 16,
-      "action" : "track:sendAmount",
+      "action" : "track:send",
       "track" : 0
     },
     {
+      "status" : 176,
+      "data" : 20,
+      "action" : "track:xside",
+      "track" : 0
+    },
+    {
+      "status" : 144,
+      "data" : 48,
+      "action" : "track:recordarm",
+      "track"  : 0,
+      "active" : 1
+    },
+    {
+      "status" : 128,
+      "data"   : 48,
+      "action" : "track:recordarm",
+      "track"  : 0,
+      "active" : 0
+    },
+    {
+      "status" : 144,
+      "data"   : 49,
+      "action" : "track:keyactive",
+      "track"  : 0,
+      "active" : 1
+    },
+    {
+      "status" : 128,
+      "data" : 49,
+      "action" : "track:keyactive",
+      "track"  : 0,
+      "active" : 0
+    },
+    {
+      "status" : 144,
+      "data" : 50,
+      "action" : "track:sendactive",
+      "track"  : 0,
+      "active" : 1
+    },
+    {
+      "status" : 128,
+      "data" : 50,
+      "action" : "track:sendactive",
+      "track"  : 0,
+      "active" : 0
+    },
+    {
+      "status" : 144,
+      "data" : 53,
+      "action" : "track:clippressed",
+      "track" : 0,
+      "scene" : 0
+    },
+    {
+      "status" : 144,
+      "data" : 54,
+      "action" : "track:clippressed",
+      "track" : 0,
+      "scene" : 1
+    },
+    {
+      "status" : 144,
+      "data" : 55,
+      "action" : "track:clippressed",
+      "track" : 0,
+      "scene" : 2
+    },
+    {
+      "status" : 144,
+      "data" : 56,
+      "action" : "track:clippressed",
+      "track" : 0,
+      "scene" : 3
+    },
+    {
+      "status" : 144,
+      "data" : 57,
+      "action" : "track:clippressed",
+      "track" : 0,
+      "scene" : 4
+    },
+    
+    
+    {
+      "__COMMENT__" : "track 1",
+      
       "status" : 177,
       "data" : 7,
       "action" : "track:volume",
       "track" : 1
     },
+    
+    
     {
+      "__COMMENT__" : "track 2",
+      
       "status" : 178,
       "data" : 7,
       "action" : "track:volume",
@@ -64,7 +164,7 @@
     {
       "status" : 176,
       "data" : 64,
-      "action" : "footpedal"
+      "action" : "footpedal1"
     }
   ],
   

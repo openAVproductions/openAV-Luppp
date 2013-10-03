@@ -27,7 +27,7 @@ void MidiIO::writeMidi( unsigned char* data )
   }
   else
   {
-    cout << "JC::writeMidi() " << int(data[0]) << ", " << int(data[1]) << ", " << int(data[2]) << endl; 
+    cout << "JC::writeMidi() port =  " << jackOutputPort << int(data[0]) << ", " << int(data[1]) << ", " << int(data[2]) << endl; 
     //memcpy( buffer, data, sizeof(unsigned char)*3 );
     buffer[0] = data[0];
     buffer[1] = data[1];
@@ -56,7 +56,8 @@ void MidiIO::registerMidiPorts(std::string name)
   
   if ( jackInputPort && jackOutputPort )
   {
-    LUPPP_NOTE("%i, %i", jackInputPort, jackOutputPort );
+    cout << jackOutputPort << endl;
+    //LUPPP_NOTE("%i, %i", jackInputPort, jackOutputPort );
   }
   else
   {
@@ -65,12 +66,17 @@ void MidiIO::registerMidiPorts(std::string name)
 }
 
 
+void MidiIO::initBuffers(int nframes)
+{
+  // clear the output buffer
+  void* outputBuffer= (void*) jack_port_get_buffer( jackOutputPort, nframes );
+  jack_midi_clear_buffer( outputBuffer );
+}
+
 void MidiIO::process(int nframes)
 {
   // get port buffers and setup
   void* inputBuffer = (void*) jack_port_get_buffer( jackInputPort, nframes );
-  void* outputBuffer= (void*) jack_port_get_buffer( jackOutputPort, nframes );
-  jack_midi_clear_buffer( outputBuffer );
   
   jack_midi_event_t in_event;
   int index = 0;

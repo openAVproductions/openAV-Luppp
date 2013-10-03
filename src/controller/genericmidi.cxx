@@ -452,22 +452,18 @@ int GenericMIDI::loadController( std::string file )
     
     
     
-    cJSON* feedbackBindings = cJSON_GetObjectItem( controllerJson, "feedbackBindings");
-    if ( feedbackBindings )
+    cJSON* outputBindings = cJSON_GetObjectItem( controllerJson, "outputBindings");
+    if ( outputBindings )
     {
-      int nBindings = cJSON_GetArraySize( feedbackBindings );
+      int nBindings = cJSON_GetArraySize( outputBindings );
       for(int i = 0; i < nBindings; i++ )
       {
-        cJSON* binding = cJSON_GetArrayItem( feedbackBindings, i );
+        cJSON* bindingJson = cJSON_GetArrayItem( outputBindings, i );
+        Binding* tmp = setupBinding( bindingJson );
+        if ( tmp )
+          actionToMidi.push_back( tmp );
         
-        cJSON* action = cJSON_GetObjectItem( binding, "action" );
-        
-        cJSON* status = cJSON_GetObjectItem( binding, "status" );
-        cJSON* data   = cJSON_GetObjectItem( binding, "data"   );
-        
-        LUPPP_NOTE("Binding from %s to %i %i", action->valuestring, status->valueint, data->valueint );
-        
-        //actionToMidi.push_back( Binding(status->valueint, data->valueint, action->valuestring ) );
+        //LUPPP_NOTE("Binding from %s to %i %i", actionJ->valuestring, statusJson->valueint, dataJson->valueint );
       }
     }
     else
@@ -546,9 +542,12 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
     tmp->active = 0; // release event
   }
   
+  else if ( strcmp( actionJson->valuestring, "footpedal1" ) == 0 ) {
+    //tmp->action = Event::MASTER_VOL;
+  }
   else if ( strcmp( actionJson->valuestring, "master:volume" ) == 0 ) {
     tmp->action = Event::MASTER_VOL;
-  } 
+  }
   
   // check for valid event: otherwise pass
   if ( tmp->action != Event::EVENT_NULL )
