@@ -75,8 +75,8 @@ class GenericMIDI : public Controller, public MidiIO
     std::string name;
     
     /// contains midi binding instances
-    std::vector<Binding> midiToAction;
-    std::vector<Binding> actionToMidi;
+    std::vector<Binding*> midiToAction;
+    std::vector<Binding*> actionToMidi;
     
     int loadController(std::string controllerFile);
     

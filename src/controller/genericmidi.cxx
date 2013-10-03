@@ -330,10 +330,11 @@ void GenericMIDI::midi(unsigned char* midi)
   // iterate over bindings, execute binding action if matches
   for(unsigned int i = 0; i < midiToAction.size(); i++)
   {
-    if ( midiToAction.at(i).status == status &&
-         midiToAction.at(i).data   == data )
+    Binding& b = *midiToAction.at(i);
+    
+    if ( b.status == status && b.data == data )
     {
-      Binding& b = midiToAction.at(i);
+      
       LUPPP_NOTE("Executing action %i", b.action );
       
       switch( b.action )
@@ -514,16 +515,16 @@ int GenericMIDI::loadController( std::string file )
         {
           LUPPP_NOTE("Binding from %i %i  %s", status->valueint, data->valueint, actionJson->valuestring);
           
-          midiToAction.push_back( Binding(status->valueint, data->valueint, action ) );
+          midiToAction.push_back( new Binding(status->valueint, data->valueint, action ) );
           
           if ( track )
-            midiToAction.back().track = track->valueint;
+            midiToAction.back()->track = track->valueint;
           if ( scene )
-            midiToAction.back().scene = scene->valueint;
+            midiToAction.back()->scene = scene->valueint;
           if ( send != -1 )
-            midiToAction.back().send = send;
+            midiToAction.back()->send = send;
           if ( active != -1 )
-            midiToAction.back().active = active;
+            midiToAction.back()->active = active;
         }
         
       }
