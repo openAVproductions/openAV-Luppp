@@ -45,7 +45,7 @@ ClipSelector::ClipSelector( int _x, int _y, int _w, int _h,
     for(int i = 0; i < 10; i++ )
     {
       stringstream s;
-      s << i + 1;
+      s << "Scene " << i + 1;
       clips[i].setName( s.str() );
     }
     

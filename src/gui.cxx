@@ -101,10 +101,7 @@ static void gui_header_callback(Fl_Widget *w, void *data)
     int yes = fl_choice("Start a new session?","Cancel","Yes",0);
     if ( yes )
     {
-      EventStateReset ev;
-      writeToDspRingbuffer( &ev );
-      
-      
+      gui->reset();
     }
   }
   else if ( strcmp(m->label(), "Load Session") == 0 )
@@ -278,6 +275,34 @@ Gui::Gui() :
     LUPPP_ERROR("Controller initialization failed!");
   }
   
+  
+}
+
+void Gui::reset()
+{
+  // signal to DSP to reset state
+  EventStateReset ev;
+  writeToDspRingbuffer( &ev );
+  
+  // clear UI state: track names / scene names
+  for(unsigned int i = 0; i < NTRACKS; i++)
+  {
+    stringstream s;
+    s << "Track " << i+1;
+    tracks.at(i)->bg.setLabel( s.str().c_str() );
+    
+    for(unsigned int s = 0; s < NSCENES; s++)
+    {
+      tracks.at(i)->getClipSelector()->clipName( s, "" );
+    }
+  }
+  
+  for(unsigned int i = 0; i < NSCENES; i++)
+  {
+    stringstream s;
+    s << "Scene " << i+1;
+    master->getClipSelector()->clipName( i, s.str() );
+  }
   
 }
 
