@@ -24,7 +24,7 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
   
   _toPostfaderActive        = 0;
   _toKeyActive     = 0;
-  _toXSideActive = 0;
+  _toXSideActive = true;
 }
 
 
@@ -59,8 +59,9 @@ void TrackOutput::setSendActive( int send, bool a )
     case SEND_KEY:
         _toKeyActive = a;
         break;
-    case SEND_XSIDE:
-        _toXSideActive = a;
+    //case SEND_XSIDE:
+    //    _toXSideActive = a;
+    default:
         break;
   }
 }
