@@ -30,6 +30,12 @@ void Logic::masterInputTo( Event::INPUT_TO inputTo, float v)
   jack->inputTo( inputTo, v );
 }
 
+void Logic::masterReturn( int send, float v )
+{
+  
+  
+}
+
 void Logic::masterInputToActive( Event::INPUT_TO inputTo, bool active)
 {
   jack->inputToActive( inputTo, active);

@@ -63,6 +63,7 @@ class Jack
     /// set the master i/o volume / sends
     void inputVolume( float vol );
     void masterVolume( float vol );
+    void returnVolume( float vol );
     void inputTo(INPUT_TO to, float v);
     void inputToActive(INPUT_TO to, bool a);
     
@@ -93,7 +94,7 @@ class Jack
     
     float inputVol;
     float masterVol;
-    
+    float returnVol;
     
     float inputToMixVol;
     float inputToSendVol;

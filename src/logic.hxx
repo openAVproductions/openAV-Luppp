@@ -32,7 +32,7 @@ class Logic
     void masterInputTo( Event::INPUT_TO inputTo, float v);
     void masterInputToActive( Event::INPUT_TO inputTo, bool active);
     
-    void masterReturn(int t, int send, float v);
+    void masterReturn( int send, float v);
     
     void trackVolume(int track, float volume);
     void trackRecordArm(int track, bool armed);

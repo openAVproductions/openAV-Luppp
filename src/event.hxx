@@ -26,7 +26,7 @@ namespace Event
   };
   enum RETURN_TYPE
   {
-    RETURN_REV = 0,
+    RETURN_MAIN = 0,
   };
   enum INPUT_TO
   {

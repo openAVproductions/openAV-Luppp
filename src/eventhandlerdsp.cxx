@@ -70,7 +70,9 @@ void handleDspEvents()
           if ( availableRead >= sizeof(EventMasterReturn) ) {
             EventMasterReturn ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMasterReturn) );
-            //jack->getLogic()->trackSend( ev.track, ev.send, ev.value );
+            if ( ev.ret == RETURN_MAIN ) {
+              jack->returnVolume( ev.value );
+            }
           } break; }
         case Event::MASTER_INPUT_VOL: {
           if ( availableRead >= sizeof(EventMasterVol) ) {

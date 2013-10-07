@@ -103,6 +103,7 @@ Jack::Jack() :
                           0 );
   
   masterVol = 0.0f;
+  returnVol = 1.0f;
   
   /// prepare internal buffers
   buffers.audio[Buffers::SEND]           = new float[ buffers.nframes ];
@@ -370,6 +371,11 @@ int Jack::process (jack_nframes_t nframes)
 void Jack::masterVolume(float vol)
 {
   masterVol = vol;
+}
+
+void Jack::returnVolume(float vol)
+{
+  returnVol = vol;
 }
 
 void Jack::inputVolume(float v)

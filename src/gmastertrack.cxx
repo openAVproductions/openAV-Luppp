@@ -71,6 +71,16 @@ static void gmastertrack_xSideVol_callback(Fl_Widget *w, void *data)
   printf("XSide dial\n");
 }
 
+/// return volume
+static void gmastertrack_returnVol_callback(Fl_Widget *w, void *data)
+{
+  Avtk::Dial* b = (Avtk::Dial*)w;
+  float v = b->value();
+  EventMasterReturn e( RETURN_MAIN, v );
+  writeToDspRingbuffer( &e );
+  printf("Return dial\n");
+}
+
 static void gmastertrack_mixVol_callback(Fl_Widget *w, void *data)
 {
   Avtk::Dial* b = (Avtk::Dial*)w;
@@ -159,7 +169,10 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   
   
   tempoDial.align( FL_ALIGN_CENTER );
+  
+  returnVol.value( 1.f );
   returnVol.align( FL_ALIGN_CENTER );
+  returnVol.callback( gmastertrack_returnVol_callback, 0 );
   
   for(int i = 0; i < 4; i++)
   {
