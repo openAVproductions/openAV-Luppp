@@ -3,6 +3,8 @@
 
 ControllerUpdater::ControllerUpdater()
 {
+  // CAREFUL size of controllers: otherwise malloc() called
+  c.reserve( CONTROLLERS_PREALLOC );
 }
 
 void ControllerUpdater::registerController( Controller* controller )

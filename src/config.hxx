@@ -33,6 +33,8 @@
 #define NSCENES 10
 #define MAX_BUFFER_SIZE 1024
 
+#define CONTROLLERS_PREALLOC 20
+
 // nsamples remaining during recording before Looper requests larger buffer
 #define LOOPER_SAMPLES_BEFORE_REQUEST 44100
 #define LOOPER_SAMPLES_UPDATE_SIZE    44100

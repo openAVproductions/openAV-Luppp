@@ -35,6 +35,9 @@ Jack::Jack() :
   gridLogic = new GridLogic();
   
   
+  // CAREFUL: setup the size by default: otherwise malloc() is called on push_back
+  midiIO.reserve( CONTROLLERS_PREALLOC );
+  
   //GenericMIDI* tmp = new GenericMIDI("akai_apc.ctlr");
   //tmp->registerComponents();
   //controllerUpdater->registerController( static_cast<Controller*>(tmp) );
@@ -218,7 +221,9 @@ Looper* Jack::getLooper(int t)
 
 void Jack::registerMidiIO( MidiIO* mo )
 {
-  LUPPP_NOTE("Jack::registerMidiIO()" );
+  //LUPPP_NOTE("Jack::registerMidiIO()" );
+  
+  // CAREFUL : this could need to resize and cause malloc() in RT thread
   midiIO.push_back( mo );
 }
 

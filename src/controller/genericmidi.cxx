@@ -43,12 +43,10 @@ Controller::STATUS GenericMIDI::status()
 
 int GenericMIDI::registerComponents()
 {
-  LUPPP_NOTE("registerComponents()" );
   // makes JACK add this controller to the midiObservers list:
   // note the static_cast<>() is *needed* here for multiple-inheritance
   MidiIO* m = static_cast<MidiIO*>(this);
   
-  LUPPP_NOTE("jack->reg()" );
   jack->registerMidiIO( m );
 }
 
