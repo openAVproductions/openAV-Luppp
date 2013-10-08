@@ -19,11 +19,52 @@ const char* GridLogic::StateString[8] = {
 GridLogic::GridLogic()
 {
   sceneLaunch = 0;
+  
+  sampleTrackScene = false;
+  selectedTrack = 0;
+  selectedScene = 0;
+}
+
+void GridLogic::selectedTrackSceneEvent(bool p)
+{
+  if ( p )
+  {
+    pressed( selectedTrack, selectedScene );
+  }
+  else
+  {
+    released( selectedTrack, selectedScene );
+  }
+}
+
+void GridLogic::setSampleTrackScene(bool b)
+{
+  sampleTrackScene = b;
 }
 
 int GridLogic::getLaunchedScene()
 {
   return sceneLaunch;
+}
+
+int GridLogic::getSelectedTrack()
+{
+  return selectedTrack;
+}
+
+int GridLogic::getSelectedScene()
+{
+  return selectedScene;
+}
+
+void GridLogic::setSelectedTrack(int t)
+{
+  selectedTrack = t;
+}
+
+void GridLogic::setSelectedScene(int s)
+{
+  selectedScene = s;
 }
 
 
@@ -62,6 +103,18 @@ void GridLogic::launchScene( int scene )
 
 void GridLogic::pressed( int track, int scene )
 {
+  if ( sampleTrackScene )
+  {
+    selectedTrack = track;
+    selectedScene = scene;
+    
+    sampleTrackScene = false;
+    
+    // don't act on grid press!
+    return;
+  }
+  
+  
   // get the clip, do the "press" action based on current state.
   LooperClip* lc  = jack->getLooper( track )->getClip( scene );
   TrackOutput* to = jack->getTrackOutput( track );

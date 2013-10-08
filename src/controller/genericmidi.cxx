@@ -373,6 +373,11 @@ void GenericMIDI::midi(unsigned char* midi)
               jack->getGridLogic()->released( b->track, b->scene );
             break;
         
+        case Event::GRID_SELECT_CLIP_EVENT:
+            jack->getGridLogic()->selectedTrackSceneEvent(true); // press event
+            break;
+        
+        
         case Event::MASTER_VOL:   jack->getLogic()->trackVolume( -1     , value ); break;
       }
       
@@ -401,19 +406,6 @@ void GenericMIDI::setSceneState(int t, int scene, GridLogic::State s)
     
     if ( b->action == GRID_STATE && b->track == t && b->scene == scene )
     {
-      /*
-      switch( s )
-      {
-        case GridLogic::STATE_EMPTY:         data[2] = 0; break;
-        case GridLogic::STATE_PLAYING:       data[2] = 1; break;
-        case GridLogic::STATE_PLAY_QUEUED:   data[2] = 2; break;
-        case GridLogic::STATE_RECORDING:     data[2] = 3; break;
-        case GridLogic::STATE_RECORD_QUEUED: data[2] = 4; break;
-        case GridLogic::STATE_STOPPED:       data[2] = 5; break;
-        case GridLogic::STATE_STOP_QUEUED:   data[2] = 6; break;
-      }
-      */
-      
       for( map<int,int>::iterator it = b->clipStateMap.begin(); it != b->clipStateMap.end(); ++it)
       {
         // check if its the right clip state
@@ -452,12 +444,34 @@ void GenericMIDI::reset()
 
 void GenericMIDI::launchScene( int scene )
 {
-  unsigned char data[3];
-  data[0] = 144;
-  data[1] = 82 + scene;
-  data[2] = 127;
-  LUPPP_NOTE("this = %i GenericMIDI::launchScene()", this );
-  writeMidi( data );
+  for(unsigned int i = 0; i < actionToMidi.size(); i++)
+  {
+    Binding* b = actionToMidi.at(i);
+    
+    if ( b->action == GRID_LAUNCH_SCENE )
+    {
+      for( int i = 0; i < 5; i++ )
+      {
+        if ( i != scene )
+        {
+          unsigned char data[3];
+          data[0] = b->status;
+          data[1] = b->data + i;
+          data[2] = 0;
+          writeMidi( data );
+        }
+      }
+      unsigned char data[3];
+      data[0] = b->status;
+      data[1] = b->data + scene;
+      data[2] = 127;
+      LUPPP_NOTE("this = %i GenericMIDI::launchScene()", this );
+      writeMidi( data );
+      
+      return;
+    }
+  }
+  
 }
 
 
@@ -480,7 +494,19 @@ int GenericMIDI::loadController( std::string file )
     
     cJSON* controllerJson = cJSON_Parse( sampleString );
     if (!controllerJson) {
-      LUPPP_ERROR("%s %s","Error in Sample JSON before: ", cJSON_GetErrorPtr() );
+      std::string error = cJSON_GetErrorPtr();
+      
+      std::istringstream ss( error );
+      
+      std::string line;
+      std::getline( ss, line );
+      LUPPP_ERROR("%s %s","Error in JSON *before*: ", line.c_str() );
+      
+      for(int i = 0; i < 5; i++)
+      {
+        std::getline( ss, line );
+        LUPPP_ERROR("%s %s","Error in JSON         : ", line.c_str() );
+      }
       return LUPPP_RETURN_ERROR;
     }
     
@@ -647,8 +673,11 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
     */
   }
   
+  else if ( strcmp( actionJson->valuestring, "track:launchScene" ) == 0 ) {
+    tmp->action = Event::GRID_LAUNCH_SCENE;
+  }
   else if ( strcmp( actionJson->valuestring, "footpedal1" ) == 0 ) {
-    //tmp->action = Event::MASTER_VOL;
+    tmp->action = Event::GRID_SELECT_CLIP_EVENT;
   }
   else if ( strcmp( actionJson->valuestring, "master:volume" ) == 0 ) {
     tmp->action = Event::MASTER_VOL;

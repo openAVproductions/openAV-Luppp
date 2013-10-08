@@ -51,6 +51,15 @@ class GridLogic : public TimeObserver
     void launchScene( int scene );
     int  getLaunchedScene();
     
+    /// selected track functions
+    void setSampleTrackScene(bool b);
+    void setSelectedTrack(int t);
+    void setSelectedScene(int s);
+    int getSelectedTrack();
+    int getSelectedScene();
+    
+    void selectedTrackSceneEvent(bool pressed);
+    
     /// GUI load event
     void load(int track, int scene, AudioBuffer* ab);
     
@@ -71,6 +80,11 @@ class GridLogic : public TimeObserver
   private:
     /// holds last scene launch
     int sceneLaunch;
+    
+    /// holds selected track / scene
+    bool sampleTrackScene; // turn on to have selected clip, press event acted on
+    int selectedTrack;
+    int selectedScene;
 };
 
 

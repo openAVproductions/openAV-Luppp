@@ -54,10 +54,14 @@ namespace Event
     
     REQUEST_SAVE_BUFFER, // gets an audioBuffer of a certain size
     
+    /// Grid
     GRID_EVENT, // press / release events
     GRID_STATE, // state of one block
-    GRID_LAUNCH_SCENE,
+    GRID_LAUNCH_SCENE, // launches a scene
+    GRID_SELECT_CLIP, // select a clip from the grid
+    GRID_SELECT_CLIP_EVENT, // a press / release on the selected clip
     
+    /// Track
     TRACK_SEND,
     TRACK_SEND_ACTIVE,
     TRACK_SIGNAL_LEVEL,
@@ -88,6 +92,7 @@ namespace Event
     CONTROLLER_INSTANCE,
     
     QUIT,
+    
   };
 };
 
@@ -102,6 +107,25 @@ class EventBase
     
     virtual int type() = 0;
     virtual uint32_t size() = 0;
+};
+
+class EventGridSelectClipEvent : public EventBase
+{
+  public:
+    int type() { return int(GRID_SELECT_CLIP_EVENT); }
+    uint32_t size() { return sizeof(EventGridSelectClipEvent); }
+    bool pressed;
+    EventGridSelectClipEvent(bool p=false):pressed(p){}
+};
+
+class EventGridSelectClip : public EventBase
+{
+  public:
+    int type() { return int(GRID_SELECT_CLIP); }
+    uint32_t size() { return sizeof(EventGridSelectClip); }
+    int track;
+    int scene;
+    EventGridSelectClip(int t=0, int s=0):track(t),scene(s){}
 };
 
 class EventQuit : public EventBase
