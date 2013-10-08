@@ -114,26 +114,6 @@ void GenericMIDI::trackSend(int t, int send, float v)
   jack->midiObserverWriteMIDI( _port,  &data[0] );
 }
 
-void GenericMIDI::setSceneState(int t, int clip, GridLogic::State s)
-{
-  unsigned char data[3];
-  data[0] = 144 + t;
-  data[1] = 53 + clip;
-  
-  switch (s)
-  {
-    case GridLogic::STATE_EMPTY:         data[2] = 0; break;
-    case GridLogic::STATE_PLAYING:       data[2] = 1; break;
-    case GridLogic::STATE_PLAY_QUEUED:   data[2] = 2; break;
-    case GridLogic::STATE_RECORDING:     data[2] = 3; break;
-    case GridLogic::STATE_RECORD_QUEUED: data[2] = 4; break;
-    case GridLogic::STATE_STOPPED:       data[2] = 5; break;
-    case GridLogic::STATE_STOP_QUEUED:   data[2] = 6; break;
-  }
-  
-  jack->midiObserverWriteMIDI( _port,  &data[0] );
-}
-
 void GenericMIDI::launchScene( int s )
 {
   unsigned char data[3];
@@ -344,7 +324,7 @@ void GenericMIDI::midi(unsigned char* midi)
             if ( b->active )
               jack->getGridLogic()->pressed( b->track, b->scene );
             else
-              jack->getGridLogic()->pressed( b->track, b->scene );
+              jack->getGridLogic()->released( b->track, b->scene );
             break;
         
         case Event::MASTER_VOL:   jack->getLogic()->trackVolume( -1     , value ); break;
@@ -365,6 +345,47 @@ void GenericMIDI::midi(unsigned char* midi)
     }
   }
   
+}
+
+void GenericMIDI::setSceneState(int t, int scene, GridLogic::State s)
+{
+  for(unsigned int i = 0; i < actionToMidi.size(); i++)
+  {
+    Binding* b = actionToMidi.at(i);
+    
+    if ( b->action == GRID_STATE && b->track == t && b->scene == scene )
+    {
+      /*
+      switch( s )
+      {
+        case GridLogic::STATE_EMPTY:         data[2] = 0; break;
+        case GridLogic::STATE_PLAYING:       data[2] = 1; break;
+        case GridLogic::STATE_PLAY_QUEUED:   data[2] = 2; break;
+        case GridLogic::STATE_RECORDING:     data[2] = 3; break;
+        case GridLogic::STATE_RECORD_QUEUED: data[2] = 4; break;
+        case GridLogic::STATE_STOPPED:       data[2] = 5; break;
+        case GridLogic::STATE_STOP_QUEUED:   data[2] = 6; break;
+      }
+      */
+      
+      for( map<int,int>::iterator it = b->clipStateMap.begin(); it != b->clipStateMap.end(); ++it)
+      {
+        // check if its the right clip state
+        if ( it->first == int(s) )
+        {
+          unsigned char data[3];
+          data[0] = b->status;
+          data[1] = b->data;
+          data[2] = it->second;
+          
+          LUPPP_NOTE("GenericMIDI::sceneState() writing event %i, %i, %i", data[0],data[1],data[2] );
+          writeMidi( data );
+        }
+      }
+    }
+  }
+  
+  LUPPP_NOTE("GenericMIDI::sceneState()" );
 }
 
 
@@ -502,7 +523,7 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
   cJSON* actionJson = cJSON_GetObjectItem( binding, "action" );
   if ( !actionJson )
   {
-    LUPPP_WARN("Binding doesn't have action field: check .ctlr file");
+    LUPPP_WARN("Binding doesn't have action field: fix .ctlr file");
     return 0;
   }
   
@@ -538,6 +559,46 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
   else if ( strcmp( actionJson->valuestring, "track:clipreleased" ) == 0 ) {
     tmp->action = Event::GRID_EVENT;
     tmp->active = 0; // release event
+  }
+  else if ( strcmp( actionJson->valuestring, "track:clipstate" ) == 0 ) {
+    tmp->action = Event::GRID_STATE;
+    
+    // read "state", to bind multiple values depending on clip state
+    
+    cJSON* stateBindings = cJSON_GetObjectItem( binding, "state");
+    if ( stateBindings )
+    {
+      cJSON* empty      = cJSON_GetObjectItem( stateBindings, "empty");
+      cJSON* stopped    = cJSON_GetObjectItem( stateBindings, "stopped");
+      cJSON* playing    = cJSON_GetObjectItem( stateBindings, "playing");
+      cJSON* recording  = cJSON_GetObjectItem( stateBindings, "recording");
+      cJSON* qPlaying   = cJSON_GetObjectItem( stateBindings, "queuePlaying");
+      cJSON* qStopped   = cJSON_GetObjectItem( stateBindings, "queueStopped");
+      cJSON* qRecording = cJSON_GetObjectItem( stateBindings, "queueRecording");
+      
+      // keep a map of GridLogic::STATE to the MIDI byte 3 output from .ctlr file
+      if ( empty )
+        tmp->clipStateMap.insert( std::pair<int,int>( GridLogic::STATE_EMPTY, empty->valueint ) );
+      if ( stopped )
+        tmp->clipStateMap.insert( std::pair<int,int>( GridLogic::STATE_STOPPED, stopped->valueint ) );
+      if ( playing )
+        tmp->clipStateMap.insert( std::pair<int,int>( GridLogic::STATE_PLAYING, playing->valueint ) );
+      if ( recording )
+        tmp->clipStateMap.insert( std::pair<int,int>( GridLogic::STATE_RECORDING, recording->valueint ) );
+      
+      if ( qPlaying )
+        tmp->clipStateMap.insert( std::pair<int,int>( GridLogic::STATE_PLAY_QUEUED, qPlaying->valueint ) );
+      if ( qStopped )
+        tmp->clipStateMap.insert( std::pair<int,int>( GridLogic::STATE_STOP_QUEUED, qStopped->valueint ) );
+      if ( qRecording )
+        tmp->clipStateMap.insert( std::pair<int,int>( GridLogic::STATE_RECORD_QUEUED, qRecording->valueint ) );
+    }
+    /* // Extreme debugging
+    for( map<int,int>::iterator it = tmp->clipStateMap.begin(); it != tmp->clipStateMap.end(); ++it)
+    {
+      std::cout << it->first << " " << it->second << "\n";
+    }
+    */
   }
   
   else if ( strcmp( actionJson->valuestring, "footpedal1" ) == 0 ) {

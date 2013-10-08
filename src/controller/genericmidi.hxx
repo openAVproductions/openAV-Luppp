@@ -5,6 +5,8 @@
 
 #include "controller.hxx"
 
+#include <map>
+#include <string>
 #include <vector>
 
 #include "../cjson/cJSON.h"
@@ -30,6 +32,8 @@ class Binding
     int track;
     int scene;
     int send;
+    
+    std::map<int,int> clipStateMap;
 };
 
 /** GenericMIDI
@@ -54,11 +58,13 @@ class GenericMIDI : public Controller, public MidiIO
     void launchScene( int scene );
     
     void volume(int t, float f);
+    
+    void setSceneState(int track, int clip, GridLogic::State s);
+    
     /*
     void progress(int t, int s, float f);
     void recordArm(int t, bool b);
     void launchScene( int scene );
-    void setSceneState(int track, int clip, GridLogic::State s);
     
     /// track FX
     void trackSend(int t, int send, float v);

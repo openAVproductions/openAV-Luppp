@@ -168,12 +168,22 @@
     }
   ],
   
-  "feedbackBindings" : [
+  "outputBindings" : [
     {
       "action" : "track:launchScene",
-      
       "status" : 144,
       "data" : 82
+    },
+    {
+      "action" : "track:clipstate",
+      "status" : 144,
+      "data"   : 53,
+      "track"  : 0,
+      "scene"  : 0,
+      "state" : {
+          "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+          "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4
+      }
     }
   ]
 }
