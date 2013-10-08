@@ -7,9 +7,9 @@
 
 #include "audiobuffer.hxx"
 #include "eventhandler.hxx"
-#include "controller/guicontroller.hxx"
 #include "controller/genericmidi.hxx"
-#include "controller/apc.hxx"
+#include "controller/guicontroller.hxx"
+
 
 using namespace std;
 
