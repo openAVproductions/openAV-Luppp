@@ -80,21 +80,20 @@ void GenericMIDI::recordArm(int t, bool enabled)
 
 void GenericMIDI::trackSend(int t, int send, float v)
 {
-  /*
+  
   for(unsigned int i = 0; i < actionToMidi.size(); i++)
   {
     Binding* b = actionToMidi.at(i);
     
-    if ( b->action == TRACK_SEND && b->track == t )
+    if ( b->action == TRACK_SEND && b->track == t && b->send == send )
     {
       unsigned char data[3];
       data[0] = b->status;
       data[1] = b->data;
-      data[2] = enabled ? 127 : 0;
+      data[2] = v * 127;
       writeMidi( data );
     }
   }
-  */
 }
 
 void GenericMIDI::trackSendActive(int t, int send, bool a)
