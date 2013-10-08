@@ -37,8 +37,12 @@ void GridLogic::selectedTrackSceneEvent(bool p)
   }
 }
 
-void GridLogic::setSampleTrackScene(bool b)
+void GridLogic::setSelectTrackScene(bool b)
 {
+  char tmp[40];
+  sprintf( tmp, "Select track enable %i", int(b) );
+  EventGuiPrint e( tmp );
+  writeToGuiRingbuffer( &e );
   sampleTrackScene = b;
 }
 
@@ -108,7 +112,7 @@ void GridLogic::pressed( int track, int scene )
     selectedTrack = track;
     selectedScene = scene;
     
-    sampleTrackScene = false;
+    //sampleTrackScene = false;
     
     // don't act on grid press!
     return;
@@ -223,7 +227,7 @@ void GridLogic::bar()
 {
 #ifdef DEBUG_CLIP
   EventGuiPrint e( "GridLogic::bar()" );
-  writeToGuiRingbuffer( &e );
+  //writeToGuiRingbuffer( &e );
 #endif
   
   /// iterate over all clips, if they're set to QUEUED, set to the next state

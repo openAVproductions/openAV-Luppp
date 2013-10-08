@@ -110,11 +110,10 @@ void handleDspEvents()
             jack->getGridLogic()->launchScene( ev.scene );
             break; }
         
-        case Event::GRID_SELECT_CLIP: {
-            EventGridSelectClip ev;
-            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventGridSelectClip) );
-            jack->getGridLogic()->setSelectedTrack( ev.track );
-            jack->getGridLogic()->setSelectedScene( ev.scene );
+        case Event::GRID_SELECT_CLIP_ENABLE: {
+            EventGridSelectClipEnable ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventGridSelectClipEnable) );
+            jack->getGridLogic()->setSelectTrackScene( ev.enable );
             break; }
         case Event::GRID_SELECT_CLIP_EVENT: {
             EventGridSelectClipEvent ev;

@@ -52,7 +52,7 @@ class GridLogic : public TimeObserver
     int  getLaunchedScene();
     
     /// selected track functions
-    void setSampleTrackScene(bool b);
+    void setSelectTrackScene(bool b);
     void setSelectedTrack(int t);
     void setSelectedScene(int s);
     int getSelectedTrack();

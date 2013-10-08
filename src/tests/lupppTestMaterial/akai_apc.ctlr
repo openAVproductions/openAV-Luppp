@@ -7,6 +7,29 @@
   "midiOut" : 1,
   
   "inputBindings" : [
+    
+    
+    {
+      "__COMMENT__" : "Shift key: samples a clip into gridLogic",
+      "action" : "gridlogic:selectclipenable",
+      "status" : 144,
+      "data"   : 98,
+      "active" : 1
+    },
+    {
+      "action" : "gridlogic:selectclipenable",
+      "status" : 128,
+      "data"   : 98,
+      "active" : 0
+    },
+    
+    {
+      "__COMMENT__" : "footpedal 1 to trigger selected clip",
+      "status" : 176,
+      "data" : 64,
+      "action" : "gridlogic:selectclipevent"
+    },
+    
     {
       "status" : 176,
       "data" : 14,
@@ -827,25 +850,9 @@
       "action" : "track:clippressed",
       "track"  : 7,
       "scene"  : 4
-    },
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    {
-      "status" : 176,
-      "data" : 64,
-      "action" : "footpedal1"
     }
+    
+    
   
   
   ],
@@ -854,9 +861,41 @@
     {
       "action" : "track:launchScene",
       "status" : 144,
-      "data" : 82
+      "data"   : 82,
+      "scene"  : 0
     },
     {
+      "action" : "track:launchScene",
+      "status" : 144,
+      "data"   : 83,
+      "scene"  : 1
+    },
+    {
+      "action" : "track:launchScene",
+      "status" : 144,
+      "data"   : 84,
+      "scene"  : 2
+    },
+    {
+      "action" : "track:launchScene",
+      "status" : 144,
+      "data"   : 85,
+      "scene"  : 3
+    },
+    {
+      "action" : "track:launchScene",
+      "status" : 144,
+      "data"   : 86,
+      "scene"  : 4
+    },
+    
+    
+    
+    
+    
+    
+    {
+      " __COMMMENT__ ###############################" : "track 1",
       "action" : "track:clipstate",
       "status" : 144,
       "data"   : 53,
@@ -940,6 +979,113 @@
       "status" : 176,
       "data"   : 20,
       "track"  : 0
+    },
+    
+    
+     {
+      " __COMMMENT__ ###############################" : "track 2",
+      "action" : "track:clipstate",
+      "status" : 145,
+      "data"   : 53,
+      "track"  : 1,
+      "scene"  : 0,
+      "state" : {
+          "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+          "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4
+      }
+    },
+    {
+      "action" : "track:clipstate",
+      "status" : 145,
+      "data"   : 54,
+      "track"  : 1,
+      "scene"  : 1,
+      "state" : {
+          "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+          "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4
+      }
+    },
+    {
+      "action" : "track:clipstate",
+      "status" : 145,
+      "data"   : 55,
+      "track"  : 1,
+      "scene"  : 2,
+      "state" : {
+          "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+          "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4
+      }
+    },
+    {
+      "action" : "track:clipstate",
+      "status" : 145,
+      "data"   : 56,
+      "track"  : 1,
+      "scene"  : 3,
+      "state" : {
+          "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+          "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4
+      }
+    },
+    {
+      "action" : "track:clipstate",
+      "status" : 145,
+      "data"   : 57,
+      "track"  : 1,
+      "scene"  : 4,
+      "state" : {
+          "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+          "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4
+      }
+    },
+    {
+      "action" : "track:recordarm",
+      "status" : 145,
+      "data"   : 48,
+      "track"  : 0
+    },
+    {
+      "action" : "track:keyactive",
+      "status" : 145,
+      "data"   : 49,
+      "track"  : 0
+    },
+    {
+      "action" : "track:sendactive",
+      "status" : 145,
+      "data" : 50,
+      "track"  : 0
+    },
+    {
+      "action" : "track:send",
+      "status" : 177,
+      "data"   : 16,
+      "track"  : 0
+    },
+    {
+      "action" : "track:xside",
+      "status" : 177,
+      "data"   : 20,
+      "track"  : 0
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
   ]
 }

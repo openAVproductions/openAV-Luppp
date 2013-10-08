@@ -357,7 +357,7 @@ void GenericMIDI::midi(unsigned char* midi)
     
     if ( b->status == status && b->data == data )
     {
-      LUPPP_NOTE("Executing action %i", b->action );
+      LUPPP_NOTE("Executing action %i, value %f, b->active %i", b->action, value, int(b->active) );
       
       switch( b->action )
       {
@@ -374,26 +374,18 @@ void GenericMIDI::midi(unsigned char* midi)
             break;
         
         case Event::GRID_SELECT_CLIP_EVENT:
-            jack->getGridLogic()->selectedTrackSceneEvent(true); // press event
+            jack->getGridLogic()->selectedTrackSceneEvent( value );
+            break;
+        case Event::GRID_SELECT_CLIP_ENABLE:
+            jack->getGridLogic()->setSelectTrackScene( b->active );
             break;
         
         
         case Event::MASTER_VOL:   jack->getLogic()->trackVolume( -1     , value ); break;
       }
-      
-      /*
-      if( b.action.compare("track:volume") == 0 ) {
-        jack->getLogic()->trackVolume( b.track, value );
-      }
-      else if( b.action.compare("track:sendAmount") == 0 ) {
-        jack->getLogic()->trackSend( b.track, SEND_POSTFADER, value );
-      }
-      else if( b.action.compare("footpedal") == 0 ) {
-        LUPPP_NOTE("Executing action %s v = %f", b.action.c_str(), value );
-        //jack->getLogic()->trackVolume( b.track, value );
-      }
-      */
     }
+    
+    
   }
   
 }
@@ -575,6 +567,8 @@ int GenericMIDI::loadController( std::string file )
   }
   
   
+  LUPPP_NOTE("Controller loading complete." );
+  
   return LUPPP_RETURN_OK;
 }
 
@@ -676,8 +670,11 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
   else if ( strcmp( actionJson->valuestring, "track:launchScene" ) == 0 ) {
     tmp->action = Event::GRID_LAUNCH_SCENE;
   }
-  else if ( strcmp( actionJson->valuestring, "footpedal1" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, "gridlogic:selectclipevent" ) == 0 ) {
     tmp->action = Event::GRID_SELECT_CLIP_EVENT;
+  }
+  else if ( strcmp( actionJson->valuestring, "gridlogic:selectclipenable" ) == 0 ) {
+    tmp->action = Event::GRID_SELECT_CLIP_ENABLE;
   }
   else if ( strcmp( actionJson->valuestring, "master:volume" ) == 0 ) {
     tmp->action = Event::MASTER_VOL;
@@ -686,7 +683,7 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
   // check for valid event: otherwise pass
   if ( tmp->action != Event::EVENT_NULL )
   {
-    LUPPP_NOTE("Binding from %i %i  %s", statusJson->valueint, dataJson->valueint, actionJson->valuestring);
+    //LUPPP_NOTE("Binding from %i %i  %s", statusJson->valueint, dataJson->valueint, actionJson->valuestring);
     
     cJSON* track      = cJSON_GetObjectItem( binding, "track"  );
     cJSON* scene      = cJSON_GetObjectItem( binding, "scene"  );

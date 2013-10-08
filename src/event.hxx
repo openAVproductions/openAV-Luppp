@@ -58,7 +58,7 @@ namespace Event
     GRID_EVENT, // press / release events
     GRID_STATE, // state of one block
     GRID_LAUNCH_SCENE, // launches a scene
-    GRID_SELECT_CLIP, // select a clip from the grid
+    GRID_SELECT_CLIP_ENABLE, // enable selecting a clip from the grid
     GRID_SELECT_CLIP_EVENT, // a press / release on the selected clip
     
     /// Track
@@ -118,14 +118,13 @@ class EventGridSelectClipEvent : public EventBase
     EventGridSelectClipEvent(bool p=false):pressed(p){}
 };
 
-class EventGridSelectClip : public EventBase
+class EventGridSelectClipEnable : public EventBase
 {
   public:
-    int type() { return int(GRID_SELECT_CLIP); }
-    uint32_t size() { return sizeof(EventGridSelectClip); }
-    int track;
-    int scene;
-    EventGridSelectClip(int t=0, int s=0):track(t),scene(s){}
+    int type() { return int(GRID_SELECT_CLIP_ENABLE); }
+    uint32_t size() { return sizeof(EventGridSelectClipEnable); }
+    bool enable;
+    EventGridSelectClipEnable(bool e=false):enable(e){}
 };
 
 class EventQuit : public EventBase
