@@ -5,10 +5,11 @@ version that is available on github. It is redesigned from scratch to handle RT
 better, and scale better.
 
 This version depends on the following libraries: please ensure the -dev versions are installed.
+
 JACK
-NTK
 CAIRO
 SNDFILE
+NTK               git clone git://git.tuxfamily.org/gitroot/non/fltk.git ntk
 
 
 === INSTALL
