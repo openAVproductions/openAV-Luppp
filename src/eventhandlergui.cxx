@@ -61,7 +61,7 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventMetronomeActive) ) {
             EventMetronomeActive ev(false);
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventMetronomeActive) );
-            //gui->getMetronome()->setActive(ev.active);
+            gui->getMasterTrack()->metronomeEnable(ev.active);
           } break; }
         case Event::LOOPER_STATE: {
           if ( availableRead >= sizeof(EventLooperState) ) {

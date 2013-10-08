@@ -16,6 +16,8 @@ class LupppGUI : public Controller
     
     void masterVolume(float f);
     
+    void metronomeEnable(bool b);
+    
     void trackSend(int t, int send, float r);
     void trackSendActive(int t, int send, bool a);
     

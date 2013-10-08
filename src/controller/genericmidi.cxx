@@ -48,6 +48,8 @@ int GenericMIDI::registerComponents()
   MidiIO* m = static_cast<MidiIO*>(this);
   
   jack->registerMidiIO( m );
+  
+  return LUPPP_RETURN_OK;
 }
 
 std::string GenericMIDI::getName()
@@ -68,6 +70,24 @@ void GenericMIDI::recordArm(int t, bool enabled)
     Binding* b = actionToMidi.at(i);
     
     if ( b->action == TRACK_RECORD_ARM && b->track == t )
+    {
+      unsigned char data[3];
+      data[0] = b->status;
+      data[1] = b->data;
+      data[2] = enabled ? 127 : 0;
+      writeMidi( data );
+      return;
+    }
+  }
+}
+
+void GenericMIDI::metronomeEnable(bool enabled)
+{
+  for(unsigned int i = 0; i < actionToMidi.size(); i++)
+  {
+    Binding* b = actionToMidi.at(i);
+    
+    if ( b->action == METRONOME_ACTIVE )
     {
       unsigned char data[3];
       data[0] = b->status;
@@ -348,7 +368,7 @@ void GenericMIDI::midi(unsigned char* midi)
   int data   = midi[1];
   float value  = midi[2] / 127.f;
   
-  LUPPP_NOTE("GenericMIDI::midi() %i %i %f", status, data, value );
+  //LUPPP_NOTE("GenericMIDI::midi() %i %i %f", status, data, value );
   
   // iterate over bindings, execute binding action if matches
   for(unsigned int i = 0; i < midiToAction.size(); i++)
@@ -357,7 +377,7 @@ void GenericMIDI::midi(unsigned char* midi)
     
     if ( b->status == status && b->data == data )
     {
-      LUPPP_NOTE("Executing action %i, value %f, b->active %i", b->action, value, int(b->active) );
+      //LUPPP_NOTE("Executing action %i, value %f, b->active %i", b->action, value, int(b->active) );
       
       switch( b->action )
       {
@@ -383,6 +403,10 @@ void GenericMIDI::midi(unsigned char* midi)
             jack->getGridLogic()->launchScene( b->scene );
             break;
         
+        
+        case Event::METRONOME_ACTIVE:
+            jack->getLogic()->metronomeEnable( b->active );
+            break;
         
         case Event::MASTER_VOL:   jack->getLogic()->trackVolume( -1     , value ); break;
       }
@@ -411,14 +435,12 @@ void GenericMIDI::setSceneState(int t, int scene, GridLogic::State s)
           data[1] = b->data;
           data[2] = it->second;
           
-          LUPPP_NOTE("GenericMIDI::sceneState() writing event %i, %i, %i", data[0],data[1],data[2] );
+          //LUPPP_NOTE("GenericMIDI::sceneState() writing event %i, %i, %i", data[0],data[1],data[2] );
           writeMidi( data );
         }
       }
     }
   }
-  
-  LUPPP_NOTE("GenericMIDI::sceneState()" );
 }
 
 
@@ -460,7 +482,7 @@ void GenericMIDI::launchScene( int scene )
       data[0] = b->status;
       data[1] = b->data + scene;
       data[2] = 127;
-      LUPPP_NOTE("this = %i GenericMIDI::launchScene()", this );
+      //LUPPP_NOTE("this = %i GenericMIDI::launchScene()", this );
       writeMidi( data );
       
       return;
@@ -680,6 +702,9 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
   }
   else if ( strcmp( actionJson->valuestring, "master:volume" ) == 0 ) {
     tmp->action = Event::MASTER_VOL;
+  }
+  else if ( strcmp( actionJson->valuestring, "metronome:active" ) == 0 ) {
+    tmp->action = Event::METRONOME_ACTIVE;
   }
   
   // check for valid event: otherwise pass

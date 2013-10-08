@@ -55,6 +55,8 @@ class GenericMIDI : public Controller, public MidiIO
     /// track actions
     //void mute(int t, bool b);
     
+    void metronomeEnable(bool b);
+    
     void launchScene( int scene );
     
     void volume(int t, float f);

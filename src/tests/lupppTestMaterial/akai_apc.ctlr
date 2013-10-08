@@ -10,6 +10,15 @@
     
     
     {
+      "__COMMENT__" : "Metronome button",
+      "action" : "metronome:active",
+      "status" : 144,
+      "data"   : 65,
+      "active" : 1,
+      "toggle" : 1
+    },
+    
+    {
       "__COMMENT__" : "Shift key: samples a clip into gridLogic",
       "action" : "gridlogic:selectclipenable",
       "status" : 144,
@@ -933,6 +942,19 @@
     },
     
     
+    {
+      "__COMMENT__" : "Metronome button",
+      "action" : "metronome:active",
+      "status" : 144,
+      "data"   : 65,
+      "active" : 1
+    },
+    {
+      "action" : "metronome:active",
+      "status" : 128,
+      "data"   : 65,
+      "active" : 0
+    },
     
     
     

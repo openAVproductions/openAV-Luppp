@@ -212,10 +212,10 @@ void Gui::selectLoadSample( int track, int scene )
 
 
 Gui::Gui() :
+    samplerate( 0 ),
     window(1110,650),
     diskReader( new DiskReader() ),
-    diskWriter( new DiskWriter() ),
-    samplerate( 0 )
+    diskWriter( new DiskWriter() )
 {
   LUPPP_NOTE( "%s", "Gui()" );
   

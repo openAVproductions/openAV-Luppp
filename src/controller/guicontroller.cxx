@@ -21,6 +21,12 @@ void LupppGUI::masterVolume(float f)
   writeToGuiRingbuffer( &e );
 }
 
+void LupppGUI::metronomeEnable(bool r)
+{
+  EventMetronomeActive e( r );
+  writeToGuiRingbuffer( &e );
+}
+
 void LupppGUI::recordArm(int t, bool r)
 {
   EventTrackRecordArm e( t, r );

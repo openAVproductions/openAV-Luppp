@@ -203,6 +203,11 @@ void GMasterTrack::setBpm( int b )
   tempoDial.value( ( bpm - 60 ) / 160.f );
 }
 
+void GMasterTrack::metronomeEnable( bool b )
+{
+  metronomeButton.value( b );
+}
+
 int GMasterTrack::getBpm()
 {
   return bpm;

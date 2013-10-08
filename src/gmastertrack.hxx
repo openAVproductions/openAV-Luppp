@@ -35,6 +35,8 @@ class GMasterTrack : public Fl_Group
     void setTapTempo( bool b );
     void setBarBeat(int b, int beat);
     
+    void metronomeEnable( bool b );
+    
     Avtk::Volume* getInputVolume();
     Avtk::Volume* getVolume();
     Avtk::ClipSelector* getClipSelector();
