@@ -74,6 +74,7 @@ void GenericMIDI::recordArm(int t, bool enabled)
       data[1] = b->data;
       data[2] = enabled ? 127 : 0;
       writeMidi( data );
+      return;
     }
   }
 }
@@ -92,6 +93,7 @@ void GenericMIDI::trackSend(int t, int send, float v)
       data[1] = b->data;
       data[2] = v * 127;
       writeMidi( data );
+      return;
     }
   }
 }
@@ -109,6 +111,7 @@ void GenericMIDI::trackSendActive(int t, int send, bool a)
       data[1] = b->data;
       data[2] = a ? 127 : 0;
       writeMidi( data );
+      return;
     }
   }
 }

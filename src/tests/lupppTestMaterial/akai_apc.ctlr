@@ -15,7 +15,7 @@
     
     
     {
-      "__COMMENT__" : "track 0",
+      "__COMMENT__ ############################################" : "track 0",
       
       "status" : 176,
       "data" : 7,
@@ -113,18 +113,114 @@
     },
     
     
+    
+    
+    
+    
+    
     {
-      "__COMMENT__" : "track 1",
+      "__COMMENT__ ############################################" : "track 1",
       
       "status" : 177,
       "data" : 7,
       "action" : "track:volume",
       "track" : 1
     },
+    {
+      "status" : 177,
+      "data" : 16,
+      "action" : "track:send",
+      "track" : 1
+    },
+    {
+      "status" : 177,
+      "data" : 20,
+      "action" : "track:xside",
+      "track" : 1
+    },
+    {
+      "status" : 145,
+      "data" : 48,
+      "action" : "track:recordarm",
+      "track"  : 1,
+      "active" : 1
+    },
+    {
+      "status" : 129,
+      "data"   : 48,
+      "action" : "track:recordarm",
+      "track"  : 1,
+      "active" : 0
+    },
+    {
+      "status" : 145,
+      "data"   : 49,
+      "action" : "track:keyactive",
+      "track"  : 1,
+      "active" : 1
+    },
+    {
+      "status" : 129,
+      "data" : 49,
+      "action" : "track:keyactive",
+      "track"  : 1,
+      "active" : 0
+    },
+    {
+      "status" : 145,
+      "data"   : 50,
+      "action" : "track:sendactive",
+      "track"  : 1,
+      "active" : 1
+    },
+    {
+      "status" : 129,
+      "data"   : 50,
+      "action" : "track:sendactive",
+      "track"  : 1,
+      "active" : 0
+    },
+    {
+      "status" : 145,
+      "data"   : 53,
+      "action" : "track:clippressed",
+      "track"  : 1,
+      "scene"  : 0
+    },
+    {
+      "status" : 145,
+      "data" : 54,
+      "action" : "track:clippressed",
+      "track" : 1,
+      "scene" : 1
+    },
+    {
+      "status" : 145,
+      "data" : 55,
+      "action" : "track:clippressed",
+      "track" : 1,
+      "scene" : 2
+    },
+    {
+      "status" : 145,
+      "data" : 56,
+      "action" : "track:clippressed",
+      "track" : 1,
+      "scene" : 3
+    },
+    {
+      "status" : 145,
+      "data" : 57,
+      "action" : "track:clippressed",
+      "track" : 1,
+      "scene" : 4
+    },
+    
+    
     
     
     {
-      "__COMMENT__" : "track 2",
+      "__COMMENT__ ############################################" : "track 2",
       
       "status" : 178,
       "data" : 7,
@@ -132,40 +228,626 @@
       "track" : 2
     },
     {
+      "status" : 178,
+      "data" : 16,
+      "action" : "track:send",
+      "track" : 2
+    },
+    {
+      "status" : 178,
+      "data" : 20,
+      "action" : "track:xside",
+      "track" : 2
+    },
+    {
+      "status" : 146,
+      "data" : 48,
+      "action" : "track:recordarm",
+      "track"  : 2,
+      "active" : 1
+    },
+    {
+      "status" : 130,
+      "data"   : 48,
+      "action" : "track:recordarm",
+      "track"  : 2,
+      "active" : 0
+    },
+    {
+      "status" : 146,
+      "data"   : 49,
+      "action" : "track:keyactive",
+      "track"  : 2,
+      "active" : 1
+    },
+    {
+      "status" : 130,
+      "data" : 49,
+      "action" : "track:keyactive",
+      "track"  : 2,
+      "active" : 0
+    },
+    {
+      "status" : 146,
+      "data" : 50,
+      "action" : "track:sendactive",
+      "track"  : 2,
+      "active" : 1
+    },
+    {
+      "status" : 130,
+      "data" : 50,
+      "action" : "track:sendactive",
+      "track"  : 2,
+      "active" : 0
+    },
+    {
+      "status" : 146,
+      "data" : 53,
+      "action" : "track:clippressed",
+      "track" : 2,
+      "scene" : 0
+    },
+    {
+      "status" : 146,
+      "data" : 54,
+      "action" : "track:clippressed",
+      "track" : 2,
+      "scene" : 1
+    },
+    {
+      "status" : 146,
+      "data" : 55,
+      "action" : "track:clippressed",
+      "track" : 2,
+      "scene" : 2
+    },
+    {
+      "status" : 146,
+      "data" : 56,
+      "action" : "track:clippressed",
+      "track" : 2,
+      "scene" : 3
+    },
+    {
+      "status" : 146,
+      "data" : 57,
+      "action" : "track:clippressed",
+      "track" : 2,
+      "scene" : 4
+    },
+    
+    
+    
+    
+    
+    
+    
+    
+    {
+      "__COMMENT__ ############################################" : "track 3",
+      
       "status" : 179,
-      "data" : 7,
+      "data"   : 7,
       "action" : "track:volume",
-      "track" : 3
+      "track"  : 3
+    },
+    {
+      "status" : 179,
+      "data"   : 16,
+      "action" : "track:send",
+      "track"  : 3
+    },
+    {
+      "status" : 179,
+      "data"   : 20,
+      "action" : "track:xside",
+      "track"  : 3
+    },
+    {
+      "status" : 147,
+      "data"   : 48,
+      "action" : "track:recordarm",
+      "track"  : 3,
+      "active" : 1
+    },
+    {
+      "status" : 131,
+      "data"   : 48,
+      "action" : "track:recordarm",
+      "track"  : 3,
+      "active" : 0
+    },
+    {
+      "status" : 147,
+      "data"   : 49,
+      "action" : "track:keyactive",
+      "track"  : 3,
+      "active" : 1
+    },
+    {
+      "status" : 131,
+      "data"   : 49,
+      "action" : "track:keyactive",
+      "track"  : 3,
+      "active" : 0
+    },
+    {
+      "status" : 147,
+      "data"   : 50,
+      "action" : "track:sendactive",
+      "track"  : 3,
+      "active" : 1
+    },
+    {
+      "status" : 131,
+      "data"   : 50,
+      "action" : "track:sendactive",
+      "track"  : 3,
+      "active" : 0
+    },
+    {
+      "status" : 147,
+      "data"   : 53,
+      "action" : "track:clippressed",
+      "track"  : 3,
+      "scene"  : 0
+    },
+    {
+      "status" : 147,
+      "data"   : 54,
+      "action" : "track:clippressed",
+      "track"  : 3,
+      "scene"  : 1
+    },
+    {
+      "status" : 147,
+      "data"   : 55,
+      "action" : "track:clippressed",
+      "track"  : 3,
+      "scene"  : 2
+    },
+    {
+      "status" : 147,
+      "data"   : 56,
+      "action" : "track:clippressed",
+      "track"  : 3,
+      "scene"  : 3
+    },
+    {
+      "status" : 147,
+      "data"   : 57,
+      "action" : "track:clippressed",
+      "track"  : 3,
+      "scene"  : 4
+    },
+    
+    
+    
+    
+    
+    
+    {
+      "__COMMENT__ ############################################" : "track 4",
+      
+      "status" : 180,
+      "data"   : 7,
+      "action" : "track:volume",
+      "track"  : 4
     },
     {
       "status" : 180,
-      "data" : 7,
+      "data"   : 16,
+      "action" : "track:send",
+      "track"  : 4
+    },
+    {
+      "status" : 180,
+      "data"   : 20,
+      "action" : "track:xside",
+      "track"  : 4
+    },
+    {
+      "status" : 148,
+      "data"   : 48,
+      "action" : "track:recordarm",
+      "track"  : 4,
+      "active" : 1
+    },
+    {
+      "status" : 132,
+      "data"   : 48,
+      "action" : "track:recordarm",
+      "track"  : 4,
+      "active" : 0
+    },
+    {
+      "status" : 148,
+      "data"   : 49,
+      "action" : "track:keyactive",
+      "track"  : 4,
+      "active" : 1
+    },
+    {
+      "status" : 132,
+      "data"   : 49,
+      "action" : "track:keyactive",
+      "track"  : 4,
+      "active" : 0
+    },
+    {
+      "status" : 148,
+      "data"   : 50,
+      "action" : "track:sendactive",
+      "track"  : 4,
+      "active" : 1
+    },
+    {
+      "status" : 132,
+      "data"   : 50,
+      "action" : "track:sendactive",
+      "track"  : 4,
+      "active" : 0
+    },
+    {
+      "status" : 148,
+      "data"   : 53,
+      "action" : "track:clippressed",
+      "track"  : 4,
+      "scene"  : 0
+    },
+    {
+      "status" : 148,
+      "data"   : 54,
+      "action" : "track:clippressed",
+      "track"  : 4,
+      "scene"  : 1
+    },
+    {
+      "status" : 148,
+      "data"   : 55,
+      "action" : "track:clippressed",
+      "track"  : 4,
+      "scene"  : 2
+    },
+    {
+      "status" : 148,
+      "data" : 56,
+      "action" : "track:clippressed",
+      "track"  : 4,
+      "scene"  : 3
+    },
+    {
+      "status" : 148,
+      "data"   : 57,
+      "action" : "track:clippressed",
+      "track"  : 4,
+      "scene"  : 4
+    },
+    
+    
+    
+    
+    {
+      "__COMMENT__ ############################################" : "track 5",
+      
+      "status" : 181,
+      "data"   : 7,
       "action" : "track:volume",
-      "track" : 4
+      "track"  : 5
     },
     {
       "status" : 181,
-      "data" : 7,
+      "data"   : 16,
+      "action" : "track:send",
+      "track"  : 5
+    },
+    {
+      "status" : 181,
+      "data"   : 20,
+      "action" : "track:xside",
+      "track"  : 5
+    },
+    {
+      "status" : 149,
+      "data"   : 48,
+      "action" : "track:recordarm",
+      "track"  : 5,
+      "active" : 1
+    },
+    {
+      "status" : 133,
+      "data"   : 48,
+      "action" : "track:recordarm",
+      "track"  : 5,
+      "active" : 0
+    },
+    {
+      "status" : 149,
+      "data"   : 49,
+      "action" : "track:keyactive",
+      "track"  : 5,
+      "active" : 1
+    },
+    {
+      "status" : 133,
+      "data"   : 49,
+      "action" : "track:keyactive",
+      "track"  : 5,
+      "active" : 0
+    },
+    {
+      "status" : 149,
+      "data"   : 50,
+      "action" : "track:sendactive",
+      "track"  : 5,
+      "active" : 1
+    },
+    {
+      "status" : 133,
+      "data"   : 50,
+      "action" : "track:sendactive",
+      "track"  : 5,
+      "active" : 0
+    },
+    {
+      "status" : 149,
+      "data"   : 53,
+      "action" : "track:clippressed",
+      "track"  : 5,
+      "scene"  : 0
+    },
+    {
+      "status" : 149,
+      "data"   : 54,
+      "action" : "track:clippressed",
+      "track"  : 5,
+      "scene"  : 1
+    },
+    {
+      "status" : 149,
+      "data"   : 55,
+      "action" : "track:clippressed",
+      "track"  : 5,
+      "scene"  : 2
+    },
+    {
+      "status" : 149,
+      "data" : 56,
+      "action" : "track:clippressed",
+      "track"  : 5,
+      "scene"  : 3
+    },
+    {
+      "status" : 149,
+      "data"   : 57,
+      "action" : "track:clippressed",
+      "track"  : 5,
+      "scene"  : 4
+    },
+    
+    
+    
+    
+    
+    {
+      "__COMMENT__ ############################################" : "track 6",
+      
+      "status" : 182,
+      "data"   : 7,
       "action" : "track:volume",
-      "track" : 5
+      "track"  : 6
     },
     {
       "status" : 182,
-      "data" : 7,
+      "data"   : 16,
+      "action" : "track:send",
+      "track"  : 6
+    },
+    {
+      "status" : 182,
+      "data"   : 20,
+      "action" : "track:xside",
+      "track"  : 6
+    },
+    {
+      "status" : 150,
+      "data"   : 48,
+      "action" : "track:recordarm",
+      "track"  : 6,
+      "active" : 1
+    },
+    {
+      "status" : 134,
+      "data"   : 48,
+      "action" : "track:recordarm",
+      "track"  : 6,
+      "active" : 0
+    },
+    {
+      "status" : 150,
+      "data"   : 49,
+      "action" : "track:keyactive",
+      "track"  : 6,
+      "active" : 1
+    },
+    {
+      "status" : 134,
+      "data"   : 49,
+      "action" : "track:keyactive",
+      "track"  : 6,
+      "active" : 0
+    },
+    {
+      "status" : 150,
+      "data"   : 50,
+      "action" : "track:sendactive",
+      "track"  : 6,
+      "active" : 1
+    },
+    {
+      "status" : 134,
+      "data"   : 50,
+      "action" : "track:sendactive",
+      "track"  : 6,
+      "active" : 0
+    },
+    {
+      "status" : 150,
+      "data"   : 53,
+      "action" : "track:clippressed",
+      "track"  : 6,
+      "scene"  : 0
+    },
+    {
+      "status" : 150,
+      "data"   : 54,
+      "action" : "track:clippressed",
+      "track"  : 6,
+      "scene"  : 1
+    },
+    {
+      "status" : 150,
+      "data"   : 55,
+      "action" : "track:clippressed",
+      "track"  : 6,
+      "scene"  : 2
+    },
+    {
+      "status" : 150,
+      "data" : 56,
+      "action" : "track:clippressed",
+      "track"  : 6,
+      "scene"  : 3
+    },
+    {
+      "status" : 150,
+      "data"   : 57,
+      "action" : "track:clippressed",
+      "track"  : 6,
+      "scene"  : 4
+    },
+    
+    
+    
+    
+    {
+      "__COMMENT__ ############################################" : "track 7",
+      
+      "status" : 183,
+      "data"   : 7,
       "action" : "track:volume",
-      "track" : 6
+      "track"  : 7
     },
     {
       "status" : 183,
-      "data" : 7,
-      "action" : "track:volume",
-      "track" : 7
+      "data"   : 16,
+      "action" : "track:send",
+      "track"  : 7
     },
+    {
+      "status" : 183,
+      "data"   : 20,
+      "action" : "track:xside",
+      "track"  : 7
+    },
+    {
+      "status" : 151,
+      "data"   : 48,
+      "action" : "track:recordarm",
+      "track"  : 7,
+      "active" : 1
+    },
+    {
+      "status" : 135,
+      "data"   : 48,
+      "action" : "track:recordarm",
+      "track"  : 7,
+      "active" : 0
+    },
+    {
+      "status" : 151,
+      "data"   : 49,
+      "action" : "track:keyactive",
+      "track"  : 7,
+      "active" : 1
+    },
+    {
+      "status" : 135,
+      "data"   : 49,
+      "action" : "track:keyactive",
+      "track"  : 7,
+      "active" : 0
+    },
+    {
+      "status" : 151,
+      "data"   : 50,
+      "action" : "track:sendactive",
+      "track"  : 7,
+      "active" : 1
+    },
+    {
+      "status" : 135,
+      "data"   : 50,
+      "action" : "track:sendactive",
+      "track"  : 7,
+      "active" : 0
+    },
+    {
+      "status" : 151,
+      "data"   : 53,
+      "action" : "track:clippressed",
+      "track"  : 7,
+      "scene"  : 0
+    },
+    {
+      "status" : 151,
+      "data"   : 54,
+      "action" : "track:clippressed",
+      "track"  : 7,
+      "scene"  : 1
+    },
+    {
+      "status" : 151,
+      "data"   : 55,
+      "action" : "track:clippressed",
+      "track"  : 7,
+      "scene"  : 2
+    },
+    {
+      "status" : 151,
+      "data" : 56,
+      "action" : "track:clippressed",
+      "track"  : 7,
+      "scene"  : 3
+    },
+    {
+      "status" : 151,
+      "data"   : 57,
+      "action" : "track:clippressed",
+      "track"  : 7,
+      "scene"  : 4
+    },
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     {
       "status" : 176,
       "data" : 64,
       "action" : "footpedal1"
     }
+  
+  
   ],
   
   "outputBindings" : [
