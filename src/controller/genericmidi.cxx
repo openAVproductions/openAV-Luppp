@@ -469,11 +469,10 @@ void GenericMIDI::launchScene( int scene )
 
 int GenericMIDI::loadController( std::string file )
 {
-  LUPPP_NOTE("%s%s","Loading controller : ", file.c_str() );
   
   /// open and read whole file
 #ifdef DEBUG_CONTROLLER
-  cout << "loading controller file " << file.c_str() << endl;
+  LUPPP_NOTE("%s%s","Loading controller : ", file.c_str() );
 #endif
   std::ifstream sampleFile( file.c_str(), std::ios_base::in|std::ios_base::ate);
   long file_length = sampleFile.tellg();
