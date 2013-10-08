@@ -59,16 +59,21 @@ class GenericMIDI : public Controller, public MidiIO
     
     void volume(int t, float f);
     
+    
+    void recordArm(int t, bool b);
     void setSceneState(int track, int clip, GridLogic::State s);
     
     /*
     void progress(int t, int s, float f);
-    void recordArm(int t, bool b);
     void launchScene( int scene );
     
     /// track FX
     void trackSend(int t, int send, float v);
     */
+    
+    void trackSend(int t, int send, float v);
+    void trackSendActive(int t, int send, bool a);
+    
     
     void reset();
     

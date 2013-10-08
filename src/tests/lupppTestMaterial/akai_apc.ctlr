@@ -184,6 +184,68 @@
           "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
           "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4
       }
+    },
+    {
+      "action" : "track:clipstate",
+      "status" : 144,
+      "data"   : 54,
+      "track"  : 0,
+      "scene"  : 1,
+      "state" : {
+          "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+          "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4
+      }
+    },
+    {
+      "action" : "track:clipstate",
+      "status" : 144,
+      "data"   : 55,
+      "track"  : 0,
+      "scene"  : 2,
+      "state" : {
+          "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+          "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4
+      }
+    },
+    {
+      "action" : "track:clipstate",
+      "status" : 144,
+      "data"   : 56,
+      "track"  : 0,
+      "scene"  : 3,
+      "state" : {
+          "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+          "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4
+      }
+    },
+    {
+      "action" : "track:clipstate",
+      "status" : 144,
+      "data"   : 57,
+      "track"  : 0,
+      "scene"  : 4,
+      "state" : {
+          "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+          "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4
+      }
+    },
+    {
+      "action" : "track:recordarm",
+      "status" : 144,
+      "data"   : 48,
+      "track"  : 0
+    },
+    {
+      "action" : "track:keyactive",
+      "status" : 144,
+      "data"   : 49,
+      "track"  : 0
+    },
+    {
+      "action" : "track:sendactive",
+      "status" : 144,
+      "data" : 50,
+      "track"  : 0
     }
   ]
 }

@@ -61,16 +61,60 @@ void GenericMIDI::volume(int t, float f)
 }
 
 
-/*
 void GenericMIDI::recordArm(int t, bool enabled)
 {
-  unsigned char data[3];
-  data[0] = 144 + t;
-  data[1] = 48; // record enable LED
-  data[2] = enabled ? 127 : 0;
-  jack->midiObserverWriteMIDI( _port,  &data[0] );
+  for(unsigned int i = 0; i < actionToMidi.size(); i++)
+  {
+    Binding* b = actionToMidi.at(i);
+    
+    if ( b->action == TRACK_RECORD_ARM && b->track == t )
+    {
+      unsigned char data[3];
+      data[0] = b->status;
+      data[1] = b->data;
+      data[2] = enabled ? 127 : 0;
+      writeMidi( data );
+    }
+  }
 }
 
+void GenericMIDI::trackSend(int t, int send, float v)
+{
+  /*
+  for(unsigned int i = 0; i < actionToMidi.size(); i++)
+  {
+    Binding* b = actionToMidi.at(i);
+    
+    if ( b->action == TRACK_SEND && b->track == t )
+    {
+      unsigned char data[3];
+      data[0] = b->status;
+      data[1] = b->data;
+      data[2] = enabled ? 127 : 0;
+      writeMidi( data );
+    }
+  }
+  */
+}
+
+void GenericMIDI::trackSendActive(int t, int send, bool a)
+{
+  for(unsigned int i = 0; i < actionToMidi.size(); i++)
+  {
+    Binding* b = actionToMidi.at(i);
+    
+    if ( b->action == TRACK_SEND_ACTIVE && b->track == t && b->send == send )
+    {
+      unsigned char data[3];
+      data[0] = b->status;
+      data[1] = b->data;
+      data[2] = a ? 127 : 0;
+      writeMidi( data );
+    }
+  }
+}
+
+/*
 void GenericMIDI::progress(int t, int s, float f)
 {
   
