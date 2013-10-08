@@ -31,10 +31,47 @@
     },
     
     {
+      "status" : 128,
+      "data"   : 82,
+      "action" : "gridlogic:launchscene",
+      "scene"  : 0
+    },
+    {
+      "status" : 128,
+      "data"   : 83,
+      "action" : "gridlogic:launchscene",
+      "scene"  : 1
+    },
+    {
+      "status" : 128,
+      "data"   : 84,
+      "action" : "gridlogic:launchscene",
+      "scene"  : 2
+    },
+    {
+      "status" : 128,
+      "data"   : 85,
+      "action" : "gridlogic:launchscene",
+      "scene"  : 3
+    },
+    {
+      "status" : 128,
+      "data"   : 86,
+      "action" : "gridlogic:launchscene",
+      "scene"  : 4
+    },
+    
+    
+    
+    
+    {
       "status" : 176,
       "data" : 14,
       "action" : "master:volume"
     },
+    
+    
+    
     
     
     {
@@ -865,31 +902,31 @@
   
   "outputBindings" : [
     {
-      "action" : "track:launchScene",
+      "action" : "gridlogic:launchscene",
       "status" : 144,
       "data"   : 82,
       "scene"  : 0
     },
     {
-      "action" : "track:launchScene",
+      "action" : "gridlogic:launchscene",
       "status" : 144,
       "data"   : 83,
       "scene"  : 1
     },
     {
-      "action" : "track:launchScene",
+      "action" : "gridlogic:launchscene",
       "status" : 144,
       "data"   : 84,
       "scene"  : 2
     },
     {
-      "action" : "track:launchScene",
+      "action" : "gridlogic:launchscene",
       "status" : 144,
       "data"   : 85,
       "scene"  : 3
     },
     {
-      "action" : "track:launchScene",
+      "action" : "gridlogic:launchscene",
       "status" : 144,
       "data"   : 86,
       "scene"  : 4

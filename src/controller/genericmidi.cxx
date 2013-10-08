@@ -379,6 +379,9 @@ void GenericMIDI::midi(unsigned char* midi)
         case Event::GRID_SELECT_CLIP_ENABLE:
             jack->getGridLogic()->setSelectTrackScene( b->active );
             break;
+        case Event::GRID_LAUNCH_SCENE:
+            jack->getGridLogic()->launchScene( b->scene );
+            break;
         
         
         case Event::MASTER_VOL:   jack->getLogic()->trackVolume( -1     , value ); break;
@@ -666,7 +669,7 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
     */
   }
   
-  else if ( strcmp( actionJson->valuestring, "track:launchScene" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, "gridlogic:launchscene" ) == 0 ) {
     tmp->action = Event::GRID_LAUNCH_SCENE;
   }
   else if ( strcmp( actionJson->valuestring, "gridlogic:selectclipevent" ) == 0 ) {
