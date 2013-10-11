@@ -185,11 +185,11 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   
   volBox.maximum(1.0f);
   volBox.minimum(0.0f);
-  volBox.color( FL_BLACK );
+  volBox.color( fl_rgb_color( 0,0,0 ) );
   
   source.maximum(1.0f);
   source.minimum(0.0f);
-  source.color( FL_BLACK );
+  source.color( fl_rgb_color( 0,0,0 ) );
   
   volume.amplitude( 0.0, 0.0 );
   volume.callback( gmastertrack_volume_callback, 0 );

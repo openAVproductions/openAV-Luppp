@@ -55,7 +55,7 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
   
   volBox.maximum(1.0f);
   volBox.minimum(0.0f);
-  volBox.color( FL_BLACK );
+  volBox.color( fl_rgb_color( 0,0,0 ) );
   volBox.selection_color( FL_BLUE );
   
   end(); // close the group
