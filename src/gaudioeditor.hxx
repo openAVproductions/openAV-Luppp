@@ -6,9 +6,10 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
 
-//#include "avtk/waveform.h"
-
 class AudioBuffer;
+namespace Avtk {
+class Waveform;
+}
 
 class AudioEditor
 {
@@ -17,12 +18,15 @@ class AudioEditor
     ~AudioEditor();
     
     /// shows the window, and loads the audio buffer into the display
-    void show( AudioBuffer* ab );
+    void show( AudioBuffer* ab, bool modal = false );
+    
+    /// returns true if the editor window is shown
+    bool shown();
   
   private:
     // GUI elements
     Fl_Double_Window* window;
-    //Avtk::Waveform*   waveform;
+    Avtk::Waveform*   waveform;
     
     // Contents
     AudioBuffer* ab;

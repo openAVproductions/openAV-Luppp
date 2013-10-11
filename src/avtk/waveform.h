@@ -9,7 +9,6 @@
 #include <stdlib.h>
 
 using namespace std;
-using namespace Cairo;
 
 namespace Avtk
 {
@@ -17,7 +16,7 @@ namespace Avtk
 class Waveform : public Fl_Widget
 {
   public:
-    AvtkWaveform(int _x, int _y, int _w, int _h, const char *_label=0 ):
+    Waveform(int _x, int _y, int _w, int _h, const char *_label=0 ):
         Fl_Widget(_x, _y, _w, _h, _label)
     {
       x = _x;
@@ -34,15 +33,14 @@ class Waveform : public Fl_Widget
       waveformSurf = 0;
       
       
-      data = new std::vector<float>();
+      data = (float*)malloc( sizeof(float) * w );
       
       srand (time(NULL));
       
-      for (int i = 0; i < 700; i++)
+      for (int i = 0; i < _w; i++)
       {
-        data->push_back( 0.f );
+        data[i] = rand() / RAND_MAX / 0.75;
       }
-      
       
       newWaveform = true;
       
@@ -59,13 +57,17 @@ class Waveform : public Fl_Widget
     
     bool newWaveform;
     
-    std::vector<float>* data;
+    long   dataSize;
+    float* data;
     
-    void setDataPtr(std::vector<float>* d )
+    void setData( float* d, long size )
     {
       //cout << "AvtkWaveform: setDataPtr = " << data << endl;
+      dataSize = size;
       data = d;
       newWaveform = true;
+      
+      
       damage(FL_DAMAGE_ALL);
     }
     
@@ -74,20 +76,12 @@ class Waveform : public Fl_Widget
       if (damage() & FL_DAMAGE_ALL)
       {
         cairo_t *cr = Fl::cairo_cc();
-        
-        //Cairo::Context cr = Cairo::Context( c_cr );
-        //Cairo::Context cairoContext = Context( c_cr, false );
-        //Cairo::Context* cr = &cairoContext;
-        
         cairo_save(cr);
         
         // clear the surface
         cairo_rectangle(cr, x, y, w, h);
         cairo_set_source_rgb (cr, 0.1,0.1,0.1);
         cairo_fill( cr );
-        
-        
-        //cout << "waveform have data" << endl;
         
         if ( newWaveform )
         {
@@ -131,7 +125,7 @@ class Waveform : public Fl_Widget
           cairo_set_dash ( waveformCr, dashes, 0, 0.0);
           
           
-          if ( not data )
+          if ( !data )
           {
             // draw X
             cairo_move_to( cr,  0    , 0     );
@@ -157,7 +151,7 @@ class Waveform : public Fl_Widget
             float currentSample = 0.f;
             
             // find how many samples per pixel
-            int samplesPerPix = data->size() / w;
+            int samplesPerPix = int(dataSize / float(w));
             //cout << "width = " << w << "  sampsPerPx " << samplesPerPix << endl;
             
             // loop over each pixel value we need
@@ -169,7 +163,7 @@ class Waveform : public Fl_Widget
               // calc value for this pixel
               for( int i = 0; i < samplesPerPix; i++ )
               {
-                float tmp = data->at(i + (p * samplesPerPix) );
+                float tmp = data[i + (p * samplesPerPix)];
                 if ( tmp < 0 )
                 {
                   averageMin += tmp;
@@ -221,10 +215,27 @@ class Waveform : public Fl_Widget
     void resize(int X, int Y, int W, int H)
     {
       Fl_Widget::resize(X,Y,W,H);
+      
+      // take the smaller value
+      long newSize = W > w ? W : w;
+      printf("Waveform new size %li, from %i\n", newSize, w );
+      
       x = X;
       y = Y;
       w = W;
       h = H;
+      
+      // FIXME: needs to be resampled, not clipped at end
+      // delete old data, and resize it
+      float* newData = (float*)malloc( sizeof(float) * w );
+      
+      memcpy( newData, data, newSize );
+      free ( data );
+      data = newData;
+      
+      newWaveform = true;
+      
+      
       redraw();
     }
     

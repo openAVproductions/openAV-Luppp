@@ -210,13 +210,10 @@ void Gui::selectLoadSample( int track, int scene )
   diskReader->loadSample( track, scene, path );
 }
 
-
-void Gui::openAudioEditor(AudioBuffer* ab)
+AudioEditor* Gui::getAudioEditor()
 {
-  LUPPP_WARN("Gui::openAudioEditor() %i", audioEditor );
-  audioEditor->show(0);
+  return audioEditor;
 }
-
 
 Gui::Gui() :
     samplerate( 0 ),
@@ -267,7 +264,6 @@ Gui::Gui() :
   Avtk::Button* ctlrButton = new Avtk::Button(5, 25, 200, 20, "Add Controller");
   ctlrButton->callback( selectLoadController );
   optionWindow->end();
-  
   
   // Create AudioEditor after window.end() has been called
   audioEditor = new AudioEditor();

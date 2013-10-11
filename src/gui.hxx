@@ -36,7 +36,7 @@ class Gui
     void showOptions();
     
     /// open audio editor window with an AudioBuffer
-    void openAudioEditor(AudioBuffer* ab);
+    AudioEditor* getAudioEditor();
     
     /// resets the state to "new"
     void reset();
