@@ -4,12 +4,12 @@
 
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Box.H>
 
 #include "config.hxx"
 #include "gtrack.hxx"
 #include "gunittrack.hxx"
 #include "gmastertrack.hxx"
+#include "gaudioeditor.hxx"
 
 #include "diskwriter.hxx"
 #include "diskreader.hxx"
@@ -19,10 +19,14 @@
 
 using namespace std;
 
+class AudioBuffer;
+
 class Gui
 {
   public:
     Gui();
+    ~Gui();
+    
     int show();
     
     int quit();
@@ -30,6 +34,9 @@ class Gui
     
     /// shows the options window
     void showOptions();
+    
+    /// open audio editor window with an AudioBuffer
+    void openAudioEditor(AudioBuffer* ab);
     
     /// resets the state to "new"
     void reset();
@@ -50,9 +57,10 @@ class Gui
   
   private:
     Fl_Double_Window    window;
-    Fl_Box*             box;
+    // FIXME: Refactor optionWindow to seperate class
+    Fl_Double_Window* optionWindow;
     
-    Fl_Window* optionWindow;
+    AudioEditor*        audioEditor;
     
     DiskReader*         diskReader;
     DiskWriter*         diskWriter;
@@ -61,6 +69,7 @@ class Gui
     
     vector<GTrack*>     tracks;
     
+    // FIXME: refactor tooltip code out..?
     std::string         tooltip;
     Fl_Box*             tooltipLabel;
 };

@@ -191,7 +191,7 @@ void Gui::selectLoadSample( int track, int scene )
   Fl_Native_File_Chooser fnfc;
   fnfc.title("Pick a file");
   fnfc.type(Fl_Native_File_Chooser::BROWSE_FILE);
-  //fnfc.filter("Wav\t*.wav");
+  fnfc.filter("Wav\t*.wav");
   fnfc.directory( getenv("HOME") ); // default directory to use
   // Show native chooser
   switch ( fnfc.show() ) {
@@ -211,9 +211,17 @@ void Gui::selectLoadSample( int track, int scene )
 }
 
 
+void Gui::openAudioEditor(AudioBuffer* ab)
+{
+  LUPPP_WARN("Gui::openAudioEditor() %i", audioEditor );
+  audioEditor->show(0);
+}
+
+
 Gui::Gui() :
     samplerate( 0 ),
     window(1110,650),
+    
     diskReader( new DiskReader() ),
     diskWriter( new DiskWriter() )
 {
@@ -230,11 +238,13 @@ Gui::Gui() :
   headerImage->setPixbuf( header.pixel_data, 4 );
   headerImage->callback( gui_header_callback, this );
   
-  tooltipLabel = new Fl_Box(130, 25, 500, 20, "");
+  /*
+  tooltipLabel = new Fl_2(130, 25, 500, 20, "");
   tooltipLabel->labelcolor( FL_LIGHT2 );
   tooltipLabel->color( FL_DARK2 );
   tooltipLabel->hide();
   //tooltipLabel->align( FL_ALIGN_TOP_LEFT );
+  */
   
   window.resizable( headerImage );
   
@@ -253,13 +263,14 @@ Gui::Gui() :
   
   
   // setup Options dialog
-  optionWindow = new Fl_Window(400,300,"Options");
+  optionWindow = new Fl_Double_Window(400,300,"Options");
   Avtk::Button* ctlrButton = new Avtk::Button(5, 25, 200, 20, "Add Controller");
   ctlrButton->callback( selectLoadController );
   optionWindow->end();
   
   
-  
+  // Create AudioEditor after window.end() has been called
+  audioEditor = new AudioEditor();
   
   // default controller for testing
   LUPPP_NOTE("Adding APC40 Controller cb");
@@ -335,4 +346,23 @@ void Gui::askQuit()
   {
     gui->quit();
   }
+}
+
+
+Gui::~Gui()
+{
+  delete optionWindow;
+  delete audioEditor;
+  
+  delete diskReader;
+  delete diskWriter;
+  
+  delete master;
+  
+  for(unsigned int i = 0; i < tracks.size(); i++)
+  {
+    delete tracks.at(i);
+  }
+  
+  
 }

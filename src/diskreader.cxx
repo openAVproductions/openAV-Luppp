@@ -24,7 +24,7 @@ using namespace std;
 
 DiskReader::DiskReader()
 {
-};
+}
 
 int DiskReader::loadSample( int track, int scene, string path )
 {
@@ -75,6 +75,8 @@ int DiskReader::loadSample( int track, int scene, string path )
     stringstream base;
     base << dirname( basePath ) << "/audio.cfg";
     
+    free( basePath );
+    
     /// open audio.cfg, reading whole file
 #ifdef DEBUG_STATE
     cout << "loading sample metadata file " << base.str().c_str() << endl;
@@ -120,11 +122,14 @@ int DiskReader::loadSample( int track, int scene, string path )
     }
     else
     {
-      LUPPP_WARN("%s %s","Empty or no sample.cfg found at ",base.str().c_str() );
+      // this means there's no audio.cfg file found for the sample: show the user
+      // the file, and ask what the intended beat number is, and load the AudioBuffer
+      LUPPP_WARN("%s %s","Empty or no audio.cfg found at ",base.str().c_str() );
+      // FIXME: Cancel = no load sample?
+      gui->openAudioEditor( ab );
+      
       return LUPPP_RETURN_WARNING;
     }
-    
-    free( basePath );
     
     // write audioBuffer to DSP
     EventLooperLoad e = EventLooperLoad( track, scene, ab );
