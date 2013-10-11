@@ -36,7 +36,7 @@ void MidiIO::writeMidi( unsigned char* data )
   
 }
 
-void MidiIO::registerMidiPorts(std::string name)
+int MidiIO::registerMidiPorts(std::string name)
 {
   // register the JACK MIDI ports
   stringstream i;
@@ -56,12 +56,14 @@ void MidiIO::registerMidiPorts(std::string name)
   
   if ( jackInputPort && jackOutputPort )
   {
-    cout << jackOutputPort << endl;
+    //cout << jackOutputPort << endl;
     //LUPPP_NOTE("%i, %i", jackInputPort, jackOutputPort );
+    return LUPPP_RETURN_OK;
   }
   else
   {
     LUPPP_ERROR("Error registering JACK ports" );
+    return LUPPP_RETURN_ERROR;
   }
 }
 

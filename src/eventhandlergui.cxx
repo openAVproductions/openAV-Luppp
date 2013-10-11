@@ -88,6 +88,8 @@ void handleGuiEvents()
             
           } break; }
         
+        
+        // FIXME: reset signal level to 0
         case Event::TRACK_SIGNAL_LEVEL: {
           if ( availableRead >= sizeof(EventTrackSignalLevel) ) {
             EventTrackSignalLevel ev;

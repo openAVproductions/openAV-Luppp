@@ -32,7 +32,7 @@ class MidiIO
     void process(int nframes);
     
     /// called by the subclass to create MIDI ports
-    void registerMidiPorts(std::string name);
+    int registerMidiPorts(std::string name);
     
     virtual void midi(unsigned char* data){};
     
