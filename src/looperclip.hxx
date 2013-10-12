@@ -41,9 +41,8 @@ class LooperClip : public Stately
     float getSample(float playSpeed);
     void record(int count, float* L, float* R);
     
-    /// TimeObserver overrides
-    void bar(){}; // dummy override
-    void bar(int);
+    // change scene state
+    void doBar();
     
     /// SaveAble overrides
     void save();
@@ -113,11 +112,6 @@ class LooperClip : public Stately
     float _playhead;
     float _recordhead;
     AudioBuffer* _buffer;
-    
-    /// causes buffer changing / bar() effect: note this is called internally due
-    /// to a bar event being *inside* an nframes, *not* on a boundary
-    int barCountdown;
-    void doBar();
 };
 
 #endif // LUPPP_LOOPER_CLIP_H

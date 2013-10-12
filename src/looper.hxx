@@ -28,6 +28,7 @@ class Looper : public AudioProcessor, public TimeObserver
     void setRequestedBuffer(int s, AudioBuffer* ab);
     
     /// stores the framesPerBeat from TimeManager. Used to stretch audio
+    void bar(int framesInNframes);
     void setFpb(int f) { fpb = f; }
     
     /// Retrieve a clip from the Looper
@@ -44,6 +45,11 @@ class Looper : public AudioProcessor, public TimeObserver
     int queuedScene;
     
     int fpb;
+    
+    /// causes buffer changing by calling bar() on LooperClip instance.
+    /// note this is called internally due to a bar event being *inside*
+    /// an nframes period, and *not* on a boundary of nframes
+    int barCountdown;
     
     //vector<float> tmpRecordBuffer;
     LooperClip* clips[10];

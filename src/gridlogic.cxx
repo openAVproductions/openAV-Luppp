@@ -237,7 +237,7 @@ void GridLogic::bar(int framesInNframes)
   {
     int track = i / NSCENES;
     int scene = i - track * NSCENES;
-    jack->getLooper( track )->getClip( scene )->bar(framesInNframes);
+    jack->getLooper( track )->bar(framesInNframes);
 
 #ifdef DEBUG_CLIP
     GridLogic::State s = jack->getLooper( track )->getClip( scene )->getState();

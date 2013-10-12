@@ -59,6 +59,14 @@ void Looper::setRequestedBuffer(int s, AudioBuffer* ab)
   clips[s]->setRequestedBuffer( ab );
 }
 
+void Looper::bar(int framesInNframes)
+{
+  // sets the countdown, if it reaches 0 in the next process cycle, then doBar()
+  // is called: swapping state / playing buffers etc
+  barCountdown = framesInNframes;
+  //LUPPP_NOTE("Looper::bar() countdown = %i", barCountdown);
+}
+
 void Looper::process(unsigned int nframes, Buffers* buffers)
 {
   // process each clip individually: this allows for playback of one clip,
@@ -79,7 +87,10 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
       
       // copy data from input buffer to recording buffer
       float* input = buffers->audio[Buffers::MASTER_INPUT];
-      clips[clip]->record( nframes, input, 0 );
+      
+      // FIXME: always records nframes: should depend on barCountdown
+      if ( nframes < barCountdown )
+        clips[clip]->record( nframes, input, 0 );
     }
     else if ( clips[clip]->playing() )
     {
@@ -95,8 +106,18 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
       
       float* out = buffers->audio[Buffers::TRACK_0 + track];
       
+      // barCountdown < 0 == doBar()
+      int tmpBarCountdown = barCountdown;
       for(unsigned int i = 0; i < nframes; i++ )
       {
+        // tell the instance to update the state
+        if ( tmpBarCountdown <= 0 )
+        {
+          // FIXME: remove print
+          LUPPP_NOTE("doBar() on %i", barCountdown);
+          clips[clip]->doBar();
+        }
+        
         float tmp = clips[clip]->getSample(playSpeed);
         
         float deltaPitch = 12 * log ( playSpeed ) / log (2);
@@ -104,6 +125,9 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
         
         // write the pitch-shifted signal to the track buffer
         pitchShift( 1, &tmp, &out[i] );
+        
+        // countdown
+        tmpBarCountdown--;
       }
       
       //printf("Looper %i playing(), speed = %f\n", track, playSpeed );
@@ -115,8 +139,19 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
       }
       uiUpdateCounter += nframes;
     }
+    else // allow enabling of play / record with error on beat
+    {
+      if ( barCountdown < nframes )
+      {
+        //LUPPP_NOTE("doBar() on %i", barCountdown);
+        clips[clip]->doBar();
+      }
+    }
+  
   }
   
+  // Fixme: big number to stop doBar() being called again
+  barCountdown = 44100*4;
   
   /*
   float playbackSpeed = endPoint / ( float(numBeats) * fpb );

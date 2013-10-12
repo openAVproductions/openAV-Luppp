@@ -225,11 +225,6 @@ long LooperClip::getBufferLenght()
   return _recordhead;
 }
 
-void LooperClip::bar(int framesInNframes)
-{
-  
-}
-
 void LooperClip::doBar()
 {
   bool change = false;
@@ -245,6 +240,7 @@ void LooperClip::doBar()
   
   if ( _queuePlay && _loaded )
   {
+    LUPPP_NOTE("QPLay + loaded" );
     _playing = true;
     s = GridLogic::STATE_PLAYING;
     _recording = false;
