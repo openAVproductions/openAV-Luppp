@@ -36,7 +36,7 @@ class AudioBuffer
       stringstream s;
       s << ID;
       sprintf ( name, "%s\n", s.str().c_str() );
-      }
+    }
     
     /// this function is used for "resizing" an exisiting buffer, and should
     /// not be called for any other reason.

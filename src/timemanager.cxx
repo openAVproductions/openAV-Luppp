@@ -141,7 +141,7 @@ void TimeManager::process(Buffers* buffers)
     if ( beat % (int)buffers->transportPosition->beats_per_bar == 0 )
     {
       // inform observers of new bar SECOND
-      for(uint i = 0; i < observers.size(); i++) { observers.at(i)->bar(); }
+      for(uint i = 0; i < observers.size(); i++) { observers.at(i)->bar(nframesRemainder); }
       buffers->transportPosition->bar++;
     }
     
