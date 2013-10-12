@@ -19,7 +19,8 @@ class Metronome : public TimeObserver
     
     void setActive(bool a);
     
-    void bar();
+    void bar(){}; // dummy override
+    void bar(int);
     void beat();
     void setFpb(int f);
     

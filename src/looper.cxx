@@ -4,6 +4,8 @@
 
 #include "config.hxx"
 
+#include <cmath>
+
 #include "jack.hxx"
 #include "audiobuffer.hxx"
 #include "eventhandler.hxx"

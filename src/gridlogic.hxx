@@ -67,7 +67,7 @@ class GridLogic : public TimeObserver
     void updateState();
     
     /// time functions, not for use by Controller subclasses
-    void bar();
+    void bar(int nframes);
     void beat();
   
     /// for debug purposes: use static_cast<int>(GridLogic::State) to access

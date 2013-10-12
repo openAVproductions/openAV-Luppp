@@ -40,7 +40,7 @@ void Metronome::setActive(bool a)
   playPoint = endPoint + 1;
 }
 
-void Metronome::bar()
+void Metronome::bar(int)
 {
   playPoint = 0;
   playBar = true;

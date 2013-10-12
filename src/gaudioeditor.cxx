@@ -29,7 +29,7 @@ void cancelCB(Fl_Widget*,void* data)
 
 AudioEditor::AudioEditor()
 {
-  window = new Fl_Double_Window(450,200,"Audio Editor : Beats?");
+  window = new Fl_Double_Window(460,200,"Audio Editor : Beats?");
   waveform = new Avtk::Waveform(5, 5, 450, 150, "Waveform");
   cancel = new Avtk::Button(360, 160, 80,30, "Cancel");
   

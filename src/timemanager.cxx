@@ -124,12 +124,14 @@ void TimeManager::process(Buffers* buffers)
   buffers->transportPosition->beat_type     = 4;
   
   int beat = buffers->transportFrame / fpb;
-  //int beat = int(beat);
+  int nframesRemainder = buffers->transportFrame % int(fpb);
   
   //int tick = int( (beatFloat - beat) * 1920 );
   
   if ( beat != oldBeat )
   {
+    LUPPP_NOTE("Beat %i, nframes %i", beat, nframesRemainder );
+    
     // inform observers of new beat FIRST
     for(uint i = 0; i < observers.size(); i++)
     {

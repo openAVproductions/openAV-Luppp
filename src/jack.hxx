@@ -9,22 +9,25 @@
 #include <jack/midiport.h>
 #include <jack/transport.h>
 
-#include "state/state.hxx"
-
-#include "logic.hxx"
-#include "config.hxx"
-#include "looper.hxx"
-#include "metronome.hxx"
-#include "gridlogic.hxx"
-#include "trackoutput.hxx"
-#include "timemanager.hxx"
-#include "controllerupdater.hxx"
-
-#include "dsp/dsp_reverb.hxx"
-#include "dsp/dsp_dbmeter.hxx"
-#include "dsp/dsp_sidechain_gain.hxx"
+#include "event.hxx"
 
 class MidiIO;
+
+class Reverb;
+class DBMeter;
+
+class State;
+class Logic;
+class Looper;
+class Metronome;
+class GridLogic;
+class TimeManager;
+class ControllerUpdater;
+
+class TrackOutput;
+
+// INPUT_TO
+//#include "gridlogic.hxx"
 
 using namespace std;
 

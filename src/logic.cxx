@@ -4,6 +4,11 @@
 #include "jack.hxx"
 extern Jack* jack;
 
+#include "timemanager.hxx"
+#include "controllerupdater.hxx"
+#include "trackoutput.hxx"
+#include "metronome.hxx"
+
 Logic::Logic()
 {
   

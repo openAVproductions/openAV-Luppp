@@ -8,6 +8,11 @@
 #include "eventhandler.hxx"
 #include "audiobuffer.hxx"
 
+#include "controllerupdater.hxx"
+#include "timemanager.hxx"
+
+
+
 extern Jack* jack;
 
 LooperClip::LooperClip(int t, int s) :
@@ -220,7 +225,12 @@ long LooperClip::getBufferLenght()
   return _recordhead;
 }
 
-void LooperClip::bar()
+void LooperClip::bar(int framesInNframes)
+{
+  
+}
+
+void LooperClip::doBar()
 {
   bool change = false;
   GridLogic::State s = GridLogic::STATE_EMPTY;

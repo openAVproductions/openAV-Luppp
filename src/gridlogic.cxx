@@ -2,7 +2,9 @@
 #include "gridlogic.hxx"
 
 #include "jack.hxx"
-#include "audiobuffer.hxx"
+
+#include "trackoutput.hxx"
+#include "controllerupdater.hxx"
 
 extern Jack* jack;
 
@@ -223,7 +225,7 @@ void GridLogic::updateState()
   }
 }
 
-void GridLogic::bar()
+void GridLogic::bar(int framesInNframes)
 {
 #ifdef DEBUG_CLIP
   EventGuiPrint e( "GridLogic::bar()" );
@@ -235,7 +237,7 @@ void GridLogic::bar()
   {
     int track = i / NSCENES;
     int scene = i - track * NSCENES;
-    jack->getLooper( track )->getClip( scene )->bar();
+    jack->getLooper( track )->getClip( scene )->bar(framesInNframes);
 
 #ifdef DEBUG_CLIP
     GridLogic::State s = jack->getLooper( track )->getClip( scene )->getState();

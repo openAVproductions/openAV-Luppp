@@ -8,6 +8,8 @@
 #include "../event.hxx"
 #include "../gridlogic.hxx"
 
+#include "../eventhandler.hxx"
+
 extern Jack* jack;
 
 LupppGUI::LupppGUI() :

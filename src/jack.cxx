@@ -5,6 +5,20 @@
 #include <cstring>
 #include <iostream>
 
+#include "state/state.hxx"
+
+#include "logic.hxx"
+#include "config.hxx"
+#include "looper.hxx"
+#include "metronome.hxx"
+#include "gridlogic.hxx"
+#include "trackoutput.hxx"
+#include "timemanager.hxx"
+#include "controllerupdater.hxx"
+
+#include "dsp/dsp_reverb.hxx"
+#include "dsp/dsp_dbmeter.hxx"
+
 #include "audiobuffer.hxx"
 #include "eventhandler.hxx"
 #include "controller/genericmidi.hxx"

@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include "../jack.hxx"
+#include "../logic.hxx"
 #include "../gridlogic.hxx"
 
 extern Jack* jack;

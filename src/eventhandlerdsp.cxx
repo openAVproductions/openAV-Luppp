@@ -15,6 +15,9 @@
 #include "eventhandler.hxx"
 
 #include "logic.hxx"
+#include "state/state.hxx"
+#include "timemanager.hxx"
+#include "controllerupdater.hxx"
 
 using namespace std;
 
