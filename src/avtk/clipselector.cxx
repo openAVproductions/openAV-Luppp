@@ -247,7 +247,7 @@ int ClipSelector::handle(int event)
           Fl_Menu_Item rclick_menu[] =
           {
             { "Load" },
-            { "Bars",  0,   0, 0, FL_SUBMENU },
+            { "Beats",  0,   0, 0, FL_SUBMENU },
               {"1       "},
               {"2"},
               {"4"},

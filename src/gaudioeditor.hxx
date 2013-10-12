@@ -9,6 +9,7 @@
 class AudioBuffer;
 namespace Avtk {
 class Waveform;
+class Button;
 }
 
 class AudioEditor
@@ -22,11 +23,17 @@ class AudioEditor
     
     /// returns true if the editor window is shown
     bool shown();
+    
+    void setBeatsAndQuit( int beats );
+    
+    //AudioBuffer* getAudioBuffer();
   
   private:
     // GUI elements
     Fl_Double_Window* window;
     Avtk::Waveform*   waveform;
+    Avtk::Button*     cancel;
+    Avtk::Button*     beatButtons[7];
     
     // Contents
     AudioBuffer* ab;

@@ -132,7 +132,14 @@ int DiskReader::loadSample( int track, int scene, string path )
         // FIXME: Cancel = no load sample?
         gui->getAudioEditor()->show( ab, true );
         while ( gui->getAudioEditor()->shown() ) Fl::wait();
-        LUPPP_WARN("finished show() " );
+        
+        // handle "cancel" return
+        if ( ab->getBeats() == -1 )
+        {
+          LUPPP_WARN("cancel clicked, deleting audiobuffer" );
+          delete ab;
+          return LUPPP_RETURN_OK;
+        }
       }
     }
     
