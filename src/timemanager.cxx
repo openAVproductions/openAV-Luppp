@@ -111,6 +111,16 @@ void TimeManager::tap()
   }
 }
 
+int TimeManager::getNframesToBeat()
+{
+  return nframesToBeat;
+}
+
+bool TimeManager::beatInThisProcess()
+{
+  return beatInProcess;
+}
+
 
 void TimeManager::process(Buffers* buffers)
 {
@@ -120,20 +130,27 @@ void TimeManager::process(Buffers* buffers)
   //int framesPerBeat = (int) buffers->samplerate / (bpm / 60.0);
   
   // time signature?
-  buffers->transportPosition->beats_per_bar = 4;
-  buffers->transportPosition->beat_type     = 4;
+  //buffers->transportPosition->beats_per_bar = 4;
+  //buffers->transportPosition->beat_type     = 4;
   
-  
-  int beat = buffers->transportFrame / fpb;
   
   // calculate beat / bar position in nframes
-  int nframesRemainder = buffers->transportFrame % int(fpb);
+  int beat = buffers->transportFrame / fpb;
+  nframesToBeat = buffers->transportFrame - (beat*fpb);
   
-  //int tick = int( (beatFloat - beat) * 1920 );
+  
+  
+  // convert BBT position to a frame number in this period
+  //double frames_per_beat = _audio.samplerate() * 60.0 / pos.beats_per_minute;
+  //nframes_t offset = (frames_per_beat * (1.0 - (pos.tick / pos.ticks_per_beat))  );
+  
+  
   
   if ( beat != oldBeat )
   {
-    LUPPP_NOTE("Beat %i, nframes %i", beat, nframesRemainder );
+    beatInProcess = true;
+    
+    LUPPP_NOTE("Beat %i, nframesToBeat %i", beat, nframesToBeat );
     
     // inform observers of new beat FIRST
     for(uint i = 0; i < observers.size(); i++)
@@ -141,11 +158,16 @@ void TimeManager::process(Buffers* buffers)
       observers.at(i)->beat();
     }
     
-    if ( beat % (int)buffers->transportPosition->beats_per_bar == 0 )
+    // FIXME: 4 == beats in time sig
+    if ( beat % (int) 4 == 0 )
     {
       // inform observers of new bar SECOND
-      for(uint i = 0; i < observers.size(); i++) { observers.at(i)->bar(); }
-      buffers->transportPosition->bar++;
+      for(uint i = 0; i < observers.size(); i++)
+      {
+        observers.at(i)->bar();
+      }
+      
+      //buffers->transportPosition->bar++;
     }
     
     // write new beat to UI (bar info currently not used)
@@ -154,19 +176,28 @@ void TimeManager::process(Buffers* buffers)
     
     oldBeat = beat;
   }
+  else
+  {
+    beatInProcess = false;
+  }
   
   
-  buffers->transportPosition->valid = JackPositionBBT;
+  /*
+  int tick = int( (beatFloat - beat) * 1920 );
+  
+  buffers->transportPosition->valid = (JackPositionBBT | JackTransportPosition);
+  
   buffers->transportPosition->tick += (buffers->nframes / buffers->samplerate);
   
   buffers->transportPosition->beat = beat % 4;
   buffers->transportPosition->tick = 0;
   
   buffers->transportPosition->ticks_per_beat = 1920;
+  */
   
   int bpm = ( samplerate * 60) / fpb;
   //LUPPP_NOTE("BPM = %i " , bpm );
-  buffers->transportPosition->beats_per_minute = bpm;
+  //buffers->transportPosition->beats_per_minute = bpm;
   
 }
 

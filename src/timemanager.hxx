@@ -26,9 +26,18 @@ class TimeManager
     void tap();
     
     void process(Buffers* buffers);
+    
+    /// returns the number of samples till beat if a beat exists in this process
+    /// Otherwise returns nframes
+    int getNframesToBeat();
+    bool beatInThisProcess();
   
   private:
     int samplerate;
+    
+    /// holds the number of frames before a beat
+    int nframesToBeat;
+    bool beatInProcess;
     
     float fpb;
     int oldBeat;

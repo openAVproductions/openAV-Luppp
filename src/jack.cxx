@@ -252,7 +252,6 @@ void Jack::unregisterMidiIO( MidiIO* mo )
 
 int Jack::process (jack_nframes_t nframes)
 {
-  
   /// get buffers
   buffers.audio[Buffers::MASTER_INPUT]        = (float*)jack_port_get_buffer( masterInput    , nframes );
   buffers.audio[Buffers::MASTER_RETURN_L]     = (float*)jack_port_get_buffer( masterReturnL  , nframes );
@@ -299,6 +298,13 @@ int Jack::process (jack_nframes_t nframes)
     
     masterMidiInputIndex++;
   }
+  
+  
+  /// update "time" from JACK master, or write master?
+  buffers.transportFrame    = jack_get_current_transport_frame(client);
+  timeManager->process( &buffers );
+  
+  
   
   /// process each MidiIO registered MIDI port
   for(unsigned int i = 0; i < midiIO.size(); i++ )
@@ -454,12 +460,8 @@ int Jack::timebase(jack_transport_state_t state,
                    int newPos)
 {
   // fill buffers with data, then pass to timeManager
-  buffers.transportFrame    = jack_get_current_transport_frame(client);
-  buffers.transportPosition = pos;
-  buffers.transportState    =&state;
-  
-  // update "time" from JACK master, or write master?
-  timeManager->process( &buffers );
+  //buffers.transportPosition = pos;
+  //buffers.transportState    =&state;
   
   return 0;
 }
