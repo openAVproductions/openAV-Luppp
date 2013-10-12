@@ -41,8 +41,8 @@ class LooperClip : public Stately
     float getSample(float playSpeed);
     void record(int count, float* L, float* R);
     
-    // change scene state
-    void doBar();
+    /// TimeObserver override
+    void bar();
     
     /// SaveAble overrides
     void save();

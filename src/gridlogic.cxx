@@ -225,7 +225,7 @@ void GridLogic::updateState()
   }
 }
 
-void GridLogic::bar(int framesInNframes)
+void GridLogic::bar()
 {
 #ifdef DEBUG_CLIP
   EventGuiPrint e( "GridLogic::bar()" );
@@ -237,7 +237,7 @@ void GridLogic::bar(int framesInNframes)
   {
     int track = i / NSCENES;
     int scene = i - track * NSCENES;
-    jack->getLooper( track )->bar(framesInNframes);
+    jack->getLooper( track )->getClip(scene)->bar();
 
 #ifdef DEBUG_CLIP
     GridLogic::State s = jack->getLooper( track )->getClip( scene )->getState();

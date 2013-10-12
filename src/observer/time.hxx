@@ -14,9 +14,7 @@ class TimeObserver
     virtual void setFpb(int fpb){};
     
     
-    //virtual void bar(){LUPPP_WARN("bar() int not overriden");}
-    
-    virtual void bar(int framesInNframes){};
+    virtual void bar(){};
     
     virtual void beat(){};
     

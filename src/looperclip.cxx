@@ -225,7 +225,7 @@ long LooperClip::getBufferLenght()
   return _recordhead;
 }
 
-void LooperClip::doBar()
+void LooperClip::bar()
 {
   bool change = false;
   GridLogic::State s = GridLogic::STATE_EMPTY;
