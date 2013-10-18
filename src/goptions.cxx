@@ -23,8 +23,25 @@ OptionsWindow::OptionsWindow()
 {
   window = new Fl_Double_Window(400,300,"Options");
   
-  ctlrButton = new Avtk::Button(5, 25, 200, 20, "Add Controller");
-  bindEnable = new Avtk::LightButton(5, 55, 200, 20, "Bind Enable");
+  tabs = new Fl_Tabs(0, 0, 400, 300);
+  
+  int x, y, w, h;
+  tabs->client_area( x, y, w, h, 25 );
+  
+  Fl_Group* bindings = new Fl_Group( x, y, w, h, "Binding");
+  {
+    bindEnable = new Avtk::LightButton(x + 5, y + 5, 100, 25, "Bind Enable");
+  }
+  bindings->end();
+
+  Fl_Group* controllers = new Fl_Group( x, y, w, h, "Controllers");
+  controllers->hide();
+  {
+    ctlrButton = new Avtk::Button(x + 5, y + 5, 100, 25, "Add Controller");
+  }
+  controllers->end();
+  
+  tabs->end();
   
   //ctlrButton->callback( selectLoadController );
   bindEnable->callback( writeBindEnable, this );

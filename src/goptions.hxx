@@ -3,6 +3,8 @@
 #define LUPPP_OPTIONS_H
 
 #include <FL/Fl.H>
+#include <FL/Fl_Tabs.H>
+#include <FL/Fl_Group.H>
 #include <FL/Fl_Double_Window.H>
 
 #include "avtk/avtk_button.h"
@@ -19,6 +21,8 @@ class OptionsWindow
   
   private:
     Fl_Double_Window* window;
+    Fl_Tabs*          tabs;
+    
     Avtk::Button* ctlrButton;
     Avtk::LightButton* bindEnable;
 };
