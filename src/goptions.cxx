@@ -30,6 +30,7 @@ OptionsWindow::OptionsWindow()
   
   Fl_Group* bindings = new Fl_Group( x, y, w, h, "Binding");
   {
+    targetLabel = new Avtk::Button(x + 105, y + 5, 100, 25, "Target: ");
     bindEnable = new Avtk::LightButton(x + 5, y + 5, 100, 25, "Bind Enable");
   }
   bindings->end();
@@ -47,6 +48,13 @@ OptionsWindow::OptionsWindow()
   bindEnable->callback( writeBindEnable, this );
   
   window->end();
+}
+
+void OptionsWindow::setTarget(const char* t)
+{
+  target = t;
+  printf("%s\n", target.c_str() );
+  targetLabel->setLabel( t );
 }
 
 void OptionsWindow::show()

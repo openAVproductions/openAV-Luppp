@@ -58,6 +58,12 @@ class Button : public Fl_Button
     int x, y, w, h;
     const char* label;
     
+    void setLabel( const char* l)
+    {
+      label = l;
+      redraw();
+    }
+    
     float _r, _g, _b;       // foreground colour
     float _bgr, _bgg, _bgb; // background colour
     float _outr, _outg, _outb; // outline colour

@@ -2,6 +2,8 @@
 #ifndef LUPPP_OPTIONS_H
 #define LUPPP_OPTIONS_H
 
+#include <string>
+
 #include <FL/Fl.H>
 #include <FL/Fl_Tabs.H>
 #include <FL/Fl_Group.H>
@@ -16,13 +18,16 @@ class OptionsWindow
     OptionsWindow();
     
     void show();
-    
+    void setTarget(const char* t);
     void setBindEnable(bool b);
   
   private:
     Fl_Double_Window* window;
     Fl_Tabs*          tabs;
     
+    std::string target;
+    
+    Avtk::Button* targetLabel;
     Avtk::Button* ctlrButton;
     Avtk::LightButton* bindEnable;
 };

@@ -42,6 +42,9 @@ void handleDspEvents()
       {
         //printf("event %i\n", e->type() );
         jack->bindingEventType = e->type();
+        
+        EventControllerBindTarget event( "test" );
+        writeToGuiRingbuffer( &event );
       }
       
       switch ( e->type() )

@@ -277,6 +277,13 @@ void handleGuiEvents()
             gui->getOptionsWindow()->setBindEnable( ev.enable );
           } break; }
         
+        case Event::CONTROLLER_BIND_TARGET: {
+          if ( availableRead >= sizeof(EventControllerBindTarget) ) {
+            EventControllerBindTarget ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerBindTarget) );
+            gui->getOptionsWindow()->setTarget( ev.target );
+          } break; }
+        
         default:
           {
             cout << "GUI: Unkown message!! Will clog ringbuffer" << endl;

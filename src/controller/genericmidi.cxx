@@ -62,7 +62,7 @@ std::string GenericMIDI::getName()
 
 void GenericMIDI::volume(int t, float f)
 {
-  cout << "t " << t << "  vol " << f << endl;
+  //cout << "t " << t << "  vol " << f << endl;
 }
 
 

@@ -92,6 +92,7 @@ namespace Event
     // Controller
     CONTROLLER_INSTANCE,
     CONTROLLER_BIND_ENABLE,
+    CONTROLLER_BIND_TARGET,
     
     QUIT,
     
@@ -574,7 +575,7 @@ class EventGuiPrint : public EventBase
     EventGuiPrint(){}
     EventGuiPrint(const char* s)
     {
-      if ( strlen( s ) > 50 )
+      if ( strlen( s ) > 49 )
       {
         // this will be called from an RT context, and should be removed from
         // production code. It is here for the programmer to notice when they
@@ -592,6 +593,37 @@ class EventGuiPrint : public EventBase
       return &stringArray[0];
     }
 };
+
+
+class EventControllerBindTarget : public EventBase
+{
+  public:
+    int type() { return int(CONTROLLER_BIND_TARGET); }
+    uint32_t size() { return sizeof(EventControllerBindTarget); }
+    char target[50];
+    
+    EventControllerBindTarget(){}
+    EventControllerBindTarget(const char* s)
+    {
+      if ( strlen( s ) > 49 )
+      {
+        // this will be called from an RT context, and should be removed from
+        // production code. It is here for the programmer to notice when they
+        // are using code which causes too long a message.
+        cout << "EventGuiPrint() error! Size of string too long!" << endl;
+      }
+      else
+      {
+        // move the sting into this event
+        strcpy( &target[0], s );
+      }
+    }
+    char* getMessage()
+    {
+      return &target[0];
+    }
+};
+
 
 #endif // LUPPP_EVENT_H
 
