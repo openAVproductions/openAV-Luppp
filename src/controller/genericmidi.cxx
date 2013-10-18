@@ -401,7 +401,7 @@ void GenericMIDI::midi(unsigned char* midi)
     writeToGuiRingbuffer( &e );
     
     // update GUI of new binding
-    EventControllerBindingMade e2( midiToAction.back() );
+    EventControllerBindingMade e2( (void*)midiToAction.back() );
     writeToGuiRingbuffer( &e2 );
   }
   

@@ -288,7 +288,7 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventControllerBindingMade) ) {
             EventControllerBindingMade ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerBindingMade) );
-            //gui->getOptionsWindow()->setTarget( ev.target );
+            gui->getOptionsWindow()->addBinding( (Binding*)ev.binding );
           } break; }
         
         default:
