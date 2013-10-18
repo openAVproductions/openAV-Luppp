@@ -47,16 +47,9 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
   recordActive.setColor( 1, 0.0, 0.0 );
   recordActive.callback( gtrack_record_cb, this );
   
-  
-  
-
-  
   volume.callback( gtrack_vol_cb, this );
   
-  volBox.maximum(1.0f);
-  volBox.minimum(0.0f);
-  volBox.color( fl_rgb_color( 0,0,0 ) );
-  volBox.selection_color( FL_BLUE );
+  //volBox.color( fl_rgb_color( 0,0,0 ) );
   
   end(); // close the group
 }

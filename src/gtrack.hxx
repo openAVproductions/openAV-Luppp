@@ -10,6 +10,7 @@
 #include <FL/Fl_Progress.H>
 #include <FL/Fl_Native_File_Chooser.H>
 
+#include "avtk/avtk_box.h"
 #include "avtk/avtk_dial.h"
 #include "avtk/avtk_button.h"
 #include "avtk/avtk_background.h"
@@ -61,7 +62,7 @@ class GTrack : public Fl_Group
     
     Avtk::ClipSelector clipSel;
     
-    Fl_Progress  volBox;
+    Avtk::Box    volBox;
     
     Avtk::Volume volume;
     

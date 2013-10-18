@@ -10,6 +10,7 @@
 #include <FL/Fl_Slider.H>
 #include <FL/Fl_Progress.H>
 
+#include "avtk/avtk_box.h"
 #include "avtk/avtk_dial.h"
 #include "avtk/avtk_button.h"
 #include "avtk/avtk_reverb.h"
@@ -54,8 +55,8 @@ class GMasterTrack : public Fl_Group
     
     Avtk::ClipSelector clipSel;
     
-    Fl_Progress  source;
-    Fl_Progress  volBox;
+    Avtk::Box  source;
+    Avtk::Box  volBox;
     
     Avtk::Button tapTempo;
     Avtk::LightButton metronomeButton;
