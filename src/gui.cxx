@@ -135,7 +135,7 @@ static void gui_header_callback(Fl_Widget *w, void *data)
   }
   else if ( strcmp(m->label(), "Options") == 0 )
   {
-    g->showOptions();
+    g->getOptionsWindow()->show();
   }
   else if ( strcmp(m->label(), "Quit") == 0 )
   {
@@ -143,20 +143,9 @@ static void gui_header_callback(Fl_Widget *w, void *data)
   }
 }
 
-void Gui::showOptions()
+OptionsWindow* Gui::getOptionsWindow()
 {
-  optionWindow->show();
-}
-
-void Gui::writeBindEnable(Fl_Widget* w, void*)
-{
-  //LUPPP_NOTE("MIDI bind mode");
-  
-  Avtk::LightButton* l = (Avtk::LightButton*)w;
-  l->value( !l->value() );
-  
-  EventControllerBindEnable e( l->value() );
-  writeToDspRingbuffer( &e );
+  return optionWindow;
 }
 
 void Gui::selectLoadController(Fl_Widget* w, void*)
@@ -269,14 +258,7 @@ Gui::Gui() :
   
   window.end();
   
-  
-  // setup Options dialog
-  optionWindow = new Fl_Double_Window(400,300,"Options");
-  Avtk::Button* ctlrButton = new Avtk::Button(5, 25, 200, 20, "Add Controller");
-  Avtk::LightButton* bindEnable = new Avtk::LightButton(5, 55, 200, 20, "Bind Enable");
-  ctlrButton->callback( selectLoadController );
-  bindEnable->callback( writeBindEnable );
-  optionWindow->end();
+  optionWindow = new OptionsWindow();
   
   // Create AudioEditor after window.end() has been called
   audioEditor = new AudioEditor();

@@ -5,6 +5,8 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
 
+#include "goptions.hxx"
+
 #include "config.hxx"
 #include "gtrack.hxx"
 #include "gunittrack.hxx"
@@ -32,8 +34,8 @@ class Gui
     int quit();
     void askQuit();
     
-    /// shows the options window
-    void showOptions();
+    /// returns the options window
+    OptionsWindow* getOptionsWindow();
     
     /// open audio editor window with an AudioBuffer
     AudioEditor* getAudioEditor();
@@ -58,8 +60,8 @@ class Gui
   
   private:
     Fl_Double_Window    window;
-    // FIXME: Refactor optionWindow to seperate class
-    Fl_Double_Window* optionWindow;
+    
+    OptionsWindow*    optionWindow;
     
     AudioEditor*        audioEditor;
     
@@ -73,8 +75,6 @@ class Gui
     // FIXME: refactor tooltip code out..?
     std::string         tooltip;
     Fl_Box*             tooltipLabel;
-    
-    static void writeBindEnable(Fl_Widget* w, void*);
 };
 
 #endif // LUPPP_GUI
