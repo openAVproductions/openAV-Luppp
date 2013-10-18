@@ -50,14 +50,14 @@ Volume::Volume(int _x, int _y, int _w, int _h, const char *_label ):
 void Volume::fader( float f )
 {
   // redraw on larger value change
-  if ( fabsf( value() - f ) > 0.05 )
-    value( f );
+  //if ( fabsf( value() - f ) > 0.025 )
+  value( f );
 }
 
 
 void Volume::amplitude  (float aL, float aR)
 {
-  // only redraw if changed more than 0.05
+  // only redraw if changed more than X amount
   if ( fabsf(ampL - aL) > 0.05 ||
        fabsf(ampR - aR) > 0.05 )
   {

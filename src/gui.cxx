@@ -150,8 +150,12 @@ void Gui::showOptions()
 
 void Gui::writeBindEnable(Fl_Widget* w, void*)
 {
-  LUPPP_NOTE("MIDI bind mode enabled");
-  EventControllerBindEnable e( true );
+  //LUPPP_NOTE("MIDI bind mode");
+  
+  Avtk::LightButton* l = (Avtk::LightButton*)w;
+  l->value( !l->value() );
+  
+  EventControllerBindEnable e( l->value() );
   writeToDspRingbuffer( &e );
 }
 

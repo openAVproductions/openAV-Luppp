@@ -270,6 +270,12 @@ void handleGuiEvents()
             delete ev.ab;
           } break; }
         
+        case Event::CONTROLLER_BIND_ENABLE: {
+          if ( availableRead >= sizeof(EventControllerBindEnable) ) {
+            EventControllerBindEnable ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerBindEnable) );
+            //gui->bindingEventRecordEnable = ev.enable;
+          } break; }
         
         default:
           {
