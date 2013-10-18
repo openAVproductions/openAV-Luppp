@@ -4,6 +4,7 @@
 
 #include "eventhandler.hxx"
 
+#include "controller/binding.hxx"
 
 
 static void writeBindEnable(Fl_Widget* w, void* data)
@@ -28,12 +29,17 @@ OptionsWindow::OptionsWindow()
   int x, y, w, h;
   tabs->client_area( x, y, w, h, 25 );
   
-  Fl_Group* bindings = new Fl_Group( x, y, w, h, "Binding");
+  Fl_Group* bindingGroup = new Fl_Group( x, y, w, h, "Binding");
   {
-    targetLabel = new Fl_Box(x + 110,y + 5, 200, 25,"");
+    targetLabelStat = new Fl_Box(x + 100,y + 5, 75, 25,"Target: ");
+    targetLabel = new Fl_Box(x + 140,y + 5, 200, 25,"");
     bindEnable = new Avtk::LightButton(x + 5, y + 5, 100, 25, "Bind Enable");
+    
+    Fl_Scroll* s = new Fl_Scroll( x + 5, y + 35, 400, 250 );
+    bindings = new Avtk::Bindings( x + 5, y + 35, 400, 450 );
+    s->end();
   }
-  bindings->end();
+  bindingGroup->end();
 
   Fl_Group* controllers = new Fl_Group( x, y, w, h, "Controllers");
   controllers->hide();
@@ -73,4 +79,8 @@ void OptionsWindow::setBindEnable(bool e)
   setTarget("");
 }
 
+void OptionsWindow::addBinding( Binding* b)
+{
+  //bindingTable->insert();
+}
 

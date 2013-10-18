@@ -150,7 +150,7 @@ void TimeManager::process(Buffers* buffers)
   {
     beatInProcess = true;
     
-    LUPPP_NOTE("Beat %i, nframesToBeat %i", beat, nframesToBeat );
+    //LUPPP_NOTE("Beat %i, nframesToBeat %i", beat, nframesToBeat );
     
     // inform observers of new beat FIRST
     for(uint i = 0; i < observers.size(); i++)
