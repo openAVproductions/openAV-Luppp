@@ -11,6 +11,8 @@
 #include "../logic.hxx"
 #include "../gridlogic.hxx"
 
+#include "../eventhandler.hxx"
+
 extern Jack* jack;
 
 
@@ -381,6 +383,10 @@ void GenericMIDI::midi(unsigned char* midi)
                   jack->bindingActive );
     
     jack->bindingEventRecordEnable = false;
+    
+    // binding is now created, so disable GUI binding enable button
+    EventControllerBindEnable e ( false );
+    writeToGuiRingbuffer( &e );
   }
   
   // iterate over bindings, execute binding action if matches

@@ -274,7 +274,7 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventControllerBindEnable) ) {
             EventControllerBindEnable ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerBindEnable) );
-            //gui->bindingEventRecordEnable = ev.enable;
+            gui->getOptionsWindow()->setBindEnable( ev.enable );
           } break; }
         
         default:
