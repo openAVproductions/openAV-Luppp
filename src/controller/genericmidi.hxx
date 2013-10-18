@@ -12,7 +12,7 @@
 #include "../cjson/cJSON.h"
 #include "../observer/midi.hxx"
 
-/// for future compatibility, LupppAction might be a string mapped to a unique number
+/// a LupppAction represents the Event type, as from Event.hxx
 typedef int LupppAction;
 
 class Binding
@@ -82,6 +82,9 @@ class GenericMIDI : public Controller, public MidiIO
     void midi(unsigned char* data);
     
     void process(int nframes);
+    
+    // for adding bindings from MIDI / GUI event pair
+    void setupBinding( LupppAction eventType, int midiStatus, int midiData, int track );
     
   private:
     STATUS stat;

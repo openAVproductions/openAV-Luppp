@@ -52,6 +52,13 @@ Jack::Jack() :
   // CAREFUL: setup the size by default: otherwise malloc() is called on push_back
   midiIO.reserve( CONTROLLERS_PREALLOC );
   
+  
+  // MIDI binding stuff
+  bindingEventRecordEnable = true;
+  bindingTrack = 0;
+  bindingEventType = EVENT_NULL;
+  
+  
   //GenericMIDI* tmp = new GenericMIDI("akai_apc.ctlr");
   //tmp->registerComponents();
   //controllerUpdater->registerController( static_cast<Controller*>(tmp) );

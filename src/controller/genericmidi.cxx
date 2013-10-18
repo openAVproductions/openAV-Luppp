@@ -22,7 +22,7 @@ GenericMIDI::GenericMIDI(std::string file) :
   name = "generic";
   
   // load the JSON config file
-  int result = loadController( file );
+  int result = LUPPP_RETURN_OK; //loadController( file );
   
   if ( result == LUPPP_RETURN_OK )
   {
@@ -371,6 +371,13 @@ void GenericMIDI::midi(unsigned char* midi)
   
   //LUPPP_NOTE("GenericMIDI::midi() %i %i %f", status, data, value );
   
+  // create new MIDI binding?
+  if ( jack->bindingEventRecordEnable )
+  {
+    setupBinding( jack->bindingEventType, status, data, 0 );
+    jack->bindingEventRecordEnable = false;
+  }
+  
   // iterate over bindings, execute binding action if matches
   for(unsigned int i = 0; i < midiToAction.size(); i++)
   {
@@ -595,6 +602,20 @@ int GenericMIDI::loadController( std::string file )
   LUPPP_NOTE("Controller loading complete." );
   
   return LUPPP_RETURN_OK;
+}
+
+void GenericMIDI::setupBinding( LupppAction eventType, int midiStatus, int midiData, int track )
+{
+  LUPPP_NOTE("MIDI binding, track %d, from eventType %d to %d, %d", track, eventType, midiStatus, midiData );
+  
+  Binding* tmp = new Binding();
+  
+  tmp->action = eventType;
+  tmp->status = midiStatus;
+  tmp->data   = midiData;
+  tmp->track  = track;
+  
+  midiToAction.push_back( tmp );
 }
 
 

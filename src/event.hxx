@@ -36,7 +36,7 @@ namespace Event
     INPUT_TO_SIDE_KEY,
   };
   
-  enum {
+  enum EVENT_TYPE {
     // default event type
     EVENT_NULL = 0,
     

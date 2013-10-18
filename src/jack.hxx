@@ -74,6 +74,11 @@ class Jack
     {
       return client;
     };
+    
+    // MIDI binding creation
+    bool bindingEventRecordEnable;
+    int bindingTrack;
+    int bindingEventType;
   
   private:
     jack_client_t* client;
@@ -142,6 +147,7 @@ class Jack
     // UI update variables
     int uiUpdateCounter;
     int uiUpdateConstant;
+    
 };
 
 #endif // LUPPP_JACK_H

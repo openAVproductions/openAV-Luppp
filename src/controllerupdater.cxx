@@ -16,6 +16,16 @@ void ControllerUpdater::registerController( Controller* controller )
   controller->registerComponents();
 }
 
+Controller* ControllerUpdater::getController(std::string name)
+{
+  // FIXME: find controller based on name / ID?
+  LUPPP_WARN("FIXME, returning 0th element!!");
+  if ( c.size() >= 1 )
+    return c.at(0);
+  
+  return 0;
+}
+
 void ControllerUpdater::reset()
 {
   for(unsigned int i = 0; i < c.size(); i++)

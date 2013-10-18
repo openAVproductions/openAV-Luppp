@@ -36,6 +36,14 @@ void handleDspEvents()
     // recheck the size against the actual event size
     if ( availableRead >= e->size() )
     {
+      
+      // MIDI binding creation: sample the Event.
+      if( jack->bindingEventRecordEnable )
+      {
+        printf("event %i\n", e->type() );
+        jack->bindingEventType = e->type();
+      }
+      
       switch ( e->type() )
       {
         case Event::QUIT: {
