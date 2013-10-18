@@ -33,6 +33,7 @@ class Binding
     int scene;
     int send;
     
+    /// maps from Gridlogic::State to MIDI output value from binding
     std::map<int,int> clipStateMap;
 };
 
@@ -84,7 +85,7 @@ class GenericMIDI : public Controller, public MidiIO
     void process(int nframes);
     
     // for adding bindings from MIDI / GUI event pair
-    void setupBinding( LupppAction eventType, int midiStatus, int midiData, int track );
+    void setupBinding( LupppAction eventType, int midiStatus, int midiData, int track, int scene, int send, int active );
     
   private:
     STATUS stat;

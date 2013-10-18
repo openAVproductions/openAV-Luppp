@@ -82,7 +82,7 @@ void gtrack_sendDial_cb(Fl_Widget *w, void *data)
   GTrack* track = (GTrack*) data;
   EventTrackSend e( track->ID, SEND_POSTFADER, ((Avtk::Dial*)w)->value() );
   writeToDspRingbuffer( &e );
-  printf("track %i reverb send %f\n", track->ID, ((Avtk::Dial*)w)->value() );
+  //printf("track %i reverb send %f\n", track->ID, ((Avtk::Dial*)w)->value() );
 }
 
 
@@ -101,7 +101,7 @@ void gtrack_key_cb(Fl_Widget *w, void *data)
     EventTrackSendActive e( track->ID, SEND_KEY, false );
     writeToDspRingbuffer( &e );
   }
-  printf("track %i post send %s\n", track->ID, b ? "off" : "on" );
+  //printf("track %i post send %s\n", track->ID, b ? "off" : "on" );
 }
 
 
@@ -110,7 +110,7 @@ void gtrack_xsideDial_cb(Fl_Widget *w, void *data)
   GTrack* track = (GTrack*) data;
   EventTrackSend e( track->ID, SEND_XSIDE, ((Avtk::Dial*)w)->value() );
   writeToDspRingbuffer( &e );
-  printf("track %i side send %f\n", track->ID, ((Avtk::Dial*)w)->value() );
+  //printf("track %i side send %f\n", track->ID, ((Avtk::Dial*)w)->value() );
 }
 
 void gtrack_vol_cb(Fl_Widget *w, void *data)
@@ -118,7 +118,7 @@ void gtrack_vol_cb(Fl_Widget *w, void *data)
   GTrack* track = (GTrack*) data;
   EventTrackVol e( track->ID, ((Avtk::Volume*)w)->value() );
   writeToDspRingbuffer( &e );
-  printf("track %i vol %f\n", track->ID, ((Avtk::Dial*)w)->value() );
+  //printf("track %i vol %f\n", track->ID, ((Avtk::Dial*)w)->value() );
 }
 
 
@@ -138,7 +138,7 @@ void gtrack_send_cb(Fl_Widget *w, void *data)
     EventTrackSendActive e( track->ID, SEND_POSTFADER, 0.0f );
     writeToDspRingbuffer( &e );
   }
-  printf("track %i reverb send %s\n", track->ID, b ? "true" : "false" );
+  //printf("track %i reverb send %s\n", track->ID, b ? "true" : "false" );
 }
 void gtrack_record_cb(Fl_Widget *w, void *data)
 {
@@ -155,6 +155,6 @@ void gtrack_record_cb(Fl_Widget *w, void *data)
     EventTrackRecordArm e( track->ID, 0.0f );
     writeToDspRingbuffer( &e );
   }
-  printf("track %i record Arm %s\n", track->ID, b ? "off" : "on" );
+  //printf("track %i record Arm %s\n", track->ID, b ? "off" : "on" );
 }
 

@@ -374,7 +374,12 @@ void GenericMIDI::midi(unsigned char* midi)
   // create new MIDI binding?
   if ( jack->bindingEventRecordEnable )
   {
-    setupBinding( jack->bindingEventType, status, data, 0 );
+    setupBinding( jack->bindingEventType, status, data,
+                  jack->bindingTrack,
+                  jack->bindingScene,
+                  jack->bindingSend,
+                  jack->bindingActive );
+    
     jack->bindingEventRecordEnable = false;
   }
   
@@ -604,17 +609,22 @@ int GenericMIDI::loadController( std::string file )
   return LUPPP_RETURN_OK;
 }
 
-void GenericMIDI::setupBinding( LupppAction eventType, int midiStatus, int midiData, int track )
+void GenericMIDI::setupBinding( LupppAction eventType, int midiStatus, int midiData, int track, int scene, int send, int active )
 {
   LUPPP_NOTE("MIDI binding, track %d, from eventType %d to %d, %d", track, eventType, midiStatus, midiData );
   
+  // FIXME: NON-RT Have stack of Bindings() available, or push in GUI thread?
   Binding* tmp = new Binding();
   
   tmp->action = eventType;
   tmp->status = midiStatus;
   tmp->data   = midiData;
   tmp->track  = track;
+  tmp->scene  = scene;
+  tmp->send   = send;
+  tmp->active = active;
   
+  // FIXME: Could allocate memory! Issue? Shouldn't be binding during performance?
   midiToAction.push_back( tmp );
 }
 

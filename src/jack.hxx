@@ -77,8 +77,11 @@ class Jack
     
     // MIDI binding creation
     bool bindingEventRecordEnable;
-    int bindingTrack;
     int bindingEventType;
+    int bindingTrack;
+    int bindingScene;
+    int bindingSend;
+    int bindingActive;
   
   private:
     jack_client_t* client;

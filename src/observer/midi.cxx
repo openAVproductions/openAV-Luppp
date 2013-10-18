@@ -80,14 +80,14 @@ void MidiIO::process(int nframes)
   // get port buffers and setup
   void* inputBuffer = (void*) jack_port_get_buffer( jackInputPort, nframes );
   
-  jack_midi_event_t in_event;
+  jack_midi_event_t event;
   int index = 0;
   int event_count = (int) jack_midi_get_event_count( inputBuffer );
   while ( index < event_count )
   {
-    jack_midi_event_get(&in_event, inputBuffer, index);
-    midi( (unsigned char*) &in_event.buffer[0] );
-    printf( "MIDI %i %i %i\n", int(in_event.buffer[0]), int(in_event.buffer[1]), int(in_event.buffer[2]) );
+    jack_midi_event_get(&event, inputBuffer, index);
+    midi( (unsigned char*) &event.buffer[0] );
+    //printf( "MIDI %i %i %i\n", int(event.buffer[0]), int(event.buffer[1]), int(event.buffer[2]) );
     index++;
   }
   

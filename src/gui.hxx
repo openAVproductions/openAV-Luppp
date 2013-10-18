@@ -52,7 +52,8 @@ class Gui
     
     /// allows the user to select a Controller definition
     static void selectLoadController(Fl_Widget* w, void*);
-  
+    
+    
     int samplerate;
   
   private:
@@ -72,6 +73,8 @@ class Gui
     // FIXME: refactor tooltip code out..?
     std::string         tooltip;
     Fl_Box*             tooltipLabel;
+    
+    static void writeBindEnable(Fl_Widget* w, void*);
 };
 
 #endif // LUPPP_GUI

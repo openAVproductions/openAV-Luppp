@@ -148,6 +148,13 @@ void Gui::showOptions()
   optionWindow->show();
 }
 
+void Gui::writeBindEnable(Fl_Widget* w, void*)
+{
+  LUPPP_NOTE("MIDI bind mode enabled");
+  EventControllerBindEnable e( true );
+  writeToDspRingbuffer( &e );
+}
+
 void Gui::selectLoadController(Fl_Widget* w, void*)
 {
   // FIXME: refactor
@@ -262,7 +269,9 @@ Gui::Gui() :
   // setup Options dialog
   optionWindow = new Fl_Double_Window(400,300,"Options");
   Avtk::Button* ctlrButton = new Avtk::Button(5, 25, 200, 20, "Add Controller");
+  Avtk::LightButton* bindEnable = new Avtk::LightButton(5, 55, 200, 20, "Bind Enable");
   ctlrButton->callback( selectLoadController );
+  bindEnable->callback( writeBindEnable );
   optionWindow->end();
   
   // Create AudioEditor after window.end() has been called

@@ -89,7 +89,9 @@ namespace Event
     
     SAMPLERATE,
     
+    // Controller
     CONTROLLER_INSTANCE,
+    CONTROLLER_BIND_ENABLE,
     
     QUIT,
     
@@ -107,6 +109,15 @@ class EventBase
     
     virtual int type() = 0;
     virtual uint32_t size() = 0;
+};
+
+class EventControllerBindEnable : public EventBase
+{
+  public:
+    int type() { return int(CONTROLLER_BIND_ENABLE); }
+    uint32_t size() { return sizeof(EventControllerBindEnable); }
+    bool enable;
+    EventControllerBindEnable(bool e=false):enable(e){}
 };
 
 class EventGridSelectClipEvent : public EventBase

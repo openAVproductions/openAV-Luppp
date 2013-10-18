@@ -40,7 +40,7 @@ void handleDspEvents()
       // MIDI binding creation: sample the Event.
       if( jack->bindingEventRecordEnable )
       {
-        printf("event %i\n", e->type() );
+        //printf("event %i\n", e->type() );
         jack->bindingEventType = e->type();
       }
       
@@ -109,6 +109,8 @@ void handleDspEvents()
           if ( availableRead >= sizeof(EventGridEvent) ) {
             EventGridEvent ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventGridEvent) );
+            jack->bindingTrack = ev.track;
+            jack->bindingScene = ev.scene;
             if ( ev.pressed )
               jack->getGridLogic()->pressed( ev.track, ev.scene );
             else
@@ -119,6 +121,7 @@ void handleDspEvents()
             EventGridLaunchScene ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventGridLaunchScene) );
             jack->getGridLogic()->launchScene( ev.scene );
+            jack->bindingScene = ev.scene;
             break; }
         
         case Event::GRID_SELECT_CLIP_ENABLE: {
@@ -196,6 +199,7 @@ void handleDspEvents()
             EventTrackVol ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackVol) );
             jack->getLogic()->trackVolume( ev.track, ev.vol );
+            jack->bindingTrack = ev.track;
             break; }
           }
         
@@ -204,6 +208,8 @@ void handleDspEvents()
             EventTrackRecordArm ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackRecordArm) );
             jack->getLogic()->trackRecordArm( ev.track, ev.recordArm );
+            jack->bindingTrack  = ev.track;
+            jack->bindingActive = ev.recordArm;
             break; }
           }
           
@@ -212,6 +218,8 @@ void handleDspEvents()
             EventTrackSendActive ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackSendActive) );
             jack->getLogic()->trackSendActive( ev.track, ev.send, ev.active );
+            jack->bindingTrack  = ev.track;
+            jack->bindingActive = ev.active;
           } break; }
         
         case Event::TRACK_SEND: {
@@ -219,6 +227,8 @@ void handleDspEvents()
             EventTrackSend ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackSend) );
             jack->getLogic()->trackSend( ev.track, ev.send, ev.value );
+            jack->bindingTrack = ev.track;
+            jack->bindingSend  = ev.send;
           } break; }
           
         
@@ -243,6 +253,13 @@ void handleDspEvents()
             EventControllerInstance ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventControllerInstance) );
             jack->getControllerUpdater()->registerController( static_cast<Controller*>(ev.controller) );
+          } break; }
+        
+        case Event::CONTROLLER_BIND_ENABLE: {
+          if ( availableRead >= sizeof(EventControllerBindEnable) ) {
+            EventControllerBindEnable ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventControllerBindEnable) );
+            jack->bindingEventRecordEnable = ev.enable;
           } break; }
         
         default:
