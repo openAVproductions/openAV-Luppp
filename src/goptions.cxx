@@ -17,6 +17,11 @@ static void writeBindEnable(Fl_Widget* w, void* data)
   
   EventControllerBindingEnable e( l->value() );
   writeToDspRingbuffer( &e );
+  
+  if ( l->value() < 0.5 )
+  {
+    o->setTarget("");
+  }
 }
 
 

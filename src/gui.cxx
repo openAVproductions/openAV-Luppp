@@ -85,7 +85,7 @@ static void gui_header_callback(Fl_Widget *w, void *data)
     { "New Session" },
     { "Load Session" },
     { "Save Session   ", 0, 0, 0, FL_MENU_DIVIDER},
-    { "Options", 0, 0, 0, FL_MENU_DIVIDER},
+    { "Setup", 0, 0, 0, FL_MENU_DIVIDER},
     { "Quit" },
     { 0 }
   };
@@ -133,7 +133,7 @@ static void gui_header_callback(Fl_Widget *w, void *data)
       writeToDspRingbuffer( &e );
     }
   }
-  else if ( strcmp(m->label(), "Options") == 0 )
+  else if ( strcmp(m->label(), "Setup") == 0 )
   {
     g->getOptionsWindow()->show();
   }
