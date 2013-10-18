@@ -110,6 +110,10 @@ class EventBase
     
     virtual int type() = 0;
     virtual uint32_t size() = 0;
+    
+    /// returns const char* to static char buffer: is the pretty name for event
+    /// optional override: if function isn't overriden, no target update sent
+    virtual const char* name(){return 0;}
 };
 
 class EventControllerBindEnable : public EventBase
@@ -192,8 +196,11 @@ class EventMasterInputToActive : public EventBase
 class EventMasterVol : public EventBase
 {
   public:
+    static const char* prettyName;
+    const char* name(){ return prettyName; }
     int type() { return int(MASTER_VOL); }
     uint32_t size() { return sizeof(EventMasterVol); }
+    
     float vol;
     EventMasterVol(float v = 0) : vol(v){}
 };
@@ -201,6 +208,8 @@ class EventMasterVol : public EventBase
 class EventMasterInputVol : public EventBase
 {
   public:
+    static const char* prettyName;
+    const char* name(){ return prettyName; }
     int type() { return int(MASTER_INPUT_VOL); }
     uint32_t size() { return sizeof(EventMasterInputVol); }
     float vol;
@@ -212,6 +221,8 @@ class EventMasterReturn : public EventBase
   public:
     int type() { return int(MASTER_RETURN); }
     uint32_t size() { return sizeof(EventMasterReturn); }
+    static const char* prettyName;
+    const char* name(){ return prettyName; }
     
     RETURN_TYPE ret;
     float value;
@@ -225,6 +236,8 @@ class EventTrackVol : public EventBase
   public:
     int type() { return int(TRACK_VOLUME); }
     uint32_t size() { return sizeof(EventTrackVol); }
+    static const char* prettyName;
+    const char* name(){ return prettyName; }
     
     int track;
     float vol;
@@ -242,6 +255,8 @@ class EventTrackRecordArm : public EventBase
   public:
     int type() { return int(TRACK_RECORD_ARM); }
     uint32_t size() { return sizeof(EventTrackRecordArm); }
+    static const char* prettyName;
+    const char* name(){ return prettyName; }
     
     int track;
     float recordArm;
@@ -286,6 +301,8 @@ class EventGridEvent : public EventBase
   public:
     int type() { return int(GRID_EVENT); }
     uint32_t size() { return sizeof(EventGridEvent); }
+    static const char* prettyName;
+    const char* name(){ return prettyName; }
     
     int track;
     int scene;
@@ -314,6 +331,8 @@ class EventGridLaunchScene : public EventBase
   public:
     int type() { return int(GRID_LAUNCH_SCENE); }
     uint32_t size() { return sizeof(EventGridLaunchScene); }
+    static const char* prettyName;
+    const char* name(){ return prettyName; }
     
     int scene;
     
