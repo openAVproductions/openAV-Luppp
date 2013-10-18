@@ -5,6 +5,7 @@
 #include <string>
 
 #include <FL/Fl.H>
+#include <FL/Fl_Box.H>
 #include <FL/Fl_Tabs.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Double_Window.H>
@@ -25,9 +26,10 @@ class OptionsWindow
     Fl_Double_Window* window;
     Fl_Tabs*          tabs;
     
-    std::string target;
+    char* target;
     
-    Avtk::Button* targetLabel;
+    Fl_Box* targetLabel;
+    
     Avtk::Button* ctlrButton;
     Avtk::LightButton* bindEnable;
 };

@@ -54,7 +54,7 @@ Jack::Jack() :
   
   
   // MIDI binding stuff
-  bindingEventRecordEnable = true;
+  bindingEventRecordEnable = false;
   bindingTrack = 0;
   bindingEventType = EVENT_NULL;
   

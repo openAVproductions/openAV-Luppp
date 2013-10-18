@@ -30,7 +30,7 @@ OptionsWindow::OptionsWindow()
   
   Fl_Group* bindings = new Fl_Group( x, y, w, h, "Binding");
   {
-    targetLabel = new Avtk::Button(x + 105, y + 5, 100, 25, "Target: ");
+    targetLabel = new Fl_Box(x + 110,y + 5, 200, 25,"");
     bindEnable = new Avtk::LightButton(x + 5, y + 5, 100, 25, "Bind Enable");
   }
   bindings->end();
@@ -52,9 +52,14 @@ OptionsWindow::OptionsWindow()
 
 void OptionsWindow::setTarget(const char* t)
 {
-  target = t;
-  printf("%s\n", target.c_str() );
-  targetLabel->setLabel( t );
+  if ( target )
+    free (target);
+  target = strdup(t);
+  
+  targetLabel->label( target );
+  targetLabel->redraw();
+  
+  //LUPPP_NOTE("New Target %s\n", target );
 }
 
 void OptionsWindow::show()
@@ -65,6 +70,7 @@ void OptionsWindow::show()
 void OptionsWindow::setBindEnable(bool e)
 {
   bindEnable->value( e );
+  setTarget("");
 }
 
 
