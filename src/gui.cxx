@@ -265,7 +265,13 @@ Gui::Gui() :
   
   // default controller for testing
   LUPPP_NOTE("Adding APC40 Controller cb");
-  Controller* c = new GenericMIDI( "akai_apc.ctlr" );
+  //GenericMIDI* c = new GenericMIDI( "akai_apc.ctlr" );
+  GenericMIDI* c = new GenericMIDI();
+  
+  std::vector<Binding*> b = c->getMidiToAction();
+  for(int i =0; i < b.size(); i++ )
+    optionWindow->addBinding( b.at(i) );
+  
   
   if ( c->status() == Controller::CONTROLLER_OK )
   {

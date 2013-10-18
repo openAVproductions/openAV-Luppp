@@ -25,6 +25,7 @@ class OptionsWindow
     void show();
     void setTarget(const char* t);
     void setBindEnable(bool b);
+    
     void addBinding( Binding* b );
   
   private:

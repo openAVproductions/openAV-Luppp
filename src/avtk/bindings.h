@@ -2,8 +2,12 @@
 #ifndef AVTK_BINDINGS_H
 #define AVTK_BINDINGS_H
 
+#include <vector>
+
 #include <FL/Fl.H>
 #include <FL/Fl_Button.H>
+
+#include "../controller/binding.hxx"
 
 namespace Avtk
 {
@@ -18,9 +22,15 @@ class Bindings : public Fl_Button
     int x, y, w, h;
     const char* label;
     
+    void add( Binding* b );
+    
     void draw();
     //int handle(int event);
     void resize(int X, int Y, int W, int H);
+    
+    int bindYPx;
+    std::vector<Binding*> binds;
+    
 };
 
 }

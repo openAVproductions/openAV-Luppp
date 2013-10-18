@@ -15,6 +15,14 @@
 
 extern Jack* jack;
 
+GenericMIDI::GenericMIDI() :
+  Controller(),
+  MidiIO()
+{
+  name = "generic";
+  registerMidiPorts( name );
+  stat = CONTROLLER_OK;
+}
 
 GenericMIDI::GenericMIDI(std::string file) :
   Controller(),
@@ -24,7 +32,7 @@ GenericMIDI::GenericMIDI(std::string file) :
   name = "generic";
   
   // load the JSON config file
-  int result = LUPPP_RETURN_OK; //loadController( file );
+  int result = loadController( file );
   
   if ( result == LUPPP_RETURN_OK )
   {
@@ -36,6 +44,11 @@ GenericMIDI::GenericMIDI(std::string file) :
     LUPPP_ERROR("Error in loading controller map!" );
     stat = CONTROLLER_ERROR;
   }
+}
+
+const std::vector<Binding*>& GenericMIDI::getMidiToAction()
+{
+  return midiToAction;
 }
 
 Controller::STATUS GenericMIDI::status()
@@ -382,11 +395,14 @@ void GenericMIDI::midi(unsigned char* midi)
                   jack->bindingSend,
                   jack->bindingActive );
     
-    jack->bindingEventRecordEnable = false;
-    
     // binding is now created, so disable GUI binding enable button
-    EventControllerBindEnable e ( false );
+    jack->bindingEventRecordEnable = false;
+    EventControllerBindingEnable e( false );
     writeToGuiRingbuffer( &e );
+    
+    // update GUI of new binding
+    EventControllerBindingMade e2( midiToAction.back() );
+    writeToGuiRingbuffer( &e2 );
   }
   
   // iterate over bindings, execute binding action if matches

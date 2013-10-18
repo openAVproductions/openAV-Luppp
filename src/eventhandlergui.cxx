@@ -270,18 +270,25 @@ void handleGuiEvents()
             delete ev.ab;
           } break; }
         
-        case Event::CONTROLLER_BIND_ENABLE: {
-          if ( availableRead >= sizeof(EventControllerBindEnable) ) {
-            EventControllerBindEnable ev;
-            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerBindEnable) );
+        case Event::CONTROLLER_BINDING_ENABLE: {
+          if ( availableRead >= sizeof(EventControllerBindingEnable) ) {
+            EventControllerBindingEnable ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerBindingEnable) );
             gui->getOptionsWindow()->setBindEnable( ev.enable );
           } break; }
         
-        case Event::CONTROLLER_BIND_TARGET: {
-          if ( availableRead >= sizeof(EventControllerBindTarget) ) {
-            EventControllerBindTarget ev;
-            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerBindTarget) );
+        case Event::CONTROLLER_BINDING_TARGET: {
+          if ( availableRead >= sizeof(EventControllerBindingTarget) ) {
+            EventControllerBindingTarget ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerBindingTarget) );
             gui->getOptionsWindow()->setTarget( ev.target );
+          } break; }
+        
+        case Event::CONTROLLER_BINDING_MADE: {
+          if ( availableRead >= sizeof(EventControllerBindingMade) ) {
+            EventControllerBindingMade ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerBindingMade) );
+            //gui->getOptionsWindow()->setTarget( ev.target );
           } break; }
         
         default:

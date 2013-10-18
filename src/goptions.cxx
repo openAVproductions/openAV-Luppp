@@ -15,7 +15,7 @@ static void writeBindEnable(Fl_Widget* w, void* data)
   Avtk::LightButton* l = (Avtk::LightButton*)w;
   l->value( !l->value() );
   
-  EventControllerBindEnable e( l->value() );
+  EventControllerBindingEnable e( l->value() );
   writeToDspRingbuffer( &e );
 }
 
@@ -35,8 +35,8 @@ OptionsWindow::OptionsWindow()
     targetLabel = new Fl_Box(x + 140,y + 5, 200, 25,"");
     bindEnable = new Avtk::LightButton(x + 5, y + 5, 100, 25, "Bind Enable");
     
-    Fl_Scroll* s = new Fl_Scroll( x + 5, y + 35, 400, 250 );
-    bindings = new Avtk::Bindings( x + 5, y + 35, 400, 450 );
+    Fl_Scroll* s = new Fl_Scroll( x + 5, y + 35, 400, 280 );
+    bindings = new Avtk::Bindings( x + 5, y + 35, 400, 300 );
     s->end();
   }
   bindingGroup->end();
@@ -79,8 +79,8 @@ void OptionsWindow::setBindEnable(bool e)
   setTarget("");
 }
 
-void OptionsWindow::addBinding( Binding* b)
+void OptionsWindow::addBinding( Binding* b )
 {
-  //bindingTable->insert();
+  bindings->add( b );
 }
 

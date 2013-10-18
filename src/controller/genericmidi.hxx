@@ -20,7 +20,10 @@
 class GenericMIDI : public Controller, public MidiIO
 {
   public:
-    /// Loads 
+    /// Creates a blank GenericMIDI instance, which can be bound dynamically
+    GenericMIDI();
+    
+    /// Attempts to load a .ctlr file, pointed to by the string
     GenericMIDI(std::string file);
     
     int registerComponents();
@@ -59,6 +62,8 @@ class GenericMIDI : public Controller, public MidiIO
     void midi(unsigned char* data);
     
     void process(int nframes);
+    
+    const std::vector<Binding*>& getMidiToAction();
     
     // for adding bindings from MIDI / GUI event pair
     void setupBinding( LupppAction eventType, int midiStatus, int midiData, int track, int scene, int send, int active );

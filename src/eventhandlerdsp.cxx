@@ -46,7 +46,7 @@ void handleDspEvents()
         const char* target = e->name();
         if ( target )
         {
-          EventControllerBindTarget event( target );
+          EventControllerBindingTarget event( target );
           writeToGuiRingbuffer( &event );
         }
       }
@@ -262,10 +262,10 @@ void handleDspEvents()
             jack->getControllerUpdater()->registerController( static_cast<Controller*>(ev.controller) );
           } break; }
         
-        case Event::CONTROLLER_BIND_ENABLE: {
-          if ( availableRead >= sizeof(EventControllerBindEnable) ) {
-            EventControllerBindEnable ev;
-            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventControllerBindEnable) );
+        case Event::CONTROLLER_BINDING_ENABLE: {
+          if ( availableRead >= sizeof(EventControllerBindingEnable) ) {
+            EventControllerBindingEnable ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventControllerBindingEnable) );
             jack->bindingEventRecordEnable = ev.enable;
           } break; }
         

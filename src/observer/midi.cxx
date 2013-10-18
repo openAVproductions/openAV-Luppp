@@ -27,7 +27,7 @@ void MidiIO::writeMidi( unsigned char* data )
   }
   else
   {
-    cout << "JC::writeMidi() port =  " << jackOutputPort << int(data[0]) << ", " << int(data[1]) << ", " << int(data[2]) << endl; 
+    //cout << "MidiIO::writeMidi() port =  " << jackOutputPort << int(data[0]) << ", " << int(data[1]) << ", " << int(data[2]) << endl; 
     //memcpy( buffer, data, sizeof(unsigned char)*3 );
     buffer[0] = data[0];
     buffer[1] = data[1];

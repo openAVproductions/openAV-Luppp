@@ -91,12 +91,17 @@ namespace Event
     
     // Controller
     CONTROLLER_INSTANCE,
-    CONTROLLER_BIND_ENABLE,
-    CONTROLLER_BIND_TARGET,
+    CONTROLLER_BINDING_ENABLE,
+    CONTROLLER_BINDING_TARGET,
+    CONTROLLER_BINDING_MADE,
     
     QUIT,
     
   };
+  
+  /// returns the pretty name of an event
+  const char* getPrettyName( int type );
+  
 };
 
 using namespace Event;
@@ -116,13 +121,22 @@ class EventBase
     virtual const char* name(){return 0;}
 };
 
-class EventControllerBindEnable : public EventBase
+class EventControllerBindingMade : public EventBase
 {
   public:
-    int type() { return int(CONTROLLER_BIND_ENABLE); }
-    uint32_t size() { return sizeof(EventControllerBindEnable); }
+    int type() { return int(CONTROLLER_BINDING_MADE); }
+    uint32_t size() { return sizeof(EventControllerBindingMade); }
+    void* binding;
+    EventControllerBindingMade(void* b=0): binding(b){}
+};
+
+class EventControllerBindingEnable : public EventBase
+{
+  public:
+    int type() { return int(CONTROLLER_BINDING_ENABLE); }
+    uint32_t size() { return sizeof(EventControllerBindingEnable); }
     bool enable;
-    EventControllerBindEnable(bool e=false):enable(e){}
+    EventControllerBindingEnable(bool e=false):enable(e){}
 };
 
 class EventGridSelectClipEvent : public EventBase
@@ -626,15 +640,15 @@ class EventGuiPrint : public EventBase
 };
 
 
-class EventControllerBindTarget : public EventBase
+class EventControllerBindingTarget : public EventBase
 {
   public:
-    int type() { return int(CONTROLLER_BIND_TARGET); }
-    uint32_t size() { return sizeof(EventControllerBindTarget); }
+    int type() { return int(CONTROLLER_BINDING_TARGET); }
+    uint32_t size() { return sizeof(EventControllerBindingTarget); }
     char target[50];
     
-    EventControllerBindTarget(){}
-    EventControllerBindTarget(const char* s)
+    EventControllerBindingTarget(){}
+    EventControllerBindingTarget(const char* s)
     {
       if ( strlen( s ) > 49 )
       {

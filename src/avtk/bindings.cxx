@@ -2,6 +2,10 @@
 
 #include "bindings.h"
 
+#include <sstream>
+
+#include "../event.hxx"
+
 namespace Avtk
 {
 
@@ -15,6 +19,8 @@ Bindings::Bindings( int _x, int _y, int _w, int _h, const char *_label ) :
   
   label = _label;
   
+  bindYPx = 25;
+  
   highlight = false;
   mouseOver = false;
 }
@@ -27,20 +33,62 @@ void Bindings::draw()
     cairo_t *cr = Fl::cairo_cc();
     cairo_save( cr );
     
-    int drawY = 0;
-    for( int i = 0; i < 10; i++) // draw each binding
+    int drawY = y;
+    for( int i = 0; i < binds.size(); i++) // draw each binding
     {
-      cairo_rectangle( cr, x+2, y + drawY, 100, 25 );
-      drawY += 28;
+      cairo_rectangle( cr, x+2, drawY, 100, 23 );
+      cairo_set_source_rgba(cr, 0 / 255.f,  0 / 255.f ,  0 / 255.f, 0.4);
+      cairo_fill(cr);
+      
+      // track
+      cairo_move_to( cr, x + 10, drawY-10 );
+      cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 1 );
+      cairo_set_font_size( cr, 11 );
+      {
+        std::stringstream s;
+        s << binds.at(i)->track;
+        cairo_show_text( cr, s.str().c_str() );
+      }
+      
+      
+      // action
+      cairo_move_to( cr, x + 40, drawY-10 );
+      cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 1 );
+      cairo_set_font_size( cr, 11 );
+      
+      const char* action = Event::getPrettyName( binds.at(i)->action );
+      if ( action )
+        cairo_show_text( cr, action );
+      
+      
+      
+      
+      // move to next line
+      drawY += bindYPx;
     }
-    cairo_set_source_rgba(cr, 0 / 255.f,  0 / 255.f ,  0 / 255.f, 0.4);
-    cairo_fill(cr);
     
     cairo_restore( cr );
   }
 }
 
-
+void Bindings::add( Binding* b )
+{
+  // FIXME: Refactor to use copy-constructor?
+  Binding* tmp = new Binding();
+  tmp->action = b->action;
+  tmp->status = b->status;
+  tmp->data   = b->data;
+  
+  tmp->active = b->active;
+  tmp->track  = b->track;
+  tmp->scene  = b->scene;
+  tmp->send   = b->send;
+  
+  binds.push_back( tmp );
+  
+  resize( x, binds.size() * bindYPx, w, h );
+  
+}
 
 void Bindings::resize(int X, int Y, int W, int H)
 {
