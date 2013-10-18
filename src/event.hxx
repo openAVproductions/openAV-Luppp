@@ -174,6 +174,8 @@ class EventMasterInputTo : public EventBase
   public:
     int type() { return int(MASTER_INPUT_TO); }
     uint32_t size() { return sizeof(EventMasterInputTo); }
+    static const char* prettyName;
+    const char* name(){ return prettyName; }
     
     INPUT_TO place;
     float value;
@@ -186,6 +188,8 @@ class EventMasterInputToActive : public EventBase
   public:
     int type() { return int(MASTER_INPUT_TO_ACTIVE); }
     uint32_t size() { return sizeof(EventMasterInputToActive); }
+    static const char* prettyName;
+    const char* name(){ return prettyName; }
     
     INPUT_TO place;
     bool active;
@@ -361,6 +365,8 @@ class EventTrackSend : public EventBase
   public:
     int type() { return int(TRACK_SEND); }
     uint32_t size() { return sizeof(EventTrackSend); }
+    static const char* prettyName;
+    const char* name(){ return prettyName; }
     
     int track;
     SEND_TYPE send;
@@ -375,6 +381,8 @@ class EventTrackSendActive : public EventBase
   public:
     int type() { return int(TRACK_SEND_ACTIVE); }
     uint32_t size() { return sizeof(EventTrackSendActive); }
+    static const char* prettyName;
+    const char* name(){ return prettyName; }
     
     int track;
     SEND_TYPE send;
@@ -470,6 +478,8 @@ class EventTimeBPM : public EventBase
   public:
     int type() { return int(TIME_BPM); }
     uint32_t size() { return sizeof(EventTimeBPM); }
+    static const char* prettyName;
+    const char* name(){ return prettyName; }
     
     float bpm;
     
@@ -496,6 +506,8 @@ class EventTimeTempoTap : public EventBase
   public:
     int type() { return int(TIME_TEMPO_TAP); }
     uint32_t size() { return sizeof(EventTimeTempoTap); }
+    static const char* prettyName;
+    const char* name(){ return prettyName; }
     
     bool pressed; // only used to turn on / off the button in GUI
     EventTimeTempoTap():pressed(false){}
