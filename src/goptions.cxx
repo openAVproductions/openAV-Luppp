@@ -92,6 +92,7 @@ OptionsWindow::OptionsWindow()
     bindEnable = new Avtk::LightButton(x + 5, y + 5, 100, 25, "Bind Enable");
     
     writeControllerBtn = new Avtk::Button( x + 5, y + 275, 100, 25, "Save" );
+    ctlrButton = new Avtk::Button(x + 110, y + 275, 100, 25, "Load");
     
     Fl_Scroll* s = new Fl_Scroll( x + 5, y + 35, 400, 180 );
     bindings = new Avtk::Bindings( x + 5, y + 35, 400, 200 );
@@ -102,7 +103,7 @@ OptionsWindow::OptionsWindow()
   Fl_Group* controllers = new Fl_Group( x, y, w, h, "Controllers");
   controllers->hide();
   {
-    ctlrButton = new Avtk::Button(x + 5, y + 5, 100, 25, "Add Controller");
+    //ctlrButton = new Avtk::Button(x + 5, y + 5, 100, 25, "Add Controller");
   }
   controllers->end();
   

@@ -573,7 +573,7 @@ int GenericMIDI::loadController( std::string file )
     }
     
     
-    
+    int nInputBindings = 0;
     cJSON* inputBindings = cJSON_GetObjectItem( controllerJson, "inputBindings");
     if ( inputBindings )
     {
@@ -584,16 +584,23 @@ int GenericMIDI::loadController( std::string file )
         Binding* tmp = setupBinding( bindingJson );
         if ( tmp )
           midiToAction.push_back( tmp );
+        
+        nInputBindings++;
       }
     }
     else
     {
-      LUPPP_WARN("%s %s","No input bindings found at ", file.c_str() );
-      //return LUPPP_RETURN_WARNING;
+      LUPPP_WARN("No input bindings array in .ctlr map." );
+      nInputBindings++; // hack to avoid 2 prints
+    }
+    
+    if ( nInputBindings == 0 )
+    {
+      LUPPP_NOTE("Zero input bindings present in .ctlr map.");
     }
     
     
-    
+    int nOutputBindings = 0;
     cJSON* outputBindings = cJSON_GetObjectItem( controllerJson, "outputBindings");
     if ( outputBindings )
     {
@@ -605,15 +612,19 @@ int GenericMIDI::loadController( std::string file )
         if ( tmp )
           actionToMidi.push_back( tmp );
         
+        nOutputBindings++;
         //LUPPP_NOTE("Binding from %s to %i %i", actionJ->valuestring, statusJson->valueint, dataJson->valueint );
       }
     }
     else
     {
-      LUPPP_WARN("%s %s","No output bindings found at ", file.c_str() );
-      //return LUPPP_RETURN_WARNING;
+      LUPPP_WARN("No output bindings array in .ctlr map." );
+      nOutputBindings++; // hack to avoid 2 prints
     }
-    
+    if ( nOutputBindings == 0 )
+    {
+      LUPPP_NOTE("Zero output bindings present in .ctlr map." );
+    }
     
     
     cJSON_Delete( controllerJson );
