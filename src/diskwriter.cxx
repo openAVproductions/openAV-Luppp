@@ -84,6 +84,48 @@ int DiskWriter::writeControllerFile(std::string name  ,
   if ( g )
   {
     LUPPP_NOTE("Writing .ctlr file...");
+    
+    cJSON* controllerJson = cJSON_CreateObject();
+    
+    cJSON_AddItemToObject  ( controllerJson, "name", cJSON_CreateString( name.c_str() ));
+    cJSON_AddItemToObject  ( controllerJson, "author", cJSON_CreateString( author.c_str() ));
+    cJSON_AddItemToObject  ( controllerJson, "link", cJSON_CreateString( link.c_str() ));
+    
+    // input bindings
+    std::vector<Binding*> b = g->getMidiToAction();
+    
+    cJSON* inputBindings = cJSON_CreateArray();
+    cJSON_AddItemToObject(controllerJson, "inputBindings", inputBindings );
+    for(unsigned int i = 0; i < b.size(); i++ )
+    {
+      // create binding
+      cJSON* binding = cJSON_CreateObject();
+      cJSON_AddItemToArray( inputBindings, binding );
+      
+      // add metadata to binding
+      // FIXME: get action string from Event class: need to move function from GenericMIDI to there
+      //cJSON_AddNumberToObject( binding, "action", cJSON_CreateString( "actionStringHere" ) );
+      
+      cJSON_AddNumberToObject( binding, "status", b.at(i)->status );
+      cJSON_AddNumberToObject( binding, "data"  , b.at(i)->data   );
+      
+      cJSON_AddNumberToObject( binding, "track" , b.at(i)->track  );
+      cJSON_AddNumberToObject( binding, "scene" , b.at(i)->scene  );
+      cJSON_AddNumberToObject( binding, "send"  , b.at(i)->send   );
+      cJSON_AddNumberToObject( binding, "active", b.at(i)->active );
+    }
+    
+    
+    
+    // write the sample JSON node to <samplePath>/sample.cfg
+    stringstream controllerCfgPath;
+    controllerCfgPath << getenv("HOME") << "/.config/openAV/luppp/controller.cfg";
+    
+    ofstream controllerCfgFile;
+    controllerCfgFile.open ( controllerCfgPath.str().c_str() );
+    controllerCfgFile << cJSON_Print( controllerJson );
+    controllerCfgFile.close();
+    
   }
   else
   {

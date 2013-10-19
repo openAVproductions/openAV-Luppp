@@ -5,6 +5,8 @@
 #include "eventhandler.hxx"
 
 #include "controller/binding.hxx"
+#include "controller/controller.hxx"
+#include "controller/genericmidi.hxx"
 
 #include "gui.hxx"
 extern Gui* gui;
@@ -23,6 +25,41 @@ static void writeBindEnable(Fl_Widget* w, void* data)
   if ( l->value() < 0.5 )
   {
     o->setTarget("");
+  }
+}
+
+static void selectLoadController(Fl_Widget* w, void*)
+{
+  // FIXME: refactor
+  string path;
+  Fl_Native_File_Chooser fnfc;
+  fnfc.title("Pick a controller definition");
+  fnfc.type(Fl_Native_File_Chooser::BROWSE_FILE);
+  fnfc.filter("Controllers\t*.ctlr");
+  fnfc.directory( getenv("HOME") ); // default directory to use
+  // Show native chooser
+  switch ( fnfc.show() ) {
+     case -1: printf("ERROR: %s\n", fnfc.errmsg());    break;  // ERROR
+     case  1: printf("CANCEL\n");                      break;  // CANCEL
+     default: printf("Loading controller at %s\n", fnfc.filename());
+        path = fnfc.filename();
+        break;
+  }
+  
+  if ( strcmp( path.c_str(), "" ) == 0 )
+    return;
+  
+  LUPPP_NOTE("%s","ADD Controller cb");
+  Controller* c = new GenericMIDI( path );
+  
+  if ( c->status() == Controller::CONTROLLER_OK )
+  {
+    EventControllerInstance e(c);
+    writeToDspRingbuffer( &e );
+  }
+  else
+  {
+    LUPPP_ERROR("Controller initialization failed!");
   }
 }
 
@@ -68,7 +105,7 @@ OptionsWindow::OptionsWindow()
   
   tabs->end();
   
-  //ctlrButton->callback( selectLoadController );
+  ctlrButton->callback( selectLoadController );
   bindEnable->callback( writeBindEnable, this );
   writeControllerBtn->callback( writeControllerFile, this );
   
