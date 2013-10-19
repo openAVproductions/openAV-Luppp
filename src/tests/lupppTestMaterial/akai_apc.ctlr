@@ -3,9 +3,6 @@
   "author" : "Harry van Haaren",
   "link" : "www.openavproductions.com/luppp#akaiapc40",
   
-  "midiIn" : 1,
-  "midiOut" : 1,
-  
   "inputBindings" : [
     
     

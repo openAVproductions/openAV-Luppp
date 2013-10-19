@@ -91,6 +91,7 @@ namespace Event
     
     // Controller
     CONTROLLER_INSTANCE,
+    CONTROLLER_INSTANCE_GET_TO_WRITE,
     CONTROLLER_BINDING_ENABLE,
     CONTROLLER_BINDING_TARGET,
     CONTROLLER_BINDING_MADE,
@@ -181,6 +182,17 @@ class EventControllerInstance : public EventBase
     uint32_t size() { return sizeof(EventControllerInstance); }
     void* controller;
     EventControllerInstance(void* c = 0) : controller(c) {}
+};
+
+/// writes the GenericMIDI controller instance to a .ctlr file
+class EventControllerInstanceGetToWrite : public EventBase
+{
+  public:
+    int type() { return int(CONTROLLER_INSTANCE_GET_TO_WRITE); }
+    uint32_t size() { return sizeof(EventControllerInstanceGetToWrite); }
+    int ID;
+    void* controller;
+    EventControllerInstanceGetToWrite(int id = 0, void* c = 0) : ID(0), controller(c) {}
 };
 
 class EventMasterInputTo : public EventBase

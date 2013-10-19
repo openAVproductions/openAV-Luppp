@@ -38,6 +38,7 @@ class OptionsWindow
     Fl_Box* targetLabel;
     Fl_Box* targetLabelStat;
     Avtk::LightButton* bindEnable;
+    Avtk::Button* writeControllerBtn;
     
     // Controller
     Avtk::Button* ctlrButton;

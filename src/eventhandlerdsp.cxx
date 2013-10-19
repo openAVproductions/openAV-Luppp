@@ -269,6 +269,16 @@ void handleDspEvents()
             jack->bindingEventRecordEnable = ev.enable;
           } break; }
         
+        case Event::CONTROLLER_INSTANCE_GET_TO_WRITE: {
+          if ( availableRead >= sizeof(EventControllerInstanceGetToWrite) ) {
+            EventControllerInstanceGetToWrite ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventControllerInstanceGetToWrite) );
+            // get the corresponding Controller with ID, and return it
+            Controller* c = jack->getControllerUpdater()->getController( ev.ID );
+            EventControllerInstanceGetToWrite tmp( ev.ID, c );
+            writeToGuiRingbuffer( &tmp );
+          } break; }
+        
         default:
           {
             cout << "DSP: Unkown message!! Will clog ringbuffer" << endl;

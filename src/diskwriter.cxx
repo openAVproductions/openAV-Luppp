@@ -12,6 +12,8 @@
 #include "gui.hxx"
 #include "gmastertrack.hxx"
 
+#include "controller/genericmidi.hxx"
+
 #include <sndfile.hh>
 
 extern Gui* gui;
@@ -69,6 +71,25 @@ std::string DiskWriter::getLastSaveName()
 std::string DiskWriter::getLastSavePath()
 {
   return sessionPath;
+}
+
+int DiskWriter::writeControllerFile(std::string name  ,
+                                    std::string author,
+                                    std::string link  ,
+                                    Controller* c     )
+{
+  // check if controller of ID is actually a GenericMIDI controller
+  GenericMIDI* g = dynamic_cast<GenericMIDI*>( c );
+  
+  if ( g )
+  {
+    LUPPP_NOTE("Writing .ctlr file...");
+  }
+  else
+  {
+    LUPPP_WARN("Invalid Controller pointer: cannot write %s as is not a GenericMIDI controller!", c->getName().c_str() );
+  }
+  
 }
 
 int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )

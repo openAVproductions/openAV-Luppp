@@ -6,6 +6,8 @@
 
 #include "controller/binding.hxx"
 
+#include "gui.hxx"
+extern Gui* gui;
 
 static void writeBindEnable(Fl_Widget* w, void* data)
 {
@@ -24,12 +26,21 @@ static void writeBindEnable(Fl_Widget* w, void* data)
   }
 }
 
+static void writeControllerFile(Fl_Widget* w, void* data)
+{
+  OptionsWindow* o = (OptionsWindow*) data;
+  
+  // FIXME: Controller ID hardcoded
+  EventControllerInstanceGetToWrite e( 1 );
+  writeToDspRingbuffer( &e );
+}
+
 
 OptionsWindow::OptionsWindow()
 {
-  window = new Fl_Double_Window(400,300,"Options");
+  window = new Fl_Double_Window(400,400,"Options");
   
-  tabs = new Fl_Tabs(0, 0, 400, 300);
+  tabs = new Fl_Tabs(0, 0, 400, 400);
   
   int x, y, w, h;
   tabs->client_area( x, y, w, h, 25 );
@@ -40,8 +51,10 @@ OptionsWindow::OptionsWindow()
     targetLabel = new Fl_Box(x + 140,y + 5, 200, 25,"");
     bindEnable = new Avtk::LightButton(x + 5, y + 5, 100, 25, "Bind Enable");
     
-    Fl_Scroll* s = new Fl_Scroll( x + 5, y + 35, 400, 280 );
-    bindings = new Avtk::Bindings( x + 5, y + 35, 400, 300 );
+    writeControllerBtn = new Avtk::Button( x + 5, y + 275, 100, 25, "Save" );
+    
+    Fl_Scroll* s = new Fl_Scroll( x + 5, y + 35, 400, 180 );
+    bindings = new Avtk::Bindings( x + 5, y + 35, 400, 200 );
     s->end();
   }
   bindingGroup->end();
@@ -57,6 +70,7 @@ OptionsWindow::OptionsWindow()
   
   //ctlrButton->callback( selectLoadController );
   bindEnable->callback( writeBindEnable, this );
+  writeControllerBtn->callback( writeControllerFile, this );
   
   window->end();
 }

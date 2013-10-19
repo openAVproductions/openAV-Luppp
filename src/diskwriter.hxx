@@ -8,6 +8,7 @@
 #include "cjson/cJSON.h"
 
 class AudioBuffer;
+class Controller;
 
 /// To hold data about loaded clips until we write the JSON out
 class ClipData
@@ -30,6 +31,7 @@ class DiskWriter
   public:
     DiskWriter();
     
+    /// sets up session write path etc
     void initialize( std::string path, std::string sessionName );
     
     /// writes a single audio buffer to disk
@@ -40,7 +42,14 @@ class DiskWriter
     
     std::string getLastSaveName();
     std::string getLastSavePath();
-  
+    
+    /// writes a controller definition .ctlr JSON file from a GenericMIDI instance
+    int writeControllerFile(  std::string name  ,
+                              std::string author,
+                              std::string link  ,
+                              Controller*      );
+    
+    
 #ifdef BUILD_TESTS
     int runTests();
 #endif

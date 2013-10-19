@@ -24,6 +24,9 @@ class Controller
     /// creates the controller instance: this is called in the non-RT thread
     Controller();
     
+    /// controllers have a unique ID
+    int getID();
+    
     /// allows instance to register MIDI observer type functionality
     virtual int registerComponents(){return 0;}
     
@@ -57,6 +60,10 @@ class Controller
     
     /// reset controller
     virtual void reset();
+  
+  private:
+    static int privateID;
+    int ID;
 };
 
 #endif // LUPPP_CONTROLLER_H

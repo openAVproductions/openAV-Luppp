@@ -269,7 +269,7 @@ Gui::Gui() :
   GenericMIDI* c = new GenericMIDI();
   
   std::vector<Binding*> b = c->getMidiToAction();
-  for(int i =0; i < b.size(); i++ )
+  for(unsigned int i =0; i < b.size(); i++ )
     optionWindow->addBinding( b.at(i) );
   
   

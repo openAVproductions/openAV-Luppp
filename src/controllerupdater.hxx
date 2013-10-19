@@ -31,8 +31,8 @@ class ControllerUpdater
     
     void registerController( Controller* controller );
     
-    // returns a Controller* by its name
-    Controller* getController(std::string name);
+    // returns a Controller* by its ID
+    Controller* getController(int id);
     
     void reset();
     void mute(int t, bool b);

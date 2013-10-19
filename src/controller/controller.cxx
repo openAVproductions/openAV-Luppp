@@ -8,11 +8,18 @@
 
 extern Jack* jack;
 
+int Controller::privateID = 0;
+
 Controller::Controller()
 {
+  ID = privateID++;
 }
 
 void Controller::reset()
 {
 }
 
+int Controller::getID()
+{
+  return ID;
+}

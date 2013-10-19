@@ -291,6 +291,16 @@ void handleGuiEvents()
             gui->getOptionsWindow()->addBinding( (Binding*)ev.binding );
           } break; }
         
+        case Event::CONTROLLER_INSTANCE_GET_TO_WRITE: {
+          if ( availableRead >= sizeof(EventControllerInstanceGetToWrite) ) {
+            EventControllerInstanceGetToWrite ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerInstanceGetToWrite) );
+            // write the contents of the GenericMIDI controller to .ctlr file
+            gui->getDiskWriter()->writeControllerFile("name","author","link", (Controller*)ev.controller );
+          } break; }
+        
+        
+        
         default:
           {
             cout << "GUI: Unkown message!! Will clog ringbuffer" << endl;
