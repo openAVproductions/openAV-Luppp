@@ -36,7 +36,10 @@ static void selectLoadController(Fl_Widget* w, void*)
   fnfc.title("Pick a controller definition");
   fnfc.type(Fl_Native_File_Chooser::BROWSE_FILE);
   fnfc.filter("Controllers\t*.ctlr");
-  fnfc.directory( getenv("HOME") ); // default directory to use
+  
+  stringstream s;
+  s << getenv("HOME") << "/.config/openAV/luppp/";
+  fnfc.directory( s.str().c_str() ); // default directory to use
   // Show native chooser
   switch ( fnfc.show() ) {
      case -1: printf("ERROR: %s\n", fnfc.errmsg());    break;  // ERROR
