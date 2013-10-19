@@ -104,7 +104,7 @@ int DiskWriter::writeControllerFile(std::string name  ,
       
       // add metadata to binding
       // FIXME: get action string from Event class: need to move function from GenericMIDI to there
-      //cJSON_AddNumberToObject( binding, "action", cJSON_CreateString( "actionStringHere" ) );
+      cJSON_AddItemToObject( binding, "action", cJSON_CreateString( "gridlogic:launchscene" ) );
       
       cJSON_AddNumberToObject( binding, "status", b.at(i)->status );
       cJSON_AddNumberToObject( binding, "data"  , b.at(i)->data   );
@@ -119,7 +119,7 @@ int DiskWriter::writeControllerFile(std::string name  ,
     
     // write the sample JSON node to <samplePath>/sample.cfg
     stringstream controllerCfgPath;
-    controllerCfgPath << getenv("HOME") << "/.config/openAV/luppp/controller.cfg";
+    controllerCfgPath << getenv("HOME") << "/.config/openAV/luppp/" << name << ".ctlr";
     
     ofstream controllerCfgFile;
     controllerCfgFile.open ( controllerCfgPath.str().c_str() );

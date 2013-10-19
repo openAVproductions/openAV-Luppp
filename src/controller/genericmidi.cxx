@@ -588,8 +588,8 @@ int GenericMIDI::loadController( std::string file )
     }
     else
     {
-      LUPPP_WARN("%s %s","No controller bindings found at ", file.c_str() );
-      return LUPPP_RETURN_WARNING;
+      LUPPP_WARN("%s %s","No input bindings found at ", file.c_str() );
+      //return LUPPP_RETURN_WARNING;
     }
     
     
@@ -610,8 +610,8 @@ int GenericMIDI::loadController( std::string file )
     }
     else
     {
-      LUPPP_WARN("%s %s","No controller bindings found at ", file.c_str() );
-      return LUPPP_RETURN_WARNING;
+      LUPPP_WARN("%s %s","No output bindings found at ", file.c_str() );
+      //return LUPPP_RETURN_WARNING;
     }
     
     
