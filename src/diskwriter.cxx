@@ -156,6 +156,7 @@ int DiskWriter::writeControllerFile(std::string name  ,
     LUPPP_WARN("Invalid Controller pointer: cannot write %s as is not a GenericMIDI controller!", c->getName().c_str() );
   }
   
+  return LUPPP_RETURN_OK;
 }
 
 int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )

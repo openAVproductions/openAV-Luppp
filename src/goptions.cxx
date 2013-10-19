@@ -95,7 +95,7 @@ OptionsWindow::OptionsWindow()
     ctlrButton = new Avtk::Button(x + 110, y + 275, 100, 25, "Load");
     
     Fl_Scroll* s = new Fl_Scroll( x + 5, y + 35, 400, 180 );
-    bindings = new Avtk::Bindings( x + 5, y + 35, 400, 200 );
+    bindings = new Avtk::Bindings( x + 5, y + 35, 398, 10 );
     s->end();
   }
   bindingGroup->end();

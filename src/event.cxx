@@ -4,9 +4,9 @@
 // defines the pretty names of each event type
 const char* EventMasterVol::prettyName = "Master Volume";
 const char* EventMasterReturn::prettyName = "Master Return";
-const char* EventMasterInputVol::prettyName = "Master Input Volume";
-const char* EventMasterInputTo::prettyName = "Master Input To";
-const char* EventMasterInputToActive::prettyName = "Master Input To Active";
+const char* EventMasterInputVol::prettyName = "Input Volume";
+const char* EventMasterInputTo::prettyName = "Input To";
+const char* EventMasterInputToActive::prettyName = "Input To Active";
 
 const char* EventTrackVol::prettyName = "Track Volume";
 const char* EventTrackSend::prettyName = "Track Send";
@@ -16,8 +16,8 @@ const char* EventTrackRecordArm::prettyName = "Track Record Arm";
 const char* EventTimeBPM::prettyName = "Tempo BPM";
 const char* EventTimeTempoTap::prettyName = "Tempo Tap";
 
-const char* EventGridEvent::prettyName = "Grid Press / Release";
-const char* EventGridLaunchScene::prettyName = "Grid Launch Scene";
+const char* EventGridEvent::prettyName = "Grid Press";
+const char* EventGridLaunchScene::prettyName = "Launch Scene";
 
 
 

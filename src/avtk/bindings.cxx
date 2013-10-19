@@ -33,39 +33,73 @@ void Bindings::draw()
     cairo_t *cr = Fl::cairo_cc();
     cairo_save( cr );
     
-    int drawY = y;
+    cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 1 );
+    cairo_set_font_size( cr, 11 );
+    cairo_move_to( cr, x + 7, y+15 );
+    cairo_show_text( cr, "Action:" );
+    
+    cairo_move_to( cr, x + 140, y+15 );
+    cairo_show_text( cr, "T:" );
+    cairo_move_to( cr, x + 160, y+15 );
+    cairo_show_text( cr, "S:" );
+    
+    
+    cairo_move_to( cr, x + 200, y+15 );
+    cairo_show_text( cr, "B1:" );
+    cairo_move_to( cr, x + 230, y+15 );
+    cairo_show_text( cr, "B2:" );
+    
+    
+    int drawY = y + bindYPx;
     for( int i = 0; i < binds.size(); i++) // draw each binding
     {
-      cairo_rectangle( cr, x+2, drawY, 100, 23 );
+      cairo_rectangle( cr, x+2, drawY, 179, 23 );
       cairo_set_source_rgba(cr, 0 / 255.f,  0 / 255.f ,  0 / 255.f, 0.4);
       cairo_fill(cr);
       
-      // track
-      cairo_move_to( cr, x + 10, drawY-10 );
+      // action
+      cairo_move_to( cr, x + 7, drawY+15 );
       cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 1 );
       cairo_set_font_size( cr, 11 );
+      const char* action = Event::getPrettyName( binds.at(i)->action );
+      if ( action )
+        cairo_show_text( cr, action );
+      
+      // track
+      cairo_move_to( cr, x + 140, drawY+15 );
       {
         std::stringstream s;
         s << binds.at(i)->track;
         cairo_show_text( cr, s.str().c_str() );
       }
+      // scene
+      cairo_move_to( cr, x + 150, drawY+15 );
+      {
+        std::stringstream s;
+        s << binds.at(i)->scene;
+        cairo_show_text( cr, s.str().c_str() );
+      }
       
-      
-      // action
-      cairo_move_to( cr, x + 40, drawY-10 );
-      cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 1 );
-      cairo_set_font_size( cr, 11 );
-      
-      const char* action = Event::getPrettyName( binds.at(i)->action );
-      if ( action )
-        cairo_show_text( cr, action );
-      
-      
-      
-      
+      // status
+      cairo_move_to( cr, x + 165, drawY+15 );
+      {
+        std::stringstream s;
+        s << binds.at(i)->status;
+        cairo_show_text( cr, s.str().c_str() );
+      }
+      // data
+      cairo_move_to( cr, x + 175, drawY+15 );
+      {
+        std::stringstream s;
+        s << binds.at(i)->data;
+        cairo_show_text( cr, s.str().c_str() );
+      }
       // move to next line
       drawY += bindYPx;
     }
+    
+    printf("done drawing\n");
+    
     
     cairo_restore( cr );
   }
@@ -86,8 +120,10 @@ void Bindings::add( Binding* b )
   
   binds.push_back( tmp );
   
-  resize( x, binds.size() * bindYPx, w, h );
+  printf("resize to %i, %i, %i, %i\n", x, y, w, binds.size() * bindYPx ); 
   
+  resize( x, y, w, binds.size() * bindYPx );
+  redraw();
 }
 
 void Bindings::resize(int X, int Y, int W, int H)
