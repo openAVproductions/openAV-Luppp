@@ -10,6 +10,7 @@
 extern Jack* jack;
 
 #include "audiobuffer.hxx"
+#include "controller/nonseq.hxx"
 #include "controller/genericmidi.hxx"
 
 
@@ -227,9 +228,14 @@ Gui::Gui() :
   // setup callback to signalChecker()
   Fl::add_timeout( 0.1, (Fl_Timeout_Handler)&signalChecker, 0 );
   
+  //window.resize( false );
+  window.xclass("luppp");
+  window.iconlabel("luppp");
+  
   window.color(FL_BLACK);
   window.label("Luppp");
   window.callback( close_cb, 0 );
+  window.size_range(1110,  650);
   
   Avtk::Image* headerImage = new Avtk::Image(0,0,1110,36,"header.png");
   headerImage->setPixbuf( header.pixel_data, 4 );
@@ -243,7 +249,7 @@ Gui::Gui() :
   //tooltipLabel->align( FL_ALIGN_TOP_LEFT );
   */
   
-  window.resizable( headerImage );
+  //window.resizable( headerImage );
   
   int i = 0;
   for (; i < NTRACKS; i++ )
@@ -282,6 +288,11 @@ Gui::Gui() :
   {
     LUPPP_ERROR("Controller initialization failed!");
   }
+  
+  
+  Controller* non = new NonSeq();
+  EventControllerInstance e( non );
+  writeToDspRingbuffer( &e );
   
   
 }

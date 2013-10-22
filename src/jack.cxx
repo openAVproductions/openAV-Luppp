@@ -162,7 +162,7 @@ Jack::Jack() :
   }
   
   if ( jack_set_timebase_callback(client,
-                                  0,
+                                  1, //0, 0 == must be master, 1 == conditional
                                   (JackTimebaseCallback)static_timebase,
                                   static_cast<void*>(this)) )
   {
