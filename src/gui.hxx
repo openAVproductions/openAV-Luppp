@@ -2,6 +2,9 @@
 #ifndef LUPPP_GUI
 #define LUPPP_GUI
 
+#include <vector>
+#include <string>
+
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
 
@@ -16,8 +19,9 @@
 #include "diskwriter.hxx"
 #include "diskreader.hxx"
 
-#include <vector>
-#include <string>
+// non-session-manager integration
+#include "nsm.h"
+
 
 using namespace std;
 
@@ -75,6 +79,9 @@ class Gui
     // FIXME: refactor tooltip code out..?
     std::string         tooltip;
     Fl_Box*             tooltipLabel;
+    
+    // non-session-manager
+    nsm_client_t* nsm;
 };
 
 #endif // LUPPP_GUI

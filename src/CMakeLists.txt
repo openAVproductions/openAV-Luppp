@@ -10,6 +10,10 @@ pkg_check_modules(NTK ntk)
 include_directories( ${NTK_INCLUDE_DIRS}  )
 link_directories   ( ${NTK_LIBRARY_DIRS}  )
 
+pkg_check_modules(LIBLO liblo)
+include_directories( ${LIBLO_INCLUDE_DIRS}  )
+link_directories   ( ${LIBLO_LIBRARY_DIRS}  )
+
 pkg_check_modules(JACK jack)
 include_directories( ${JACK_INCLUDE_DIRS}  )
 link_directories   ( ${JACK_LIBRARY_DIRS}  )
@@ -47,6 +51,7 @@ add_executable (luppp ${sources} )
 
 # Linking
 target_link_libraries( luppp ${JACK_LIBRARIES}     )
+target_link_libraries( luppp ${LIBLO_LIBRARIES}    )
 target_link_libraries( luppp ${NTK_LIBRARIES}      )
 target_link_libraries( luppp ${CAIRO_LIBRARIES}    )
 target_link_libraries( luppp ${SNDFILE_LIBRARIES}  )

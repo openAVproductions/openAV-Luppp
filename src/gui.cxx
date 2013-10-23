@@ -216,6 +216,27 @@ AudioEditor* Gui::getAudioEditor()
   return audioEditor;
 }
 
+
+static int cb_nsm_open (const char *name,
+                        const char *display_name,
+                        const char *client_id,
+                        char **out_msg,
+                        void *userdata )
+{
+  printf("nsm open()\n");
+  //do_open_stuff();
+  return ERR_OK;
+}
+
+static int cb_nsm_save ( char **out_msg, void *userdata )
+{
+  printf("nsm save()\n");
+  //do_save_stuff();
+  return ERR_OK;
+}
+
+
+
 Gui::Gui() :
     samplerate( 0 ),
     window(1110,650),
@@ -294,7 +315,28 @@ Gui::Gui() :
   EventControllerInstance e( non );
   writeToDspRingbuffer( &e );
   
+  // NSM stuff
+  nsm = 0;
+  const char *nsm_url = getenv( "NSM_URL" );
   
+  
+  if ( nsm_url )
+  {
+    nsm = nsm_new();
+    
+    nsm_set_open_callback( nsm, cb_nsm_open, 0 );
+    nsm_set_save_callback( nsm, cb_nsm_save, 0 );
+    
+    if ( nsm_init( nsm, nsm_url ) == 0 )
+    {
+      nsm_send_announce( nsm, "Luppp", "", "luppp" );
+    }
+    else
+    {
+      nsm_free( nsm );
+      nsm = 0;
+    }
+  }
 }
 
 void Gui::reset()
