@@ -223,8 +223,11 @@ static int cb_nsm_open (const char *name,
                         char **out_msg,
                         void *userdata )
 {
-  printf("nsm open()\n");
-  //do_open_stuff();
+  //printf("nsm open()\n", out_msg[0] );
+  
+  LUPPP_NOTE("%s %s","Loading session ", out_msg[0] );
+  //gui->getDiskReader()->readSession( fnfc.filename() );
+  
   return ERR_OK;
 }
 
@@ -232,6 +235,12 @@ static int cb_nsm_save ( char **out_msg, void *userdata )
 {
   printf("nsm save()\n");
   //do_save_stuff();
+  
+  LUPPP_NOTE("%s %s","Saving session as ", out_msg[0] );
+  //gui->getDiskWriter()->initialize( getenv("HOME"), out_msg );
+  EventStateSave e;
+  //writeToDspRingbuffer( &e );
+  
   return ERR_OK;
 }
 
