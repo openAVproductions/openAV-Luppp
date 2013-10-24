@@ -36,7 +36,7 @@ int GridLogic::runTests()
   jack->getGridLogic()->pressed( t, s );
   jack->getGridLogic()->released( t, s );
   QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_RECORD_QUEUED );
-  jack->getGridLogic()->bar( 0 );
+  jack->getGridLogic()->bar();
   QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_RECORDING );
   
   float buffer[64];
@@ -46,19 +46,19 @@ int GridLogic::runTests()
   jack->getGridLogic()->pressed( t, s );
   jack->getGridLogic()->released( t, s );
   QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_PLAY_QUEUED );
-  jack->getGridLogic()->bar( 0 );
+  jack->getGridLogic()->bar();
   QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_PLAYING );
   // playing -> stopped
   jack->getGridLogic()->pressed( t, s );
   jack->getGridLogic()->released( t, s );
   QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_STOP_QUEUED );
-  jack->getGridLogic()->bar( 0 );
+  jack->getGridLogic()->bar();
   QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_STOPPED );
   // stopped -> playing
   jack->getGridLogic()->pressed( t, s );
   jack->getGridLogic()->released( t, s );
   QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_PLAY_QUEUED );
-  jack->getGridLogic()->bar( 0 );
+  jack->getGridLogic()->bar();
   QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_PLAYING );
   
   
@@ -72,7 +72,7 @@ int GridLogic::runTests()
   jack->getGridLogic()->pressed( t, s );
   jack->getGridLogic()->released( t, s );
   QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_EMPTY );
-  lc->doBar();
+  lc->bar();
   
   // recording -> playing -> stopped
   lc->setState( true, false, true, false, false, false );
@@ -83,7 +83,7 @@ int GridLogic::runTests()
   jack->getGridLogic()->pressed( t, s );
   jack->getGridLogic()->released( t, s );
   QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_STOP_QUEUED );
-  lc->doBar();
+  lc->bar();
   
   // stopped -> playing -> stopped
   lc->setState( true, false, false, false, false, false );
