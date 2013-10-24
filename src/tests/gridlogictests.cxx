@@ -28,6 +28,30 @@ int GridLogic::runTests()
   jack->getGridLogic()->launchScene( s );
   QUNIT_IS_TRUE( jack->getGridLogic()->getLaunchedScene() == s );
   
+  /// QUEUE s1, then launch s2, s1 
+  int launchScene = s + 1;
+  lc->init();
+  lc->setState( true, false, false, true, false, false ); // qplay
+  //LUPPP_NOTE("state before = %s", GridLogic::StateString[ lc->getState() ] );
+  jack->getGridLogic()->launchScene( launchScene ); // launch different clip
+  QUNIT_IS_TRUE( jack->getGridLogic()->getLaunchedScene() == launchScene );
+  //LUPPP_NOTE("state after before bar = %s", GridLogic::StateString[ lc->getState() ] );
+  jack->getGridLogic()->bar();
+  //LUPPP_NOTE("state after bar = %s", GridLogic::StateString[ lc->getState() ] );
+  QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_STOPPED );
+  
+  /// s1 playing, then launch s2, s1
+  lc->init();
+  lc->setState( true, true, false, false, false, false ); // playing
+  //LUPPP_NOTE("state before = %s", GridLogic::StateString[ lc->getState() ] );
+  jack->getGridLogic()->launchScene( launchScene ); // launch different clip
+  QUNIT_IS_TRUE( jack->getGridLogic()->getLaunchedScene() == launchScene );
+  //LUPPP_NOTE("state after before bar = %s", GridLogic::StateString[ lc->getState() ] );
+  QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_STOP_QUEUED );
+  jack->getGridLogic()->bar();
+  //LUPPP_NOTE("state after bar = %s", GridLogic::StateString[ lc->getState() ] );
+  QUNIT_IS_TRUE( lc->getState() == GridLogic::STATE_STOPPED );
+  
   
   /// PRESS PAD
   // empty -> recording

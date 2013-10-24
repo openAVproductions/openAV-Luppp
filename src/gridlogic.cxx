@@ -88,14 +88,14 @@ void GridLogic::launchScene( int scene )
       }
       else
       {
-        if ( lc->somethingQueued() )
-        {
-          lc->neutralize();
-          jack->getControllerUpdater()->setSceneState( t, s, lc->getState() );
-        }
-        else if ( lc->playing() )
+        if ( lc->playing() )
         {
           lc->queueStop();
+          jack->getControllerUpdater()->setSceneState( t, s, lc->getState() );
+        }
+        else if ( lc->somethingQueued() )
+        {
+          lc->neutralize();
           jack->getControllerUpdater()->setSceneState( t, s, lc->getState() );
         }
       }
