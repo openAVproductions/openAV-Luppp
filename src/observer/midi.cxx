@@ -11,7 +11,7 @@ MidiIO::MidiIO() :
   jackInputPort(0),
   jackOutputPort(0)
 {
-  LUPPP_NOTE("MidiIO %i",this);
+  //LUPPP_NOTE("MidiIO %i",this);
 }
 
 
@@ -22,12 +22,10 @@ void MidiIO::writeMidi( unsigned char* data )
   unsigned char* buffer = jack_midi_event_reserve( portBuffer, 0, 3);
   if( buffer == 0 )
   {
-    std::cout << "Error: APC writeMidi() write buffer == 0" << std::endl;
     return;
   }
   else
   {
-    //cout << "MidiIO::writeMidi() port =  " << jackOutputPort << int(data[0]) << ", " << int(data[1]) << ", " << int(data[2]) << endl; 
     //memcpy( buffer, data, sizeof(unsigned char)*3 );
     buffer[0] = data[0];
     buffer[1] = data[1];
@@ -56,7 +54,6 @@ int MidiIO::registerMidiPorts(std::string name)
   
   if ( jackInputPort && jackOutputPort )
   {
-    //cout << jackOutputPort << endl;
     //LUPPP_NOTE("%i, %i", jackInputPort, jackOutputPort );
     return LUPPP_RETURN_OK;
   }

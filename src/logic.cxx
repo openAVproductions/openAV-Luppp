@@ -94,9 +94,6 @@ void Logic::trackSend(int t, int send, float v)
 {
   if ( t >= 0 && t < NTRACKS )
   {
-#ifdef DEBUG_LOGIC
-    cout << "Logic::trackSend() " << t << " " << send << " " << v << endl;
-#endif
     jack->getTrackOutput( t )->setSend( send, v );
     jack->getControllerUpdater()->setTrackSend( t, send, v );
   }

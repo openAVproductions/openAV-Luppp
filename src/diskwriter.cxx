@@ -188,7 +188,6 @@ int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
   path << audioDir << "/" << filename.str();
   
   SndfileHandle outfile( path.str(), SFM_WRITE, SF_FORMAT_WAV | SF_FORMAT_FLOAT, 1, gui->samplerate );
-  cout << "Worker::writeSample() " << path.str() << " size: " << ab->getAudioFrames() << endl;
   
   // FIXME: the size of the buffer is bigger than the audio contained in it:
   // calculate the length that needs saving using getBeats() * framesPerBeat
@@ -299,7 +298,7 @@ int DiskWriter::writeSession()
   
   stringstream sessionLuppp;
   sessionLuppp << sessionDir << "/session.luppp";
-  //cout << "Session dir: " << sessionDir.str() << "\n" << "Sample dir : " << audioDir.str() << endl;
+  //c out << "Session dir: " << sessionDir.str() << "\n" << "Sample dir : " << audioDir.str() << endl;
   ofstream sessionFile;
   sessionFile.open ( sessionLuppp.str().c_str() );
   sessionFile << cJSON_Print( sessionJson );

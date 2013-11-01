@@ -106,7 +106,7 @@ static void gmastertrack_button_callback(Fl_Widget *w, void *data)
   }
   else
   {
-    cout << __FILE__ << __LINE__ << " Error: unknown command string" << endl;
+    LUPPP_WARN("Error: unknown command string");
   }
 }
 
@@ -218,8 +218,6 @@ void GMasterTrack::setBarBeat(int b, int beat)
   }
   
   int num = (beat % 4) + 1;
-  
-  //cout << bar << "  " << num << endl;
   
   // turn all off
   for( int i = 0; i < 4; i++)

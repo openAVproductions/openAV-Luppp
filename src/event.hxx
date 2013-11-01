@@ -1,4 +1,4 @@
-
+  
 #ifndef LUPPP_EVENT_H
 #define LUPPP_EVENT_H
 
@@ -483,7 +483,6 @@ class EventLooperLoad : public EventBase
     EventLooperLoad(){}
     EventLooperLoad(int t, int c, void* ab) : track(t), clip(c), audioBuffer(ab)
     {
-      cout << "ab ptr = " << audioBuffer << endl;
     }
 };
 
@@ -667,7 +666,7 @@ class EventControllerBindingTarget : public EventBase
         // this will be called from an RT context, and should be removed from
         // production code. It is here for the programmer to notice when they
         // are using code which causes too long a message.
-        cout << "EventGuiPrint() error! Size of string too long!" << endl;
+        cout << "EventControllerBindingTarget() error! Size of string too long!" << endl;
       }
       else
       {

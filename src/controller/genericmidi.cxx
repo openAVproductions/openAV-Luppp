@@ -75,7 +75,7 @@ std::string GenericMIDI::getName()
 
 void GenericMIDI::volume(int t, float f)
 {
-  //cout << "t " << t << "  vol " << f << endl;
+  
 }
 
 
@@ -751,7 +751,7 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
     /* // Extreme debugging
     for( map<int,int>::iterator it = tmp->clipStateMap.begin(); it != tmp->clipStateMap.end(); ++it)
     {
-      std::cout << it->first << " " << it->second << "\n";
+      std::co ut << it->first << " " << it->second << "\n";
     }
     */
   }
