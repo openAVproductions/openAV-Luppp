@@ -15,6 +15,8 @@
 #include "eventhandler.hxx"
 #include "gmastertrack.hxx"
 
+#include "controller/genericmidi.hxx"
+
 #include <sndfile.hh>
 #include <samplerate.h>
 
@@ -24,6 +26,56 @@ using namespace std;
 
 DiskReader::DiskReader()
 {
+}
+
+int DiskReader::loadPreferences()
+{
+  stringstream s;
+  s << getenv("HOME") << "/.config/openAV/luppp/luppp.prfs";
+  std::ifstream sampleFile( s.str().c_str(), std::ios_base::in|std::ios_base::ate);
+  long file_length = sampleFile.tellg();
+  if ( file_length > 0 )
+  {
+    sampleFile.seekg(0, std::ios_base::beg);
+    sampleFile.clear();
+    char *sampleString = new char[file_length];
+    sampleFile.read(sampleString, file_length);
+    
+    cJSON* preferencesJson = cJSON_Parse( sampleString );
+    if (!preferencesJson)
+    {
+      return LUPPP_RETURN_ERROR;
+    }
+    
+    cJSON* ctlrs = cJSON_GetObjectItem( preferencesJson, "defaultControllers" );
+    if ( ctlrs )
+    {
+      //cout << ".nanba HAS items." << endl;
+      int nCtlrs = cJSON_GetArraySize( ctlrs );
+      for(int i = 0; i < nCtlrs; i++ )
+      {
+        cJSON* ctlr = cJSON_GetArrayItem( ctlrs, i );
+        if( ctlr )
+        {
+          LUPPP_NOTE("Loading controller %s", ctlr->valuestring);
+          stringstream s;
+          s << getenv("HOME") << "/.config/openAV/luppp/controllers/" << ctlr->valuestring;
+          GenericMIDI* c = new GenericMIDI( s.str().c_str() );
+          EventControllerInstance e(c);
+          writeToDspRingbuffer( &e );
+        }
+      }
+    }
+    else
+    {
+      cout << "Warning: .nanba has no items." << endl;
+    }
+    
+    cJSON_Delete( preferencesJson );
+    free ( sampleString  );
+  }
+  
+  return LUPPP_RETURN_OK;
 }
 
 int DiskReader::loadSample( int track, int scene, string path )

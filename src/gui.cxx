@@ -299,6 +299,18 @@ Gui::Gui() :
   // Create AudioEditor after window.end() has been called
   audioEditor = new AudioEditor();
   
+  // read settings file using diskreader, and setup controllers etc
+  int prefs = diskReader->loadPreferences();
+  if ( prefs != LUPPP_RETURN_OK )
+  {
+    LUPPP_ERROR("Error loading preferences");
+  }
+  else
+  {
+    LUPPP_NOTE("Loaded preferences");
+  }
+  
+  /*
   // default controller for testing
   stringstream s;
   s << getenv("HOME") << "/.config/openAV/luppp/controllers/akai_apc.ctlr";
@@ -308,7 +320,7 @@ Gui::Gui() :
   std::vector<Binding*> b = c->getMidiToAction();
   for(unsigned int i =0; i < b.size(); i++ )
     optionWindow->addBinding( b.at(i) );
-  
+  /*
   
   if ( c->status() == Controller::CONTROLLER_OK )
   {

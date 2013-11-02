@@ -25,6 +25,9 @@ class DiskReader
   public:
     DiskReader();
     
+    /// loads default settings for Luppp: controller instances etc
+    int loadPreferences();
+    
     /// loads a sample into a new AudioBuffer, returning the buffer
     int loadSample( int track, int scene, std::string path );
     
