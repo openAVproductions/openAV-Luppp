@@ -258,7 +258,6 @@ void Jack::unregisterMidiIO( MidiIO* mo )
   //midiIO.push_back( mo );
 }
 
-
 int Jack::process (jack_nframes_t nframes)
 {
   /// get buffers
@@ -273,15 +272,6 @@ int Jack::process (jack_nframes_t nframes)
   buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL]=(float*)jack_port_get_buffer(sidechainSignalOutput,nframes);
   
   //buffers.midi [Buffers::MASTER_MIDI_INPUT]   = (void*) jack_port_get_buffer( masterMidiInput, nframes );
-  
-  memset( buffers.audio[Buffers::JACK_MASTER_OUT_L] , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::JACK_MASTER_OUT_R] , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::MASTER_OUT_L]      , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::MASTER_OUT_R]      , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::SEND]              , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::SIDECHAIN_KEY]     , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::SIDECHAIN_SIGNAL]  , 0, sizeof(float) * nframes );
-  
   
   /// init buffers for each MidiIO
   for(unsigned int i = 0; i < midiIO.size(); i++ )
@@ -324,6 +314,17 @@ int Jack::process (jack_nframes_t nframes)
 
 void Jack::processFrames(int nframes)
 {
+  // clear the buffers
+  memset( buffers.audio[Buffers::JACK_MASTER_OUT_L] , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::JACK_MASTER_OUT_R] , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::MASTER_OUT_L]      , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::MASTER_OUT_R]      , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::SEND]              , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::SIDECHAIN_KEY]     , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::SIDECHAIN_SIGNAL]  , 0, sizeof(float) * nframes );
+  
+  
+  
   /// process each MidiIO registered MIDI port
   for(unsigned int i = 0; i < midiIO.size(); i++ )
   {
@@ -407,6 +408,21 @@ void Jack::processFrames(int nframes)
           //buffers.audio[Buffers::POST_SIDECHAIN],
           //buffers.audio[Buffers::SEND],  // uncomment to listen to reverb send only
           sizeof(float)*nframes);
+  
+  
+  // move buffer pointers up nframes: allows processing of one "nframes" from 
+  // JACK in multiple parts internally in Luppp: used for processing bar() / beat()
+  // if a full JACK nframes has been processed, this is extra work: its not that expensive
+  /// update buffers by nframes
+  buffers.audio[Buffers::MASTER_INPUT]        = &buffers.audio[Buffers::MASTER_INPUT][nframes];
+  buffers.audio[Buffers::MASTER_RETURN_L]     = &buffers.audio[Buffers::MASTER_RETURN_L][nframes];
+  buffers.audio[Buffers::MASTER_RETURN_R]     = &buffers.audio[Buffers::MASTER_RETURN_R][nframes];
+  
+  buffers.audio[Buffers::JACK_SEND_OUT]       = &buffers.audio[Buffers::JACK_SEND_OUT][nframes];
+  buffers.audio[Buffers::JACK_MASTER_OUT_L]   = &buffers.audio[Buffers::JACK_MASTER_OUT_L][nframes];
+  buffers.audio[Buffers::JACK_MASTER_OUT_R]   = &buffers.audio[Buffers::JACK_MASTER_OUT_R][nframes];
+  buffers.audio[Buffers::JACK_SIDECHAIN_KEY]  = &buffers.audio[Buffers::JACK_SIDECHAIN_KEY][nframes];
+  buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL]=&buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL][nframes];
   
   return;
 }

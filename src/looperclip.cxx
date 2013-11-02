@@ -235,6 +235,11 @@ void LooperClip::bar()
     _buffer->setAudioFrames( jack->getTimeManager()->getFpb() * _buffer->getBeats() );
   }
   
+  if ( _playhead > 0.9 * _recordhead )
+  {
+    _playhead = 0.f;
+  }
+  
   if ( _queuePlay && _loaded )
   {
     LUPPP_NOTE("QPLay + loaded" );

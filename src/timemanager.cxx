@@ -138,19 +138,18 @@ void TimeManager::process(Buffers* buffers)
   int beat = buffers->transportFrame / fpb;
   nframesToBeat = buffers->transportFrame - (beat*fpb);
   
-  
-  
-  // convert BBT position to a frame number in this period
-  //double frames_per_beat = _audio.samplerate() * 60.0 / pos.beats_per_minute;
-  //nframes_t offset = (frames_per_beat * (1.0 - (pos.tick / pos.ticks_per_beat))  );
-  
-  
-  
   if ( beat != oldBeat )
   {
     beatInProcess = true;
     
-    //LUPPP_NOTE("Beat %i, nframesToBeat %i", beat, nframesToBeat );
+    if ( nframesToBeat > buffers->nframes )
+    {
+      nframesToBeat = buffers->nframes;
+    }
+    
+    
+    // process *upto* beat frame:
+    jack->processFrames( nframesToBeat );
     
     // inform observers of new beat FIRST
     for(uint i = 0; i < observers.size(); i++)
@@ -170,6 +169,16 @@ void TimeManager::process(Buffers* buffers)
       //buffers->transportPosition->bar++;
     }
     
+    // process frames after beat()
+    int remaining = buffers->nframes - nframesToBeat;
+    if ( remaining > 0 )
+    {
+      char buffer [50];
+      sprintf (buffer, "remaining %i",  remaining );
+      EventGuiPrint e2( buffer );
+      writeToGuiRingbuffer( &e2 );
+      jack->processFrames( remaining );
+    }
     // write new beat to UI (bar info currently not used)
     EventTimeBarBeat e( 0, beat );
     writeToGuiRingbuffer( &e );
@@ -179,6 +188,7 @@ void TimeManager::process(Buffers* buffers)
   else
   {
     beatInProcess = false;
+    jack->processFrames( buffers->nframes );
   }
   
   
@@ -198,8 +208,6 @@ void TimeManager::process(Buffers* buffers)
   int bpm = ( samplerate * 60) / fpb;
   //LUPPP_NOTE("BPM = %i " , bpm );
   //buffers->transportPosition->beats_per_minute = bpm;
-  
-  jack->processFrames( buffers->nframes );
   
 }
 
