@@ -173,10 +173,12 @@ void TimeManager::process(Buffers* buffers)
     int remaining = buffers->nframes - nframesToBeat;
     if ( remaining > 0 )
     {
+      /*
       char buffer [50];
       sprintf (buffer, "remaining %i",  remaining );
       EventGuiPrint e2( buffer );
       writeToGuiRingbuffer( &e2 );
+      */
       jack->processFrames( remaining );
     }
     // write new beat to UI (bar info currently not used)
