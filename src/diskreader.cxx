@@ -104,7 +104,7 @@ int DiskReader::loadSample( int track, int scene, string path )
     data.end_of_input = 0;
     data.src_ratio = resampleRatio;
     
-    int ret = src_simple ( &data, SRC_SINC_BEST_QUALITY, 1 );
+    int ret = src_simple ( &data, SRC_SINC_FASTEST, 1 );
     
     LUPPP_NOTE("%s%i%s%i", "Resampling finished, from ", data.input_frames_used, " to ", data.output_frames_gen );
     
@@ -340,7 +340,11 @@ int DiskReader::readScenes(int t, cJSON* track)
         // load it, checking for sample.cfg, and using metadata if there
         loadSample( t, s, sampleFilePath.str() );
       }
-    
+      
+      // FIXME: check GUI ringbuffer after each sample: with resampling it can
+      // take quite some time, and the ->GUI ringbuffer can fill up
+      handleGuiEvents();
+      
     } // nClips loop
   }
   
