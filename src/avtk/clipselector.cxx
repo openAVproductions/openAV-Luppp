@@ -259,6 +259,7 @@ int ClipSelector::handle(int event)
             //{ "Record" },
             { "Use as tempo" },
             { "Rename" },
+            { "Clear" },
             { 0 }
           };
           Fl_Menu_Item *m = (Fl_Menu_Item*) rclick_menu->popup(Fl::event_x(), Fl::event_y(), 0, 0, 0);
@@ -299,17 +300,15 @@ int ClipSelector::handle(int event)
           }
           else if ( strcmp(m->label(), "Rename") == 0 )
           {
-            const char* name = fl_input( "Scene name: ", clips[clipNum].getName().c_str() );
+            const char* name = fl_input( "Clip name: ", clips[clipNum].getName().c_str() );
             if ( name )
               clips[clipNum].setName( name );
           }
-          else if ( strcmp(m->label(), "Record") == 0 )
+          else if ( strcmp(m->label(), "Clear") == 0 )
           {
-            /*
-            //recordingClip = clipNum;
-            EventLooperState e = EventLooperState( ID, clipNum, Looper::STATE_RECORD_QUEUED);
+            // for a clip to become 0
+            EventGridState e( ID, clipNum, GridLogic::STATE_EMPTY );
             writeToDspRingbuffer( &e );
-            */
           }
         }
         else

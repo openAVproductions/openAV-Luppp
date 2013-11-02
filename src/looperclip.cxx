@@ -43,6 +43,8 @@ void LooperClip::init()
   
   _playhead   = 0;
   _recordhead = 0;
+  
+  
 }
 
 void LooperClip::save()

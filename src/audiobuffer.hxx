@@ -6,7 +6,6 @@
 #include <string>
 #include <cstring>
 #include <iostream>
-#include <sstream>
 #include <stdlib.h>
 
 using namespace std;
@@ -33,9 +32,7 @@ class AudioBuffer
       numBeats = 0;
       audioFrames = 0;
       memset( name, 0, sizeof(char)*20 );
-      stringstream s;
-      s << ID;
-      sprintf ( name, "%s\n", s.str().c_str() );
+      sprintf( name, "%i", ID );
     }
     
     /// this function is used for "resizing" an exisiting buffer, and should

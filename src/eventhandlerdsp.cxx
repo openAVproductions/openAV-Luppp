@@ -112,6 +112,19 @@ void handleDspEvents()
           } break; }
         
         // ========= GRID =====
+        case Event::GRID_STATE: {
+          if ( availableRead >= sizeof(EventGridState) ) {
+            EventGridState ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventGridState) );
+            // clear clips in Controllers
+            if ( ev.state == GridLogic::STATE_EMPTY )
+            {
+              jack->getLooper( ev.track )->getClip( ev.scene )->init();
+              jack->getControllerUpdater()->setTrackSceneProgress(ev.track, ev.scene, 0 );
+              jack->getControllerUpdater()->setSceneState( ev.track, ev.scene, GridLogic::STATE_EMPTY );
+            }
+          } break; }
+        
         case Event::GRID_EVENT: {
           if ( availableRead >= sizeof(EventGridEvent) ) {
             EventGridEvent ev;
