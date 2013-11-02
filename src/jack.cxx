@@ -155,6 +155,8 @@ Jack::Jack() :
   masterMeter = new DBMeter( buffers.samplerate );
   inputMeter  = new DBMeter( buffers.samplerate );
   
+  buffers.transportPosition = 0;
+  
   /// setup JACK callbacks
   if ( jack_set_process_callback( client,
                                   static_process,
@@ -164,7 +166,7 @@ Jack::Jack() :
   }
   
   if ( jack_set_timebase_callback(client,
-                                  1, //0, 0 == must be master, 1 == conditional
+                                  0, //0, 0 == must be master, 1 == conditional
                                   (JackTimebaseCallback)static_timebase,
                                   static_cast<void*>(this)) )
   {
@@ -494,8 +496,8 @@ int Jack::timebase(jack_transport_state_t state,
                    int newPos)
 {
   // fill buffers with data, then pass to timeManager
-  //buffers.transportPosition = pos;
-  //buffers.transportState    =&state;
+  buffers.transportPosition = pos;
+  buffers.transportState    =&state;
   
   return 0;
 }

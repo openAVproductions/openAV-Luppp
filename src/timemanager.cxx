@@ -196,7 +196,7 @@ void TimeManager::process(Buffers* buffers)
   /*
   int tick = int( (beatFloat - beat) * 1920 );
   
-  buffers->transportPosition->valid = (JackPositionBBT | JackTransportPosition);
+  buffers->transportPosition->valid = (JackPositionBBT); | JackTransportPosition);
   
   buffers->transportPosition->tick += (buffers->nframes / buffers->samplerate);
   
@@ -207,8 +207,11 @@ void TimeManager::process(Buffers* buffers)
   */
   
   int bpm = ( samplerate * 60) / fpb;
-  //LUPPP_NOTE("BPM = %i " , bpm );
-  //buffers->transportPosition->beats_per_minute = bpm;
-  
+  if ( buffers->transportPosition )
+  {
+    //LUPPP_NOTE("BPM = %i " , bpm );
+    buffers->transportPosition->valid = (JackPositionBBT);
+    buffers->transportPosition->beats_per_minute = bpm;
+  }
 }
 
