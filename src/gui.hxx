@@ -61,6 +61,8 @@ class Gui
     
     
     int samplerate;
+    
+    nsm_client_t* getNsm(){return nsm;}
   
   private:
     Fl_Double_Window    window;

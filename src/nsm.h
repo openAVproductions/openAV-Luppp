@@ -309,7 +309,6 @@ nsm_set_save_callback( nsm_client_t *nsm, nsm_save_callback *save_callback, void
 {
     _NSM()->save = save_callback;
     _NSM()->save_userdata = userdata;
-    
 }
 
 NSM_EXPORT
@@ -337,7 +336,7 @@ nsm_set_broadcast_callback( nsm_client_t *nsm, nsm_broadcast_callback *broadcast
     _NSM()->broadcast_userdata = userdata;
 }
 
-
+
 
 /****************/
 /* OSC HANDLERS */
@@ -347,6 +346,7 @@ nsm_set_broadcast_callback( nsm_client_t *nsm, nsm_broadcast_callback *broadcast
 #undef OSC_REPLY_ERR
 
 #define OSC_REPLY( value ) lo_send_from( ((struct _nsm_client_t*)user_data)->nsm_addr, ((struct _nsm_client_t*)user_data)->_server, LO_TT_IMMEDIATE, "/reply", "ss", path, value )
+#define OSC_REPLY_P( path, value ) lo_send_from( ((struct _nsm_client_t*)user_data)->nsm_addr, ((struct _nsm_client_t*)user_data)->_server, LO_TT_IMMEDIATE, "/reply", "ss", path, value )
 
 #define OSC_REPLY_ERR( errcode, value ) lo_send_from( ((struct _nsm_client_t*)user_data)->nsm_addr, ((struct _nsm_client_t*)user_data)->_server, LO_TT_IMMEDIATE, "/error", "sis", path, errcode, value )
 
@@ -385,6 +385,8 @@ NSM_EXPORT int _nsm_osc_save ( const char *path, const char *types, lo_arg **arg
     (void) argv;
     (void) argc;
     (void) msg;
+    
+    printf("NSM SAVE()\n");
 
     char *out_msg = NULL;
     
@@ -396,10 +398,15 @@ NSM_EXPORT int _nsm_osc_save ( const char *path, const char *types, lo_arg **arg
     int r = nsm->save(&out_msg, nsm->save_userdata );
     
     if ( r )
+    {
+      printf("SEnding save ERROR\n");
         OSC_REPLY_ERR( r, ( out_msg ? out_msg : "") );
+    }
     else
+    {
+      printf("SEnding save OK\n");
         OSC_REPLY( "OK" );
-    
+    }
     if ( out_msg )
         free( out_msg );
     

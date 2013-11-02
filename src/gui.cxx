@@ -228,6 +228,14 @@ static int cb_nsm_open (const char *name,
   LUPPP_NOTE("%s %s","Loading session ", out_msg[0] );
   //gui->getDiskReader()->readSession( fnfc.filename() );
   
+  //OSC_REPLY( "OK" );
+  //OSC_REPLY_P( "/nsm/client/open", "OK" );
+  nsm_client_t* nsm = gui->getNsm();
+  
+  //lo_send_from( nsm_addr, losrv, LO_TT_IMMEDIATE, "/reply", "ss", path, "OK" );
+  
+  //lo_send_from( _NSM()->nsm_addr, _NSM()->_server, LO_TT_IMMEDIATE, "/reply", "ss", "/nsm/client/open", "OK" );
+  
   return ERR_OK;
 }
 
@@ -241,7 +249,7 @@ static int cb_nsm_save ( char **out_msg, void *userdata )
   EventStateSave e;
   //writeToDspRingbuffer( &e );
   
-  return ERR_OK;
+  return 0;
 }
 
 
@@ -341,8 +349,6 @@ Gui::Gui() :
   // NSM stuff
   nsm = 0;
   const char *nsm_url = getenv( "NSM_URL" );
-  
-  
   if ( nsm_url )
   {
     nsm = nsm_new();
@@ -353,12 +359,17 @@ Gui::Gui() :
     if ( nsm_init( nsm, nsm_url ) == 0 )
     {
       nsm_send_announce( nsm, "Luppp", "", "luppp" );
+      LUPPP_WARN("Announcing to NSM");
     }
     else
     {
       nsm_free( nsm );
       nsm = 0;
     }
+  }
+  else
+  {
+    LUPPP_WARN("No NSM_URL env variable");
   }
 }
 
