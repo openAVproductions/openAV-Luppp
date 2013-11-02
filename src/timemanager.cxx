@@ -158,14 +158,13 @@ void TimeManager::process(Buffers* buffers)
     }
     
     // FIXME: 4 == beats in time sig
-    if ( beat % (int) 4 == 0 )
+    if ( beat % 4 == 0 )
     {
       // inform observers of new bar SECOND
       for(uint i = 0; i < observers.size(); i++)
       {
         observers.at(i)->bar();
       }
-      
       //buffers->transportPosition->bar++;
     }
     

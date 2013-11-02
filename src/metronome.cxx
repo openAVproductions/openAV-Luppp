@@ -40,7 +40,7 @@ void Metronome::setActive(bool a)
   playPoint = endPoint + 1;
 }
 
-void Metronome::bar(int)
+void Metronome::bar()
 {
   playPoint = 0;
   playBar = true;
@@ -49,6 +49,7 @@ void Metronome::bar(int)
 void Metronome::beat()
 {
   playPoint = 0;
+  playBar = false;
 }
 
 void Metronome::setFpb(int f)
@@ -68,7 +69,10 @@ void Metronome::process(int nframes, Buffers* buffers)
   float* outR = buffers->audio[Buffers::MASTER_OUT_R];
   
   float* sample = &beatSample[0];
-  if( playBar ) { sample = &barSample[0]; playBar = false; }
+  if( playBar )
+  {
+    sample = &barSample[0];
+  }
   
   for(int i = 0; i < nframes; i++)
   {
