@@ -48,6 +48,9 @@ class Jack
     int getBuffersize();
     int getSamplerate();
     
+    // Luppp process callback: bar() events can occur between these
+    void processFrames(int nframes);
+    
     /// get functions for components owned by Jack 
     Looper*             getLooper(int t);
     TrackOutput*        getTrackOutput(int t);
@@ -130,8 +133,8 @@ class Jack
     
     jack_port_t*  masterMidiInput;
     
-    // JACK callbacks
-    int process (jack_nframes_t);
+    // JACK callback
+    int  process (jack_nframes_t);
     
     int timebase(jack_transport_state_t,
                  jack_nframes_t,

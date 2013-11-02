@@ -199,5 +199,7 @@ void TimeManager::process(Buffers* buffers)
   //LUPPP_NOTE("BPM = %i " , bpm );
   //buffers->transportPosition->beats_per_minute = bpm;
   
+  jack->processFrames( buffers->nframes );
+  
 }
 

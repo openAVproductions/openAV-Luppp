@@ -313,10 +313,17 @@ int Jack::process (jack_nframes_t nframes)
   
   /// update "time" from JACK master, or write master?
   buffers.transportFrame    = jack_get_current_transport_frame(client);
+  
+  // time manager deals with detecting bar() / beat() events, and calls
+  // processFrames() with the appropriate nframes
   timeManager->process( &buffers );
   
-  
-  
+  return 0;
+}
+
+
+void Jack::processFrames(int nframes)
+{
   /// process each MidiIO registered MIDI port
   for(unsigned int i = 0; i < midiIO.size(); i++ )
   {
@@ -401,7 +408,7 @@ int Jack::process (jack_nframes_t nframes)
           //buffers.audio[Buffers::SEND],  // uncomment to listen to reverb send only
           sizeof(float)*nframes);
   
-  return false;
+  return;
 }
 
 void Jack::masterVolume(float vol)

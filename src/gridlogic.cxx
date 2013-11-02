@@ -184,7 +184,7 @@ void GridLogic::pressed( int track, int scene )
       // exclude current scene
       if ( i != scene )
       {
-        LUPPP_NOTE("netralizing & qStop on scene %i due to press on %i", i, scene );
+        //LUPPP_NOTE("netralizing & qStop on scene %i due to press on %i", i, scene );
         LooperClip* ilc = jack->getLooper( track )->getClip( i );
         /*
         if ( ilc->getState() == GridLogic::STATE_EMPTY ||
