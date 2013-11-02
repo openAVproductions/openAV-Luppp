@@ -319,10 +319,11 @@ Gui::Gui() :
     LUPPP_ERROR("Controller initialization failed!");
   }
   
-  
+  /*
   Controller* non = new NonSeq();
   EventControllerInstance e( non );
   writeToDspRingbuffer( &e );
+  */
   
   // NSM stuff
   nsm = 0;
