@@ -24,6 +24,11 @@ GenericMIDI::GenericMIDI() :
   stat = CONTROLLER_OK;
 }
 
+void GenericMIDI::setName(std::string n)
+{
+  name = n;
+}
+
 GenericMIDI::GenericMIDI(std::string file) :
   Controller(),
   MidiIO()

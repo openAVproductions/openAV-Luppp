@@ -30,6 +30,7 @@ class GenericMIDI : public Controller, public MidiIO
     
     Controller::STATUS status();
     
+    void setName(std::string );
     std::string getName();
     
     /// track actions

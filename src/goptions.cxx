@@ -28,6 +28,32 @@ static void writeBindEnable(Fl_Widget* w, void* data)
   }
 }
 
+static void addNewController(Fl_Widget* w, void*)
+{
+  LUPPP_NOTE("%s","ADD Controller cb");
+  
+  GenericMIDI* c = new GenericMIDI();
+  /*
+  // FIXME: need t refactor GenericMIDI() to allow creation with just a name
+  const char* name = fl_input( "Controller name: ", "" );
+  if ( name )
+  {
+    c->setName(name);
+  }
+  */
+  
+  
+  if ( c->status() == Controller::CONTROLLER_OK )
+  {
+    EventControllerInstance e(c);
+    writeToDspRingbuffer( &e );
+  }
+  else
+  {
+    LUPPP_ERROR("Controller initialization failed!");
+  }
+}
+
 static void selectLoadController(Fl_Widget* w, void*)
 {
   // FIXME: refactor
@@ -66,6 +92,8 @@ static void selectLoadController(Fl_Widget* w, void*)
   }
 }
 
+
+
 static void writeControllerFile(Fl_Widget* w, void* data)
 {
   OptionsWindow* o = (OptionsWindow*) data;
@@ -93,6 +121,7 @@ OptionsWindow::OptionsWindow()
     
     writeControllerBtn = new Avtk::Button( x + 5, y + 275, 100, 25, "Save" );
     ctlrButton = new Avtk::Button(x + 110, y + 275, 100, 25, "Load");
+    newButton = new Avtk::Button(x + 215, y + 275, 100, 25, "New");
     
     Fl_Scroll* s = new Fl_Scroll( x + 5, y + 35, 400, 180 );
     bindings = new Avtk::Bindings( x + 5, y + 35, 398, 10 );
@@ -109,6 +138,7 @@ OptionsWindow::OptionsWindow()
   
   tabs->end();
   
+  newButton->callback( addNewController );
   ctlrButton->callback( selectLoadController );
   bindEnable->callback( writeBindEnable, this );
   writeControllerBtn->callback( writeControllerFile, this );

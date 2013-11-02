@@ -41,6 +41,7 @@ class OptionsWindow
     Avtk::Button* writeControllerBtn;
     
     // Controller
+    Avtk::Button* newButton;
     Avtk::Button* ctlrButton;
     
 };
