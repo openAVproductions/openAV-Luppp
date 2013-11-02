@@ -51,7 +51,7 @@ void Bindings::draw()
     
     
     int drawY = y + bindYPx;
-    for( int i = 0; i < binds.size(); i++) // draw each binding
+    for(unsigned int i = 0; i < binds.size(); i++) // draw each binding
     {
       cairo_rectangle( cr, x+2, drawY, 179, 23 );
       cairo_set_source_rgba(cr, 0 / 255.f,  0 / 255.f ,  0 / 255.f, 0.4);
@@ -120,7 +120,7 @@ void Bindings::add( Binding* b )
   
   binds.push_back( tmp );
   
-  printf("resize to %i, %i, %i, %i\n", x, y, w, binds.size() * bindYPx ); 
+  //printf("resize to %i, %i, %i, %i\n", x, y, w, binds.size() * bindYPx ); 
   
   resize( x, y, w, binds.size() * bindYPx );
   redraw();

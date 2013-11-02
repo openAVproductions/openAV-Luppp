@@ -142,7 +142,19 @@ void GridLogic::pressed( int track, int scene )
       lc->queueRecord();
     
     if ( s == STATE_STOPPED )
+    {
+      // hack, stop all scenes, then launch proper one
+      for( int i = 0; i < NTRACKS; i++ )
+      {
+        LooperClip* ilc = jack->getLooper( track )->getClip( i );
+        if ( ilc->playing() )
+        {
+          ilc->queueStop();
+        }
+      }
+      
       lc->queuePlay();
+    }
     
     if ( s == STATE_PLAYING )
       lc->queueStop();
@@ -165,24 +177,37 @@ void GridLogic::pressed( int track, int scene )
   }
   
   // check state of new clip, if getQueuePlay() == true, queueStop() all other scenes
-  if ( lc->getQueuePlay() )
+  //if ( lc->getQueuePlay() )
   {
     for(int i = 0; i < NSCENES; i++)
     {
       // exclude current scene
       if ( i != scene )
       {
+        LUPPP_NOTE("netralizing & qStop on scene %i due to press on %i", i, scene );
         LooperClip* ilc = jack->getLooper( track )->getClip( i );
-        if ( ilc->somethingQueued() )
+        /*
+        if ( ilc->getState() == GridLogic::STATE_EMPTY ||
+             ilc->getState() == GridLogic::STATE_STOPPED )
         {
+          // pass
+        }
+        else if ( ilc->somethingQueued() )
+        {
+          LUPPP_NOTE("netralizing & qStop on scene %i due to press on %i", i, scene );
           ilc->neutralize();
           jack->getControllerUpdater()->setSceneState(track, i, ilc->getState() );
         }
-        else if ( ilc->playing() )
+        else // catch all others, netralize & stop
         {
+          ilc->neutralize();
           ilc->queueStop();
           jack->getControllerUpdater()->setSceneState(track, i, ilc->getState() );
         }
+        */
+        ilc->neutralize();
+        ilc->queueStop();
+        jack->getControllerUpdater()->setSceneState(track, i, ilc->getState() );
       }
     }
   }

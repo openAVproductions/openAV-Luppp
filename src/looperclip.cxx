@@ -288,6 +288,7 @@ void LooperClip::neutralize()
 {
   _queuePlay = false;
   _queueRecord = false;
+  _queueStop = false;
 }
 
 bool LooperClip::somethingQueued()
@@ -309,8 +310,11 @@ void LooperClip::queuePlay(bool qP)
 void LooperClip::queueStop()
 {
   // comment
-  _queueStop   = true;
-  _queuePlay   = false;
+  if ( _loaded )
+  {
+    _queueStop   = true;
+    _queuePlay   = false;
+  }
 }
 
 void LooperClip::queueRecord()
