@@ -300,9 +300,10 @@ Gui::Gui() :
   audioEditor = new AudioEditor();
   
   // default controller for testing
-  LUPPP_NOTE("Adding APC40 Controller cb");
-  //GenericMIDI* c = new GenericMIDI( "akai_apc.ctlr" );
-  GenericMIDI* c = new GenericMIDI();
+  stringstream s;
+  s << getenv("HOME") << "/.config/openAV/luppp/controllers/akai_apc.ctlr";
+  GenericMIDI* c = new GenericMIDI( s.str().c_str() );
+  //GenericMIDI* c = new GenericMIDI();
   
   std::vector<Binding*> b = c->getMidiToAction();
   for(unsigned int i =0; i < b.size(); i++ )

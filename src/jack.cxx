@@ -120,11 +120,13 @@ Jack::Jack() :
                           JackPortIsOutput,
                           0 );
   
+  /*
   masterMidiInput  = jack_port_register( client,
                           "midi_in",
                           JACK_DEFAULT_MIDI_TYPE,
                           JackPortIsInput,
                           0 );
+  */
   
   masterVol = 0.0f;
   returnVol = 1.0f;
@@ -270,7 +272,7 @@ int Jack::process (jack_nframes_t nframes)
   buffers.audio[Buffers::JACK_SIDECHAIN_KEY]   = (float*)jack_port_get_buffer(sidechainKeyOutput,nframes);
   buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL]=(float*)jack_port_get_buffer(sidechainSignalOutput,nframes);
   
-  buffers.midi [Buffers::MASTER_MIDI_INPUT]   = (void*) jack_port_get_buffer( masterMidiInput, nframes );
+  //buffers.midi [Buffers::MASTER_MIDI_INPUT]   = (void*) jack_port_get_buffer( masterMidiInput, nframes );
   
   memset( buffers.audio[Buffers::JACK_MASTER_OUT_L] , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::JACK_MASTER_OUT_R] , 0, sizeof(float) * nframes );
@@ -291,6 +293,7 @@ int Jack::process (jack_nframes_t nframes)
   handleDspEvents();
   
   /// process incoming MIDI
+  /*
   jack_midi_event_t in_event;
   int masterMidiInputIndex = 0;
   int event_count = (int) jack_midi_get_event_count( buffers.midi[Buffers::MASTER_MIDI_INPUT] );
@@ -305,6 +308,7 @@ int Jack::process (jack_nframes_t nframes)
     
     masterMidiInputIndex++;
   }
+  */
   
   
   /// update "time" from JACK master, or write master?
