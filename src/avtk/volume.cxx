@@ -57,9 +57,12 @@ void Volume::fader( float f )
 
 void Volume::amplitude  (float aL, float aR)
 {
+  if ( aL < 0.1 ) aL = 0.f;
+  if ( aR < 0.1 ) aR = 0.f;
+  
   // only redraw if changed more than X amount
-  if ( fabsf(ampL - aL) > 0.05 ||
-       fabsf(ampR - aR) > 0.05 )
+  if ( fabsf(ampL - aL) > 0.025 ||
+       fabsf(ampR - aR) > 0.025 )
   {
     ampL = aL;
     ampR = aR;
