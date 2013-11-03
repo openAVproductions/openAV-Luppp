@@ -33,6 +33,9 @@ int DiskReader::loadPreferences()
   stringstream s;
   s << getenv("HOME") << "/.config/openAV/luppp/luppp.prfs";
   std::ifstream sampleFile( s.str().c_str(), std::ios_base::in|std::ios_base::ate);
+  
+  // CRITICAL FIXME: check file_length here, can be 0 causing new[0] causing segfault
+  
   long file_length = sampleFile.tellg();
   if ( file_length > 0 )
   {
@@ -73,6 +76,11 @@ int DiskReader::loadPreferences()
     
     cJSON_Delete( preferencesJson );
     free ( sampleString  );
+  }
+  else
+  {
+    // empty file / file no exists:
+    return LUPPP_RETURN_ERROR;
   }
   
   return LUPPP_RETURN_OK;
@@ -221,6 +229,13 @@ int DiskReader::readSession( std::string path )
   // open session, read all
   std::ifstream file( s.str().c_str(), std::ios_base::in|std::ios_base::ate);
   long file_length = file.tellg();
+  if ( file_length < 0 )
+  {
+    // empty file / file no exists:
+    LUPPP_ERROR("no session file exists!");
+    return LUPPP_RETURN_ERROR;
+  }
+  
   file.seekg(0, std::ios_base::beg);
   file.clear();
   char *sessionString = new char[file_length];

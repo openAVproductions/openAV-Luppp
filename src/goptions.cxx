@@ -32,15 +32,18 @@ static void addNewController(Fl_Widget* w, void*)
 {
   LUPPP_NOTE("%s","ADD Controller cb");
   
-  GenericMIDI* c = new GenericMIDI();
-  /*
-  // FIXME: need t refactor GenericMIDI() to allow creation with just a name
+  GenericMIDI* c = 0;
+  
   const char* name = fl_input( "Controller name: ", "" );
   if ( name )
   {
-    c->setName(name);
+    c = new GenericMIDI( 0, name);
   }
-  */
+  else
+  {
+    c = new GenericMIDI();
+  }
+  
   
   
   if ( c->status() == Controller::CONTROLLER_OK )
@@ -165,12 +168,14 @@ void OptionsWindow::show()
 
 void OptionsWindow::setBindEnable(bool e)
 {
+  LUPPP_NOTE("setBindEnable() %i", int(e) );
   bindEnable->value( e );
   setTarget("");
 }
 
 void OptionsWindow::addBinding( Binding* b )
 {
-  bindings->add( b );
+  // FIXME: adding a binding causes the window to stop drawing properly!
+  //bindings->add( b );
 }
 

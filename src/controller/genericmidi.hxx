@@ -21,7 +21,7 @@ class GenericMIDI : public Controller, public MidiIO
 {
   public:
     /// Creates a blank GenericMIDI instance, which can be bound dynamically
-    GenericMIDI();
+    GenericMIDI(int waste = 0, std::string name = "generic");
     
     /// Attempts to load a .ctlr file, pointed to by the string
     GenericMIDI(std::string file);

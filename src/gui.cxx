@@ -118,8 +118,11 @@ static void gui_header_callback(Fl_Widget *w, void *data)
           break;  // ERROR
       case  1: //printf("CANCEL\\n");
           break;  // CANCEL
-      default: printf("Loading session directory %s\n", fnfc.filename());
-          gui->getDiskReader()->readSession( fnfc.filename() );
+      default:
+          LUPPP_NOTE( "Loading session from dir %s", fnfc.filename() );
+          int sess = gui->getDiskReader()->readSession( fnfc.filename() );
+          if ( sess != LUPPP_RETURN_OK )
+            LUPPP_ERROR( "Error loading session" );
           break;
     }
   }

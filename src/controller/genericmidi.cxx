@@ -15,11 +15,11 @@
 
 extern Jack* jack;
 
-GenericMIDI::GenericMIDI() :
+GenericMIDI::GenericMIDI(int waste, std::string n) :
   Controller(),
   MidiIO()
 {
-  name = "generic";
+  name = n;
   registerMidiPorts( name );
   stat = CONTROLLER_OK;
 }

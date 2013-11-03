@@ -31,14 +31,14 @@ IF(BUILD_TESTS)
   ADD_DEFINITIONS(-DBUILD_TESTS)
   ADD_DEFINITIONS(-DBUILD_COVERAGE_TEST)
   
-  SET(CMAKE_CXX_FLAGS "-g -O0 -Wall -Wextra -Wno-unused-variable -fprofile-arcs -ftest-coverage")
-  SET(CMAKE_C_FLAGS "-g -O0 -Wall -Wextra -W -Wno-unused-variable -fprofile-arcs -ftest-coverage")
+  SET(CMAKE_CXX_FLAGS "-g -Wall -Wextra -Wno-unused-variable -fprofile-arcs -ftest-coverage")
+  SET(CMAKE_C_FLAGS "-g -Wall -Wextra -W -Wno-unused-variable -fprofile-arcs -ftest-coverage")
   SET(CMAKE_EXE_LINKER_FLAGS "-fprofile-arcs -ftest-coverage")
 ENDIF(BUILD_TESTS)
 
 IF(RELEASE_BUILD)
-  SET(CMAKE_CXX_FLAGS "-g -O2 -Wall  -Wno-unused-variable -ffast-math")
-  SET(CMAKE_C_FLAGS "-g -O2 -Wall -W  -Wno-unused-variable -ffast-math")
+  SET(CMAKE_CXX_FLAGS "-g -Wall  -Wno-unused-variable -ffast-math")
+  SET(CMAKE_C_FLAGS "-g -Wall -W  -Wno-unused-variable -ffast-math")
 ENDIF(RELEASE_BUILD)
 
 
