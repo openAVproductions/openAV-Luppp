@@ -174,7 +174,6 @@ int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
     return LUPPP_RETURN_ERROR;
   }
   
-  // get the filename
   stringstream filename;
   filename << "t_" << track << "_s_" << scene << ".wav";
   
@@ -186,10 +185,12 @@ int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
   cJSON_AddItemToObject(audioJson, filename.str().c_str(), sampleClip );
   cJSON_AddNumberToObject(sampleClip,"beats", ab->getBeats() );
   
+  // get pretty name from GUI
+  std::string clipName = gui->getTrack(track)->getClipSelector()->clipName( scene );
+  cJSON_AddItemToObject  ( sampleClip, "name", cJSON_CreateString( clipName.c_str() ));
+  
   // write the AudioBuffer contents to <path>/audio/  as  <name>.wav
   // or alternatively t_<track>_s_<scene>.wav
-  
-  // FIXME: trim trailing  /  sessionPath from session path if its there
   
   stringstream path;
   path << audioDir << "/" << filename.str();

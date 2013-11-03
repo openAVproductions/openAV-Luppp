@@ -168,8 +168,12 @@ int DiskReader::loadSample( int track, int scene, string path )
       if ( sample )
       {
         cJSON* beats = cJSON_GetObjectItem( sample, "beats" );
+        cJSON* name  = cJSON_GetObjectItem( sample, "name" );
         //cout << "Clip @ " << track << " " << scene << " gets " << beats->valuedouble << " beats."<< endl;
-        ab->setBeats( beats->valuedouble );
+        if ( beats )
+          ab->setBeats( beats->valuedouble );
+        if ( name )
+          gui->getTrack(track)->getClipSelector()->clipName( scene, name->valuestring );
       }
       else
       {
