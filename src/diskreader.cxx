@@ -34,8 +34,6 @@ int DiskReader::loadPreferences()
   s << getenv("HOME") << "/.config/openAV/luppp/luppp.prfs";
   std::ifstream sampleFile( s.str().c_str(), std::ios_base::in|std::ios_base::ate);
   
-  // CRITICAL FIXME: check file_length here, can be 0 causing new[0] causing segfault
-  
   long file_length = sampleFile.tellg();
   if ( file_length > 0 )
   {

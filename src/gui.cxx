@@ -65,6 +65,9 @@ void close_cb(Fl_Widget*o, void*)
 static void gui_static_read_rb(void* inst)
 {
   handleGuiEvents();
+  
+  nsm_check_nowait( gui->getNsm() );
+  
   Fl::repeat_timeout( 1 / 30.f, &gui_static_read_rb, inst);
 }
 
@@ -228,12 +231,12 @@ static int cb_nsm_open (const char *name,
 {
   //printf("nsm open()\n", out_msg[0] );
   
-  LUPPP_NOTE("%s %s","Loading session ", out_msg[0] );
+  LUPPP_NOTE("NSM open() loading session");
   //gui->getDiskReader()->readSession( fnfc.filename() );
   
   //OSC_REPLY( "OK" );
   //OSC_REPLY_P( "/nsm/client/open", "OK" );
-  nsm_client_t* nsm = gui->getNsm();
+  //nsm_client_t* nsm = gui->getNsm();
   
   //lo_send_from( nsm_addr, losrv, LO_TT_IMMEDIATE, "/reply", "ss", path, "OK" );
   
@@ -257,7 +260,7 @@ static int cb_nsm_save ( char **out_msg, void *userdata )
 
 
 
-Gui::Gui() :
+Gui::Gui(std::string argZero) :
     samplerate( 0 ),
     window(1110,650),
     
@@ -356,13 +359,13 @@ Gui::Gui() :
   {
     nsm = nsm_new();
     
-    nsm_set_open_callback( nsm, cb_nsm_open, 0 );
-    nsm_set_save_callback( nsm, cb_nsm_save, 0 );
+    nsm_set_open_callback( nsm, cb_nsm_open, this );
+    nsm_set_save_callback( nsm, cb_nsm_save, this );
     
     if ( nsm_init( nsm, nsm_url ) == 0 )
     {
-      nsm_send_announce( nsm, "Luppp", "", "luppp" );
-      LUPPP_WARN("Announcing to NSM");
+      nsm_send_announce( nsm, "Luppp", "", argZero.c_str() );
+      LUPPP_NOTE("Announcing to NSM");
     }
     else
     {
@@ -372,7 +375,7 @@ Gui::Gui() :
   }
   else
   {
-    LUPPP_WARN("No NSM_URL env variable");
+    LUPPP_NOTE("No session management in use");
   }
 }
 

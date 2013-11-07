@@ -66,7 +66,7 @@ int main(int argc, char** argv)
     
     // setup the testing Gui / JACK: Jack first, then GUI
     jack = new Jack();
-    gui = new Gui();
+    gui = new Gui(argv[0]);
     
     // test offline functionality
     testResult += gui->getDiskReader()->runTests();
@@ -90,7 +90,7 @@ int main(int argc, char** argv)
   // setup the "real" JACK / Gui: Jack first, then GUI
   jack = new Jack();
   
-  gui = new Gui();
+  gui = new Gui(argv[0]);
   
   
   jack->activate();

@@ -50,12 +50,12 @@ add_executable (luppp ${sources} )
 
 
 # Linking
-target_link_libraries( luppp ${JACK_LIBRARIES}     )
-target_link_libraries( luppp ${LIBLO_LIBRARIES}    )
-target_link_libraries( luppp ${NTK_LIBRARIES}      )
-target_link_libraries( luppp ${CAIRO_LIBRARIES}    )
-target_link_libraries( luppp ${SNDFILE_LIBRARIES}  )
-target_link_libraries(luppp ${SAMPLERATE_LIBRARIES})
+target_link_libraries( luppp ${JACK_LIBRARIES}       )
+target_link_libraries( luppp ${LIBLO_LIBRARIES}      )
+target_link_libraries( luppp ${NTK_LIBRARIES}        )
+target_link_libraries( luppp ${CAIRO_LIBRARIES}      )
+target_link_libraries( luppp ${SNDFILE_LIBRARIES}    )
+target_link_libraries( luppp ${SAMPLERATE_LIBRARIES} )
 
 # Check build type, linking with gcov for code analysis if needed
 IF(BUILD_TESTS)

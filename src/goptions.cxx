@@ -45,7 +45,6 @@ static void addNewController(Fl_Widget* w, void*)
   }
   
   
-  
   if ( c->status() == Controller::CONTROLLER_OK )
   {
     EventControllerInstance e(c);

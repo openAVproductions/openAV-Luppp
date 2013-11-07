@@ -103,7 +103,6 @@ int DiskWriter::writeControllerFile(std::string name  ,
       cJSON_AddItemToArray( inputBindings, binding );
       
       // add metadata to binding
-      // FIXME: get action string from Event class: need to move function from GenericMIDI to there
       const char* actionName = Event::getPrettyName( b.at(i)->action );
       if ( actionName )
       {
@@ -116,6 +115,8 @@ int DiskWriter::writeControllerFile(std::string name  ,
         cJSON_AddNumberToObject( binding, "scene" , b.at(i)->scene  );
         cJSON_AddNumberToObject( binding, "send"  , b.at(i)->send   );
         cJSON_AddNumberToObject( binding, "active", b.at(i)->active );
+        
+        LUPPP_NOTE("Creating Binding: action %i == %s!", b.at(i)->action, actionName );
       }
       else
       {
