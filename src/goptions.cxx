@@ -140,6 +140,8 @@ OptionsWindow::OptionsWindow()
   
   tabs->end();
   
+  target = 0;
+  
   newButton->callback( addNewController );
   ctlrButton->callback( selectLoadController );
   bindEnable->callback( writeBindEnable, this );
