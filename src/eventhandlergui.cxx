@@ -48,7 +48,7 @@ void handleGuiEvents()
             EventSamplerate ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventSamplerate) );
             gui->samplerate = ev.samplerate;
-            //LUPPP_NOTE("%s %i","Gui Samplerate: ", gui->samplerate);
+            LUPPP_NOTE("Gui Samplerate: %i", gui->samplerate);
           } break; }
         
         case Event::MASTER_VOL: {

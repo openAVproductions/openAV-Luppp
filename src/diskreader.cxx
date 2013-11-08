@@ -136,8 +136,8 @@ int DiskReader::loadSample( int track, int scene, string path )
     free( basePath );
     
     /// open audio.cfg, reading whole file
-#ifdef DEBUG_STATE
     cout << "loading sample metadata file " << base.str().c_str() << endl;
+#ifdef DEBUG_STATE
 #endif
     std::ifstream sampleFile( base.str().c_str(), std::ios_base::in|std::ios_base::ate);
     long file_length = sampleFile.tellg();

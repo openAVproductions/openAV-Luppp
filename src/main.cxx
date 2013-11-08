@@ -57,6 +57,7 @@ int main(int argc, char** argv)
   rbToDsp = jack_ringbuffer_create( 5000 * sizeof(EventBase));
   rbToGui = jack_ringbuffer_create( 5000 * sizeof(EventBase));
   
+  /*
 #ifdef BUILD_TESTS
   if ( runTests )
   {
@@ -86,6 +87,7 @@ int main(int argc, char** argv)
 #endif
   }
 #endif
+  */
   
   // setup the "real" JACK / Gui: Jack first, then GUI
   gui = new Gui(argv[0]);

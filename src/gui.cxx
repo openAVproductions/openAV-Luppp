@@ -237,6 +237,9 @@ static int cb_nsm_open (const char *name,
   
   Jack::setup( client_id );
   
+  // we *must* get the samplerate here: loading files depends on this information!
+  gui->samplerate = jack->getSamplerate();
+  
   stringstream loadPath;
   loadPath << name;
   

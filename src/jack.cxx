@@ -32,13 +32,13 @@ int AudioBuffer::privateID = 0;
 // static pointer from main.
 extern Jack* jack;
 
-extern int jackSamplerate;
-
 void Jack::setup(std::string name)
 {
   if ( jack == 0 )
   {
     jack = new Jack( name );
+    
+    jack->activate();
     return;
   }
   else
