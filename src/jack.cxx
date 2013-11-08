@@ -34,8 +34,22 @@ extern Jack* jack;
 
 extern int jackSamplerate;
 
-Jack::Jack() :
-  client( jack_client_open ( "Luppp", JackNullOption , 0 , 0 ) ),
+void Jack::setup(std::string name)
+{
+  if ( jack == 0 )
+  {
+    jack = new Jack( name );
+    return;
+  }
+  else
+  {
+    LUPPP_WARN("JACK instance already exists!");
+  }
+}
+
+
+Jack::Jack( std::string name ) :
+  client( jack_client_open ( name.c_str(), JackNullOption , 0 , 0 ) ),
   state( new State() ),
   controllerUpdater( new ControllerUpdater() ),
   clientActive(false)

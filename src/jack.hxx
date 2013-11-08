@@ -38,8 +38,10 @@ using namespace std;
 class Jack
 {
   public:
-    Jack();
+    Jack(std::string name);
     ~Jack();
+    
+    static void setup(std::string name);
     
     void activate();
     /// quits the JACK client, destroying ports etc. Call only on exit of Luppp.

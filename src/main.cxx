@@ -30,7 +30,6 @@ void signalHanlder(int signum)
   signalHanlderInt = signum;
 }
 
-
 int main(int argc, char** argv)
 {
   bool runTests = false;
@@ -65,7 +64,8 @@ int main(int argc, char** argv)
     int testResult = 0;
     
     // setup the testing Gui / JACK: Jack first, then GUI
-    jack = new Jack();
+    Jack::setup();
+    //jack = new Jack();
     gui = new Gui(argv[0]);
     
     // test offline functionality
@@ -88,12 +88,19 @@ int main(int argc, char** argv)
 #endif
   
   // setup the "real" JACK / Gui: Jack first, then GUI
-  jack = new Jack();
-  
   gui = new Gui(argv[0]);
   
+  if ( gui->getNsm() )
+  {
+    // the NSM OSC Open message will trigger Jack initialization: necessary
+    // to use the right name to create the JACK client.
+  }
+  else
+  {
+    Jack::setup("Luppp");
+    jack->activate();
+  }
   
-  jack->activate();
   gui->show();
   
   return 0;

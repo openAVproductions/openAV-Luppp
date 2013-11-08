@@ -66,9 +66,13 @@ static void gui_static_read_rb(void* inst)
 {
   handleGuiEvents();
   
-  nsm_check_nowait( gui->getNsm() );
-  
   Fl::repeat_timeout( 1 / 30.f, &gui_static_read_rb, inst);
+}
+
+static void gui_static_nsm_cb(void* inst)
+{
+  nsm_check_nowait( gui->getNsm() );
+  Fl::repeat_timeout( 1 / 1.f, &gui_static_nsm_cb, inst);
 }
 
 void option_controller_cb(Fl_Widget*,void* data)
@@ -229,31 +233,29 @@ static int cb_nsm_open (const char *name,
                         char **out_msg,
                         void *userdata )
 {
-  //printf("nsm open()\n", out_msg[0] );
+  LUPPP_NOTE("NSM: Open, displayname: %s", display_name );
   
-  LUPPP_NOTE("NSM open() loading session");
-  //gui->getDiskReader()->readSession( fnfc.filename() );
+  Jack::setup( client_id );
   
-  //OSC_REPLY( "OK" );
-  //OSC_REPLY_P( "/nsm/client/open", "OK" );
-  //nsm_client_t* nsm = gui->getNsm();
   
-  //lo_send_from( nsm_addr, losrv, LO_TT_IMMEDIATE, "/reply", "ss", path, "OK" );
   
-  //lo_send_from( _NSM()->nsm_addr, _NSM()->_server, LO_TT_IMMEDIATE, "/reply", "ss", "/nsm/client/open", "OK" );
+  // load the NSM provided directory
+  gui->getDiskReader()->readSession( name );
+  
+  // initialize the disk-writer to the same directory:
+  // we *always* overwrite the old save file when using NSM
+  gui->getDiskWriter()->initialize( name, display_name );
   
   return ERR_OK;
 }
 
 static int cb_nsm_save ( char **out_msg, void *userdata )
 {
-  printf("nsm save()\n");
-  //do_save_stuff();
+  LUPPP_NOTE("NSM: saving session as %s", *out_msg );
   
-  LUPPP_NOTE("%s %s","Saving session as ", out_msg[0] );
-  //gui->getDiskWriter()->initialize( getenv("HOME"), out_msg );
+  // disk-writer already initialized to the right directory, so just write!
   EventStateSave e;
-  //writeToDspRingbuffer( &e );
+  writeToDspRingbuffer( &e );
   
   return 0;
 }
@@ -417,6 +419,10 @@ int Gui::show()
   window.show();
   
   gui_static_read_rb( this );
+  
+  // only launch NSM check callbacks if NSM is setup
+  if ( gui->getNsm() )
+    gui_static_nsm_cb( this );
   
   return Fl::run();
 }

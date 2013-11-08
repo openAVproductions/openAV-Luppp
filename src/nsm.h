@@ -353,8 +353,6 @@ nsm_set_broadcast_callback( nsm_client_t *nsm, nsm_broadcast_callback *broadcast
 
 NSM_EXPORT int _nsm_osc_open ( const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, void *user_data )
 {
-  printf("NSM OSC OPEN\n");
-  
     (void) types;
     (void) argc;
     (void) msg;
@@ -387,8 +385,6 @@ NSM_EXPORT int _nsm_osc_save ( const char *path, const char *types, lo_arg **arg
     (void) argv;
     (void) argc;
     (void) msg;
-    
-    printf("NSM SAVE()\n");
 
     char *out_msg = NULL;
     
@@ -401,12 +397,10 @@ NSM_EXPORT int _nsm_osc_save ( const char *path, const char *types, lo_arg **arg
     
     if ( r )
     {
-      printf("SEnding save ERROR\n");
         OSC_REPLY_ERR( r, ( out_msg ? out_msg : "") );
     }
     else
     {
-      printf("SEnding save OK\n");
         OSC_REPLY( "OK" );
     }
     if ( out_msg )
