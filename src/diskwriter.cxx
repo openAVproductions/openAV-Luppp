@@ -37,27 +37,34 @@ void DiskWriter::initialize(std::string path, std::string name )
   
   // write session.luppp JSON node to <path>/<sessionName>.luppp
   stringstream sessionDirStream;
-  sessionDirStream << path << "/" << sessionName;
+  
+  sessionDirStream << path;
+  
+  if ( !gui->getNsm() )
+   sessionDirStream << "/" << sessionName;
+  
   sessionDir = sessionDirStream.str();
+  
+  LUPPP_NOTE( "Creating session dir %s", sessionDir.c_str() );
   
   int sessionDirError = mkdir( sessionDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
   if ( sessionDirError )
   {
     // handle by using different filename?
-    LUPPP_WARN("%s","Error creating session directory");
+    LUPPP_WARN("Error creating session directory");
   }
   
   stringstream audioDirStream;
   audioDirStream << sessionDir << "/audio";
   audioDir = audioDirStream.str();
-  LUPPP_NOTE("%s %s","Creating audio dir ", audioDir.c_str() );
+  LUPPP_NOTE("Creating audio dir %s", audioDir.c_str() );
   
   int audioDirError  = mkdir( audioDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
   
   // FIXME: error check mkdir for error return
   if ( audioDirError )
   {
-    LUPPP_WARN("%s","Error creating sample directory");
+    LUPPP_WARN("Error creating sample directory");
   }
   
   foldersCreated = true;

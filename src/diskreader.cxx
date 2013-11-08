@@ -51,7 +51,7 @@ int DiskReader::loadPreferences()
     cJSON* ctlrs = cJSON_GetObjectItem( preferencesJson, "defaultControllers" );
     if ( ctlrs )
     {
-      //cout << ".nanba HAS items." << endl;
+      //cout << ".ctlr HAS items." << endl;
       int nCtlrs = cJSON_GetArraySize( ctlrs );
       for(int i = 0; i < nCtlrs; i++ )
       {
@@ -69,7 +69,7 @@ int DiskReader::loadPreferences()
     }
     else
     {
-      cout << "Warning: .nanba has no items." << endl;
+      LUPPP_NOTE("No default controllers active.");
     }
     
     cJSON_Delete( preferencesJson );
@@ -223,10 +223,10 @@ int DiskReader::readSession( std::string path )
   s << path << "/session.luppp";
   
   stringstream samplePath;
-  samplePath << path << "/samples/sample.cfg";
+  samplePath << path << "/audio/audio.cfg";
   
   cout << "session path: " << s.str() << endl;
-  cout << "sample path:  " << samplePath.str() << endl;
+  cout << "audio path:  " << samplePath.str() << endl;
   
   // open session, read all
   std::ifstream file( s.str().c_str(), std::ios_base::in|std::ios_base::ate);

@@ -237,10 +237,11 @@ static int cb_nsm_open (const char *name,
   
   Jack::setup( client_id );
   
-  
+  stringstream loadPath;
+  loadPath << name;
   
   // load the NSM provided directory
-  gui->getDiskReader()->readSession( name );
+  gui->getDiskReader()->readSession( loadPath.str() );
   
   // initialize the disk-writer to the same directory:
   // we *always* overwrite the old save file when using NSM
@@ -251,7 +252,7 @@ static int cb_nsm_open (const char *name,
 
 static int cb_nsm_save ( char **out_msg, void *userdata )
 {
-  LUPPP_NOTE("NSM: saving session as %s", *out_msg );
+  LUPPP_NOTE("NSM: saving..." );
   
   // disk-writer already initialized to the right directory, so just write!
   EventStateSave e;
