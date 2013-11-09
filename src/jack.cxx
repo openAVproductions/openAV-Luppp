@@ -223,7 +223,7 @@ void Jack::activate()
 
 void Jack::quit()
 {
-  jack_deactivate( client );
+  //jack_deactivate( client );
   jack_client_close( client );
   LUPPP_NOTE("%s","Quit JACK.");
 }

@@ -72,7 +72,7 @@ static void gui_static_read_rb(void* inst)
 static void gui_static_nsm_cb(void* inst)
 {
   nsm_check_nowait( gui->getNsm() );
-  Fl::repeat_timeout( 1 / 1.f, &gui_static_nsm_cb, inst);
+  Fl::repeat_timeout( 1 / 30.f, &gui_static_nsm_cb, inst);
 }
 
 void option_controller_cb(Fl_Widget*,void* data)
@@ -436,7 +436,6 @@ int Gui::quit()
 {
   jack->quit();
   window.hide();
-  exit(0);
 }
 
 void Gui::askQuit()
