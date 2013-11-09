@@ -447,7 +447,7 @@ void GenericMIDI::midi(unsigned char* midi)
             jack->getLogic()->masterInputVol( value );
             break;
         case Event::MASTER_INPUT_TO:
-            jack->getLogic()->masterInputTo( static_cast<Event::INPUT_TO>(b->send), value );
+            jack->getLogic()->masterInputTo( static_cast<Event::INPUT_TO>(b->send) , value );
             break;
         case Event::MASTER_INPUT_TO_ACTIVE:
             jack->getLogic()->masterInputToActive( static_cast<Event::INPUT_TO>(b->send), b->active );

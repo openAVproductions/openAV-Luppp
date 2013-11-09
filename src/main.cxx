@@ -57,7 +57,7 @@ int main(int argc, char** argv)
   rbToDsp = jack_ringbuffer_create( 5000 * sizeof(EventBase));
   rbToGui = jack_ringbuffer_create( 5000 * sizeof(EventBase));
   
-  /*
+  
 #ifdef BUILD_TESTS
   if ( runTests )
   {
@@ -65,8 +65,7 @@ int main(int argc, char** argv)
     int testResult = 0;
     
     // setup the testing Gui / JACK: Jack first, then GUI
-    Jack::setup();
-    //jack = new Jack();
+    Jack::setup("LupppTEST");
     gui = new Gui(argv[0]);
     
     // test offline functionality
@@ -76,18 +75,17 @@ int main(int argc, char** argv)
     // test realtime functionality
     testResult += jack->getGridLogic()->runTests();
     
+    jack->quit();
+    
     delete gui;
     delete jack;
+    jack = 0;
     
-#ifdef BUILD_COVERAGE_TEST
-    if ( stopAfterTest )
-    {
-      return testResult;
-    }
-#endif
+    // running tests == quitting after testing finishes
+    return testResult;
   }
 #endif
-  */
+  
   
   // setup the "real" JACK / Gui: Jack first, then GUI
   gui = new Gui(argv[0]);

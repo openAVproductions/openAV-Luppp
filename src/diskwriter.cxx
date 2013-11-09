@@ -168,7 +168,11 @@ int DiskWriter::writeControllerFile(std::string name  ,
   }
   else
   {
-    LUPPP_WARN("Invalid Controller pointer: cannot write %s as is not a GenericMIDI controller!", c->getName().c_str() );
+    if ( c )
+      LUPPP_WARN("Invalid Controller pointer: cannot write %s as is not a GenericMIDI controller!", c->getName().c_str() );
+    else
+      LUPPP_WARN("Invalid Controller pointer: was passed NULL!" );
+    return LUPPP_RETURN_ERROR;
   }
   
   return LUPPP_RETURN_OK;
