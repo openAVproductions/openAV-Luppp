@@ -30,20 +30,16 @@ void Logic::masterInputVol( float v )
   jack->inputVolume( v );
 }
 
-void Logic::masterInputTo( Event::INPUT_TO inputTo, float v)
+void Logic::masterInputTo( int to, float v )
 {
-  jack->inputTo( inputTo, v );
+  jack->inputTo( (Event::INPUT_TO)to, v );
+  jack->getControllerUpdater()->masterInputTo( to, v );
 }
 
-void Logic::masterReturn( int send, float v )
+void Logic::masterInputToActive( int inputTo, bool active)
 {
-  
-  
-}
-
-void Logic::masterInputToActive( Event::INPUT_TO inputTo, bool active)
-{
-  jack->inputToActive( inputTo, active);
+  jack->inputToActive( (Event::INPUT_TO)inputTo, active);
+  jack->getControllerUpdater()->masterInputToActive( (int)inputTo, active );
 }
 
 void Logic::trackVolume(int t, float v)

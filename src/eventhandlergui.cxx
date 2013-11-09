@@ -51,12 +51,33 @@ void handleGuiEvents()
             LUPPP_NOTE("Gui Samplerate: %i", gui->samplerate);
           } break; }
         
+        /// master
+        case Event::MASTER_INPUT_TO: {
+          if ( availableRead >= sizeof(EventMasterInputTo) ) {
+            EventMasterInputTo ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventMasterInputTo) );
+            gui->getMasterTrack()->setInputTo( (int)ev.place, ev.value );
+          } break; }
+        case Event::MASTER_INPUT_TO_ACTIVE: {
+          if ( availableRead >= sizeof(EventMasterInputToActive) ) {
+            EventMasterInputToActive ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventMasterInputToActive) );
+            gui->getMasterTrack()->setInputToActive( (int)ev.place, ev.active );
+          } break; }
+        case Event::MASTER_INPUT_VOL: {
+          if ( availableRead >= sizeof(EventMasterInputVol) ) {
+            EventMasterInputVol ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventMasterInputVol) );
+            gui->getMasterTrack()->setInputVol( ev.vol );
+          } break; }
         case Event::MASTER_VOL: {
           if ( availableRead >= sizeof(EventMasterVol) ) {
             EventMasterVol ev(0);
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventMasterVol) );
-            //jack->masterVolume = ev.vol;
+            
           } break; }
+        
+        
         case Event::METRONOME_ACTIVE: {
           if ( availableRead >= sizeof(EventMetronomeActive) ) {
             EventMetronomeActive ev(false);

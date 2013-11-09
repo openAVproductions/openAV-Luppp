@@ -167,6 +167,11 @@ void OptionsWindow::show()
   window->show();
 }
 
+void OptionsWindow::hide()
+{
+  window->hide();
+}
+
 void OptionsWindow::setBindEnable(bool e)
 {
   LUPPP_NOTE("setBindEnable() %i", int(e) );

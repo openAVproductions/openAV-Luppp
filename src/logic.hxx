@@ -29,8 +29,8 @@ class Logic
     void metronomeEnable(bool b);
     
     void masterInputVol( float v );
-    void masterInputTo( Event::INPUT_TO inputTo, float v);
-    void masterInputToActive( Event::INPUT_TO inputTo, bool active);
+    void masterInputTo( int inputTo, float v);
+    void masterInputToActive( int inputTo, bool active);
     
     void masterReturn( int send, float v);
     

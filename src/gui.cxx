@@ -434,7 +434,14 @@ int Gui::show()
 
 int Gui::quit()
 {
+  // close JACK client
   jack->quit();
+  
+  // ensure the subwindows are closed
+  optionWindow->hide();
+  audioEditor->hide();
+  
+  // quit main window, causing program termination
   window.hide();
 }
 

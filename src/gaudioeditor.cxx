@@ -75,6 +75,12 @@ void AudioEditor::show( AudioBuffer* buf, bool modal )
   window->show();
 }
 
+void AudioEditor::hide()
+{
+  window->hide();
+}
+
+
 void AudioEditor::setBeatsAndQuit(int beats)
 {
   ab->setBeats(beats);

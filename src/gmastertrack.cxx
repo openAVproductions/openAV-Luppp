@@ -195,6 +195,31 @@ void GMasterTrack::setBpm( int b )
   tempoDial.value( ( bpm - 60 ) / 160.f );
 }
 
+void GMasterTrack::setInputVol(float f)
+{
+  inputVolume.value( f );
+}
+
+void GMasterTrack::setInputTo(int to, float f)
+{
+  if ( to == Event::INPUT_TO_MIX )
+    inputToMixVol.value( f );
+  else if ( to == Event::INPUT_TO_MIX )
+    inputToSendVol.value( f );
+  else if ( to == Event::INPUT_TO_XSIDE )
+    inputToSidechainSignalVol.value( f );
+}
+
+void GMasterTrack::setInputToActive(int to, bool f)
+{
+  if ( to == Event::INPUT_TO_MIX )
+    inputToMix.value( f );
+  else if ( to == Event::INPUT_TO_MIX )
+    inputToSend.value( f );
+  else if ( to == Event::INPUT_TO_SIDE_KEY )
+    inputToSidechainKey.value( f );
+}
+
 void GMasterTrack::metronomeEnable( bool b )
 {
   metronomeButton.value( b );

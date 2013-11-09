@@ -15,6 +15,8 @@ class LupppGUI : public Controller
     std::string getName(){return "Luppp GUI";}
     
     void masterVolume(float f);
+    void masterInputTo(int to,float f);
+    void masterInputToActive(int to,float f);
     
     void metronomeEnable(bool b);
     

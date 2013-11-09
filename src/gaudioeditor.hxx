@@ -21,6 +21,8 @@ class AudioEditor
     /// shows the window, and loads the audio buffer into the display
     void show( AudioBuffer* ab, bool modal = false );
     
+    void hide();
+    
     /// returns true if the editor window is shown
     bool shown();
     

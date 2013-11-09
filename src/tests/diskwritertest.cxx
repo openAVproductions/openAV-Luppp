@@ -40,7 +40,7 @@ int DiskWriter::runTests()
    *  disk.
   **/
   int waste = 0;
-  GenericMIDI* dummy = new GenericMIDI( waste, "Dummy" );
+  GenericMIDI* dummy = new GenericMIDI( waste, "dummy" );
   std::string name = "dummy name";
   std::string author = "dummy author";
   std::string link = "www.dummylink.com";

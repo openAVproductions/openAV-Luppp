@@ -23,6 +23,8 @@ class OptionsWindow
     OptionsWindow();
     
     void show();
+    void hide();
+    
     void setTarget(const char* t);
     void setBindEnable(bool b);
     

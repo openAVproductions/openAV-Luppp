@@ -39,6 +39,8 @@ class Controller
     virtual std::string getName() = 0;
     
     /// master
+    virtual void masterInputTo(int to,float f){}
+    virtual void masterInputToActive(int to,float f){}
     virtual void masterVolume(float f){}
     virtual void metronomeEnable(bool b){}
     

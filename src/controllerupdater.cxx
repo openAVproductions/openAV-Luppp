@@ -61,6 +61,17 @@ void ControllerUpdater::setTrackSend(int t, int send, float v)
     c.at(i)->trackSend(t, send, v);
 }
 
+void ControllerUpdater::masterInputToActive(int to, bool v)
+{
+  for(unsigned int i = 0; i < c.size(); i++)
+    c.at(i)->masterInputToActive( to, v);
+}
+void ControllerUpdater::masterInputTo( int to, float v )
+{
+  for(unsigned int i = 0; i < c.size(); i++)
+    c.at(i)->masterInputTo( to, v);
+}
+
 void ControllerUpdater::launchScene( int scene )
 {
   for(unsigned int i = 0; i < c.size(); i++)
