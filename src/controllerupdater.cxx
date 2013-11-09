@@ -71,6 +71,11 @@ void ControllerUpdater::masterInputTo( int to, float v )
   for(unsigned int i = 0; i < c.size(); i++)
     c.at(i)->masterInputTo( to, v);
 }
+void ControllerUpdater::masterInputVol( float v )
+{
+  for(unsigned int i = 0; i < c.size(); i++)
+    c.at(i)->masterInputVol( v );
+}
 
 void ControllerUpdater::launchScene( int scene )
 {

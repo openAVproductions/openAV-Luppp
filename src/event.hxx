@@ -203,10 +203,9 @@ class EventMasterInputTo : public EventBase
     static const char* prettyName;
     const char* name(){ return prettyName; }
     
-    INPUT_TO place;
+    int place;
     float value;
-    EventMasterInputTo() : value(-1){}
-    EventMasterInputTo(INPUT_TO p, float v) : place(p), value(v){}
+    EventMasterInputTo(int p=-1, float v=0) : place(p), value(v){}
 };
 
 class EventMasterInputToActive : public EventBase
@@ -217,10 +216,9 @@ class EventMasterInputToActive : public EventBase
     static const char* prettyName;
     const char* name(){ return prettyName; }
     
-    INPUT_TO place;
+    int place;
     bool active;
-    EventMasterInputToActive() : active(false){}
-    EventMasterInputToActive(INPUT_TO p, bool a) : place(p), active(a){}
+    EventMasterInputToActive(int p=-1, bool a=false) : place(p), active(a){}
 };
 
 class EventMasterVol : public EventBase

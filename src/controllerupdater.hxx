@@ -40,6 +40,7 @@ class ControllerUpdater
     void masterVolume(float v);
     void masterInputToActive(int to, bool v);
     void masterInputTo( int inputTo, float vol );
+    void masterInputVol( float vol );
     
     void setTrackSceneProgress(int t, int s, float p);
     void setTrackSendActive(int t, int send, bool v);

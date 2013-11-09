@@ -197,14 +197,16 @@ void GMasterTrack::setBpm( int b )
 
 void GMasterTrack::setInputVol(float f)
 {
+  LUPPP_NOTE(" gmtrck, inputVol %f", f );
   inputVolume.value( f );
 }
 
 void GMasterTrack::setInputTo(int to, float f)
 {
+  LUPPP_NOTE(" gmtrck, inputTO %i, %f", to, f );
   if ( to == Event::INPUT_TO_MIX )
     inputToMixVol.value( f );
-  else if ( to == Event::INPUT_TO_MIX )
+  else if ( to == Event::INPUT_TO_SEND )
     inputToSendVol.value( f );
   else if ( to == Event::INPUT_TO_XSIDE )
     inputToSidechainSignalVol.value( f );
@@ -212,9 +214,11 @@ void GMasterTrack::setInputTo(int to, float f)
 
 void GMasterTrack::setInputToActive(int to, bool f)
 {
+  LUPPP_NOTE(" gmtrck, inputToActive %i, %i", to, int(f) );
+  
   if ( to == Event::INPUT_TO_MIX )
     inputToMix.value( f );
-  else if ( to == Event::INPUT_TO_MIX )
+  else if ( to == Event::INPUT_TO_SEND )
     inputToSend.value( f );
   else if ( to == Event::INPUT_TO_SIDE_KEY )
     inputToSidechainKey.value( f );

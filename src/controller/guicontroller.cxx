@@ -17,6 +17,12 @@ LupppGUI::LupppGUI() :
 {
 }
 
+void LupppGUI::masterInputVol(float f)
+{
+  EventMasterInputVol e( f );
+  writeToGuiRingbuffer( &e );
+}
+
 void LupppGUI::masterInputTo(int to,float f)
 {
   EventMasterInputTo e( (Event::INPUT_TO)to, f );

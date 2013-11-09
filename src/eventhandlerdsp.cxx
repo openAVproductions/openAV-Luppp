@@ -102,12 +102,15 @@ void handleDspEvents()
           if ( availableRead >= sizeof(EventMasterInputTo) ) {
             EventMasterInputTo ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMasterInputTo) );
+            jack->bindingSend = ev.place;
             jack->getLogic()->masterInputTo( ev.place, ev.value );
           } break; }
         case Event::MASTER_INPUT_TO_ACTIVE: {
           if ( availableRead >= sizeof(EventMasterInputToActive) ) {
             EventMasterInputToActive ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMasterInputToActive) );
+            jack->bindingSend = ev.place;
+            jack->bindingActive = ev.active;
             jack->getLogic()->masterInputToActive( ev.place, ev.active );
           } break; }
         

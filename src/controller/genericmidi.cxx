@@ -447,10 +447,12 @@ void GenericMIDI::midi(unsigned char* midi)
             jack->getLogic()->masterInputVol( value );
             break;
         case Event::MASTER_INPUT_TO:
-            jack->getLogic()->masterInputTo( static_cast<Event::INPUT_TO>(b->send) , value );
+            LUPPP_NOTE("GenMidi event INPUT_TO %i", b->send );
+            jack->getLogic()->masterInputTo( b->send, value );
             break;
         case Event::MASTER_INPUT_TO_ACTIVE:
-            jack->getLogic()->masterInputToActive( static_cast<Event::INPUT_TO>(b->send), b->active );
+            LUPPP_NOTE("GenMidi event INPUT_TO_ACTIVE %i", b->send );
+            jack->getLogic()->masterInputToActive( b->send, b->active );
             break;
         
         case Event::METRONOME_ACTIVE:
