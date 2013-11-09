@@ -28,7 +28,7 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
   xsideDial    (x+21, y +430 + 69, 30, 30, ""),
   keyActive  (x+11, y +430 + 101, 50, 25, "Key"),
   
-  recordActive  (x+11, y +430 + 132, 50, 25, "Rec")
+  recordActive  (x+11, y +430 + 132, 50, 25, "XRec")
 {
   ID = privateID++;
   

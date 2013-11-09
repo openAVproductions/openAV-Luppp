@@ -7,6 +7,7 @@
 #include <string>
 #include <iostream>
 #include <stdlib.h>
+#include <math.h>
 
 using namespace std;
 
@@ -166,7 +167,7 @@ class Waveform : public Fl_Widget
                 float tmp = data[i + (p * samplesPerPix)];
                 if ( tmp < 0 )
                 {
-                  averageMin += tmp;
+                  averageMin -= tmp;
                 }
                 else
                 {
@@ -178,11 +179,22 @@ class Waveform : public Fl_Widget
               averageMin = (averageMin / samplesPerPix);
               averageMax = (averageMax / samplesPerPix);
               
+              // don't use to the *very* top of the widget, only 0.8 (top & bottom)
               float dH = h * 0.4;
               
+              // emulate log shape
+              float tmpMin = log( 0.1 + (averageMin*4.9) );
+              float tmpMax = log( 0.1 + (averageMax*4.9) );
+              
+              // logMin range == -2.3 -> 1.6: add 2.3, then / 3.9
+              float logMin = -((tmpMin + 2.3) / 3.9);
+              float logMax =  ((tmpMax + 2.3) / 3.9);
+              
+              //printf("input %f, output %f\n", averageMin, logMin );
+              
               // draw lines
-              cairo_move_to( waveformCr, p, h * 0.5 + (averageMin * dH ) );
-              cairo_line_to( waveformCr, p, h * 0.5 + (averageMax * dH ) );
+              cairo_move_to( waveformCr, p, h * 0.5 + (logMin * dH ) );
+              cairo_line_to( waveformCr, p, h * 0.5 + (logMax * dH ) );
             }
             
             // stroke the waveform
