@@ -98,7 +98,7 @@ void Bindings::draw()
       drawY += bindYPx;
     }
     
-    printf("done drawing\n");
+    //printf("done drawing\n");
     
     
     cairo_restore( cr );

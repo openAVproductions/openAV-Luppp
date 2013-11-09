@@ -443,6 +443,15 @@ void GenericMIDI::midi(unsigned char* midi)
             jack->getGridLogic()->launchScene( b->scene );
             break;
         
+        case Event::MASTER_INPUT_VOL:
+            jack->getLogic()->masterInputVol( value );
+            break;
+        case Event::MASTER_INPUT_TO:
+            jack->getLogic()->masterInputTo( static_cast<Event::INPUT_TO>(b->send), value );
+            break;
+        case Event::MASTER_INPUT_TO_ACTIVE:
+            jack->getLogic()->masterInputToActive( static_cast<Event::INPUT_TO>(b->send), b->active );
+            break;
         
         case Event::METRONOME_ACTIVE:
             jack->getLogic()->metronomeEnable( b->active );
@@ -695,6 +704,33 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
   } else if ( strcmp( actionJson->valuestring, "track:send" ) == 0 ) {
     tmp->action = Event::TRACK_SEND;
     tmp->send = Event::SEND_POSTFADER;
+  }
+  else if ( strcmp( actionJson->valuestring, "input:volume" ) == 0 ) {
+    tmp->action = Event::MASTER_INPUT_VOL;
+  }
+  else if ( strcmp( actionJson->valuestring, "input:toMix" ) == 0 ) {
+    tmp->action = Event::MASTER_INPUT_TO;
+    tmp->send = Event::INPUT_TO_MIX;
+  }
+  else if ( strcmp( actionJson->valuestring, "input:toMixActive" ) == 0 ) {
+    tmp->action = Event::MASTER_INPUT_TO_ACTIVE;
+    tmp->send = Event::INPUT_TO_MIX;
+  }
+  else if ( strcmp( actionJson->valuestring, "input:toSend" ) == 0 ) {
+    tmp->action = Event::MASTER_INPUT_TO;
+    tmp->send = Event::INPUT_TO_SEND;
+  }
+  else if ( strcmp( actionJson->valuestring, "input:toSendActive" ) == 0 ) {
+    tmp->action = Event::MASTER_INPUT_TO_ACTIVE;
+    tmp->send = Event::INPUT_TO_SEND;
+  }
+  else if ( strcmp( actionJson->valuestring, "input:toXSide" ) == 0 ) {
+    tmp->action = Event::MASTER_INPUT_TO;
+    tmp->send = Event::INPUT_TO_XSIDE;
+  }
+  else if ( strcmp( actionJson->valuestring, "input:toXSideActive" ) == 0 ) {
+    tmp->action = Event::MASTER_INPUT_TO_ACTIVE;
+    tmp->send = Event::INPUT_TO_XSIDE;
   }
   else if ( strcmp( actionJson->valuestring, "track:xside" ) == 0 ) {
     tmp->action = Event::TRACK_SEND;
