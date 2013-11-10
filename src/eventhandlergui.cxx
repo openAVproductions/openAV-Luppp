@@ -14,6 +14,8 @@
 #include "audiobuffer.hxx"
 #include "eventhandler.hxx"
 
+#include "controller/controller.hxx"
+
 extern Gui* gui;
 
 using namespace std;
@@ -318,6 +320,17 @@ void handleGuiEvents()
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerInstanceGetToWrite) );
             // write the contents of the GenericMIDI controller to .ctlr file
             gui->getDiskWriter()->writeControllerFile("name","author","link", (Controller*)ev.controller );
+          } break; }
+          
+        case Event::CONTROLLER_INSTANCE: {
+          if ( availableRead >= sizeof(EventControllerInstance) ) {
+            EventControllerInstance ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerInstance) );
+            // remove this controller from use:
+            LUPPP_NOTE("Deleting controller %s", ((Controller*)ev.controller)->getName().c_str() );
+            // delete will call the destructor for the Controller: this should
+            // clean up ports etc, all from the GUI thread as appropriate
+            delete ev.controller;
           } break; }
         
         

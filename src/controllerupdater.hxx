@@ -29,9 +29,13 @@ class ControllerUpdater
   public:
     ControllerUpdater();
     
+    /// add a Controller* to Controllers that recieve updates
     void registerController( Controller* controller );
     
-    // returns a Controller* by its ID
+    /// removes a controller by ID
+    void removeController( int controllerID );
+    
+    /// returns a Controller* from ID
     Controller* getController(int id);
     
     void reset();

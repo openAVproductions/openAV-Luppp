@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include "debug.hxx"
+
 #ifdef __SSE__
 /* On Intel set FZ (Flush to Zero) and DAZ (Denormals Are Zero)
    flags to avoid costly denormals */
@@ -10,7 +12,7 @@
 #include <pmmintrin.h>
 inline void AVOIDDENORMALS()
 {
-  std::cout << "Denormals: FZ DAZ using SSE3" << std::endl;
+  //std::cout << "Denormals: FZ DAZ using SSE3" << std::endl;
   _MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
   _MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON);
 }
@@ -18,7 +20,7 @@ inline void AVOIDDENORMALS()
 #include <xmmintrin.h>
 inline void AVOIDDENORMALS()
 {
-  std::cout << "Denormals: FZ" << std::endl;
+  //std::cout << "Denormals: FZ" << std::endl;
   _MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
 }
 #endif //__SSE3__
@@ -26,7 +28,7 @@ inline void AVOIDDENORMALS()
 #else
 inline void AVOIDDENORMALS()
 {
-  std::cout << "Denormals: Warning! No protection" << std::endl;
+  LUPPP_NOTE( "Denormals: Warning! No protection" );
 }
 #endif //__SSE__
 

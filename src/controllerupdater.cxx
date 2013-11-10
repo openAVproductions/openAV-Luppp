@@ -1,6 +1,8 @@
 
 #include "controllerupdater.hxx"
 
+#include "eventhandler.hxx"
+
 ControllerUpdater::ControllerUpdater()
 {
   // CAREFUL size of controllers: otherwise malloc() called
@@ -14,6 +16,26 @@ void ControllerUpdater::registerController( Controller* controller )
   
   // and tell it to register itself (MidiObserver / AudioObserver etc)
   controller->registerComponents();
+}
+
+void ControllerUpdater::removeController( int id )
+{
+  for( unsigned int i = 0; i < c.size(); i++)
+  {
+    if ( c.at(i)->getID() == id )
+    {
+      // keep pointer: otherwise we mem-leak
+      Controller* removed = c.at(i);
+      
+      // remove the instance at 
+      c.erase( c.begin() + i);
+      
+      // send it for de-allocation
+      EventControllerInstance e( removed );
+      writeToGuiRingbuffer( &e );
+    }
+  }
+  
 }
 
 Controller* ControllerUpdater::getController(int id)

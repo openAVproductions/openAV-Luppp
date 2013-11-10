@@ -14,6 +14,13 @@ MidiIO::MidiIO() :
   //LUPPP_NOTE("MidiIO %i",this);
 }
 
+MidiIO::~MidiIO()
+{
+  LUPPP_NOTE("~MidiIO unregistring ports");
+  jack_port_unregister( jack->getJackClientPointer(), jackInputPort );
+  jack_port_unregister( jack->getJackClientPointer(), jackOutputPort );
+}
+
 
 void MidiIO::writeMidi( unsigned char* data )
 {

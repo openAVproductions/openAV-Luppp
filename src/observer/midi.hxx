@@ -17,13 +17,10 @@ class MidiIO
 {
   public:
     MidiIO();
-    virtual ~MidiIO(){};
+    virtual ~MidiIO();
     
     /// name string to show in UI
     virtual std::string getName() = 0;
-    
-    /// 
-    int status();
     
     /// gets / clears MIDI buffers
     void initBuffers(int nframes);
