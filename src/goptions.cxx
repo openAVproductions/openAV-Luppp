@@ -23,9 +23,11 @@ static void addControllerUiDsp(OptionsWindow* self, Controller* c)
   
   LUPPP_NOTE("Added controller %s, ID %i", c->getName().c_str(), c->getID() );
 
-  // add widget before "add" button, but after existing controllers
-  self->tabs->insert( *self->controllers.back()->widget, self->controllers.size() - 1 );
-
+  // add widget before "add" button
+  self->tabs->insert( *self->controllers.back()->widget, self->addGroup );
+  
+  self->tabs->redraw();
+  
   // send to DSP side
   EventControllerInstance e(c);
   writeToDspRingbuffer( &e );
@@ -50,9 +52,11 @@ static void removeControllerCB(Fl_Widget* w, void* data)
   // Remove UI tab for that controller
   // should return "tabs" from OptionsWindow
   self->optionsWindow->tabs->remove( self->widget );
+  self->optionsWindow->tabs->redraw();
   
   // FIXME: confirm action here?
-  LUPPP_NOTE("Removing controllerID %i", self->controllerID );
+  
+  //LUPPP_NOTE("Removing controllerID %i", self->controllerID );
   EventControllerInstanceRemove e( self->controllerID );
   writeToDspRingbuffer( &e );
   
@@ -101,7 +105,7 @@ static void selectLoadController(Fl_Widget* w, void* data)
   fnfc.filter("Controllers\t*.ctlr");
   
   stringstream s;
-  s << getenv("HOME") << "/.config/openAV/luppp/";
+  s << getenv("HOME") << "/.config/openAV/luppp/controllers/";
   fnfc.directory( s.str().c_str() ); // default directory to use
   // Show native chooser
   switch ( fnfc.show() ) {
@@ -155,8 +159,8 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
     bindEnable = new Avtk::LightButton(x + 5, y + 5, 100, 25, "Bind Enable");
     
     writeControllerBtn = new Avtk::Button( x + 5, y + 275, 100, 25, "Save" );
-    ctlrButton = new Avtk::Button(x + 110, y + 275, 100, 25, "Load");
-    removeController = new Avtk::Button(x + 215, y + 275, 100, 25, "Remove");
+    //ctlrButton = new Avtk::Button(x + 110, y + 275, 100, 25, "Load");
+    removeController = new Avtk::Button(x + 110, y + 275, 100, 25, "Remove");
     
     Fl_Scroll* s = new Fl_Scroll( x + 5, y + 35, 400, 180 );
     bindings = new Avtk::Bindings( x + 5, y + 35, 398, 10 );
@@ -168,7 +172,7 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
   controllerID = ID;
   LUPPP_NOTE("Controller %li ID on create %i", this, controllerID );
   
-  ctlrButton->callback( selectLoadController );
+  //ctlrButton->callback( selectLoadController );
   bindEnable->callback( writeBindEnable, this );
   removeController->callback( removeControllerCB, this );
   writeControllerBtn->callback( writeControllerFile, this );
@@ -207,11 +211,16 @@ OptionsWindow::OptionsWindow()
   int x, y, w, h;
   tabs->client_area( x, y, w, h, 25 );
   
-  newButton = new Avtk::Button( x, y, w, h, "Add");
-  
+  addGroup = new Fl_Group(x,y,w,h,"Add");
+  {
+    newButton = new Avtk::Button( x+2, y+2, w-4, 30, "New Generic MIDI");
+    loadButton = new Avtk::Button( x+2, y+2+32, w-4, 30, "Load Generic MIDI");
+  }
+  addGroup->end();
   tabs->end();
   
-  newButton->callback( addNewController, this );
+  newButton ->callback( addNewController, this );
+  loadButton->callback( selectLoadController, this );
   
   window->end();
 }

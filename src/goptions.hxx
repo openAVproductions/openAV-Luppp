@@ -69,11 +69,12 @@ class OptionsWindow
     // public for static methods only
     Fl_Tabs* tabs;
     std::vector<ControllerUI*> controllers;
+    Fl_Group* addGroup;
   
   private:
     Fl_Double_Window* window;
-    
     Avtk::Button* newButton;
+    Avtk::Button* loadButton;
 };
 
 #endif // LUPPP_OPTIONS_H
