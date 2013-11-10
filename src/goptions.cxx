@@ -16,12 +16,12 @@ static void addControllerUiDsp(OptionsWindow* self, Controller* c)
   // add the controller to the UI
   int x, y, w, h;
   self->tabs->client_area( x, y, w, h, 25 );
-  self->controllers.push_back( ControllerUI( x, y, w, h, c->getName().c_str(), c->getID() ) );
+  self->controllers.push_back( new ControllerUI( x, y, w, h, c->getName().c_str(), c->getID() ) );
 
   LUPPP_NOTE("Added controller %s, ID %i", c->getName().c_str(), c->getID() );
 
   // add widget before "add" button, but after existing controllers
-  self->tabs->insert( *self->controllers.back().widget, self->controllers.size() - 1 );
+  self->tabs->insert( *self->controllers.back()->widget, self->controllers.size() - 1 );
 
   // send to DSP side
   EventControllerInstance e(c);
@@ -49,8 +49,9 @@ static void removeControllerCB(Fl_Widget* w, void* data)
   // self->widget->parent();
   
   // FIXME: confirm action here?
-  //EventControllerRemove e( ID );
-  //writeToDspRingbuffer( &e );
+  LUPPP_NOTE("Removing controllerID %i", self->controllerID );
+  EventControllerInstanceRemove e( self->controllerID );
+  writeToDspRingbuffer( &e );
   
 }
 
@@ -223,11 +224,11 @@ void OptionsWindow::hide()
 
 ControllerUI* OptionsWindow::getControllerUI(int id)
 {
-  for(int i = 0; i < controllers.size(); i++ )
+  for(unsigned int i = 0; i < controllers.size(); i++ )
   {
-    if ( controllers.at(i).controllerID == id )
+    if ( controllers.at(i)->controllerID == id )
     {
-      return &controllers.at(i);
+      return controllers.at(i);
     }
   }
   

@@ -16,6 +16,8 @@ MidiIO::MidiIO() :
 
 MidiIO::~MidiIO()
 {
+  jack->unregisterMidiIO( this );
+  
   LUPPP_NOTE("~MidiIO unregistring ports");
   jack_port_unregister( jack->getJackClientPointer(), jackInputPort );
   jack_port_unregister( jack->getJackClientPointer(), jackOutputPort );

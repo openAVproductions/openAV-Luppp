@@ -25,10 +25,12 @@ void ControllerUpdater::removeController( int id )
     if ( c.at(i)->getID() == id )
     {
       // keep pointer: otherwise we mem-leak
-      Controller* removed = c.at(i);
+      Controller* removed = c.at( i );
+      
+      cout << "Removing item " << i << " with name " << removed->getName() << endl;
       
       // remove the instance at 
-      c.erase( c.begin() + i);
+      c.erase( c.begin() + i );
       
       // send it for de-allocation
       EventControllerInstance e( removed );

@@ -271,7 +271,15 @@ void Jack::unregisterMidiIO( MidiIO* mo )
   LUPPP_NOTE("Jack::unregisterMidiIO()");
   
   // unregister the observer
-  //midiIO.push_back( mo );
+  for(unsigned int i = 0; i < midiIO.size(); i++)
+  {
+    if ( midiIO.at(i) == mo )
+    {
+      cout << "removing mo at " << i << endl;
+      midiIO.erase( midiIO.begin() + i );
+      return;
+    }
+  }
 }
 
 int Jack::process (jack_nframes_t nframes)

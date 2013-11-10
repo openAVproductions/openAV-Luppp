@@ -65,7 +65,7 @@ class OptionsWindow
     
     // public for static methods only
     Fl_Tabs* tabs;
-    std::vector<ControllerUI> controllers;
+    std::vector<ControllerUI*> controllers;
   
   private:
     Fl_Double_Window* window;
