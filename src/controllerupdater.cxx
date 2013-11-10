@@ -42,9 +42,13 @@ Controller* ControllerUpdater::getController(int id)
 {
   // search controllers for ID, if found return a pointer to it
   for( unsigned int i = 0; i < c.size(); i++)
+  {
     if ( c.at(i)->getID() == id )
+    {
+      LUPPP_NOTE("getController target ID: %i, found ID: %i, returning %s", id, i, c.at(i)->getName().c_str() );
       return c.at(i);
-  
+    }
+  }
   return 0;
 }
 

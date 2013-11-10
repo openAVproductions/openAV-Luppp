@@ -23,8 +23,22 @@ static void writeBindEnable(Fl_Widget* w, void* data)
   writeToDspRingbuffer( &e );
 }
 
-static void addNewController(Fl_Widget* w, void*)
+static void removeControllerCB(Fl_Widget* w, void* data)
 {
+  OptionsWindow* self = (OptionsWindow*)data;
+  int ID = *(int*) data;
+  
+  // FIXME: confirm action here?
+  //EventControllerRemove e( ID );
+  //writeToDspRingbuffer( &e );
+  
+  // Remove UI tab for that controller
+  
+}
+
+static void addNewController(Fl_Widget* w, void* ud)
+{
+  OptionsWindow* self = (OptionsWindow*)ud;
   LUPPP_NOTE("%s","ADD Controller cb");
   
   GenericMIDI* c = 0;
@@ -42,11 +56,19 @@ static void addNewController(Fl_Widget* w, void*)
   
   if ( c->status() == Controller::CONTROLLER_OK )
   {
+    // add the controller to the UI
+    int x, y, w, h;
+    self->tabs->client_area( x, y, w, h, 25 );
+    self->controllers.push_back( ControllerUI( x, y, w, h, c->getName().c_str(), c->getID() ) );
+    
+    LUPPP_NOTE("Added controller %s, ID %i", c->getName().c_str(), c->getID() );
+    
+    // add widget before "add" button, but after existing controllers
+    self->tabs->insert( *self->controllers.back().widget, self->controllers.size() - 1 );
+    
+    // send to DSP side
     EventControllerInstance e(c);
     writeToDspRingbuffer( &e );
-    
-    // FIXME: add the controller to the UI
-    
   }
   else
   {
@@ -96,20 +118,23 @@ static void selectLoadController(Fl_Widget* w, void*)
 
 static void writeControllerFile(Fl_Widget* w, void* data)
 {
-  OptionsWindow* o = (OptionsWindow*) data;
+  // a pointer to the controllerID int is passed as data
+  ControllerUI* c = (ControllerUI*)data;
+  
+  LUPPP_NOTE("Writing controller %s ID %i .ctlr to disk", c->name, c->controllerID );
   
   // FIXME: Controller ID hardcoded
-  EventControllerInstanceGetToWrite e( 1 );
+  EventControllerInstanceGetToWrite e( c->controllerID );
   writeToDspRingbuffer( &e );
 }
 
 
-ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n)
+ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
 {
   name = strdup(n.c_str());
   target = 0;
   
-  Fl_Group* bindingGroup = new Fl_Group( x, y, w, h, name);
+  widget = new Fl_Group( x, y, w, h, name);
   {
     targetLabelStat = new Fl_Box(x + 100,y + 5, 75, 25,"Target: ");
     targetLabel = new Fl_Box(x + 140,y + 5, 200, 25,"");
@@ -117,15 +142,21 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n)
     
     writeControllerBtn = new Avtk::Button( x + 5, y + 275, 100, 25, "Save" );
     ctlrButton = new Avtk::Button(x + 110, y + 275, 100, 25, "Load");
+    removeController = new Avtk::Button(x + 215, y + 275, 100, 25, "Remove");
     
     Fl_Scroll* s = new Fl_Scroll( x + 5, y + 35, 400, 180 );
     bindings = new Avtk::Bindings( x + 5, y + 35, 398, 10 );
     s->end();
   }
-  bindingGroup->end();
+  widget->end();
+  
+  // save the controller ID this ControllerUI represents
+  controllerID = ID;
+  LUPPP_NOTE("Controller ID on create %i", controllerID );
   
   ctlrButton->callback( selectLoadController );
   bindEnable->callback( writeBindEnable, this );
+  removeController->callback( removeControllerCB, this );
   writeControllerBtn->callback( writeControllerFile, this );
 }
 
@@ -162,14 +193,11 @@ OptionsWindow::OptionsWindow()
   int x, y, w, h;
   tabs->client_area( x, y, w, h, 25 );
   
-  // create controller?
-  controllers.push_back( ControllerUI( x, y, w, h, "test" ) );
-  
   newButton = new Avtk::Button( x, y, w, h, "Add");
   
   tabs->end();
   
-  newButton->callback( addNewController );
+  newButton->callback( addNewController, this );
   
   window->end();
 }

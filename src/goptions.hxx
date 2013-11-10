@@ -21,7 +21,7 @@ class Binding;
 class ControllerUI
 {
   public:
-    ControllerUI( int x, int y, int w, int h, std::string name);
+    ControllerUI( int x, int y, int w, int h, std::string name,int id);
     ~ControllerUI();
     
     void setTarget(const char* n);
@@ -31,6 +31,11 @@ class ControllerUI
     
     // the ControllerID this UI class represents
     int controllerID;
+    
+    // for adding to GOptions tabs
+    Fl_Group* widget;
+    
+    char* name;
   
   private:
     // bindings
@@ -39,8 +44,9 @@ class ControllerUI
     Fl_Box* targetLabelStat;
     Avtk::LightButton* bindEnable;
     Avtk::Button* writeControllerBtn;
+    Avtk::Button* removeController;
     
-    char* name;
+    
     char* target;
     
     // Controller
@@ -56,15 +62,15 @@ class OptionsWindow
     void hide();
     
     ControllerUI* getControllerUI(int id);
+    
+    // public for static methods only
+    Fl_Tabs* tabs;
+    std::vector<ControllerUI> controllers;
   
   private:
     Fl_Double_Window* window;
-    Fl_Tabs*          tabs;
     
     Avtk::Button* newButton;
-    
-    std::vector<ControllerUI> controllers;
-    
 };
 
 #endif // LUPPP_OPTIONS_H

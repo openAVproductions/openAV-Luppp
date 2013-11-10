@@ -277,6 +277,14 @@ void handleDspEvents()
             jack->getControllerUpdater()->registerController( static_cast<Controller*>(ev.controller) );
           } break; }
         
+        case Event::CONTROLLER_INSTANCE_REMOVE: {
+          if ( availableRead >= sizeof(EventControllerInstanceRemove) ) {
+            EventControllerInstanceRemove ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventControllerInstanceRemove) );
+            
+            jack->getControllerUpdater()->removeController( ev.ID );
+          } break; }
+        
         case Event::CONTROLLER_BINDING_ENABLE: {
           if ( availableRead >= sizeof(EventControllerBindingEnable) ) {
             EventControllerBindingEnable ev;
@@ -289,7 +297,11 @@ void handleDspEvents()
             EventControllerInstanceGetToWrite ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventControllerInstanceGetToWrite) );
             // get the corresponding Controller with ID, and return it
+            
             Controller* c = jack->getControllerUpdater()->getController( ev.ID );
+            
+            cout << "controller instance get to write id " << ev.ID << endl;
+            
             EventControllerInstanceGetToWrite tmp( ev.ID, c );
             writeToGuiRingbuffer( &tmp );
           } break; }

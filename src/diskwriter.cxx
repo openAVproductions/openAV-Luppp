@@ -85,6 +85,8 @@ int DiskWriter::writeControllerFile(std::string name  ,
                                     std::string link  ,
                                     Controller* c     )
 {
+  LUPPP_NOTE("DiskWriter Controller* id: %i", c->getID() );
+  
   // check if controller of ID is actually a GenericMIDI controller
   GenericMIDI* g = dynamic_cast<GenericMIDI*>( c );
   
