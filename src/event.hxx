@@ -202,7 +202,7 @@ class EventControllerInstanceGetToWrite : public EventBase
     uint32_t size() { return sizeof(EventControllerInstanceGetToWrite); }
     int ID;
     void* controller;
-    EventControllerInstanceGetToWrite(int id = 0, void* c = 0) : ID(0), controller(c) {}
+    EventControllerInstanceGetToWrite(int id = 0, void* c = 0) : ID(id), controller(c) {}
 };
 
 class EventMasterInputTo : public EventBase

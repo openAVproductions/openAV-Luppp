@@ -11,6 +11,23 @@
 #include "gui.hxx"
 extern Gui* gui;
 
+static void addControllerUiDsp(OptionsWindow* self, Controller* c)
+{
+  // add the controller to the UI
+  int x, y, w, h;
+  self->tabs->client_area( x, y, w, h, 25 );
+  self->controllers.push_back( ControllerUI( x, y, w, h, c->getName().c_str(), c->getID() ) );
+
+  LUPPP_NOTE("Added controller %s, ID %i", c->getName().c_str(), c->getID() );
+
+  // add widget before "add" button, but after existing controllers
+  self->tabs->insert( *self->controllers.back().widget, self->controllers.size() - 1 );
+
+  // send to DSP side
+  EventControllerInstance e(c);
+  writeToDspRingbuffer( &e );
+}
+
 static void writeBindEnable(Fl_Widget* w, void* data)
 {
   OptionsWindow* o = (OptionsWindow*) data;
@@ -25,14 +42,15 @@ static void writeBindEnable(Fl_Widget* w, void* data)
 
 static void removeControllerCB(Fl_Widget* w, void* data)
 {
-  OptionsWindow* self = (OptionsWindow*)data;
-  int ID = *(int*) data;
+  ControllerUI* self = (ControllerUI*)data;
+  
+  // Remove UI tab for that controller
+  // should return "tabs" from OptionsWindow
+  // self->widget->parent();
   
   // FIXME: confirm action here?
   //EventControllerRemove e( ID );
   //writeToDspRingbuffer( &e );
-  
-  // Remove UI tab for that controller
   
 }
 
@@ -56,19 +74,7 @@ static void addNewController(Fl_Widget* w, void* ud)
   
   if ( c->status() == Controller::CONTROLLER_OK )
   {
-    // add the controller to the UI
-    int x, y, w, h;
-    self->tabs->client_area( x, y, w, h, 25 );
-    self->controllers.push_back( ControllerUI( x, y, w, h, c->getName().c_str(), c->getID() ) );
-    
-    LUPPP_NOTE("Added controller %s, ID %i", c->getName().c_str(), c->getID() );
-    
-    // add widget before "add" button, but after existing controllers
-    self->tabs->insert( *self->controllers.back().widget, self->controllers.size() - 1 );
-    
-    // send to DSP side
-    EventControllerInstance e(c);
-    writeToDspRingbuffer( &e );
+    addControllerUiDsp( self, c );
   }
   else
   {
@@ -76,8 +82,12 @@ static void addNewController(Fl_Widget* w, void* ud)
   }
 }
 
-static void selectLoadController(Fl_Widget* w, void*)
+
+
+static void selectLoadController(Fl_Widget* w, void* data)
 {
+  OptionsWindow* self = (OptionsWindow*)data;
+  
   // FIXME: refactor
   string path;
   Fl_Native_File_Chooser fnfc;
@@ -105,8 +115,7 @@ static void selectLoadController(Fl_Widget* w, void*)
   
   if ( c->status() == Controller::CONTROLLER_OK )
   {
-    EventControllerInstance e(c);
-    writeToDspRingbuffer( &e );
+    addControllerUiDsp( self, c );
   }
   else
   {
@@ -121,10 +130,10 @@ static void writeControllerFile(Fl_Widget* w, void* data)
   // a pointer to the controllerID int is passed as data
   ControllerUI* c = (ControllerUI*)data;
   
-  LUPPP_NOTE("Writing controller %s ID %i .ctlr to disk", c->name, c->controllerID );
+  LUPPP_NOTE("Writing controller %li, %s ID %i .ctlr to disk", c, c->name, c->controllerID );
   
   // FIXME: Controller ID hardcoded
-  EventControllerInstanceGetToWrite e( c->controllerID );
+  EventControllerInstanceGetToWrite e( 2 );
   writeToDspRingbuffer( &e );
 }
 
@@ -152,7 +161,7 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
   
   // save the controller ID this ControllerUI represents
   controllerID = ID;
-  LUPPP_NOTE("Controller ID on create %i", controllerID );
+  LUPPP_NOTE("Controller %li ID on create %i", this, controllerID );
   
   ctlrButton->callback( selectLoadController );
   bindEnable->callback( writeBindEnable, this );

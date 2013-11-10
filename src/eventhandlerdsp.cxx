@@ -296,6 +296,7 @@ void handleDspEvents()
           if ( availableRead >= sizeof(EventControllerInstanceGetToWrite) ) {
             EventControllerInstanceGetToWrite ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventControllerInstanceGetToWrite) );
+            
             // get the corresponding Controller with ID, and return it
             
             Controller* c = jack->getControllerUpdater()->getController( ev.ID );
