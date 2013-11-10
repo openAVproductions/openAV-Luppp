@@ -24,17 +24,24 @@ class ControllerUI
     ControllerUI( int x, int y, int w, int h, std::string name);
     ~ControllerUI();
     
+    void setTarget(const char* n);
+    
+    void setBindEnable( bool b );
+    void addBinding( Binding* b );
+    
     // the ControllerID this UI class represents
     int controllerID;
   
   private:
     // bindings
     Avtk::Bindings*   bindings;
-    char* target;
     Fl_Box* targetLabel;
     Fl_Box* targetLabelStat;
     Avtk::LightButton* bindEnable;
     Avtk::Button* writeControllerBtn;
+    
+    char* name;
+    char* target;
     
     // Controller
     Avtk::Button* ctlrButton;
@@ -48,10 +55,7 @@ class OptionsWindow
     void show();
     void hide();
     
-    void setTarget(const char* t);
-    void setBindEnable(bool b);
-    
-    void addBinding( Binding* b );
+    ControllerUI* getControllerUI(int id);
   
   private:
     Fl_Double_Window* window;

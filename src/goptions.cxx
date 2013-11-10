@@ -21,11 +21,6 @@ static void writeBindEnable(Fl_Widget* w, void* data)
   
   EventControllerBindingEnable e( l->value() );
   writeToDspRingbuffer( &e );
-  
-  if ( l->value() < 0.5 )
-  {
-    o->setTarget("");
-  }
 }
 
 static void addNewController(Fl_Widget* w, void*)
@@ -109,11 +104,12 @@ static void writeControllerFile(Fl_Widget* w, void* data)
 }
 
 
-ControllerUI::ControllerUI(int x, int y, int w, int h, std::string name)
+ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n)
 {
+  name = strdup(n.c_str());
   target = 0;
   
-  Fl_Group* bindingGroup = new Fl_Group( x, y, w, h, name.c_str());
+  Fl_Group* bindingGroup = new Fl_Group( x, y, w, h, name);
   {
     targetLabelStat = new Fl_Box(x + 100,y + 5, 75, 25,"Target: ");
     targetLabel = new Fl_Box(x + 140,y + 5, 200, 25,"");
@@ -133,6 +129,24 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string name)
   writeControllerBtn->callback( writeControllerFile, this );
 }
 
+void ControllerUI::setTarget(const char* n)
+{
+  if ( target )
+    free (target);
+  target = strdup(n);
+  
+  targetLabel->label( target );
+  targetLabel->redraw();
+}
+
+void ControllerUI::setBindEnable( bool b )
+{
+  bindEnable->value( b );
+}
+void ControllerUI::addBinding( Binding* b )
+{
+  // FIXME: add binding to Avtk::Binding here
+}
 
 ControllerUI::~ControllerUI()
 {
@@ -160,20 +174,6 @@ OptionsWindow::OptionsWindow()
   window->end();
 }
 
-void OptionsWindow::setTarget(const char* t)
-{
-  /*
-  if ( target )
-    free (target);
-  target = strdup(t);
-  
-  targetLabel->label( target );
-  targetLabel->redraw();
-  
-  //LUPPP_NOTE("New Target %s\n", target );
-  */
-}
-
 void OptionsWindow::show()
 {
   window->show();
@@ -184,18 +184,16 @@ void OptionsWindow::hide()
   window->hide();
 }
 
-void OptionsWindow::setBindEnable(bool e)
+ControllerUI* OptionsWindow::getControllerUI(int id)
 {
-  /*
-  LUPPP_NOTE("setBindEnable() %i", int(e) );
-  bindEnable->value( e );
-  setTarget("");
-  */
+  for(int i = 0; i < controllers.size(); i++ )
+  {
+    if ( controllers.at(i).controllerID == id )
+    {
+      return &controllers.at(i);
+    }
+  }
+  
+  // error: controller not found!
+  return 0;
 }
-
-void OptionsWindow::addBinding( Binding* b )
-{
-  // FIXME: adding a binding causes the window to stop drawing properly!
-  //bindings->add( b );
-}
-

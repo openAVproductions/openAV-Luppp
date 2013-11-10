@@ -297,21 +297,27 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventControllerBindingEnable) ) {
             EventControllerBindingEnable ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerBindingEnable) );
-            gui->getOptionsWindow()->setBindEnable( ev.enable );
+            
+            // FIXME: needs to include controllerID!
+            //gui->getOptionsWindow()->setBindEnable( ev.enable );
           } break; }
         
         case Event::CONTROLLER_BINDING_TARGET: {
           if ( availableRead >= sizeof(EventControllerBindingTarget) ) {
             EventControllerBindingTarget ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerBindingTarget) );
-            gui->getOptionsWindow()->setTarget( ev.target );
+            
+            // FIXME: needs to include controllerID!
+            //gui->getOptionsWindow()->setTarget( ev.target );
           } break; }
         
         case Event::CONTROLLER_BINDING_MADE: {
           if ( availableRead >= sizeof(EventControllerBindingMade) ) {
             EventControllerBindingMade ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerBindingMade) );
-            gui->getOptionsWindow()->addBinding( (Binding*)ev.binding );
+            
+            // FIXME: needs to include controllerID!
+            //gui->getOptionsWindow()->addBinding( (Binding*)ev.binding );
           } break; }
         
         case Event::CONTROLLER_INSTANCE_GET_TO_WRITE: {
@@ -327,10 +333,11 @@ void handleGuiEvents()
             EventControllerInstance ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerInstance) );
             // remove this controller from use:
-            LUPPP_NOTE("Deleting controller %s", ((Controller*)ev.controller)->getName().c_str() );
+            Controller* c = (Controller*)ev.controller;
+            LUPPP_NOTE("Deleting controller %s", c->getName().c_str() );
             // delete will call the destructor for the Controller: this should
             // clean up ports etc, all from the GUI thread as appropriate
-            delete ev.controller;
+            delete c;
           } break; }
         
         
