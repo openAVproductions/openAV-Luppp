@@ -16,6 +16,7 @@
 #include "avtk/avtk_light_button.h"
 
 class Binding;
+class OptionsWindow;
 
 /// contains UI elements to represent one controller
 class ControllerUI
@@ -36,6 +37,8 @@ class ControllerUI
     Fl_Group* widget;
     
     char* name;
+    
+    OptionsWindow* optionsWindow;
   
   private:
     // bindings

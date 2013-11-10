@@ -17,7 +17,10 @@ static void addControllerUiDsp(OptionsWindow* self, Controller* c)
   int x, y, w, h;
   self->tabs->client_area( x, y, w, h, 25 );
   self->controllers.push_back( new ControllerUI( x, y, w, h, c->getName().c_str(), c->getID() ) );
-
+  
+  // store the pointer to the options window: needed to make remove button work
+  self->controllers.back()->optionsWindow = self;
+  
   LUPPP_NOTE("Added controller %s, ID %i", c->getName().c_str(), c->getID() );
 
   // add widget before "add" button, but after existing controllers
@@ -46,13 +49,14 @@ static void removeControllerCB(Fl_Widget* w, void* data)
   
   // Remove UI tab for that controller
   // should return "tabs" from OptionsWindow
-  // self->widget->parent();
+  self->optionsWindow->tabs->remove( self->widget );
   
   // FIXME: confirm action here?
   LUPPP_NOTE("Removing controllerID %i", self->controllerID );
   EventControllerInstanceRemove e( self->controllerID );
   writeToDspRingbuffer( &e );
   
+  delete self;
 }
 
 static void addNewController(Fl_Widget* w, void* ud)
