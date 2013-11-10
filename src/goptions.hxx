@@ -17,6 +17,29 @@
 
 class Binding;
 
+/// contains UI elements to represent one controller
+class ControllerUI
+{
+  public:
+    ControllerUI( int x, int y, int w, int h, std::string name);
+    ~ControllerUI();
+    
+    // the ControllerID this UI class represents
+    int controllerID;
+  
+  private:
+    // bindings
+    Avtk::Bindings*   bindings;
+    char* target;
+    Fl_Box* targetLabel;
+    Fl_Box* targetLabelStat;
+    Avtk::LightButton* bindEnable;
+    Avtk::Button* writeControllerBtn;
+    
+    // Controller
+    Avtk::Button* ctlrButton;
+};
+
 class OptionsWindow
 {
   public:
@@ -34,17 +57,9 @@ class OptionsWindow
     Fl_Double_Window* window;
     Fl_Tabs*          tabs;
     
-    // bindings
-    Avtk::Bindings*   bindings;
-    char* target;
-    Fl_Box* targetLabel;
-    Fl_Box* targetLabelStat;
-    Avtk::LightButton* bindEnable;
-    Avtk::Button* writeControllerBtn;
-    
-    // Controller
     Avtk::Button* newButton;
-    Avtk::Button* ctlrButton;
+    
+    std::vector<ControllerUI> controllers;
     
 };
 

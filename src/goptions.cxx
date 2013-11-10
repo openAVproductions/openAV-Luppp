@@ -49,6 +49,9 @@ static void addNewController(Fl_Widget* w, void*)
   {
     EventControllerInstance e(c);
     writeToDspRingbuffer( &e );
+    
+    // FIXME: add the controller to the UI
+    
   }
   else
   {
@@ -106,6 +109,36 @@ static void writeControllerFile(Fl_Widget* w, void* data)
 }
 
 
+ControllerUI::ControllerUI(int x, int y, int w, int h, std::string name)
+{
+  target = 0;
+  
+  Fl_Group* bindingGroup = new Fl_Group( x, y, w, h, name.c_str());
+  {
+    targetLabelStat = new Fl_Box(x + 100,y + 5, 75, 25,"Target: ");
+    targetLabel = new Fl_Box(x + 140,y + 5, 200, 25,"");
+    bindEnable = new Avtk::LightButton(x + 5, y + 5, 100, 25, "Bind Enable");
+    
+    writeControllerBtn = new Avtk::Button( x + 5, y + 275, 100, 25, "Save" );
+    ctlrButton = new Avtk::Button(x + 110, y + 275, 100, 25, "Load");
+    
+    Fl_Scroll* s = new Fl_Scroll( x + 5, y + 35, 400, 180 );
+    bindings = new Avtk::Bindings( x + 5, y + 35, 398, 10 );
+    s->end();
+  }
+  bindingGroup->end();
+  
+  ctlrButton->callback( selectLoadController );
+  bindEnable->callback( writeBindEnable, this );
+  writeControllerBtn->callback( writeControllerFile, this );
+}
+
+
+ControllerUI::~ControllerUI()
+{
+  // FIXME CRITICAL! free UI component memory here
+}
+
 OptionsWindow::OptionsWindow()
 {
   window = new Fl_Double_Window(400,400,"Options");
@@ -115,43 +148,21 @@ OptionsWindow::OptionsWindow()
   int x, y, w, h;
   tabs->client_area( x, y, w, h, 25 );
   
-  Fl_Group* bindingGroup = new Fl_Group( x, y, w, h, "Binding");
-  {
-    targetLabelStat = new Fl_Box(x + 100,y + 5, 75, 25,"Target: ");
-    targetLabel = new Fl_Box(x + 140,y + 5, 200, 25,"");
-    bindEnable = new Avtk::LightButton(x + 5, y + 5, 100, 25, "Bind Enable");
-    
-    writeControllerBtn = new Avtk::Button( x + 5, y + 275, 100, 25, "Save" );
-    ctlrButton = new Avtk::Button(x + 110, y + 275, 100, 25, "Load");
-    newButton = new Avtk::Button(x + 215, y + 275, 100, 25, "New");
-    
-    Fl_Scroll* s = new Fl_Scroll( x + 5, y + 35, 400, 180 );
-    bindings = new Avtk::Bindings( x + 5, y + 35, 398, 10 );
-    s->end();
-  }
-  bindingGroup->end();
-
-  Fl_Group* controllers = new Fl_Group( x, y, w, h, "Controllers");
-  controllers->hide();
-  {
-    //ctlrButton = new Avtk::Button(x + 5, y + 5, 100, 25, "Add Controller");
-  }
-  controllers->end();
+  // create controller?
+  controllers.push_back( ControllerUI( x, y, w, h, "test" ) );
+  
+  newButton = new Avtk::Button( x, y, w, h, "Add");
   
   tabs->end();
   
-  target = 0;
-  
   newButton->callback( addNewController );
-  ctlrButton->callback( selectLoadController );
-  bindEnable->callback( writeBindEnable, this );
-  writeControllerBtn->callback( writeControllerFile, this );
   
   window->end();
 }
 
 void OptionsWindow::setTarget(const char* t)
 {
+  /*
   if ( target )
     free (target);
   target = strdup(t);
@@ -160,6 +171,7 @@ void OptionsWindow::setTarget(const char* t)
   targetLabel->redraw();
   
   //LUPPP_NOTE("New Target %s\n", target );
+  */
 }
 
 void OptionsWindow::show()
@@ -174,9 +186,11 @@ void OptionsWindow::hide()
 
 void OptionsWindow::setBindEnable(bool e)
 {
+  /*
   LUPPP_NOTE("setBindEnable() %i", int(e) );
   bindEnable->value( e );
   setTarget("");
+  */
 }
 
 void OptionsWindow::addBinding( Binding* b )
