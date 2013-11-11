@@ -158,9 +158,9 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
     targetLabel = new Fl_Box(x + 140,y + 5, 200, 25,"");
     bindEnable = new Avtk::LightButton(x + 5, y + 5, 100, 25, "Bind Enable");
     
-    writeControllerBtn = new Avtk::Button( x + 5, y + 275, 100, 25, "Save" );
+    writeControllerBtn = new Avtk::Button( x + 5, y + h - 27, 100, 25, "Save" );
     //ctlrButton = new Avtk::Button(x + 110, y + 275, 100, 25, "Load");
-    removeController = new Avtk::Button(x + 110, y + 275, 100, 25, "Remove");
+    removeController = new Avtk::Button(x + 110, y + h - 27, 100, 25, "Remove");
     
     Fl_Scroll* s = new Fl_Scroll( x + 5, y + 35, 400, 180 );
     bindings = new Avtk::Bindings( x + 5, y + 35, 398, 10 );

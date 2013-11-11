@@ -31,7 +31,7 @@ static void gmastertrack_sidchainKeyButton_callback(Fl_Widget *w, void *data)
   b->value( !b->value() );
   EventMasterInputToActive e( INPUT_TO_SIDE_KEY, b->value() );
   writeToDspRingbuffer( &e );
-  printf("Key button\n");
+  //printf("Key button\n");
 }
 
 static void gmastertrack_mixButton_callback(Fl_Widget *w, void *data)
@@ -40,7 +40,7 @@ static void gmastertrack_mixButton_callback(Fl_Widget *w, void *data)
   b->value( !b->value() );
   EventMasterInputToActive e( INPUT_TO_MIX, b->value() );
   writeToDspRingbuffer( &e );
-  printf("Mix button\n");
+  //printf("Mix button\n");
 }
 
 static void gmastertrack_sendButton_callback(Fl_Widget *w, void *data)
@@ -49,7 +49,7 @@ static void gmastertrack_sendButton_callback(Fl_Widget *w, void *data)
   b->value( !b->value() );
   EventMasterInputToActive e( INPUT_TO_SEND, b->value() );
   writeToDspRingbuffer( &e );
-  printf("Send button\n");
+  //printf("Send button\n");
 
 }
 
@@ -59,7 +59,7 @@ static void gmastertrack_sendVol_callback(Fl_Widget *w, void *data)
   float v = b->value();
   EventMasterInputTo e = EventMasterInputTo( INPUT_TO_SEND, v );
   writeToDspRingbuffer( &e );
-  printf("Send dial\n");
+  ///printf("Send dial\n");
 }
 
 static void gmastertrack_xSideVol_callback(Fl_Widget *w, void *data)
@@ -68,7 +68,7 @@ static void gmastertrack_xSideVol_callback(Fl_Widget *w, void *data)
   float v = b->value();
   EventMasterInputTo e = EventMasterInputTo( INPUT_TO_XSIDE, v );
   writeToDspRingbuffer( &e );
-  printf("XSide dial\n");
+  //printf("XSide dial\n");
 }
 
 /// return volume
@@ -78,7 +78,7 @@ static void gmastertrack_returnVol_callback(Fl_Widget *w, void *data)
   float v = b->value();
   EventMasterReturn e( RETURN_MAIN, v );
   writeToDspRingbuffer( &e );
-  printf("Return dial\n");
+  //printf("Return dial\n");
 }
 
 static void gmastertrack_mixVol_callback(Fl_Widget *w, void *data)
@@ -87,7 +87,7 @@ static void gmastertrack_mixVol_callback(Fl_Widget *w, void *data)
   float v = b->value();
   EventMasterInputTo e = EventMasterInputTo( INPUT_TO_MIX, v );
   writeToDspRingbuffer( &e );
-  printf("MIX dial\n");
+  //printf("MIX dial\n");
 }
 
 static void gmastertrack_button_callback(Fl_Widget *w, void *data)
@@ -197,13 +197,13 @@ void GMasterTrack::setBpm( int b )
 
 void GMasterTrack::setInputVol(float f)
 {
-  LUPPP_NOTE(" gmtrck, inputVol %f", f );
+  //LUPPP_NOTE(" gmtrck, inputVol %f", f );
   inputVolume.value( f );
 }
 
 void GMasterTrack::setInputTo(int to, float f)
 {
-  LUPPP_NOTE(" gmtrck, inputTO %i, %f", to, f );
+  //LUPPP_NOTE(" gmtrck, inputTO %i, %f", to, f );
   if ( to == Event::INPUT_TO_MIX )
     inputToMixVol.value( f );
   else if ( to == Event::INPUT_TO_SEND )
@@ -214,7 +214,7 @@ void GMasterTrack::setInputTo(int to, float f)
 
 void GMasterTrack::setInputToActive(int to, bool f)
 {
-  LUPPP_NOTE(" gmtrck, inputToActive %i, %i", to, int(f) );
+  //LUPPP_NOTE(" gmtrck, inputToActive %i, %i", to, int(f) );
   
   if ( to == Event::INPUT_TO_MIX )
     inputToMix.value( f );
