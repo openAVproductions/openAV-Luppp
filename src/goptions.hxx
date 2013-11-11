@@ -60,6 +60,7 @@ class OptionsWindow
 {
   public:
     OptionsWindow();
+    ~OptionsWindow();
     
     void show();
     void hide();

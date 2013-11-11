@@ -225,6 +225,15 @@ OptionsWindow::OptionsWindow()
   window->end();
 }
 
+OptionsWindow::~OptionsWindow
+{
+  delete newButton;
+  delete loadButton;
+  delete addgroup;
+  delete tabs;
+  delete window;
+}
+
 void OptionsWindow::show()
 {
   window->show();
