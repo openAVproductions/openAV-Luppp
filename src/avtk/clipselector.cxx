@@ -271,7 +271,7 @@ int ClipSelector::handle(int event)
           {
             gui->selectLoadSample( ID, clipNum );
           }
-          else if ( strcmp(m->label(), "1") == 0 ) {
+          else if ( strcmp(m->label(), "1       ") == 0 ) {
             EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,1);
             writeToDspRingbuffer( &e );
           } else if ( strcmp(m->label(), "2") == 0 ) {
