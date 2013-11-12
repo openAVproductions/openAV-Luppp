@@ -10,6 +10,9 @@
 #include <sys/stat.h>
 #include <errno.h>
 
+// to prompt the user of new filenames in case of overwrite
+#include <FL/fl_ask.H>
+
 #include "gui.hxx"
 #include "gmastertrack.hxx"
 
@@ -210,6 +213,14 @@ int DiskWriter::writeControllerFile(std::string name  ,
     // write the sample JSON node to <samplePath>/sample.cfg
     stringstream controllerCfgPath;
     controllerCfgPath << getenv("HOME") << "/.config/openAV/luppp/controllers/" << g->getName() << ".ctlr";
+    
+    ifstream infile( controllerCfgPath.str().c_str() );
+    if ( infile.good() )
+    {
+      // file exists: ask user overwrite or rename?
+      LUPPP_WARN("Controller filename exists: prompting user to overwrite y/n?");
+      controllerCfgPath << ".newCtlr";
+    }
     
     ofstream controllerCfgFile;
     controllerCfgFile.open ( controllerCfgPath.str().c_str() );
