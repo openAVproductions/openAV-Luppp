@@ -225,11 +225,11 @@ OptionsWindow::OptionsWindow()
   window->end();
 }
 
-OptionsWindow::~OptionsWindow
+OptionsWindow::~OptionsWindow()
 {
   delete newButton;
   delete loadButton;
-  delete addgroup;
+  delete addGroup;
   delete tabs;
   delete window;
 }

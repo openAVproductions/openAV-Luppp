@@ -71,6 +71,9 @@ class OptionsWindow
     Fl_Tabs* tabs;
     std::vector<ControllerUI*> controllers;
     Fl_Group* addGroup;
+#ifdef BUILD_TESTS
+    int runTests();
+#endif
   
   private:
     Fl_Double_Window* window;

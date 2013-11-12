@@ -8,6 +8,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <sys/stat.h>
+#include <errno.h>
 
 #include "gui.hxx"
 #include "gmastertrack.hxx"
@@ -28,6 +29,55 @@ DiskWriter::DiskWriter()
   sessionDir = getenv("HOME");
   sessionName = "lupppSession";
   foldersCreated = false;
+  
+  // create .config/openAV/luppp/ directory
+  stringstream dotConfig;
+  dotConfig << getenv("HOME") << "/.config/openAV/";
+  int dotConfigDir  = mkdir( dotConfig.str().c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
+  if ( errno == EEXIST )
+  {
+    //LUPPP_NOTE("dotConfigDir exists");
+  }
+  else if ( dotConfigDir )
+  {
+    LUPPP_WARN("Error creating dotConfigDir: %s",  strerror(errno));
+  }
+  else
+  {
+    LUPPP_NOTE("Creating .config/openAV/ directory");
+  }
+  
+  stringstream dotConfigLuppp;
+  dotConfigLuppp << getenv("HOME") << "/.config/openAV/luppp";
+  int dotConfigLupppDir  = mkdir( dotConfigLuppp.str().c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
+  if ( errno == EEXIST )
+  {
+    //LUPPP_NOTE("dotConfigLupppDir exists");
+  }
+  else if ( dotConfigLupppDir )
+  {
+    LUPPP_WARN("Error creating dotConfigLupppDir: %s",  strerror(errno));
+  }
+  else
+  {
+    LUPPP_NOTE("Creating .config/openAV/luppp directory");
+  }
+  
+  stringstream dotConfigCtlr;
+  dotConfigCtlr << getenv("HOME") << "/.config/openAV/luppp/controllers/";
+  int dotConfigCtlrDir  = mkdir( dotConfigCtlr.str().c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
+  if ( errno == EEXIST )
+  {
+    //LUPPP_NOTE("dotConfigCtlrDir exists");
+  }
+  else if ( dotConfigCtlrDir )
+  {
+    LUPPP_WARN("Error creating dotConfigCtlrDir: %s",  strerror(errno));
+  }
+  else
+  {
+    LUPPP_NOTE("Creating .config/openAV/luppp directory");
+  }
 };
 
 void DiskWriter::initialize(std::string path, std::string name )
@@ -60,8 +110,6 @@ void DiskWriter::initialize(std::string path, std::string name )
   LUPPP_NOTE("Creating audio dir %s", audioDir.c_str() );
   
   int audioDirError  = mkdir( audioDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
-  
-  // FIXME: error check mkdir for error return
   if ( audioDirError )
   {
     LUPPP_WARN("Error creating sample directory");
