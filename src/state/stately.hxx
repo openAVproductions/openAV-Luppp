@@ -24,8 +24,12 @@ class Stately
     virtual void save();
     
     /// this function *must* be called by each sub-class when it is *finished*
-    /// its save action. Once each Stately is done, the final save is OK-ed.
+    /// a successful save action. Once each Stately is done, the final save is OK-ed.
     static void done();
+    
+    /// this function notes that a stately could *not* successfully save: buffer
+    /// size mismatch in LooperClip for example.
+    static void error();
   
   private:
     static int savesDone;

@@ -32,3 +32,9 @@ void Stately::done()
     savesDone = 0; // reset in case of another save before quit
   }
 }
+
+void Stately::error()
+{
+  // CRITICAL FIXME: add error handling code, noting an error occured, perhaps prompt user?
+  savesDone++;
+}

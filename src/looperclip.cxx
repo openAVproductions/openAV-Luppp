@@ -135,18 +135,27 @@ void LooperClip::setRequestedBuffer( AudioBuffer* ab )
 
 void LooperClip::recieveSaveBuffer( AudioBuffer* saveBuffer )
 {
-  // copy current contents into save buffer,
-  size_t framesBySize = _buffer->getAudioFrames();
-  memcpy( &saveBuffer->getData().at(0), &_buffer->getData().at(0), sizeof(float)*framesBySize);
-  
-  saveBuffer->setID   ( _buffer->getID()    );
-  saveBuffer->setBeats( _buffer->getBeats() );
-  saveBuffer->setAudioFrames( _buffer->getAudioFrames() );
-  
-  EventStateSaveBuffer e ( track, scene, saveBuffer );
-  writeToGuiRingbuffer( &e );
-  
-  Stately::done();
+  // CRITICAL FIXME: crash on buffer size difference
+  if ( saveBuffer->getData().size() >= _buffer->getData().at(0) )
+  {
+    // copy current contents into save buffer,
+    size_t framesBySize = _buffer->getAudioFrames();
+    memcpy( &saveBuffer->getData().at(0), &_buffer->getData().at(0), sizeof(float)*framesBySize);
+    
+    saveBuffer->setID   ( _buffer->getID()    );
+    saveBuffer->setBeats( _buffer->getBeats() );
+    saveBuffer->setAudioFrames( _buffer->getAudioFrames() );
+    
+    EventStateSaveBuffer e ( track, scene, saveBuffer );
+    writeToGuiRingbuffer( &e );
+    
+    Stately::done();
+  }
+  else
+  {
+    LUPPP_ERROR("LooperClip @ %i, %i could not save, save buffer too small!", track, scene);
+    Stately::error();
+  }
 }
 
 
