@@ -26,6 +26,8 @@ static void addControllerUiDsp(OptionsWindow* self, Controller* c)
   // add widget before "add" button
   self->tabs->insert( *self->controllers.back()->widget, self->addGroup );
   
+  self->controllers.back()->addBindings( c );
+  
   self->tabs->redraw();
   
   // send to DSP side
@@ -192,9 +194,10 @@ void ControllerUI::setBindEnable( bool b )
 {
   bindEnable->value( b );
 }
-void ControllerUI::addBinding( Binding* b )
+void ControllerUI::addBindings( Controller* c )
 {
   // FIXME: add binding to Avtk::Binding here
+  //bindings->add( b );
 }
 
 ControllerUI::~ControllerUI()

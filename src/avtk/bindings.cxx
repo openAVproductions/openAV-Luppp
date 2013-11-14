@@ -100,7 +100,6 @@ void Bindings::draw()
     
     //printf("done drawing\n");
     
-    
     cairo_restore( cr );
   }
 }
@@ -120,9 +119,10 @@ void Bindings::add( Binding* b )
   
   binds.push_back( tmp );
   
-  //printf("resize to %i, %i, %i, %i\n", x, y, w, binds.size() * bindYPx ); 
+  int height = binds.size() * bindYPx;
+  printf("resize to %i, %i, %i, %i\n", x, y, w, height );
+  resize( x, y, w, height );
   
-  resize( x, y, w, binds.size() * bindYPx );
   redraw();
 }
 

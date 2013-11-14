@@ -11,6 +11,8 @@
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Double_Window.H>
 
+#include "controller/controller.hxx"
+
 #include "avtk/bindings.h"
 #include "avtk/avtk_button.h"
 #include "avtk/avtk_light_button.h"
@@ -28,7 +30,7 @@ class ControllerUI
     void setTarget(const char* n);
     
     void setBindEnable( bool b );
-    void addBinding( Binding* b );
+    void addBindings( Controller* c );
     
     // the ControllerID this UI class represents
     int controllerID;
@@ -42,15 +44,14 @@ class ControllerUI
   
   private:
     // bindings
-    Avtk::Bindings*   bindings;
+    char* target;
     Fl_Box* targetLabel;
     Fl_Box* targetLabelStat;
+    Avtk::Bindings* bindings;
     Avtk::LightButton* bindEnable;
-    Avtk::Button* writeControllerBtn;
     Avtk::Button* removeController;
+    Avtk::Button* writeControllerBtn;
     
-    
-    char* target;
     
     // Controller
     Avtk::Button* ctlrButton;
