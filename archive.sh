@@ -1,3 +1,4 @@
+#!/bin/bash
 
-
-git archive HEAD --format=zip > lupppGit_`date +"%m-%d-%Y"`_`git log --pretty=format:"%h" | head -n1`.zip
+./version.sh
+git archive HEAD --format=zip > lupppGit_`date +"%d-%m-%Y"`_`git log --pretty=format:"%h" | head -n1`.zip

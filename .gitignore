@@ -16,3 +16,4 @@ buildTest/*
 /src/Makefile
 CMakeFiles/*
 src/CMakeFiles/*
+/src/version.hxx

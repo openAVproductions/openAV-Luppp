@@ -218,13 +218,36 @@ int DiskWriter::writeControllerFile(std::string name  ,
     if ( infile.good() )
     {
       // file exists: ask user overwrite or rename?
-      LUPPP_WARN("Controller filename exists: prompting user to overwrite y/n?");
-      int overwrite = fl_choice("Controller filename exists, overwrite?", "no", "yes", 0);
-      if ( !overwrite )
+      //LUPPP_WARN("Controller filename exists: prompting user to overwrite y/n?");
+      int action = fl_choice("Controller exists, action?", "Cancel", "Rename", "Overwrite");
+      if ( action == 0 )
       {
-        // return OK, as user has chosen to *not* write the file
+        // return OK, as user has chosen to cancel writing the file
         return LUPPP_RETURN_OK;
       }
+      else if ( action == 1 )
+      {
+        // rename here
+        const char* name = fl_input("New name for .ctlr file:");
+        if ( name )
+        {
+          // clear the filename
+          controllerCfgPath.str( "" );
+          controllerCfgPath << getenv("HOME") << "/.config/openAV/luppp/controllers/" << name << ".ctlr";
+          LUPPP_NOTE( "New .ctlr filename %s", controllerCfgPath.str().c_str() );
+        }
+        else
+        {
+          LUPPP_NOTE("No name entered for .ctlr file, canceling!");
+          return LUPPP_RETURN_ERROR;
+        }
+      }
+      else
+      {
+        // just overwrite the file, no action
+      }
+      
+      
     }
     
     LUPPP_NOTE("Writing .ctlr file to disk");

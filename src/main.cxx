@@ -1,5 +1,6 @@
 
 #include "config.hxx"
+#include "version.hxx"
 
 #include <iostream>
 #include <unistd.h>
@@ -32,6 +33,8 @@ void signalHanlder(int signum)
 
 int main(int argc, char** argv)
 {
+  LUPPP_NOTE("%s", GIT_VERSION );
+  
   bool runTests = false;
   bool stopAfterTest = false;
   if(runTests == stopAfterTest){} // warning
