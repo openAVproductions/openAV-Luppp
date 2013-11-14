@@ -2,6 +2,7 @@
 #include "stately.hxx"
 
 #include "../jack.hxx"
+#include "../eventhandler.hxx"
 #include "state.hxx"
 
 extern Jack* jack;
@@ -28,6 +29,15 @@ void Stately::checkCompletedSave()
   if ( (saveSuccess + saveErrors) >= jack->getState()->getNumStatelys() )
   {
     jack->getState()->finish();
+    
+    if ( saveErrors )
+    {
+      // send message to UI to be printed, noting # of clips unsaved due to errors
+      char buf[50];
+      sprintf( buf, "Saved with %i clips !saved due to errors", saveErrors);
+      EventGuiPrint e( buf );
+      writeToGuiRingbuffer( &e );
+    }
     
     // reset in case of another save before quit
     saveErrors  = 0;
