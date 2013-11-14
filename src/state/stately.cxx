@@ -6,7 +6,8 @@
 
 extern Jack* jack;
 
-int Stately::savesDone = 0;
+int Stately::saveSuccess = 0;
+int Stately::saveErrors  = 0;
 
 Stately::Stately()
 {
@@ -22,19 +23,27 @@ void Stately::save()
 {
 }
 
-void Stately::done()
+void Stately::checkCompletedSave()
 {
-  savesDone++;
-  
-  if ( savesDone >= jack->getState()->getNumStatelys() )
+  if ( (saveSuccess + saveErrors) >= jack->getState()->getNumStatelys() )
   {
     jack->getState()->finish();
-    savesDone = 0; // reset in case of another save before quit
+    
+    // reset in case of another save before quit
+    saveErrors  = 0;
+    saveSuccess = 0;
   }
 }
 
-void Stately::error()
+void Stately::success()
+{
+  saveSuccess++;
+  checkCompletedSave();
+}
+
+void Stately::error(const char* errorString)
 {
   // CRITICAL FIXME: add error handling code, noting an error occured, perhaps prompt user?
-  savesDone++;
+  saveErrors++;
+  checkCompletedSave();
 }

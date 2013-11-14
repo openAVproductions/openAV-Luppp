@@ -62,7 +62,8 @@ void LooperClip::save()
   }
   else
   {
-    Stately::done();
+    // notify of "success" of save if there *is* no state to save
+    Stately::success();
   }
 }
 
@@ -149,12 +150,13 @@ void LooperClip::recieveSaveBuffer( AudioBuffer* saveBuffer )
     EventStateSaveBuffer e ( track, scene, saveBuffer );
     writeToGuiRingbuffer( &e );
     
-    Stately::done();
+    Stately::success();
   }
   else
   {
+    
     LUPPP_ERROR("LooperClip @ %i, %i could not save, save buffer too small!", track, scene);
-    Stately::error();
+    Stately::error("");
   }
 }
 

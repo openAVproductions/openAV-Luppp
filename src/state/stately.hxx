@@ -25,14 +25,19 @@ class Stately
     
     /// this function *must* be called by each sub-class when it is *finished*
     /// a successful save action. Once each Stately is done, the final save is OK-ed.
-    static void done();
+    static void success();
     
     /// this function notes that a stately could *not* successfully save: buffer
     /// size mismatch in LooperClip for example.
-    static void error();
+    static void error(const char* errorString);
   
   private:
-    static int savesDone;
+    /// holds the amount of successful / error-full saves. Used by success()
+    /// and error()
+    static int saveSuccess;
+    static int saveErrors;
+    
+    static void checkCompletedSave();
 };
 
 #endif // LUPPP_STATELY_H
