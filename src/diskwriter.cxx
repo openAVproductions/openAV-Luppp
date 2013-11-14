@@ -219,8 +219,15 @@ int DiskWriter::writeControllerFile(std::string name  ,
     {
       // file exists: ask user overwrite or rename?
       LUPPP_WARN("Controller filename exists: prompting user to overwrite y/n?");
-      controllerCfgPath << ".newCtlr";
+      int overwrite = fl_choice("Controller filename exists, overwrite?", "no", "yes", 0);
+      if ( !overwrite )
+      {
+        // return OK, as user has chosen to *not* write the file
+        return LUPPP_RETURN_OK;
+      }
     }
+    
+    LUPPP_NOTE("Writing .ctlr file to disk");
     
     ofstream controllerCfgFile;
     controllerCfgFile.open ( controllerCfgPath.str().c_str() );
