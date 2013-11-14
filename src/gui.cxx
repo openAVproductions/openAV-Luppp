@@ -127,6 +127,11 @@ static void gui_header_callback(Fl_Widget *w, void *data)
           break;  // CANCEL
       default:
           LUPPP_NOTE( "Loading session from dir %s", fnfc.filename() );
+          
+          // clear the current session: just do a state reset
+          EventStateReset e;
+          writeToDspRingbuffer( &e );
+          
           int sess = gui->getDiskReader()->readSession( fnfc.filename() );
           if ( sess != LUPPP_RETURN_OK )
             LUPPP_ERROR( "Error loading session" );

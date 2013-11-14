@@ -50,7 +50,7 @@ void handleGuiEvents()
             EventSamplerate ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventSamplerate) );
             gui->samplerate = ev.samplerate;
-            LUPPP_NOTE("Gui Samplerate: %i", gui->samplerate);
+            //LUPPP_NOTE("Gui Samplerate: %i", gui->samplerate);
           } break; }
         
         /// master
@@ -276,7 +276,7 @@ void handleGuiEvents()
             
             if ( ab )
             {
-              cout << "Save buffer sent with t s ab* " << ev.track << " " << ev.scene << " " << ab << endl;
+              //LUPPP_NOTE("Save buffer sent with t %i, s %i, ab* %i", ev.track, ev.scene, ab );
               EventRequestSaveBuffer returnEvent( ev.track, ev.scene, ab);
               writeToDspRingbuffer( &returnEvent );
             }
