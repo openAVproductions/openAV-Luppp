@@ -119,9 +119,11 @@ void Bindings::add( Binding* b )
   
   binds.push_back( tmp );
   
+  /*
   int height = binds.size() * bindYPx;
   printf("resize to %i, %i, %i, %i\n", x, y, w, height );
   resize( x, y, w, height );
+  */
   
   redraw();
 }

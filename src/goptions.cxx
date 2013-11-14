@@ -11,7 +11,7 @@
 #include "gui.hxx"
 extern Gui* gui;
 
-static void addControllerUiDsp(OptionsWindow* self, Controller* c)
+static void addControllerUiDsp(OptionsWindow* self, GenericMIDI* c)
 {
   // add the controller to the UI
   int x, y, w, h;
@@ -26,6 +26,7 @@ static void addControllerUiDsp(OptionsWindow* self, Controller* c)
   // add widget before "add" button
   self->tabs->insert( *self->controllers.back()->widget, self->addGroup );
   
+  // tell the ControllerUI to add the bindings from this Controller*
   self->controllers.back()->addBindings( c );
   
   self->tabs->redraw();
@@ -122,7 +123,7 @@ static void selectLoadController(Fl_Widget* w, void* data)
     return;
   
   LUPPP_NOTE("%s","ADD Controller cb");
-  Controller* c = new GenericMIDI( path );
+  GenericMIDI* c = new GenericMIDI( path );
   
   if ( c->status() == Controller::CONTROLLER_OK )
   {
@@ -165,6 +166,7 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
     removeController = new Avtk::Button(x + 110, y + h - 27, 100, 25, "Remove");
     
     Fl_Scroll* s = new Fl_Scroll( x + 5, y + 35, 400, 180 );
+    s->box( FL_UP_BOX );
     bindings = new Avtk::Bindings( x + 5, y + 35, 398, 10 );
     s->end();
   }
@@ -194,10 +196,15 @@ void ControllerUI::setBindEnable( bool b )
 {
   bindEnable->value( b );
 }
-void ControllerUI::addBindings( Controller* c )
+void ControllerUI::addBindings( GenericMIDI* c )
 {
   // FIXME: add binding to Avtk::Binding here
-  //bindings->add( b );
+  std::vector<Binding*> bindingVector= c->getMidiToAction();
+  
+  for( int i = 0; i < bindingVector.size() && i < 5; i++ )
+  { 
+    bindings->add( bindingVector.at(i) );
+  }
 }
 
 ControllerUI::~ControllerUI()

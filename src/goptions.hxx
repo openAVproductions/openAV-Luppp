@@ -11,7 +11,7 @@
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Double_Window.H>
 
-#include "controller/controller.hxx"
+#include "controller/genericmidi.hxx"
 
 #include "avtk/bindings.h"
 #include "avtk/avtk_button.h"
@@ -30,7 +30,7 @@ class ControllerUI
     void setTarget(const char* n);
     
     void setBindEnable( bool b );
-    void addBindings( Controller* c );
+    void addBindings( GenericMIDI* c );
     
     // the ControllerID this UI class represents
     int controllerID;
