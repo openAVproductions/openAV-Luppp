@@ -49,15 +49,16 @@ void LooperClip::init()
 
 void LooperClip::save()
 {
-  // ensure there is something in the buffer to be saved
-  if ( _loaded )
+  // ensure the buffer exists, and is saveable (not recording)
+  if ( _loaded && !_recording && !_queueRecord )
   {
     char buffer [50];
     sprintf (buffer, "LC::save() track %i, scene %i", track,scene);
     EventGuiPrint e( buffer );
     writeToGuiRingbuffer( &e );
     
-    EventRequestSaveBuffer e2( track, scene, _buffer->getAudioFrames() );
+    int frames = _buffer->getAudioFrames();
+    EventRequestSaveBuffer e2( track, scene, frames );
     writeToGuiRingbuffer( &e2 );
   }
   else
@@ -154,7 +155,6 @@ void LooperClip::recieveSaveBuffer( AudioBuffer* saveBuffer )
   }
   else
   {
-    
     LUPPP_ERROR("LooperClip @ %i, %i could not save, save buffer too small!", track, scene);
     Stately::error("");
   }
