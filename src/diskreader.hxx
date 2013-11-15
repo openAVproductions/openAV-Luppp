@@ -48,6 +48,9 @@ class DiskReader
     int readTracks();
     int readMaster();
     int readScenes(int t, cJSON* track);
+    
+    // ui show editor
+    int showAudioEditor(AudioBuffer* );
 };
 
 #endif // LUPPP_DISK_READER_H

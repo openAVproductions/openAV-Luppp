@@ -73,7 +73,7 @@ int DiskReader::loadPreferences()
     }
     
     cJSON_Delete( preferencesJson );
-    free ( sampleString  );
+    delete[] sampleString;
   }
   else
   {
@@ -83,6 +83,27 @@ int DiskReader::loadPreferences()
   
   return LUPPP_RETURN_OK;
 }
+
+int DiskReader::showAudioEditor(AudioBuffer* ab)
+{
+  while ( ab->getBeats() == 0 )
+  {
+    // FIXME: Cancel = no load sample?
+    gui->getAudioEditor()->show( ab, true );
+    
+    while ( gui->getAudioEditor()->shown() ) Fl::wait();
+    
+    // handle "cancel" return
+    if ( ab->getBeats() == -1 )
+    {
+      LUPPP_WARN("cancel clicked, deleting audiobuffer" );
+      return LUPPP_RETURN_ERROR;
+    }
+  }
+  
+  return LUPPP_RETURN_OK;
+}
+
 
 int DiskReader::loadSample( int track, int scene, string path )
 {
@@ -176,6 +197,11 @@ int DiskReader::loadSample( int track, int scene, string path )
       else
       {
         cout << "Warning: audio.cfg has no entry for beats." << endl;
+        int error = showAudioEditor( ab );
+        if ( error == LUPPP_RETURN_ERROR )
+        {
+          delete ab;
+        }
       }
       
       cJSON_Delete( audioJson );
@@ -184,24 +210,13 @@ int DiskReader::loadSample( int track, int scene, string path )
     }
     else
     {
-      
-      while ( ab->getBeats() == 0 )
+      // this means there's no audio.cfg file found for the sample: show the user
+      // the file, and ask what the intended beat number is, and load the AudioBuffer
+      LUPPP_WARN("%s %s","Empty or no audio.cfg found at ",base.str().c_str() );
+      int error = showAudioEditor( ab );
+      if ( error == LUPPP_RETURN_ERROR )
       {
-        // this means there's no audio.cfg file found for the sample: show the user
-        // the file, and ask what the intended beat number is, and load the AudioBuffer
-        LUPPP_WARN("%s %s","Empty or no audio.cfg found at ",base.str().c_str() );
-      
-        // FIXME: Cancel = no load sample?
-        gui->getAudioEditor()->show( ab, true );
-        while ( gui->getAudioEditor()->shown() ) Fl::wait();
-        
-        // handle "cancel" return
-        if ( ab->getBeats() == -1 )
-        {
-          LUPPP_WARN("cancel clicked, deleting audiobuffer" );
-          delete ab;
-          return LUPPP_RETURN_OK;
-        }
+        delete ab;
       }
     }
     
