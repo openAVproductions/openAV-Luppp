@@ -118,7 +118,7 @@ int DiskReader::loadSample( int track, int scene, string path )
   {
     LUPPP_NOTE("%s%i%s%i", "Resampling from ", infile.samplerate(), " to ", gui->samplerate);
     
-    float resampleRatio = infile.samplerate() / float(gui->samplerate);
+    float resampleRatio = float(gui->samplerate) / infile.samplerate();
     std::vector<float> resampled( infile.frames() * resampleRatio );
     
     SRC_DATA data;

@@ -255,7 +255,7 @@ void LooperClip::bar()
   
   if ( _queuePlay && _loaded )
   {
-    LUPPP_NOTE("QPLay + loaded" );
+    //LUPPP_NOTE("QPLay + loaded" );
     _playing = true;
     s = GridLogic::STATE_PLAYING;
     _recording = false;
