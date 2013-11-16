@@ -114,29 +114,54 @@ static void gui_header_callback(Fl_Widget *w, void *data)
   }
   else if ( strcmp(m->label(), "Load Session") == 0 )
   {
-    Fl_Native_File_Chooser fnfc;
-    fnfc.title("Load Session");
-    fnfc.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
-    fnfc.directory( getenv("HOME") );
     
-    switch ( fnfc.show() )
+    std::string tmp;
     {
-      case -1: //printf("ERROR: %s\\n", fnfc.errmsg());
-          break;  // ERROR
-      case  1: //printf("CANCEL\\n");
-          break;  // CANCEL
-      default:
-          LUPPP_NOTE( "Loading session from dir %s", fnfc.filename() );
-          
-          // clear the current session: just do a state reset
-          EventStateReset e;
-          writeToDspRingbuffer( &e );
-          
-          int sess = gui->getDiskReader()->readSession( fnfc.filename() );
-          if ( sess != LUPPP_RETURN_OK )
-            LUPPP_ERROR( "Error loading session" );
-          break;
+      // Create the file chooser, and show it
+      Fl_File_Chooser chooser(getenv("HOME"),
+                              "*",
+                              Fl_File_Chooser::DIRECTORY,
+                              "Load Session");
+      chooser.show();
+
+      // Block until user picks something.
+      //     (The other way to do this is to use a callback())
+      //
+      while(chooser.shown())
+          { Fl::wait(); }
+
+      // User hit cancel?
+      if ( chooser.value() == NULL )
+          { fprintf(stderr, "(User hit 'Cancel')\n"); return; }
+      
+      // Print what the user picked
+      fprintf(stderr, "--------------------\n");
+      fprintf(stderr, "DIRECTORY: '%s'\n", chooser.directory());
+      fprintf(stderr, "    VALUE: '%s'\n", chooser.value());
+      fprintf(stderr, "    COUNT: %d files selected\n", chooser.count());
+      
+      tmp = chooser.value();
+      chooser.hide();
+      
+      /*
+      // try to make the Load window dissapear *now*
+      Fl::check();
+      Fl::flush();
+      Fl::wait(0);
+      */
     }
+    
+    LUPPP_NOTE( "Loading session from dir %s", tmp.c_str() );
+    
+    // clear the current session: just do a state reset
+    EventStateReset e;
+    writeToDspRingbuffer( &e );
+    
+    int sess = gui->getDiskReader()->readSession( tmp );
+    if ( sess != LUPPP_RETURN_OK )
+      LUPPP_ERROR( "Error loading session" );
+    
+    return;
   }
   else if ( strcmp(m->label(), "Save Session   ") == 0 )
   {
@@ -448,6 +473,8 @@ int Gui::quit()
   
   // quit main window, causing program termination
   window.hide();
+  
+  return 0;
 }
 
 void Gui::askQuit()
