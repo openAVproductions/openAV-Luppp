@@ -164,6 +164,7 @@ int DiskWriter::writeControllerFile(std::string name  ,
       
       // add metadata to binding
       const char* actionName = Event::getPrettyName( b.at(i)->action );
+      
       if ( actionName )
       {
         cJSON_AddItemToObject( binding, "action", cJSON_CreateString( actionName ) );
@@ -186,9 +187,10 @@ int DiskWriter::writeControllerFile(std::string name  ,
     
     
     //std::vector<Binding*> b = g->getMidiToAction();
+    /*
     cJSON* outputBindings = cJSON_CreateArray();
     cJSON_AddItemToObject(controllerJson, "outputBindings", outputBindings );
-    /*
+    
     for(unsigned int i = 0; i < b.size(); i++ )
     {
       // create binding

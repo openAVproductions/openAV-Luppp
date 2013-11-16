@@ -2,24 +2,22 @@
 #include "event.hxx"
 
 // defines the pretty names of each event type
-const char* EventMasterVol::prettyName = "Master Volume";
-const char* EventMasterReturn::prettyName = "Master Return";
-const char* EventMasterInputVol::prettyName = "Input Volume";
-const char* EventMasterInputTo::prettyName = "Input To";
-const char* EventMasterInputToActive::prettyName = "Input To Active";
+const char* EventMasterVol::prettyName = "master:volume";
+const char* EventMasterReturn::prettyName = "master:return";
+const char* EventMasterInputVol::prettyName = "master:input_vol";
+const char* EventMasterInputTo::prettyName = "master:input_to";
+const char* EventMasterInputToActive::prettyName = "master:input_to_active";
 
-const char* EventTrackVol::prettyName = "Track Volume";
-const char* EventTrackSend::prettyName = "Track Send";
-const char* EventTrackSendActive::prettyName = "Track Send Active";
-const char* EventTrackRecordArm::prettyName = "Track Record Arm";
+const char* EventTrackVol::prettyName = "track:volume";
+const char* EventTrackSend::prettyName = "track:send";
+const char* EventTrackSendActive::prettyName = "track:send_active";
+const char* EventTrackRecordArm::prettyName = "track:record_arm";
 
-const char* EventTimeBPM::prettyName = "Tempo BPM";
-const char* EventTimeTempoTap::prettyName = "Tempo Tap";
+const char* EventTimeBPM::prettyName = "tempo_bpm";
+const char* EventTimeTempoTap::prettyName = "tempo_tap";
 
-const char* EventGridEvent::prettyName = "Grid Press";
-const char* EventGridLaunchScene::prettyName = "Launch Scene";
-
-
+const char* EventGridEvent::prettyName = "grid:event";
+const char* EventGridLaunchScene::prettyName = "grid:launch_scene";
 
 const char* Event::getPrettyName( int type )
 {
