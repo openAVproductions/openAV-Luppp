@@ -128,8 +128,9 @@ class EventControllerBindingMade : public EventBase
   public:
     int type() { return int(CONTROLLER_BINDING_MADE); }
     uint32_t size() { return sizeof(EventControllerBindingMade); }
+    int controllerID;
     void* binding;
-    EventControllerBindingMade(void* b=0): binding(b){}
+    EventControllerBindingMade(int id = 0, void* b=0): controllerID(id), binding(b){}
 };
 
 class EventControllerBindingEnable : public EventBase
@@ -137,8 +138,9 @@ class EventControllerBindingEnable : public EventBase
   public:
     int type() { return int(CONTROLLER_BINDING_ENABLE); }
     uint32_t size() { return sizeof(EventControllerBindingEnable); }
+    int controllerID;
     bool enable;
-    EventControllerBindingEnable(bool e=false):enable(e){}
+    EventControllerBindingEnable(int id = 0, bool e=false):controllerID(id),enable(e){}
 };
 
 class EventGridSelectClipEvent : public EventBase

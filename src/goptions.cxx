@@ -27,6 +27,8 @@ static void addControllerUiDsp(OptionsWindow* self, GenericMIDI* c)
   self->tabs->insert( *self->controllers.back()->widget, self->addGroup );
   
   // tell the ControllerUI to add the bindings from this Controller*
+  self->controllers.back()->setAuthor( c->getAuthor() );
+  self->controllers.back()->setEmail( c->getEmail() );
   self->controllers.back()->addBindings( c );
   
   self->tabs->redraw();
@@ -44,7 +46,8 @@ static void writeBindEnable(Fl_Widget* w, void* data)
   Avtk::LightButton* l = (Avtk::LightButton*)w;
   l->value( !l->value() );
   
-  EventControllerBindingEnable e( l->value() );
+  int controllerID = -1; // waste?
+  EventControllerBindingEnable e( controllerID, l->value() );
   writeToDspRingbuffer( &e );
 }
 
@@ -157,15 +160,20 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
   
   widget = new Fl_Group( x, y, w, h, name);
   {
-    targetLabelStat = new Fl_Box(x + 100,y + 5, 75, 25,"Target: ");
-    targetLabel = new Fl_Box(x + 140,y + 5, 200, 25,"");
-    bindEnable = new Avtk::LightButton(x + 5, y + 5, 100, 25, "Bind Enable");
+    // author / link
+    authorLabel = new Fl_Box( x, y + 0, 200, 30, "Author: -" );
+    emailLabel  = new Fl_Box( x + w/2, y + 0, 200, 30, "Email: -" );
+    
+    // binding / target
+    targetLabelStat = new Fl_Box(x + 100,y + 25, 75, 25,"Target: ");
+    targetLabel = new Fl_Box(x + 140,y + 25, 200, 25,"");
+    bindEnable = new Avtk::LightButton(x + 5, y + 25, 100, 25, "Bind Enable");
     
     writeControllerBtn = new Avtk::Button( x + 5, y + h - 27, 100, 25, "Save" );
     //ctlrButton = new Avtk::Button(x + 110, y + 275, 100, 25, "Load");
     removeController = new Avtk::Button(x + 110, y + h - 27, 100, 25, "Remove");
     
-    Fl_Scroll* s = new Fl_Scroll( x + 5, y + 35, 400, 180 );
+    Fl_Scroll* s = new Fl_Scroll( x + 5, y + 75, 400, 180 );
     s->box( FL_UP_BOX );
     bindings = new Avtk::Bindings( x + 5, y + 35, 398, 10 );
     s->end();
@@ -182,7 +190,15 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
   writeControllerBtn->callback( writeControllerFile, this );
 }
 
-void ControllerUI::setTarget(const char* n)
+void OptionsWindow::setTarget(const char* n)
+{
+  for(unsigned int i = 0; i < controllers.size(); i++ )
+  {
+    controllers.at(i)->setTarget( n );
+  }
+}
+
+void ControllerUI::setTarget( const char* n )
 {
   if ( target )
     free (target);
@@ -192,19 +208,45 @@ void ControllerUI::setTarget(const char* n)
   targetLabel->redraw();
 }
 
+void ControllerUI::setAuthor(std::string a)
+{
+  stringstream s;
+  s << "Author: " << a;
+  author = s.str();
+  authorLabel->label( author.c_str() );
+  authorLabel->redraw();
+}
+
+void ControllerUI::setEmail(std::string e)
+{
+  stringstream s;
+  s << "Email: " << e;
+  email = s.str(); 
+  emailLabel->label( email.c_str() );
+  emailLabel->redraw();
+}
+
 void ControllerUI::setBindEnable( bool b )
 {
   bindEnable->value( b );
 }
+
+void ControllerUI::addBinding( Binding* b )
+{
+  // add individual bindings as they're made
+}
+
 void ControllerUI::addBindings( GenericMIDI* c )
 {
+  /*
   // FIXME: add binding to Avtk::Binding here
   std::vector<Binding*> bindingVector= c->getMidiToAction();
   
-  for( int i = 0; i < bindingVector.size() && i < 5; i++ )
+  for(unsigned int i = 0; i < bindingVector.size() && i < 5; i++ )
   { 
     bindings->add( bindingVector.at(i) );
   }
+  */
 }
 
 ControllerUI::~ControllerUI()

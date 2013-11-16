@@ -78,11 +78,19 @@ std::string GenericMIDI::getName()
   return name;
 }
 
+std::string GenericMIDI::getAuthor()
+{
+  return author;
+}
+std::string GenericMIDI::getEmail()
+{
+  return email;
+}
+
 void GenericMIDI::volume(int t, float f)
 {
   
 }
-
 
 void GenericMIDI::recordArm(int t, bool enabled)
 {
@@ -389,11 +397,13 @@ void GenericMIDI::midi(unsigned char* midi)
   int data   = midi[1];
   float value  = midi[2] / 127.f;
   
-  //LUPPP_NOTE("GenericMIDI::midi() %i %i %f", status, data, value );
   
   // create new MIDI binding?
   if ( jack->bindingEventRecordEnable )
   {
+    
+    LUPPP_NOTE("making binding from: %i %i %f", status, data, value );
+    
     setupBinding( jack->bindingEventType, status, data,
                   jack->bindingTrack,
                   jack->bindingScene,
@@ -402,11 +412,11 @@ void GenericMIDI::midi(unsigned char* midi)
     
     // binding is now created, so disable GUI binding enable button
     jack->bindingEventRecordEnable = false;
-    EventControllerBindingEnable e( false );
+    EventControllerBindingEnable e( getID(), false );
     writeToGuiRingbuffer( &e );
     
     // update GUI of new binding
-    EventControllerBindingMade e2( (void*)midiToAction.back() );
+    EventControllerBindingMade e2( getID(), (void*)midiToAction.back() );
     writeToGuiRingbuffer( &e2 );
   }
   
@@ -588,6 +598,28 @@ int GenericMIDI::loadController( std::string file )
         LUPPP_NOTE("Has no name field");
     }
     
+    cJSON* authorJson = cJSON_GetObjectItem( controllerJson, "author" );
+    if ( authorJson )
+    {
+      author = authorJson->valuestring;
+      LUPPP_NOTE("Author %s", author.c_str() );
+    }
+    else
+    {
+        LUPPP_NOTE("Has no author field");
+    }
+    
+    cJSON* linkJson = cJSON_GetObjectItem( controllerJson, "email" );
+    if ( linkJson )
+    {
+      email = linkJson->valuestring;
+      LUPPP_NOTE("Email %s", email.c_str() );
+    }
+    else
+    {
+        LUPPP_NOTE("Has no email field");
+    }
+    
     
     int nInputBindings = 0;
     cJSON* inputBindings = cJSON_GetObjectItem( controllerJson, "inputBindings");
@@ -634,7 +666,7 @@ int GenericMIDI::loadController( std::string file )
     }
     else
     {
-      LUPPP_WARN("No output bindings array in .ctlr map." );
+      LUPPP_NOTE("No output bindings array in .ctlr map." );
       nOutputBindings++; // hack to avoid 2 prints
     }
     if ( nOutputBindings == 0 )

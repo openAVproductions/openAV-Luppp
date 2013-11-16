@@ -297,27 +297,29 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventControllerBindingEnable) ) {
             EventControllerBindingEnable ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerBindingEnable) );
-            
-            // FIXME: needs to include controllerID!
-            //gui->getOptionsWindow()->setBindEnable( ev.enable );
+            ControllerUI* c = gui->getOptionsWindow()->getControllerUI( ev.controllerID );
+            if ( c )
+              c->setBindEnable( ev.enable );
+            else
+              LUPPP_WARN("ControllerUI %i doesn't exist in the UI", ev.controllerID );
           } break; }
         
         case Event::CONTROLLER_BINDING_TARGET: {
           if ( availableRead >= sizeof(EventControllerBindingTarget) ) {
             EventControllerBindingTarget ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerBindingTarget) );
-            
-            // FIXME: needs to include controllerID!
-            //gui->getOptionsWindow()->setTarget( ev.target );
+            gui->getOptionsWindow()->setTarget( ev.target );
           } break; }
         
         case Event::CONTROLLER_BINDING_MADE: {
           if ( availableRead >= sizeof(EventControllerBindingMade) ) {
             EventControllerBindingMade ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerBindingMade) );
-            
-            // FIXME: needs to include controllerID!
-            //gui->getOptionsWindow()->addBinding( (Binding*)ev.binding );
+            ControllerUI* c = gui->getOptionsWindow()->getControllerUI( ev.controllerID );
+            if ( c )
+              c->addBinding( (Binding*)ev.binding );
+            else
+              LUPPP_WARN("ControllerUI %i doesn't exist in the UI", ev.controllerID );
           } break; }
         
         case Event::CONTROLLER_INSTANCE_GET_TO_WRITE: {

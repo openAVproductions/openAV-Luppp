@@ -32,6 +32,8 @@ class GenericMIDI : public Controller, public MidiIO
     
     void setName(std::string );
     std::string getName();
+    std::string getAuthor();
+    std::string getEmail();
     
     /// track actions
     //void mute(int t, bool b);
@@ -73,6 +75,8 @@ class GenericMIDI : public Controller, public MidiIO
     STATUS stat;
     
     std::string name;
+    std::string author;
+    std::string email;
     
     /// contains midi binding instances
     std::vector<Binding*> midiToAction;

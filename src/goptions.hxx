@@ -27,9 +27,13 @@ class ControllerUI
     ControllerUI( int x, int y, int w, int h, std::string name,int id);
     ~ControllerUI();
     
-    void setTarget(const char* n);
+    void setAuthor(std::string author);
+    void setEmail (std::string email  );
     
+    void setTarget(const char* n);
     void setBindEnable( bool b );
+    
+    void addBinding( Binding* b );
     void addBindings( GenericMIDI* c );
     
     // the ControllerID this UI class represents
@@ -45,6 +49,12 @@ class ControllerUI
   private:
     // bindings
     char* target;
+    
+    std::string author;
+    std::string email;
+    Fl_Box* authorLabel;
+    Fl_Box* emailLabel;
+    
     Fl_Box* targetLabel;
     Fl_Box* targetLabelStat;
     Avtk::Bindings* bindings;
@@ -66,6 +76,7 @@ class OptionsWindow
     void show();
     void hide();
     
+    void setTarget(const char* n);
     ControllerUI* getControllerUI(int id);
     
     // public for static methods only
