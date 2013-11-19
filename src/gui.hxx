@@ -62,6 +62,8 @@ class Gui
     
     int samplerate;
     
+    int getWindowWidth(){return window.w();}
+    
     nsm_client_t* getNsm(){return nsm;}
   
   private:

@@ -98,11 +98,14 @@ class RadialStatus : public Fl_Slider
         int xc = (w) / 2.f;
         int yc = (h) / 2.f;
         
+        int radius = xc > yc ? yc : xc;
+        radius -= 10;
+        
         float angle = newAngle / 16.f;
         
         cairo_set_line_cap ( cr, CAIRO_LINE_CAP_ROUND );
         //cairo_move_to( cr, x + xc, y + yc );
-        cairo_arc( cr, x + xc, y + yc, xc - 10, -(3.1415/2), angle * 6.28 - (3.1415/2) );
+        cairo_arc( cr, x + xc, y + yc, radius, -(3.1415/2), angle * 6.28 - (3.1415/2) );
         cairo_set_source_rgba (cr, 0.0, 0.0, 0.0, 0.5 );
         cairo_set_line_width(cr, 12);
         cairo_stroke_preserve(cr);
@@ -116,7 +119,7 @@ class RadialStatus : public Fl_Slider
         if ( _recording )
         {
           cairo_set_source_rgba(cr,1.0,0.0,0.0, 0.8);
-          cairo_arc(cr, x + xc, y + yc, 30, 0, 2 * 3.1415);
+          cairo_arc(cr, x + xc, y + yc, radius-4, 0, 2 * 3.1415);
           cairo_fill_preserve(cr);
           cairo_set_source_rgba(cr,0.0,0.0,0.0, 0.8);
           cairo_set_line_width(cr, 2.2);

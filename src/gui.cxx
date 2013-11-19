@@ -26,6 +26,8 @@ extern Jack* jack;
 // include the header.c file in the planning dir:
 // its the GIMP .c export of the LUPPP header image 
 #include "../planning/header.c"
+#include "../planning/luppp.c"
+#include "../planning/bg.c"
 
 // Hack, move to gtrack.cpp
 int GTrack::privateID = 0;
@@ -322,7 +324,9 @@ Gui::Gui(std::string argZero) :
   window.color(FL_BLACK);
   window.label("Luppp");
   window.callback( close_cb, 0 );
-  window.size_range(1024,  720);
+  window.size_range( 800, 500 );
+  
+  window.color( fl_rgb_color (7,7,7) );
   
   /*
   tooltipLabel = new Fl_2(130, 25, 500, 20, "");
@@ -332,15 +336,49 @@ Gui::Gui(std::string argZero) :
   //tooltipLabel->align( FL_ALIGN_TOP_LEFT );
   */
   
-  
-  Avtk::Image* headerImage = new Avtk::Image(0,0,1110,36,"header.png");
-  headerImage->setPixbuf( header.pixel_data, 4 );
-  headerImage->callback( gui_header_callback, this );
-  
+  // horizontal no-resize-images group
+  Fl_Group* headerImages = new Fl_Group( 0, 0, 1110, 650, "header");
+  {
+    //Fl_Pack* vHeaderImages = new Fl_Pack( 0, 0, 1110, 650, "verticalHeader");
+    {
+      Avtk::Image* bgImage = new Avtk::Image(0,0,1920,36,"bg");
+      bgImage->setPixbuf( bgImg.pixel_data, 4 );
+      
+      Avtk::Image* lupppImage = new Avtk::Image(0,0,130,36,"luppp");
+      lupppImage->setPixbuf( lupppImg.pixel_data, 4 );
+      lupppImage->callback( gui_header_callback, this );
+      
+      Avtk::Image* headerImage = new Avtk::Image( window.w() - 270,0,270,36,"header");
+      headerImage->setPixbuf( header.pixel_data, 4 );
+      headerImage->stickToRight = true;
+      
+      
+      Fl_Box* box = new Fl_Box( 130, 0, 400, 36 );
+      headerImages->resizable( box );
+      
+      //vHeaderImages->set_vertical();
+      //vHeaderImages->relayout();
+    }
+    //vHeaderImages->end();
+    
+    Fl_Box* box = new Fl_Box( 130, 0, 400, 36 );
+    headerImages->resizable( box );
+  }
+  headerImages->end();
   
   // create a new "Group" with all Luppp GUI contents, for resizing
-  lupppGroup = new Fl_Group( 0, 0, 1024, 720, "Luppp");
+  lupppGroup = new Fl_Group( 0, 0, 1110, 650, "Luppp");
   {
+    // everything in here will have resize() called when main window is resized
+    
+    /*
+    Fl_Bitmap* headImg = new Fl_Bitmap( (unsigned char*)header.pixel_data, 1110, 36 );
+    
+    Fl_Box* pic_box = new Fl_Box(0,0,1110,36);
+    pic_box->image( headImg );
+    pic_box->redraw();
+    */
+    
     int i = 0;
     for (; i < NTRACKS; i++ )
     {

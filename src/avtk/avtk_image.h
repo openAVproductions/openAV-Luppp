@@ -31,6 +31,9 @@
 
 #include <FL/fl_draw.H>
 
+#include "../gui.hxx"
+extern Gui* gui;
+
 using namespace std;
 
 namespace Avtk
@@ -51,7 +54,12 @@ class Image : public Fl_Widget
       
       bits = -1;
       imageDataPtr = 0;
+      
+      stickToRight = false;
     }
+    
+    // used to keep images on the right hand side of the window
+    bool stickToRight;
     
     void setPixbuf(const unsigned char* data, int b )
     {
@@ -75,11 +83,22 @@ class Image : public Fl_Widget
     
     void resize(int X, int Y, int W, int H)
     {
+      if ( stickToRight )
+      {
+        x = gui->getWindowWidth() - w;
+      }
+      
+      /*
       Fl_Widget::resize(X,Y,W,H);
+      
+      
       x = X;
       y = Y;
       w = W;
       h = H;
+      */
+      
+      
       redraw();
     }
     
