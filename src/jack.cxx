@@ -47,6 +47,16 @@ void Jack::setup(std::string name)
   }
 }
 
+void Jack::resetMidiBindingState()
+{
+  // MIDI binding stuff
+  bindingEventRecordEnable = false;
+  bindingEventType = EVENT_NULL;
+  bindingTrack = -2;
+  bindingScene = -1;
+  bindingSend  = -1;
+  bindingActive= -1;
+}
 
 Jack::Jack( std::string name ) :
   client( jack_client_open ( name.c_str(), JackNullOption , 0 , 0 ) ),
@@ -66,12 +76,7 @@ Jack::Jack( std::string name ) :
   // CAREFUL: setup the size by default: otherwise malloc() is called on push_back
   midiIO.reserve( CONTROLLERS_PREALLOC );
   
-  
-  // MIDI binding stuff
-  bindingEventRecordEnable = false;
-  bindingTrack = 0;
-  bindingEventType = EVENT_NULL;
-  
+  resetMidiBindingState();
   
   //GenericMIDI* tmp = new GenericMIDI("akai_apc.ctlr");
   //tmp->registerComponents();

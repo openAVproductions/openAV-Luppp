@@ -19,6 +19,20 @@ const char* EventTimeTempoTap::prettyName = "tempo_tap";
 const char* EventGridEvent::prettyName = "grid:event";
 const char* EventGridLaunchScene::prettyName = "grid:launch_scene";
 
+EVENT_TYPE Event::getTypeFromName(const char* name)
+{
+  for(int i = 0; i < EVENT_TYPE_FINAL; i++)
+  {
+    const char* tmp = getPrettyName(i);
+    if ( tmp )
+    {
+      if ( strcmp( name, tmp ) == 0 ) {
+        return (EVENT_TYPE)i;
+      }
+    }
+  }
+}
+
 const char* Event::getPrettyName( int type )
 {
   switch ( type )

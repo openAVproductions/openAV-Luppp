@@ -100,11 +100,15 @@ namespace Event
     
     QUIT,
     
+    // for keeping loop index's inside the enum
+    EVENT_TYPE_FINAL, 
   };
   
   /// returns the pretty name of an event
   const char* getPrettyName( int type );
   
+  /// returns an EVENT_TYPE from a pretty name
+  EVENT_TYPE getTypeFromName(const char* name);
 };
 
 using namespace Event;

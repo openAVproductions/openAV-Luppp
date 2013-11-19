@@ -403,17 +403,17 @@ void GenericMIDI::midi(unsigned char* midi)
   // create new MIDI binding?
   if ( jack->bindingEventRecordEnable )
   {
-    
     LUPPP_NOTE("making binding from: %i %i %f", status, data, value );
-    
     setupBinding( jack->bindingEventType, status, data,
                   jack->bindingTrack,
                   jack->bindingScene,
                   jack->bindingSend,
                   jack->bindingActive );
     
+    // reset jack state, so bindings defaults are setup after each creation
+    jack->resetMidiBindingState();
+    
     // binding is now created, so disable GUI binding enable button
-    jack->bindingEventRecordEnable = false;
     EventControllerBindingEnable e( getID(), false );
     writeToGuiRingbuffer( &e );
     
@@ -733,6 +733,9 @@ void GenericMIDI::setupBinding( LupppAction eventType, int midiStatus, int midiD
 
 Binding* GenericMIDI::setupBinding( cJSON* binding )
 {
+  // include Event::getPrettyName, and avoid Event::TRACK_VOLUME etc each time
+  using namespace Event;
+  
   // create binding, then fill in data as from JSON.
   Binding* tmp = new Binding();
   
@@ -754,36 +757,41 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
   tmp->status = statusJson->valueint;
   tmp->data   = dataJson->valueint;
   
-  if ( strcmp( actionJson->valuestring, "track:volume" ) == 0 ) {
+  tmp->action = Event::getTypeFromName(actionJson->valuestring);
+  tmp->send = Event::INPUT_TO_XSIDE;
+  
+  /*
+  if ( strcmp( actionJson->valuestring, getPrettyName(TRACK_VOLUME) ) == 0 ) {
     tmp->action = Event::TRACK_VOLUME;
-  } else if ( strcmp( actionJson->valuestring, "track:send" ) == 0 ) {
+  } else if ( strcmp( actionJson->valuestring, getPrettyName(TRACK_SEND) ) == 0 ) {
     tmp->action = Event::TRACK_SEND;
+    // FIXME: read this from the .ctlr file!!
     tmp->send = Event::SEND_POSTFADER;
   }
-  else if ( strcmp( actionJson->valuestring, "input:volume" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, getPrettyName(MASTER_INPUT_VOL) ) == 0 ) {
     tmp->action = Event::MASTER_INPUT_VOL;
   }
-  else if ( strcmp( actionJson->valuestring, "input:toMix" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, getPrettyName(MASTER_INPUT_TO) ) == 0 ) {
     tmp->action = Event::MASTER_INPUT_TO;
     tmp->send = Event::INPUT_TO_MIX;
   }
-  else if ( strcmp( actionJson->valuestring, "input:toMixActive" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, getPrettyName(MASTER_INPUT_TO_ACTIVE) ) == 0 ) {
     tmp->action = Event::MASTER_INPUT_TO_ACTIVE;
     tmp->send = Event::INPUT_TO_MIX;
   }
-  else if ( strcmp( actionJson->valuestring, "input:toSend" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, getPrettyName(MASTER_INPUT_TO) ) == 0 ) {
     tmp->action = Event::MASTER_INPUT_TO;
     tmp->send = Event::INPUT_TO_SEND;
   }
-  else if ( strcmp( actionJson->valuestring, "input:toSendActive" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, "input:to_send_active" ) == 0 ) {
     tmp->action = Event::MASTER_INPUT_TO_ACTIVE;
     tmp->send = Event::INPUT_TO_SEND;
   }
-  else if ( strcmp( actionJson->valuestring, "input:toXSide" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, "input:to_x_side" ) == 0 ) {
     tmp->action = Event::MASTER_INPUT_TO;
     tmp->send = Event::INPUT_TO_XSIDE;
   }
-  else if ( strcmp( actionJson->valuestring, "input:toXSideActive" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, "input:to_x_side_active" ) == 0 ) {
     tmp->action = Event::MASTER_INPUT_TO_ACTIVE;
     tmp->send = Event::INPUT_TO_XSIDE;
   }
@@ -791,27 +799,29 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
     tmp->action = Event::TRACK_SEND;
     tmp->send = Event::SEND_XSIDE;
   }
-  else if ( strcmp( actionJson->valuestring, "track:sendactive" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, "track:send_active" ) == 0 ) {
     tmp->action = Event::TRACK_SEND_ACTIVE;
     tmp->send = Event::SEND_POSTFADER;
   }
-  else if ( strcmp( actionJson->valuestring, "track:keyactive" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, "track:key_active" ) == 0 ) {
     tmp->action = Event::TRACK_SEND_ACTIVE;
     tmp->send = Event::SEND_KEY;
   }
-  else if ( strcmp( actionJson->valuestring, "track:recordarm" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, "track:record_arm" ) == 0 ) {
     tmp->action = Event::TRACK_RECORD_ARM;
   }
   
-  else if ( strcmp( actionJson->valuestring, "track:clippressed" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, "grid:pressed" ) == 0 ) {
     tmp->action = Event::GRID_EVENT;
     tmp->active = 1; // press event
   }
-  else if ( strcmp( actionJson->valuestring, "track:clipreleased" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, "grid:released" ) == 0 ) {
     tmp->action = Event::GRID_EVENT;
     tmp->active = 0; // release event
   }
-  else if ( strcmp( actionJson->valuestring, "track:clipstate" ) == 0 ) {
+  */
+  
+  if ( strcmp( actionJson->valuestring, "grid:clipstate" ) == 0 ) {
     tmp->action = Event::GRID_STATE;
     
     // read "state", to bind multiple values depending on clip state
@@ -852,7 +862,7 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
     */
   }
   
-  else if ( strcmp( actionJson->valuestring, "gridlogic:launchscene" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, "gridlogic:launch_scene" ) == 0 ) {
     tmp->action = Event::GRID_LAUNCH_SCENE;
   }
   else if ( strcmp( actionJson->valuestring, "gridlogic:selectclipevent" ) == 0 ) {

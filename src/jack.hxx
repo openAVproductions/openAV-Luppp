@@ -80,6 +80,8 @@ class Jack
       return client;
     };
     
+    void resetMidiBindingState();
+    
     // MIDI binding creation
     bool bindingEventRecordEnable;
     int bindingEventType;
