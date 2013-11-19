@@ -196,7 +196,7 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
     //ctlrButton = new Avtk::Button(x + 110, y + 275, 100, 25, "Load");
     removeController = new Avtk::Button(x + 110, y + h - 27, 100, 25, "Remove");
     
-    scroll = new Fl_Scroll( x + 5, y + 75, 395, 70 );
+    scroll = new Fl_Scroll( x + 5, y + 75, 395, 270 );
     {
       bindingsPack = new Fl_Pack( x + 5, y + 75, 340, 10);
       bindingsPack->end();
