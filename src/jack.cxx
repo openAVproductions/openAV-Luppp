@@ -145,6 +145,13 @@ Jack::Jack( std::string name ) :
   masterVol = 0.0f;
   returnVol = 1.0f;
   
+  inputToMixEnable  = false;
+  inputToSendEnable = false;
+  inputToKeyEnable  = false;
+  inputToMixVol     = 0.f;
+  inputToSendVol    = 0.f;
+  inputToXSideVol   = 0.f;
+  
   /// prepare internal buffers
   buffers.audio[Buffers::SEND]           = new float[ buffers.nframes ];
   buffers.audio[Buffers::SIDECHAIN_KEY]  = new float[ buffers.nframes ];
