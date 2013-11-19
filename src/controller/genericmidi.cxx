@@ -698,8 +698,14 @@ void GenericMIDI::removeBinding( int bindingID )
   {
     if ( midiToAction.at(i)->ID == bindingID )
     {
-      LUPPP_NOTE("MIDI binding REMOVED with bindingID %i", bindingID );
-      // CRITICAL FIXME
+      //LUPPP_NOTE("MIDI binding REMOVED with bindingID %i\n", bindingID );
+      Binding* tmp = midiToAction.at(i);
+      midiToAction.erase( midiToAction.begin()+i );
+      
+      if ( tmp )
+      {
+        delete tmp;
+      }
       return;
     }
   }
