@@ -168,6 +168,11 @@ static void deleteBindingFromController(Fl_Widget* w, void* ud)
   
   EventControllerBindingRemove e( self->controllerID, tmp );
   writeToDspRingbuffer( &e );
+  
+  // remove "this" widget (and its parent Pack) from the list of MIDI bindings:
+  self->bindingsPack->remove( w->parent() );
+  self->bindingsPack->redraw();
+  self->scroll->redraw();
 }
 
 

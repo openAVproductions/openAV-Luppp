@@ -46,6 +46,10 @@ class ControllerUI
     char* name;
     
     OptionsWindow* optionsWindow;
+    
+    // public to redraw when removing from static
+    Fl_Scroll* scroll;
+    Fl_Pack* bindingsPack;
   
   private:
     // bindings
@@ -56,8 +60,6 @@ class ControllerUI
     Fl_Box* authorLabel;
     Fl_Box* emailLabel;
     
-    Fl_Scroll* scroll;
-    Fl_Pack* bindingsPack;
     std::vector<int> bindingID;
     
     Fl_Box* targetLabel;
