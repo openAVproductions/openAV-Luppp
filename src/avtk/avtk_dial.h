@@ -42,14 +42,6 @@ class Dial : public Fl_Slider
       
       drawLabel = true;
       
-      // * 0.9 for line width to remain inside redraw area
-      if ( w > h )
-        radius = (h / 2.f)*0.9;
-      else
-        radius = (w / 2.f)*0.9;
-      
-      lineWidth = 1.4 + radius / 12.f;
-      
       mouseClickedY = 0;
       mouseClicked = false;
       
@@ -78,9 +70,21 @@ class Dial : public Fl_Slider
           draw_label();
         }
         
+        // * 0.9 for line width to remain inside redraw area
+        if ( w > h )
+          radius = (h / 2.f)*0.9;
+        else
+          radius = (w / 2.f)*0.9;
+        
+        lineWidth = 1.4 + radius / 12.f;
+        
         cairo_t *cr = Fl::cairo_cc();
         
         cairo_save( cr );
+        
+        cairo_rectangle( cr, x, y, w, h );
+        cairo_set_source_rgba(cr, 1.1, 0.1, 0.1, 0 );
+        cairo_fill(cr);
         
         cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
         cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
