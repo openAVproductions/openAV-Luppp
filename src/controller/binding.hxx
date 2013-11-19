@@ -12,7 +12,9 @@ class Binding
 {
   public:
     Binding() : status(0), data(0), action(0), active(-1),
-                track(-2),scene(-1),send(-1) {}
+                track(-2),scene(-1),send(-1) { ID = privateID++; }
+    
+    int ID;
     
     unsigned char status;
     unsigned char data;
@@ -29,6 +31,11 @@ class Binding
     
     /// maps from Gridlogic::State to MIDI output value from binding
     std::map<int,int> clipStateMap;
+  
+  private:
+    /// static int counter to allow deleting this specific instance
+    static int privateID;
+    
 };
 
 #endif

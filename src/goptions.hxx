@@ -56,6 +56,7 @@ class ControllerUI
     Fl_Box* authorLabel;
     Fl_Box* emailLabel;
     
+    Fl_Scroll* scroll;
     Fl_Pack* bindingsPack;
     
     Fl_Box* targetLabel;

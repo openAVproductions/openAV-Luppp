@@ -177,13 +177,15 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
     //ctlrButton = new Avtk::Button(x + 110, y + 275, 100, 25, "Load");
     removeController = new Avtk::Button(x + 110, y + h - 27, 100, 25, "Remove");
     
-    Fl_Scroll* s = new Fl_Scroll( x + 5, y + 75, 400, 180 );
-    s->box( FL_DOWN_FRAME );
-    bindingsPack = new Fl_Pack( x + 5, y + 75, 340, 10);
-    bindingsPack->end();
-    bindingsPack->spacing( 2 );
-    
-    s->end();
+    scroll = new Fl_Scroll( x + 5, y + 75, 395, 70 );
+    {
+      bindingsPack = new Fl_Pack( x + 5, y + 75, 340, 10);
+      bindingsPack->end();
+      bindingsPack->spacing( 2 );
+    }
+    scroll->end();
+    scroll->box( FL_DOWN_FRAME );
+    scroll->type( Fl_Scroll::VERTICAL_ALWAYS );
   }
   widget->end();
   
@@ -254,7 +256,7 @@ void ControllerUI::addBinding( Binding* b )
   }
   
   // create a horizontal pack, add that to the bindingsPack
-  Fl_Pack* tmp = new Fl_Pack( 35, 35, 25, 25 );
+  Fl_Pack* tmp = new Fl_Pack( 35, 35, 25, 25);
   {
     tmp->type( Fl_Pack::HORIZONTAL );
     tmp->spacing( 2 );
@@ -294,6 +296,8 @@ void ControllerUI::addBinding( Binding* b )
     Fl_Button* but = new Fl_Button(35, 35, 25, 25, "@square");
     Fl_Box* b = new Fl_Box(35, 35, 400, 25, strdup(s.str().c_str()) );
     
+    b->align( FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
+    
     but->redraw();
     b->redraw();
   }
@@ -301,7 +305,12 @@ void ControllerUI::addBinding( Binding* b )
   
   bindingsPack->add( tmp );
   
+  bindingsPack->resize( bindingsPack->x(),bindingsPack->y(),bindingsPack->w(),bindingsPack->children() * 36 );
+  
   bindingsPack->redraw();
+  
+  scroll->redraw();
+  
 }
 
 void ControllerUI::addBindings( GenericMIDI* c )

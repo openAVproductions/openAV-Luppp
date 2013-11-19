@@ -15,6 +15,8 @@
 
 extern Jack* jack;
 
+int Binding::privateID = 0;
+
 GenericMIDI::GenericMIDI(int waste, std::string n) :
   Controller(),
   MidiIO()
