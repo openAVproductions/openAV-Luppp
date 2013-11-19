@@ -4,9 +4,13 @@
 
 #include "eventhandler.hxx"
 
+#include <FL/Fl_Button.H>
+
 #include "controller/binding.hxx"
 #include "controller/controller.hxx"
 #include "controller/genericmidi.hxx"
+
+#include "event.hxx"
 
 #include "gui.hxx"
 extern Gui* gui;
@@ -174,11 +178,16 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
     removeController = new Avtk::Button(x + 110, y + h - 27, 100, 25, "Remove");
     
     Fl_Scroll* s = new Fl_Scroll( x + 5, y + 75, 400, 180 );
-    s->box( FL_UP_BOX );
-    bindings = new Avtk::Bindings( x + 5, y + 35, 398, 10 );
+    s->box( FL_DOWN_FRAME );
+    bindingsPack = new Fl_Pack( x + 5, y + 75, 340, 10);
+    bindingsPack->end();
+    bindingsPack->spacing( 2 );
+    
     s->end();
   }
   widget->end();
+  
+  widget->redraw();
   
   // save the controller ID this ControllerUI represents
   controllerID = ID;
@@ -234,19 +243,39 @@ void ControllerUI::setBindEnable( bool b )
 void ControllerUI::addBinding( Binding* b )
 {
   // add individual bindings as they're made
+  LUPPP_NOTE("new binding, action: %s, ", Event::getPrettyName( b->action ) );
+  
+  // create a horizontal pack, add that to the bindingsPack
+  Fl_Pack* tmp = new Fl_Pack( 35, 35, 25, 25 );
+  {
+    tmp->type( Fl_Pack::HORIZONTAL );
+    tmp->spacing( 2 );
+    
+    stringstream s;
+    s << Event::getPrettyName( b->action ) << " " << b->track + 1;
+    
+    Fl_Button* but = new Fl_Button(35, 35, 25, 25, "@square");
+    Fl_Box* b = new Fl_Box(35, 35, 400, 25, strdup(s.str().c_str()) );
+    
+    but->redraw();
+    b->redraw();
+  }
+  tmp->end();
+  
+  bindingsPack->add( tmp );
+  
+  bindingsPack->redraw();
 }
 
 void ControllerUI::addBindings( GenericMIDI* c )
 {
-  /*
   // FIXME: add binding to Avtk::Binding here
   std::vector<Binding*> bindingVector= c->getMidiToAction();
   
   for(unsigned int i = 0; i < bindingVector.size() && i < 5; i++ )
   { 
-    bindings->add( bindingVector.at(i) );
+    addBinding( bindingVector.at(i) );
   }
-  */
 }
 
 ControllerUI::~ControllerUI()

@@ -7,6 +7,7 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Tabs.H>
+#include <FL/Fl_Pack.H>
 #include <FL/Fl_Table.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Double_Window.H>
@@ -54,6 +55,8 @@ class ControllerUI
     std::string email;
     Fl_Box* authorLabel;
     Fl_Box* emailLabel;
+    
+    Fl_Pack* bindingsPack;
     
     Fl_Box* targetLabel;
     Fl_Box* targetLabelStat;
