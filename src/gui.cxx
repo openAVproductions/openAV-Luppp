@@ -98,6 +98,13 @@ static void gui_header_callback(Fl_Widget *w, void *data)
     { 0 }
   };
   
+  // check for NSM running, deactivate new / save / load if yes
+  if ( gui->getNsm() )
+  {
+    rclick_menu[1].deactivate();
+    rclick_menu[2].deactivate();
+  }
+  
   Fl_Menu_Item *m = (Fl_Menu_Item*) rclick_menu->popup( 10, 38, 0, 0, 0);
   
   if ( !m )
