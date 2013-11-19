@@ -12,6 +12,7 @@
 #include "jack.hxx"
 #include "event.hxx"
 #include "controller/controller.hxx"
+#include "controller/genericmidi.hxx"
 #include "eventhandler.hxx"
 
 #include "logic.hxx"
@@ -290,6 +291,26 @@ void handleDspEvents()
             EventControllerBindingEnable ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventControllerBindingEnable) );
             jack->bindingEventRecordEnable = ev.enable;
+          } break; }
+        
+        
+        case Event::CONTROLLER_BINDING_REMOVE: {
+          if ( availableRead >= sizeof(EventControllerBindingRemove) ) {
+            EventControllerBindingRemove ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventControllerBindingRemove) );
+            // get Controller* from controllerID
+            Controller* c =jack->getControllerUpdater()->getController(ev.controllerID);
+            // dynamic cast to check for GenericMIDI controller
+            GenericMIDI* g = dynamic_cast<GenericMIDI*>(c);
+            if ( g )
+            {
+              // kick out BindingID
+              g->removeBinding( ev.bindingID );
+            }
+            else
+            {
+              // GUI print notify of error removing binding
+            }
           } break; }
         
         case Event::CONTROLLER_INSTANCE_GET_TO_WRITE: {

@@ -692,6 +692,19 @@ int GenericMIDI::loadController( std::string file )
   return LUPPP_RETURN_OK;
 }
 
+void GenericMIDI::removeBinding( int bindingID )
+{
+  for(unsigned int i = 0; i < midiToAction.size(); i++)
+  {
+    if ( midiToAction.at(i)->ID == bindingID )
+    {
+      LUPPP_NOTE("MIDI binding REMOVED with bindingID %i", bindingID );
+      // CRITICAL FIXME
+      return;
+    }
+  }
+}
+
 void GenericMIDI::setupBinding( LupppAction eventType, int midiStatus, int midiData, int track, int scene, int send, int active )
 {
   LUPPP_NOTE("MIDI binding, track %d, from eventType %d to %d, %d", track, eventType, midiStatus, midiData );

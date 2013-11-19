@@ -96,6 +96,7 @@ namespace Event
     CONTROLLER_BINDING_ENABLE,
     CONTROLLER_BINDING_TARGET,
     CONTROLLER_BINDING_MADE,
+    CONTROLLER_BINDING_REMOVE,
     
     QUIT,
     
@@ -131,6 +132,17 @@ class EventControllerBindingMade : public EventBase
     int controllerID;
     void* binding;
     EventControllerBindingMade(int id = 0, void* b=0): controllerID(id), binding(b){}
+};
+
+class EventControllerBindingRemove : public EventBase
+{
+  public:
+    int type() { return int(CONTROLLER_BINDING_REMOVE); }
+    uint32_t size() { return sizeof(EventControllerBindingRemove); }
+    int controllerID;
+    int bindingID;
+    void* binding;
+    EventControllerBindingRemove(int ctlrID = 0, int bindID=0, void* b=0): controllerID(ctlrID), bindingID(bindID), binding(b){}
 };
 
 class EventControllerBindingEnable : public EventBase

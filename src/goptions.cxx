@@ -166,8 +166,8 @@ static void deleteBindingFromController(Fl_Widget* w, void* ud)
   s >> tmp;
   LUPPP_NOTE("CtlrID %i: Deleting binding with ID %i", self->controllerID, tmp );
   
-  
-  
+  EventControllerBindingRemove e( self->controllerID, tmp );
+  writeToDspRingbuffer( &e );
 }
 
 

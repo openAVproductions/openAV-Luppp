@@ -70,6 +70,7 @@ class GenericMIDI : public Controller, public MidiIO
     
     // for adding bindings from MIDI / GUI event pair
     void setupBinding( LupppAction eventType, int midiStatus, int midiData, int track, int scene, int send, int active );
+    void removeBinding( int bindingID );
     
   private:
     STATUS stat;
