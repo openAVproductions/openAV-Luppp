@@ -322,11 +322,7 @@ Gui::Gui(std::string argZero) :
   window.color(FL_BLACK);
   window.label("Luppp");
   window.callback( close_cb, 0 );
-  window.size_range(1110,  650);
-  
-  Avtk::Image* headerImage = new Avtk::Image(0,0,1110,36,"header.png");
-  headerImage->setPixbuf( header.pixel_data, 4 );
-  headerImage->callback( gui_header_callback, this );
+  window.size_range(1024,  720);
   
   /*
   tooltipLabel = new Fl_2(130, 25, 500, 20, "");
@@ -336,18 +332,29 @@ Gui::Gui(std::string argZero) :
   //tooltipLabel->align( FL_ALIGN_TOP_LEFT );
   */
   
-  //window.resizable( headerImage );
   
-  int i = 0;
-  for (; i < NTRACKS; i++ )
+  Avtk::Image* headerImage = new Avtk::Image(0,0,1110,36,"header.png");
+  headerImage->setPixbuf( header.pixel_data, 4 );
+  headerImage->callback( gui_header_callback, this );
+  
+  
+  // create a new "Group" with all Luppp GUI contents, for resizing
+  lupppGroup = new Fl_Group( 0, 0, 1024, 720, "Luppp");
   {
-    stringstream s;
-    s << "Track " << i+1;
-    //printf("track name %s\n", s.str().c_str() );
-    tracks.push_back( new GTrack(8 + i * 118, 40, 110, 600, s.str().c_str() ) );
+    int i = 0;
+    for (; i < NTRACKS; i++ )
+    {
+      stringstream s;
+      s << "Track " << i+1;
+      //printf("track name %s\n", s.str().c_str() );
+      tracks.push_back( new GTrack(8 + i * 118, 40, 110, 600, s.str().c_str() ) );
+    }
+    
+    master = new GMasterTrack(8 + i * 118, 40, 150, 600, "Master");
   }
+  lupppGroup->end();
   
-  master = new GMasterTrack(8 + i * 118, 40, 150, 600, "Master");
+  window.resizable( lupppGroup );
   
   window.end();
   

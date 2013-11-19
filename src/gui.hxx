@@ -67,6 +67,8 @@ class Gui
   private:
     Fl_Double_Window    window;
     
+    Fl_Group* lupppGroup; 
+    
     OptionsWindow*    optionWindow;
     
     AudioEditor*        audioEditor;
