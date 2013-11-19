@@ -87,7 +87,7 @@ static void addNewController(Fl_Widget* w, void* ud)
   }
   else
   {
-    c = new GenericMIDI();
+    return;
   }
   
   
@@ -242,8 +242,16 @@ void ControllerUI::setBindEnable( bool b )
 
 void ControllerUI::addBinding( Binding* b )
 {
+  if ( b->action )
+  {
   // add individual bindings as they're made
-  LUPPP_NOTE("new binding, action: %s, ", Event::getPrettyName( b->action ) );
+    LUPPP_NOTE("new binding, action: %s, ", Event::getPrettyName( b->action ) );
+  }
+  else
+  {
+    LUPPP_WARN("new binding, action: ==  EVENT_NULL" );
+    return;
+  }
   
   // create a horizontal pack, add that to the bindingsPack
   Fl_Pack* tmp = new Fl_Pack( 35, 35, 25, 25 );
@@ -252,7 +260,22 @@ void ControllerUI::addBinding( Binding* b )
     tmp->spacing( 2 );
     
     stringstream s;
-    s << Event::getPrettyName( b->action ) << " " << b->track + 1;
+    s << Event::getPrettyName( b->action );
+    
+    if (b->track != -2)
+      s << " Track:" << b->track + 1;
+    
+    if (b->scene != -1)
+      s << " Scene:" << b->scene + 1;
+      
+    if ( b->send == Event::SEND_POSTFADER )
+      s << " Post-fader Send";
+    if ( b->send == Event::SEND_XSIDE )
+      s << " Sidechain Crossfade";
+    if ( b->send == Event::SEND_KEY )
+      s << " Sidechain Key";
+    
+    
     
     Fl_Button* but = new Fl_Button(35, 35, 25, 25, "@square");
     Fl_Box* b = new Fl_Box(35, 35, 400, 25, strdup(s.str().c_str()) );
