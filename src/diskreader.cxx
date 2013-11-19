@@ -96,7 +96,6 @@ int DiskReader::showAudioEditor(AudioBuffer* ab)
     // handle "cancel" return
     if ( ab->getBeats() == -1 )
     {
-      LUPPP_WARN("cancel clicked, deleting audiobuffer" );
       return LUPPP_RETURN_ERROR;
     }
   }
@@ -112,6 +111,26 @@ int DiskReader::loadSample( int track, int scene, string path )
   std::vector<float> buf( infile.frames() );
   infile.read( &buf[0] , infile.frames() );
   
+  LUPPP_NOTE("Loading file with  %i chnls, frames %i", infile.channels(), infile.frames() );
+  
+  /// kick stereo channel?
+  int chnls = infile.channels();
+  if ( chnls > 1 )
+  {
+    // we're gonna kick all samples that are *not* channel 1
+    std::vector<float> tmp( buf.size() / chnls );
+    
+    LUPPP_NOTE("Non mono file: %i chnls found, old size %i, new size %i ", infile.channels(), buf.size(), tmp.size() );
+    
+    for(size_t i = 0; i < tmp.size(); i++ )
+    {
+      tmp.at(i) = buf.at( i * chnls );
+    }
+    
+    
+    // swap the buffers
+    buf.swap( tmp );
+  }
   
   /// resample?
   if ( infile.samplerate() != gui->samplerate )
@@ -147,6 +166,7 @@ int DiskReader::loadSample( int track, int scene, string path )
   
   //cout << "DiskReader::loadSample() " << path << endl;
   
+  bool loadableBuffer = false;
   
   if ( infile.frames() > 0 )
   {
@@ -190,15 +210,25 @@ int DiskReader::loadSample( int track, int scene, string path )
         cJSON* name  = cJSON_GetObjectItem( sample, "name" );
         //cout << "Clip @ " << track << " " << scene << " gets " << beats->valuedouble << " beats."<< endl;
         if ( beats )
+        {
+          loadableBuffer = true;
           ab->setBeats( beats->valuedouble );
+        }
         if ( name )
           gui->getTrack(track)->getClipSelector()->clipName( scene, name->valuestring );
       }
-      else
+      
+      // if we don't find the beats from audio.cfg, show dialog
+      if ( loadableBuffer == false )
       {
         cout << "Warning: audio.cfg has no entry for beats." << endl;
-        int error = showAudioEditor( ab );
-        if ( error == LUPPP_RETURN_ERROR )
+        int ret = showAudioEditor( ab );
+        if ( ret == LUPPP_RETURN_OK )
+        {
+          // flag that we can load this sample OK
+          loadableBuffer = true;
+        }
+        else
         {
           delete ab;
         }
@@ -216,13 +246,21 @@ int DiskReader::loadSample( int track, int scene, string path )
       int error = showAudioEditor( ab );
       if ( error == LUPPP_RETURN_ERROR )
       {
+        LUPPP_WARN("cancel clicked, deleting audiobuffer" );
         delete ab;
       }
     }
     
-    // write audioBuffer to DSP
-    EventLooperLoad e = EventLooperLoad( track, scene, ab );
-    writeToDspRingbuffer( &e );
+    if ( loadableBuffer )
+    {
+      // write audioBuffer to DSP
+      EventLooperLoad e = EventLooperLoad( track, scene, ab );
+      writeToDspRingbuffer( &e );
+    }
+    else
+    {
+      LUPPP_NOTE("AudioBuffer not loaded, missing beats info and dialog was Canceled" );
+    }
   }
   
   return LUPPP_RETURN_OK;
