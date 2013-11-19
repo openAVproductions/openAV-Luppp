@@ -11,7 +11,8 @@ typedef int LupppAction;
 class Binding
 {
   public:
-    Binding() : status(0), data(0), action(0), active(false),track(-2),scene(-1),send(-1){}
+    Binding() : status(0), data(0), action(0), active(-1),
+                track(-2),scene(-1),send(-1) {}
     
     unsigned char status;
     unsigned char data;

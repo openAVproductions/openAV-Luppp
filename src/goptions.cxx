@@ -260,7 +260,15 @@ void ControllerUI::addBinding( Binding* b )
     tmp->spacing( 2 );
     
     stringstream s;
-    s << Event::getPrettyName( b->action );
+    
+    if ( b->action == MASTER_VOL )
+      s << "Master Volume";
+    else if ( false )
+      s << "stuff";
+    else
+      s << Event::getPrettyName( b->action );
+    
+    
     
     if (b->track != -2)
       s << " Track:" << b->track + 1;
@@ -275,7 +283,13 @@ void ControllerUI::addBinding( Binding* b )
     if ( b->send == Event::SEND_KEY )
       s << " Sidechain Key";
     
-    
+    if ( b->active != -1)
+    {
+      if ( b->active == true )
+        s << " On";
+      if ( b->active == false )
+      s << " Off";
+    }
     
     Fl_Button* but = new Fl_Button(35, 35, 25, 25, "@square");
     Fl_Box* b = new Fl_Box(35, 35, 400, 25, strdup(s.str().c_str()) );
