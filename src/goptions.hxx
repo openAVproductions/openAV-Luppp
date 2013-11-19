@@ -58,6 +58,7 @@ class ControllerUI
     
     Fl_Scroll* scroll;
     Fl_Pack* bindingsPack;
+    std::vector<int> bindingID;
     
     Fl_Box* targetLabel;
     Fl_Box* targetLabelStat;

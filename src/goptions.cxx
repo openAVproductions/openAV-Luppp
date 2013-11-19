@@ -157,6 +157,20 @@ static void writeControllerFile(Fl_Widget* w, void* data)
 }
 
 
+static void deleteBindingFromController(Fl_Widget* w, void* ud)
+{
+  ControllerUI* self = (ControllerUI*)ud;
+  stringstream s;
+  s << w->label();
+  int tmp;
+  s >> tmp;
+  LUPPP_NOTE("CtlrID %i: Deleting binding with ID %i", self->controllerID, tmp );
+  
+  
+  
+}
+
+
 ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
 {
   name = strdup(n.c_str());
@@ -255,6 +269,9 @@ void ControllerUI::addBinding( Binding* b )
     return;
   }
   
+  // push the bindingID onto the vector
+  bindingID.push_back( b->ID );
+  
   // create a horizontal pack, add that to the bindingsPack
   Fl_Pack* tmp = new Fl_Pack( 35, 35, 25, 25);
   {
@@ -293,16 +310,22 @@ void ControllerUI::addBinding( Binding* b )
       s << " Off";
     }
     
-    Fl_Button* but = new Fl_Button(35, 35, 25, 25, "@square");
-    Fl_Box* b = new Fl_Box(35, 35, 400, 25, strdup(s.str().c_str()) );
-    
-    b->align( FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
-    
+    // button to remove a binding, uses bindingsID vector to get unique number
+    stringstream id;
+    id << b->ID;
+    Fl_Button* but = new Fl_Button(35, 35, 25, 25, strdup(id.str().c_str() ) );
+    but->callback( deleteBindingFromController, this );
     but->redraw();
+    
+    
+    Fl_Box* b = new Fl_Box(35, 35, 400, 25, strdup(s.str().c_str()) );
+    b->align( FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
     b->redraw();
   }
   tmp->end();
   
+  // push the binding to the UI pack, *and* store its binding ID in the same
+  // array element in the bindingID vector. Used to remove bindings
   bindingsPack->add( tmp );
   
   bindingsPack->resize( bindingsPack->x(),bindingsPack->y(),bindingsPack->w(),bindingsPack->children() * 36 );
