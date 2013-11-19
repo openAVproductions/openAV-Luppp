@@ -109,9 +109,9 @@ int DiskReader::loadSample( int track, int scene, string path )
   /// load the sample
   SndfileHandle infile( path, SFM_READ );
   std::vector<float> buf( infile.frames() );
-  infile.read( &buf[0] , infile.frames() );
+  infile.read( (float*)&buf[0] , infile.frames() );
   
-  LUPPP_NOTE("Loading file with  %i chnls, frames %i", infile.channels(), infile.frames() );
+  LUPPP_NOTE("Loading file with  %i chnls, frames %i,buffer size %i", infile.channels(), infile.frames(), buf.size() );
   
   /// kick stereo channel?
   int chnls = infile.channels();
@@ -126,7 +126,6 @@ int DiskReader::loadSample( int track, int scene, string path )
     {
       tmp.at(i) = buf.at( i * chnls );
     }
-    
     
     // swap the buffers
     buf.swap( tmp );

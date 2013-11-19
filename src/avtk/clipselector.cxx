@@ -103,9 +103,13 @@ void ClipSelector::draw()
     int clipWidth  = w - 2;
     int clipHeight = (h / numClips);
     
+    int xOff = x+clipHeight/2;
+    
     int drawY = y + 1;
     for( int i = 0; i < numClips; i++) // draw each clip
     {
+      int yOff = drawY+13;
+      
       cairo_rectangle( cr, x+2, drawY, clipWidth-1, clipHeight - 4 );
       cairo_set_source_rgba(cr, 66 / 255.f,  66 / 255.f ,  66 / 255.f, 0.4);
       cairo_fill(cr);
@@ -116,7 +120,8 @@ void ClipSelector::draw()
       {
         cairo_set_source_rgba(cr, 1.f,  0 / 255.f ,  0 / 255.f, 1.f);
         cairo_fill(cr);
-        cairo_arc( cr, x+14, drawY+13, 4.3, 0, 6.29 );
+        //cairo_arc( cr, x+14, drawY+13, 4.3, 0, 6.29 );
+        cairo_arc( cr, xOff, yOff, 4.3, 0, 6.29 );
         cairo_set_source_rgba(cr, 0, 0, 0, 1.f);
         cairo_fill(cr);
       }
@@ -124,8 +129,8 @@ void ClipSelector::draw()
       {
         cairo_set_source_rgba(cr, 0.0, 1.0,   0, 1.f );
         cairo_fill(cr);
-        cairo_move_to( cr, x+10, drawY+8 );
-        cairo_line_to( cr, x+19, drawY+13 );
+        cairo_move_to( cr, xOff-4, drawY+8 );
+        cairo_line_to( cr, xOff+5, drawY+13 );
         cairo_line_to( cr, x+10, drawY+18 );
         cairo_close_path(cr);
         cairo_set_source_rgba(cr, 0, 0, 0, 1.f);

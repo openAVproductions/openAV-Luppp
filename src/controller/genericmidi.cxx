@@ -757,71 +757,21 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
   tmp->status = statusJson->valueint;
   tmp->data   = dataJson->valueint;
   
+  // gets the Action type from the JSON string
   tmp->action = Event::getTypeFromName(actionJson->valuestring);
-  tmp->send = Event::INPUT_TO_XSIDE;
   
-  /*
-  if ( strcmp( actionJson->valuestring, getPrettyName(TRACK_VOLUME) ) == 0 ) {
-    tmp->action = Event::TRACK_VOLUME;
-  } else if ( strcmp( actionJson->valuestring, getPrettyName(TRACK_SEND) ) == 0 ) {
-    tmp->action = Event::TRACK_SEND;
-    // FIXME: read this from the .ctlr file!!
-    tmp->send = Event::SEND_POSTFADER;
-  }
-  else if ( strcmp( actionJson->valuestring, getPrettyName(MASTER_INPUT_VOL) ) == 0 ) {
-    tmp->action = Event::MASTER_INPUT_VOL;
-  }
-  else if ( strcmp( actionJson->valuestring, getPrettyName(MASTER_INPUT_TO) ) == 0 ) {
-    tmp->action = Event::MASTER_INPUT_TO;
-    tmp->send = Event::INPUT_TO_MIX;
-  }
-  else if ( strcmp( actionJson->valuestring, getPrettyName(MASTER_INPUT_TO_ACTIVE) ) == 0 ) {
-    tmp->action = Event::MASTER_INPUT_TO_ACTIVE;
-    tmp->send = Event::INPUT_TO_MIX;
-  }
-  else if ( strcmp( actionJson->valuestring, getPrettyName(MASTER_INPUT_TO) ) == 0 ) {
-    tmp->action = Event::MASTER_INPUT_TO;
-    tmp->send = Event::INPUT_TO_SEND;
-  }
-  else if ( strcmp( actionJson->valuestring, "input:to_send_active" ) == 0 ) {
-    tmp->action = Event::MASTER_INPUT_TO_ACTIVE;
-    tmp->send = Event::INPUT_TO_SEND;
-  }
-  else if ( strcmp( actionJson->valuestring, "input:to_x_side" ) == 0 ) {
-    tmp->action = Event::MASTER_INPUT_TO;
-    tmp->send = Event::INPUT_TO_XSIDE;
-  }
-  else if ( strcmp( actionJson->valuestring, "input:to_x_side_active" ) == 0 ) {
-    tmp->action = Event::MASTER_INPUT_TO_ACTIVE;
-    tmp->send = Event::INPUT_TO_XSIDE;
-  }
-  else if ( strcmp( actionJson->valuestring, "track:xside" ) == 0 ) {
-    tmp->action = Event::TRACK_SEND;
-    tmp->send = Event::SEND_XSIDE;
-  }
-  else if ( strcmp( actionJson->valuestring, "track:send_active" ) == 0 ) {
-    tmp->action = Event::TRACK_SEND_ACTIVE;
-    tmp->send = Event::SEND_POSTFADER;
-  }
-  else if ( strcmp( actionJson->valuestring, "track:key_active" ) == 0 ) {
-    tmp->action = Event::TRACK_SEND_ACTIVE;
-    tmp->send = Event::SEND_KEY;
-  }
-  else if ( strcmp( actionJson->valuestring, "track:record_arm" ) == 0 ) {
-    tmp->action = Event::TRACK_RECORD_ARM;
+  
+  
+  // check what our send value should be:
+  tmp->send = -1;
+  cJSON* sendJson   = cJSON_GetObjectItem( binding, "send" );
+  if ( sendJson )
+  {
+    tmp->send = sendJson->valueint;
   }
   
-  else if ( strcmp( actionJson->valuestring, "grid:pressed" ) == 0 ) {
-    tmp->action = Event::GRID_EVENT;
-    tmp->active = 1; // press event
-  }
-  else if ( strcmp( actionJson->valuestring, "grid:released" ) == 0 ) {
-    tmp->action = Event::GRID_EVENT;
-    tmp->active = 0; // release event
-  }
-  */
-  
-  if ( strcmp( actionJson->valuestring, "grid:clipstate" ) == 0 ) {
+  if ( strcmp( actionJson->valuestring, "grid:clip_state" ) == 0 )
+  {
     tmp->action = Event::GRID_STATE;
     
     // read "state", to bind multiple values depending on clip state
