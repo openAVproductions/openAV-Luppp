@@ -739,18 +739,19 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
   // create binding, then fill in data as from JSON.
   Binding* tmp = new Binding();
   
-  cJSON* statusJson = cJSON_GetObjectItem( binding, "status" );
-  cJSON* dataJson   = cJSON_GetObjectItem( binding, "data"   );
-  if ( !statusJson || !dataJson )
-  {
-    LUPPP_WARN("Binding doesn't have status / data field: fix .ctlr file");
-    return 0;
-  }
   
   cJSON* actionJson = cJSON_GetObjectItem( binding, "action" );
   if ( !actionJson )
   {
     LUPPP_WARN("Binding doesn't have action field: fix .ctlr file");
+    return 0;
+  }
+  
+  cJSON* statusJson = cJSON_GetObjectItem( binding, "status" );
+  cJSON* dataJson   = cJSON_GetObjectItem( binding, "data"   );
+  if ( !statusJson || !dataJson )
+  {
+    LUPPP_WARN("Binding w Action:%s doesn't have status / data field: fix .ctlr file", actionJson->valuestring);
     return 0;
   }
   

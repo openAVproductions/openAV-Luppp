@@ -133,7 +133,7 @@ std::string DiskWriter::getLastSavePath()
 
 int DiskWriter::writeControllerFile(std::string name  ,
                                     std::string author,
-                                    std::string link  ,
+                                    std::string email,
                                     Controller* c     )
 {
   LUPPP_NOTE("DiskWriter Controller* id: %i", c->getID() );
@@ -143,13 +143,13 @@ int DiskWriter::writeControllerFile(std::string name  ,
   
   if ( g )
   {
-    LUPPP_NOTE("Writing .ctlr file...");
+    LUPPP_NOTE("Creating JSON for .ctlr file...");
     
     cJSON* controllerJson = cJSON_CreateObject();
     
     cJSON_AddItemToObject  ( controllerJson, "name", cJSON_CreateString( name.c_str() ));
     cJSON_AddItemToObject  ( controllerJson, "author", cJSON_CreateString( author.c_str() ));
-    cJSON_AddItemToObject  ( controllerJson, "link", cJSON_CreateString( link.c_str() ));
+    cJSON_AddItemToObject  ( controllerJson, "email", cJSON_CreateString( email.c_str() ));
     
     // input bindings
     std::vector<Binding*> b = g->getMidiToAction();
@@ -172,10 +172,15 @@ int DiskWriter::writeControllerFile(std::string name  ,
         cJSON_AddNumberToObject( binding, "status", b.at(i)->status );
         cJSON_AddNumberToObject( binding, "data"  , b.at(i)->data   );
         
-        cJSON_AddNumberToObject( binding, "track" , b.at(i)->track  );
-        cJSON_AddNumberToObject( binding, "scene" , b.at(i)->scene  );
-        cJSON_AddNumberToObject( binding, "send"  , b.at(i)->send   );
-        cJSON_AddNumberToObject( binding, "active", b.at(i)->active );
+        // only add JSON elements if they're not the "invalid" defaults
+        if ( b.at(i)->track != -2 )
+          cJSON_AddNumberToObject( binding, "track" , b.at(i)->track  );
+        if ( b.at(i)->scene != -1 )
+          cJSON_AddNumberToObject( binding, "scene" , b.at(i)->scene  );
+        if ( b.at(i)->send  != -1 )
+          cJSON_AddNumberToObject( binding, "send"  , b.at(i)->send   );
+        if ( b.at(i)->active!= -1 )
+          cJSON_AddNumberToObject( binding, "active", b.at(i)->active );
         
         LUPPP_NOTE("Creating Binding: action %i == %s!", b.at(i)->action, actionName );
       }
