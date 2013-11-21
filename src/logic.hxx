@@ -25,6 +25,7 @@ class Logic
     Logic();
     
     void tapTempo();
+    void setBpm(float bpm); /// 0-1 input
     
     void metronomeEnable(bool b);
     
@@ -32,7 +33,7 @@ class Logic
     void masterInputTo( int inputTo, float v);
     void masterInputToActive( int inputTo, bool active);
     
-    void masterReturn( int send, float v);
+    void masterReturn( int returnNum, float v);
     
     void trackVolume(int track, float volume);
     void trackRecordArm(int track, bool armed);

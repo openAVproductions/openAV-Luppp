@@ -43,6 +43,7 @@ class Controller
     virtual void masterInputTo(int to,float f){}
     virtual void masterInputToActive(int to,float f){}
     virtual void masterVolume(float f){}
+    virtual void masterReturnVolume(float f){}
     virtual void metronomeEnable(bool b){}
     
     /// FX

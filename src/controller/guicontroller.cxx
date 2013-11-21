@@ -37,7 +37,14 @@ void LupppGUI::masterInputToActive(int to,float f)
 
 void LupppGUI::masterVolume(float f)
 {
-  EventTrackVol e( -1, f );
+  EventMasterVol e( f );
+  writeToGuiRingbuffer( &e );
+}
+
+void LupppGUI::masterReturnVolume(float f)
+{
+  printf(" return %f ", f );
+  EventMasterReturn e( RETURN_MAIN, f );
   writeToGuiRingbuffer( &e );
 }
 

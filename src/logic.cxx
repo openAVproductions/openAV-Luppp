@@ -19,6 +19,11 @@ void Logic::tapTempo()
   jack->getTimeManager()->tap();
 }
 
+void Logic::setBpm(float bpm)
+{
+  jack->getTimeManager()->setBpm( bpm );
+}
+
 void Logic::metronomeEnable(bool b)
 {
   jack->getMetronome()->setActive(b);
@@ -41,6 +46,12 @@ void Logic::masterInputToActive( int inputTo, bool active)
 {
   jack->inputToActive( (Event::INPUT_TO)inputTo, active);
   jack->getControllerUpdater()->masterInputToActive( (int)inputTo, active );
+}
+
+void Logic::masterReturn( int returnNum, float value )
+{
+  jack->returnVolume( value );
+  jack->getControllerUpdater()->masterReturnVolume( value );
 }
 
 void Logic::trackVolume(int t, float v)

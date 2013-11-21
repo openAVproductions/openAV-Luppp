@@ -90,7 +90,7 @@ void handleDspEvents()
             EventMasterReturn ev;
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMasterReturn) );
             if ( ev.ret == RETURN_MAIN ) {
-              jack->returnVolume( ev.value );
+              jack->returnVolume( ev.vol );
             }
           } break; }
         case Event::MASTER_INPUT_VOL: {

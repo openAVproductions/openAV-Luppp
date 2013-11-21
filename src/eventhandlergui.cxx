@@ -72,11 +72,17 @@ void handleGuiEvents()
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventMasterInputVol) );
             gui->getMasterTrack()->setInputVol( ev.vol );
           } break; }
+        case Event::MASTER_RETURN: {
+          if ( availableRead >= sizeof(EventMasterReturn) ) {
+            EventMasterReturn ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventMasterReturn) );
+            gui->getMasterTrack()->setReturnVol( ev.vol );
+          } break; }
         case Event::MASTER_VOL: {
           if ( availableRead >= sizeof(EventMasterVol) ) {
             EventMasterVol ev(0);
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventMasterVol) );
-            
+            gui->getMasterTrack()->getVolume()->fader( ev.vol );
           } break; }
         
         
@@ -128,12 +134,7 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventTrackVol) ) {
             EventTrackVol ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTrackVol) );
-            if ( ev.track < 0 )
-            {
-              gui->getMasterTrack()->getVolume()->fader( ev.vol );
-            }
-            else
-              gui->getTrack(ev.track)->getVolume()->fader( ev.vol );
+            gui->getTrack(ev.track)->getVolume()->fader( ev.vol );
           } break; }
         
                 

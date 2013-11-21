@@ -4,7 +4,7 @@
 static void gmastertrack_tempoDial_callback(Fl_Widget *w, void *data)
 {
   Avtk::Dial* b = (Avtk::Dial*)w;
-  float bpm = b->value() * 160 + 60; // 60 - 220
+  float bpm = b->value();
   EventTimeBPM e = EventTimeBPM( bpm );
   writeToDspRingbuffer( &e );
 }
@@ -199,6 +199,12 @@ void GMasterTrack::setInputVol(float f)
 {
   //LUPPP_NOTE(" gmtrck, inputVol %f", f );
   inputVolume.value( f );
+}
+
+void GMasterTrack::setReturnVol(float f)
+{
+  LUPPP_NOTE(" gmtrck, returnVol %f", f );
+  returnVol.value( f );
 }
 
 void GMasterTrack::setInputTo(int to, float f)

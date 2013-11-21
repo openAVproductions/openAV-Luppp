@@ -26,7 +26,8 @@ namespace Event
   };
   enum RETURN_TYPE
   {
-    RETURN_MAIN = 0,
+    RETURN_INVALID = 0,
+    RETURN_MAIN,
   };
   enum INPUT_TO
   {
@@ -281,10 +282,8 @@ class EventMasterReturn : public EventBase
     const char* name(){ return prettyName; }
     
     RETURN_TYPE ret;
-    float value;
-    
-    EventMasterReturn(){};
-    EventMasterReturn(RETURN_TYPE s, float v): ret(s), value(v){}
+    float vol;
+    EventMasterReturn(RETURN_TYPE s=RETURN_INVALID, float v=0): ret(s), vol(v){}
 };
 
 class EventTrackVol : public EventBase
@@ -517,11 +516,11 @@ class EventMetronomeActive : public EventBase
   public:
     int type() { return int(METRONOME_ACTIVE); }
     uint32_t size() { return sizeof(EventMetronomeActive); }
+    static const char* prettyName;
+    const char* name(){ return prettyName; }
     
     bool active;
-    
-    EventMetronomeActive() : active(false) {}
-    EventMetronomeActive(bool a) : active(a) {}
+    EventMetronomeActive(bool a = false) : active(a) {}
 };
 
 class EventTimeBPM : public EventBase

@@ -72,6 +72,12 @@ void ControllerUpdater::masterVolume(float v)
     c.at(i)->masterVolume(v);
 }
 
+void ControllerUpdater::masterReturnVolume(float v)
+{
+  for(unsigned int i = 0; i < c.size(); i++)
+    c.at(i)->masterReturnVolume( v );
+}
+
 void ControllerUpdater::setTrackSceneProgress(int t, int s, float p)
 {
   for(unsigned int i = 0; i < c.size(); i++)

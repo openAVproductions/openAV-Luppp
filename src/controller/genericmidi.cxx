@@ -429,7 +429,7 @@ void GenericMIDI::midi(unsigned char* midi)
     
     if ( b->status == status && b->data == data )
     {
-      //LUPPP_NOTE("Executing action %i, value %f, b->active %i", b->action, value, int(b->active) );
+      LUPPP_NOTE("Executing action %s, value %f, b->active %i", Event::getPrettyName(b->action), value, int(b->active) );
       
       switch( b->action )
       {
@@ -455,18 +455,27 @@ void GenericMIDI::midi(unsigned char* midi)
             jack->getGridLogic()->launchScene( b->scene );
             break;
         
+        case Event::MASTER_RETURN:
+            jack->getLogic()->masterReturn( RETURN_MAIN, value );
+            break;
         case Event::MASTER_INPUT_VOL:
             jack->getLogic()->masterInputVol( value );
             break;
         case Event::MASTER_INPUT_TO:
-            LUPPP_NOTE("GenMidi event INPUT_TO %i", b->send );
+            //LUPPP_NOTE("GenMidi event INPUT_TO %i", b->send );
             jack->getLogic()->masterInputTo( b->send, value );
             break;
         case Event::MASTER_INPUT_TO_ACTIVE:
-            LUPPP_NOTE("GenMidi event INPUT_TO_ACTIVE %i", b->send );
+            //LUPPP_NOTE("GenMidi event INPUT_TO_ACTIVE %i", b->send );
             jack->getLogic()->masterInputToActive( b->send, b->active );
             break;
         
+        case Event::TIME_TEMPO_TAP:
+            jack->getLogic()->tapTempo();
+            break;
+        case Event::TIME_BPM:
+            jack->getLogic()->setBpm( value );
+            break;
         case Event::METRONOME_ACTIVE:
             jack->getLogic()->metronomeEnable( b->active );
             break;
@@ -764,7 +773,6 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
   
   
   // check what our send value should be:
-  tmp->send = -1;
   cJSON* sendJson   = cJSON_GetObjectItem( binding, "send" );
   if ( sendJson )
   {

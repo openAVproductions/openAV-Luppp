@@ -42,6 +42,7 @@ class ControllerUpdater
     void mute(int t, bool b);
     
     void masterVolume(float v);
+    void masterReturnVolume(float v);
     void masterInputToActive(int to, bool v);
     void masterInputTo( int inputTo, float vol );
     void masterInputVol( float vol );
