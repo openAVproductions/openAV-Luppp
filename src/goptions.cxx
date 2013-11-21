@@ -149,7 +149,7 @@ static void writeControllerFile(Fl_Widget* w, void* data)
   // a pointer to the controllerID int is passed as data
   ControllerUI* c = (ControllerUI*)data;
   
-  LUPPP_NOTE("Writing controller %li, %s ID %i .ctlr to disk", c, c->name, c->controllerID );
+  LUPPP_NOTE("Writing controller %li, %s ID %i .ctlr to disk", c, c->name.c_str(), c->controllerID );
   
   // FIXME: Controller ID hardcoded
   EventControllerInstanceGetToWrite e( 2 );
@@ -178,10 +178,9 @@ static void deleteBindingFromController(Fl_Widget* w, void* ud)
 
 ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
 {
-  name = strdup(n.c_str());
-  target = 0;
+  name = n;
   
-  widget = new Fl_Group( x, y, w, h, name);
+  widget = new Fl_Group( x, y, w, h, name.c_str());
   {
     // author / link
     authorLabel = new Fl_Box( x, y + 0, 200, 30, "Author: -" );
@@ -230,11 +229,8 @@ void OptionsWindow::setTarget(const char* n)
 
 void ControllerUI::setTarget( const char* n )
 {
-  if ( target )
-    free (target);
-  target = strdup(n);
-  
-  targetLabel->label( target );
+  target = n;
+  targetLabel->label( target.c_str() );
   targetLabel->redraw();
 }
 

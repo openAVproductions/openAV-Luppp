@@ -147,9 +147,9 @@ int DiskWriter::writeControllerFile(std::string name  ,
     
     cJSON* controllerJson = cJSON_CreateObject();
     
-    cJSON_AddItemToObject  ( controllerJson, "name", cJSON_CreateString( name.c_str() ));
-    cJSON_AddItemToObject  ( controllerJson, "author", cJSON_CreateString( author.c_str() ));
-    cJSON_AddItemToObject  ( controllerJson, "email", cJSON_CreateString( email.c_str() ));
+    cJSON_AddItemToObject( controllerJson, "name",   cJSON_CreateString( name.c_str()   ));
+    cJSON_AddItemToObject( controllerJson, "author", cJSON_CreateString( author.c_str() ));
+    cJSON_AddItemToObject( controllerJson, "email",  cJSON_CreateString( email.c_str()  ));
     
     // input bindings
     std::vector<Binding*> b = g->getMidiToAction();
@@ -257,7 +257,7 @@ int DiskWriter::writeControllerFile(std::string name  ,
       
     }
     
-    LUPPP_NOTE("Writing .ctlr file to disk");
+    LUPPP_NOTE("Writing %s.ctlr file to disk", g->getName().c_str() );
     
     ofstream controllerCfgFile;
     controllerCfgFile.open ( controllerCfgPath.str().c_str() );

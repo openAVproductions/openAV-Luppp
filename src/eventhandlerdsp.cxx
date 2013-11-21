@@ -243,6 +243,7 @@ void handleDspEvents()
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackSendActive) );
             jack->getLogic()->trackSendActive( ev.track, ev.send, ev.active );
             jack->bindingTrack  = ev.track;
+            jack->bindingSend   = ev.send;
             jack->bindingActive = ev.active;
           } break; }
         

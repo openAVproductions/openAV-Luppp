@@ -43,7 +43,7 @@ class ControllerUI
     // for adding to GOptions tabs
     Fl_Group* widget;
     
-    char* name;
+    std::string name;
     
     OptionsWindow* optionsWindow;
     
@@ -53,10 +53,10 @@ class ControllerUI
   
   private:
     // bindings
-    char* target;
-    
+    std::string target;
     std::string author;
     std::string email;
+    
     Fl_Box* authorLabel;
     Fl_Box* emailLabel;
     

@@ -21,6 +21,7 @@ GenericMIDI::GenericMIDI(int waste, std::string n) :
   Controller(),
   MidiIO()
 {
+  LUPPP_NOTE("Adding GenericMIDI %s", n.c_str() );
   name = n;
   registerMidiPorts( name );
   stat = CONTROLLER_OK;
@@ -43,6 +44,7 @@ GenericMIDI::GenericMIDI(std::string file) :
   
   if ( result == LUPPP_RETURN_OK )
   {
+    LUPPP_NOTE("GenericMIDI registering ports: %s", name.c_str() );
     registerMidiPorts( name );
     stat = CONTROLLER_OK;
   }
@@ -429,7 +431,7 @@ void GenericMIDI::midi(unsigned char* midi)
     
     if ( b->status == status && b->data == data )
     {
-      LUPPP_NOTE("Executing action %s, value %f, b->active %i", Event::getPrettyName(b->action), value, int(b->active) );
+      LUPPP_NOTE("Executing action %s, send %i value %f, b->active %i", Event::getPrettyName(b->action), b->send, value, int(b->active) );
       
       switch( b->action )
       {
@@ -722,7 +724,7 @@ void GenericMIDI::removeBinding( int bindingID )
 
 void GenericMIDI::setupBinding( LupppAction eventType, int midiStatus, int midiData, int track, int scene, int send, int active )
 {
-  LUPPP_NOTE("MIDI binding, track %d, from eventType %d to %d, %d", track, eventType, midiStatus, midiData );
+  LUPPP_NOTE("MIDI binding, track %d, send %d from eventType %d to %d, %d", track, send, eventType, midiStatus, midiData );
   
   // FIXME: NON-RT Have stack of Bindings() available, or push in GUI thread?
   Binding* tmp = new Binding();
