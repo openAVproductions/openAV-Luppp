@@ -248,6 +248,11 @@ int DiskReader::loadSample( int track, int scene, string path )
         LUPPP_WARN("cancel clicked, deleting audiobuffer" );
         delete ab;
       }
+      else
+      {
+        LUPPP_NOTE("AudioBuffer set %i beats.", ab->getBeats() );
+        loadableBuffer = true;
+      }
     }
     
     if ( loadableBuffer )
