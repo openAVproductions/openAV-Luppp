@@ -357,6 +357,8 @@ OptionsWindow::OptionsWindow()
 {
   window = new Fl_Double_Window(400,400,"Options");
   
+  window->set_modal();
+  
   tabs = new Fl_Tabs(0, 0, 400, 400);
   
   int x, y, w, h;
