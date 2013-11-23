@@ -21,6 +21,8 @@
 
 #include "clipselector.hxx"
 
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+
 #include "../gui.hxx"
 
 extern Gui* gui;

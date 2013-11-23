@@ -6,6 +6,7 @@
 ///     PROGAM WIDE DEFINES
 #define NAME "Luppp"
 
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 
 
 ///     DEBUG

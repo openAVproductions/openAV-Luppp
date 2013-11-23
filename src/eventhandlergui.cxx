@@ -16,6 +16,8 @@
 
 #include "controller/controller.hxx"
 
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 extern Gui* gui;
 
 using namespace std;

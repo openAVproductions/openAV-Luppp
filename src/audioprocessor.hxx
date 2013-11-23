@@ -4,6 +4,8 @@
 
 #include <stdio.h>
 
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 class AudioProcessor
 {
   public:

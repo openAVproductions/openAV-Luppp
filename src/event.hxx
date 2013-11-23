@@ -14,6 +14,8 @@
 #include "looper.hxx"
 #include "gridlogic.hxx"
 
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 using namespace std;
 
 namespace Event

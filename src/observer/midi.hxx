@@ -31,9 +31,9 @@ class MidiIO
     /// called by the subclass to create MIDI ports
     int registerMidiPorts(std::string name);
     
-    virtual void midi(unsigned char* data){};
+    virtual void midi(unsigned char* /*data*/){};
     
-    void writeMidi( unsigned char* data );
+    void writeMidi( unsigned char* /*data*/ );
   
   private:
     // there are jack_port_t* registered ports

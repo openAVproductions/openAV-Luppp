@@ -5,6 +5,9 @@
 
 #include <sstream>
 
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+
 // ONLY to be used for QUIT!
 #include "jack.hxx"
 extern Jack* jack;
@@ -35,6 +38,7 @@ int GMasterTrack::privateID = 0;
 //int AudioBuffer::privateID = 0;
 
 using namespace std;
+
 
 extern Gui* gui;
 extern int signalHanlderInt;
@@ -411,34 +415,6 @@ Gui::Gui(std::string argZero) :
   {
     LUPPP_NOTE("Loaded preferences");
   }
-  
-  /*
-  // default controller for testing
-  stringstream s;
-  s << getenv("HOME") << "/.config/openAV/luppp/controllers/akai_apc.ctlr";
-  GenericMIDI* c = new GenericMIDI( s.str().c_str() );
-  //GenericMIDI* c = new GenericMIDI();
-  
-  std::vector<Binding*> b = c->getMidiToAction();
-  for(unsigned int i =0; i < b.size(); i++ )
-    optionWindow->addBinding( b.at(i) );
-  /*
-  
-  if ( c->status() == Controller::CONTROLLER_OK )
-  {
-    EventControllerInstance e(c);
-    writeToDspRingbuffer( &e );
-  }
-  else
-  {
-    LUPPP_ERROR("Controller initialization failed!");
-  }
-  
-  /*
-  Controller* non = new NonSeq();
-  EventControllerInstance e( non );
-  writeToDspRingbuffer( &e );
-  */
   
   // NSM stuff
   nsm = 0;

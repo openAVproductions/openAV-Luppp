@@ -136,7 +136,15 @@ int DiskWriter::writeControllerFile(std::string name  ,
                                     std::string email,
                                     Controller* c     )
 {
-  LUPPP_NOTE("DiskWriter Controller* id: %i", c->getID() );
+  if ( c )
+  {
+    LUPPP_NOTE("DiskWriter Controller* id: %i", c->getID() );
+  }
+  else
+  {
+    LUPPP_ERROR("DiskWriter Controller* passed NULL" );
+    return LUPPP_RETURN_ERROR;
+  }
   
   // check if controller of ID is actually a GenericMIDI controller
   GenericMIDI* g = dynamic_cast<GenericMIDI*>( c );
@@ -266,10 +274,7 @@ int DiskWriter::writeControllerFile(std::string name  ,
   }
   else
   {
-    if ( c )
-      LUPPP_WARN("Invalid Controller pointer: cannot write %s as is not a GenericMIDI controller!", c->getName().c_str() );
-    else
-      LUPPP_WARN("Invalid Controller pointer: was passed NULL!" );
+    LUPPP_WARN("Invalid Controller pointer: cannot write %s as is not a GenericMIDI controller!", c->getName().c_str() );
     return LUPPP_RETURN_ERROR;
   }
   

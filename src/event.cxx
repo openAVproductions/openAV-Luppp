@@ -32,6 +32,8 @@ EVENT_TYPE Event::getTypeFromName(const char* name)
       }
     }
   }
+  
+  return EVENT_NULL;
 }
 
 const char* Event::getPrettyName( int type )

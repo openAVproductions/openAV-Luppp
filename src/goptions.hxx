@@ -2,6 +2,8 @@
 #ifndef LUPPP_OPTIONS_H
 #define LUPPP_OPTIONS_H
 
+#include "config.hxx"
+
 #include <string>
 
 #include <FL/Fl.H>

@@ -143,7 +143,7 @@ void TimeManager::process(Buffers* buffers)
   {
     beatInProcess = true;
     
-    if ( nframesToBeat > buffers->nframes )
+    if ( nframesToBeat > int(buffers->nframes) )
     {
       nframesToBeat = buffers->nframes;
     }

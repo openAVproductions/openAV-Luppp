@@ -28,6 +28,8 @@
 #include <valarray>
 #include <string>
 
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 namespace Avtk
 {
   
