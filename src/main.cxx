@@ -31,20 +31,30 @@ void signalHanlder(int signum)
   signalHanlderInt = signum;
 }
 
+static void gui_static_loadSession_cb(void* inst)
+{
+  char* tmp = (char*) inst;
+  int sess = gui->getDiskReader()->readSession( tmp );
+  if ( sess != LUPPP_RETURN_OK )
+    LUPPP_ERROR( "Error loading session" );
+}
+
 int main(int argc, char** argv)
 {
   LUPPP_NOTE("%s", GIT_VERSION );
   
-  bool runTests = false;
-  bool stopAfterTest = false;
-  if(runTests == stopAfterTest){} // warning
+  bool runTests;
+  if ( runTests ){} // remove unused warning if not built with BUILD_TESTS
   
   for(int i = 0; i < argc; i++)
   {
     if ( strcmp(argv[i], "-test" ) == 0 ) {
       runTests = true;
-    } else if ( strcmp( argv[i], "-stopAfterTest") == 0 ) {
-      stopAfterTest = true;
+    }
+    else
+    {
+      // assume filename, try load it
+      Fl::repeat_timeout( 1 / 30.f, &gui_static_loadSession_cb, argv[i] );
     }
   }
   
