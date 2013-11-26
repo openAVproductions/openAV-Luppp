@@ -823,13 +823,13 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
     */
   }
   
-  else if ( strcmp( actionJson->valuestring, "gridlogic:launch_scene" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, "grid:launch_scene" ) == 0 ) {
     tmp->action = Event::GRID_LAUNCH_SCENE;
   }
-  else if ( strcmp( actionJson->valuestring, "gridlogic:selectclipevent" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, "grid:selectclipevent" ) == 0 ) {
     tmp->action = Event::GRID_SELECT_CLIP_EVENT;
   }
-  else if ( strcmp( actionJson->valuestring, "gridlogic:selectclipenable" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, "grid:selectclipenable" ) == 0 ) {
     tmp->action = Event::GRID_SELECT_CLIP_ENABLE;
   }
   else if ( strcmp( actionJson->valuestring, "master:volume" ) == 0 ) {
