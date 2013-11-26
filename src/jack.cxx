@@ -167,6 +167,10 @@ Jack::Jack( std::string name ) :
   
   for(int i = 0; i < NTRACKS; i++)
   {
+    /** Setup the tracks:
+     *  The TrackOutput gets a pointer to the next AudioProcessor to call:
+     *  In this case, the track's Looper instance.
+    **/
     loopers.push_back( new Looper(i) );
     trackOutputs.push_back( new TrackOutput(i, loopers.back() ) );
     
