@@ -51,7 +51,7 @@ int main(int argc, char** argv)
     if ( strcmp(argv[i], "-test" ) == 0 ) {
       runTests = true;
     }
-    else
+    else if ( i != 0 ) // don't try load with the program name!
     {
       // assume filename, try load it
       Fl::repeat_timeout( 1 / 30.f, &gui_static_loadSession_cb, argv[i] );
