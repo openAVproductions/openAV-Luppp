@@ -410,8 +410,8 @@ void Jack::processFrames(int nframes)
     buffers.audio[Buffers::SIDECHAIN_SIGNAL][i] += input * inputToXSideVol;
     
     /// mixdown returns into master buffers
-    buffers.audio[Buffers::MASTER_OUT_L][i] = (L + returnL) * masterVol;
-    buffers.audio[Buffers::MASTER_OUT_R][i] = (R + returnR) * masterVol;
+    buffers.audio[Buffers::MASTER_OUT_L][i] = (L + returnL*returnVol) * masterVol;
+    buffers.audio[Buffers::MASTER_OUT_R][i] = (R + returnR*returnVol) * masterVol;
     
     /// write SEND content to JACK port
     buffers.audio[Buffers::JACK_SEND_OUT][i] = buffers.audio[Buffers::SEND][i];

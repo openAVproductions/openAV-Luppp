@@ -16,12 +16,15 @@ extern Jack* jack;
 using namespace std;
 
 TimeManager::TimeManager():
-    oldBeat(0),
     observers()
 {
   samplerate = jack->getSamplerate();
   // 120 BPM default
   fpb = samplerate / 2;
+  
+  beatCounter = 0;
+  
+  beatFrameCountdown = 0;
   
   tapTempoPos = 0;
   tapTempo[0] = 0;
@@ -136,16 +139,26 @@ void TimeManager::process(Buffers* buffers)
   
   
   // calculate beat / bar position in nframes
-  int beat = buffers->transportFrame / fpb;
-  nframesToBeat = buffers->transportFrame - (beat*fpb);
+  //int beat = buffers->transportFrame / int(fpb);
   
-  if ( beat != oldBeat )
+  
+  beatFrameCountdown -= buffers->nframes;
+  
+  //nframesToBeat = buffers->transportFrame - (beat*int(fpb));
+  
+  if ( beatFrameCountdown <= 0 )
   {
+    beatCounter++;
+    
     beatInProcess = true;
     
     if ( nframesToBeat > int(buffers->nframes) )
     {
       nframesToBeat = buffers->nframes;
+    }
+    if ( nframesToBeat < 0 )
+    {
+      LUPPP_ERROR("NframesToBeat: %i, cannot be less than zero!", nframesToBeat );
     }
     
     
@@ -159,7 +172,7 @@ void TimeManager::process(Buffers* buffers)
     }
     
     // FIXME: 4 == beats in time sig
-    if ( beat % 4 == 0 )
+    if ( beatCounter % 4 == 0 )
     {
       // inform observers of new bar SECOND
       for(uint i = 0; i < observers.size(); i++)
@@ -182,10 +195,10 @@ void TimeManager::process(Buffers* buffers)
       jack->processFrames( remaining );
     }
     // write new beat to UI (bar info currently not used)
-    EventTimeBarBeat e( 0, beat );
+    EventTimeBarBeat e( 0, beatCounter );
     writeToGuiRingbuffer( &e );
     
-    oldBeat = beat;
+    beatFrameCountdown = int(fpb);
   }
   else
   {

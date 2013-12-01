@@ -39,10 +39,13 @@ class TimeManager
     int nframesToBeat;
     bool beatInProcess;
     
-    float fpb;
-    int oldBeat;
+    /// counts down frames until the next beat
+    int beatFrameCountdown;
     
-    // tap tempo measurements
+    float fpb;
+    int beatCounter;
+    
+    /// tap tempo measurements
     int frame;
     
     int tapTempoPos;
