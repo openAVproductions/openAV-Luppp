@@ -476,7 +476,8 @@ void GenericMIDI::midi(unsigned char* midi)
             jack->getLogic()->tapTempo();
             break;
         case Event::TIME_BPM:
-            jack->getLogic()->setBpm( value );
+            // FIXME: quick-fix for "ZeroOne" type value -> BPM range
+            jack->getLogic()->setBpm( value * 160 + 60 );
             break;
         case Event::METRONOME_ACTIVE:
             jack->getLogic()->metronomeEnable( b->active );
