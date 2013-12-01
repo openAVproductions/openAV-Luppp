@@ -354,6 +354,12 @@ int Jack::process (jack_nframes_t nframes)
 
 void Jack::processFrames(int nframes)
 {
+  if ( nframes < 0 )
+  {
+    LUPPP_WARN("Jack processFrames got nframes < 0");
+    return;
+  }
+  
   // clear the buffers
   memset( buffers.audio[Buffers::JACK_MASTER_OUT_L] , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::JACK_MASTER_OUT_R] , 0, sizeof(float) * nframes );

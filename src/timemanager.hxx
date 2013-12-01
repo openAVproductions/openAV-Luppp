@@ -37,7 +37,7 @@ class TimeManager
     int samplerate;
     
     /// holds the number of frames before a beat
-    int nframesToBeat;
+    //int nframesToBeat;
     bool beatInProcess;
     
     /// counts down frames until the next beat
