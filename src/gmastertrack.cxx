@@ -4,7 +4,7 @@
 static void gmastertrack_tempoDial_callback(Fl_Widget *w, void *data)
 {
   Avtk::Dial* b = (Avtk::Dial*)w;
-  float bpm = b->value();
+  float bpm = b->value() * 160.f + 60;
   EventTimeBPM e = EventTimeBPM( bpm );
   writeToDspRingbuffer( &e );
 }

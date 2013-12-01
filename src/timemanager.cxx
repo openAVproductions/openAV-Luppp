@@ -38,14 +38,17 @@ int TimeManager::getFpb()
   return fpb;
 }
 
-
-void TimeManager::setBpm(float b)
+void TimeManager::setBpm(float bpm)
 {
-  float bpm = b * 160 + 60; // 60 - 220
 #ifdef DEBUG_TIME
   LUPPP_NOTE("%s %f","setBpm()",bpm);
 #endif
   setFpb( samplerate / bpm * 60 );
+}
+
+void TimeManager::setBpmZeroOne(float b)
+{
+  setBpm( b * 160 + 60 ); // 60 - 220
 }
 
 

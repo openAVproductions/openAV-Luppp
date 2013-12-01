@@ -19,6 +19,7 @@ class TimeManager
     
     int getFpb();
     void setBpm(float bpm);
+    void setBpmZeroOne(float bpm);
     void setFpb(float f);
     
     void registerObserver(TimeObserver* o);
