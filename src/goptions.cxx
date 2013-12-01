@@ -204,6 +204,8 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
     scroll->end();
     scroll->box( FL_DOWN_FRAME );
     scroll->type( Fl_Scroll::VERTICAL_ALWAYS );
+    
+    widget->resizable( scroll );
   }
   widget->end();
   
@@ -360,6 +362,8 @@ OptionsWindow::OptionsWindow()
   window->set_non_modal();
   
   tabs = new Fl_Tabs(0, 0, 400, 400);
+  
+  window->resizable( tabs );
   
   int x, y, w, h;
   tabs->client_area( x, y, w, h, 25 );
