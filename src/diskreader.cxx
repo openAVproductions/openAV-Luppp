@@ -108,8 +108,14 @@ int DiskReader::loadSample( int track, int scene, string path )
 {
   /// load the sample
   SndfileHandle infile( path, SFM_READ );
-  std::vector<float> buf( infile.frames() );
-  infile.read( (float*)&buf[0] , infile.frames() );
+  std::vector<float> buf( infile.frames() * infile.channels() );
+  infile.read( (float*)&buf[0] , infile.frames() * infile.channels() );
+  
+  if ( infile.error() )
+  {
+    LUPPP_ERROR("File %s, Error %s", path.c_str(), infile.strError() );
+    return LUPPP_RETURN_ERROR;
+  }
   
   LUPPP_NOTE("Loading file with  %i chnls, frames %i,buffer size %i", infile.channels(), infile.frames(), buf.size() );
   
