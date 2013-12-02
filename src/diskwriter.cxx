@@ -35,7 +35,7 @@ DiskWriter::DiskWriter()
   controllerInfo[CONTROLLER_LINK] = "no link";
   
   sessionDir = getenv("HOME");
-  sessionName = "lupppSession";
+  sessionName = "session";
   foldersCreated = false;
   
   // create .config/openAV/luppp/ directory
@@ -99,7 +99,7 @@ void DiskWriter::initialize(std::string path, std::string name )
   sessionDirStream << path;
   
   if ( !gui->getNsm() )
-   sessionDirStream << "/" << sessionName;
+   sessionDirStream << "/" << sessionName << ".luppp";
   
   sessionDir = sessionDirStream.str();
   

@@ -45,21 +45,21 @@ int DiskWriter::runTests()
   std::string author = "dummy author";
   std::string link = "www.dummylink.com";
   
-  int d = gui->getDiskWriter()->writeControllerFile( name, author, link, dummy );
+  int d = gui->getDiskWriter()->writeControllerFile( dummy );
   QUNIT_IS_TRUE( d == LUPPP_RETURN_OK );
   
   dummy->setupBinding( Event::TRACK_VOLUME, 176, 7, 0, 0, 0, 0 );
   dummy->setupBinding( Event::GRID_LAUNCH_SCENE, 144, 60, 0, 2, 0, 0 );
   
-  int d1 = gui->getDiskWriter()->writeControllerFile( name, author, link, dummy );
+  int d1 = gui->getDiskWriter()->writeControllerFile( dummy );
   QUNIT_IS_TRUE( d1 == LUPPP_RETURN_OK );
   
   /// test dynamic cast, null, and invalid Controller* type
-  int r1 = gui->getDiskWriter()->writeControllerFile(name, author, link, 0);
+  int r1 = gui->getDiskWriter()->writeControllerFile( 0 );
   QUNIT_IS_TRUE( r1 == LUPPP_RETURN_ERROR );
   
   Controller* non = new NonSeq();
-  int r2 = gui->getDiskWriter()->writeControllerFile(name, author, link, non);
+  int r2 = gui->getDiskWriter()->writeControllerFile( non);
   QUNIT_IS_TRUE( r2 == LUPPP_RETURN_ERROR );
   
   return qunit.errors();
