@@ -32,7 +32,7 @@ static void addControllerUiDsp(OptionsWindow* self, GenericMIDI* c)
   
   // tell the ControllerUI to add the bindings from this Controller*
   self->controllers.back()->setAuthor( c->getAuthor() );
-  self->controllers.back()->setEmail( c->getEmail() );
+  self->controllers.back()->setLink( c->getEmail() );
   self->controllers.back()->addBindings( c );
   
   self->tabs->redraw();
@@ -40,6 +40,26 @@ static void addControllerUiDsp(OptionsWindow* self, GenericMIDI* c)
   // send to DSP side
   EventControllerInstance e(c);
   writeToDspRingbuffer( &e );
+}
+
+static void updateAuthorCB(Fl_Widget* w, void* data)
+{
+  ControllerUI* c = (ControllerUI*)data;
+  const char* s = fl_input( "Author: ", "" );
+  if ( s )
+  {
+    c->setAuthor( s );
+  }
+}
+
+static void updateLinkCB(Fl_Widget* w, void* data)
+{
+  ControllerUI* c = (ControllerUI*)data;
+  const char* s = fl_input( "Link: ", "" );
+  if ( s )
+  {
+    c->setLink( s );
+  }
 }
 
 static void writeBindEnable(Fl_Widget* w, void* data)
@@ -146,13 +166,16 @@ static void selectLoadController(Fl_Widget* w, void* data)
 
 static void writeControllerFile(Fl_Widget* w, void* data)
 {
-  // a pointer to the controllerID int is passed as data
   ControllerUI* c = (ControllerUI*)data;
   
   LUPPP_NOTE("Writing controller %li, %s ID %i .ctlr to disk", c, c->name.c_str(), c->controllerID );
   
-  // FIXME: Controller ID hardcoded
-  EventControllerInstanceGetToWrite e( 2 );
+  // Set the Controller details in diskWriter, so it write it pretty
+  gui->getDiskWriter()->writeControllerInfo( CONTROLLER_NAME  , c->name       );
+  gui->getDiskWriter()->writeControllerInfo( CONTROLLER_AUTHOR, c->getAuthor());
+  gui->getDiskWriter()->writeControllerInfo( CONTROLLER_LINK  , c->getLink()  );
+  
+  EventControllerInstanceGetToWrite e( c->controllerID );
   writeToDspRingbuffer( &e );
 }
 
@@ -183,19 +206,25 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
   widget = new Fl_Group( x, y, w, h, name.c_str());
   {
     // author / link
-    authorLabel = new Fl_Box( x, y + 0, 200, 30, "Author: -" );
-    emailLabel  = new Fl_Box( x + w/2, y + 0, 200, 30, "Email: -" );
+    authorLabel = new Avtk::Button( x + 5, y + 0, 190, 25, "Author?" );
+    linkLabel   = new Avtk::Button( x + 7+ w/2, y + 0, 190, 25, "Link?" );
+    
+    authorLabel->label("Author?");
+    authorLabel->label("Link?");
+    
+    authorLabel->callback( updateAuthorCB, this );
+    linkLabel->callback( updateLinkCB, this );
     
     // binding / target
-    targetLabelStat = new Fl_Box(x + 100,y + 25, 75, 25,"Target: ");
-    targetLabel = new Fl_Box(x + 140,y + 25, 200, 25,"");
-    bindEnable = new Avtk::LightButton(x + 5, y + 25, 100, 25, "Bind Enable");
+    targetLabelStat = new Fl_Box(x + 100,y + 27, 75, 25,"Target: ");
+    targetLabel = new Fl_Box(x + 140,y + 27, 200, 25,"");
+    bindEnable = new Avtk::LightButton(x + 5, y + 27, 100, 25, "Bind Enable");
     
     writeControllerBtn = new Avtk::Button( x + 5, y + h - 27, 100, 25, "Save" );
     //ctlrButton = new Avtk::Button(x + 110, y + 275, 100, 25, "Load");
     removeController = new Avtk::Button(x + 110, y + h - 27, 100, 25, "Remove");
     
-    scroll = new Fl_Scroll( x + 5, y + 75, 395, 270 );
+    scroll = new Fl_Scroll( x + 5, y + 77, 395, 270 );
     {
       bindingsPack = new Fl_Pack( x + 5, y + 75, 340, 10);
       bindingsPack->end();
@@ -238,20 +267,16 @@ void ControllerUI::setTarget( const char* n )
 
 void ControllerUI::setAuthor(std::string a)
 {
-  stringstream s;
-  s << "Author: " << a;
-  author = s.str();
+  author = a;
   authorLabel->label( author.c_str() );
   authorLabel->redraw();
 }
 
-void ControllerUI::setEmail(std::string e)
+void ControllerUI::setLink(std::string e)
 {
-  stringstream s;
-  s << "Email: " << e;
-  email = s.str(); 
-  emailLabel->label( email.c_str() );
-  emailLabel->redraw();
+  link = e;
+  linkLabel->label( link.c_str() );
+  linkLabel->redraw();
 }
 
 void ControllerUI::setBindEnable( bool b )

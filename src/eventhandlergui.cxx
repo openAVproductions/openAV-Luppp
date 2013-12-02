@@ -330,7 +330,7 @@ void handleGuiEvents()
             EventControllerInstanceGetToWrite ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerInstanceGetToWrite) );
             // write the contents of the GenericMIDI controller to .ctlr file
-            gui->getDiskWriter()->writeControllerFile("name","author","link", (Controller*)ev.controller );
+            gui->getDiskWriter()->writeControllerFile( (Controller*)ev.controller );
           } break; }
           
         case Event::CONTROLLER_INSTANCE: {

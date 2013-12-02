@@ -55,8 +55,6 @@ void TimeManager::setBpmZeroOne(float b)
 void TimeManager::setFpb(float f)
 {
   fpb = f;
-  //LUPPP_NOTE("%s %f","setFpb()", fpb);
-  
   int bpm = ( samplerate * 60) / f;
   
   char buffer [50];
@@ -175,13 +173,13 @@ void TimeManager::process(Buffers* buffers)
     int remaining = buffers->nframes - beatFrameCountdown;
     if ( remaining > 0 )
     {
-      
+      /*
       char buffer [50];
       sprintf (buffer, "remaining %i",  remaining );
       EventGuiPrint e2( buffer );
       writeToGuiRingbuffer( &e2 );
+      */
       
-      printf("remaining %i\n", remaining );
       jack->processFrames( remaining );
     }
     // write new beat to UI (bar info currently not used)

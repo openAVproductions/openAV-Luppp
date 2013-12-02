@@ -39,7 +39,8 @@ class Button : public Fl_Button
       w = _w;
       h = _h;
       
-      label = _label;
+      labelMe = _label;
+      setLabel( labelMe );
       
       _r = 1.0;
       _g = 0.48;
@@ -56,11 +57,12 @@ class Button : public Fl_Button
     bool mouseOver;
     bool highlight;
     int x, y, w, h;
-    const char* label;
+    const char* labelMe;
     
     void setLabel( const char* l)
     {
-      label = l;
+      labelMe = l;
+      label( labelMe );
       redraw();
     }
     

@@ -10,6 +10,14 @@
 class AudioBuffer;
 class Controller;
 
+enum CONTROLLER_INFO
+{
+  CONTROLLER_NAME,
+  CONTROLLER_AUTHOR,
+  CONTROLLER_LINK,
+  CONTROLLER_INFO_SIZE,
+};
+
 /// To hold data about loaded clips until we write the JSON out
 class ClipData
 {
@@ -43,11 +51,10 @@ class DiskWriter
     std::string getLastSaveName();
     std::string getLastSavePath();
     
+    /// sets a piece of info to be written to the controller
+    void writeControllerInfo( CONTROLLER_INFO c, std::string s );
     /// writes a controller definition .ctlr JSON file from a GenericMIDI instance
-    int writeControllerFile(  std::string name  ,
-                              std::string author,
-                              std::string link  ,
-                              Controller*      );
+    int writeControllerFile( Controller* c );
     
     
 #ifdef BUILD_TESTS
@@ -68,6 +75,8 @@ class DiskWriter
     
     // convienice functions for code separation
     void writeMaster();
+    
+    std::string controllerInfo[CONTROLLER_INFO_SIZE];
 };
 
 #endif // LUPPP_DISK_WRITER_H

@@ -29,6 +29,11 @@ DiskWriter::DiskWriter()
   sessionJson = cJSON_CreateObject();
   audioJson   = cJSON_CreateObject();
   
+  // setup default controller name / author etc
+  controllerInfo[CONTROLLER_NAME] = "no name";
+  controllerInfo[CONTROLLER_AUTHOR] = "no author";
+  controllerInfo[CONTROLLER_LINK] = "no link";
+  
   sessionDir = getenv("HOME");
   sessionName = "lupppSession";
   foldersCreated = false;
@@ -131,10 +136,12 @@ std::string DiskWriter::getLastSavePath()
   return sessionPath;
 }
 
-int DiskWriter::writeControllerFile(std::string name  ,
-                                    std::string author,
-                                    std::string email,
-                                    Controller* c     )
+void DiskWriter::writeControllerInfo( CONTROLLER_INFO c, std::string s )
+{
+  controllerInfo[c] = s;
+}
+
+int DiskWriter::writeControllerFile( Controller* c )
 {
   if ( c )
   {
@@ -155,9 +162,12 @@ int DiskWriter::writeControllerFile(std::string name  ,
     
     cJSON* controllerJson = cJSON_CreateObject();
     
-    cJSON_AddItemToObject( controllerJson, "name",   cJSON_CreateString( name.c_str()   ));
-    cJSON_AddItemToObject( controllerJson, "author", cJSON_CreateString( author.c_str() ));
-    cJSON_AddItemToObject( controllerJson, "email",  cJSON_CreateString( email.c_str()  ));
+    cJSON_AddItemToObject( controllerJson, "name",
+        cJSON_CreateString( controllerInfo[CONTROLLER_NAME].c_str()   ) );
+    cJSON_AddItemToObject( controllerJson, "author",
+        cJSON_CreateString( controllerInfo[CONTROLLER_AUTHOR].c_str() ) );
+    cJSON_AddItemToObject( controllerJson, "link",
+        cJSON_CreateString( controllerInfo[CONTROLLER_LINK].c_str()   ) );
     
     // input bindings
     std::vector<Binding*> b = g->getMidiToAction();

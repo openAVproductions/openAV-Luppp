@@ -623,15 +623,15 @@ int GenericMIDI::loadController( std::string file )
         LUPPP_NOTE("Has no author field");
     }
     
-    cJSON* linkJson = cJSON_GetObjectItem( controllerJson, "email" );
+    cJSON* linkJson = cJSON_GetObjectItem( controllerJson, "link" );
     if ( linkJson )
     {
       email = linkJson->valuestring;
-      LUPPP_NOTE("Email %s", email.c_str() );
+      LUPPP_NOTE("Link %s", email.c_str() );
     }
     else
     {
-        LUPPP_NOTE("Has no email field");
+        LUPPP_NOTE("Has no link field");
     }
     
     

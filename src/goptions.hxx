@@ -31,7 +31,9 @@ class ControllerUI
     ~ControllerUI();
     
     void setAuthor(std::string author);
-    void setEmail (std::string email  );
+    void setLink (std::string link );
+    std::string getAuthor(){return author;}
+    std::string getLink(){return link;}
     
     void setTarget(const char* n);
     void setBindEnable( bool b );
@@ -57,10 +59,10 @@ class ControllerUI
     // bindings
     std::string target;
     std::string author;
-    std::string email;
+    std::string link;
     
-    Fl_Box* authorLabel;
-    Fl_Box* emailLabel;
+    Avtk::Button* authorLabel;
+    Avtk::Button* linkLabel;
     
     std::vector<int> bindingID;
     
