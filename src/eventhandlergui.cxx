@@ -197,6 +197,21 @@ void handleGuiEvents()
               gui->getMasterTrack()->getClipSelector()->setState( i, GridLogic::STATE_EMPTY );
             gui->getMasterTrack()->getClipSelector()->setState( ev.scene, GridLogic::STATE_PLAYING );
           } break; }
+          
+        case Event::GRID_SELECT_NEW_CHOSEN: {
+          if ( availableRead >= sizeof(EventGridSelectNewChosen) ) {
+            EventGridSelectNewChosen ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventGridSelectNewChosen) );
+            
+            LUPPP_NOTE("New special, %i, %i", ev.track, ev.scene);
+            
+            
+            for(int i = 0; i < NTRACKS; i++)
+            {
+              gui->getTrack(i)->getClipSelector()->setSpecial( i == ev.track ? ev.scene : -1 );
+            }
+          } break; }
+          
         
         case Event::TRACK_SEND: {
           if ( availableRead >= sizeof(EventTrackSend) ) {

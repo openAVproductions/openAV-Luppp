@@ -95,6 +95,15 @@ void ControllerUpdater::setTrackSend(int t, int send, float v)
     c.at(i)->trackSend(t, send, v);
 }
 
+void ControllerUpdater::specialScene(int t, int scene)
+{
+  for(unsigned int i = 0; i < c.size(); i++)
+  {
+    printf("calling on c %i\n", i);
+    c.at(i)->specialScene(t, scene);
+  }
+}
+
 void ControllerUpdater::masterInputToActive(int to, bool v)
 {
   for(unsigned int i = 0; i < c.size(); i++)

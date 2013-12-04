@@ -84,6 +84,10 @@ class ClipSelector : public Fl_Button
     static const int numClips = 10;
     ClipState clips[numClips];
     
+    /// indicates if a clip is the "special" clip
+    void setSpecial(int scene);
+    int special;
+    
     bool _master;
     bool mouseOver;
     bool highlight;

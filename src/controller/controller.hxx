@@ -54,6 +54,9 @@ class Controller
     virtual void bpm(int bpm){}
     virtual void tapTempo(bool b){}
     
+    /// Special
+    virtual void specialScene(int t, int scene){}
+    
     /// track functionality
     virtual void mute(int t, bool b){}
     virtual void volume(int t, float f){}

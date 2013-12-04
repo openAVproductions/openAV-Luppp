@@ -400,6 +400,9 @@ Gui::Gui(std::string argZero) :
   
   window.end();
   
+  tracks.at(0)->getClipSelector()->setSpecial( 0 );
+  
+  
   optionWindow = new OptionsWindow();
   
   // Create AudioEditor after window.end() has been called

@@ -107,14 +107,20 @@ void GridLogic::launchScene( int scene )
   jack->getControllerUpdater()->launchScene( scene );
 }
 
+void GridLogic::specialScene(int t, int s)
+{
+  selectedTrack = t;
+  selectedScene = s;
+  
+  // update UI's
+  jack->getControllerUpdater()->specialScene( t, s );
+}
+
 void GridLogic::pressed( int track, int scene )
 {
   if ( sampleTrackScene )
   {
-    selectedTrack = track;
-    selectedScene = scene;
-    
-    //sampleTrackScene = false;
+    specialScene( track, scene );
     
     // don't act on grid press!
     return;

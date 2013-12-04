@@ -39,6 +39,8 @@ ClipSelector::ClipSelector( int _x, int _y, int _w, int _h,
   w = _w;
   h = _h;
   
+  special = -1;
+  
   label = _label;
   _master = master;
   
@@ -85,6 +87,18 @@ void ClipSelector::clipName(int clip, std::string name)
   clips[clip].setName( name );
 }
 
+void ClipSelector::setSpecial(int scene)
+{
+  if ( special == -1 && scene == -1 )
+  {
+    // no change
+    return;
+  }
+  
+  special = scene;
+  redraw();
+}
+
 void ClipSelector::draw()
 {
   if (damage() & FL_DAMAGE_ALL)
@@ -105,12 +119,13 @@ void ClipSelector::draw()
     int clipWidth  = w - 2;
     int clipHeight = (h / numClips);
     
+    // text height adjustment based on clip size
     // small 22, 13
     // start 29, 17
+    //printf("clipHeight %i\n", clipHeight);
     int textHeight = 13 + ((clipHeight - 22) * 0.66 );
     
     
-    printf("clipHeight %i\n", clipHeight);
     
     int xOff = x+clipHeight/2;
     
@@ -203,7 +218,16 @@ void ClipSelector::draw()
       cairo_set_font_size( cr, 11 );
       cairo_show_text( cr, clips[i].getName().c_str() );
       
+      // special indicator?
+      if ( i == special )
+      {
+        cairo_rectangle( cr, x+2, drawY, clipWidth -1, clipHeight - 3 );
+        cairo_set_source_rgba(cr, 1.0, 0.408, 0.0, alpha);
+        cairo_stroke( cr );
+      }
+      
       drawY += clipHeight;
+      
     }
     
     cairo_restore( cr );
@@ -315,14 +339,9 @@ int ClipSelector::handle(int event)
           }
           else if ( strcmp(m->label(), "Special select") == 0 )
           {
-            printf("special selected %i, %i\n", ID, clipNum );
-            // turn on special selection, send note event, turn off selection:
-            EventGridSelectClipEnable e1(true);
-            writeToDspRingbuffer( &e1 );
-            EventGridEvent e2(ID, clipNum, true);
-            writeToDspRingbuffer( &e2 );
-            EventGridSelectClipEnable e3(false);
-            writeToDspRingbuffer( &e3 );
+            //printf("special selected %i, %i\n", ID, clipNum );
+            EventGridSelectNewChosen e( ID, clipNum);
+            writeToDspRingbuffer( &e );
           }
           else if ( strcmp(m->label(), "Rename") == 0 )
           {

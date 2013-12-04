@@ -51,6 +51,8 @@ class ControllerUpdater
     void setTrackSendActive(int t, int send, bool v);
     void setTrackSend(int t, int send, float v);
     
+    void specialScene(int t, int scene);
+    
     void launchScene( int scene );
     
     void setSceneState(int t, int clip, GridLogic::State s);

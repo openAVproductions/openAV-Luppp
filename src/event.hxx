@@ -63,6 +63,7 @@ namespace Event
     GRID_LAUNCH_SCENE, // launches a scene
     GRID_SELECT_CLIP_ENABLE, // enable selecting a clip from the grid
     GRID_SELECT_CLIP_EVENT, // a press / release on the selected clip
+    GRID_SELECT_NEW_CHOSEN, // a different clip is now "special"
     
     /// Track
     TRACK_SEND,
@@ -178,6 +179,16 @@ class EventGridSelectClipEnable : public EventBase
     uint32_t size() { return sizeof(EventGridSelectClipEnable); }
     bool enable;
     EventGridSelectClipEnable(bool e=false):enable(e){}
+};
+
+class EventGridSelectNewChosen : public EventBase
+{
+  public:
+    int type() { return int(GRID_SELECT_NEW_CHOSEN); }
+    uint32_t size() { return sizeof(EventGridSelectNewChosen); }
+    int track;
+    int scene;
+    EventGridSelectNewChosen(int t = -1, int s = -1):track(t),scene(s){}
 };
 
 class EventQuit : public EventBase

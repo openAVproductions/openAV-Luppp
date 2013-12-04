@@ -60,6 +60,8 @@ class GridLogic : public TimeObserver
     
     void selectedTrackSceneEvent(bool pressed);
     
+    void specialScene(int t, int s);
+    
     /// GUI load event
     void load(int track, int scene, AudioBuffer* ab);
     

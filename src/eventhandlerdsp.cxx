@@ -159,6 +159,13 @@ void handleDspEvents()
             jack->getGridLogic()->selectedTrackSceneEvent( ev.pressed );
             break; }
         
+        case Event::GRID_SELECT_NEW_CHOSEN: {
+            EventGridSelectNewChosen ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventGridSelectNewChosen) );
+            jack->getGridLogic()->specialScene( ev.track, ev.scene );
+            break; }
+        
+        
         case Event::LOOPER_LOAD: {
           if ( availableRead >= sizeof(EventLooperLoad) ) {
             EventLooperLoad ev;

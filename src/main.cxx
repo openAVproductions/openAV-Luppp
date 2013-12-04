@@ -72,6 +72,7 @@ int main(int argc, char** argv)
   
   
 #ifdef BUILD_TESTS
+  LUPPP_NOTE("Built with BUILD_TESTS enabled");
   if ( runTests )
   {
     // counts failures
@@ -100,8 +101,8 @@ int main(int argc, char** argv)
 #endif
   
   
-  // setup the "real" JACK / Gui: Jack first, then GUI
-  gui = new Gui(argv[0]);
+  // Create a GUI, check for NSM integration
+  gui = new Gui( argv[0] );
   
   if ( gui->getNsm() )
   {

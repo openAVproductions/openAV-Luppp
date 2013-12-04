@@ -28,6 +28,8 @@ class LupppGUI : public Controller
     void bpm(int bpm);
     void tapTempo( bool b );
     
+    void specialScene(int t, int scene);
+    
     void mute(int t, bool b);
     void volume(int t, float f);
     void progress(int t, int s, float p);
