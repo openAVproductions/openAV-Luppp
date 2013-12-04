@@ -146,9 +146,10 @@ static void selectLoadController(Fl_Widget* w, void* data)
   fnfc.directory( s.str().c_str() ); // default directory to use
   // Show native chooser
   switch ( fnfc.show() ) {
-     case -1: printf("ERROR: %s\n", fnfc.errmsg());    break;  // ERROR
-     case  1: printf("CANCEL\n");                      break;  // CANCEL
-     default: printf("Loading controller at %s\n", fnfc.filename());
+     case -1: /*printf("ERROR: %s\n", fnfc.errmsg());*/  break;  // ERROR
+     case  1: /*printf("CANCEL\n");                  */  break;  // CANCEL
+     default:
+        //printf("Loading controller at %s\n", fnfc.filename());
         path = fnfc.filename();
         break;
   }
@@ -299,7 +300,12 @@ void ControllerUI::addBinding( Binding* b )
   // add individual bindings as they're made
     const char* tmp = Event::getPrettyName( b->action );
     if ( !tmp )
+    {
+#ifdef DEBUG_MIDI
       LUPPP_NOTE("new binding, action string returned NULL, action number %i ", b->action  );
+#endif
+      return;
+    }
   }
   else
   {

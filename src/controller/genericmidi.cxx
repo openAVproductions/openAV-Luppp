@@ -826,10 +826,10 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
   else if ( strcmp( actionJson->valuestring, "grid:launch_scene" ) == 0 ) {
     tmp->action = Event::GRID_LAUNCH_SCENE;
   }
-  else if ( strcmp( actionJson->valuestring, "grid:selectclipevent" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, "grid:special_clip_event" ) == 0 ) {
     tmp->action = Event::GRID_SELECT_CLIP_EVENT;
   }
-  else if ( strcmp( actionJson->valuestring, "grid:selectclipenable" ) == 0 ) {
+  else if ( strcmp( actionJson->valuestring, "grid:select_clip_enable" ) == 0 ) {
     tmp->action = Event::GRID_SELECT_CLIP_ENABLE;
   }
   else if ( strcmp( actionJson->valuestring, "master:volume" ) == 0 ) {

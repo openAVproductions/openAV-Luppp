@@ -57,6 +57,8 @@ const char* Event::getPrettyName( int type )
     case GRID_EVENT:{ return EventGridEvent::prettyName; }
     case GRID_LAUNCH_SCENE:{ return EventGridLaunchScene::prettyName; }
     
+    case METRONOME_ACTIVE:{ return EventMetronomeActive::prettyName; }
+    
     default: return 0;
   }
 }

@@ -68,7 +68,6 @@ void LupppGUI::trackSend(int t, int send, float r)
 
 void LupppGUI::specialScene(int t, int s)
 {
-  printf("special cene writing event\n");
   EventGridSelectNewChosen e( t, s );
   writeToGuiRingbuffer( &e );
 }

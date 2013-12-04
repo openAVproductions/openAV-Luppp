@@ -202,10 +202,7 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventGridSelectNewChosen) ) {
             EventGridSelectNewChosen ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventGridSelectNewChosen) );
-            
-            LUPPP_NOTE("New special, %i, %i", ev.track, ev.scene);
-            
-            
+            //LUPPP_NOTE("New special, %i, %i", ev.track, ev.scene);
             for(int i = 0; i < NTRACKS; i++)
             {
               gui->getTrack(i)->getClipSelector()->setSpecial( i == ev.track ? ev.scene : -1 );
