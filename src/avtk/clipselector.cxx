@@ -272,6 +272,7 @@ int ClipSelector::handle(int event)
               {0},
             //{ "Record" },
             { "Use as tempo" },
+            { "Special select"},
             { "Rename" },
             { "Clear" },
             { 0 }
@@ -311,6 +312,17 @@ int ClipSelector::handle(int event)
           {
             EventLooperUseAsTempo e (ID, clipNum);
             writeToDspRingbuffer( &e );
+          }
+          else if ( strcmp(m->label(), "Special select") == 0 )
+          {
+            printf("special selected %i, %i\n", ID, clipNum );
+            // turn on special selection, send note event, turn off selection:
+            EventGridSelectClipEnable e1(true);
+            writeToDspRingbuffer( &e1 );
+            EventGridEvent e2(ID, clipNum, true);
+            writeToDspRingbuffer( &e2 );
+            EventGridSelectClipEnable e3(false);
+            writeToDspRingbuffer( &e3 );
           }
           else if ( strcmp(m->label(), "Rename") == 0 )
           {
