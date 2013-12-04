@@ -26,6 +26,8 @@ using namespace std;
 
 DiskReader::DiskReader()
 {
+  // FIXME: could use a config item of sample location?
+  lastLoadedSamplePath = getenv("HOME");
 }
 
 int DiskReader::loadPreferences()
@@ -266,6 +268,10 @@ int DiskReader::loadSample( int track, int scene, string path )
       // write audioBuffer to DSP
       EventLooperLoad e = EventLooperLoad( track, scene, ab );
       writeToDspRingbuffer( &e );
+      
+      char* tmp = strdup( path.c_str() );
+      lastLoadedSamplePath = dirname( tmp );
+      free(tmp);
     }
     else
     {
@@ -275,6 +281,11 @@ int DiskReader::loadSample( int track, int scene, string path )
   
   return LUPPP_RETURN_OK;
   
+}
+
+std::string DiskReader::getLastLoadedSamplePath()
+{
+  return lastLoadedSamplePath;
 }
 
 int DiskReader::readSession( std::string path )

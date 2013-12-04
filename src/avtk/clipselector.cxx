@@ -222,7 +222,7 @@ void ClipSelector::draw()
       if ( i == special )
       {
         cairo_rectangle( cr, x+2, drawY, clipWidth -1, clipHeight - 3 );
-        cairo_set_source_rgba(cr, 1.0, 0.408, 0.0, alpha);
+        cairo_set_source_rgba(cr, 0.0, 153 / 255.f, 1.0, alpha);
         cairo_stroke( cr );
       }
       
@@ -285,7 +285,8 @@ int ClipSelector::handle(int event)
           Fl_Menu_Item rclick_menu[] =
           {
             { "Load" },
-            { "Beats",  0,   0, 0, FL_SUBMENU },
+            { "Special"},
+            { "Beats",  0,   0, 0, FL_SUBMENU | FL_MENU_DIVIDER },
               {"1       "},
               {"2"},
               {"4"},
@@ -296,8 +297,7 @@ int ClipSelector::handle(int event)
               {0},
             //{ "Record" },
             { "Use as tempo" },
-            { "Special select"},
-            { "Rename" },
+            { "Rename", 0, 0, 0, FL_MENU_DIVIDER},
             { "Clear" },
             { 0 }
           };
@@ -337,7 +337,7 @@ int ClipSelector::handle(int event)
             EventLooperUseAsTempo e (ID, clipNum);
             writeToDspRingbuffer( &e );
           }
-          else if ( strcmp(m->label(), "Special select") == 0 )
+          else if ( strcmp(m->label(), "Special") == 0 )
           {
             //printf("special selected %i, %i\n", ID, clipNum );
             EventGridSelectNewChosen e( ID, clipNum);

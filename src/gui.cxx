@@ -246,7 +246,10 @@ void Gui::selectLoadSample( int track, int scene )
   fnfc.title("Pick a file");
   fnfc.type(Fl_Native_File_Chooser::BROWSE_FILE);
   fnfc.filter("Wav\t*.wav");
-  fnfc.directory( getenv("HOME") ); // default directory to use
+  
+  std::string defLoadPath = gui->getDiskReader()->getLastLoadedSamplePath();
+  fnfc.directory( defLoadPath.c_str() ); // default directory to use
+  
   // Show native chooser
   switch ( fnfc.show() ) {
      case -1: printf("ERROR: %s\n", fnfc.errmsg());    break;  // ERROR

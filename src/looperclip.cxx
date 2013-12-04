@@ -108,10 +108,12 @@ void LooperClip::load( AudioBuffer* ab )
   // set the endpoint to the buffer's size
   _recordhead = _buffer->getData().size();
   
+#ifdef DEBUG_BUFFER
   char buffer [50];
   sprintf (buffer, "LC::load() t %i, s %i, aF %i",track, scene, int(_buffer->getAudioFrames()) );
   EventGuiPrint e( buffer );
   writeToGuiRingbuffer( &e );
+#endif
 }
 
 void LooperClip::setRequestedBuffer( AudioBuffer* ab )
@@ -155,7 +157,10 @@ void LooperClip::recieveSaveBuffer( AudioBuffer* saveBuffer )
   }
   else
   {
-    LUPPP_ERROR("LooperClip @ %i, %i could not save, save buffer too small!", track, scene);
+    char buffer [50];
+    sprintf (buffer, "LC:: %i, s: can't save, buf too small",track, scene );
+    EventGuiPrint e( buffer );
+    writeToGuiRingbuffer( &e );
     Stately::error("");
   }
 }

@@ -157,7 +157,7 @@ static void selectLoadController(Fl_Widget* w, void* data)
   if ( strcmp( path.c_str(), "" ) == 0 )
     return;
   
-  LUPPP_NOTE("%s","ADD Controller cb");
+  //LUPPP_NOTE("%s","ADD Controller cb");
   GenericMIDI* c = new GenericMIDI( path );
   
   if ( c->status() == Controller::CONTROLLER_OK )

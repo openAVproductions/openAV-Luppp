@@ -30,6 +30,7 @@ class DiskReader
     
     /// loads a sample into a new AudioBuffer, returning the buffer
     int loadSample( int track, int scene, std::string path );
+    std::string getLastLoadedSamplePath();
     
     /// reads a session from disk, parsing and restoring state
     int readSession( std::string path );
@@ -51,6 +52,9 @@ class DiskReader
     
     // ui show editor
     int showAudioEditor(AudioBuffer* );
+    
+    // sample load dialog
+    std::string lastLoadedSamplePath;
 };
 
 #endif // LUPPP_DISK_READER_H
