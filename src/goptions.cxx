@@ -213,8 +213,8 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
   widget = new Fl_Group( x, y, w, h, name.c_str());
   {
     // author / link
-    authorLabel = new Avtk::Button( x + 5, y + 0, 190, 25, "Author?" );
-    linkLabel   = new Avtk::Button( x + 7+ w/2, y + 0, 190, 25, "Link?" );
+    authorLabel = new Avtk::Button( x + 5, y + 5, 190, 25, "Author?" );
+    linkLabel   = new Avtk::Button( x + 7+ w/2, y + 5, 190, 25, "Link?" );
     
     authorLabel->label("Author?");
     authorLabel->label("Link?");
@@ -223,23 +223,24 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
     linkLabel->callback( updateLinkCB, this );
     
     // binding / target
-    targetLabelStat = new Fl_Box(x + 100,y + 27, 75, 25,"Target: ");
-    targetLabel = new Fl_Box(x + 140,y + 27, 200, 25,"");
-    bindEnable = new Avtk::LightButton(x + 5, y + 27, 100, 25, "Bind Enable");
+    targetLabelStat = new Fl_Box(x + 100,y + 32, 75, 25,"Target: ");
+    targetLabel = new Fl_Box(x + 140,y + 32, 200, 25,"");
+    bindEnable = new Avtk::LightButton(x + 5, y + 32, 100, 25, "Bind Enable");
     
     writeControllerBtn = new Avtk::Button( x + 5, y + h - 27, 100, 25, "Save" );
-    //ctlrButton = new Avtk::Button(x + 110, y + 275, 100, 25, "Load");
-    removeController = new Avtk::Button(x + 110, y + h - 27, 100, 25, "Remove");
+    removeController = new Avtk::Button( x + 110, y + h - 27, 100, 25, "Remove");
     
-    scroll = new Fl_Scroll( x + 5, y + 77, 395, 270 );
+    scroll = new Fl_Scroll( x + 5, y + 82, 395, 265 );
     {
-      bindingsPack = new Fl_Pack( x + 5, y + 75, 340, 10);
+      bindingsPack = new Fl_Pack( x + 5, y + 82, w - 15, 270-10);
       bindingsPack->end();
       bindingsPack->spacing( 2 );
+      bindingsPack->box(FL_DOWN_FRAME);
     }
-    scroll->end();
+    scroll->resizable( bindingsPack );
     scroll->box( FL_DOWN_FRAME );
     scroll->type( Fl_Scroll::VERTICAL_ALWAYS );
+    scroll->end();
     
     widget->resizable( scroll );
   }
