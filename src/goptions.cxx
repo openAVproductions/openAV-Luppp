@@ -298,9 +298,7 @@ void ControllerUI::addBinding( Binding* b )
   {
   // add individual bindings as they're made
     const char* tmp = Event::getPrettyName( b->action );
-    if ( tmp )
-      LUPPP_NOTE("new binding, action: %s, ", tmp );
-    else
+    if ( !tmp )
       LUPPP_NOTE("new binding, action string returned NULL, action number %i ", b->action  );
   }
   else
@@ -357,7 +355,6 @@ void ControllerUI::addBinding( Binding* b )
     but->callback( deleteBindingFromController, this );
     but->redraw();
     
-    
     Fl_Box* b = new Fl_Box(35, 35, 400, 25, strdup(s.str().c_str()) );
     b->align( FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
     b->redraw();
@@ -372,7 +369,7 @@ void ControllerUI::addBinding( Binding* b )
   bindingsPack->redraw();
   scroll->redraw();
   
-  LUPPP_NOTE("binding size %i %i", bindingsPack->w(), bindingsPack->h() );
+  //LUPPP_NOTE("binding size %i %i", bindingsPack->w(), bindingsPack->h() );
 }
 
 void ControllerUI::addBindings( GenericMIDI* c )
@@ -380,8 +377,8 @@ void ControllerUI::addBindings( GenericMIDI* c )
   // FIXME: add binding to Avtk::Binding here
   std::vector<Binding*> bindingVector= c->getMidiToAction();
   
-  for(unsigned int i = 0; i < bindingVector.size() && i < 5; i++ )
-  { 
+  for(unsigned int i = 0; i < bindingVector.size(); i++ )
+  {
     addBinding( bindingVector.at(i) );
   }
 }
