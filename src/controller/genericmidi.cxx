@@ -405,7 +405,7 @@ void GenericMIDI::midi(unsigned char* midi)
   // create new MIDI binding?
   if ( jack->bindingEventRecordEnable )
   {
-    LUPPP_NOTE("making binding from: %i %i %f", status, data, value );
+    //LUPPP_NOTE("making binding from: %i %i %f", status, data, value );
     setupBinding( jack->bindingEventType, status, data,
                   jack->bindingTrack,
                   jack->bindingScene,
@@ -431,7 +431,7 @@ void GenericMIDI::midi(unsigned char* midi)
     
     if ( b->status == status && b->data == data )
     {
-      LUPPP_NOTE("Executing action %s, send %i value %f, b->active %i", Event::getPrettyName(b->action), b->send, value, int(b->active) );
+      //LUPPP_NOTE("Executing action %s, send %i value %f, b->active %i", Event::getPrettyName(b->action), b->send, value, int(b->active) );
       
       switch( b->action )
       {
@@ -771,8 +771,7 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
   tmp->data   = dataJson->valueint;
   
   // gets the Action type from the JSON string
-  tmp->action = Event::getTypeFromName(actionJson->valuestring);
-  
+  tmp->action = Event::getTypeFromName( actionJson->valuestring );
   
   
   // check what our send value should be:

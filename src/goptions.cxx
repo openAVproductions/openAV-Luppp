@@ -55,11 +55,18 @@ static void updateAuthorCB(Fl_Widget* w, void* data)
 static void updateLinkCB(Fl_Widget* w, void* data)
 {
   ControllerUI* c = (ControllerUI*)data;
-  const char* s = fl_input( "Link: ", "" );
-  if ( s )
-  {
-    c->setLink( s );
-  }
+  
+  stringstream str;
+  str << "xdg-open ";
+  
+  // add http:// if its not in the string
+  std::string l =  c->getLink();
+  if ( ( l.find("http") ) == std::string::npos )
+    str << " http://";
+  
+  str << l;
+  
+  system( str.str().c_str() );
 }
 
 static void writeBindEnable(Fl_Widget* w, void* data)
@@ -286,10 +293,14 @@ void ControllerUI::setBindEnable( bool b )
 
 void ControllerUI::addBinding( Binding* b )
 {
-  if ( b->action )
+  if ( b->action != EVENT_NULL )
   {
   // add individual bindings as they're made
-    LUPPP_NOTE("new binding, action: %s, ", Event::getPrettyName( b->action ) );
+    const char* tmp = Event::getPrettyName( b->action );
+    if ( tmp )
+      LUPPP_NOTE("new binding, action: %s, ", tmp );
+    else
+      LUPPP_NOTE("new binding, action string returned NULL, action number %i ", b->action  );
   }
   else
   {
@@ -357,11 +368,10 @@ void ControllerUI::addBinding( Binding* b )
   bindingsPack->add( tmp );
   
   bindingsPack->resize( bindingsPack->x(),bindingsPack->y(),bindingsPack->w(),bindingsPack->children() * 36 );
-  
   bindingsPack->redraw();
-  
   scroll->redraw();
   
+  LUPPP_NOTE("binding size %i %i", bindingsPack->w(), bindingsPack->h() );
 }
 
 void ControllerUI::addBindings( GenericMIDI* c )
