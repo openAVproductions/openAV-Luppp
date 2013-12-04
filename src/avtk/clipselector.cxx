@@ -105,6 +105,13 @@ void ClipSelector::draw()
     int clipWidth  = w - 2;
     int clipHeight = (h / numClips);
     
+    // small 22, 13
+    // start 29, 17
+    int textHeight = 13 + ((clipHeight - 22) * 0.66 );
+    
+    
+    printf("clipHeight %i\n", clipHeight);
+    
     int xOff = x+clipHeight/2;
     
     int drawY = y + 1;
@@ -191,7 +198,7 @@ void ClipSelector::draw()
       cairo_stroke(cr);
       
       // clip name
-      cairo_move_to( cr, x + clipHeight + 10, drawY + 17 );
+      cairo_move_to( cr, x + clipHeight + 5, drawY + textHeight );
       cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 0.9 );
       cairo_set_font_size( cr, 11 );
       cairo_show_text( cr, clips[i].getName().c_str() );
