@@ -11,8 +11,14 @@ ControllerUpdater::ControllerUpdater()
 
 void ControllerUpdater::registerController( Controller* controller )
 {
+  if (!controller)
+    LUPPP_ERROR("Register Controller passed NULL controller!");
+  
+  LUPPP_NOTE("Registering controller %s", controller->getName().c_str() );
+  
   // store the controller instance
   c.push_back( controller );
+  
   
   // and tell it to register itself (MidiObserver / AudioObserver etc)
   controller->registerComponents();
@@ -99,7 +105,7 @@ void ControllerUpdater::specialScene(int t, int scene)
 {
   for(unsigned int i = 0; i < c.size(); i++)
   {
-    printf("calling on c %i\n", i);
+    printf("calling on c %i, %s\n", i, c.at(i)->getName().c_str() );
     c.at(i)->specialScene(t, scene);
   }
 }

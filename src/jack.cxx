@@ -202,6 +202,20 @@ Jack::Jack( std::string name ) :
   {
     LUPPP_ERROR("%s","Error setting timebase callback");
   }
+  
+  //Controller* m = new AkaiAPC();
+  
+  // TODO: Add GUI dialog to add controllers, and insert them into the controller map.
+  // Watch out for RT stuff, loading file, registering ports etc: before activate?!
+  //Controller* m = new GenericMIDI("akai_apc.ctlr","apc");
+  
+  Controller* gui = new LupppGUI();
+  controllerUpdater->registerController( gui );
+  
+  if ( !gui )
+  {
+    LUPPP_ERROR("%s","Error creating LupppGUI Controller instance");
+  }
 }
 
 Jack::~Jack()
@@ -219,20 +233,6 @@ Jack::~Jack()
 
 void Jack::activate()
 {
-  //Controller* m = new AkaiAPC();
-  
-  // TODO: Add GUI dialog to add controllers, and insert them into the controller map.
-  // Watch out for RT stuff, loading file, registering ports etc: before activate?!
-  //Controller* m = new GenericMIDI("akai_apc.ctlr","apc");
-  
-  Controller* gui = new LupppGUI();
-  controllerUpdater->registerController( gui );
-  
-  if ( !gui )
-  {
-    LUPPP_ERROR("%s","Error creating LupppGUI Controller instance");
-  }
-  
   jack_activate( client );
   jack_transport_start(client);
 }
