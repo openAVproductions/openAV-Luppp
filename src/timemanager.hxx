@@ -22,10 +22,15 @@ class TimeManager
     void setBpmZeroOne(float bpm);
     void setFpb(float f);
     
+    /// add a component to be updated for time events
     void registerObserver(TimeObserver* o);
     
+    /// call this when a tempo-tap occurs
     void tap();
     
+    /// called to process buffers->nframes samples. If a beat is present, this
+    /// is handled gracefully, first calling process up to the beat, then doing
+    /// a beat() event on all TimeObservers, and processing the remaining samples
     void process(Buffers* buffers);
     
     /// returns the number of samples till beat if a beat exists in this process
@@ -35,15 +40,17 @@ class TimeManager
   private:
     int samplerate;
     
-    /// holds the number of frames before a beat
-    //int nframesToBeat;
+    /// number of frames per beat
+    float fpb;
     
+    /// holds the number of frames processed
     long long totalFrameCounter;
     
     /// counts down frames until the next beat
     long beatFrameCountdown;
     
-    float fpb;
+    /// counts bars / beats processed
+    int barCounter;
     int beatCounter;
     
     /// tap tempo measurements

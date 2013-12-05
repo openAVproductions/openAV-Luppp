@@ -22,6 +22,7 @@ TimeManager::TimeManager():
   // 120 BPM default
   fpb = samplerate / 2;
   
+  barCounter  = 0;
   beatCounter = 0;
   
   beatFrameCountdown = fpb;
@@ -128,25 +129,15 @@ void TimeManager::process(Buffers* buffers)
   // tap tempo measurements
   frame = buffers->transportFrame;
   
-  //int framesPerBeat = (int) buffers->samplerate / (bpm / 60.0);
-  
   // time signature?
   //buffers->transportPosition->beats_per_bar = 4;
   //buffers->transportPosition->beat_type     = 4;
   
   totalFrameCounter += buffers->nframes;
   
-  //beatFrameCountdown = beatFrameCountdown - buffers->nframes;
-  //printf("beatFCd %i, %i\n", beatFrameCountdown, buffers->nframes );
-  
-  
-  
-  
   // calculate beat / bar position in nframes
   int beat = totalFrameCounter / fpb;
   beatFrameCountdown = totalFrameCounter - (beat*fpb);
-  
-  
   
   
   if ( beatFrameCountdown < buffers->nframes )
@@ -170,20 +161,18 @@ void TimeManager::process(Buffers* buffers)
       {
         observers.at(i)->bar();
       }
+      barCounter++;
       //buffers->transportPosition->bar++;
     }
     
     // process frames after beat()
-    
-    // beatFrameCountdown < nframes in this case, so this remaining is a + int
     int remaining = long(buffers->nframes) - beatFrameCountdown;
-    
+    /*
     char buffer [50];
     sprintf (buffer, "r: %i, nfr: %i, bFC %li\ttFC %lli",  remaining, buffers->nframes, beatFrameCountdown, totalFrameCounter );
     EventGuiPrint e2( buffer );
     writeToGuiRingbuffer( &e2 );
-    
-    
+    */
     if ( remaining > 0 )
     {
       jack->processFrames( remaining );
@@ -191,20 +180,19 @@ void TimeManager::process(Buffers* buffers)
     else
     {
       char buffer [50];
-      sprintf (buffer, "weird negative remaining!! %i",  remaining );
+      sprintf (buffer, "Timing Error: negative samples %i",  remaining );
       EventGuiPrint e2( buffer );
       writeToGuiRingbuffer( &e2 );
     }
     
     // write new beat to UI (bar info currently not used)
-    EventTimeBarBeat e( 0, beatCounter );
+    EventTimeBarBeat e( barCounter, beatCounter );
     writeToGuiRingbuffer( &e );
     
     beatFrameCountdown = fpb; 
   }
   else
   {
-    //printf("nframes %i\n", buffers->nframes );
     jack->processFrames( buffers->nframes );
   }
   
