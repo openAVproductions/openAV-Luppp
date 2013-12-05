@@ -68,14 +68,10 @@ class ControllerUI
     
     Fl_Box* targetLabel;
     Fl_Box* targetLabelStat;
-    Avtk::Bindings* bindings;
+    //Avtk::Bindings* bindings;
     Avtk::LightButton* bindEnable;
     Avtk::Button* removeController;
     Avtk::Button* writeControllerBtn;
-    
-    
-    // Controller
-    Avtk::Button* ctlrButton;
 };
 
 class OptionsWindow

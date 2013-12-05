@@ -380,7 +380,6 @@ void ControllerUI::addBinding( Binding* b )
 
 void ControllerUI::addBindings( GenericMIDI* c )
 {
-  // FIXME: add binding to Avtk::Binding here
   std::vector<Binding*> bindingVector= c->getMidiToAction();
   
   for(unsigned int i = 0; i < bindingVector.size(); i++ )
@@ -391,7 +390,18 @@ void ControllerUI::addBindings( GenericMIDI* c )
 
 ControllerUI::~ControllerUI()
 {
-  // FIXME CRITICAL! free UI component memory here
+  
+  // free all binding resources here:
+  
+  
+  delete authorLabel;
+  delete linkLabel;
+  
+  delete targetLabel;
+  delete targetLabelStat;
+  delete bindEnable;
+  delete removeController;
+  delete writeControllerBtn;
 }
 
 OptionsWindow::OptionsWindow()
