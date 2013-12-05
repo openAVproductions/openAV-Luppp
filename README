@@ -8,7 +8,9 @@ This version depends on the following libraries: please ensure the -dev versions
 
 JACK
 CAIRO
+LIBLO
 SNDFILE
+LIBSAMPLRATE
 NTK               git clone git://git.tuxfamily.org/gitroot/non/fltk.git ntk
 
 
