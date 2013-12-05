@@ -158,7 +158,7 @@ void LooperClip::recieveSaveBuffer( AudioBuffer* saveBuffer )
   else
   {
     char buffer [50];
-    sprintf (buffer, "LC:: %i, s: can't save, buf too small",track, scene );
+    sprintf (buffer, "LC:: %i, %i: can't save, buf too small",track, scene );
     EventGuiPrint e( buffer );
     writeToGuiRingbuffer( &e );
     Stately::error("");

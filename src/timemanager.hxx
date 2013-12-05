@@ -31,17 +31,17 @@ class TimeManager
     /// returns the number of samples till beat if a beat exists in this process
     /// Otherwise returns nframes
     int getNframesToBeat();
-    bool beatInThisProcess();
   
   private:
     int samplerate;
     
     /// holds the number of frames before a beat
     //int nframesToBeat;
-    bool beatInProcess;
+    
+    long long totalFrameCounter;
     
     /// counts down frames until the next beat
-    int beatFrameCountdown;
+    long beatFrameCountdown;
     
     float fpb;
     int beatCounter;
