@@ -139,11 +139,11 @@ void TimeManager::process(Buffers* buffers)
   //buffers->transportPosition->beat_type     = 4;
   
   
-  beatFrameCountdown -= buffers->nframes;
+  beatFrameCountdown = beatFrameCountdown - buffers->nframes;
   //printf("beatFCd %i, %i\n", beatFrameCountdown, buffers->nframes );
   
   
-  if ( beatFrameCountdown < int(buffers->nframes) )
+  if ( beatFrameCountdown < long(buffers->nframes) )
   {
     beatCounter++;
     
@@ -173,15 +173,22 @@ void TimeManager::process(Buffers* buffers)
     int remaining = buffers->nframes - beatFrameCountdown;
     if ( remaining > 0 )
     {
-      /*
       char buffer [50];
       sprintf (buffer, "remaining %i",  remaining );
       EventGuiPrint e2( buffer );
       writeToGuiRingbuffer( &e2 );
-      */
+      
       
       jack->processFrames( remaining );
     }
+    else
+    {
+      char buffer [50];
+      sprintf (buffer, "weird negative remaining!! %i",  remaining );
+      EventGuiPrint e2( buffer );
+      writeToGuiRingbuffer( &e2 );
+    }
+    
     // write new beat to UI (bar info currently not used)
     EventTimeBarBeat e( 0, beatCounter );
     writeToGuiRingbuffer( &e );
