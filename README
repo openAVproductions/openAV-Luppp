@@ -1,10 +1,16 @@
-    Repo for Luppp5
 
-This version of Luppp is a total re-write on the previously announced and released
-version that is available on github. It is redesigned from scratch to handle RT
-better, and scale better.
+    Luppp - OpenAV Productions
 
-This version depends on the following libraries: please ensure the -dev versions are installed.
+  http://openavproductions.com/Luppp
+
+This is the repository of Luppp, the live looping tool.
+
+
+This version of Luppp is designed from zero to handle realtime
+audio, and scale with additional features as needed.
+
+This version depends on the following libraries:
+please ensure the -dev versions are installed.
 
 JACK
 CAIRO
@@ -23,6 +29,18 @@ cd build
 
 
 
-=== Errors
-Please report errors on IRC, to harryhaaren in #lad on FreeNode.net, or email
-harryhaaren@gmail.com. This is a temporary arrangement until a release is made.
+=== Using
+There are a range of demo videos and tutorials available
+on OpenAV's youtube channel:
+www.youtube.com/user/openAVproductions
+
+
+=== Bug Reports
+Please report bugs on github.com/harryhaaren/luppp/issues
+
+
+=== Contact
+If you have a particular question, email me!
+  harryhaaren@gmail.com
+
+Cheers, -Harry
