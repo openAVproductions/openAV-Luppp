@@ -28,7 +28,7 @@ class Looper : public AudioProcessor, public TimeObserver
     void setRequestedBuffer(int s, AudioBuffer* ab);
     
     /// stores the framesPerBeat from TimeManager. Used to stretch audio
-    void setFpb(int f) { fpb = f; }
+    void setFpb(int f);
     
     /// Retrieve a clip from the Looper
     LooperClip* getClip(int scene);

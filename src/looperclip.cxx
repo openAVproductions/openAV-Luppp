@@ -139,7 +139,6 @@ void LooperClip::setRequestedBuffer( AudioBuffer* ab )
 
 void LooperClip::recieveSaveBuffer( AudioBuffer* saveBuffer )
 {
-  // CRITICAL FIXME: crash on buffer size difference
   if ( saveBuffer->getData().size() >= _buffer->getData().at(0) )
   {
     // copy current contents into save buffer,
@@ -184,8 +183,8 @@ void LooperClip::record(int count, float* L, float* R)
       else
       {
         // break: this is *BAD*, audio data is lost but the buffer isn't here
-        // yet to hold new audio data so there's no option. This has only been
-        // experienced during development / testing, not actual usage.
+        // yet to hold new audio data so there's no option. This has not been
+        // encountered in actual usage, only during the development process.
         char buffer [50];
         sprintf (buffer, "LooperClip t %i, s %i, Error: out of mem!",track, scene );
         EventGuiPrint e( buffer );

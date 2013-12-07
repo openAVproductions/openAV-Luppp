@@ -59,6 +59,11 @@ void Looper::setRequestedBuffer(int s, AudioBuffer* ab)
   clips[s]->setRequestedBuffer( ab );
 }
 
+void Looper::setFpb(int f)
+{
+  fpb = f;
+}
+
 void Looper::process(unsigned int nframes, Buffers* buffers)
 {
   // process each clip individually: this allows for playback of one clip,
@@ -97,6 +102,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
       
       for(unsigned int i = 0; i < nframes; i++ )
       {
+        // REFACTOR into system that is better than per sample function calls
         float tmp = clips[clip]->getSample(playSpeed);
         
         float deltaPitch = 12 * log ( playSpeed ) / log (2);
