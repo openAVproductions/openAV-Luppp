@@ -97,7 +97,7 @@ int main(int argc, char** argv)
     
     // setup the testing Gui / JACK: Jack first, then GUI
     Jack::setup("LupppTEST");
-    gui = new Gui(argv[0]);
+    gui = new Gui( argv[0] );
     
     // test offline functionality
     testResult += gui->getDiskReader()->runTests();

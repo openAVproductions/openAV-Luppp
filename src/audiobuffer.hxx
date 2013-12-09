@@ -49,7 +49,7 @@ class AudioBuffer
       numBeats = 0;
       audioFrames = 0;
       memset( name, 0, sizeof(char)*20 );
-      sprintf( name, "%i", ID );
+      //sprintf( name, "%i", ID );
     }
     
     /// this function is used for "resizing" an exisiting buffer, and should
@@ -75,6 +75,11 @@ class AudioBuffer
       }
       
       memcpy( name, n, sizeof(char)* 20 ); 
+    }
+    
+    char* getName()
+    {
+      return name;
     }
     
     int getBeats()

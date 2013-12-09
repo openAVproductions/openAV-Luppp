@@ -91,6 +91,9 @@ int DiskReader::loadPreferences()
       LUPPP_NOTE("No default controllers active.");
     }
     
+    
+    
+    
     cJSON_Delete( preferencesJson );
     delete[] sampleString;
   }
@@ -174,7 +177,10 @@ int DiskReader::loadSample( int track, int scene, string path )
     data.end_of_input = 0;
     data.src_ratio = resampleRatio;
     
-    int ret = src_simple ( &data, SRC_SINC_FASTEST, 1 );
+    
+    // FIXME: ADD FEATURE: Config option for resampling quality on load?
+    int ret = src_simple ( &data, SRC_LINEAR, 1 );
+    //int ret = src_simple ( &data, SRC_SINC_FASTEST, 1 );
     
     LUPPP_NOTE("%s%i%s%i", "Resampling finished, from ", data.input_frames_used, " to ", data.output_frames_gen );
     
@@ -276,15 +282,28 @@ int DiskReader::loadSample( int track, int scene, string path )
       else
       {
         LUPPP_NOTE("AudioBuffer set %i beats.", ab->getBeats() );
+        
+        
+        std::string name = path;
+        int i = name.find_last_of('/') + 1;
+        std::string sub = name.substr( i );
+        
+        ab->setName( sub.c_str() );
+        
         loadableBuffer = true;
       }
     }
     
     if ( loadableBuffer )
     {
+      std::string n = ab->getName();
+      
       // write audioBuffer to DSP
       EventLooperLoad e = EventLooperLoad( track, scene, ab );
       writeToDspRingbuffer( &e );
+      
+      // now write audiobuffer name to GUI on track, scene
+      gui->getTrack( track )->getClipSelector()->clipName( scene, n );
       
       char* tmp = strdup( path.c_str() );
       lastLoadedSamplePath = dirname( tmp );

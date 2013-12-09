@@ -214,7 +214,10 @@ void ClipSelector::draw()
       cairo_move_to( cr, x + clipHeight + 5, drawY + textHeight );
       cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 0.9 );
       cairo_set_font_size( cr, 11 );
-      cairo_show_text( cr, clips[i].getName().c_str() );
+      
+      std::string tmp = clips[i].getName().substr(0,8);
+      
+      cairo_show_text( cr, tmp.c_str() );
       
       // special indicator?
       if ( i == special )
