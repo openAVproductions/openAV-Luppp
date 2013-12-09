@@ -1,0 +1,6 @@
+{
+  "defaultControllers" : ["akai_apc.ctlr"],
+  
+  "__COMMENT__"        : "0 = LINEAR, 1 = SINC_FASTEST, 2 = SINC_BEST",
+  "resampleQuality"    : 2
+}
