@@ -43,6 +43,8 @@ using namespace std;
 
 DiskReader::DiskReader()
 {
+  resampleQuality = 1;
+  
   // FIXME: could use a config item of sample location?
   lastLoadedSamplePath = getenv("HOME");
 }
@@ -67,6 +69,14 @@ int DiskReader::loadPreferences()
       return LUPPP_RETURN_ERROR;
     }
     
+    
+    cJSON* resample = cJSON_GetObjectItem( preferencesJson, "defaultControllers" );
+    if ( resample )
+    {
+      resampleQuality = resample->valueint;
+      if ( resampleQuality == 0 )
+        LUPPP_NOTE("Using Linear resampling, may reduce quality. Check .config/openAV/luppp/luppp.prfs");
+    }
     cJSON* ctlrs = cJSON_GetObjectItem( preferencesJson, "defaultControllers" );
     if ( ctlrs )
     {
@@ -175,10 +185,18 @@ int DiskReader::loadSample( int track, int scene, string path )
     data.end_of_input = 0;
     data.src_ratio = resampleRatio;
     
+    int q = SRC_SINC_FASTEST;
     
-    // FIXME: ADD FEATURE: Config option for resampling quality on load?
-    int ret = src_simple ( &data, SRC_LINEAR, 1 );
-    //int ret = src_simple ( &data, SRC_SINC_FASTEST, 1 );
+    switch( resampleQuality )
+    {
+      case 0: q = SRC_LINEAR;             break;
+      case 1: q = SRC_SINC_FASTEST;       break;
+      case 2: q = SRC_SINC_BEST_QUALITY;  break;
+    }
+    
+    
+    // resample quality taken from config file, 
+    int ret = src_simple ( &data, q, 1 );
     
     LUPPP_NOTE("%s%i%s%i", "Resampling finished, from ", data.input_frames_used, " to ", data.output_frames_gen );
     

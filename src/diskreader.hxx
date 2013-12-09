@@ -71,6 +71,7 @@ class DiskReader
     int showAudioEditor(AudioBuffer* );
     
     // sample load dialog
+    int resampleQuality;
     std::string lastLoadedSamplePath;
 };
 
