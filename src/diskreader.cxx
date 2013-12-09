@@ -80,9 +80,7 @@ int DiskReader::loadPreferences()
           LUPPP_NOTE("Loading controller %s", ctlr->valuestring);
           stringstream s;
           s << getenv("HOME") << "/.config/openAV/luppp/controllers/" << ctlr->valuestring;
-          GenericMIDI* c = new GenericMIDI( s.str().c_str() );
-          EventControllerInstance e(c);
-          writeToDspRingbuffer( &e );
+          gui->addMidiControllerToSetup( s.str() );
         }
       }
     }

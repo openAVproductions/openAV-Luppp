@@ -64,6 +64,10 @@ class Gui
     /// resets the state to "new"
     void reset();
     
+    /// sets up MIDI controllers: must be done *after* backend is started
+    void addMidiControllerToSetup(std::string);
+    void setupMidiControllers();
+    
     GTrack* getTrack(int id);
     GMasterTrack* getMasterTrack(){return master;}
     
@@ -84,6 +88,8 @@ class Gui
     nsm_client_t* getNsm(){return nsm;}
   
   private:
+    vector<std::string> controllerVector;
+    
     Fl_Double_Window    window;
     
     Fl_Group* lupppGroup; 

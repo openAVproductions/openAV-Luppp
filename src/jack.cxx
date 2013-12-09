@@ -24,6 +24,7 @@
 
 #include "state/state.hxx"
 
+#include "gui.hxx"
 #include "logic.hxx"
 #include "config.hxx"
 #include "looper.hxx"
@@ -46,7 +47,8 @@ using namespace std;
 
 int AudioBuffer::privateID = 0;
 
-// static pointer from main.
+// static pointers from main
+extern Gui* gui;
 extern Jack* jack;
 
 void Jack::setup(std::string name)
@@ -226,13 +228,17 @@ Jack::Jack( std::string name ) :
   // Watch out for RT stuff, loading file, registering ports etc: before activate?!
   //Controller* m = new GenericMIDI("akai_apc.ctlr","apc");
   
-  Controller* gui = new LupppGUI();
-  controllerUpdater->registerController( gui );
+  Controller* g = new LupppGUI();
+  controllerUpdater->registerController( g );
   
-  if ( !gui )
+  if ( !g )
   {
     LUPPP_ERROR("%s","Error creating LupppGUI Controller instance");
   }
+  
+  // call into the GUI, telling it to register default controllers
+  gui->setupMidiControllers();
+  
 }
 
 Jack::~Jack()

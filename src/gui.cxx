@@ -338,6 +338,8 @@ Gui::Gui(std::string argZero) :
 {
   LUPPP_NOTE( "%s", "Gui()" );
   
+  gui = this;
+  
   // setup callback to signalChecker()
   Fl::add_timeout( 0.1, (Fl_Timeout_Handler)&signalChecker, 0 );
   
@@ -463,6 +465,24 @@ Gui::Gui(std::string argZero) :
   else
   {
     LUPPP_NOTE("No session management in use");
+  }
+}
+
+void Gui::addMidiControllerToSetup(std::string c)
+{
+  controllerVector.push_back( c );
+}
+
+void Gui::setupMidiControllers()
+{
+  for(int i = 0; i < controllerVector.size(); i++)
+  {
+    GenericMIDI* c = new GenericMIDI( controllerVector.at(i).c_str() );
+    if ( c )
+    {
+      EventControllerInstance e(c);
+      writeToDspRingbuffer( &e );
+    }
   }
 }
 
