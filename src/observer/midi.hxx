@@ -53,6 +53,7 @@ class MidiIO
     void writeMidi( unsigned char* /*data*/ );
   
   private:
+    bool portsRegistered;
     // there are jack_port_t* registered ports
     jack_port_t* jackInputPort;
     jack_port_t* jackOutputPort;

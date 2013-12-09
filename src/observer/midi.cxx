@@ -26,7 +26,8 @@ extern Jack* jack;
 
 MidiIO::MidiIO() :
   jackInputPort(0),
-  jackOutputPort(0)
+  jackOutputPort(0),
+  portsRegistered(false)
 {
   //LUPPP_NOTE("MidiIO %i",this);
 }
@@ -62,25 +63,34 @@ void MidiIO::writeMidi( unsigned char* data )
 
 int MidiIO::registerMidiPorts(std::string name)
 {
+  if( !jack )
+  {
+    LUPPP_ERROR("Attempted register of controller, JACK not instantiated yet!");
+    return LUPPP_RETURN_ERROR;
+  }
+  
+  jack_client_t* c = jack->getJackClientPointer();
+  
   // register the JACK MIDI ports
   stringstream i;
   i << name << " in";
-  jackInputPort  = jack_port_register( jack->getJackClientPointer(),
-                                              i.str().c_str(),
-                                              JACK_DEFAULT_MIDI_TYPE,
-                                              JackPortIsInput,
-                                              0 );
+  jackInputPort  = jack_port_register( c,
+                                        i.str().c_str(),
+                                        JACK_DEFAULT_MIDI_TYPE,
+                                        JackPortIsInput,
+                                        0 );
   stringstream o;
   o << name << " out";
-  jackOutputPort  = jack_port_register( jack->getJackClientPointer(),
-                                              o.str().c_str(),
-                                              JACK_DEFAULT_MIDI_TYPE,
-                                              JackPortIsOutput,
-                                              0 );
+  jackOutputPort  = jack_port_register( c,
+                                        o.str().c_str(),
+                                        JACK_DEFAULT_MIDI_TYPE,
+                                        JackPortIsOutput,
+                                        0 );
   
   if ( jackInputPort && jackOutputPort )
   {
     //LUPPP_NOTE("%i, %i", jackInputPort, jackOutputPort );
+    portsRegistered = true;
     return LUPPP_RETURN_OK;
   }
   else
@@ -93,6 +103,9 @@ int MidiIO::registerMidiPorts(std::string name)
 
 void MidiIO::initBuffers(int nframes)
 {
+  if ( !portsRegistered )
+    return;
+  
   // clear the output buffer
   void* outputBuffer= (void*) jack_port_get_buffer( jackOutputPort, nframes );
   jack_midi_clear_buffer( outputBuffer );
@@ -100,6 +113,9 @@ void MidiIO::initBuffers(int nframes)
 
 void MidiIO::process(int nframes)
 {
+  if ( !portsRegistered )
+    return;
+  
   // get port buffers and setup
   void* inputBuffer = (void*) jack_port_get_buffer( jackInputPort, nframes );
   
