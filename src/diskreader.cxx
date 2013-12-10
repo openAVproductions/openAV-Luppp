@@ -71,12 +71,14 @@ int DiskReader::loadPreferences()
     }
     
     
-    cJSON* resample = cJSON_GetObjectItem( preferencesJson, "defaultControllers" );
+    cJSON* resample = cJSON_GetObjectItem( preferencesJson, "resampleQuality" );
     if ( resample )
     {
       resampleQuality = resample->valueint;
       if ( resampleQuality == 0 )
+      {
         LUPPP_NOTE("Using Linear resampling, may reduce quality. Check .config/openAV/luppp/luppp.prfs");
+      }
     }
     cJSON* ctlrs = cJSON_GetObjectItem( preferencesJson, "defaultControllers" );
     if ( ctlrs )
@@ -110,7 +112,11 @@ int DiskReader::loadPreferences()
   {
     // empty file / file no exists:
     LUPPP_WARN("Preferences, file doesn't exist: ~/.config/openAV/luppp/luppp.prefs");
-    return LUPPP_RETURN_ERROR;
+    
+    // so write default file
+    gui->getDiskWriter()->writeDefaultConfigToUserHome();
+    
+    return LUPPP_RETURN_OK;
   }
   
   return LUPPP_RETURN_OK;

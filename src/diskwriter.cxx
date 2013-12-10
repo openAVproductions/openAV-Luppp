@@ -487,3 +487,42 @@ int DiskWriter::writeSession()
   
   return LUPPP_RETURN_OK;
 }
+
+
+void DiskWriter::writeDefaultConfigToUserHome()
+{
+  LUPPP_NOTE("Writing default preferences file.");
+  
+  cJSON* prfs = cJSON_CreateObject();
+  
+  // "__COMMENT__"         : "users home + <whatever it says here>"
+  // "saveDirectory"       : "luppp"
+  cJSON_AddItemToObject  ( prfs, "__COMMENT__",
+            cJSON_CreateString("users home + <whatever it says here>") );
+  cJSON_AddItemToObject  ( prfs, "saveDirectory", cJSON_CreateString( "luppp" ));
+  
+  
+  // "__COMMENT__"         : "0 = LINEAR, 1 = SINC_FASTEST, 2 = SINC_BEST",
+  // "resampleQuality"     : 2
+  cJSON_AddItemToObject  ( prfs, "__COMMENT__",
+            cJSON_CreateString("0 = LINEAR, 1 = SINC_FASTEST, 2 = SINC_BEST") );
+  cJSON_AddNumberToObject( prfs, "resampleQuality", 1 );
+  
+  // "defaultControllers"  : [],
+  cJSON* defCtrls = cJSON_CreateArray();
+  cJSON_AddItemToObject( prfs, "defaultControllers", defCtrls );
+  
+  
+  // test output on console
+  // cout << endl << cJSON_Print( prfs ) << endl << endl;
+  
+  
+  // write JSON to .config/openAV/luppp/luppp.prfs
+  stringstream f;
+  f << getenv("HOME") << "/.config/openAV/luppp/luppp.prfs";
+  
+  ofstream outFile;
+  outFile.open ( f.str().c_str() );
+  outFile << cJSON_Print( prfs );
+  outFile.close();
+}

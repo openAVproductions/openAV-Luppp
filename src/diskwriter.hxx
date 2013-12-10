@@ -73,6 +73,8 @@ class DiskWriter
     /// writes a controller definition .ctlr JSON file from a GenericMIDI instance
     int writeControllerFile( Controller* c );
     
+    /// writes default config file to users home if it doesn't exist
+    void writeDefaultConfigToUserHome();
     
 #ifdef BUILD_TESTS
     int runTests();
