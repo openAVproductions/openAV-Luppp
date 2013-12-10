@@ -29,7 +29,7 @@
 #include <pmmintrin.h>
 inline void AVOIDDENORMALS()
 {
-  //std::cout << "Denormals: FZ DAZ using SSE3" << std::endl;
+  //LUPPP_NOTE("Denormals: FZ DAZ using SSE3");
   _MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
   _MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON);
 }
@@ -37,7 +37,7 @@ inline void AVOIDDENORMALS()
 #include <xmmintrin.h>
 inline void AVOIDDENORMALS()
 {
-  //std::cout << "Denormals: FZ" << std::endl;
+  //LUPPP_NOTE("Denormals: FZ");
   _MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
 }
 #endif //__SSE3__
