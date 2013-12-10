@@ -363,6 +363,16 @@ void DiskWriter::writeMaster()
   // TODO add samplerate to session JSON
   //cJSON_AddNumberToObject( masterTrack, "samplerate", gui->getMasterTrack()->getBpm() );
   
+  cJSON_AddNumberToObject( masterTrack, "inputVolume", gui->getMasterTrack()->getInputVolume()->value() );
+  
+  cJSON_AddNumberToObject( masterTrack, "inputToSndActive", gui->getMasterTrack()->getInputToSend()->value() );
+  cJSON_AddNumberToObject( masterTrack, "inputToKeyActive", gui->getMasterTrack()->getInputToSidechainKey()->value() );
+  cJSON_AddNumberToObject( masterTrack, "inputToMixActive", gui->getMasterTrack()->getInputToMix()->value() );
+  
+  cJSON_AddNumberToObject( masterTrack, "inputToSndVol", gui->getMasterTrack()->getInputToSendVol()->value() );
+  cJSON_AddNumberToObject( masterTrack, "inputToXSide", gui->getMasterTrack()->getInputToXSide()->value() );
+  cJSON_AddNumberToObject( masterTrack, "inputToMixVol", gui->getMasterTrack()->getInputToMixVol()->value() );
+  
   // scene names
   Avtk::ClipSelector* clipSelector = master->getClipSelector();
   cJSON* sceneNames = cJSON_CreateArray();

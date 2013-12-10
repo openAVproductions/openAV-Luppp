@@ -409,6 +409,50 @@ int DiskReader::readMaster()
       EventTrackVol e( -1, fader->valuedouble );
       writeToDspRingbuffer( &e );
     }
+    // input volume
+    { 
+      cJSON* cjson = cJSON_GetObjectItem( master, "inputVolume");
+      EventMasterInputVol e( cjson->valuedouble );
+      writeToDspRingbuffer( &e );
+    }
+    // input to send
+    { 
+      cJSON* cjson = cJSON_GetObjectItem( master, "inputToSndVol");
+      EventMasterInputTo e( INPUT_TO_SEND, cjson->valuedouble );
+      writeToDspRingbuffer( &e );
+    }
+    // input to key
+    { 
+      cJSON* cjson = cJSON_GetObjectItem( master, "inputToXSide");
+      EventMasterInputTo e( INPUT_TO_XSIDE, cjson->valuedouble );
+      writeToDspRingbuffer( &e );
+    }
+    // input to mix
+    { 
+      cJSON* cjson = cJSON_GetObjectItem( master, "inputToMixVol");
+      EventMasterInputTo e( INPUT_TO_MIX, cjson->valuedouble );
+      writeToDspRingbuffer( &e );
+    }
+    
+    // input to send active
+    {
+      cJSON* cjson = cJSON_GetObjectItem( master, "inputToSndActive");
+      EventMasterInputTo e( INPUT_TO_SEND, cjson->valuedouble );
+      writeToDspRingbuffer( &e );
+    }
+    // input to key active
+    {
+      cJSON* cjson = cJSON_GetObjectItem( master, "inputToKeyActive");
+      EventMasterInputTo e( INPUT_TO_SIDE_KEY, cjson->valuedouble );
+      writeToDspRingbuffer( &e );
+    }
+    // input to mix active
+    {
+      cJSON* cjson = cJSON_GetObjectItem( master, "inputToMixActive");
+      EventMasterInputTo e( INPUT_TO_MIX, cjson->valuedouble );
+      writeToDspRingbuffer( &e );
+    }
+    
     // reverb
     {
       cJSON* reverb = cJSON_GetObjectItem( master, "reverb");

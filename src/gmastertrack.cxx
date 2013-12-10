@@ -288,6 +288,34 @@ Avtk::Volume* GMasterTrack::getVolume()
 {
   return &volume;
 }
+
+Avtk::LightButton* GMasterTrack::getInputToSend()
+{
+  return &inputToSend;
+}
+Avtk::LightButton* GMasterTrack::getInputToSidechainKey()
+{
+  return &inputToSidechainKey;
+}
+Avtk::LightButton* GMasterTrack::getInputToMix()
+{
+  return &inputToMix;
+}
+
+Avtk::Dial* GMasterTrack::getInputToSendVol()
+{
+  return &inputToSendVol;
+}
+Avtk::Dial* GMasterTrack::getInputToXSide()
+{
+  return &inputToSidechainSignalVol;
+}
+Avtk::Dial* GMasterTrack::getInputToMixVol()
+{
+  return &inputToMixVol;
+}
+
+
 Avtk::ClipSelector* GMasterTrack::getClipSelector()
 {
   return &clipSel;

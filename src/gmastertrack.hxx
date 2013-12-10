@@ -64,6 +64,14 @@ class GMasterTrack : public Fl_Group
     Avtk::Volume* getVolume();
     Avtk::ClipSelector* getClipSelector();
     
+    Avtk::LightButton* getInputToSend();
+    Avtk::LightButton* getInputToSidechainKey();
+    Avtk::LightButton* getInputToMix();
+    
+    Avtk::Dial*        getInputToSendVol();
+    Avtk::Dial*        getInputToXSide();
+    Avtk::Dial*        getInputToMixVol();
+    
     ~GMasterTrack();
   
   private:
