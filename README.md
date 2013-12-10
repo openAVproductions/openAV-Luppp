@@ -1,11 +1,15 @@
+Luppp - OpenAV Productions
+===============================
 
-    Luppp - OpenAV Productions
-
-  http://openavproductions.com/Luppp
+Link to official page: http://openavproductions.com/Luppp
 
 This is the repository of Luppp, the live looping tool.
 
 
+![screenshot](https://raw.github.com/harryhaaren/openAV-Luppp/master/resources/screenshots/1.0.png "Luppp 1.0 Screenshot")
+
+Intro
+-----
 This version of Luppp is designed from zero to handle realtime
 audio, and scale with additional features as needed.
 
@@ -20,27 +24,36 @@ LIBSAMPLRATE
 NTK               git clone git://git.tuxfamily.org/gitroot/non/fltk.git ntk
 
 
-=== INSTALL
+
+Install
+-------
+
 Run the following commands from the top directory to configure & install Luppp:
 
+```bash
 cd build
 ./compile.sh
 ./run.sh
+```
 
 
-
-=== Using
+Usage
+-----
 There are a range of demo videos and tutorials available
 on OpenAV's youtube channel:
 www.youtube.com/user/openAVproductions
 
 
-=== Bug Reports
-Please report bugs on github.com/harryhaaren/luppp/issues
+Issues
+------
+Please report bugs on www.github.com/harryhaaren/luppp/issues
 
 
-=== Contact
+Contact
+-------
 If you have a particular question, email me!
-  harryhaaren@gmail.com
+```
+harryhaaren@gmail.com
+```
 
 Cheers, -Harry
