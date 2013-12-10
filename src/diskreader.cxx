@@ -66,6 +66,7 @@ int DiskReader::loadPreferences()
     cJSON* preferencesJson = cJSON_Parse( sampleString );
     if (!preferencesJson)
     {
+      LUPPP_WARN("Preferences JSON not valid");
       return LUPPP_RETURN_ERROR;
     }
     
@@ -108,6 +109,7 @@ int DiskReader::loadPreferences()
   else
   {
     // empty file / file no exists:
+    LUPPP_WARN("Preferences, file doesn't exist: ~/.config/openAV/luppp/luppp.prefs");
     return LUPPP_RETURN_ERROR;
   }
   

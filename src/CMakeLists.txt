@@ -38,7 +38,7 @@ ENDIF(BUILD_TESTS)
 
 IF(RELEASE_BUILD)
   SET(CMAKE_CXX_FLAGS "-g -Wall -Werror -Wno-unused-variable -ffast-math")
-  SET(CMAKE_C_FLAGS "-g -Wall -Werror -W  -Wno-unused-variable -ffast-math")
+  SET(CMAKE_C_FLAGS "-g -Wall -Werror -W -Wno-unused-variable -ffast-math")
 ENDIF(RELEASE_BUILD)
 
 

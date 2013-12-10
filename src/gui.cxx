@@ -434,7 +434,7 @@ Gui::Gui(std::string argZero) :
   int prefs = diskReader->loadPreferences();
   if ( prefs != LUPPP_RETURN_OK )
   {
-    LUPPP_ERROR("Error loading preferences");
+    LUPPP_WARN("No preferences loaded, using defaults.");
   }
   else
   {
