@@ -263,7 +263,7 @@ void Gui::selectLoadSample( int track, int scene )
   fnfc.title("Pick a file");
   fnfc.type(Fl_Native_File_Chooser::BROWSE_FILE);
   
-  fnfc.filter("Audio\t{*.aiff,*.wav,*.flac}");
+  fnfc.filter("Audio\t{*.aiff,*.wav,*.flac,*.ogg}");
   
   std::string defLoadPath = gui->getDiskReader()->getLastLoadedSamplePath();
   fnfc.directory( defLoadPath.c_str() ); // default directory to use
