@@ -1,0 +1,29 @@
+
+Thanks for looking into packaging Luppp:
+OpenAV couldn't possibly package for every distro,
+your work is apprecatied!
+
+
+CMake is used as the build system, checkout the compile.sh
+script in the 'build' directory: its pretty simple.
+
+
+Notes for packaging:
+
+=== 1: luppp.prfs
+Install luppp.prfs into .config/openAV/luppp/
+
+Result: file:   .config/openAV/luppp/luppp.prfs
+
+
+=== 2: Controllers directory
+Install controllers directory (and contents) to
+.config/openAV/luppp/
+
+Result: dir:    .config/openAV/luppp/controllers/
+        files:  .config/openAV/luppp/controllers/<filename>.ctlr
+
+
+=== Questions
+Contact me directly at harryhaaren@gmail.com
+Thanks again! -Harry
