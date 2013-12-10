@@ -398,59 +398,69 @@ int DiskReader::readMaster()
     // bpm
     { 
       cJSON* bpm = cJSON_GetObjectItem( master, "bpm");
-      LUPPP_NOTE("%s %i","Session: BPM ",bpm->valueint); 
-      
-      EventTimeBPM e( bpm->valuedouble );
-      writeToDspRingbuffer( &e );
+      if ( bpm ) {
+        LUPPP_NOTE("%s %i","Session: BPM ",bpm->valueint); 
+        EventTimeBPM e( bpm->valuedouble );
+        writeToDspRingbuffer( &e );
+      }
     }
     // fader
     { 
       cJSON* fader = cJSON_GetObjectItem( master, "fader");
-      EventTrackVol e( -1, fader->valuedouble );
-      writeToDspRingbuffer( &e );
+      if ( fader ) {
+        EventTrackVol e( -1, fader->valuedouble );
+        writeToDspRingbuffer( &e );
+      }
     }
     // input volume
     { 
       cJSON* cjson = cJSON_GetObjectItem( master, "inputVolume");
+      if ( cjson ) {
       EventMasterInputVol e( cjson->valuedouble );
-      writeToDspRingbuffer( &e );
+      writeToDspRingbuffer( &e ); }
     }
     // input to send
     { 
       cJSON* cjson = cJSON_GetObjectItem( master, "inputToSndVol");
+      if ( cjson ) {
       EventMasterInputTo e( INPUT_TO_SEND, cjson->valuedouble );
-      writeToDspRingbuffer( &e );
+      writeToDspRingbuffer( &e ); }
     }
     // input to key
     { 
       cJSON* cjson = cJSON_GetObjectItem( master, "inputToXSide");
+      if ( cjson ) {
       EventMasterInputTo e( INPUT_TO_XSIDE, cjson->valuedouble );
-      writeToDspRingbuffer( &e );
+      writeToDspRingbuffer( &e ); }
     }
     // input to mix
     { 
       cJSON* cjson = cJSON_GetObjectItem( master, "inputToMixVol");
+      if ( cjson ) {
       EventMasterInputTo e( INPUT_TO_MIX, cjson->valuedouble );
-      writeToDspRingbuffer( &e );
+      writeToDspRingbuffer( &e ); }
     }
     
     // input to send active
     {
       cJSON* cjson = cJSON_GetObjectItem( master, "inputToSndActive");
+      if ( cjson ) {
       EventMasterInputTo e( INPUT_TO_SEND, cjson->valuedouble );
-      writeToDspRingbuffer( &e );
+      writeToDspRingbuffer( &e ); }
     }
     // input to key active
     {
       cJSON* cjson = cJSON_GetObjectItem( master, "inputToKeyActive");
+      if ( cjson ) {
       EventMasterInputTo e( INPUT_TO_SIDE_KEY, cjson->valuedouble );
-      writeToDspRingbuffer( &e );
+      writeToDspRingbuffer( &e ); }
     }
     // input to mix active
     {
       cJSON* cjson = cJSON_GetObjectItem( master, "inputToMixActive");
+      if ( cjson ) {
       EventMasterInputTo e( INPUT_TO_MIX, cjson->valuedouble );
-      writeToDspRingbuffer( &e );
+      writeToDspRingbuffer( &e ); }
     }
     
     // reverb
