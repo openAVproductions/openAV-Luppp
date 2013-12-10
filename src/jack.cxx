@@ -257,7 +257,7 @@ Jack::~Jack()
 void Jack::activate()
 {
   jack_activate( client );
-  jack_transport_start(client);
+  //jack_transport_start(client);
 }
 
 void Jack::quit()
