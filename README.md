@@ -16,13 +16,14 @@ audio, and scale with additional features as needed.
 This version depends on the following libraries:
 please ensure the -dev versions are installed.
 
+```bash
 JACK
 CAIRO
 LIBLO
 SNDFILE
 LIBSAMPLRATE
-NTK               git clone git://git.tuxfamily.org/gitroot/non/fltk.git ntk
-
+NTK  ( git clone git://git.tuxfamily.org/gitroot/non/fltk.git ntk )
+```
 
 Install
 -------
