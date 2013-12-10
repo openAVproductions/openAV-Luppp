@@ -143,9 +143,6 @@ int TimeManager::getNframesToBeat()
 
 void TimeManager::process(Buffers* buffers)
 {
-  // tap tempo measurements
-  frame = buffers->transportFrame;
-  
   // time signature?
   //buffers->transportPosition->beats_per_bar = 4;
   //buffers->transportPosition->beat_type     = 4;

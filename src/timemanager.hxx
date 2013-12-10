@@ -70,11 +70,8 @@ class TimeManager
     int barCounter;
     int beatCounter;
     
-    /// tap tempo measurements
-    int frame;
-    
     int tapTempoPos;
-    int tapTempo[3];
+    long long tapTempo[3];
     
     std::vector<TimeObserver*> observers;
 };
