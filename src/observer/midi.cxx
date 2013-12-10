@@ -25,9 +25,9 @@
 extern Jack* jack;
 
 MidiIO::MidiIO() :
+  portsRegistered(false),
   jackInputPort(0),
-  jackOutputPort(0),
-  portsRegistered(false)
+  jackOutputPort(0)
 {
   //LUPPP_NOTE("MidiIO %i",this);
 }

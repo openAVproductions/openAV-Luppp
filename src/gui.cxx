@@ -475,7 +475,7 @@ void Gui::addMidiControllerToSetup(std::string c)
 
 void Gui::setupMidiControllers()
 {
-  for(int i = 0; i < controllerVector.size(); i++)
+  for(unsigned int i = 0; i < controllerVector.size(); i++)
   {
     GenericMIDI* c = new GenericMIDI( controllerVector.at(i).c_str() );
     if ( c )
