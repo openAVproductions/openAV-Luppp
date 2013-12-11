@@ -111,6 +111,11 @@ void LooperClip::load( AudioBuffer* ab )
 {
   _loaded = true;
   _recording = false;
+  _playing    = false;
+  
+  _queuePlay  = false;
+  _queueStop  = false;
+  _queueRecord= false;
   
   if ( _buffer )
   {
@@ -121,6 +126,7 @@ void LooperClip::load( AudioBuffer* ab )
   _buffer = ab;
   
   _playhead = 0;
+  jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0 );
   
   // set the endpoint to the buffer's size
   _recordhead = _buffer->getData().size();

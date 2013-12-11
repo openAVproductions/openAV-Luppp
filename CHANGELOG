@@ -1,4 +1,7 @@
 
+-AudioEditor shows green / red based on BPM analysis of the sample 
+-Clearing clips bug fixed
+-Loading bug re-trigger bug fixed
 
 1.0: Tuesday, 10th December 2013
 

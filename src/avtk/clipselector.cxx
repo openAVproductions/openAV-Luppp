@@ -72,6 +72,11 @@ void ClipSelector::setState( int clipNum, GridLogic::State s )
   //cout << "ClipSelector::setState() t = " << ID << " clipNum = " << clipNum << "  state = " << s << endl;
 #endif
   clips[clipNum].setState( s );
+  if ( s == GridLogic::STATE_EMPTY )
+  {
+    clips[clipNum].setName("");
+  }
+  
   redraw();
 }
 
