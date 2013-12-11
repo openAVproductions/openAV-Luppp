@@ -22,6 +22,8 @@
 #include <sstream>
 
 #include "config.hxx"
+#include "gui.hxx"
+extern Gui* gui;
 
 #include "audiobuffer.hxx"
 
@@ -84,11 +86,86 @@ void AudioEditor::show( AudioBuffer* buf, bool modal )
   else
   {
     std::vector<float>& tmp = ab->getData();
-    waveform->setData( &tmp[0], tmp.size() );
+    int size = tmp.size();
+    waveform->setData( &tmp[0], size );
+    
+    const int beats[]={1,2,4,8,16,32,64};
+    
+    int iBeatOne = -1;
+    int iBeatTwo = -1;
+    
+    // figure out BPM values from size
+    for( int i = 0; i < 7; i++ )
+    {
+      int beat = beats[i];
+      
+      int fpb = size / beat;
+      
+      int bpm = (gui->samplerate / fpb) * 60;
+      
+      
+      if ( bpm < 60 || bpm > 220 )
+      {
+        // disable option: not valid
+        beatButtons[i]->setGreyOut( true );
+        beatButtons[i]->setColor( 0.4, 0.4, 0.4 );
+      }
+      else
+      {
+        printf("%i, fpb = %i, bpm= = %i\n", beat, fpb, bpm );
+        // enable option ( may be disabled previously! )
+        beatButtons[i]->setGreyOut( false );
+        
+        // remember this beat was a valid one, to check for best match
+        if ( iBeatOne == -1 )
+          iBeatOne = i;
+        else
+          iBeatTwo = i;
+      }
+    }
+    
+    // both valid: compare, and adjust color
+    if ( iBeatOne != -1 && iBeatTwo != -1 )
+    {
+      int masterFpb = (gui->samplerate * 60) / gui->getMasterTrack()->getBpm();
+      int oneFpb = size / beats[iBeatOne];
+      int twoFpb = size / beats[iBeatTwo];
+      
+      int oneDelta = masterFpb - oneFpb;
+      int twoDelta = masterFpb - twoFpb;
+      
+      if ( oneDelta < 0 ) oneDelta = -oneDelta;
+      if ( twoDelta < 0 ) twoDelta = -twoDelta;
+      
+      if ( oneDelta == twoDelta )
+      {
+        beatButtons[iBeatOne]->setColor( 0.0, 1.0, 0.0 );
+        beatButtons[iBeatTwo]->setColor( 0.0, 1.0, 0.0 );
+      }
+      else if ( oneDelta <= twoDelta )
+      {
+        // one is the better match
+        beatButtons[iBeatOne]->setColor( 0.0, 1.0, 0.0 );
+        beatButtons[iBeatTwo]->setColor( 1.0, 0.0, 0.0 );
+      }
+      else
+      {
+        beatButtons[iBeatTwo]->setColor( 0.0, 1.0, 0.0 );
+        beatButtons[iBeatOne]->setColor( 1.0, 0.0, 0.0 );
+      }
+    }
+    else if( iBeatOne != -1 && iBeatTwo == -1) // only one valid
+    {
+      beatButtons[iBeatOne]->setColor( 0.0, 1.0, 0.0 );
+    }
+    else
+    {
+      // no valid BPM range..?
+    }
+    
   }
   
   window->set_modal();
-  
   window->show();
 }
 

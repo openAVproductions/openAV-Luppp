@@ -49,7 +49,16 @@ class Button : public Fl_Button
       
       highlight = false;
       mouseOver = false;
+      
+      greyedOut = false;
     }
+    
+    void setGreyOut( bool g )
+    {
+      greyedOut = g;
+    }
+    
+    bool greyedOut;
     
     bool mouseOver;
     bool highlight;
@@ -95,13 +104,19 @@ class Button : public Fl_Button
         cairo_save( cr );
         
         cairo_rectangle( cr, x+1, y+1, w-2, h-2 );
-        cairo_set_source_rgb( cr, _bgr, _bgg, _bgb );
+        if ( !greyedOut )
+          cairo_set_source_rgb( cr, _bgr, _bgg, _bgb );
+        else
+        {
+          float grey = (_bgr + _bgg + _bgb) / 3;
+          cairo_set_source_rgb( cr, grey, grey, grey );
+        }
         cairo_fill_preserve(cr);
         
         cairo_set_line_width(cr, 1.3);
         cairo_rectangle( cr, x+1, y+1, w-2, h-2 );
         
-        if ( highlight )
+        if ( highlight && !greyedOut )
         {
           cairo_set_source_rgba(cr, _r, _g, _b, 0.4);
           cairo_fill_preserve(cr);
@@ -110,8 +125,16 @@ class Button : public Fl_Button
         float alpha = 0.6;
         if (mouseOver)
           alpha = 1;
-        cairo_set_source_rgba(cr,  _r, _g, _b, alpha);
-        if ( highlight )
+        
+        if ( !greyedOut )
+          cairo_set_source_rgba(cr,  _r, _g, _b, alpha);
+        else
+        {
+          float grey = (_r + _g + _b) / 3;
+          cairo_set_source_rgb( cr, grey, grey, grey );
+        }
+        
+        if ( highlight && !greyedOut )
           cairo_set_line_width(cr, 2.2);
         cairo_stroke(cr);
         
