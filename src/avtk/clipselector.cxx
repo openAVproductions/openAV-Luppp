@@ -88,6 +88,7 @@ std::string ClipSelector::clipName(int clip)
 void ClipSelector::clipName(int clip, std::string name)
 {
   clips[clip].setName( name );
+  redraw();
 }
 
 void ClipSelector::setSpecial(int scene)

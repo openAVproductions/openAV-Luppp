@@ -269,7 +269,9 @@ int DiskReader::loadSample( int track, int scene, string path )
           ab->setBeats( beats->valuedouble );
         }
         if ( name )
-          gui->getTrack(track)->getClipSelector()->clipName( scene, name->valuestring );
+        {
+          ab->setName( name->valuestring );
+        }
       }
       
       // if we don't find the beats from audio.cfg, show dialog
