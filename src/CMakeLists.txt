@@ -2,27 +2,27 @@
 # Find depend libraries
 find_package(PkgConfig)
 
-pkg_check_modules(CAIRO cairo)
+pkg_check_modules(CAIRO cairo REQUIRED)
 include_directories( ${CAIRO_INCLUDE_DIRS}  )
 link_directories   ( ${CAIRO_LIBRARY_DIRS}  )
 
-pkg_check_modules(NTK ntk)
+pkg_check_modules(NTK ntk REQUIRED)
 include_directories( ${NTK_INCLUDE_DIRS}  )
 link_directories   ( ${NTK_LIBRARY_DIRS}  )
 
-pkg_check_modules(LIBLO liblo)
+pkg_check_modules(LIBLO liblo REQUIRED)
 include_directories( ${LIBLO_INCLUDE_DIRS}  )
 link_directories   ( ${LIBLO_LIBRARY_DIRS}  )
 
-pkg_check_modules(JACK jack)
+pkg_check_modules(JACK jack REQUIRED)
 include_directories( ${JACK_INCLUDE_DIRS}  )
 link_directories   ( ${JACK_LIBRARY_DIRS}  )
 
-pkg_check_modules(SNDFILE sndfile)
+pkg_check_modules(SNDFILE sndfile REQUIRED)
 include_directories( ${SNDFILE_INCLUDE_DIRS}  )
 link_directories   ( ${SNDFILE_LIBRARY_DIRS}  )
 
-pkg_check_modules(SAMPLERATE samplerate)
+pkg_check_modules(SAMPLERATE samplerate REQUIRED)
 include_directories( ${SAMPLERATE_INCLUDE_DIRS}  )
 link_directories   ( ${SAMPLERATE_LIBRARY_DIRS}  )
 
