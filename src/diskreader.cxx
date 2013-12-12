@@ -222,6 +222,12 @@ int DiskReader::loadSample( int track, int scene, string path )
   
   bool loadableBuffer = false;
   
+  // retrieve sample metadata from sample.cfg using filename as key
+  char* tmp = strdup( path.c_str() );
+  char* baseName = basename( tmp );
+  //cout << "tmp " << tmp << " baseName " << baseName << endl;
+  ab->setName( baseName );
+  
   if ( infile.frames() > 0 )
   {
     char* basePath = strdup( path.c_str() );
@@ -252,11 +258,6 @@ int DiskReader::loadSample( int track, int scene, string path )
         return LUPPP_RETURN_ERROR;
       }
       
-      // retrieve sample metadata from sample.cfg using filename as key
-      char* tmp = strdup( path.c_str() );
-      char* baseName = basename( tmp );
-      //cout << "tmp " << tmp << " baseName " << baseName << endl;
-      
       cJSON* sample = cJSON_GetObjectItem( audioJson, baseName );
       if ( sample )
       {
@@ -268,6 +269,7 @@ int DiskReader::loadSample( int track, int scene, string path )
           loadableBuffer = true;
           ab->setBeats( beats->valuedouble );
         }
+        
         if ( name )
         {
           ab->setName( name->valuestring );
@@ -277,8 +279,9 @@ int DiskReader::loadSample( int track, int scene, string path )
       // if we don't find the beats from audio.cfg, show dialog
       if ( loadableBuffer == false )
       {
-        cout << "Warning: audio.cfg has no entry for beats." << endl;
+        LUPPP_NOTE("Warning: audio.cfg has no entry for beats.");
         int ret = showAudioEditor( ab );
+        
         if ( ret == LUPPP_RETURN_OK )
         {
           // flag that we can load this sample OK
@@ -307,14 +310,12 @@ int DiskReader::loadSample( int track, int scene, string path )
       }
       else
       {
-        LUPPP_NOTE("AudioBuffer set %i beats.", ab->getBeats() );
-        
-        
         std::string name = path;
         int i = name.find_last_of('/') + 1;
         std::string sub = name.substr( i );
-        
         ab->setName( sub.c_str() );
+        
+        LUPPP_NOTE("AudioBuffer %s set %i beats", ab->getName(), ab->getBeats() );
         
         loadableBuffer = true;
       }

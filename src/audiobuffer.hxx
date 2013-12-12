@@ -31,104 +31,34 @@ using namespace std;
 class AudioBuffer
 {
   public:
-    AudioBuffer()
-    {
-      ID = privateID++;
-      init();
-    }
-    AudioBuffer(unsigned long size)
-    {
-      // FIXME recorded buffers don't get an ID, using garbage IDs 
-      /// no ID assigned: it *takes* the one from the previous buffer!
-      init();
-      buffer.resize(size);
-    }
+    AudioBuffer();
+    AudioBuffer(unsigned long size);
     
-    void init()
-    {
-      numBeats = 0;
-      audioFrames = 0;
-      memset( name, 0, sizeof(char)*20 );
-      //sprintf( name, "%i", ID );
-    }
+    void init();
     
     /// this function is used for "resizing" an exisiting buffer, and should
     /// not be called for any other reason.
-    void setID(int id)
-    {
-      ID = id;
-    }
+    void setID(int id);
     
-    int getID()
-    {
-      return ID;
-    }
+    int getID();
+    void setName(const char* n);
     
-    void setName(const char* n)
-    {
-      if ( strlen(n) > 19 )
-      {
-#ifdef DEBUG_BUFFER
-        cout << "AudioBuffer setName too long!" << endl;
-#endif
-        return;
-      }
-      
-      memcpy( name, n, sizeof(char)* 20 ); 
-    }
+    char* getName();
+    int getBeats();
     
-    char* getName()
-    {
-      return name;
-    }
+    void setBeats(int b);
     
-    int getBeats()
-    {
-      return numBeats;
-    }
+    void setAudioFrames(long af);
     
-    void setBeats(int b)
-    {
-#ifdef DEBUG_BUFFER
-      cout << "AudioBuffer now has " << b << " beats\n" << endl;
-#endif
-      numBeats = b;
-    }
+    long getAudioFrames();
     
-    void setAudioFrames(long af)
-    {
-      audioFrames = af;
-#ifdef DEBUG_BUFFER
-      cout << "AudioBuffer " << ID << " has "  << audioFrames << " audioFrames\n" << endl;
-#endif
-    }
+    std::vector<float>& getData();
     
-    long getAudioFrames()
-    {
-      return audioFrames;
-    }
+    void nonRtSetSample(std::vector<float>& sample);
     
-    std::vector<float>& getData()
-    {
-      return buffer;
-    }
+    void nonRtResize(unsigned long size);
     
-    void nonRtSetSample(std::vector<float>& sample)
-    {
-      buffer.swap(sample);
-    }
-    void nonRtResize(unsigned long size)
-    {
-        buffer.resize(size);
-    }
-    
-    friend ostream& operator<<(ostream& o, const AudioBuffer& a)
-    {
-      o << "AudioBuffer " << a.name <<
-            " beats: " << a.numBeats <<
-            " audioFrames: " << a.audioFrames << endl;
-      return o;
-    }
+    //friend ostream& operator<<(ostream& o, const AudioBuffer& a);
   
   protected:
     static int privateID;

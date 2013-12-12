@@ -112,7 +112,7 @@ void AudioEditor::show( AudioBuffer* buf, bool modal )
       }
       else
       {
-        printf("%i, fpb = %i, bpm= = %i\n", beat, fpb, bpm );
+        //printf("%i, fpb = %i, bpm= = %i\n", beat, fpb, bpm );
         // enable option ( may be disabled previously! )
         beatButtons[i]->setGreyOut( false );
         
