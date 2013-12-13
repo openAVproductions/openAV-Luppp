@@ -350,7 +350,7 @@ Gui::Gui(std::string argZero) :
   window.color(FL_BLACK);
   window.label("Luppp");
   window.callback( close_cb, 0 );
-  window.size_range( 800, 500 );
+  window.size_range( 800, 450 );
   
   window.color( fl_rgb_color (7,7,7) );
   
