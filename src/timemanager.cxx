@@ -42,7 +42,7 @@ TimeManager::TimeManager():
   barCounter  = 0;
   beatCounter = 0;
   
-  beatFrameCountdown = fpb;
+  previousBeat = 0;
   
   totalFrameCounter = 0;
   
@@ -138,7 +138,8 @@ void TimeManager::tap()
 
 int TimeManager::getNframesToBeat()
 {
-  return beatFrameCountdown;
+  // FIXME
+  return -1; //beatFrameCountdown;
 }
 
 void TimeManager::process(Buffers* buffers)
@@ -147,19 +148,21 @@ void TimeManager::process(Buffers* buffers)
   //buffers->transportPosition->beats_per_bar = 4;
   //buffers->transportPosition->beat_type     = 4;
   
-  totalFrameCounter += buffers->nframes;
   
   // calculate beat / bar position in nframes
-  int beat = totalFrameCounter / fpb;
-  beatFrameCountdown = totalFrameCounter - (beat*fpb);
+  //beatFrameCountdown = totalFrameCounter - (beat*fpb);
   
   
-  if ( beatFrameCountdown < buffers->nframes )
+  if ( previousBeat + fpb < totalFrameCounter + buffers->nframes )
   {
     beatCounter++;
     
+    long remaining = (totalFrameCounter + buffers->nframes) - (previousBeat + fpb);
+    
+    //printf("remaining %li",remaining);
+    
     // process *upto* beat frame:
-    jack->processFrames( beatFrameCountdown );
+    jack->processFrames( buffers->nframes - remaining );
     
     // inform observers of new beat FIRST
     for(uint i = 0; i < observers.size(); i++)
@@ -180,21 +183,21 @@ void TimeManager::process(Buffers* buffers)
     }
     
     // process frames after beat()
-    int remaining = long(buffers->nframes) - beatFrameCountdown;
+    //int remaining = long(buffers->nframes) - beatFrameCountdown;
     /*
     char buffer [50];
     sprintf (buffer, "r: %i, nfr: %i, bFC %li\ttFC %lli",  remaining, buffers->nframes, beatFrameCountdown, totalFrameCounter );
     EventGuiPrint e2( buffer );
     writeToGuiRingbuffer( &e2 );
     */
-    if ( remaining > 0 )
+    if ( remaining > 0 && remaining < buffers->nframes )
     {
       jack->processFrames( remaining );
     }
     else
     {
       char buffer [50];
-      sprintf (buffer, "Timing Error: negative samples %i",  remaining );
+      sprintf (buffer, "Timing Error: negative samples %li",  remaining );
       EventGuiPrint e2( buffer );
       writeToGuiRingbuffer( &e2 );
     }
@@ -203,13 +206,16 @@ void TimeManager::process(Buffers* buffers)
     EventTimeBarBeat e( barCounter, beatCounter );
     writeToGuiRingbuffer( &e );
     
-    beatFrameCountdown = fpb; 
+    //beatFrameCountdown = fpb; 
+    previousBeat += fpb;
   }
   else
   {
     jack->processFrames( buffers->nframes );
   }
   
+  
+  totalFrameCounter += buffers->nframes;
   
   /*
   int tick = int( (beatFloat - beat) * 1920 );
