@@ -329,7 +329,7 @@ static int cb_nsm_save ( char **out_msg, void *userdata )
 
 
 
-Gui::Gui(std::string argZero) :
+Gui::Gui(const char* argZero) :
     samplerate( 0 ),
     window(1110,650),
     
@@ -453,7 +453,7 @@ Gui::Gui(std::string argZero) :
     
     if ( nsm_init( nsm, nsm_url ) == 0 )
     {
-      nsm_send_announce( nsm, "Luppp", "", argZero.c_str() );
+      nsm_send_announce( nsm, "Luppp", "", argZero );
       LUPPP_NOTE("Announcing to NSM");
     }
     else

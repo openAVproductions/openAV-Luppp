@@ -47,7 +47,7 @@ class AudioBuffer;
 class Gui
 {
   public:
-    Gui(std::string argZero);
+    Gui(const char* argZero);
     ~Gui();
     
     int show();
