@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Name=Luppp
+GenericName=Live performance mixing tool
+Comment=Create music by recording, playing, and mixing samples
+Type=Application
+Categories=Audio;AudioVideo;
+Exec=luppp
+Terminal=false
+StartupNotify=true
+Icon=luppp

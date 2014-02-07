@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+  <id type="desktop">luppp.desktop</id>
+  <licence>CC0</licence>
+  <name>OpenAV Luppp</name>
+  <description>
+    <p>
+      Luppp is a music creation tool, intended for live use. It
+      focuses on real time processing and a fast intuitive
+      workflow. It has been developed since December 2011, and many
+      iterations of development have been completed. Luppp
+      uses jack for audio output.
+    </p>
+  </description>
+  <screenshots>
+    <!-- the width and height are optional, but suggested -->
+    <screenshot type="default" width="1110" height="650">https://raw.github.com/harryhaaren/openAV-Luppp/master/resources/screenshots/1.0.png</screenshot>
+  </screenshots>
+  <url type="homepage">http://openavproductions.com/luppp</url>
+  <updatecontact>zbyszek@in.waw.pl</updatecontact>
+</application>
