@@ -84,13 +84,17 @@ Jack::Jack( std::string name ) :
   clientActive(false)
 {
   jack = this;
+  
+  samplerate = jack_get_sample_rate( client );
+  
+  LUPPP_NOTE("Samplerate %i", samplerate );
+  
   // construct Observer classes here, not in the initializer list as the Jack*
   // will be 0x0 until then.
   timeManager = new TimeManager(),
   metronome = new Metronome();
   logic = new Logic();
   gridLogic = new GridLogic();
-  
   
   // CAREFUL: setup the size by default: otherwise malloc() is called on push_back
   midiIO.reserve( CONTROLLERS_PREALLOC );
@@ -554,7 +558,7 @@ int Jack::getBuffersize()
 
 int Jack::getSamplerate()
 {
-  return jack_get_sample_rate( client );
+  return samplerate;
 }
 
 int Jack::timebase(jack_transport_state_t state,

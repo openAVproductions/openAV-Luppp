@@ -141,6 +141,7 @@ class Jack
     
     // JACK member variables
     bool clientActive;
+    int samplerate;
     
     jack_port_t*  masterInput;
     jack_port_t*  masterOutputL;
