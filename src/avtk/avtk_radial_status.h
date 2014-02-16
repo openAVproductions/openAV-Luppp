@@ -50,6 +50,8 @@ class RadialStatus : public Fl_Slider
       
       highlight = false;
       mouseOver = false;
+      
+      _recording = false;
     }
     
     bool _recording;
