@@ -10,10 +10,6 @@ trap 'err_handle' ERR
 
 set -e
 
-cd ../
-./version.sh
-cd build
-
 cmake -DRELEASE_BUILD=1 ../
 
 make -j 2

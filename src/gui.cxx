@@ -343,6 +343,9 @@ Gui::Gui(const char* argZero) :
   // setup callback to signalChecker()
   Fl::add_timeout( 0.1, (Fl_Timeout_Handler)&signalChecker, 0 );
   
+  // add keyboard shortcut handler
+  Fl::add_handler( keyboardHandler );
+  
   //window.resize( false );
   window.xclass("luppp");
   window.iconlabel("luppp");
@@ -555,6 +558,63 @@ void Gui::askQuit()
   {
     gui->quit();
   }
+}
+
+int Gui::keyboardHandler(int event)
+{
+  printf("event\n");
+  
+  switch( event )
+  {
+    case FL_SHORTCUT:
+      if     ( strcmp( Fl::event_text(), "1" ) == 0 ) { EventGridEvent e( 0, 0, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "2" ) == 0 ) { EventGridEvent e( 1, 0, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "3" ) == 0 ) { EventGridEvent e( 2, 0, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "4" ) == 0 ) { EventGridEvent e( 3, 0, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "5" ) == 0 ) { EventGridEvent e( 4, 0, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "6" ) == 0 ) { EventGridEvent e( 5, 0, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "7" ) == 0 ) { EventGridEvent e( 6, 0, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "8" ) == 0 ) { EventGridEvent e( 7, 0, true ); writeToDspRingbuffer( &e ); return 1; }
+      
+      else if( strcmp( Fl::event_text(), "q" ) == 0 ) { EventGridEvent e( 0, 1, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "w" ) == 0 ) { EventGridEvent e( 1, 1, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "e" ) == 0 ) { EventGridEvent e( 2, 1, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "r" ) == 0 ) { EventGridEvent e( 3, 1, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "t" ) == 0 ) { EventGridEvent e( 4, 1, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "y" ) == 0 ) { EventGridEvent e( 5, 1, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "u" ) == 0 ) { EventGridEvent e( 6, 1, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "i" ) == 0 ) { EventGridEvent e( 7, 1, true ); writeToDspRingbuffer( &e ); return 1; }
+      
+      else if( strcmp( Fl::event_text(), "a" ) == 0 ) { EventGridEvent e( 0, 2, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "s" ) == 0 ) { EventGridEvent e( 1, 2, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "d" ) == 0 ) { EventGridEvent e( 2, 2, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "f" ) == 0 ) { EventGridEvent e( 3, 2, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "g" ) == 0 ) { EventGridEvent e( 4, 2, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "h" ) == 0 ) { EventGridEvent e( 5, 2, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "j" ) == 0 ) { EventGridEvent e( 6, 2, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "k" ) == 0 ) { EventGridEvent e( 7, 2, true ); writeToDspRingbuffer( &e ); return 1; }
+      
+      else if( strcmp( Fl::event_text(), "z" ) == 0 ) { EventGridEvent e( 0, 3, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "x" ) == 0 ) { EventGridEvent e( 1, 3, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "c" ) == 0 ) { EventGridEvent e( 2, 3, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "v" ) == 0 ) { EventGridEvent e( 3, 3, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "b" ) == 0 ) { EventGridEvent e( 4, 3, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "n" ) == 0 ) { EventGridEvent e( 5, 3, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "m" ) == 0 ) { EventGridEvent e( 6, 3, true ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "," ) == 0 ) { EventGridEvent e( 7, 3, true ); writeToDspRingbuffer( &e ); return 1; }
+      
+      else if( strcmp( Fl::event_text(), "9" ) == 0 ) { EventGridLaunchScene e( 0 ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "o" ) == 0 ) { EventGridLaunchScene e( 1 ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "l" ) == 0 ) { EventGridLaunchScene e( 2 ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "." ) == 0 ) { EventGridLaunchScene e( 3 ); writeToDspRingbuffer( &e ); return 1; }
+      
+      else
+      {
+        //printf("%s\n", Fl::event_text() ); return 1;
+      }
+  }
+  
+  return 0;
 }
 
 

@@ -111,6 +111,8 @@ class Gui
     
     // non-session-manager
     nsm_client_t* nsm;
+    
+    static int keyboardHandler(int event);
 };
 
 #endif // LUPPP_GUI
