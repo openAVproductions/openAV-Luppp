@@ -58,7 +58,7 @@ static void gui_static_loadSession_cb(void* inst)
 
 int main(int argc, char** argv)
 {
-  LUPPP_NOTE("%s", GIT_VERSION );
+  LUPPP_NOTE("Git: %s", GIT_VERSION   );
   
   bool runTests;
   if ( runTests ){} // remove unused warning if not built with BUILD_TESTS
