@@ -61,3 +61,7 @@ target_link_libraries( luppp ${SAMPLERATE_LIBRARIES} )
 IF(BUILD_TESTS)
   target_link_libraries(luppp gcov)
 ENDIF(BUILD_TESTS)
+
+# add the install targets
+install (TARGETS luppp DESTINATION bin)
+
