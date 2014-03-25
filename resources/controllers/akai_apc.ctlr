@@ -15,13 +15,13 @@
     
     {
       "__COMMENT__" : "Shift key: samples a clip into gridLogic",
-      "action" : "grid:selectclipenable",
+      "action" : "grid:select_clip_enable",
       "status" : 144,
       "data"   : 98,
       "active" : 1
     },
     {
-      "action" : "grid:selectclipenable",
+      "action" : "grid:select_clip_enable",
       "status" : 128,
       "data"   : 98,
       "active" : 0
@@ -31,7 +31,7 @@
       "__COMMENT__" : "footpedal 1 to trigger selected clip",
       "status" : 176,
       "data" : 64,
-      "action" : "grid:selectclipevent"
+      "action" : "grid:special_clip_event"
     },
     
     {
