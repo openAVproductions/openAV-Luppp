@@ -42,6 +42,29 @@ GenericMIDI::GenericMIDI(int waste, std::string n) :
   name = n;
   registerMidiPorts( name );
   stat = CONTROLLER_OK;
+  
+  setFootswitchToNextScene( 0 );
+}
+
+
+void GenericMIDI::setFootswitchToNextScene(int v)
+{
+  LUPPP_NOTE("Set Footswitch to %i", v ); 
+  if ( v == 0 )
+  {
+    footswitchNextScene = false;
+    footswitchPrevScene = false;
+  }
+  else if ( v > 0 )
+  {
+    footswitchNextScene = true;
+    footswitchPrevScene = false;
+  }
+  else
+  {
+    footswitchNextScene = false;
+    footswitchPrevScene = true;
+  }
 }
 
 void GenericMIDI::setName(std::string n)
@@ -441,6 +464,22 @@ void GenericMIDI::midi(unsigned char* midi)
     writeToGuiRingbuffer( &e2 );
   }
   
+  if ( status == 0x90 && data == 0x64 ) // nudge +
+  {
+    // footpedal to scene++
+    setFootswitchToNextScene(  1 );
+  }
+  else if ( status == 0x90 && data == 0x65 ) // nudge
+  {
+    // footpedal to scene--
+    setFootswitchToNextScene( -1 );
+  }
+  else if ( status == 0x90 && data == 0x60 ) // > on bank select: clear scene
+  {
+    // footpedal to special clip
+    setFootswitchToNextScene( 0 );
+  }
+  
   // iterate over bindings, execute binding action if matches
   for(unsigned int i = 0; i < midiToAction.size(); i++)
   {
@@ -465,7 +504,22 @@ void GenericMIDI::midi(unsigned char* midi)
             break;
         
         case Event::GRID_SELECT_CLIP_EVENT:
-            jack->getGridLogic()->selectedTrackSceneEvent( value );
+            // hack to do scene ++ / -- with footswitch
+            if ( footswitchNextScene && value > 0.5 ) // avoid note offs
+            {
+              cout << "footswitch next scene *now*" << endl;
+              jack->getGridLogic()->launchScene( jack->getGridLogic()->getCurrentScene() + 1 );
+            }
+            else if ( footswitchPrevScene && value > 0.5 )
+            {
+              cout << "footswitch prev scene *now*" << endl;
+              jack->getGridLogic()->launchScene( jack->getGridLogic()->getCurrentScene() - 1 );
+            }
+            else
+            {
+              cout << "footswitch special clip action now" << endl;
+              jack->getGridLogic()->selectedTrackSceneEvent( value );
+            }
             break;
         case Event::GRID_SELECT_CLIP_ENABLE:
             jack->getGridLogic()->setSelectTrackScene( b->active );

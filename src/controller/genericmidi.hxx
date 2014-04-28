@@ -76,6 +76,11 @@ class GenericMIDI : public Controller, public MidiIO
     void trackSend(int t, int send, float v);
     void trackSendActive(int t, int send, bool a);
     
+    /// footswitch -> scene launch controls
+    void setFootswitchToNextScene(int v);
+    bool footswitchNextScene;
+    bool footswitchPrevScene;
+    
     
     void reset();
     

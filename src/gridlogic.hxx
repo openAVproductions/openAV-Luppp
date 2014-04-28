@@ -66,6 +66,7 @@ class GridLogic : public TimeObserver
     
     /// master controls, launches a horizontal scene with one event
     void launchScene( int scene );
+    int  getCurrentScene(){return sceneLaunch;}
     int  getLaunchedScene();
     
     /// selected track functions
@@ -100,7 +101,7 @@ class GridLogic : public TimeObserver
     /// holds last scene launch
     int sceneLaunch;
     
-    /// holds selected track / scene
+    /// holds selected track / scene for special clip
     bool sampleTrackScene; // turn on to have selected clip, press event acted on
     int selectedTrack;
     int selectedScene;
