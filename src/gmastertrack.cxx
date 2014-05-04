@@ -121,6 +121,11 @@ static void gmastertrack_button_callback(Fl_Widget *w, void *data)
     EventTimeTempoTap e;
     writeToDspRingbuffer( &e );
   }
+  else if ( strcmp( w->label(), "Sync" ) == 0 )
+  {
+    EventTimeSync e;
+    writeToDspRingbuffer( &e );
+  }
   else
   {
     LUPPP_WARN("Error: unknown command string");
@@ -138,11 +143,12 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   source(x+5, y+26, 140, 100, ""),
   volBox(x+5, y+422, 140, 172, ""),
   
-  tapTempo       ( x + w * 2/4.f - 18, y + 426 + 41 * 0, 44,38, "Tap"),
-  metronomeButton( x + w * 2/4.f - 18, y + 426 + 41 * 1, 44, 38,"Metro"),
+  tapTempo       ( x + w * 2/4.f - 18, y + 426 + 27 * 0, 44, 21,"Tap"),
+  syncButton     ( x + w * 2/4.f - 18, y + 426 + 27 * 1, 44, 21,"Sync"),
+  metronomeButton( x + w * 2/4.f - 18, y + 426 + 27 * 2, 44, 21,"Metro"),
   
-  tempoDial      ( x + w * 2/4.f - 18, y + 426 + 41 * 2, 45, 36,"BPM"),
-  returnVol      ( x + w * 2/4.f - 18, y + 426 + 41 * 3, 45, 36,"Return"),
+  tempoDial      ( x + w * 2/4.f - 18, y + 426 + 81 + 41 * 0, 45, 36,"BPM"),
+  returnVol      ( x + w * 2/4.f - 18, y + 426 + 81 + 41 * 1, 45, 36,"Return"),
   
   inputVolume(x + 9,y + 26 + 4, w - 18, 30,""),
   
@@ -167,6 +173,7 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   inputVolume.callback( gmastertrack_inputVolume_callback, 0 );
   
   tapTempo.callback( gmastertrack_button_callback, &ID );
+  syncButton.callback( gmastertrack_button_callback, &ID );
   metronomeButton.callback( gmastertrack_button_callback, 0 );
   
   tempoDial.callback( gmastertrack_tempoDial_callback, 0 );
@@ -182,8 +189,6 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   
   inputToMix.callback   ( gmastertrack_mixButton_callback, 0 );
   inputToMixVol.callback   ( gmastertrack_mixVol_callback, 0 );
-  
-  
   
   tempoDial.align( FL_ALIGN_CENTER );
   
@@ -262,6 +267,11 @@ void GMasterTrack::setTapTempo( bool b )
   tapTempo.setHighlight( b );
 }
 
+void GMasterTrack::setSyncButton( bool b )
+{
+  syncButton.setHighlight( b );
+}
+
 void GMasterTrack::setBarBeat(int b, int beat)
 {
   if ( beat % 4 == 0 )
@@ -314,7 +324,6 @@ Avtk::Dial* GMasterTrack::getInputToMixVol()
 {
   return &inputToMixVol;
 }
-
 
 Avtk::ClipSelector* GMasterTrack::getClipSelector()
 {

@@ -34,6 +34,8 @@ class TimeObserver
     virtual void bar(){};
     
     virtual void beat(){};
+
+    virtual void sync(){};
     
     virtual void tapTempo(bool b){};
     

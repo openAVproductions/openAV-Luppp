@@ -42,6 +42,7 @@ class Logic
     Logic();
     
     void tapTempo();
+    void sync();
     void setBpm(float bpm); /// 0-1 input
     
     void metronomeEnable(bool b);

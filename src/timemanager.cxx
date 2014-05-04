@@ -109,7 +109,7 @@ void TimeManager::tap()
   {
     tapTempoPos = 0;
   }
-  
+
   if ( tapTempoPos < 3 )
   {
     tapTempo[tapTempoPos] = totalFrameCounter;
@@ -134,6 +134,32 @@ void TimeManager::tap()
     // reset, so next 3 taps restart process
     tapTempoPos = 0;
   }
+}
+
+void TimeManager::sync()
+{
+  barCounter  = 0;
+  beatCounter = 0;
+
+  // inform observers of new beat FIRST
+  for(uint i = 0; i < observers.size(); i++)
+  {
+    observers.at(i)->beat();
+  }
+  // inform observers of new bar SECOND
+  for(uint i = 0; i < observers.size(); i++)
+  {
+    observers.at(i)->bar();
+  }
+
+  // inform observers of sync LAST
+  for(uint i = 0; i < observers.size(); i++)
+  {
+    observers.at(i)->sync();
+  }
+  // write new beat to UI (bar info currently not used)
+  EventTimeBarBeat e( barCounter, beatCounter );
+  writeToGuiRingbuffer( &e );
 }
 
 int TimeManager::getNframesToBeat()

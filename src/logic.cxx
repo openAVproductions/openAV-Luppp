@@ -36,6 +36,11 @@ void Logic::tapTempo()
   jack->getTimeManager()->tap();
 }
 
+void Logic::sync()
+{
+  jack->getTimeManager()->sync();
+}
+
 void Logic::setBpm(float bpm)
 {
   jack->getTimeManager()->setBpm( bpm );

@@ -53,6 +53,9 @@ class TimeManager
     /// returns the number of samples till beat if a beat exists in this process
     /// Otherwise returns nframes
     int getNframesToBeat();
+
+    /// resets the beat and bar
+    void sync();
   
   private:
     int samplerate;

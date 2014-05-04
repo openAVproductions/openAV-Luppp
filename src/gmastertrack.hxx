@@ -51,6 +51,7 @@ class GMasterTrack : public Fl_Group
     int  getBpm();
     void setBpm( int bpm );
     void setTapTempo( bool b );
+    void setSyncButton( bool b );
     void setBarBeat(int b, int beat);
     
     void setReturnVol(float f);
@@ -89,6 +90,7 @@ class GMasterTrack : public Fl_Group
     Avtk::Box  volBox;
     
     Avtk::Button tapTempo;
+    Avtk::Button syncButton;
     Avtk::LightButton metronomeButton;
     Avtk::Dial   tempoDial;
     
