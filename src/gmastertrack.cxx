@@ -264,6 +264,7 @@ void GMasterTrack::setTapTempo( bool b )
 
 void GMasterTrack::setBarBeat(int b, int beat)
 {
+  // FIXME: hard coded 4/4 time here
   if ( beat % 4 == 0 )
   {
     bar = bar % 4 + 1;
@@ -276,8 +277,8 @@ void GMasterTrack::setBarBeat(int b, int beat)
     beatLights[i]->value( 0 );
   
   // beat starts at 4
-  for( int i = 0; i < num; i++)
-    beatLights[3-i]->value( 1 );
+  // FIXME: hard coded 4/4 time
+  beatLights[ 3 - beat%4 ]->value( 1 );
 }
 
 Avtk::Volume* GMasterTrack::getInputVolume()
