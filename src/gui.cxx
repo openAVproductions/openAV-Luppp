@@ -562,7 +562,6 @@ void Gui::askQuit()
 
 int Gui::keyboardHandler(int event)
 {
-  printf("event\n");
   
   switch( event )
   {
@@ -576,6 +575,15 @@ int Gui::keyboardHandler(int event)
       else if( strcmp( Fl::event_text(), "7" ) == 0 ) { EventGridEvent e( 6, 0, true ); writeToDspRingbuffer( &e ); return 1; }
       else if( strcmp( Fl::event_text(), "8" ) == 0 ) { EventGridEvent e( 7, 0, true ); writeToDspRingbuffer( &e ); return 1; }
       
+      else if( strcmp( Fl::event_text(), "!" ) == 0 ) { EventGridState e( 0, 0, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "@" ) == 0 ) { EventGridState e( 1, 0, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "#" ) == 0 ) { EventGridState e( 2, 0, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "$" ) == 0 ) { EventGridState e( 3, 0, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "%" ) == 0 ) { EventGridState e( 4, 0, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "^" ) == 0 ) { EventGridState e( 5, 0, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "&" ) == 0 ) { EventGridState e( 6, 0, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "*" ) == 0 ) { EventGridState e( 7, 0, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+
       else if( strcmp( Fl::event_text(), "q" ) == 0 ) { EventGridEvent e( 0, 1, true ); writeToDspRingbuffer( &e ); return 1; }
       else if( strcmp( Fl::event_text(), "w" ) == 0 ) { EventGridEvent e( 1, 1, true ); writeToDspRingbuffer( &e ); return 1; }
       else if( strcmp( Fl::event_text(), "e" ) == 0 ) { EventGridEvent e( 2, 1, true ); writeToDspRingbuffer( &e ); return 1; }
@@ -584,6 +592,15 @@ int Gui::keyboardHandler(int event)
       else if( strcmp( Fl::event_text(), "y" ) == 0 ) { EventGridEvent e( 5, 1, true ); writeToDspRingbuffer( &e ); return 1; }
       else if( strcmp( Fl::event_text(), "u" ) == 0 ) { EventGridEvent e( 6, 1, true ); writeToDspRingbuffer( &e ); return 1; }
       else if( strcmp( Fl::event_text(), "i" ) == 0 ) { EventGridEvent e( 7, 1, true ); writeToDspRingbuffer( &e ); return 1; }
+      
+      else if( strcmp( Fl::event_text(), "Q" ) == 0 ) { EventGridState e( 0, 1, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "W" ) == 0 ) { EventGridState e( 1, 1, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "E" ) == 0 ) { EventGridState e( 2, 1, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "R" ) == 0 ) { EventGridState e( 3, 1, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "T" ) == 0 ) { EventGridState e( 4, 1, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "Y" ) == 0 ) { EventGridState e( 5, 1, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "U" ) == 0 ) { EventGridState e( 6, 1, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "I" ) == 0 ) { EventGridState e( 7, 1, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
       
       else if( strcmp( Fl::event_text(), "a" ) == 0 ) { EventGridEvent e( 0, 2, true ); writeToDspRingbuffer( &e ); return 1; }
       else if( strcmp( Fl::event_text(), "s" ) == 0 ) { EventGridEvent e( 1, 2, true ); writeToDspRingbuffer( &e ); return 1; }
@@ -594,6 +611,15 @@ int Gui::keyboardHandler(int event)
       else if( strcmp( Fl::event_text(), "j" ) == 0 ) { EventGridEvent e( 6, 2, true ); writeToDspRingbuffer( &e ); return 1; }
       else if( strcmp( Fl::event_text(), "k" ) == 0 ) { EventGridEvent e( 7, 2, true ); writeToDspRingbuffer( &e ); return 1; }
       
+      else if( strcmp( Fl::event_text(), "A" ) == 0 ) { EventGridState e( 0, 2, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "S" ) == 0 ) { EventGridState e( 1, 2, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "D" ) == 0 ) { EventGridState e( 2, 2, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "F" ) == 0 ) { EventGridState e( 3, 2, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "G" ) == 0 ) { EventGridState e( 4, 2, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "H" ) == 0 ) { EventGridState e( 5, 2, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "J" ) == 0 ) { EventGridState e( 6, 2, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "K" ) == 0 ) { EventGridState e( 7, 2, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      
       else if( strcmp( Fl::event_text(), "z" ) == 0 ) { EventGridEvent e( 0, 3, true ); writeToDspRingbuffer( &e ); return 1; }
       else if( strcmp( Fl::event_text(), "x" ) == 0 ) { EventGridEvent e( 1, 3, true ); writeToDspRingbuffer( &e ); return 1; }
       else if( strcmp( Fl::event_text(), "c" ) == 0 ) { EventGridEvent e( 2, 3, true ); writeToDspRingbuffer( &e ); return 1; }
@@ -602,6 +628,15 @@ int Gui::keyboardHandler(int event)
       else if( strcmp( Fl::event_text(), "n" ) == 0 ) { EventGridEvent e( 5, 3, true ); writeToDspRingbuffer( &e ); return 1; }
       else if( strcmp( Fl::event_text(), "m" ) == 0 ) { EventGridEvent e( 6, 3, true ); writeToDspRingbuffer( &e ); return 1; }
       else if( strcmp( Fl::event_text(), "," ) == 0 ) { EventGridEvent e( 7, 3, true ); writeToDspRingbuffer( &e ); return 1; }
+      
+      else if( strcmp( Fl::event_text(), "Z" ) == 0 ) { EventGridState e( 0, 3, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "X" ) == 0 ) { EventGridState e( 1, 3, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "C" ) == 0 ) { EventGridState e( 2, 3, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "V" ) == 0 ) { EventGridState e( 3, 3, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "B" ) == 0 ) { EventGridState e( 4, 3, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "N" ) == 0 ) { EventGridState e( 5, 3, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "M" ) == 0 ) { EventGridState e( 6, 3, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "<" ) == 0 ) { EventGridState e( 7, 3, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
       
       else if( strcmp( Fl::event_text(), "9" ) == 0 ) { EventGridLaunchScene e( 0 ); writeToDspRingbuffer( &e ); return 1; }
       else if( strcmp( Fl::event_text(), "o" ) == 0 ) { EventGridLaunchScene e( 1 ); writeToDspRingbuffer( &e ); return 1; }
