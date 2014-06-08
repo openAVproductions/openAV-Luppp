@@ -126,6 +126,12 @@ void GridLogic::launchScene( int scene )
 
 void GridLogic::specialScene(int t, int s)
 {
+  if ( t < 0 ) t = 0;
+  if ( t >= NTRACKS ) t = NTRACKS-1;
+  
+  if ( s < 0 ) s = 0;
+  if ( s >= NSCENES ) s = NSCENES-1;
+  
   selectedTrack = t;
   selectedScene = s;
   

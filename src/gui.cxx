@@ -425,7 +425,9 @@ Gui::Gui(const char* argZero) :
   
   window.end();
   
-  tracks.at(0)->getClipSelector()->setSpecial( 0 );
+  specialTrack = 0;
+  specialScene = 0;
+  tracks.at( specialTrack )->getClipSelector()->setSpecial( specialScene );
   
   
   optionWindow = new OptionsWindow();
@@ -648,6 +650,12 @@ int Gui::keyboardHandler(int event)
         //printf("%s\n", Fl::event_text() ); return 1;
       }
   }
+  
+  // keyboard arrows to special key mapping 
+  if ( Fl::event_key( FL_Left  ) ) { EventGridSelectNewChosen e( gui->specialTrack-1, gui->specialScene  ); writeToDspRingbuffer( &e ); return 1; }
+  if ( Fl::event_key( FL_Right ) ) { EventGridSelectNewChosen e( gui->specialTrack+1, gui->specialScene  ); writeToDspRingbuffer( &e ); return 1; }
+  if ( Fl::event_key( FL_Up    ) ) { EventGridSelectNewChosen e( gui->specialTrack  , gui->specialScene-1); writeToDspRingbuffer( &e ); return 1; }
+  if ( Fl::event_key( FL_Down  ) ) { EventGridSelectNewChosen e( gui->specialTrack  , gui->specialScene+1); writeToDspRingbuffer( &e ); return 1; }
   
   return 0;
 }

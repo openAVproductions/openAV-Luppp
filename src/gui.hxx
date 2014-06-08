@@ -86,6 +86,12 @@ class Gui
     int getWindowWidth(){return window.w();}
     
     nsm_client_t* getNsm(){return nsm;}
+    
+    
+    /// current special clip:
+    int specialTrack;
+    int specialScene;
+    
   
   private:
     vector<std::string> controllerVector;

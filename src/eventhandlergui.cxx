@@ -224,6 +224,8 @@ void handleGuiEvents()
             {
               gui->getTrack(i)->getClipSelector()->setSpecial( i == ev.track ? ev.scene : -1 );
             }
+            gui->specialTrack = ev.track;
+            gui->specialScene = ev.scene;
           } break; }
           
         
