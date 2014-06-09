@@ -25,13 +25,6 @@
 class Buffers
 {
   public:
-    Buffers()
-    {
-      memset( audio, 0, sizeof(float*)*32);
-      memset( midi , 0, sizeof(void *)*32);
-    }
-    float* audio[32];
-    void*  midi [32];
     
     enum BUFFER {
       // AUDIO
@@ -53,6 +46,8 @@ class Buffers
       MASTER_RETURN_L,
       MASTER_RETURN_R,
       
+      HEADPHONES_OUT,
+      
       // MIDI
       MASTER_MIDI_INPUT,
       
@@ -67,7 +62,17 @@ class Buffers
       TRACK_5,
       TRACK_6,
       TRACK_7,
+      
+      BUFFER_COUNT,
     };
+    
+    Buffers()
+    {
+      memset( audio, 0, sizeof(float*)*BUFFER_COUNT);
+      memset( midi , 0, sizeof(void *)*BUFFER_COUNT);
+    }
+    float* audio[BUFFER_COUNT];
+    void*  midi [BUFFER_COUNT];
     
     // Jack details
     jack_nframes_t         nframes;

@@ -144,6 +144,12 @@ Jack::Jack( std::string name ) :
                           JackPortIsOutput,
                           0 );
   
+  headphonesPort = jack_port_register( client,
+                          "headphone_out",
+                          JACK_DEFAULT_AUDIO_TYPE,
+                          JackPortIsOutput,
+                          0 );
+  
   sendOutput    = jack_port_register( client,
                           "send_out",
                           JACK_DEFAULT_AUDIO_TYPE,
@@ -331,6 +337,7 @@ int Jack::process (jack_nframes_t nframes)
   buffers.audio[Buffers::MASTER_INPUT]        = (float*)jack_port_get_buffer( masterInput    , nframes );
   buffers.audio[Buffers::MASTER_RETURN_L]     = (float*)jack_port_get_buffer( masterReturnL  , nframes );
   buffers.audio[Buffers::MASTER_RETURN_R]     = (float*)jack_port_get_buffer( masterReturnR  , nframes );
+  buffers.audio[Buffers::HEADPHONES_OUT]      = (float*)jack_port_get_buffer( headphonesPort , nframes );
   
   buffers.audio[Buffers::JACK_SEND_OUT]       = (float*)jack_port_get_buffer( sendOutput     , nframes );
   buffers.audio[Buffers::JACK_MASTER_OUT_L]   = (float*)jack_port_get_buffer( masterOutputL  , nframes );
@@ -392,6 +399,7 @@ void Jack::processFrames(int nframes)
   memset( buffers.audio[Buffers::JACK_MASTER_OUT_R] , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::MASTER_OUT_L]      , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::MASTER_OUT_R]      , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::HEADPHONES_OUT]    , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::SEND]              , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::SIDECHAIN_KEY]     , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::SIDECHAIN_SIGNAL]  , 0, sizeof(float) * nframes );
@@ -487,9 +495,10 @@ void Jack::processFrames(int nframes)
   // JACK in multiple parts internally in Luppp: used for processing bar() / beat()
   // if a full JACK nframes has been processed, this is extra work: its not that expensive
   /// update buffers by nframes
-  buffers.audio[Buffers::MASTER_INPUT]        = &buffers.audio[Buffers::MASTER_INPUT][nframes];
+  buffers.audio[Buffers::MASTER_INPUT]        = &buffers.audio[Buffers::MASTER_INPUT]   [nframes];
   buffers.audio[Buffers::MASTER_RETURN_L]     = &buffers.audio[Buffers::MASTER_RETURN_L][nframes];
   buffers.audio[Buffers::MASTER_RETURN_R]     = &buffers.audio[Buffers::MASTER_RETURN_R][nframes];
+  buffers.audio[Buffers::HEADPHONES_OUT]      = &buffers.audio[Buffers::HEADPHONES_OUT] [nframes];
   
   buffers.audio[Buffers::JACK_SEND_OUT]       = &buffers.audio[Buffers::JACK_SEND_OUT][nframes];
   buffers.audio[Buffers::JACK_MASTER_OUT_L]   = &buffers.audio[Buffers::JACK_MASTER_OUT_L][nframes];

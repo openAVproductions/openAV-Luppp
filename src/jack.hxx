@@ -148,6 +148,7 @@ class Jack
     jack_port_t*  masterOutputR;
     jack_port_t*  masterReturnL;
     jack_port_t*  masterReturnR;
+    jack_port_t*  headphonesPort;
     
     jack_port_t*  sidechainKeyOutput;
     jack_port_t*  sidechainSignalOutput;
