@@ -60,6 +60,7 @@ class LooperClip : public Stately
     
     /// TimeObserver override
     void bar();
+    void sync();
     
     /// SaveAble overrides
     void save();

@@ -230,6 +230,12 @@ void handleDspEvents()
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTimeTempoTap) );
             jack->getTimeManager()->tap();
           } break; }
+        case Event::TIME_SYNC: {
+          if ( availableRead >= sizeof(EventTimeSync) ) {
+            EventTimeSync ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTimeSync) );
+            jack->getTimeManager()->sync();
+          } break; }
         
         // ======== FX ===========
         

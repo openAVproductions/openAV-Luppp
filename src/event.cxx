@@ -32,6 +32,7 @@ const char* EventTrackRecordArm::prettyName = "track:record_arm";
 
 const char* EventTimeBPM::prettyName = "tempo_bpm";
 const char* EventTimeTempoTap::prettyName = "tempo_tap";
+const char* EventTimeSync::prettyName = "time_sync";
 const char* EventMetronomeActive::prettyName = "metronome:active";
 
 const char* EventGridEvent::prettyName = "grid:event";
@@ -70,6 +71,7 @@ const char* Event::getPrettyName( int type )
     
     case TIME_BPM:{ return EventTimeBPM::prettyName; }
     case TIME_TEMPO_TAP:{ return EventTimeTempoTap::prettyName; }
+    case TIME_SYNC:{ return EventTimeSync::prettyName; }
     
     case GRID_EVENT:{ return EventGridEvent::prettyName; }
     case GRID_LAUNCH_SCENE:{ return EventGridLaunchScene::prettyName; }

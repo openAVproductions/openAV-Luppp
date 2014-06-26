@@ -102,6 +102,7 @@ namespace Event
     TIME_BPM,
     TIME_BAR_BEAT,
     TIME_TEMPO_TAP,
+    TIME_SYNC,
     
     GUI_PRINT,
     
@@ -592,6 +593,19 @@ class EventTimeTempoTap : public EventBase
     bool pressed; // only used to turn on / off the button in GUI
     EventTimeTempoTap():pressed(false){}
     EventTimeTempoTap(bool p): pressed(p) {}
+};
+
+class EventTimeSync : public EventBase
+{
+  public:
+    int type() { return int(TIME_SYNC); }
+    uint32_t size() { return sizeof(EventTimeSync); }
+    static const char* prettyName;
+    const char* name(){ return prettyName; }
+    
+    bool pressed; // only used to turn on / off the button in GUI
+    EventTimeSync():pressed(false){}
+    EventTimeSync(bool p): pressed(p) {}
 };
 
 class EventTimeBarBeat : public EventBase

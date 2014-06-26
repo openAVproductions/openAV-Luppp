@@ -303,6 +303,17 @@ void GridLogic::bar()
   }
 }
 
+void GridLogic::sync()
+{
+  /// iterate over all clips, if they're set to QUEUED, set to the next state
+  for( int i = 0; i < NTRACKS*NSCENES; i++ )
+  {
+    int track = i / NSCENES;
+    int scene = i - track * NSCENES;
+    jack->getLooper( track )->getClip(scene)->sync();
+  }
+}
+
 
 void GridLogic::beat()
 {

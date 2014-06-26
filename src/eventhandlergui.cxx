@@ -282,6 +282,12 @@ void handleGuiEvents()
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTimeTempoTap) );
             gui->getMasterTrack()->setTapTempo( ev.pressed );
           } break; }
+        case Event::TIME_SYNC: {
+          if ( availableRead >= sizeof(EventTimeSync) ) {
+            EventTimeSync ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTimeSync) );
+            gui->getMasterTrack()->setSyncButton( ev.pressed );
+          } break; }
         
         
         case Event::LOOPER_REQUEST_BUFFER: {

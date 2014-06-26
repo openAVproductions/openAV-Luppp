@@ -329,6 +329,23 @@ void LooperClip::bar()
   }
 }
 
+void LooperClip::sync()
+{
+  if (_playing)
+  {
+    _playhead = 0;
+  }
+  else if (_recording && !_queueStop )
+  {
+    if ( _buffer )
+    {
+      _buffer->init();
+    }
+    _recordhead = 0;
+    _playhead = 0;
+  }
+}
+
 void LooperClip::neutralize()
 {
   _queuePlay = false;
