@@ -44,6 +44,8 @@ TimeManager::TimeManager():
   
   previousBeat = 0;
   
+  beatFrameCountdown = fpb;
+  
   totalFrameCounter = 0;
   
   tapTempoPos = 0;
@@ -148,29 +150,41 @@ void TimeManager::process(Buffers* buffers)
   //buffers->transportPosition->beats_per_bar = 4;
   //buffers->transportPosition->beat_type     = 4;
   
+  int nframes = buffers->nframes;
   
-  // calculate beat / bar position in nframes
-  //beatFrameCountdown = totalFrameCounter - (beat*fpb);
+  totalFrameCounter += nframes;
+  beatFrameCountdown -= nframes;
   
-  
-  if ( previousBeat + fpb < totalFrameCounter + buffers->nframes )
+  if ( beatFrameCountdown < 0 )
   {
-    beatCounter++;
+    int before = nframes + beatFrameCountdown;
+    int after  = - beatFrameCountdown;
     
-    long remaining = (totalFrameCounter + buffers->nframes) - (previousBeat + fpb);
+    if ( before < nframes && after < nframes && before + after == nframes )
+    {
+      char buffer [50];
+      sprintf (buffer, "Timing OK: beat after %i",  before );
+      EventGuiPrint e2( buffer );
+      writeToGuiRingbuffer( &e2 );
+    }
+    else
+    {
+      char buffer [50];
+      sprintf (buffer, "Timing Error: before: %i, after %i", before, after );
+      EventGuiPrint e2( buffer );
+      writeToGuiRingbuffer( &e2 );
+    }
     
-    //printf("remaining %li",remaining);
+    // process before beat:
+    jack->processFrames( before );
     
-    // process *upto* beat frame:
-    jack->processFrames( buffers->nframes - remaining );
-    
+    // handle beat:
     // inform observers of new beat FIRST
     for(uint i = 0; i < observers.size(); i++)
     {
       observers.at(i)->beat();
     }
     
-    // FIXME: 4 == beats in time sig
     if ( beatCounter % 4 == 0 )
     {
       // inform observers of new bar SECOND
@@ -179,62 +193,41 @@ void TimeManager::process(Buffers* buffers)
         observers.at(i)->bar();
       }
       barCounter++;
-      //buffers->transportPosition->bar++;
     }
     
-    // process frames after beat()
-    //int remaining = long(buffers->nframes) - beatFrameCountdown;
-    /*
-    char buffer [50];
-    sprintf (buffer, "r: %i, nfr: %i, bFC %li\ttFC %lli",  remaining, buffers->nframes, beatFrameCountdown, totalFrameCounter );
-    EventGuiPrint e2( buffer );
-    writeToGuiRingbuffer( &e2 );
-    */
-    if ( remaining > 0 && remaining < buffers->nframes )
-    {
-      jack->processFrames( remaining );
-    }
-    else
-    {
-      char buffer [50];
-      sprintf (buffer, "Timing Error: negative samples %li",  remaining );
-      EventGuiPrint e2( buffer );
-      writeToGuiRingbuffer( &e2 );
-    }
+    // process after
+    jack->processFrames( after );
     
     // write new beat to UI (bar info currently not used)
     EventTimeBarBeat e( barCounter, beatCounter );
     writeToGuiRingbuffer( &e );
     
-    //beatFrameCountdown = fpb; 
-    previousBeat += fpb;
+    
+    beatFrameCountdown = fpb;
+    beatCounter++;
   }
   else
   {
-    jack->processFrames( buffers->nframes );
+    jack->processFrames( nframes );
   }
   
-  
-  totalFrameCounter += buffers->nframes;
-  
-  /*
-  int tick = int( (beatFloat - beat) * 1920 );
-  
-  buffers->transportPosition->valid = (JackPositionBBT); | JackTransportPosition);
-  
-  buffers->transportPosition->tick += (buffers->nframes / buffers->samplerate);
-  
-  buffers->transportPosition->beat = beat % 4;
-  buffers->transportPosition->tick = 0;
-  
-  buffers->transportPosition->ticks_per_beat = 1920;
-  */
-  
+  // write BPM / transport info to JACK
   int bpm = ( samplerate * 60) / fpb;
   if ( buffers->transportPosition )
   {
-    //LUPPP_NOTE("BPM = %i " , bpm );
-    buffers->transportPosition->valid = (JackPositionBBT);
+    buffers->transportPosition->valid = (jack_position_bits_t)(JackPositionBBT | JackTransportPosition);
+    
+    buffers->transportPosition->bar  = beatCounter / 4;
+    buffers->transportPosition->beat = (beatCounter % 4) + 1; // beats 1-4
+    
+    float part = float( fpb-beatFrameCountdown) / fpb;
+    buffers->transportPosition->tick = part > 1.0f? 0.9999 : part*1920;
+    
+    buffers->transportPosition->frame = totalFrameCounter;
+    
+    buffers->transportPosition->ticks_per_beat = 1920;
+    buffers->transportPosition->beats_per_bar = 4;
+    
     buffers->transportPosition->beats_per_minute = bpm;
   }
 }

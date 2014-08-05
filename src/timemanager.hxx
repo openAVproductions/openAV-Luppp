@@ -66,6 +66,8 @@ class TimeManager
     /// frame number of the last beat
     long previousBeat;
     
+    long beatFrameCountdown;
+    
     /// counts bars / beats processed
     int barCounter;
     int beatCounter;
