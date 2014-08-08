@@ -81,6 +81,15 @@ void handleDspEvents()
             
           } break; }
         
+        
+        // ======== TRANSPORT ==
+        case Event::TRANSPORT: {
+          if ( availableRead >= sizeof(EventTransportState) ) {
+            EventTransportState ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTransportState) );
+            jack->getTimeManager()->setTransportState( ev.ts );
+          } break; }
+        
         // ========= SAVE =====
         case Event::STATE_SAVE: {
           if ( availableRead >= sizeof(EventStateSave) ) {

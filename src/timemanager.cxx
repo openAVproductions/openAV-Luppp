@@ -33,7 +33,8 @@ extern Jack* jack;
 using namespace std;
 
 TimeManager::TimeManager():
-    observers()
+    observers(),
+    transportState( TRANSPORT_ROLLING )
 {
   samplerate = jack->getSamplerate();
   // 120 BPM default
@@ -144,11 +145,21 @@ int TimeManager::getNframesToBeat()
   return -1; //beatFrameCountdown;
 }
 
+void TimeManager::setTransportState( TRANSPORT_STATE s )
+{
+  transportState = s;
+}
+
 void TimeManager::process(Buffers* buffers)
 {
   // time signature?
   //buffers->transportPosition->beats_per_bar = 4;
   //buffers->transportPosition->beat_type     = 4;
+  
+  if ( transportState == TRANSPORT_STOPPED )
+  {
+    return;
+  }
   
   int nframes = buffers->nframes;
   
@@ -221,7 +232,7 @@ void TimeManager::process(Buffers* buffers)
     buffers->transportPosition->beat = (beatCounter % 4) + 1; // beats 1-4
     
     float part = float( fpb-beatFrameCountdown) / fpb;
-    buffers->transportPosition->tick = part > 1.0f? 0.9999 : part*1920;
+    buffers->transportPosition->tick = part > 1.0f? 0.9999*1920 : part*1920;
     
     buffers->transportPosition->frame = totalFrameCounter;
     

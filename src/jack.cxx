@@ -345,6 +345,17 @@ int Jack::process (jack_nframes_t nframes)
   buffers.audio[Buffers::JACK_SIDECHAIN_KEY]   = (float*)jack_port_get_buffer(sidechainKeyOutput,nframes);
   buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL]=(float*)jack_port_get_buffer(sidechainSignalOutput,nframes);
   
+  // clear the buffers
+  memset( buffers.audio[Buffers::JACK_MASTER_OUT_L] , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::JACK_MASTER_OUT_R] , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::MASTER_OUT_L]      , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::MASTER_OUT_R]      , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::HEADPHONES_OUT]    , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::SEND]              , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::SIDECHAIN_KEY]     , 0, sizeof(float) * nframes );
+  memset( buffers.audio[Buffers::SIDECHAIN_SIGNAL]  , 0, sizeof(float) * nframes );
+  
+  
   //buffers.midi [Buffers::MASTER_MIDI_INPUT]   = (void*) jack_port_get_buffer( masterMidiInput, nframes );
   
   /// init buffers for each MidiIO
@@ -393,18 +404,6 @@ void Jack::processFrames(int nframes)
     LUPPP_WARN("Jack processFrames got nframes < 0");
     return;
   }
-  
-  // clear the buffers
-  memset( buffers.audio[Buffers::JACK_MASTER_OUT_L] , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::JACK_MASTER_OUT_R] , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::MASTER_OUT_L]      , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::MASTER_OUT_R]      , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::HEADPHONES_OUT]    , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::SEND]              , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::SIDECHAIN_KEY]     , 0, sizeof(float) * nframes );
-  memset( buffers.audio[Buffers::SIDECHAIN_SIGNAL]  , 0, sizeof(float) * nframes );
-  
-  
   
   /// process each MidiIO registered MIDI port
   for(unsigned int i = 0; i < midiIO.size(); i++ )

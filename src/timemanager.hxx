@@ -23,6 +23,7 @@
 #include <cstdio>
 
 #include "buffers.hxx"
+#include "transport.hxx"
 #include "eventhandler.hxx"
 
 #include "observer/time.hxx"
@@ -53,9 +54,15 @@ class TimeManager
     /// returns the number of samples till beat if a beat exists in this process
     /// Otherwise returns nframes
     int getNframesToBeat();
+    
+    /// TRANSPORT_STATE is defined in transport.hxx
+    void setTransportState( TRANSPORT_STATE s );
   
   private:
     int samplerate;
+    
+    /// the "state" of the transport: rolling or stopped
+    TRANSPORT_STATE transportState;
     
     /// number of frames per beat
     float fpb;

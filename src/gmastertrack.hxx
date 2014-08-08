@@ -88,6 +88,7 @@ class GMasterTrack : public Fl_Group
     Avtk::Box  source;
     Avtk::Box  volBox;
     
+    Avtk::Button transport;
     Avtk::Button tapTempo;
     Avtk::LightButton metronomeButton;
     Avtk::Dial   tempoDial;

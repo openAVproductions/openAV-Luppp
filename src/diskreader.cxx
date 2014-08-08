@@ -538,7 +538,7 @@ int DiskReader::readScenes(int t, cJSON* track)
       // get metadata for Clip
       cJSON* clip = cJSON_GetArrayItem( clips, s );
       
-      if ( !strcmp(clip->valuestring, "") == 0 )
+      if ( strcmp(clip->valuestring, "") != 0 )
       {
         stringstream sampleFilePath;
         sampleFilePath << sessionPath << "/audio/" << clip->valuestring;

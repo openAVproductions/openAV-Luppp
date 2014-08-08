@@ -30,6 +30,7 @@
 
 #include "looper.hxx"
 #include "gridlogic.hxx"
+#include "transport.hxx"
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
@@ -97,7 +98,9 @@ namespace Event
     LOOPER_LOOP_LENGTH,
     LOOPER_LOOP_USE_AS_TEMPO,
     
+    /// Transport etc
     METRONOME_ACTIVE,
+    TRANSPORT,                /// rolling or stopped
     
     TIME_BPM,
     TIME_BAR_BEAT,
@@ -147,6 +150,16 @@ class EventBase
     /// returns const char* to static char buffer: is the pretty name for event
     /// optional override: if function isn't overriden, no target update sent
     virtual const char* name(){return 0;}
+};
+
+class EventTransportState : public EventBase
+{
+  public:
+    int type() { return int(TRANSPORT); }
+    uint32_t size() { return sizeof(EventTransportState); }
+    TRANSPORT_STATE ts;
+    EventTransportState(): ts( TRANSPORT_STOPPED ){}
+    EventTransportState( TRANSPORT_STATE t): ts(t){}
 };
 
 class EventControllerBindingMade : public EventBase

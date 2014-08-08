@@ -87,7 +87,7 @@ int main(int argc, char** argv)
   rbToDsp = jack_ringbuffer_create( 5000 * sizeof(EventBase));
   rbToGui = jack_ringbuffer_create( 5000 * sizeof(EventBase));
   
-  
+   
 #ifdef BUILD_TESTS
   LUPPP_NOTE("Built with BUILD_TESTS enabled");
   if ( runTests )
@@ -115,8 +115,8 @@ int main(int argc, char** argv)
     // running tests == quitting after testing finishes
     return testResult;
   }
-#endif
   
+#endif
   
   // Create a GUI, check for NSM integration
   gui = new Gui( argv[0] );
@@ -133,6 +133,7 @@ int main(int argc, char** argv)
   }
   
   gui->show();
+  
   
   return 0;
 }

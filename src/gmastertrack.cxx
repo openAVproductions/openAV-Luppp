@@ -107,6 +107,26 @@ static void gmastertrack_mixVol_callback(Fl_Widget *w, void *data)
   //printf("MIX dial\n");
 }
 
+static void gmastertrack_transport_callback(Fl_Widget *w, void *data)
+{
+  Avtk::LightButton* b = (Avtk::LightButton*)w;
+  if( b->value() )
+  {
+    EventTransportState e = EventTransportState( TRANSPORT_ROLLING );
+    writeToDspRingbuffer( &e );
+    w->label( "Stop" );
+    b->value( 0 );
+  }
+  else
+  {
+    EventTransportState e = EventTransportState( TRANSPORT_STOPPED );
+    writeToDspRingbuffer( &e );
+    w->label( "Play" );
+    b->value( 1 );
+  }
+  
+}
+
 static void gmastertrack_button_callback(Fl_Widget *w, void *data)
 {
   if ( strcmp( w->label(), "Metro" ) == 0 )
@@ -138,8 +158,9 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   source(x+5, y+26, 140, 100, ""),
   volBox(x+5, y+422, 140, 172, ""),
   
-  tapTempo       ( x + w * 2/4.f - 18, y + 426 + 41 * 0, 44,38, "Tap"),
-  metronomeButton( x + w * 2/4.f - 18, y + 426 + 41 * 1, 44, 38,"Metro"),
+  transport      ( x + w * 2/4.f - 18, y + 426 + 26 * 0, 44,24, "Stop" ),
+  tapTempo       ( x + w * 2/4.f - 18, y + 426 + 26 * 1, 44,24, "Tap" ),
+  metronomeButton( x + w * 2/4.f - 18, y + 426 + 26 * 2, 44,24,"Metro"),
   
   tempoDial      ( x + w * 2/4.f - 18, y + 426 + 41 * 2, 45, 36,"BPM"),
   returnVol      ( x + w * 2/4.f - 18, y + 426 + 41 * 3, 45, 36,"Return"),
@@ -166,7 +187,10 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   
   inputVolume.callback( gmastertrack_inputVolume_callback, 0 );
   
+  transport.callback( gmastertrack_transport_callback, &ID );
+  
   tapTempo.callback( gmastertrack_button_callback, &ID );
+  
   metronomeButton.callback( gmastertrack_button_callback, 0 );
   
   tempoDial.callback( gmastertrack_tempoDial_callback, 0 );
