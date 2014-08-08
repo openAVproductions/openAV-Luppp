@@ -26,6 +26,11 @@ pkg_check_modules(SAMPLERATE samplerate REQUIRED)
 include_directories( ${SAMPLERATE_INCLUDE_DIRS}  )
 link_directories   ( ${SAMPLERATE_LIBRARY_DIRS}  )
 
+# needed for setting icon in WM
+pkg_check_modules(X11 x11 REQUIRED)
+include_directories( ${X11_INCLUDE_DIRS}  )
+link_directories   ( ${X11_LIBRARY_DIRS}  )
+
 # Check build type, adding coverage flags if needed
 IF(BUILD_TESTS)
   ADD_DEFINITIONS(-DBUILD_TESTS)
@@ -56,6 +61,7 @@ target_link_libraries( luppp ${NTK_LIBRARIES}        )
 target_link_libraries( luppp ${CAIRO_LIBRARIES}      )
 target_link_libraries( luppp ${SNDFILE_LIBRARIES}    )
 target_link_libraries( luppp ${SAMPLERATE_LIBRARIES} )
+target_link_libraries( luppp ${X11_LIBRARIES}        )
 
 # Check build type, linking with gcov for code analysis if needed
 IF(BUILD_TESTS)

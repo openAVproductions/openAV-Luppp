@@ -96,9 +96,9 @@ class Gui
   private:
     vector<std::string> controllerVector;
     
-    Fl_Double_Window    window;
+    Fl_Double_Window window;
     
-    Fl_Group* lupppGroup; 
+    Fl_Group* lupppGroup;
     
     OptionsWindow*    optionWindow;
     

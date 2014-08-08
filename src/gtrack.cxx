@@ -19,6 +19,9 @@
 #include "gtrack.hxx"
 #include "gui.hxx"
 
+int GTrack::privateID = 0;
+int GMasterTrack::privateID = 0;
+
 static void gtrack_vol_cb(Fl_Widget *w, void *data);
 static void gtrack_key_cb(Fl_Widget *w, void *data);
 static void gtrack_xsideDial_cb(Fl_Widget *w, void *data);

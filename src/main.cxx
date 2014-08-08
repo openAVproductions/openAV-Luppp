@@ -56,6 +56,8 @@ static void gui_static_loadSession_cb(void* inst)
     LUPPP_ERROR( "Error loading session" );
 }
 
+
+
 int main(int argc, char** argv)
 {
   LUPPP_NOTE("Git: %s", GIT_VERSION   );
@@ -117,6 +119,7 @@ int main(int argc, char** argv)
   }
   
 #endif
+  
   
   // Create a GUI, check for NSM integration
   gui = new Gui( argv[0] );

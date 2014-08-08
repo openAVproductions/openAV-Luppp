@@ -33,6 +33,10 @@ extern Jack* jack;
 #include "controller/nonseq.hxx"
 #include "controller/genericmidi.hxx"
 
+#include "icon.xpm"
+#include <FL/x.H>
+#include <FL/fl_draw.H>
+#include <FL/Fl.H>
 
 #include <stdlib.h>
 #include <FL/Fl.H>
@@ -49,13 +53,7 @@ extern Jack* jack;
 #include "../planning/luppp.c"
 #include "../planning/bg.c"
 
-// Hack, move to gtrack.cpp
-int GTrack::privateID = 0;
-int GMasterTrack::privateID = 0;
-//int AudioBuffer::privateID = 0;
-
 using namespace std;
-
 
 extern Gui* gui;
 extern int signalHanlderInt;
@@ -339,6 +337,20 @@ Gui::Gui(const char* argZero) :
   LUPPP_NOTE( "%s", "Gui()" );
   
   gui = this;
+  
+  // setup window icon before calling show()
+  fl_open_display();
+  Fl_Pixmap* pixmap = new Fl_Pixmap( icon_xpm );
+  Fl_Offscreen lupppIcon = XCreatePixmap(fl_display, RootWindow(fl_display, fl_screen),
+                               pixmap->w(), pixmap->h(), fl_visual->depth);
+  fl_gc = XCreateGC(fl_display, lupppIcon, 0, 0);
+  fl_begin_offscreen(lupppIcon);
+  pixmap->draw(0,0);
+  fl_end_offscreen();
+  delete pixmap;
+  XFreeGC(fl_display, fl_gc);
+  
+  window.icon( (void*)lupppIcon );
   
   // setup callback to signalChecker()
   Fl::add_timeout( 0.1, (Fl_Timeout_Handler)&signalChecker, 0 );
