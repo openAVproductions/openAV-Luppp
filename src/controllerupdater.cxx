@@ -29,13 +29,15 @@ ControllerUpdater::ControllerUpdater()
 void ControllerUpdater::registerController( Controller* controller )
 {
   if (!controller)
+  {
     LUPPP_ERROR("Register Controller passed NULL controller!");
+    return;
+  }
   
   //LUPPP_NOTE("Registering controller %s", controller->getName().c_str() );
   
   // store the controller instance
   c.push_back( controller );
-  
   
   // and tell it to register itself (MidiObserver / AudioObserver etc)
   controller->registerComponents();

@@ -32,8 +32,8 @@
 
 int signalHanlderInt = 0;
 
-char* processDspMem = 0;
-char* processGuiMem = 0;
+EventBase* processDspMem = 0;
+EventBase* processGuiMem = 0;
 
 jack_ringbuffer_t* rbToDsp = 0;
 jack_ringbuffer_t* rbToGui = 0;
@@ -62,7 +62,7 @@ int main(int argc, char** argv)
 {
   LUPPP_NOTE("Git: %s", GIT_VERSION   );
   
-  bool runTests;
+  bool runTests = false;
   if ( runTests ){} // remove unused warning if not built with BUILD_TESTS
   
   for(int i = 0; i < argc; i++)
@@ -83,8 +83,8 @@ int main(int argc, char** argv)
   signal(SIGTERM, signalHanlder);
   
   // allocate data to read from
-  processDspMem = (char*)malloc( sizeof(EventBase) );
-  processGuiMem = (char*)malloc( sizeof(EventBase) );
+  processDspMem = (EventBase*)malloc( sizeof(EventBase) );
+  processGuiMem = (EventBase*)malloc( sizeof(EventBase) );
   
   rbToDsp = jack_ringbuffer_create( 5000 * sizeof(EventBase));
   rbToGui = jack_ringbuffer_create( 5000 * sizeof(EventBase));
@@ -98,8 +98,8 @@ int main(int argc, char** argv)
     int testResult = 0;
     
     // setup the testing Gui / JACK: Jack first, then GUI
-    Jack::setup("LupppTEST");
     gui = new Gui( argv[0] );
+    Jack::setup("LupppTEST");
     
     // test offline functionality
     testResult += gui->getDiskReader()->runTests();

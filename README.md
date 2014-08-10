@@ -1,10 +1,9 @@
 Luppp - OpenAV Productions
 ===============================
 
-Link to official page: http://openavproductions.com/Luppp
+Official page: http://openavproductions.com/Luppp
 
 This is the repository of Luppp, the live looping tool.
-
 
 ![screenshot](https://raw.github.com/harryhaaren/openAV-Luppp/master/resources/screenshots/1.0.png "Luppp 1.0 Screenshot")
 

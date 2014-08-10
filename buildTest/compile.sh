@@ -13,9 +13,11 @@ set -e
 # setup environment: Copy material for tests to /tmp
 cp -r ../src/tests/lupppTestMaterial /tmp
 
-cmake -DBUILD_TESTS=1 ../
+rm CMakeCache.txt
 
-make -j 2
+scan-build cmake -DBUILD_TESTS=1 ../
+
+scan-build make -j 2
 
 lcov --zerocounters --directory .
 

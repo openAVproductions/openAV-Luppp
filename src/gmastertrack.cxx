@@ -294,8 +294,6 @@ void GMasterTrack::setBarBeat(int b, int beat)
     bar = bar % 4 + 1;
   }
   
-  int num = (beat % 4) + 1;
-  
   // turn all off
   for( int i = 0; i < 4; i++)
     beatLights[i]->value( 0 );

@@ -22,8 +22,8 @@
 #include "event.hxx"
 #include <jack/ringbuffer.h>
 
-extern char* processDspMem;
-extern char* processGuiMem;
+extern EventBase* processDspMem;
+extern EventBase* processGuiMem;
 
 extern jack_ringbuffer_t* rbToDsp;
 extern jack_ringbuffer_t* rbToGui;

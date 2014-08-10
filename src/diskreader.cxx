@@ -205,8 +205,10 @@ int DiskReader::loadSample( int track, int scene, string path )
     
     // resample quality taken from config file, 
     int ret = src_simple ( &data, q, 1 );
-    
-    LUPPP_NOTE("%s%i%s%i", "Resampling finished, from ", data.input_frames_used, " to ", data.output_frames_gen );
+    if ( ret == 0 )
+      LUPPP_NOTE("%s%i%s%i", "Resampling finished, from ", data.input_frames_used, " to ", data.output_frames_gen );
+    else
+      LUPPP_ERROR("%s%i%s%i", "Resampling finished, from ", data.input_frames_used, " to ", data.output_frames_gen );
     
     /// exchange buffers, so buf contains the resampled audio
     buf.swap( resampled );
@@ -294,7 +296,7 @@ int DiskReader::loadSample( int track, int scene, string path )
       }
       
       cJSON_Delete( audioJson );
-      free ( sampleString  );
+      delete[] sampleString;
       free ( tmp );
     }
     else
@@ -392,9 +394,11 @@ int DiskReader::readSession( std::string path )
   
   int mr = readMaster();
   
+  if( tr == mr ){};
+  
   // cleanup
   cJSON_Delete( sessionJson );
-  free ( sessionString );
+  delete[] sessionString;
   
   return LUPPP_RETURN_OK;
 }
