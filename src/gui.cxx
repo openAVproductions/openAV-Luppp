@@ -36,7 +36,6 @@ extern Jack* jack;
 #include "icon.xpm"
 #include <FL/x.H>
 #include <FL/fl_draw.H>
-#include <FL/Fl.H>
 
 #include <stdlib.h>
 #include <FL/Fl.H>
