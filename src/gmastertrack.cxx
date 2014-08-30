@@ -18,6 +18,8 @@
 
 #include "gmastertrack.hxx"
 
+#include <FL/Fl_Menu_Item.H>
+
 static void gmastertrack_tempoDial_callback(Fl_Widget *w, void *data)
 {
   Avtk::Dial* b = (Avtk::Dial*)w;
@@ -131,10 +133,52 @@ static void gmastertrack_button_callback(Fl_Widget *w, void *data)
 {
   if ( strcmp( w->label(), "Metro" ) == 0 )
   {
-    Avtk::LightButton* b = (Avtk::LightButton*)w;
-    b->value( !b->value() );
-    EventMetronomeActive e = EventMetronomeActive( b->value() );
-    writeToDspRingbuffer( &e );
+    if ( Fl::event_button() == FL_RIGHT_MOUSE )
+    {
+      // popup volume menu: 10 "steps of volume"
+      Fl_Menu_Item rclick_menu[] =
+      {
+        { "Vol 100%" },
+        { "Vol  75%" },
+        { "Vol  50%" },
+        { "Vol  25%"},
+        { 0 }
+      };
+      
+      Fl_Menu_Item *m = (Fl_Menu_Item*) rclick_menu->popup( Fl::event_x(), Fl::event_y(), 0, 0, 0);
+      
+      float v = 0.f;
+      if ( !m )
+      {
+        return;
+      }
+      else if ( strcmp(m->label(), "Vol 100%") == 0 ) {
+        v = 1;
+      }
+      else if ( strcmp(m->label(), "Vol  75%") == 0 ) {
+        v = 0.75;
+      }
+      else if ( strcmp(m->label(), "Vol  50%") == 0 ) {
+        v = 0.5;
+      }
+      else
+        v = 0.25;
+      
+      LUPPP_NOTE("metro vol = %f", v );
+      
+      EventMetronomeVolume e( v );
+      writeToDspRingbuffer( &e );
+    }
+    else
+    {
+      Avtk::LightButton* b = (Avtk::LightButton*)w;
+      b->value( !b->value() );
+      EventMetronomeActive e = EventMetronomeActive( b->value() );
+      writeToDspRingbuffer( &e );
+    }
+    
+    
+    
   }
   else if ( strcmp( w->label(), "Tap" ) == 0 )
   {

@@ -40,12 +40,15 @@ class Metronome : public TimeObserver
     void beat();
     void setFpb(int f);
     
+    void setVolume( float v );
+    
     void process(int nframes, Buffers* buffers);
   
   private:
     int fpb;
     bool playBar;
     bool active;
+    float vol;
     
     int playPoint, endPoint;
     float barSample[44100];

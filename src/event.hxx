@@ -100,6 +100,7 @@ namespace Event
     
     /// Transport etc
     METRONOME_ACTIVE,
+    METRONOME_VOLUME,
     TRANSPORT,                /// rolling or stopped
     
     TIME_BPM,
@@ -564,6 +565,18 @@ class EventMetronomeActive : public EventBase
     
     bool active;
     EventMetronomeActive(bool a = false) : active(a) {}
+};
+
+class EventMetronomeVolume : public EventBase
+{
+  public:
+    int type() { return int(METRONOME_VOLUME); }
+    uint32_t size() { return sizeof(EventMetronomeVolume); }
+    static const char* prettyName;
+    const char* name(){ return prettyName; }
+    
+    float vol;
+    EventMetronomeVolume(float v = 0.f) : vol(v){}
 };
 
 class EventTimeBPM : public EventBase

@@ -33,7 +33,8 @@ Metronome::Metronome() :
   TimeObserver(),
   playBar    (false),
   active     (false),
-  playPoint  (0)
+  playPoint  (0),
+  vol        (1)
 {
   // create beat and bar samples
   endPoint = ( jack->getSamplerate() / 441 );
@@ -55,6 +56,12 @@ void Metronome::setActive(bool a)
   active = a;
   // don't play immidiatly
   playPoint = endPoint + 1;
+}
+
+void Metronome::setVolume( float v )
+{
+  vol = v;
+  printf(" vol = %f \n", vol );
 }
 
 void Metronome::bar()
@@ -94,7 +101,7 @@ void Metronome::process(int nframes, Buffers* buffers)
   {
     if ( playPoint < endPoint )
     {
-      out[i] += sample[playPoint];
+      out[i] += sample[playPoint] * vol;
       playPoint++;
     }
   }

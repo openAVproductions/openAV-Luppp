@@ -31,6 +31,7 @@
 #include "controller/controller.hxx"
 #include "controller/genericmidi.hxx"
 #include "eventhandler.hxx"
+#include "metronome.hxx"
 
 #include "logic.hxx"
 #include "state/state.hxx"
@@ -203,6 +204,13 @@ void handleDspEvents()
             EventMetronomeActive ev(false);
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMetronomeActive) );
             jack->getLogic()->metronomeEnable(ev.active);
+          } break; }
+        case Event::METRONOME_VOLUME: {
+          if ( availableRead >= sizeof(EventMetronomeVolume) ) {
+            EventMetronomeVolume ev(false);
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMetronomeVolume) );
+            LUPPP_NOTE("EventDSP: MetroVol %f", ev.vol );
+            jack->getMetronome()->setVolume(ev.vol);
           } break; }
         case Event::LOOPER_STATE: {
           if ( availableRead >= sizeof(EventLooperState) ) {
