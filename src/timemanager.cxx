@@ -173,10 +173,12 @@ void TimeManager::process(Buffers* buffers)
     
     if ( before < nframes && after < nframes && before + after == nframes )
     {
+      /*
       char buffer [50];
       sprintf (buffer, "Timing OK: beat after %i",  before );
       EventGuiPrint e2( buffer );
       writeToGuiRingbuffer( &e2 );
+      */
     }
     else
     {
