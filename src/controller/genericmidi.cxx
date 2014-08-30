@@ -842,8 +842,14 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
   tmp->data   = dataJson->valueint;
   
   // gets the Action type from the JSON string
-  tmp->action = Event::getTypeFromName( actionJson->valuestring );
+  cJSON* activeJson = cJSON_GetObjectItem( binding, "active" );
+  if ( activeJson )
+  {
+    tmp->active = activeJson->valueint;
+  }
   
+  // gets the active bool from the JSON 
+  tmp->action = Event::getTypeFromName( actionJson->valuestring );
   
   // check what our send value should be:
   cJSON* sendJson   = cJSON_GetObjectItem( binding, "send" );
@@ -908,6 +914,7 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
   }
   else if ( strcmp( actionJson->valuestring, "metronome:active" ) == 0 ) {
     tmp->action = Event::METRONOME_ACTIVE;
+    LUPPP_NOTE("binding metro active event, tmp->active == %i", tmp->active );
   }
   
   // check for valid event: otherwise pass

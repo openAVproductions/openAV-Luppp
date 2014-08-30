@@ -1,4 +1,9 @@
 
+-> Fixed metronome MIDI mapping
+-> Added metronome volume
+
+1.0.1: Saturday 30th August 2014
+
 -> Updated header graphics
 -> CLang static analysis
 -> Icon updated & shows
