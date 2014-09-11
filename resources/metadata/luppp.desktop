@@ -8,4 +8,5 @@ Categories=Audio;AudioVideo;
 Exec=luppp
 Terminal=false
 StartupNotify=true
-Icon=luppp
+Icon=/usr/share/luppp/luppp.png
+X-NSM-capable=true
