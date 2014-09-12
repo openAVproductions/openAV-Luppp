@@ -106,7 +106,6 @@ static void gmastertrack_mixVol_callback(Fl_Widget *w, void *data)
   float v = b->value();
   EventMasterInputTo e = EventMasterInputTo( INPUT_TO_MIX, v );
   writeToDspRingbuffer( &e );
-  //printf("MIX dial\n");
 }
 
 static void gmastertrack_transport_callback(Fl_Widget *w, void *data)
@@ -278,6 +277,9 @@ void GMasterTrack::setBpm( int b )
 {
   bpm = b;
   tempoDial.value( ( bpm - 60 ) / 160.f );
+  std::stringstream s;
+  s << bpm;
+  tempoDial.setLabel( s.str().c_str() );
 }
 
 void GMasterTrack::setInputVol(float f)

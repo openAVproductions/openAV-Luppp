@@ -20,6 +20,7 @@
 #ifndef AVTK_DIAL_H
 #define AVTK_DIAL_H
 
+#include <stdio.h>
 #include <FL/Fl_Dial.H>
 #include <FL/Fl_Slider.H>
 
@@ -29,8 +30,8 @@ namespace Avtk
 class Dial : public Fl_Slider
 {
   public:
-    Dial(int _x, int _y, int _w, int _h, const char* _label=0):
-        Fl_Slider(_x, _y, _w, _h, _label)
+    Dial(int _x, int _y, int _w, int _h, const char* _lab=0):
+        Fl_Slider(_x, _y, _w, _h, _lab)
     {
       x = _x;
       y = _y;
@@ -43,12 +44,18 @@ class Dial : public Fl_Slider
       mouseClicked = false;
       
       highlight = false;
-      label = _label;
+      _label = strdup( _lab );
+    }
+    
+    ~Dial()
+    {
+      if( _label )
+        free( _label );
     }
     
     bool highlight;
     int x, y, w, h;
-    const char* label;
+    char* _label;
     
     float radius;
     float lineWidth;
@@ -57,6 +64,17 @@ class Dial : public Fl_Slider
     bool mouseClicked;
     
     bool drawLabel;
+    
+    void setLabel( const char* newLabel )
+    {
+      if( _label )
+        free( _label );
+      
+      _label = strdup( newLabel );
+      
+      label( _label );
+      redraw();
+    }
     
     void draw()
     {
