@@ -387,7 +387,7 @@ int Jack::process (jack_nframes_t nframes)
   
   
   /// update "time" from JACK master, or write master?
-  buffers.transportFrame    = jack_get_current_transport_frame(client);
+  buffers.transportFrame = jack_get_current_transport_frame(client);
   
   // time manager deals with detecting bar() / beat() events, and calls
   // processFrames() with the appropriate nframes
@@ -404,6 +404,14 @@ void Jack::processFrames(int nframes)
     LUPPP_WARN("Jack processFrames got nframes < 0");
     return;
   }
+  
+  /*
+  // extreme debugging of timemanager process-split functionality
+  char buffer [50];
+  sprintf (buffer, "Jack::processFrames() got %i", nframes );
+  EventGuiPrint e2( buffer );
+  writeToGuiRingbuffer( &e2 );
+  */
   
   /// process each MidiIO registered MIDI port
   for(unsigned int i = 0; i < midiIO.size(); i++ )
@@ -430,6 +438,7 @@ void Jack::processFrames(int nframes)
     float returnL = buffers.audio[Buffers::MASTER_RETURN_L][i];
     float returnR = buffers.audio[Buffers::MASTER_RETURN_R][i];
     
+    
     if ( inputToMixEnable )
     {
       // if sending to mix, scale by volume *and* by XSide send
@@ -447,11 +456,14 @@ void Jack::processFrames(int nframes)
       buffers.audio[Buffers::SIDECHAIN_KEY][i] += input;
     }
     
+    
     buffers.audio[Buffers::SIDECHAIN_SIGNAL][i] += input * inputToXSideVol;
     
     /// mixdown returns into master buffers
-    buffers.audio[Buffers::MASTER_OUT_L][i] = (L + returnL*returnVol) * masterVol;
-    buffers.audio[Buffers::MASTER_OUT_R][i] = (R + returnR*returnVol) * masterVol;
+    // FIXME: Returns broken, due to metronome glitch in master output: buffer
+    // writing issue or such. See #95 on github
+    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = L * masterVol;// (L + returnL*returnVol) * masterVol;
+    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = R * masterVol;// (R + returnR*returnVol) * masterVol;
     
     /// write SEND content to JACK port
     buffers.audio[Buffers::JACK_SEND_OUT][i] = buffers.audio[Buffers::SEND][i];
@@ -462,7 +474,7 @@ void Jack::processFrames(int nframes)
   
   /// db meter on master input & output
   inputMeter->process( nframes, buffers.audio[Buffers::MASTER_INPUT], buffers.audio[Buffers::MASTER_INPUT]);
-  masterMeter->process(nframes, buffers.audio[Buffers::MASTER_OUT_L], buffers.audio[Buffers::MASTER_OUT_R] );
+  masterMeter->process(nframes, buffers.audio[Buffers::JACK_MASTER_OUT_L], buffers.audio[Buffers::JACK_MASTER_OUT_R] );
   
   if ( uiUpdateCounter > uiUpdateConstant )
   {
@@ -477,7 +489,7 @@ void Jack::processFrames(int nframes)
   
   uiUpdateCounter += nframes;
   
-  
+  /*
   // memcpy the internal MASTER_OUTPUT buffer to the JACK_MASTER_OUTPUT
   memcpy( buffers.audio[Buffers::JACK_MASTER_OUT_L],
           buffers.audio[Buffers::MASTER_OUT_L],
@@ -488,7 +500,7 @@ void Jack::processFrames(int nframes)
           //buffers.audio[Buffers::POST_SIDECHAIN],
           //buffers.audio[Buffers::SEND],  // uncomment to listen to reverb send only
           sizeof(float)*nframes);
-  
+  */
   
   // move buffer pointers up nframes: allows processing of one "nframes" from 
   // JACK in multiple parts internally in Luppp: used for processing bar() / beat()

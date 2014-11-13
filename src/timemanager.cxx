@@ -173,12 +173,11 @@ void TimeManager::process(Buffers* buffers)
     
     if ( before < nframes && after < nframes && before + after == nframes )
     {
-      /*
       char buffer [50];
-      sprintf (buffer, "Timing OK: beat after %i",  before );
+      //sprintf (buffer, "Timing OK: before %i, after %i, b+a %i",  before, after, before+after );
       EventGuiPrint e2( buffer );
       writeToGuiRingbuffer( &e2 );
-      */
+      
     }
     else
     {
@@ -214,6 +213,7 @@ void TimeManager::process(Buffers* buffers)
     // write new beat to UI (bar info currently not used)
     EventTimeBarBeat e( barCounter, beatCounter );
     writeToGuiRingbuffer( &e );
+    
     
     
     beatFrameCountdown = fpb;
