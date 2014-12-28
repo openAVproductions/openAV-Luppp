@@ -9,7 +9,7 @@ set(LUPPP_VERSION_PATCH "1")
 
 set(LUPPP_VERSION "${LUPPP_VERSION_MAJOR}.${LUPPP_VERSION_MINOR}.${LUPPP_VERSION_PATCH}")
 
-option(BUILD_TESTS "Build test version" OFF)
+option(BUILD_TESTS "Build test version" ON)
 
 
 #set(CMAKE_VERBOSE_MAKEFILE on)

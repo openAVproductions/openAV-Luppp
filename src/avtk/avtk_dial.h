@@ -31,7 +31,8 @@ class Dial : public Fl_Slider
 {
   public:
     Dial(int _x, int _y, int _w, int _h, const char* _lab=0):
-        Fl_Slider(_x, _y, _w, _h, _lab)
+        Fl_Slider(_x, _y, _w, _h, _lab),
+        _label ( 0 )
     {
       x = _x;
       y = _y;
@@ -44,7 +45,8 @@ class Dial : public Fl_Slider
       mouseClicked = false;
       
       highlight = false;
-      _label = strdup( _lab );
+      if ( _lab != 0 )
+        _label = strdup( _lab );
     }
     
     ~Dial()
@@ -67,12 +69,12 @@ class Dial : public Fl_Slider
     
     void setLabel( const char* newLabel )
     {
-      if( _label )
-        free( _label );
+      //if( _label )
+      //  free( _label );
       
-      _label = strdup( newLabel );
+      //_label = strdup( newLabel );
       
-      label( _label );
+      //label( _label );
       redraw();
     }
     
