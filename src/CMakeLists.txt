@@ -36,9 +36,10 @@ IF(BUILD_TESTS)
   ADD_DEFINITIONS(-DBUILD_TESTS)
   ADD_DEFINITIONS(-DBUILD_COVERAGE_TEST)
   
-  SET(CMAKE_CXX_FLAGS "-g -Wall -Wextra -Wno-unused-variable -fsanitize=address -fno-omit-frame-pointer -fprofile-arcs -ftest-coverage")
+  #  -fsanitize=address -fprofile-arcs -ftest-coverage
+  SET(CMAKE_CXX_FLAGS "-g -Wall -Wextra -Wno-unused-variable -fno-omit-frame-pointer ")
   SET(CMAKE_C_FLAGS "-g -Wall -Wextra -W -Wno-unused-variable -fno-omit-frame-pointer -fprofile-arcs -ftest-coverage")
-  SET(CMAKE_EXE_LINKER_FLAGS "-fprofile-arcs -ftest-coverage")
+  #SET(CMAKE_EXE_LINKER_FLAGS "-fprofile-arcs -ftest-coverage")
 ENDIF(BUILD_TESTS)
 
 IF(RELEASE_BUILD)
