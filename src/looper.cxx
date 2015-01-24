@@ -70,6 +70,7 @@ Looper::Looper(int t) :
 void Looper::timestretch( bool ts )
 {
   timeStretchEnabled = ts;
+  printf("Looper on track %i : time stretching enabled %s\n", track, ts ? "yes." : "no." );
 }
 
 LooperClip* Looper::getClip(int scene)
