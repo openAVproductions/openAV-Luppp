@@ -47,6 +47,9 @@ class Looper : public AudioProcessor, public TimeObserver
     /// stores the framesPerBeat from TimeManager. Used to stretch audio
     void setFpb(int f);
     
+    /// sets if time stretching is used or not
+    void timestretch( bool ts );
+    
     /// Retrieve a clip from the Looper
     LooperClip* getClip(int scene);
     
@@ -61,6 +64,8 @@ class Looper : public AudioProcessor, public TimeObserver
     int queuedScene;
     
     int fpb;
+    
+    bool timeStretchEnabled;
     
     //vector<float> tmpRecordBuffer;
     LooperClip* clips[10];

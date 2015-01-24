@@ -33,7 +33,8 @@ extern Jack* jack;
 Looper::Looper(int t) :
   AudioProcessor(),
   TimeObserver(),
-  track(t)
+  track(t),
+  timeStretchEnabled( true )
 {
   uiUpdateConstant= jack->getSamplerate() / 30.f;
   uiUpdateCounter = jack->getSamplerate() / 30.f;
@@ -64,6 +65,11 @@ Looper::Looper(int t) :
   semitoneShift = 0.0f;
   windowSize = 1000;
   crossfadeSize = 1000;
+}
+
+void Looper::timestretch( bool ts )
+{
+  timeStretchEnabled = ts;
 }
 
 LooperClip* Looper::getClip(int scene)
@@ -110,7 +116,8 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
       long actualFrames = clips[clip]->getBufferLenght();
       float playSpeed = 1.0;
       
-      if ( targetFrames != 0 && actualFrames != 0 )
+      if ( timeStretchEnabled &&
+           targetFrames != 0 && actualFrames != 0 )
       {
         playSpeed = float(actualFrames) / targetFrames;
       }
@@ -122,11 +129,14 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
         // REFACTOR into system that is better than per sample function calls
         float tmp = clips[clip]->getSample(playSpeed);
         
-        float deltaPitch = 12 * log ( playSpeed ) / log (2);
-        semitoneShift = -deltaPitch;
-        
-        // write the pitch-shifted signal to the track buffer
-        pitchShift( 1, &tmp, &out[i] );
+        //if ( timeStretchEnabled )
+        {
+          float deltaPitch = 12 * log ( playSpeed ) / log (2);
+          semitoneShift = -deltaPitch;
+          
+          // write the pitch-shifted signal to the track buffer
+          pitchShift( 1, &tmp, &out[i] );
+        }
       }
       
       //printf("Looper %i playing(), speed = %f\n", track, playSpeed );
@@ -138,9 +148,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
       }
       uiUpdateCounter += nframes;
     }
-  
   }
-  
   
 }
 

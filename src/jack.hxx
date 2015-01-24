@@ -58,6 +58,10 @@ class Jack
     Jack(std::string name);
     ~Jack();
     
+    
+    // hack to pass time stretch enable into JACK before setup
+    static bool noTimetstretching;
+    
     static void setup(std::string name);
     
     void activate();

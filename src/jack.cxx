@@ -50,6 +50,7 @@ int AudioBuffer::privateID = 0;
 // static pointers from main
 extern Gui* gui;
 extern Jack* jack;
+bool Jack::noTimetstretching = false;
 
 void Jack::setup(std::string name)
 {
@@ -201,6 +202,8 @@ Jack::Jack( std::string name ) :
      *  In this case, the track's Looper instance.
     **/
     loopers.push_back( new Looper(i) );
+    loopers.back()->timestretch( !noTimetstretching );
+    
     trackOutputs.push_back( new TrackOutput(i, loopers.back() ) );
     
     buffers.audio[Buffers::TRACK_0 + i] = new float[ buffers.nframes ];

@@ -63,12 +63,18 @@ int main(int argc, char** argv)
   LUPPP_NOTE("Git: %s", GIT_VERSION   );
   
   bool runTests = false;
-  if ( runTests ){} // remove unused warning if not built with BUILD_TESTS
+  bool noTimetstretching = false;
+  // remove unused warning if not built with BUILD_TESTS
+  if ( runTests );
+  if ( noTimetstretching );
   
   for(int i = 0; i < argc; i++)
   {
     if ( strcmp(argv[i], "-test" ) == 0 ) {
       runTests = true;
+    }
+    else if ( strcmp(argv[i], "-no-ts" ) == 0 ) {
+      noTimetstretching = true;
     }
     else if ( i != 0 ) // don't try load with the program name!
     {
@@ -99,6 +105,8 @@ int main(int argc, char** argv)
     
     // setup the testing Gui / JACK: Jack first, then GUI
     gui = new Gui( argv[0] );
+    
+    Jack::noTimetstretching = noTimetstretching;
     Jack::setup("LupppTEST");
     
     // test offline functionality
@@ -131,6 +139,7 @@ int main(int argc, char** argv)
   }
   else
   {
+    Jack::noTimetstretching = noTimetstretching;
     Jack::setup("Luppp");
     jack->activate();
   }
