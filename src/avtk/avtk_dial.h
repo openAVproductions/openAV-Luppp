@@ -172,6 +172,17 @@ class Dial : public Fl_Slider
             }
           }
           return 1;
+        case FL_MOUSEWHEEL:
+          {
+            float val = value() - Fl::event_dy() * 0.1;
+            //printf("dial scroll event: %f\n", val);
+            if ( val > 1.0 ) val = 1.0;
+            if ( val < 0.0 ) val = 0.0;
+            set_value( val );
+            redraw();
+            do_callback();
+          }
+          break;
         case FL_RELEASE:
           if (highlight) {
             highlight = 0;
