@@ -41,6 +41,8 @@ Volume::Volume(int _x, int _y, int _w, int _h, const char *_label ):
   ampR = 0;
   compress = 0;
   value( 0.78f );
+
+  orientationHorizontal = false;
 }
 
 
