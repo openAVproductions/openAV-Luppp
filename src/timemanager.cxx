@@ -126,12 +126,22 @@ void TimeManager::tap()
     int tapFpb3 = totalFrameCounter - tapTempo[2]; // last tap, until now
     
     int average = (tapFpb1 + tapFpb2 + tapFpb3) / 3;
+
+    if( average < 13000 )
+    {
+	    char buffer [50];
+	    sprintf (buffer, "TM, tap() average too slow! quitting");
+	    EventGuiPrint e( buffer );
+	    writeToGuiRingbuffer( &e );
+	    return;
+    }
     
     char buffer [50];
     sprintf (buffer, "TM, tap() average = %i", average );
     EventGuiPrint e( buffer );
     writeToGuiRingbuffer( &e );
     
+
     setFpb(average);
     
     // reset, so next 3 taps restart process
