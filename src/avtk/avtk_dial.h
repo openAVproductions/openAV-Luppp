@@ -181,6 +181,7 @@ class Dial : public Fl_Slider
             set_value( val );
             redraw();
             do_callback();
+            return 1;
           }
           break;
         case FL_RELEASE:
