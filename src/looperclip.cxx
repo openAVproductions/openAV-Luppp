@@ -259,7 +259,12 @@ int LooperClip::getBeats()
 
 long LooperClip::getBufferLenght()
 {
-  return _recordhead;
+    return _recordhead;
+}
+
+long LooperClip::getActualAudioLength()
+{
+    return _buffer->getAudioFrames();
 }
 
 void LooperClip::bar()

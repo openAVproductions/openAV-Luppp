@@ -36,19 +36,30 @@ Metronome::Metronome() :
   playPoint  (0),
   vol        (1)
 {
+  //Create Beat/Bar samples
+    beatSample=new float[jack->getSamplerate()];
+    barSample=new float[jack->getSamplerate()];
   // create beat and bar samples
-  endPoint = ( jack->getSamplerate() / 441 );
+  endPoint = ( jack->getSamplerate()/10 );
   // samples per cycle of 
-  float scale = 2 * 3.1415 / endPoint;
+  float scale = 2 * 3.1415 *880/jack->getSamplerate();
   
   // And fill it up
-  for(int i=0;i < endPoint*40;i++){
+  for(int i=0;i < jack->getSamplerate();i++){
     beatSample[i]= sin(i*scale);
-    barSample [i]= sin(i*scale*1.5);
+    barSample [i]= sin(i*scale*2);
   }
   
   // don't play after creation
   playPoint = endPoint + 1;
+}
+
+Metronome::~Metronome()
+{
+    if(beatSample)
+        delete [] beatSample;
+    if(barSample)
+        delete [] barSample;
 }
 
 void Metronome::setActive(bool a)

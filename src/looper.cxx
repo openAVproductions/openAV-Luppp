@@ -107,7 +107,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
     {
       // copy data into tmpBuffer, then pitch-stretch into track buffer
       long targetFrames = clips[clip]->getBeats() * fpb;
-      long actualFrames = clips[clip]->getBufferLenght();
+      long actualFrames = clips[clip]->getActualAudioLength();//getBufferLenght();
       float playSpeed = 1.0;
       
       if ( targetFrames != 0 && actualFrames != 0 )
