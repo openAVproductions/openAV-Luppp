@@ -33,8 +33,8 @@ Metronome::Metronome() :
   TimeObserver(),
   playBar    (false),
   active     (false),
-  playPoint  (0),
-  vol        (1)
+  vol        (1),
+  playPoint  (0)
 {
   //Create Beat/Bar samples
     beatSample=new float[jack->getSamplerate()];
