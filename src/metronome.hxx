@@ -32,7 +32,7 @@ class Metronome : public TimeObserver
 {
   public:
     Metronome();
-    ~Metronome(){};
+    ~Metronome();
     
     void setActive(bool a);
     
@@ -51,8 +51,8 @@ class Metronome : public TimeObserver
     float vol;
     
     int playPoint, endPoint;
-    float barSample[44100];
-    float beatSample[44100];
+    float* barSample;
+    float* beatSample;
   
 };
 

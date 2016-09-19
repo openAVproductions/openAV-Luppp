@@ -76,7 +76,10 @@ class LooperClip : public Stately
     /// get buffer details
     int   getBeats();
     float getProgress();
+    //Return the length of the complete buffer
     long  getBufferLenght();
+    //Return the nr of samples holding actual audio. This is less then getBufferLength();
+    long  getActualAudioLength();
     size_t audioBufferSize();
     
     /// set clip state
