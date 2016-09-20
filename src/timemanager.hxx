@@ -65,7 +65,7 @@ class TimeManager
     TRANSPORT_STATE transportState;
     
     /// number of frames per beat
-    float fpb;
+    int fpb;
     
     /// holds the number of frames processed
     long long totalFrameCounter;

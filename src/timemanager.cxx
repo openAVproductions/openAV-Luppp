@@ -40,12 +40,16 @@ TimeManager::TimeManager():
   // 120 BPM default
   fpb = samplerate / 2;
   
+  //Counter for current bar/beat
   barCounter  = 0;
   beatCounter = 0;
   
   previousBeat = 0;
   
-  beatFrameCountdown = fpb;
+  //In process() we want to immediately process bar(), beat() of all observers
+  // thats why beatFrameCountdown<nframes, but we don't know yet what value nframes has
+  // so set beatFrameCountdown to a value that garantees beatFrameCountdown<nframes
+  beatFrameCountdown = -1;//fpb;
   
   totalFrameCounter = 0;
   
@@ -173,20 +177,23 @@ void TimeManager::process(Buffers* buffers)
   
   int nframes = buffers->nframes;
   
-  totalFrameCounter += nframes;
-  beatFrameCountdown -= nframes;
+
+
   
-  if ( beatFrameCountdown < 0 )
+  if ( beatFrameCountdown < nframes )
   {
-    int before = nframes + beatFrameCountdown;
-    int after  = - beatFrameCountdown;
+      //length of beat is not multiple of nframes, so need to process last frames *before*
+      //then set beat (get the queued actions: play, rec etc)
+      // then process first frames *after* beat
+      int before=(beatCounter*fpb)%nframes;
+      int after=nframes-before;
     
     if ( before < nframes && after < nframes && before + after == nframes )
     {
       char buffer [50];
-      //sprintf (buffer, "Timing OK: before %i, after %i, b+a %i",  before, after, before+after );
-      EventGuiPrint e2( buffer );
-      writeToGuiRingbuffer( &e2 );
+//      sprintf (buffer, "Timing OK: before %i, after %i, b+a %i",  before, after, before+after );
+//      EventGuiPrint e2( buffer );
+//      writeToGuiRingbuffer( &e2 );
       
     }
     else
@@ -215,6 +222,7 @@ void TimeManager::process(Buffers* buffers)
         observers.at(i)->bar();
       }
       barCounter++;
+      //beatCounter=0;
     }
     
     // process after
@@ -226,13 +234,17 @@ void TimeManager::process(Buffers* buffers)
     
     
     
-    beatFrameCountdown = fpb;
+    beatFrameCountdown = fpb-after;
     beatCounter++;
   }
   else
   {
     jack->processFrames( nframes );
+    beatFrameCountdown -= nframes;
+
   }
+
+  totalFrameCounter += nframes;
   
   // write BPM / transport info to JACK
   int bpm = ( samplerate * 60) / fpb;
