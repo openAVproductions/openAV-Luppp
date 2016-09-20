@@ -202,6 +202,13 @@ void LooperClip::record(int count, float* L, float* R)
       {
         _buffer->getData().at( _recordhead ) = *L++;
         _recordhead++;
+        if(_recordhead>=90112)
+        {
+            char buffer [50];
+            sprintf (buffer, "LooperClip t %i, s %i, recordhead %f\n",track, scene,_recordhead);
+            EventGuiPrint e( buffer );
+            //writeToGuiRingbuffer( &e );
+        }
       }
       else
       {
@@ -264,6 +271,11 @@ long LooperClip::getBufferLenght()
 
 long LooperClip::getActualAudioLength()
 {
+    char cbuffer [50];
+//    sprintf (cbuffer, "LooperClip recordhead %f,audioFrames %d \n",_recordhead,(int)_buffer->getAudioFrames());
+//    EventGuiPrint e( cbuffer );
+//    writeToGuiRingbuffer( &e );
+//    printf(cbuffer);
     return _buffer->getAudioFrames();
 }
 
