@@ -188,7 +188,7 @@ void TimeManager::process(Buffers* buffers)
       int before=(beatCounter*fpb)%nframes;
       int after=nframes-before;
     
-    if ( before < nframes && after < nframes && before + after == nframes )
+    if ( before < nframes && after <= nframes && before + after == nframes )
     {
       char buffer [50];
 //      sprintf (buffer, "Timing OK: before %i, after %i, b+a %i",  before, after, before+after );
