@@ -267,7 +267,14 @@ Jack::~Jack()
 void Jack::activate()
 {
   jack_activate( client );
-  //jack_transport_start(client);
+}
+
+void Jack::transportRolling(bool rolling)
+{
+  if(rolling)
+    jack_transport_start(client);
+  else
+    jack_transport_stop(client);
 }
 
 void Jack::quit()

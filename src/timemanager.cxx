@@ -33,8 +33,8 @@ extern Jack* jack;
 using namespace std;
 
 TimeManager::TimeManager():
-    observers(),
-    transportState( TRANSPORT_ROLLING )
+    transportState( TRANSPORT_ROLLING ),
+    observers()
 {
   samplerate = jack->getSamplerate();
   // 120 BPM default
@@ -162,6 +162,10 @@ int TimeManager::getNframesToBeat()
 void TimeManager::setTransportState( TRANSPORT_STATE s )
 {
   transportState = s;
+  if(transportState == TRANSPORT_STOPPED)
+    jack->transportRolling(false);
+  else
+    jack->transportRolling(true);
 }
 
 void TimeManager::process(Buffers* buffers)

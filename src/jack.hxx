@@ -80,6 +80,8 @@ class Jack
     GridLogic*          getGridLogic(){return gridLogic;}
     TimeManager*        getTimeManager(){return timeManager;}
     ControllerUpdater*  getControllerUpdater(){return controllerUpdater;}
+
+    void transportRolling(bool rolling);
     
     /// register a MIDI observer
     void registerMidiIO( MidiIO* mo );

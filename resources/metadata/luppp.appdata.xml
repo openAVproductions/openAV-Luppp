@@ -15,9 +15,10 @@
       Luppp est un outil de création musicale pensé pour une
       utilisation live. Il se concentre sur l'utilisation en
       temps-réel et une expérience utilisateur intuitive et
-      rapide. Il a été développé depuis Décembre 2011, et plusieurs
-      éléments de développement ont été complété. Lupp utilise
-      jack pour sortie audio.    </p>
+      rapide. Il est en développement depuis Décembre 2011, et 
+      plusieurs fonctionnalités en développement ont été complétées.
+      Lupp utilise jack en tant que sortie audio.
+    </p>
   </description>
   <screenshots>
     <!-- the width and height are optional, but suggested -->
