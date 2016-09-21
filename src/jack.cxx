@@ -527,6 +527,17 @@ void Jack::processFrames(int nframes)
   return;
 }
 
+void Jack::clearInternalBuffers(int nframes)
+{
+    memset(buffers.audio[Buffers::SEND],0,sizeof(float)*nframes);
+    memset(buffers.audio[Buffers::SIDECHAIN_KEY],0,sizeof(float)*nframes);
+    memset(buffers.audio[Buffers::SIDECHAIN_SIGNAL],0,sizeof(float)*nframes);
+    memset(buffers.audio[Buffers::MASTER_OUT_L],0,sizeof(float)*nframes);
+    memset(buffers.audio[Buffers::MASTER_OUT_R],0,sizeof(float)*nframes);
+    for(int i=0;i<NTRACKS;i++)
+        memset(buffers.audio[Buffers::TRACK_0 + i],0,sizeof(float)*nframes);
+}
+
 void Jack::masterVolume(float vol)
 {
   masterVol = vol;

@@ -186,9 +186,9 @@ void TimeManager::process(Buffers* buffers)
   
   if ( beatFrameCountdown < nframes )
   {
-      //length of beat is not multiple of nframes, so need to process last frames *before*
-      //then set beat (get the queued actions: play, rec etc)
-      // then process first frames *after* beat
+      //length of beat is not multiple of nframes, so need to process last frames of last beat *before* setting next beat
+      //then set new beat (get the queued actions: play, rec etc)
+      // then process first frames *after* new beat
       int before=(beatCounter*fpb)%nframes;
       int after=nframes-before;
     
@@ -230,8 +230,10 @@ void TimeManager::process(Buffers* buffers)
     }
     
     // process after
+    // we need to clear internal buffers in order to write *after* frames to them
+    jack->clearInternalBuffers(nframes);
     jack->processFrames( after );
-    
+
     // write new beat to UI (bar info currently not used)
     EventTimeBarBeat e( barCounter, beatCounter );
     writeToGuiRingbuffer( &e );
