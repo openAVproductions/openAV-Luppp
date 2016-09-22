@@ -30,6 +30,9 @@ class TimeObserver
     
     virtual void setFpb(int fpb){};
     
+    //Reset any internal set of this object regarding time. Don't reset/delete any buffers!!
+    //This is not to be confused with Stately::reset()
+    virtual void resetTimeState(){};
     
     virtual void bar(){};
     
