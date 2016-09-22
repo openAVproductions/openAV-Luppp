@@ -133,7 +133,11 @@ class Jack
     DBMeter* masterMeter;
     
     float inputVol;
+    /// _toMasterLag is a volume that lags behind _toMaster when setMaster() is called
+    /// This prohibits audible jumps when rapidly changing the volume
     float masterVol;
+    float masterVolLag;
+    float masterVolDiff;
     float returnVol;
     
     float inputToMixVol;

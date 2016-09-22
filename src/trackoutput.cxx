@@ -34,7 +34,8 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
   dbMeter = new DBMeter( jack->getSamplerate() );
   
   _toMaster        = 0.8;
-  
+  _toMasterLag     = 0.8;
+  _toMasterDiff    = 0;
   _toReverb        = 0.0;
   _toSidechain     = 0.0;
   _toPostSidechain = 0.0;
@@ -48,6 +49,7 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
 void TrackOutput::setMaster(float value)
 {
   _toMaster = value;
+  _toMasterDiff=_toMaster-_toMasterLag;
 }
 
 float TrackOutput::getMaster()
@@ -102,6 +104,9 @@ void TrackOutput::setSend( int send, float value )
 
 void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 {
+    //compute master volume lag;
+    if(fabs(_toMaster-_toMasterLag)>=fabs(_toMasterDiff/10.0))
+        _toMasterLag+=_toMasterDiff/10.0;
   // get & zero track buffer
   float* trackBuffer = buffers->audio[Buffers::TRACK_0 + track];
   memset( trackBuffer, 0, sizeof(float)*nframes );
@@ -114,8 +119,8 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
   
   if (uiUpdateCounter > uiUpdateConstant )
   {
-    float l = dbMeter->getLeftDB() * _toMaster;
-    float r = dbMeter->getRightDB() * _toMaster;
+    float l = dbMeter->getLeftDB() * _toMasterLag;
+    float r = dbMeter->getRightDB() * _toMasterLag;
     EventTrackSignalLevel e( track, l, r );
     writeToGuiRingbuffer( &e );
     uiUpdateCounter = 0;
@@ -137,14 +142,14 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
     float tmp = trackBuffer[i];
     
     // post-sidechain *moves* signal between "before/after" ducking, not add!
-    masterL[i]       += tmp * _toMaster * (1-_toPostSidechain);
-    masterR[i]       += tmp * _toMaster * (1-_toPostSidechain);
+    masterL[i]       += tmp * _toMasterLag * (1-_toPostSidechain);
+    masterR[i]       += tmp * _toMasterLag * (1-_toPostSidechain);
     
     if ( _toPostfaderActive )
-      reverb[i]        += tmp * _toReverb * _toMaster;
+      reverb[i]        += tmp * _toReverb * _toMasterLag;
     
     if ( _toXSideActive )
-      postSidechain[i] += tmp * _toPostSidechain * _toMaster;
+      postSidechain[i] += tmp * _toPostSidechain * _toMasterLag;
     
     // turning down an element in the mix should *NOT* influence sidechaining
     if ( _toKeyActive )
