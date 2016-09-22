@@ -176,7 +176,7 @@ Jack::Jack( std::string name ) :
                           0 );
   */
   
-  masterVol = 0.0f;
+
   returnVol = 1.0f;
   
   inputToMixEnable  = false;
@@ -211,6 +211,8 @@ Jack::Jack( std::string name ) :
   /// setup DSP instances
   inputVol = 1.0f;
   masterVol = 0.75f;
+  masterVolLag =0.75f;
+  masterVolDiff =0.0f;
   masterMeter = new DBMeter( buffers.samplerate );
   inputMeter  = new DBMeter( buffers.samplerate );
   
@@ -466,11 +468,14 @@ void Jack::processFrames(int nframes)
     
     buffers.audio[Buffers::SIDECHAIN_SIGNAL][i] += input * inputToXSideVol;
     
+    //compute master volume lag;
+    if(fabs(masterVol-masterVolLag)>=fabs(masterVolDiff/10.0))
+        masterVolLag+=masterVolDiff/10.0;
     /// mixdown returns into master buffers
     // FIXME: Returns broken, due to metronome glitch in master output: buffer
     // writing issue or such. See #95 on github
-    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = L * masterVol;// (L + returnL*returnVol) * masterVol;
-    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = R * masterVol;// (R + returnR*returnVol) * masterVol;
+    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = L * masterVolLag;// (L + returnL*returnVol) * masterVol;
+    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = R * masterVolLag;// (R + returnR*returnVol) * masterVol;
     
     /// write SEND content to JACK port
     buffers.audio[Buffers::JACK_SEND_OUT][i] = buffers.audio[Buffers::SEND][i];
@@ -541,6 +546,7 @@ void Jack::clearInternalBuffers(int nframes)
 void Jack::masterVolume(float vol)
 {
   masterVol = vol;
+  masterVolDiff=masterVol-masterVolLag;
 }
 
 void Jack::returnVolume(float vol)
