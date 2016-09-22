@@ -76,6 +76,7 @@ class LooperClip : public Stately
     /// get buffer details
     int   getBeats();
     float getProgress();
+    float getPlayhead();
     //Return the length of the complete buffer
     long  getBufferLenght();
     //Return the nr of samples holding actual audio. This is less then getBufferLength();
@@ -106,6 +107,9 @@ class LooperClip : public Stately
     
     /// used for saving the contents of this buffer to disk
     void recieveSaveBuffer( AudioBuffer* ab );
+
+    ///reset the play head to zero. Does nothing when recording
+    void setPlayHead(float ph);
   
 #ifdef BUILD_TESTS
     // used only in test cases

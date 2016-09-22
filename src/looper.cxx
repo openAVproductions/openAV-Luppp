@@ -68,7 +68,28 @@ Looper::Looper(int t) :
 
 LooperClip* Looper::getClip(int scene)
 {
-  return clips[scene];
+    return clips[scene];
+}
+
+void Looper::beat()
+{
+    //FIXME: Need to keep looperClips in sync when there exists no int N
+    // such that playSpeed*N==1
+//    for(int i=0;i<NSCENES;i++)
+//    {
+//        int iph=clips[i]->getPlayhead()+1.0;
+//        long targetFrames = clips[i]->getBeats() * fpb;
+//        long actualFrames = clips[i]->getActualAudioLength();//getBufferLenght();
+//        float playSpeed = 1.0;
+
+//        if ( targetFrames != 0 && actualFrames != 0 )
+//        {
+//          playSpeed = float(actualFrames) / targetFrames;
+//        }
+//        clips[i]->setPlayHead(iph-(iph%fpb)*playSpeed);
+
+//    }
+
 }
 
 void Looper::setRequestedBuffer(int s, AudioBuffer* ab)
@@ -142,6 +163,12 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
   }
   
   
+}
+
+void Looper::resetTimeState()
+{
+    for(int i=0;i<NSCENES;i++)
+        clips[i]->setPlayHead(0.0);
 }
 
 void Looper::pitchShift(int count, float* input, float* output)

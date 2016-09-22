@@ -71,6 +71,12 @@ void TimeManager::setBpm(float bpm)
   LUPPP_NOTE("%s %f","setBpm()",bpm);
 #endif
   setFpb( samplerate / bpm * 60 );
+  barCounter  = 0;
+  beatCounter = 0;
+  beatFrameCountdown = -1;
+  for(int i=0;i<observers.size();i++)
+      observers[i]->resetTimeState();
+
 }
 
 void TimeManager::setBpmZeroOne(float b)

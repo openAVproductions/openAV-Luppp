@@ -27,7 +27,7 @@
 
 #include "controllerupdater.hxx"
 #include "timemanager.hxx"
-
+#include <math.h>
 
 
 extern Jack* jack;
@@ -187,6 +187,15 @@ void LooperClip::recieveSaveBuffer( AudioBuffer* saveBuffer )
   }
 }
 
+void LooperClip::setPlayHead(float ph)
+{
+    if(!_recording&&_playing)
+    {
+        _playhead = ph;
+        jack->getControllerUpdater()->setTrackSceneProgress(track, scene, getProgress() );
+    }
+}
+
 
 
 void LooperClip::record(int count, float* L, float* R)
@@ -292,7 +301,7 @@ void LooperClip::bar()
     _buffer->setAudioFrames( jack->getTimeManager()->getFpb() * _buffer->getBeats() );
   }
   
-  if ( _playhead == _recordhead )
+  if ( _playhead >= _recordhead )
   {
     _playhead = 0.f;
   }
@@ -457,8 +466,8 @@ float LooperClip::getSample(float playSpeed)
     
     std::vector<float>& v = _buffer->getData();
     float tmp = v.at(_playhead);
-    _playhead += playSpeed;
-    
+    _playhead +=playSpeed;
+
     return tmp;
   }
   
@@ -474,6 +483,11 @@ float LooperClip::getProgress()
     return p;
   }
   return 0.f;
+}
+
+float LooperClip::getPlayhead()
+{
+    return _playhead;
 }
 
 #ifdef BUILD_TESTS
