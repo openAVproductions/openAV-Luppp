@@ -590,7 +590,9 @@ int Gui::keyboardHandler(int event)
       
       else if( strcmp( Fl::event_text(), "!" ) == 0 ) { EventGridState e( 0, 0, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
       else if( strcmp( Fl::event_text(), "@" ) == 0 ) { EventGridState e( 1, 0, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "\"" ) == 0 ) { EventGridState e( 1, 0, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; } // for UK/Ireland keyboards
       else if( strcmp( Fl::event_text(), "#" ) == 0 ) { EventGridState e( 2, 0, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
+      else if( strcmp( Fl::event_text(), "£" ) == 0 ) { EventGridState e( 2, 0, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; } // for UK/Ireland keyboards
       else if( strcmp( Fl::event_text(), "$" ) == 0 ) { EventGridState e( 3, 0, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
       else if( strcmp( Fl::event_text(), "%" ) == 0 ) { EventGridState e( 4, 0, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
       else if( strcmp( Fl::event_text(), "^" ) == 0 ) { EventGridState e( 5, 0, GridLogic::STATE_EMPTY ); writeToDspRingbuffer( &e ); return 1; }
