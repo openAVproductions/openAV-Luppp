@@ -147,7 +147,12 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
         semitoneShift = -deltaPitch;
         
         // write the pitch-shifted signal to the track buffer
-        pitchShift( 1, &tmp, &out[i] );
+        //FIXME: pitchShift adds delay even for playSpeed = 1.0!!
+        //we should use something better (e.g librubberband)
+        if(playSpeed!=1.0f)
+            pitchShift( 1, &tmp, &out[i] );
+        else
+            out[i]+=tmp;
       }
       
       //printf("Looper %i playing(), speed = %f\n", track, playSpeed );
@@ -190,14 +195,15 @@ void Looper::pitchShift(int count, float* input, float* output)
     float fTemp3 = min((fSlow2 * fRec0[0]), 1.f );
     float fTemp4 = (fSlow0 + fRec0[0]);
     int iTemp5 = int(fTemp4);
-    
-    *output++ = (float)(((1 - fTemp3) * (((fTemp4 - iTemp5) * 
+    float out=output[0];
+    out += (float)(((1 - fTemp3) * (((fTemp4 - iTemp5) *
     fVec0[(IOTA-int((int((1 + iTemp5)) & 65535)))&65535]) + ((0 - ((
     fRec0[0] + fSlow3) - iTemp5)) * fVec0[(IOTA-int((iTemp5 & 65535)))
     &65535]))) + (fTemp3 * (((fRec0[0] - iTemp1) * fVec0[(IOTA-int((int(
     iTemp2) & 65535)))&65535]) + ((iTemp2 - fRec0[0]) * fVec0[(IOTA-int((
     iTemp1 & 65535)))&65535]))));
     
+    output[0]=out;
     fRec0[1] = fRec0[0];
     IOTA = IOTA+1;
   }
