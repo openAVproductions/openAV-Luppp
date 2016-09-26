@@ -171,7 +171,14 @@ void TimeManager::setTransportState( TRANSPORT_STATE s )
   if(transportState == TRANSPORT_STOPPED)
     jack->transportRolling(false);
   else
+  {
     jack->transportRolling(true);
+    barCounter  = 0;
+    beatCounter = 0;
+    beatFrameCountdown = -1;
+    for(int i=0;i<observers.size();i++)
+        observers[i]->resetTimeState();
+  }
 }
 
 void TimeManager::process(Buffers* buffers)
@@ -264,7 +271,7 @@ void TimeManager::process(Buffers* buffers)
   {
     buffers->transportPosition->valid = (jack_position_bits_t)(JackPositionBBT | JackTransportPosition);
     
-    buffers->transportPosition->bar  = beatCounter / 4;
+    buffers->transportPosition->bar  = beatCounter / 4 + 1;// bars 1-based
     buffers->transportPosition->beat = (beatCounter % 4) + 1; // beats 1-4
     
     float part = float( fpb-beatFrameCountdown) / fpb;

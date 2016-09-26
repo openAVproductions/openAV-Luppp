@@ -211,13 +211,6 @@ void LooperClip::record(int count, float* L, float* R)
       {
         _buffer->getData().at( _recordhead ) = *L++;
         _recordhead++;
-        if(_recordhead>=90112)
-        {
-            char buffer [50];
-            sprintf (buffer, "LooperClip t %i, s %i, recordhead %f\n",track, scene,_recordhead);
-            EventGuiPrint e( buffer );
-            //writeToGuiRingbuffer( &e );
-        }
       }
       else
       {
