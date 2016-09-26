@@ -71,6 +71,12 @@ void TimeManager::setBpm(float bpm)
   LUPPP_NOTE("%s %f","setBpm()",bpm);
 #endif
   setFpb( samplerate / bpm * 60 );
+  barCounter  = 0;
+  beatCounter = 0;
+  beatFrameCountdown = -1;
+  for(int i=0;i<observers.size();i++)
+      observers[i]->resetTimeState();
+
 }
 
 void TimeManager::setBpmZeroOne(float b)
@@ -165,7 +171,14 @@ void TimeManager::setTransportState( TRANSPORT_STATE s )
   if(transportState == TRANSPORT_STOPPED)
     jack->transportRolling(false);
   else
+  {
     jack->transportRolling(true);
+    barCounter  = 0;
+    beatCounter = 0;
+    beatFrameCountdown = -1;
+    for(int i=0;i<observers.size();i++)
+        observers[i]->resetTimeState();
+  }
 }
 
 void TimeManager::process(Buffers* buffers)
@@ -186,9 +199,9 @@ void TimeManager::process(Buffers* buffers)
   
   if ( beatFrameCountdown < nframes )
   {
-      //length of beat is not multiple of nframes, so need to process last frames *before*
-      //then set beat (get the queued actions: play, rec etc)
-      // then process first frames *after* beat
+      //length of beat is not multiple of nframes, so need to process last frames of last beat *before* setting next beat
+      //then set new beat (get the queued actions: play, rec etc)
+      // then process first frames *after* new beat
       int before=(beatCounter*fpb)%nframes;
       int after=nframes-before;
     
@@ -230,8 +243,10 @@ void TimeManager::process(Buffers* buffers)
     }
     
     // process after
+    // we need to clear internal buffers in order to write *after* frames to them
+    jack->clearInternalBuffers(nframes);
     jack->processFrames( after );
-    
+
     // write new beat to UI (bar info currently not used)
     EventTimeBarBeat e( barCounter, beatCounter );
     writeToGuiRingbuffer( &e );
@@ -256,7 +271,7 @@ void TimeManager::process(Buffers* buffers)
   {
     buffers->transportPosition->valid = (jack_position_bits_t)(JackPositionBBT | JackTransportPosition);
     
-    buffers->transportPosition->bar  = beatCounter / 4;
+    buffers->transportPosition->bar  = beatCounter / 4 + 1;// bars 1-based
     buffers->transportPosition->beat = (beatCounter % 4) + 1; // beats 1-4
     
     float part = float( fpb-beatFrameCountdown) / fpb;

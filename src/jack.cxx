@@ -176,7 +176,7 @@ Jack::Jack( std::string name ) :
                           0 );
   */
   
-  masterVol = 0.0f;
+
   returnVol = 1.0f;
   
   inputToMixEnable  = false;
@@ -211,6 +211,8 @@ Jack::Jack( std::string name ) :
   /// setup DSP instances
   inputVol = 1.0f;
   masterVol = 0.75f;
+  masterVolLag =0.75f;
+  masterVolDiff =0.0f;
   masterMeter = new DBMeter( buffers.samplerate );
   inputMeter  = new DBMeter( buffers.samplerate );
   
@@ -466,11 +468,14 @@ void Jack::processFrames(int nframes)
     
     buffers.audio[Buffers::SIDECHAIN_SIGNAL][i] += input * inputToXSideVol;
     
+    //compute master volume lag;
+    if(fabs(masterVol-masterVolLag)>=fabs(masterVolDiff/10.0))
+        masterVolLag+=masterVolDiff/10.0;
     /// mixdown returns into master buffers
     // FIXME: Returns broken, due to metronome glitch in master output: buffer
     // writing issue or such. See #95 on github
-    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = L * masterVol;// (L + returnL*returnVol) * masterVol;
-    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = R * masterVol;// (R + returnR*returnVol) * masterVol;
+    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = L * masterVolLag;// (L + returnL*returnVol) * masterVol;
+    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = R * masterVolLag;// (R + returnR*returnVol) * masterVol;
     
     /// write SEND content to JACK port
     buffers.audio[Buffers::JACK_SEND_OUT][i] = buffers.audio[Buffers::SEND][i];
@@ -513,23 +518,38 @@ void Jack::processFrames(int nframes)
   // JACK in multiple parts internally in Luppp: used for processing bar() / beat()
   // if a full JACK nframes has been processed, this is extra work: its not that expensive
   /// update buffers by nframes
-  buffers.audio[Buffers::MASTER_INPUT]        = &buffers.audio[Buffers::MASTER_INPUT]   [nframes];
-  buffers.audio[Buffers::MASTER_RETURN_L]     = &buffers.audio[Buffers::MASTER_RETURN_L][nframes];
-  buffers.audio[Buffers::MASTER_RETURN_R]     = &buffers.audio[Buffers::MASTER_RETURN_R][nframes];
-  buffers.audio[Buffers::HEADPHONES_OUT]      = &buffers.audio[Buffers::HEADPHONES_OUT] [nframes];
-  
-  buffers.audio[Buffers::JACK_SEND_OUT]       = &buffers.audio[Buffers::JACK_SEND_OUT][nframes];
-  buffers.audio[Buffers::JACK_MASTER_OUT_L]   = &buffers.audio[Buffers::JACK_MASTER_OUT_L][nframes];
-  buffers.audio[Buffers::JACK_MASTER_OUT_R]   = &buffers.audio[Buffers::JACK_MASTER_OUT_R][nframes];
-  buffers.audio[Buffers::JACK_SIDECHAIN_KEY]  = &buffers.audio[Buffers::JACK_SIDECHAIN_KEY][nframes];
-  buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL]=&buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL][nframes];
+  if(nframes<buffers.nframes)
+  {
+      buffers.audio[Buffers::MASTER_INPUT]        = &buffers.audio[Buffers::MASTER_INPUT]   [nframes];
+      buffers.audio[Buffers::MASTER_RETURN_L]     = &buffers.audio[Buffers::MASTER_RETURN_L][nframes];
+      buffers.audio[Buffers::MASTER_RETURN_R]     = &buffers.audio[Buffers::MASTER_RETURN_R][nframes];
+      buffers.audio[Buffers::HEADPHONES_OUT]      = &buffers.audio[Buffers::HEADPHONES_OUT] [nframes];
+
+      buffers.audio[Buffers::JACK_SEND_OUT]       = &buffers.audio[Buffers::JACK_SEND_OUT][nframes];
+      buffers.audio[Buffers::JACK_MASTER_OUT_L]   = &buffers.audio[Buffers::JACK_MASTER_OUT_L][nframes];
+      buffers.audio[Buffers::JACK_MASTER_OUT_R]   = &buffers.audio[Buffers::JACK_MASTER_OUT_R][nframes];
+      buffers.audio[Buffers::JACK_SIDECHAIN_KEY]  = &buffers.audio[Buffers::JACK_SIDECHAIN_KEY][nframes];
+      buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL]=&buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL][nframes];
+  }
   
   return;
+}
+
+void Jack::clearInternalBuffers(int nframes)
+{
+    memset(buffers.audio[Buffers::SEND],0,sizeof(float)*nframes);
+    memset(buffers.audio[Buffers::SIDECHAIN_KEY],0,sizeof(float)*nframes);
+    memset(buffers.audio[Buffers::SIDECHAIN_SIGNAL],0,sizeof(float)*nframes);
+    memset(buffers.audio[Buffers::MASTER_OUT_L],0,sizeof(float)*nframes);
+    memset(buffers.audio[Buffers::MASTER_OUT_R],0,sizeof(float)*nframes);
+    for(int i=0;i<NTRACKS;i++)
+        memset(buffers.audio[Buffers::TRACK_0 + i],0,sizeof(float)*nframes);
 }
 
 void Jack::masterVolume(float vol)
 {
   masterVol = vol;
+  masterVolDiff=masterVol-masterVolLag;
 }
 
 void Jack::returnVolume(float vol)

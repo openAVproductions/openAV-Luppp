@@ -69,6 +69,9 @@ class Jack
     
     // Luppp process callback: bar() events can occur between these
     void processFrames(int nframes);
+
+    //Sets the first nframes of all the internal output buffers to zero. NO LIMIT CHECKS
+    void clearInternalBuffers(int nframes);
     
     /// get functions for components owned by Jack 
     Looper*             getLooper(int t);
@@ -130,7 +133,11 @@ class Jack
     DBMeter* masterMeter;
     
     float inputVol;
+    /// _toMasterLag is a volume that lags behind _toMaster when setMaster() is called
+    /// This prohibits audible jumps when rapidly changing the volume
     float masterVol;
+    float masterVolLag;
+    float masterVolDiff;
     float returnVol;
     
     float inputToMixVol;

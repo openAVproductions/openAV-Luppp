@@ -68,7 +68,28 @@ Looper::Looper(int t) :
 
 LooperClip* Looper::getClip(int scene)
 {
-  return clips[scene];
+    return clips[scene];
+}
+
+void Looper::beat()
+{
+    //FIXME: Need to keep looperClips in sync when there exists no int N
+    // such that playSpeed*N==1
+//    for(int i=0;i<NSCENES;i++)
+//    {
+//        int iph=clips[i]->getPlayhead()+1.0;
+//        long targetFrames = clips[i]->getBeats() * fpb;
+//        long actualFrames = clips[i]->getActualAudioLength();//getBufferLenght();
+//        float playSpeed = 1.0;
+
+//        if ( targetFrames != 0 && actualFrames != 0 )
+//        {
+//          playSpeed = float(actualFrames) / targetFrames;
+//        }
+//        clips[i]->setPlayHead(iph-(iph%fpb)*playSpeed);
+
+//    }
+
 }
 
 void Looper::setRequestedBuffer(int s, AudioBuffer* ab)
@@ -126,7 +147,12 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
         semitoneShift = -deltaPitch;
         
         // write the pitch-shifted signal to the track buffer
-        pitchShift( 1, &tmp, &out[i] );
+        //FIXME: pitchShift adds delay even for playSpeed = 1.0!!
+        //we should use something better (e.g librubberband)
+        if(playSpeed!=1.0f)
+            pitchShift( 1, &tmp, &out[i] );
+        else
+            out[i]+=tmp;
       }
       
       //printf("Looper %i playing(), speed = %f\n", track, playSpeed );
@@ -142,6 +168,12 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
   }
   
   
+}
+
+void Looper::resetTimeState()
+{
+    for(int i=0;i<NSCENES;i++)
+        clips[i]->setPlayHead(0.0);
 }
 
 void Looper::pitchShift(int count, float* input, float* output)
@@ -163,14 +195,15 @@ void Looper::pitchShift(int count, float* input, float* output)
     float fTemp3 = min((fSlow2 * fRec0[0]), 1.f );
     float fTemp4 = (fSlow0 + fRec0[0]);
     int iTemp5 = int(fTemp4);
-    
-    *output++ = (float)(((1 - fTemp3) * (((fTemp4 - iTemp5) * 
+    float out=output[0];
+    out += (float)(((1 - fTemp3) * (((fTemp4 - iTemp5) *
     fVec0[(IOTA-int((int((1 + iTemp5)) & 65535)))&65535]) + ((0 - ((
     fRec0[0] + fSlow3) - iTemp5)) * fVec0[(IOTA-int((iTemp5 & 65535)))
     &65535]))) + (fTemp3 * (((fRec0[0] - iTemp1) * fVec0[(IOTA-int((int(
     iTemp2) & 65535)))&65535]) + ((iTemp2 - fRec0[0]) * fVec0[(IOTA-int((
     iTemp1 & 65535)))&65535]))));
     
+    output[0]=out;
     fRec0[1] = fRec0[0];
     IOTA = IOTA+1;
   }

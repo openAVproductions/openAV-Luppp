@@ -59,9 +59,12 @@ class TrackOutput : public AudioProcessor
     int track;
     
     bool  _recordArm;
-    
+    /// _toMasterLag is a volume that lags behind _toMaster when setMaster() is called
+    /// This prohibits audible jumps when rapidly changing the volume
     float _toMaster;
-    
+    float _toMasterLag;
+    float _toMasterDiff;
+
     float _toReverb;
     float _toSidechain;
     float _toPostSidechain;
