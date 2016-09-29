@@ -74,9 +74,10 @@ void TimeManager::setBpm(float bpm)
   barCounter  = 0;
   beatCounter = 0;
   beatFrameCountdown = -1;
+  /*
   for(int i=0;i<observers.size();i++)
       observers[i]->resetTimeState();
-
+  */
 }
 
 void TimeManager::setBpmZeroOne(float b)
