@@ -164,6 +164,8 @@ class Jack
     jack_port_t*  sendOutput;
     
     jack_port_t*  masterMidiInput;
+
+    vector<jack_port_t*> trackJackOutputPorts;
     
     // JACK callback
     int  process (jack_nframes_t);
