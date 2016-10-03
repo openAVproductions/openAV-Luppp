@@ -108,7 +108,7 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
     if(fabs(_toMaster-_toMasterLag)>=fabs(_toMasterDiff/10.0))
         _toMasterLag+=_toMasterDiff/10.0;
   // get & zero track buffer
-  float* trackBuffer = buffers->audio[Buffers::TRACK_0 + track];
+  float* trackBuffer = buffers->audio[Buffers::RETURN_TRACK_0 + track];
   memset( trackBuffer, 0, sizeof(float)*nframes );
   
   // call process() up the chain
