@@ -33,7 +33,7 @@
 #include "trackoutput.hxx"
 #include "timemanager.hxx"
 #include "controllerupdater.hxx"
-
+#include "jacksendreturn.hxx"
 #include "dsp/dsp_reverb.hxx"
 #include "dsp/dsp_dbmeter.hxx"
 
@@ -201,9 +201,14 @@ Jack::Jack( std::string name ) :
      *  In this case, the track's Looper instance.
     **/
     loopers.push_back( new Looper(i) );
-    trackOutputs.push_back( new TrackOutput(i, loopers.back() ) );
+
+
+    tracksendreturns.push_back(new JackSendReturn(i,loopers.back(),client));
+    trackOutputs.push_back( new TrackOutput(i, tracksendreturns.back() ) );
     
     buffers.audio[Buffers::TRACK_0 + i] = new float[ buffers.nframes ];
+    buffers.audio[Buffers::SEND_TRACK_0+i]=new float[buffers.nframes];
+    buffers.audio[Buffers::RETURN_TRACK_0+i]=new float[buffers.nframes];
     
     timeManager->registerObserver( loopers.back() );
   }
@@ -264,6 +269,12 @@ Jack::~Jack()
   
   delete inputMeter;
   delete masterMeter;
+    for(int i = 0; i < NTRACKS; i++)
+    {
+        delete [] buffers.audio[Buffers::TRACK_0+i];
+        delete [] buffers.audio[Buffers::SEND_TRACK_0+i];
+        delete [] buffers.audio[Buffers::RETURN_TRACK_0+i];
+    }
 }
 
 void Jack::activate()
@@ -543,7 +554,11 @@ void Jack::clearInternalBuffers(int nframes)
     memset(buffers.audio[Buffers::MASTER_OUT_L],0,sizeof(float)*nframes);
     memset(buffers.audio[Buffers::MASTER_OUT_R],0,sizeof(float)*nframes);
     for(int i=0;i<NTRACKS;i++)
+    {
         memset(buffers.audio[Buffers::TRACK_0 + i],0,sizeof(float)*nframes);
+        memset(buffers.audio[Buffers::SEND_TRACK_0 + i],0,sizeof(float)*nframes);
+        memset(buffers.audio[Buffers::RETURN_TRACK_0 + i],0,sizeof(float)*nframes);
+    }
 }
 
 void Jack::masterVolume(float vol)

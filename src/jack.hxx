@@ -40,7 +40,7 @@ class Metronome;
 class GridLogic;
 class TimeManager;
 class ControllerUpdater;
-
+class JackSendReturn;
 class TrackOutput;
 
 // INPUT_TO
@@ -124,6 +124,7 @@ class Jack
     ControllerUpdater*  controllerUpdater;
     
     vector<Looper*>         loopers;
+    vector<JackSendReturn*> tracksendreturns;
     vector<TrackOutput*>    trackOutputs;
     
     vector<MidiIO*>   midiIO;

@@ -136,7 +136,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
         playSpeed = float(actualFrames) / targetFrames;
       }
       
-      float* out = buffers->audio[Buffers::TRACK_0 + track];
+      float* out = buffers->audio[Buffers::SEND_TRACK_0 + track];
       
       for(unsigned int i = 0; i < nframes; i++ )
       {
