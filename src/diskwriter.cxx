@@ -520,7 +520,8 @@ void DiskWriter::writeDefaultConfigToUserHome()
   cJSON* defCtrls = cJSON_CreateArray();
   cJSON_AddItemToObject( prfs, "defaultControllers", defCtrls );
   
-  
+  // per track send and return option
+  cJSON_AddNumberToObject( prfs, "enablePerTrackSendReturns", 0 );
   // test output on console
   // cout << endl << cJSON_Print( prfs ) << endl << endl;
   
