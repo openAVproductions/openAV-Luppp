@@ -101,8 +101,15 @@ int DiskReader::loadPreferences()
     {
       LUPPP_NOTE("No default controllers active.");
     }
-    
-    
+
+    //Enable per track send and resturn jack ports?
+    cJSON* jackSendReturns=cJSON_GetObjectItem(preferencesJson,"enablePerTrackSendReturns");
+    if(jackSendReturns)
+    {
+        gui->enableJackSendReturns=jackSendReturns->valueint;
+        if(gui->enableJackSendReturns)
+            LUPPP_NOTE("Enabling per track send and return ports");
+    }
     
     
     cJSON_Delete( preferencesJson );

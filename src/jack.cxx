@@ -198,17 +198,26 @@ Jack::Jack( std::string name ) :
   {
     /** Setup the tracks:
      *  The TrackOutput gets a pointer to the next AudioProcessor to call:
-     *  In this case, the track's Looper instance.
+     * This is either a JackSendReturn (providing send and return ports)
+     *  or the track's Looper instance.
+     * This is an option in luppp.prfs
     **/
     loopers.push_back( new Looper(i) );
 
+    if(gui->enableJackSendReturns)
+    {
+        tracksendreturns.push_back(new JackSendReturn(i,loopers.back(),client));
+        trackOutputs.push_back( new TrackOutput(i, tracksendreturns.back() ) );
+    }
+    else
+        trackOutputs.push_back( new TrackOutput(i, loopers.back() ) );
 
-    tracksendreturns.push_back(new JackSendReturn(i,loopers.back(),client));
-    trackOutputs.push_back( new TrackOutput(i, tracksendreturns.back() ) );
-    
     buffers.audio[Buffers::TRACK_0 + i] = new float[ buffers.nframes ];
     buffers.audio[Buffers::SEND_TRACK_0+i]=new float[buffers.nframes];
-    buffers.audio[Buffers::RETURN_TRACK_0+i]=new float[buffers.nframes];
+    if(gui->enableJackSendReturns)
+        buffers.audio[Buffers::RETURN_TRACK_0+i]=new float[buffers.nframes];
+    else
+        buffers.audio[Buffers::RETURN_TRACK_0+i]=buffers.audio[Buffers::SEND_TRACK_0+i];
     
     timeManager->registerObserver( loopers.back() );
   }
@@ -273,7 +282,13 @@ Jack::~Jack()
     {
         delete [] buffers.audio[Buffers::TRACK_0+i];
         delete [] buffers.audio[Buffers::SEND_TRACK_0+i];
-        delete [] buffers.audio[Buffers::RETURN_TRACK_0+i];
+        if(gui->enableJackSendReturns)
+        {
+            delete [] buffers.audio[Buffers::RETURN_TRACK_0+i];
+            delete tracksendreturns[i];
+        }
+        delete loopers[i];
+        delete trackOutputs[i];
     }
 }
 
@@ -557,7 +572,8 @@ void Jack::clearInternalBuffers(int nframes)
     {
         memset(buffers.audio[Buffers::TRACK_0 + i],0,sizeof(float)*nframes);
         memset(buffers.audio[Buffers::SEND_TRACK_0 + i],0,sizeof(float)*nframes);
-        memset(buffers.audio[Buffers::RETURN_TRACK_0 + i],0,sizeof(float)*nframes);
+        if(gui->enableJackSendReturns)
+            memset(buffers.audio[Buffers::RETURN_TRACK_0 + i],0,sizeof(float)*nframes);
     }
 }
 

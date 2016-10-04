@@ -83,6 +83,9 @@ class Gui
     
     int samplerate;
     
+    ////Enable per track send and resturn jack ports
+    bool enableJackSendReturns;
+
     int getWindowWidth(){return window.w();}
     
     nsm_client_t* getNsm(){return nsm;}
