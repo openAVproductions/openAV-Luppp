@@ -104,6 +104,20 @@ void handleDspEvents()
             jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventStateReset) );
             jack->getState()->reset();
           } break; }
+        case Event::STATE_SAVE_BUFFER: {
+          if ( availableRead >= sizeof(EventStateReset) ) {
+            EventStateSaveBuffer ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventStateSaveBuffer) );
+	    printf("jack got save buffer in %d, %d\n", ev.track, ev.scene);
+	    LooperClip* lc = jack->getLooper(ev.track)->getClip(ev.scene);
+	    if(!lc) break;
+	    EventStateSaveBuffer e;
+	    e.track = ev.track;
+	    e.scene = ev.scene;
+	    e.ab = lc->getAudioBuffer();
+	    e.no_dealloc = 1;
+	    writeToGuiRingbuffer( &e );
+	  } break; }
         
         // ========= MASTER ===
         case Event::MASTER_VOL: {

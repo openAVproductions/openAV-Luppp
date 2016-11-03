@@ -181,8 +181,17 @@ void handleGuiEvents()
             cout << "EventSaveBuffer: " << ev.track << " " << ev.scene << " " << ev.ab->getID() << endl;
 #endif
             gui->getDiskWriter()->writeAudioBuffer( ev.track, ev.scene, ev.ab );
-            // de allocate the AudioBuffer
-            delete ev.ab;
+            // de allocate the AudioBuffer only if reqested
+            if(!ev.no_dealloc) {
+              gui->getDiskWriter()->writeAudioBuffer( ev.track, ev.scene, ev.ab );
+              delete ev.ab;
+            } else
+            {
+              gui->getDiskWriter()->writeAudioBuffer(ev.track, ev.scene, ev.ab,
+                                                      gui->saveBufferPath.c_str());
+	      gui->saveBufferPath = "";
+            }
+
           } break; }
           
         case Event::STATE_SAVE_FINISH: {
