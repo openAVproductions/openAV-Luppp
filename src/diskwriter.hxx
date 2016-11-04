@@ -59,8 +59,10 @@ class DiskWriter
     /// sets up session write path etc
     void initialize( std::string path, std::string sessionName );
     
-    /// writes a single audio buffer to disk
-    int writeAudioBuffer(int track, int scene, AudioBuffer* ab );
+    /// writes a single audio buffer to disk for saving whole state.
+    // When gui_path is set, it only saves a single AB* to that path
+    int writeAudioBuffer(int track, int scene, AudioBuffer* ab,
+			 const char* gui_path = 0);
     
     /// flush the JSON to disk, finalizing the save
     int writeSession();

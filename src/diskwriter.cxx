@@ -308,34 +308,42 @@ int DiskWriter::writeControllerFile( Controller* c )
   return LUPPP_RETURN_OK;
 }
 
-int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab )
+int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab,
+				 const char *gui_path)
 {
-  if ( !foldersCreated )
+  stringstream path;
+  if ( gui_path && strlen(gui_path) ) {
+    printf("saving single buffer to %s\n", gui_path);
+    path << gui_path;
+  }
+  else if ( foldersCreated )
+  {
+    stringstream filename;
+    filename << "t_" << track << "_s_" << scene << ".wav";
+    
+    // store the clip in clipData, we will write the session JSON for it in writeSession
+    clipData.push_back( ClipData( track, scene, filename.str() ) );
+    
+    // add the AudioBuffer metadata to the sample JSON node
+    cJSON* sampleClip = cJSON_CreateObject();
+    cJSON_AddItemToObject(audioJson, filename.str().c_str(), sampleClip );
+    cJSON_AddNumberToObject(sampleClip,"beats", ab->getBeats() );
+    
+    // get pretty name from GUI
+    std::string clipName = gui->getTrack(track)->getClipSelector()->clipName( scene );
+    cJSON_AddItemToObject  ( sampleClip, "name", cJSON_CreateString( clipName.c_str() ));
+    
+    // write the AudioBuffer contents to <path>/audio/  as  <name>.wav
+    // or alternatively t_<track>_s_<scene>.wav
+    
+    path << audioDir << "/" << filename.str();
+  }
+  else
   {
     LUPPP_WARN("%s", "Session folders not created yet, while trying to write audioBuffers.");
     return LUPPP_RETURN_ERROR;
   }
   
-  stringstream filename;
-  filename << "t_" << track << "_s_" << scene << ".wav";
-  
-  // store the clip in clipData, we will write the session JSON for it in writeSession
-  clipData.push_back( ClipData( track, scene, filename.str() ) );
-  
-  // add the AudioBuffer metadata to the sample JSON node
-  cJSON* sampleClip = cJSON_CreateObject();
-  cJSON_AddItemToObject(audioJson, filename.str().c_str(), sampleClip );
-  cJSON_AddNumberToObject(sampleClip,"beats", ab->getBeats() );
-  
-  // get pretty name from GUI
-  std::string clipName = gui->getTrack(track)->getClipSelector()->clipName( scene );
-  cJSON_AddItemToObject  ( sampleClip, "name", cJSON_CreateString( clipName.c_str() ));
-  
-  // write the AudioBuffer contents to <path>/audio/  as  <name>.wav
-  // or alternatively t_<track>_s_<scene>.wav
-  
-  stringstream path;
-  path << audioDir << "/" << filename.str();
   
   SndfileHandle outfile( path.str(), SFM_WRITE, SF_FORMAT_WAV | SF_FORMAT_FLOAT, 1, gui->samplerate );
   

@@ -252,6 +252,40 @@ void Gui::selectLoadController(Fl_Widget* w, void*)
   
 }
 
+void Gui::selectSaveSample( int track, int scene )
+{
+  EventStateSaveBuffer e;
+  e.track = track,
+  e.scene = scene,
+  writeToDspRingbuffer( &e );
+}
+
+char *
+Gui::selectSavePath()
+{
+  string path;
+  Fl_Native_File_Chooser fnfc;
+  fnfc.title("Save filename?");
+  fnfc.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
+  
+  std::string defLoadPath = gui->getDiskReader()->getLastLoadedSamplePath();
+  fnfc.directory( defLoadPath.c_str() ); // default directory to use
+  
+  // Show native chooser
+  switch ( fnfc.show() ) {
+     case -1: /*printf("ERROR: %s\n", fnfc.errmsg()); */ break;  // ERROR
+     case  1: /*(printf("CANCEL\n");                  */ break;  // CANCEL
+     default: /*printf("Loading directory: %s\n", fnfc.filename()); */
+        path = fnfc.filename();
+        break;
+  }
+  
+  if ( strcmp( path.c_str(), "" ) == 0 )
+    return 0;
+
+  return strdup(path.c_str());
+}
+
 void Gui::selectLoadSample( int track, int scene )
 {
   // FIXME: refactor

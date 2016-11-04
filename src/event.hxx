@@ -663,8 +663,9 @@ class EventStateSaveBuffer : public EventBase
     int scene;
     // pointer to the AudioBuffer to be saved
     AudioBuffer* ab;
+    bool no_dealloc;
     
-    EventStateSaveBuffer(): track(0), scene(0), ab(0) {}
+    EventStateSaveBuffer(): track(0), scene(0), ab(0), no_dealloc(0) {}
     EventStateSaveBuffer(int t, int s, AudioBuffer* a): track(t), scene(s), ab(a) {}
 };
 

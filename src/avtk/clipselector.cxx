@@ -19,6 +19,8 @@
 
 #include "clipselector.hxx"
 
+#include <unistd.h>
+
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 #include "../gui.hxx"
@@ -292,6 +294,7 @@ int ClipSelector::handle(int event)
           Fl_Menu_Item rclick_menu[] =
           {
             { "Load" },
+            { "Save" },
             { "Special"},
             { "Beats",  0,   0, 0, FL_SUBMENU | FL_MENU_DIVIDER },
               {"1       "},
@@ -316,6 +319,22 @@ int ClipSelector::handle(int event)
           else if ( strcmp(m->label(), "Load") == 0 )
           {
             gui->selectLoadSample( ID, clipNum );
+          }
+          else if ( strcmp(m->label(), "Save") == 0 )
+          {
+            //gui->saveBufferPath = "/tmp/test.wav";
+            char* tmp = gui->selectSavePath();
+            if(tmp && strlen(tmp)) {
+              if( access( tmp, F_OK ) != -1 ) {
+                int overwrite = fl_choice("Overwrite file?","Cancel","Overwrite",0);
+                if (!overwrite) {
+                  return 0;
+                }
+              }
+              gui->saveBufferPath = tmp;
+              free(tmp);
+              gui->selectSaveSample( ID, clipNum );
+            }
           }
           else if ( strcmp(m->label(), "1       ") == 0 ) {
             EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,1);

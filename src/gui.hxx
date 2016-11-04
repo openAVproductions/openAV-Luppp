@@ -76,6 +76,8 @@ class Gui
     
     /// used to load samples into the grid
     void selectLoadSample( int track, int clip );
+    void selectSaveSample( int track, int clip );
+    char* selectSavePath();
     
     /// allows the user to select a Controller definition
     static void selectLoadController(Fl_Widget* w, void*);
@@ -91,7 +93,9 @@ class Gui
     /// current special clip:
     int specialTrack;
     int specialScene;
-    
+
+    // save a particular sample to path
+    std::string saveBufferPath;
   
   private:
     vector<std::string> controllerVector;
