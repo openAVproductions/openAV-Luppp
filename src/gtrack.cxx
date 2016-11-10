@@ -28,6 +28,7 @@ static void gtrack_xsideDial_cb(Fl_Widget *w, void *data);
 static void gtrack_sendDial_cb(Fl_Widget *w, void *data);
 static void gtrack_send_cb(Fl_Widget *w, void *data);
 static void gtrack_record_cb(Fl_Widget *w, void *data);
+static void gtrack_jacksendactivate_cb(Fl_Widget* w,void *data);
 
 
 GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
@@ -37,18 +38,22 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
   radial( x+5, y+ 26, 100, 100, ""),
   
   clipSel(x + 5, y + 26 + 102, 100, 294,""),
+  jackSendBox(x+5, y+422, 100, 45, ""),
+  jackSendDial(x+21, y+422+8, 30,30, ""),
+  jackSendActivate(x+66, y+422+11, 36,25, "FX"),
+  volBox(x+5, y+422+50, 100, 172, ""),
+  volume(x+66, y +425+50, 36, 166, ""),
+
+
   
-  volBox(x+5, y+422, 100, 172, ""),
-  volume(x+66, y +425, 36, 166, ""),
   
+  sendDial   (x+21, y +430 +  50, 30, 30, ""),
+  sendActive (x+11, y +430 +  82, 50, 25, "Snd"),
   
-  sendDial   (x+21, y +430 +   0, 30, 30, ""),
-  sendActive (x+11, y +430 +  32, 50, 25, "Snd"),
+  xsideDial    (x+21, y +430 + 69+50, 30, 30, ""),
+  keyActive  (x+11, y +430 + 151, 50, 25, "Key"),
   
-  xsideDial    (x+21, y +430 + 69, 30, 30, ""),
-  keyActive  (x+11, y +430 + 101, 50, 25, "Key"),
-  
-  recordActive  (x+11, y +430 + 132, 50, 25, "XRec")
+  recordActive  (x+11, y +430 + 182, 50, 25, "XRec")
 {
   ID = privateID++;
   
@@ -68,7 +73,10 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
   recordActive.callback( gtrack_record_cb, this );
   
   volume.callback( gtrack_vol_cb, this );
-  
+
+  jackSendActivate.setColor( 0, 0.6, 1 );
+  jackSendActivate.callback(gtrack_jacksendactivate_cb,this);
+  jackSendDial.align(FL_ALIGN_INSIDE);
   //volBox.color( fl_rgb_color( 0,0,0 ) );
   
   end(); // close the group
@@ -169,5 +177,13 @@ void gtrack_record_cb(Fl_Widget *w, void *data)
     writeToDspRingbuffer( &e );
   }
   //printf("track %i record Arm %s\n", track->ID, b ? "off" : "on" );
+}
+
+void gtrack_jacksendactivate_cb(Fl_Widget* w,void *data)
+{
+    GTrack* track = (GTrack*) data;
+    Avtk::LightButton* d = (Avtk::LightButton*)w;
+    bool b=d->value();
+    d->value(!b);
 }
 

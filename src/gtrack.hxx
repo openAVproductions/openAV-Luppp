@@ -78,12 +78,16 @@ class GTrack : public Fl_Group
     Avtk::RadialStatus radial;
     
     Avtk::ClipSelector clipSel;
-    
+
     Avtk::Box    volBox;
     
     Avtk::Volume volume;
     
   private:
+    Avtk::Box         jackSendBox;
+    Avtk::Dial        jackSendDial;
+    Avtk::LightButton jackSendActivate;
+
     Avtk::Dial        sendDial;
     Avtk::LightButton sendActive;
     
