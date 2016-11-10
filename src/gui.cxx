@@ -362,7 +362,7 @@ static int cb_nsm_save ( char **out_msg, void *userdata )
 
 Gui::Gui(const char* argZero) :
     samplerate( 0 ),
-    window(1110,650),
+    window(1110,700),
     enableJackSendReturns(false),
     diskReader( new DiskReader() ),
     diskWriter( new DiskWriter() )
@@ -459,7 +459,7 @@ Gui::Gui(const char* argZero) :
       stringstream s;
       s << "Track " << i+1;
       //printf("track name %s\n", s.str().c_str() );
-      tracks.push_back( new GTrack(8 + i * 118, 40, 110, 600, s.str().c_str() ) );
+      tracks.push_back( new GTrack(8 + i * 118, 40, 110, 650, s.str().c_str() ) );
     }
     
     master = new GMasterTrack(8 + i * 118, 40, 150, 600, "Master");
