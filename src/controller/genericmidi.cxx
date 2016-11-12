@@ -613,20 +613,25 @@ void GenericMIDI::launchScene( int scene )
     
     if ( b->action == GRID_LAUNCH_SCENE )
     {
+      for( int i = 0; i < 5; i++ )
+      {
+        if ( i != scene )
+        {
+          unsigned char data[3];
+          data[0] = b->status;
+          data[1] = b->data + i;
+          data[2] = 0;
+          writeMidi( data );
+        }
+      }
       unsigned char data[3];
       data[0] = b->status;
-      data[1] = b->data;
-      
-      if ( b->scene == scene) 
-      {
-        data[2] = 127;
-      }
-      else 
-      {
-        data[2] = 0;
-      }
+      data[1] = b->data + scene;
+      data[2] = 127;
       //LUPPP_NOTE("this = %i GenericMIDI::launchScene()", this );
       writeMidi( data );
+      
+      return;
     }
   }
   
