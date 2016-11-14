@@ -93,7 +93,7 @@ void GridLogic::setSelectedScene(int s)
 
 void GridLogic::launchScene( int scene )
 {
-  for(unsigned int t = 0; t < NTRACKS; t++ )
+  for(unsigned int t = 0; t < ntracks; t++ )
   {
     for(int s = 0; s < NSCENES; s++ )
     {
@@ -127,7 +127,7 @@ void GridLogic::launchScene( int scene )
 void GridLogic::specialScene(int t, int s)
 {
   if ( t < 0 ) t = 0;
-  if ( t >= NTRACKS ) t = NTRACKS-1;
+  if ( t >= ntracks ) t = ntracks-1;
   
   if ( s < 0 ) s = 0;
   if ( s >= NSCENES ) s = NSCENES-1;
@@ -173,7 +173,7 @@ void GridLogic::pressed( int track, int scene )
     if ( s == STATE_STOPPED )
     {
       // hack, stop all scenes, then launch proper one
-      for( int i = 0; i < NTRACKS; i++ )
+      for( int i = 0; i < ntracks; i++ )
       {
         LooperClip* ilc = jack->getLooper( track )->getClip( i );
         if ( ilc->playing() )
@@ -267,7 +267,7 @@ void GridLogic::load(int track, int scene, AudioBuffer* ab)
 void GridLogic::updateState()
 {
   //printf("GridLogic::updateState() stub" );
-  for(int t = 0; t < NTRACKS; t++)
+  for(int t = 0; t < ntracks; t++)
   {
     for(int s = 0; s < NSCENES; s++)
     {
@@ -287,7 +287,7 @@ void GridLogic::bar()
 #endif
   
   /// iterate over all clips, if they're set to QUEUED, set to the next state
-  for( int i = 0; i < NTRACKS*NSCENES; i++ )
+  for( int i = 0; i < ntracks*NSCENES; i++ )
   {
     int track = i / NSCENES;
     int scene = i - track * NSCENES;

@@ -78,7 +78,7 @@ void Logic::trackVolume(int t, float v)
     jack->masterVolume(v);
     jack->getControllerUpdater()->masterVolume( v );
   }
-  else if ( t >= 0 && t < NTRACKS )
+  else if ( t >= 0 && t < ntracks )
   {
     jack->getTrackOutput( t )->setMaster( v );
     jack->getControllerUpdater()->volume( t, v );
@@ -91,7 +91,7 @@ void Logic::trackVolume(int t, float v)
 
 void Logic::trackRecordArm(int t, bool v)
 {
-  if ( t >= 0 && t < NTRACKS )
+  if ( t >= 0 && t < ntracks )
   {
     jack->getTrackOutput( t )->recordArm( v );
     jack->getControllerUpdater()->recordArm( t, v );
@@ -104,7 +104,7 @@ void Logic::trackRecordArm(int t, bool v)
 
 void Logic::trackSendActive(int t, int s, bool v)
 {
-  if ( t >= 0 && t < NTRACKS )
+  if ( t >= 0 && t < ntracks )
   {
     jack->getTrackOutput( t )->setSendActive( s, v );
     jack->getControllerUpdater()->setTrackSendActive( t, s, v );
@@ -117,7 +117,7 @@ void Logic::trackSendActive(int t, int s, bool v)
 
 void Logic::trackSend(int t, int send, float v)
 {
-  if ( t >= 0 && t < NTRACKS )
+  if ( t >= 0 && t < ntracks )
   {
     jack->getTrackOutput( t )->setSend( send, v );
     jack->getControllerUpdater()->setTrackSend( t, send, v );
@@ -130,7 +130,7 @@ void Logic::trackSend(int t, int send, float v)
 
 void Logic::looperClipLenght(int t, int s, int l)
 {
-  if ( t >= 0 && t < NTRACKS )
+  if ( t >= 0 && t < ntracks )
   {
     jack->getLooper( t )->getClip( s )->setBeats(l);
   }

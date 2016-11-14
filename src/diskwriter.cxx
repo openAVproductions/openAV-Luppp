@@ -417,7 +417,7 @@ int DiskWriter::writeSession()
   cJSON_AddItemToObject(sessionJson, "tracks", trackArray );
   
   // write tracks into JSON tracks array
-  for(int t = 0; t < NTRACKS; t++)
+  for(int t = 0; t < ntracks; t++)
   {
     cJSON* track = cJSON_CreateObject();
     cJSON_AddItemToArray( trackArray, track );

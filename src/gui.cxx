@@ -454,7 +454,7 @@ Gui::Gui(const char* argZero) :
     */
     
     int i = 0;
-    for (; i < NTRACKS; i++ )
+    for (; i < ntracks; i++ )
     {
       stringstream s;
       s << "Track " << i+1;
@@ -543,7 +543,7 @@ void Gui::reset()
   writeToDspRingbuffer( &ev );
   
   // clear UI state: track names / scene names
-  for(unsigned int i = 0; i < NTRACKS; i++)
+  for(unsigned int i = 0; i < ntracks; i++)
   {
     stringstream s;
     s << "Track " << i+1;
