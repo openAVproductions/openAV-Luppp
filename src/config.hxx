@@ -54,6 +54,7 @@
 
 ///     GENERAL
 EXTERN int ntracks;
+#define DEFAULT_TRACKS 8
 #define NSCENES 10
 #define MAX_BUFFER_SIZE 1024
 

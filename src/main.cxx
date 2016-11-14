@@ -63,6 +63,8 @@ static void gui_static_loadSession_cb(void* inst)
 int main(int argc, char** argv)
 {
   LUPPP_NOTE("Git: %s", GIT_VERSION   );
+
+  ntracks = DEFAULT_TRACKS;
   
   bool runTests = false;
   if ( runTests ){} // remove unused warning if not built with BUILD_TESTS
@@ -77,25 +79,23 @@ int main(int argc, char** argv)
     {
       if( (i+1) < argc ) 
       {
-        ntracks = atoi(argv[i+1]);
-        if((0 < ntracks) && (ntracks < 20)) 
+        int n = atoi(argv[i+1]);
+        if((0 < n) && (n < 20)) 
         {
+          ntracks = n;
           LUPPP_NOTE("Start with %i Tracks", ntracks);
         } else {
-          LUPPP_NOTE("Track number too high or low, starting with 8 tracks.");
-          ntracks = 8;
+          LUPPP_NOTE("Track number too high or low, starting with default track number.");
         }
         i++;
       } 
       else
       {
-        LUPPP_NOTE("No track number given, starting with 8 tracks.");
-        ntracks = 8;
+        LUPPP_NOTE("No track number given, starting with default track number.");
       }
     }
     else if ( i != 0 ) // don't try load with the program name!
     {
-      // assume filename, try load it
       Fl::repeat_timeout( 1 / 30.f, &gui_static_loadSession_cb, argv[i] );
     }
   }
