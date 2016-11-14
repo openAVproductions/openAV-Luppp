@@ -17,7 +17,13 @@
  */
 
 #ifndef LUPPP_CONFIG_H
-#define LUPPP_CONFIG_H
+  #define LUPPP_CONFIG_H
+
+#ifdef MAIN
+  #define EXTERN 
+#else
+  #define EXTERN extern
+#endif
 
 
 ///     PROGAM WIDE DEFINES
@@ -47,7 +53,7 @@
 
 
 ///     GENERAL
-#define NTRACKS 8
+EXTERN int ntracks;
 #define NSCENES 10
 #define MAX_BUFFER_SIZE 1024
 

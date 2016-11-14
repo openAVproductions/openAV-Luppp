@@ -223,7 +223,7 @@ void GenericMIDI::progress(int t, int s, float f)
 
 void GenericMIDI::trackSend(int t, int send, float v)
 {
-  if ( t >= NTRACKS)
+  if ( t >= ntracks)
   {
     // master track
     return;
@@ -376,7 +376,7 @@ void GenericMIDI::noteOff( int track, int note, int vel )
 
 void GenericMIDI::ccChange( int track, int cc, float value )
 {
-  if ( track >= 0 && track < NTRACKS )
+  if ( track >= 0 && track < ntracks )
   {
     switch( cc )
     {
@@ -595,7 +595,7 @@ void GenericMIDI::reset()
   /*
   unsigned char data[3];
   // setup "volume" style rotary display
-  for(int i = 0; i < NTRACKS; i++)
+  for(int i = 0; i < ntracks; i++)
   {
     data[0] = 176 + i;
     data[1] = 0x19;

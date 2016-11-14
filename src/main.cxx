@@ -16,6 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define MAIN
+
 #include "config.hxx"
 #include "version.hxx"
 
@@ -67,8 +69,29 @@ int main(int argc, char** argv)
   
   for(int i = 0; i < argc; i++)
   {
-    if ( strcmp(argv[i], "-test" ) == 0 ) {
+    if ( strcmp(argv[i], "-test" ) == 0 ) 
+    {
       runTests = true;
+    }
+    else if ( strcmp(argv[i], "-track" ) == 0 )
+    {
+      if( (i+1) < argc ) 
+      {
+        ntracks = atoi(argv[i+1]);
+        if((0 < ntracks) && (ntracks < 20)) 
+        {
+          LUPPP_NOTE("Start with %i Tracks", ntracks);
+        } else {
+          LUPPP_NOTE("Track number too high or low, starting with 8 tracks.");
+          ntracks = 8;
+        }
+        i++;
+      } 
+      else
+      {
+        LUPPP_NOTE("No track number given, starting with 8 tracks.");
+        ntracks = 8;
+      }
     }
     else if ( i != 0 ) // don't try load with the program name!
     {
