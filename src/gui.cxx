@@ -549,13 +549,13 @@ void Gui::reset()
     s << "Track " << i+1;
     tracks.at(i)->bg.setLabel( s.str().c_str() );
     
-    for(unsigned int s = 0; s < NSCENES; s++)
+    for(unsigned int s = 0; s < nscenes; s++)
     {
       tracks.at(i)->getClipSelector()->clipName( s, "" );
     }
   }
   
-  for(unsigned int i = 0; i < NSCENES; i++)
+  for(unsigned int i = 0; i < nscenes; i++)
   {
     stringstream s;
     s << "Scene " << i+1;

@@ -54,8 +54,9 @@
 
 ///     GENERAL
 EXTERN int ntracks;
+EXTERN int nscenes;
 #define DEFAULT_TRACKS 8
-#define NSCENES 10
+#define DEFAULT_SCENES 10
 #define MAX_BUFFER_SIZE 1024
 
 #define CONTROLLERS_PREALLOC 20

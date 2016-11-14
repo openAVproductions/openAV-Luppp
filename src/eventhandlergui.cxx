@@ -219,7 +219,7 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventGridLaunchScene) ) {
             EventGridLaunchScene ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventGridLaunchScene) );
-            for(int i = 0; i < NSCENES; i++)
+            for(int i = 0; i < nscenes; i++)
               gui->getMasterTrack()->getClipSelector()->setState( i, GridLogic::STATE_EMPTY );
             gui->getMasterTrack()->getClipSelector()->setState( ev.scene, GridLogic::STATE_PLAYING );
           } break; }
