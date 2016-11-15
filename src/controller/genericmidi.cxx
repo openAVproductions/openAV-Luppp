@@ -627,11 +627,9 @@ void GenericMIDI::launchScene( int scene )
       }
       //LUPPP_NOTE("this = %i GenericMIDI::launchScene()", this );
       writeMidi( data );
-      
-      return;
     }
   }
-  
+  return;  
 }
 
 
