@@ -1,0 +1,947 @@
+{
+	"name":	"AKAI_APCkey25",
+	"author":	"Romain Caneill",
+	"link":	"",
+	"inputBindings":	[{
+	        " __COMMMENT__ ###############################" : "track 0",
+			"action":   "grid:event",
+			"status":	144,
+			"data":		32,
+			"track":	0,
+			"scene":	0
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		24,
+			"track":	0,
+			"scene":	1
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		16,
+			"track":	0,
+			"scene":	2
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		8,
+			"track":	0,
+			"scene":	3
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		0,
+			"track":	0,
+			"scene":	4
+		},
+        {
+			"action":	"track:volume",
+			"status":	176,
+			"data":	48,
+			"track":	0,
+			"send":	1,
+			"active":	0
+		},
+		{
+			"action":	"track:send_active",
+			"status":	144,
+			"data":	64,
+			"track":	0,
+			"send":	0,
+			"active":	1
+		},
+		{
+			"action":	"track:send_active",
+			"status":	128,
+			"data":	64,
+			"track":	0,
+			"send":	0,
+			"active":	0
+		},
+		{
+            " __COMMMENT__ ###############################" : "track 1",
+			"action":   "grid:event",
+			"status":	144,
+			"data":		33,
+			"track":	1,
+			"scene":	0
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		25,
+			"track":	1,
+			"scene":	1
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		17,
+			"track":	1,
+			"scene":	2
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		9,
+			"track":	1,
+			"scene":	3
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		1,
+			"track":	1,
+			"scene":	4
+		},
+		{
+			"action":	"track:volume",
+			"status":	176,
+			"data":	49,
+			"track":	1
+		},
+		{
+			"action":	"track:send_active",
+			"status":	144,
+			"data":	65,
+			"track":	1,
+			"send":	0,
+			"active":	1
+		},
+		{
+			"action":	"track:send_active",
+			"status":	128,
+			"data":	65,
+			"track":	1,
+			"send":	0,
+			"active":	0
+		},
+		{
+		    " __COMMMENT__ ###############################" : "track 2",
+			"action":   "grid:event",
+			"status":	144,
+			"data":		34,
+			"track":	2,
+			"scene":	0
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		26,
+			"track":	2,
+			"scene":	1
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		18,
+			"track":	2,
+			"scene":	2
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		10,
+			"track":	2,
+			"scene":	3
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		2,
+			"track":	2,
+			"scene":	4
+		},
+		{
+			"action":	"track:volume",
+			"status":	176,
+			"data":	50,
+			"track":	2
+		},
+		{
+			"action":	"track:send_active",
+			"status":	144,
+			"data":	66,
+			"track":	2,
+			"send":	0,
+			"active":	1
+		},
+		{
+			"action":	"track:send_active",
+			"status":	128,
+			"data":	66,
+			"track":	2,
+			"send":	0,
+			"active":	0
+		},
+		{
+		    " __COMMMENT__ ###############################" : "track 3",
+			"action":   "grid:event",
+			"status":	144,
+			"data":		35,
+			"track":	3,
+			"scene":	0
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		27,
+			"track":	3,
+			"scene":	1
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		19,
+			"track":	3,
+			"scene":	2
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		11,
+			"track":	3,
+			"scene":	3
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		3,
+			"track":	3,
+			"scene":	4
+		},
+		{
+			"action":	"track:volume",
+			"status":	176,
+			"data":	51,
+			"track":	3
+		},
+		{
+			"action":	"track:send_active",
+			"status":	144,
+			"data":	67,
+			"track":	3,
+			"send":	0,
+			"active":	1
+		},
+		{
+			"action":	"track:send_active",
+			"status":	128,
+			"data":	67,
+			"track":	3,
+			"send":	0,
+			"active":	0
+		},
+		{
+		    " __COMMMENT__ ###############################" : "track 4",
+			"action":   "grid:event",
+			"status":	144,
+			"data":		36,
+			"track":	4,
+			"scene":	0
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		28,
+			"track":	4,
+			"scene":	1
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		20,
+			"track":	4,
+			"scene":	2
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		12,
+			"track":	4,
+			"scene":	3
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		4,
+			"track":	4,
+			"scene":	4
+		},
+		{
+			"action":	"track:volume",
+			"status":	176,
+			"data":	52,
+			"track":	4
+		},
+		{
+			"action":	"track:send_active",
+			"status":	144,
+			"data":	68,
+			"track":	4,
+			"send":	0,
+			"active":	1
+		},
+		{
+			"action":	"track:send_active",
+			"status":	128,
+			"data":	68,
+			"track":	4,
+			"send":	0,
+			"active":	0
+		},
+		{
+		    " __COMMMENT__ ###############################" : "track 5",
+			"action":   "grid:event",
+			"status":	144,
+			"data":		37,
+			"track":	5,
+			"scene":	0
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		29,
+			"track":	5,
+			"scene":	1
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		21,
+			"track":	5,
+			"scene":	2
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		13,
+			"track":	5,
+			"scene":	3
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		5,
+			"track":	5,
+			"scene":	4
+		},
+		{
+			"action":	"track:volume",
+			"status":	176,
+			"data":	53,
+			"track":	5
+		},
+		{
+			"action":	"track:send_active",
+			"status":	144,
+			"data":	69,
+			"track":	5,
+			"send":	0,
+			"active":	1
+		},
+		{
+			"action":	"track:send_active",
+			"status":	128,
+			"data":	69,
+			"track":	5,
+			"send":	0,
+			"active":	0
+		},
+		{
+		    " __COMMMENT__ ###############################" : "track 6",
+			"action":   "grid:event",
+			"status":	144,
+			"data":		38,
+			"track":	6,
+			"scene":	0
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		30,
+			"track":	6,
+			"scene":	1
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		22,
+			"track":	6,
+			"scene":	2
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		14,
+			"track":	6,
+			"scene":	3
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		6,
+			"track":	6,
+			"scene":	4
+		},
+		{
+			"action":	"track:volume",
+			"status":	176,
+			"data":	54,
+			"track":	6
+		},
+		{
+			"action":	"track:send_active",
+			"status":	144,
+			"data":	70,
+			"track":	6,
+			"send":	0,
+			"active":	1
+		},
+		{
+			"action":	"track:send_active",
+			"status":	128,
+			"data":	70,
+			"track":	6,
+			"send":	0,
+			"active":	0
+		},
+		{
+		    " __COMMMENT__ ###############################" : "track 7",
+			"action":   "grid:event",
+			"status":	144,
+			"data":		39,
+			"track":	7,
+			"scene":	0
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		31,
+			"track":	7,
+			"scene":	1
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		23,
+			"track":	7,
+			"scene":	2
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		15,
+			"track":	7,
+			"scene":	3
+		},
+		{
+			"action":	"grid:event",
+			"status":	144,
+			"data":		7,
+			"track":	7,
+			"scene":	4
+		},
+		{
+			"action":	"track:volume",
+			"status":	176,
+			"data":	55,
+			"track":	7
+		},
+		{
+			"action":	"track:send_active",
+			"status":	144,
+			"data":	71,
+			"track":	7,
+			"send":	0,
+			"active":	1
+		},
+		{
+			"action":	"track:send_active",
+			"status":	128,
+			"data":	71,
+			"track":	7,
+			"send":	0,
+			"active":	0
+		},
+		{
+			" __COMMMENT__ ###############################" : "lauch scenes",
+			"action":	"grid:launch_scene",
+			"status":	144,
+			"data":	82,
+			"scene":	0
+		}, {
+			"action":	"grid:launch_scene",
+			"status":	144,
+			"data":	83,
+			"scene":	1
+		}, {
+			"action":	"grid:launch_scene",
+			"status":	144,
+			"data":	84,
+			"scene":	2
+		}, {
+			"action":	"grid:launch_scene",
+			"status":	144,
+			"data":	85,
+			"scene":	3
+		}, {
+			"action":	"grid:launch_scene",
+			"status":	144,
+			"data":	86,
+			"scene":	4
+		}],
+		
+
+"outputBindings":	[{
+			" __COMMMENT__ ###############################" : "track 0",
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 32,
+		      "track"  : 0,
+		      "scene"  : 0,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 24,
+		      "track"  : 0,
+		      "scene"  : 1,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 16,
+		      "track"  : 0,
+		      "scene"  : 2,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 8,
+		      "track"  : 0,
+		      "scene"  : 3,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}	
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 0,
+		      "track"  : 0,
+		      "scene"  : 4,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}	
+		},
+		
+{
+			" __COMMMENT__ ###############################" : "track 0",
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 33,
+		      "track"  : 1,
+		      "scene"  : 0,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 25,
+		      "track"  : 1,
+		      "scene"  : 1,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 17,
+		      "track"  : 1,
+		      "scene"  : 2,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 9,
+		      "track"  : 1,
+		      "scene"  : 3,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}	
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 1,
+		      "track"  : 1,
+		      "scene"  : 4,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}	
+		},
+		
+{
+			" __COMMMENT__ ###############################" : "track 0",
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 34,
+		      "track"  : 2,
+		      "scene"  : 0,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 26,
+		      "track"  : 2,
+		      "scene"  : 1,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 18,
+		      "track"  : 2,
+		      "scene"  : 2,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 10,
+		      "track"  : 2,
+		      "scene"  : 3,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}	
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 2,
+		      "track"  : 2,
+		      "scene"  : 4,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}	
+		},
+		
+{
+			" __COMMMENT__ ###############################" : "track 0",
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 35,
+		      "track"  : 3,
+		      "scene"  : 0,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 27,
+		      "track"  : 3,
+		      "scene"  : 1,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 19,
+		      "track"  : 3,
+		      "scene"  : 2,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 11,
+		      "track"  : 3,
+		      "scene"  : 3,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}	
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 3,
+		      "track"  : 3,
+		      "scene"  : 4,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}	
+		},
+		
+{
+			" __COMMMENT__ ###############################" : "track 0",
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 36,
+		      "track"  : 4,
+		      "scene"  : 0,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 28,
+		      "track"  : 4,
+		      "scene"  : 1,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 20,
+		      "track"  : 4,
+		      "scene"  : 2,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 12,
+		      "track"  : 4,
+		      "scene"  : 3,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}	
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 4,
+		      "track"  : 4,
+		      "scene"  : 4,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}	
+		},
+		
+{
+			" __COMMMENT__ ###############################" : "track 0",
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 37,
+		      "track"  : 5,
+		      "scene"  : 0,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 29,
+		      "track"  : 5,
+		      "scene"  : 1,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 21,
+		      "track"  : 5,
+		      "scene"  : 2,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 13,
+		      "track"  : 5,
+		      "scene"  : 3,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}	
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 5,
+		      "track"  : 5,
+		      "scene"  : 4,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}	
+		},
+		
+{
+			" __COMMMENT__ ###############################" : "track 0",
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 38,
+		      "track"  : 6,
+		      "scene"  : 0,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 30,
+		      "track"  : 6,
+		      "scene"  : 1,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 22,
+		      "track"  : 6,
+		      "scene"  : 2,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 14,
+		      "track"  : 6,
+		      "scene"  : 3,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}	
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 6,
+		      "track"  : 6,
+		      "scene"  : 4,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}	
+		},
+		
+{
+			" __COMMMENT__ ###############################" : "track 0",
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 39,
+		      "track"  : 7,
+		      "scene"  : 0,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 31,
+		      "track"  : 7,
+		      "scene"  : 1,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 23,
+		      "track"  : 7,
+		      "scene"  : 2,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}		
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 15,
+		      "track"  : 7,
+		      "scene"  : 3,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}	
+		},
+		{
+			
+		      "action" : "grid:clip_state",
+		      "status" : 144,
+		      "data"   : 7,
+		      "track"  : 7,
+		      "scene"  : 4,
+		      "state" : {
+			  "empty" : 0, "stopped" : 5, "playing" : 1, "recording" : 3,
+			  "queueStopped" : 6, "queuePlaying" : 2, "queueRecording" : 4}	
+		}]
+}
