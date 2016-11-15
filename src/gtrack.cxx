@@ -27,6 +27,7 @@ static void gtrack_key_cb(Fl_Widget *w, void *data);
 static void gtrack_xsideDial_cb(Fl_Widget *w, void *data);
 static void gtrack_sendDial_cb(Fl_Widget *w, void *data);
 static void gtrack_send_cb(Fl_Widget *w, void *data);
+static void gtrack_jacksend_cb(Fl_Widget *w, void *data);
 static void gtrack_record_cb(Fl_Widget *w, void *data);
 static void gtrack_jacksendactivate_cb(Fl_Widget* w,void *data);
 
@@ -77,6 +78,7 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
   jackSendActivate.setColor( 1, 1, 0 );
   jackSendActivate.callback(gtrack_jacksendactivate_cb,this);
   jackSendDial.align(FL_ALIGN_INSIDE);
+  jackSendDial.callback(gtrack_jacksend_cb,this);
   //volBox.color( fl_rgb_color( 0,0,0 ) );
   
   end(); // close the group
@@ -104,7 +106,7 @@ void GTrack::setJackSend(float s)
 
 void GTrack::setJackSendActivate(bool a)
 {
-    jackSendActivate.value(a);
+    //jackSendActivate.value(a);
 }
 
 void gtrack_sendDial_cb(Fl_Widget *w, void *data)
@@ -170,6 +172,16 @@ void gtrack_send_cb(Fl_Widget *w, void *data)
   }
   //printf("track %i reverb send %s\n", track->ID, b ? "true" : "false" );
 }
+void gtrack_jacksend_cb(Fl_Widget *w, void *data)
+{
+  GTrack* track = (GTrack*) data;
+  Avtk::Dial* d = (Avtk::Dial*)w;
+  float v = d->value();
+  EventTrackJackSend ev(track->ID,v);
+  writeToDspRingbuffer(&ev);
+
+  //printf("track %i reverb send %s\n", track->ID, b ? "true" : "false" );
+}
 void gtrack_record_cb(Fl_Widget *w, void *data)
 {
   GTrack* track = (GTrack*) data;
@@ -193,7 +205,7 @@ void gtrack_jacksendactivate_cb(Fl_Widget* w,void *data)
     GTrack* track = (GTrack*) data;
     Avtk::LightButton* d = (Avtk::LightButton*)w;
     bool b=d->value();
-    d->value(!b);
+   // d->value(!b);
     if ( b < 0.5 )
     {
       EventTrackJackSendActivate e( track->ID, 1.0f );
