@@ -67,6 +67,9 @@ class ControllerUpdater
     void setTrackSceneProgress(int t, int s, float p);
     void setTrackSendActive(int t, int send, bool v);
     void setTrackSend(int t, int send, float v);
+
+    void setTrackJackSendActive(int t, bool v);
+    void setTrackJackSend(int t, float v);
     
     void specialScene(int t, int scene);
     

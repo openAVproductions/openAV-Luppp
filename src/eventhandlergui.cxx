@@ -253,6 +253,20 @@ void handleGuiEvents()
                 gui->getTrack(ev.track)->setXSide( ev.value );
               }
           } break; }
+
+      case Event::TRACK_JACKSEND: {
+          if ( availableRead >= sizeof(EventTrackJackSend) ) {
+            EventTrackJackSend ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTrackJackSend) );
+            gui->getTrack(ev.track)->setJackSend(ev.value);
+          } break; }
+
+      case Event::TRACK_JACKSEND_ACTIVATE: {
+          if ( availableRead >= sizeof(EventTrackJackSendActivate) ) {
+            EventTrackJackSendActivate ev;
+            jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTrackJackSendActivate) );
+            gui->getTrack(ev.track)->setJackSendActivate(ev.active);
+          } break; }
         
         case Event::TRACK_SEND_ACTIVE: {
           if ( availableRead >= sizeof(EventTrackSendActive) ) {
