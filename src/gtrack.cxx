@@ -74,7 +74,7 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
   
   volume.callback( gtrack_vol_cb, this );
 
-  jackSendActivate.setColor( 0, 0.6, 1 );
+  jackSendActivate.setColor( 1, 1, 0 );
   jackSendActivate.callback(gtrack_jacksendactivate_cb,this);
   jackSendDial.align(FL_ALIGN_INSIDE);
   //volBox.color( fl_rgb_color( 0,0,0 ) );
@@ -97,6 +97,15 @@ void GTrack::setSendActive(bool a){ sendActive.value( a ); }
 void GTrack::setKeyActive(bool a){ keyActive.value( a ); }
 void GTrack::setRecordActive(bool a){ recordActive.value( a ); }
 
+void GTrack::setJackSend(float s)
+{
+    jackSendDial.value(s);
+}
+
+void GTrack::setJackSendActivate(bool a)
+{
+    jackSendActivate.value(a);
+}
 
 void gtrack_sendDial_cb(Fl_Widget *w, void *data)
 {
@@ -185,5 +194,15 @@ void gtrack_jacksendactivate_cb(Fl_Widget* w,void *data)
     Avtk::LightButton* d = (Avtk::LightButton*)w;
     bool b=d->value();
     d->value(!b);
+    if ( b < 0.5 )
+    {
+      EventTrackJackSendActivate e( track->ID, 1.0f );
+      writeToDspRingbuffer( &e );
+    }
+    else
+    {
+      EventTrackJackSendActivate e( track->ID, 0.0f );
+      writeToDspRingbuffer( &e );
+    }
 }
 

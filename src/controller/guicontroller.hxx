@@ -41,6 +41,9 @@ class LupppGUI : public Controller
     
     void trackSend(int t, int send, float r);
     void trackSendActive(int t, int send, bool a);
+
+    virtual void trackJackSend(int t, float v);
+    virtual void trackJackSendActivate(int t, bool a);
     
     void bpm(int bpm);
     void tapTempo( bool b );

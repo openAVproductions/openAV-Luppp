@@ -25,7 +25,7 @@ extern Jack* jack;
 #include "controllerupdater.hxx"
 #include "trackoutput.hxx"
 #include "metronome.hxx"
-
+#include "jacksendreturn.hxx"
 Logic::Logic()
 {
   
@@ -126,6 +126,32 @@ void Logic::trackSend(int t, int send, float v)
   {
     LUPPP_WARN("invalid track number %i: check controller map has \"track\" field.", t );
   }
+}
+
+void Logic::trackJackSendActivate(int t, bool active)
+{
+    if ( t >= 0 && t < NTRACKS )
+    {
+      jack->getJackSendReturn(t)->activate(active);
+      jack->getControllerUpdater()->setTrackJackSendActive( t, active );
+    }
+    else
+    {
+      LUPPP_WARN("invalid track number %i: check controller map has \"track\" field.", t );
+    }
+}
+
+void Logic::trackJackSend(int t, float vol)
+{
+    if ( t >= 0 && t < NTRACKS )
+    {
+      jack->getJackSendReturn(t)->sendVolume(vol);
+      jack->getControllerUpdater()->setTrackJackSend( t, vol );
+    }
+    else
+    {
+      LUPPP_WARN("invalid track number %i: check controller map has \"track\" field.", t );
+    }
 }
 
 void Logic::looperClipLenght(int t, int s, int l)

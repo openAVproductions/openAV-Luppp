@@ -209,6 +209,16 @@ void GenericMIDI::trackSendActive(int t, int send, bool a)
   }
 }
 
+void GenericMIDI::trackJackSend(int t, float v)
+{
+
+}
+
+void GenericMIDI::trackJackSendActivate(int t, bool a)
+{
+
+}
+
 /*
 void GenericMIDI::progress(int t, int s, float f)
 {

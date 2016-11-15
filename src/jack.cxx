@@ -326,6 +326,20 @@ TrackOutput* Jack::getTrackOutput(int t)
   return 0;
 }
 
+JackSendReturn* Jack::getJackSendReturn(int t)
+{
+  if ( t >= 0 && t < NTRACKS )
+    return tracksendreturns.at(t);
+#ifdef DEBUG_TRACKS
+  else
+  {
+    printf( "Jack::getTrackOutput() returning 0x0: invalid track requested!\n" );
+  }
+#endif
+
+  return 0;
+}
+
 
 Looper* Jack::getLooper(int t)
 {

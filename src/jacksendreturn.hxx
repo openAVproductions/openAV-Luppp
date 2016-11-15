@@ -36,7 +36,14 @@ public:
     //The process callback
     virtual void process(unsigned int nframes, Buffers* buffers);
 
+    //Activate the return chain. When m_active=true then Buffers::RETURN_TRACK_0+m_trackid gets the data
+    //from the return port. The send port always send the incoming data
+    void activate(bool act);
+    void sendVolume(float vol);
+
 private:
+    bool m_active;
+    float m_sendvol;
     jack_port_t* m_sendport;
     jack_port_t* m_returnport;
     int m_trackid;

@@ -111,8 +111,9 @@ class Jack
     int bindingScene;
     int bindingSend;
     int bindingActive;
-  
-  private:
+
+    JackSendReturn *getJackSendReturn(int t);
+private:
     jack_client_t* client;
     
     Buffers             buffers;

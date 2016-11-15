@@ -70,6 +70,8 @@ class GTrack : public Fl_Group
     void setKeyActive(bool a);
     void setRecordActive(bool a);
     
+    void setJackSend(float s);
+    void setJackSendActivate(bool a);
   
     int ID;
     
