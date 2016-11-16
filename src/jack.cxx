@@ -374,26 +374,7 @@ int Jack::process (jack_nframes_t nframes)
   }
   
   /// do events from the ringbuffer
-  handleDspEvents();
-  
-  /// process incoming MIDI
-  /*
-  jack_midi_event_t in_event;
-  int masterMidiInputIndex = 0;
-  int event_count = (int) jack_midi_get_event_count( buffers.midi[Buffers::MASTER_MIDI_INPUT] );
-  while ( masterMidiInputIndex < event_count )
-  {
-    jack_midi_event_get(&in_event, buffers.midi[Buffers::MASTER_MIDI_INPUT], masterMidiInputIndex);
-    
-    char buffer [50];
-    sprintf (buffer, "MIDI %i %i %i", int(in_event.buffer[0]), int(in_event.buffer[1]), int(in_event.buffer[2]) );
-    EventGuiPrint e( buffer );
-    writeToGuiRingbuffer( &e );
-    
-    masterMidiInputIndex++;
-  }
-  */
-  
+  handleDspEvents();  
   
   /// update "time" from JACK master, or write master?
   buffers.transportFrame = jack_get_current_transport_frame(client);
