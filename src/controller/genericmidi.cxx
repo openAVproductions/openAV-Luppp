@@ -619,7 +619,13 @@ void GenericMIDI::launchScene( int scene )
       
       if ( b->scene == scene) 
       {
-        data[2] = 127;
+        if ( b->color ) 
+        {
+          data[2] = b->color;
+        } else 
+        {
+          data[2] = 127;
+        }
       }
       else 
       {
@@ -835,6 +841,13 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
   
   tmp->status = statusJson->valueint;
   tmp->data   = dataJson->valueint;
+
+  cJSON* colorJson = cJSON_GetObjectItem( binding, "color" );
+
+  if( colorJson )
+  {
+    tmp->color  = colorJson->valueint;
+  }
   
   // gets the Action type from the JSON string
   cJSON* activeJson = cJSON_GetObjectItem( binding, "active" );
