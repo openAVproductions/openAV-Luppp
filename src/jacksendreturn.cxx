@@ -23,9 +23,10 @@ void JackSendReturn::process(unsigned int nframes, Buffers *buffers)
     float* ret=(float*)jack_port_get_buffer(m_returnport,(jack_nframes_t)nframes);
 
     //Copy result of previous AudioProcessor to send port
-    //memcpy(send,buffers->audio[Buffers::SEND_TRACK_0+m_trackid],nframes*sizeof(float));
+//    memcpy(send,buffers->audio[Buffers::SEND_TRACK_0+m_trackid],nframes*sizeof(float));
+//    memset(send,0,nframes*sizeof(float));
     for(int i=0;i<nframes;i++)
-        send[i]+=m_sendvol*buffers->audio[Buffers::SEND_TRACK_0+m_trackid][i];
+        send[i]=m_sendvol*buffers->audio[Buffers::SEND_TRACK_0+m_trackid][i];
 
 
     if(m_active)
