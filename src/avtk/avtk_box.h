@@ -106,55 +106,6 @@ class Box : public Fl_Widget
       h = H;
       redraw();
     }
-    
-    /*
-    int handle(int event)
-    {
-      
-      switch(event)
-      {
-        case FL_PUSH:
-          if ( Fl::event_state(FL_BUTTON3) && Fl::event_y() < y + 20 )
-          {
-            const char* name = fl_input( "Track name: ", "" );
-            if ( name )
-            {
-              free( (char*) label );
-              label = strdup( name );
-              redraw();
-            }
-            return 1;
-          }
-          
-          redraw();
-          return 1;
-        case FL_DRAG: {
-            int t = Fl::event_inside(this);
-            if (t != highlight) {
-              redraw();
-            }
-          }
-          return 1;
-        case FL_RELEASE:
-          if (highlight) {
-            highlight = 0;
-            redraw();
-            do_callback();
-          }
-          return 1;
-        case FL_SHORTCUT:
-          if ( test_shortcut() )
-          {
-            do_callback();
-            return 1;
-          }
-          return 0;
-        default:
-          return Fl_Widget::handle(event);
-      }
-      
-    }
-    */
 };
 
 } // Avtk

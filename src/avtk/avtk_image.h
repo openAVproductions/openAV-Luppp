@@ -85,17 +85,6 @@ class Image : public Fl_Widget
         x = gui->getWindowWidth() - w;
       }
       
-      /*
-      Fl_Widget::resize(X,Y,W,H);
-      
-      
-      x = X;
-      y = Y;
-      w = W;
-      h = H;
-      */
-      
-      
       redraw();
     }
     

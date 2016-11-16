@@ -601,7 +601,7 @@ void GenericMIDI::setSceneState(int t, int scene, GridLogic::State s)
 
 
 void GenericMIDI::reset()
-{
+{//TODO needed?
   /*
   unsigned char data[3];
   // setup "volume" style rotary display
