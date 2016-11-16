@@ -106,7 +106,7 @@ void GTrack::setJackSend(float s)
 
 void GTrack::setJackSendActivate(bool a)
 {
-    //jackSendActivate.value(a);
+    jackSendActivate.value(a);
 }
 
 void gtrack_sendDial_cb(Fl_Widget *w, void *data)
