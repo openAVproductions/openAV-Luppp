@@ -48,6 +48,7 @@ private:
     jack_port_t* m_returnport;
     int m_trackid;
     AudioProcessor* m_previousProcessor;
+    int m_counter;
 };
 
 
