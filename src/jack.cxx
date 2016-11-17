@@ -393,6 +393,7 @@ int Jack::process (jack_nframes_t nframes)
   buffers.audio[Buffers::JACK_MASTER_OUT_R]   = (float*)jack_port_get_buffer( masterOutputR  , nframes );
   buffers.audio[Buffers::JACK_SIDECHAIN_KEY]   = (float*)jack_port_get_buffer(sidechainKeyOutput,nframes);
   buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL]=(float*)jack_port_get_buffer(sidechainSignalOutput,nframes);
+
   
   // clear the buffers
   memset( buffers.audio[Buffers::JACK_MASTER_OUT_L] , 0, sizeof(float) * nframes );
