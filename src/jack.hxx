@@ -157,6 +157,7 @@ private:
     jack_port_t*  masterInput;
     jack_port_t*  masterOutputL;
     jack_port_t*  masterOutputR;
+
     jack_port_t*  masterReturnL;
     jack_port_t*  masterReturnR;
     jack_port_t*  headphonesPort;
@@ -167,7 +168,7 @@ private:
     
     jack_port_t*  masterMidiInput;
 
-    vector<jack_port_t*> trackJackOutputPorts;
+    jack_port_t* trackJackOutputPorts[NTRACKS];
     
     // JACK callback
     int  process (jack_nframes_t);

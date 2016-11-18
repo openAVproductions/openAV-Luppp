@@ -431,6 +431,9 @@ int DiskWriter::writeSession()
     
     cJSON_AddNumberToObject( track, "sendAmount" , gui->getTrack(t)->getSend()       );
     cJSON_AddNumberToObject( track, "sendActive" , gui->getTrack(t)->getSendActive() );
+
+    cJSON_AddNumberToObject( track, "jacksendAmount" , gui->getTrack(t)->getJackSend()       );
+    cJSON_AddNumberToObject( track, "jacksendActive" , gui->getTrack(t)->getJackSendActivate() );
     
     cJSON_AddNumberToObject( track, "xsideAmount", gui->getTrack(t)->getXSide()      );
     cJSON_AddNumberToObject( track, "keyActive"  , gui->getTrack(t)->getKeyActive()  );
