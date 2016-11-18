@@ -84,7 +84,7 @@ class Gui
     int samplerate;
     
     ////Enable per track send and resturn jack ports
-    bool enableJackSendReturns;
+    bool enablePerTrackOutput;
 
     int getWindowWidth(){return window.w();}
     

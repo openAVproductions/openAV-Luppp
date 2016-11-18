@@ -103,12 +103,12 @@ int DiskReader::loadPreferences()
     }
 
     //Enable per track send and resturn jack ports?
-    cJSON* jackSendReturns=cJSON_GetObjectItem(preferencesJson,"enablePerTrackSendReturns");
-    if(jackSendReturns)
+    cJSON* jackPerTrackOutput=cJSON_GetObjectItem(preferencesJson,"enablePerTrackOutput");
+    if(jackPerTrackOutput)
     {
-        gui->enableJackSendReturns=jackSendReturns->valueint;
-        if(gui->enableJackSendReturns)
-            LUPPP_NOTE("Enabling per track send and return ports");
+        gui->enablePerTrackOutput=jackPerTrackOutput->valueint;
+        if(gui->enablePerTrackOutput)
+            LUPPP_NOTE("Enabling per track output ports");
     }
     
     
@@ -637,6 +637,19 @@ int DiskReader::readTracks()
             writeToDspRingbuffer( &e1 );
             writeToDspRingbuffer( &e2 );
             writeToDspRingbuffer( &e3 );
+          }
+
+          cJSON* jacksend       = cJSON_GetObjectItem( track, "jacksendAmount");
+          cJSON* jacksendActive = cJSON_GetObjectItem( track, "jacksendActive");
+          if(jacksend)
+          {
+              EventTrackJackSend ev(t,jacksend->valuedouble);
+              writeToDspRingbuffer(&ev);
+          }
+          if(jacksendActive)
+          {
+              EventTrackJackSendActivate ev(t,jacksendActive->valueint);
+              writeToDspRingbuffer(&ev);
           }
         }
       }// if track

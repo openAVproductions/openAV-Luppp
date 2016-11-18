@@ -329,7 +329,7 @@ static int cb_nsm_save ( char **out_msg, void *userdata )
 Gui::Gui(const char* argZero) :
     samplerate( 0 ),
     window(1110,700),
-    enableJackSendReturns(false),
+    enablePerTrackOutput(false),
     diskReader( new DiskReader() ),
     diskWriter( new DiskWriter() )
 {

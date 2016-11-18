@@ -80,6 +80,15 @@ class Buffers
       RETURN_TRACK_6,
       RETURN_TRACK_7,
 
+      JACK_TRACK_0,
+      JACK_TRACK_1,
+      JACK_TRACK_2,
+      JACK_TRACK_3,
+      JACK_TRACK_4,
+      JACK_TRACK_5,
+      JACK_TRACK_6,
+      JACK_TRACK_7,
+
       
       BUFFER_COUNT,
     };

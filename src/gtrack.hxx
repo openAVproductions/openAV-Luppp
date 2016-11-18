@@ -85,7 +85,9 @@ class GTrack : public Fl_Group
     
     Avtk::Volume volume;
     
-  private:
+    float getJackSend();
+    bool getJackSendActivate();
+private:
     Avtk::Box         jackSendBox;
     Avtk::Dial        jackSendDial;
     Avtk::LightButton jackSendActivate;
