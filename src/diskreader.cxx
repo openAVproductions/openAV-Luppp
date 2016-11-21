@@ -110,6 +110,23 @@ int DiskReader::loadPreferences()
         if(gui->enablePerTrackOutput)
             LUPPP_NOTE("Enabling per track output ports");
     }
+
+    //Metronome on by default?
+    cJSON* metronomeActive=cJSON_GetObjectItem(preferencesJson,"metronomeActiveByDefault");
+    if(metronomeActive)
+    {
+        EventMetronomeActive e = EventMetronomeActive( metronomeActive->valueint);
+        writeToDspRingbuffer( &e );
+    }
+
+    //Metronome default volume
+    cJSON* metronomeVol=cJSON_GetObjectItem(preferencesJson,"metronomeDefaultVolume");
+    if(metronomeVol)
+    {
+        float vol=metronomeVol->valueint/100.0f;
+        EventMetronomeVolume e(vol);
+        writeToDspRingbuffer(&e);
+    }
     
     
     cJSON_Delete( preferencesJson );
