@@ -145,7 +145,8 @@ static void gui_header_callback(Fl_Widget *w, void *data)
     std::string tmp;
     {
       // Create the file chooser, and show it
-      Fl_File_Chooser chooser(getenv("HOME"),
+
+      Fl_File_Chooser chooser(gui->getProjectsDir().c_str(),
                               "*",
                               Fl_File_Chooser::DIRECTORY,
                               "Load Session");
@@ -195,7 +196,7 @@ static void gui_header_callback(Fl_Widget *w, void *data)
     const char* name = fl_input( "Save session as", gui->getDiskWriter()->getLastSaveName().c_str() );
     if ( name )
     {
-      gui->getDiskWriter()->initialize( getenv("HOME"), name );
+      gui->getDiskWriter()->initialize( gui->getProjectsDir().c_str(), name );
       LUPPP_NOTE("%s %s","Saving session as ", name );
       EventStateSave e;
       writeToDspRingbuffer( &e );
@@ -250,6 +251,16 @@ void Gui::selectLoadController(Fl_Widget* w, void*)
     LUPPP_ERROR("Controller initialization failed!");
   }
   
+}
+
+void Gui::setProjectsDir(string dir)
+{
+    m_lupppProjectsDir=dir;
+}
+
+string Gui::getProjectsDir()
+{
+    return m_lupppProjectsDir;
 }
 
 void Gui::selectLoadSample( int track, int scene )

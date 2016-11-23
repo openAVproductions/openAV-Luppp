@@ -91,7 +91,10 @@ class Gui
     /// current special clip:
     int specialTrack;
     int specialScene;
-    
+
+    /// The project directory is the default directoy which is shown upon load/save
+    void setProjectsDir(string dir);
+    string getProjectsDir();
   
   private:
     vector<std::string> controllerVector;
@@ -103,6 +106,7 @@ class Gui
     OptionsWindow*    optionWindow;
     
     AudioEditor*        audioEditor;
+    std::string         m_lupppProjectsDir;
     
     DiskReader*         diskReader;
     DiskWriter*         diskWriter;

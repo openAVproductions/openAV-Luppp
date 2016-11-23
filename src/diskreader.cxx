@@ -102,6 +102,15 @@ int DiskReader::loadPreferences()
       LUPPP_NOTE("No default controllers active.");
     }
     
+    cJSON* projDir=cJSON_GetObjectItem(preferencesJson,"saveDirectory");
+    string dir=getenv("HOME");
+    if(projDir)
+    {
+        stringstream s;
+        s<<dir<<"/"<<projDir->valuestring;
+        dir=s.str();
+    }
+    gui->setProjectsDir(dir);
     
     
     
