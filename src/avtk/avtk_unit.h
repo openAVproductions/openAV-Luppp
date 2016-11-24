@@ -106,25 +106,6 @@ class Unit : public Fl_Button
         cairo_set_source_rgba(cr, 66 / 255.f,  66 / 255.f ,  66 / 255.f, 0.4);
         cairo_fill(cr);
         
-        //cairo_rectangle( cr, x+1, drawY, clipHeight - 2, clipHeight - 2 );
-        /*
-        cairo_rectangle( cr, x+1, drawY, clipWidth, clipHeight - 2 );
-        
-        float alpha = 0.7;
-        if (mouseOver) { alpha = 1; }
-        cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, alpha);
-        cairo_set_line_width( cr, 1.4);
-        cairo_move_to( cr, x+clipHeight-1, drawY );
-        cairo_line_to( cr, x+clipHeight-1, drawY + clipHeight - 2);
-        cairo_stroke(cr);
-        
-        // clip name
-        cairo_move_to( cr, x+clipHeight-1+ 10, drawY + 15 );
-        cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 1 );
-        cairo_set_font_size( cr, 10 );
-        cairo_show_text( cr, label );
-        */
-        
         // outline
         float alpha = 0.7;
         if (mouseOver) { alpha = 1; }

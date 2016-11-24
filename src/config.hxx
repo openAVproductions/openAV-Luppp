@@ -25,27 +25,6 @@
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
-
-///     DEBUG
-// Track operations
-//#define DEBUG_TRACKS            1
-
-// Clip selection / queueing
-//#define DEBUG_CLIP              1
-
-// Buffer loading / resizing
-//#define DEBUG_BUFFER            1
-
-// Logic : Warning NON RT!
-//#define DEBUG_LOGIC             1
-
-// State save / load
-//#define DEBUG_STATE             1
-
-// Jack print controller out MIDI, loading etc
-//#define DEBUG_MIDI              1
-
-
 ///     GENERAL
 #define NTRACKS 8
 #define NSCENES 10
