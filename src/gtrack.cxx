@@ -30,25 +30,25 @@ static void gtrack_send_cb(Fl_Widget *w, void *data);
 static void gtrack_record_cb(Fl_Widget *w, void *data);
 
 
-GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
-  Fl_Group(x, y, w, h),
-  bg( x, y , w, h, l ),
+GTrack::GTrack(int id, int w, int h, const char* l ) :
+  Fl_Group(8 + id * (w + 8), 40, w, h),
+  bg( 8 + id * (w + 8), 40 , w, h, l ),
   
-  radial( x+5, y+ 26, 100, 100, ""),
+  radial( 8 + id * (w + 8)+ (w/22), 40+ 26, w-w/11, 100, ""),
   
-  clipSel(x + 5, y + 26 + 102, 100, 294,""),
+  clipSel(8 + id * (w + 8) + (w/22), 40 + 26 + 102, w-w/11, 294,""),
   
-  volBox(x+5, y+422, 100, 172, ""),
-  volume(x+66, y +425, 36, 166, ""),
+  volBox(8 + id * (w + 8)+ (w/22), 40+422, w-w/11, 172, ""),
+  volume(8 + id * (w + 8)+ (w-w/11)*2/3, 40 +425, (w-w/11)/3, 166, ""),
   
   
-  sendDial   (x+21, y +430 +   0, 30, 30, ""),
-  sendActive (x+11, y +430 +  32, 50, 25, "Snd"),
+  sendDial   (8 + id * (w + 8)+ (w/5), 40 +430 +   0, (w-w/11)*3/10, 30, ""),
+  sendActive (8 + id * (w + 8)+ (w/10), 40 +430 +  32, (w-w/11)/2, 25, "S"),
   
-  xsideDial    (x+21, y +430 + 69, 30, 30, ""),
-  keyActive  (x+11, y +430 + 101, 50, 25, "Key"),
+  xsideDial    (8 + id * (w + 8)+ (w/5), 40 +430 + 69, (w-w/11)*3/10, 30, ""),
+  keyActive  (8 + id * (w + 8)+(w/10), 40 +430 + 101, (w-w/11)/2, 25, "K"),
   
-  recordActive  (x+11, y +430 + 132, 50, 25, "XRec")
+  recordActive  (8 + id * (w + 8)+(w/10), 40 +430 + 132, (w-w/11)/2, 25, "X")
 {
   ID = privateID++;
   

@@ -362,7 +362,7 @@ static int cb_nsm_save ( char **out_msg, void *userdata )
 
 Gui::Gui(const char* argZero) :
     samplerate( 0 ),
-    window(1110,650),
+    window(8 + NTRACKS * (880/NTRACKS+8) + 158,650),
     
     diskReader( new DiskReader() ),
     diskWriter( new DiskWriter() )
@@ -411,9 +411,9 @@ Gui::Gui(const char* argZero) :
   */
   
   // horizontal no-resize-images group
-  Fl_Group* headerImages = new Fl_Group( 0, 0, 1110, 650, "header");
+  Fl_Group* headerImages = new Fl_Group( 0, 0, 8 + NTRACKS * (880/NTRACKS+8) + 158, 650, "header");
   {
-    //Fl_Pack* vHeaderImages = new Fl_Pack( 0, 0, 1110, 650, "verticalHeader");
+    //Fl_Pack* vHeaderImages = new Fl_Pack( 0, 0, 8 + NTRACKS * (880/NTRACKS+8) + 158, 650, "verticalHeader");
     {
       Avtk::Image* bgImage = new Avtk::Image(0,0,1920,36,"bg");
       bgImage->setPixbuf( bgImg.pixel_data, 4 );
@@ -441,14 +441,14 @@ Gui::Gui(const char* argZero) :
   headerImages->end();
   
   // create a new "Group" with all Luppp GUI contents, for resizing
-  lupppGroup = new Fl_Group( 0, 0, 1110, 650, "Luppp");
+  lupppGroup = new Fl_Group( 0, 0, 8 + NTRACKS * (880/NTRACKS+8) + 158, 650, "Luppp");
   {
     // everything in here will have resize() called when main window is resized
     
     /*
-    Fl_Bitmap* headImg = new Fl_Bitmap( (unsigned char*)header.pixel_data, 1110, 36 );
+    Fl_Bitmap* headImg = new Fl_Bitmap( (unsigned char*)header.pixel_data, 8 + NTRACKS * (880/NTRACKS+8) + 158, 36 );
     
-    Fl_Box* pic_box = new Fl_Box(0,0,1110,36);
+    Fl_Box* pic_box = new Fl_Box(0,0,8 + NTRACKS * (880/NTRACKS+8) + 158,36);
     pic_box->image( headImg );
     pic_box->redraw();
     */
@@ -459,10 +459,10 @@ Gui::Gui(const char* argZero) :
       stringstream s;
       s << "Track " << i+1;
       //printf("track name %s\n", s.str().c_str() );
-      tracks.push_back( new GTrack(8 + i * 118, 40, 110, 600, s.str().c_str() ) );
+      tracks.push_back( new GTrack(i, 880/NTRACKS, 600, s.str().c_str() ) );
     }
     
-    master = new GMasterTrack(8 + i * 118, 40, 150, 600, "Master");
+    master = new GMasterTrack(8 + NTRACKS * (880/NTRACKS+8), 40, 150, 600, "Master");
   }
   lupppGroup->end();
   

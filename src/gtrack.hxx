@@ -51,7 +51,7 @@ class GTrack : public Fl_Group
     Avtk::RadialStatus* getRadialStatus(){return &radial;}
     Avtk::ClipSelector* getClipSelector(){return &clipSel;}
     
-    GTrack(int x, int y, int w, int h, const char* l = 0 );
+    GTrack(int id, int w, int h, const char* l = 0 );
     
     
     // getters
