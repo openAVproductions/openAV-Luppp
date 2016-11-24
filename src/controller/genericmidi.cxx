@@ -223,7 +223,7 @@ void GenericMIDI::progress(int t, int s, float f)
 
 void GenericMIDI::trackSend(int t, int send, float v)
 {
-  if ( t >= NTRACKS)
+  if ( t >= ntracks)
   {
     // master track
     return;
@@ -376,7 +376,7 @@ void GenericMIDI::noteOff( int track, int note, int vel )
 
 void GenericMIDI::ccChange( int track, int cc, float value )
 {
-  if ( track >= 0 && track < NTRACKS )
+  if ( track >= 0 && track < ntracks )
   {
     switch( cc )
     {
@@ -595,7 +595,7 @@ void GenericMIDI::reset()
   /*
   unsigned char data[3];
   // setup "volume" style rotary display
-  for(int i = 0; i < NTRACKS; i++)
+  for(int i = 0; i < ntracks; i++)
   {
     data[0] = 176 + i;
     data[1] = 0x19;
@@ -613,21 +613,18 @@ void GenericMIDI::launchScene( int scene )
     
     if ( b->action == GRID_LAUNCH_SCENE )
     {
-      for( int i = 0; i < 5; i++ )
-      {
-        if ( i != scene )
-        {
-          unsigned char data[3];
-          data[0] = b->status;
-          data[1] = b->data + i;
-          data[2] = 0;
-          writeMidi( data );
-        }
-      }
       unsigned char data[3];
       data[0] = b->status;
-      data[1] = b->data + scene;
-      data[2] = 127;
+      data[1] = b->data;
+      
+      if ( b->scene == scene) 
+      {
+        data[2] = 127;
+      }
+      else 
+      {
+        data[2] = 0;
+      }
       //LUPPP_NOTE("this = %i GenericMIDI::launchScene()", this );
       writeMidi( data );
       
