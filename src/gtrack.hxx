@@ -70,6 +70,8 @@ class GTrack : public Fl_Group
     void setKeyActive(bool a);
     void setRecordActive(bool a);
     
+    void setJackSend(float s);
+    void setJackSendActivate(bool a);
   
     int ID;
     
@@ -78,12 +80,18 @@ class GTrack : public Fl_Group
     Avtk::RadialStatus radial;
     
     Avtk::ClipSelector clipSel;
-    
+
     Avtk::Box    volBox;
     
     Avtk::Volume volume;
     
-  private:
+    float getJackSend();
+    bool getJackSendActivate();
+private:
+    Avtk::Box         jackSendBox;
+    Avtk::Dial        jackSendDial;
+    Avtk::LightButton jackSendActivate;
+
     Avtk::Dial        sendDial;
     Avtk::LightButton sendActive;
     

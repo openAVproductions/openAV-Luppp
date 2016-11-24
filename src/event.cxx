@@ -28,6 +28,8 @@ const char* EventMasterInputToActive::prettyName = "master:input_to_active";
 const char* EventTrackVol::prettyName = "track:volume";
 const char* EventTrackSend::prettyName = "track:send";
 const char* EventTrackSendActive::prettyName = "track:send_active";
+const char* EventTrackJackSend::prettyName = "track:jack_send";
+const char* EventTrackJackSendActivate::prettyName = "track:jack_send_activate";
 const char* EventTrackRecordArm::prettyName = "track:record_arm";
 
 const char* EventTimeBPM::prettyName = "tempo_bpm";
@@ -67,6 +69,8 @@ const char* Event::getPrettyName( int type )
     case TRACK_VOLUME:{ return EventTrackVol::prettyName; }
     case TRACK_SEND:{ return EventTrackSend::prettyName; }
     case TRACK_SEND_ACTIVE:{ return EventTrackSendActive::prettyName; }
+    case TRACK_JACKSEND:{ return EventTrackJackSend::prettyName; }
+    case TRACK_JACKSEND_ACTIVATE:{ return EventTrackJackSendActivate::prettyName; }
     case TRACK_RECORD_ARM:{ return EventTrackRecordArm::prettyName; }
     
     case TIME_BPM:{ return EventTimeBPM::prettyName; }

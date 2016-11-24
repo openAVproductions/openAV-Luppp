@@ -301,6 +301,24 @@ void handleDspEvents()
             jack->bindingSend   = ev.send;
             jack->bindingActive = ev.active;
           } break; }
+
+      case Event::TRACK_JACKSEND_ACTIVATE: {
+          if ( availableRead >= sizeof(EventTrackJackSendActivate) ) {
+            EventTrackJackSendActivate ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackJackSendActivate) );
+            jack->getLogic()->trackJackSendActivate(ev.track,ev.active);
+            jack->bindingTrack  = ev.track;
+
+            jack->bindingActive = ev.active;
+          } break; }
+
+      case Event::TRACK_JACKSEND: {
+          if ( availableRead >= sizeof(EventTrackJackSend) ) {
+            EventTrackJackSend ev;
+            jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackJackSend) );
+            jack->getLogic()->trackJackSend(ev.track,ev.value);
+            jack->bindingTrack  = ev.track;
+          } break; }
         
         case Event::TRACK_SEND: {
           if ( availableRead >= sizeof(EventTrackSend) ) {

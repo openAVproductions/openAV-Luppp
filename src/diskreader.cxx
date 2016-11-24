@@ -101,8 +101,32 @@ int DiskReader::loadPreferences()
     {
       LUPPP_NOTE("No default controllers active.");
     }
-    
-    
+
+    //Enable per track send and resturn jack ports?
+    cJSON* jackPerTrackOutput=cJSON_GetObjectItem(preferencesJson,"enablePerTrackOutput");
+    if(jackPerTrackOutput)
+    {
+        gui->enablePerTrackOutput=jackPerTrackOutput->valueint;
+        if(gui->enablePerTrackOutput)
+            LUPPP_NOTE("Enabling per track output ports");
+    }
+
+    //Metronome on by default?
+    cJSON* metronomeActive=cJSON_GetObjectItem(preferencesJson,"metronomeActiveByDefault");
+    if(metronomeActive)
+    {
+        EventMetronomeActive e = EventMetronomeActive( metronomeActive->valueint);
+        writeToDspRingbuffer( &e );
+    }
+
+    //Metronome default volume
+    cJSON* metronomeVol=cJSON_GetObjectItem(preferencesJson,"metronomeDefaultVolume");
+    if(metronomeVol)
+    {
+        float vol=metronomeVol->valueint/100.0f;
+        EventMetronomeVolume e(vol);
+        writeToDspRingbuffer(&e);
+    }
     
     
     cJSON_Delete( preferencesJson );
@@ -630,6 +654,19 @@ int DiskReader::readTracks()
             writeToDspRingbuffer( &e1 );
             writeToDspRingbuffer( &e2 );
             writeToDspRingbuffer( &e3 );
+          }
+
+          cJSON* jacksend       = cJSON_GetObjectItem( track, "jacksendAmount");
+          cJSON* jacksendActive = cJSON_GetObjectItem( track, "jacksendActive");
+          if(jacksend)
+          {
+              EventTrackJackSend ev(t,jacksend->valuedouble);
+              writeToDspRingbuffer(&ev);
+          }
+          if(jacksendActive)
+          {
+              EventTrackJackSendActivate ev(t,jacksendActive->valueint);
+              writeToDspRingbuffer(&ev);
           }
         }
       }// if track
