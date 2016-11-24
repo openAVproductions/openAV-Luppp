@@ -613,28 +613,29 @@ void GenericMIDI::launchScene( int scene )
     
     if ( b->action == GRID_LAUNCH_SCENE )
     {
-      for( int i = 0; i < 5; i++ )
-      {
-        if ( i != scene )
-        {
-          unsigned char data[3];
-          data[0] = b->status;
-          data[1] = b->data + i;
-          data[2] = 0;
-          writeMidi( data );
-        }
-      }
       unsigned char data[3];
       data[0] = b->status;
-      data[1] = b->data + scene;
-      data[2] = 127;
+      data[1] = b->data;
+      
+      if ( b->scene == scene) 
+      {
+        if ( b->color ) 
+        {
+          data[2] = b->color;
+        } else 
+        {
+          data[2] = 127;
+        }
+      }
+      else 
+      {
+        data[2] = 0;
+      }
       //LUPPP_NOTE("this = %i GenericMIDI::launchScene()", this );
       writeMidi( data );
-      
-      return;
     }
   }
-  
+  return;  
 }
 
 
@@ -840,6 +841,13 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
   
   tmp->status = statusJson->valueint;
   tmp->data   = dataJson->valueint;
+
+  cJSON* colorJson = cJSON_GetObjectItem( binding, "color" );
+
+  if( colorJson )
+  {
+    tmp->color  = colorJson->valueint;
+  }
   
   // gets the Action type from the JSON string
   cJSON* activeJson = cJSON_GetObjectItem( binding, "active" );
