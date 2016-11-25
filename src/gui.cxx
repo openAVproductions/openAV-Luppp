@@ -252,6 +252,40 @@ void Gui::selectLoadController(Fl_Widget* w, void*)
   
 }
 
+void Gui::selectSaveSample( int track, int scene )
+{
+  EventStateSaveBuffer e;
+  e.track = track,
+  e.scene = scene,
+  writeToDspRingbuffer( &e );
+}
+
+char *
+Gui::selectSavePath()
+{
+  string path;
+  Fl_Native_File_Chooser fnfc;
+  fnfc.title("Save filename?");
+  fnfc.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
+  
+  std::string defLoadPath = gui->getDiskReader()->getLastLoadedSamplePath();
+  fnfc.directory( defLoadPath.c_str() ); // default directory to use
+  
+  // Show native chooser
+  switch ( fnfc.show() ) {
+     case -1: /*printf("ERROR: %s\n", fnfc.errmsg()); */ break;  // ERROR
+     case  1: /*(printf("CANCEL\n");                  */ break;  // CANCEL
+     default: /*printf("Loading directory: %s\n", fnfc.filename()); */
+        path = fnfc.filename();
+        break;
+  }
+  
+  if ( strcmp( path.c_str(), "" ) == 0 )
+    return 0;
+
+  return strdup(path.c_str());
+}
+
 void Gui::selectLoadSample( int track, int scene )
 {
   // FIXME: refactor
@@ -409,26 +443,14 @@ Gui::Gui(const char* argZero) :
   // create a new "Group" with all Luppp GUI contents, for resizing
   lupppGroup = new Fl_Group( 0, 0, 1110, 650, "Luppp");
   {
-    // everything in here will have resize() called when main window is resized
-    
-    /*
-    Fl_Bitmap* headImg = new Fl_Bitmap( (unsigned char*)header.pixel_data, 1110, 36 );
-    
-    Fl_Box* pic_box = new Fl_Box(0,0,1110,36);
-    pic_box->image( headImg );
-    pic_box->redraw();
-    */
-    
     int i = 0;
     for (; i < NTRACKS; i++ )
     {
       stringstream s;
       s << "Track " << i+1;
-      //printf("track name %s\n", s.str().c_str() );
       tracks.push_back( new GTrack(8 + i * 118, 40, 110, 650, s.str().c_str() ) );
     }
-    
-    master = new GMasterTrack(8 + i * 118, 40, 150, 600, "Master");
+    master = new GMasterTrack(8 + i * 118, 40, 150, 650, "Master");
   }
   lupppGroup->end();
   

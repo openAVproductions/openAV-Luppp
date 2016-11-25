@@ -4,12 +4,12 @@
 #include <assert.h>
 extern Jack* jack;
 JackSendReturn::JackSendReturn(int trackid, AudioProcessor *prev, jack_client_t *client)
-    :m_trackid(trackid), m_previousProcessor(prev)
+    :m_trackid(trackid), m_previousProcessor(prev), m_sendvol(1.0f)
 {
     char name[50];
-    sprintf(name, "Send_track_%d\0",trackid);
+    sprintf(name, "Send_track_%d\n",trackid);
     m_sendport=jack_port_register(client,name,JACK_DEFAULT_AUDIO_TYPE,JackPortIsOutput,0);
-    sprintf(name, "Return_track_%d\0",trackid);
+    sprintf(name, "Return_track_%d\n",trackid);
     m_returnport=jack_port_register(client,name,JACK_DEFAULT_AUDIO_TYPE,JackPortIsInput,0);
     m_active=false;
     m_counter=0;

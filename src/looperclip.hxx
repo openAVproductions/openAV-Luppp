@@ -82,6 +82,8 @@ class LooperClip : public Stately
     //Return the nr of samples holding actual audio. This is less then getBufferLength();
     long  getActualAudioLength();
     size_t audioBufferSize();
+
+    AudioBuffer* getAudioBuffer() {return _buffer;}
     
     /// set clip state
     void  queuePlay(bool=true);
