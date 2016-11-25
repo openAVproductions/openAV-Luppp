@@ -114,6 +114,7 @@ class Jack
 
     JackSendReturn *getJackSendReturn(int t);
 private:
+    int                 lastnframes;
     jack_client_t* client;
     
     Buffers             buffers;
