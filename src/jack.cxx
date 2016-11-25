@@ -84,7 +84,7 @@ Jack::Jack( std::string name ) :
   clientActive(false)
 {
   jack = this;
-  
+  lastnframes=0;
   samplerate = jack_get_sample_rate( client );
   
   LUPPP_NOTE("Samplerate %i", samplerate );
@@ -494,7 +494,7 @@ void Jack::processFrames(int nframes)
   metronome->process( nframes, &buffers );
   
   /// mix input, reverb & post-sidechain in
-  for(unsigned int i = 0; i < buffers.nframes; i++)
+  for(unsigned int i = 0; i < nframes; i++)
   {
     float input= buffers.audio[Buffers::MASTER_INPUT][i] * inputVol;
     
@@ -574,8 +574,9 @@ void Jack::processFrames(int nframes)
   // JACK in multiple parts internally in Luppp: used for processing bar() / beat()
   // if a full JACK nframes has been processed, this is extra work: its not that expensive
   /// update buffers by nframes
-  if(nframes<buffers.nframes)
+  if(lastnframes+nframes<buffers.nframes)
   {
+      lastnframes=nframes;
       buffers.audio[Buffers::MASTER_INPUT]        = &buffers.audio[Buffers::MASTER_INPUT]   [nframes];
       buffers.audio[Buffers::MASTER_RETURN_L]     = &buffers.audio[Buffers::MASTER_RETURN_L][nframes];
       buffers.audio[Buffers::MASTER_RETURN_R]     = &buffers.audio[Buffers::MASTER_RETURN_R][nframes];
@@ -594,6 +595,8 @@ void Jack::processFrames(int nframes)
           }
       }
   }
+  else
+      lastnframes=0;
   
   return;
 }
