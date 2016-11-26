@@ -218,7 +218,7 @@ Jack::Jack( std::string name ) :
     if(gui->enablePerTrackOutput)
     {
         char name[50];
-        sprintf(name,"track_%d\0",i);
+        sprintf(name,"track_%d\n",i);
         trackJackOutputPorts[i]=jack_port_register( client,
                                                     name,
                                                     JACK_DEFAULT_AUDIO_TYPE,
