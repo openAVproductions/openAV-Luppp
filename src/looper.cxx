@@ -72,7 +72,7 @@ LooperClip* Looper::getClip(int scene)
 }
 
 void Looper::beat()
-{
+{//TODO needed?
     //FIXME: Need to keep looperClips in sync when there exists no int N
     // such that playSpeed*N==1
 //    for(int i=0;i<NSCENES;i++)

@@ -218,7 +218,7 @@ Jack::Jack( std::string name ) :
     if(gui->enablePerTrackOutput)
     {
         char name[50];
-        sprintf(name,"track_%d\0",i);
+        sprintf(name,"track_%d\n",i);
         trackJackOutputPorts[i]=jack_port_register( client,
                                                     name,
                                                     JACK_DEFAULT_AUDIO_TYPE,
@@ -528,10 +528,8 @@ void Jack::processFrames(int nframes)
     if(fabs(masterVol-masterVolLag)>=fabs(masterVolDiff/10.0))
         masterVolLag+=masterVolDiff/10.0;
     /// mixdown returns into master buffers
-    // FIXME: Returns broken, due to metronome glitch in master output: buffer
-    // writing issue or such. See #95 on github
-    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = L * masterVolLag;// (L + returnL*returnVol) * masterVol;
-    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = R * masterVolLag;// (R + returnR*returnVol) * masterVol;
+    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = (L + returnL*returnVol) * masterVolLag;
+    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = (R + returnR*returnVol) * masterVolLag;
     
     /// write SEND content to JACK port
     buffers.audio[Buffers::JACK_SEND_OUT][i] = buffers.audio[Buffers::SEND][i];
