@@ -102,6 +102,17 @@ int DiskReader::loadPreferences()
       LUPPP_NOTE("No default controllers active.");
     }
 
+
+    cJSON* projDir=cJSON_GetObjectItem(preferencesJson,"saveDirectory");
+    string dir=getenv("HOME");
+    if(projDir)
+    {
+        stringstream s;
+        s<<dir<<"/"<<projDir->valuestring;
+        dir=s.str();
+    }
+    gui->setProjectsDir(dir);
+
     //Enable per track send and resturn jack ports?
     cJSON* jackPerTrackOutput=cJSON_GetObjectItem(preferencesJson,"enablePerTrackOutput");
     if(jackPerTrackOutput)

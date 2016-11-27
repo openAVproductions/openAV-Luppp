@@ -126,7 +126,7 @@ void DiskWriter::initialize(std::string path, std::string name )
   if ( sessionDirError )
   {
     // handle by using different filename?
-    LUPPP_WARN("Error creating session directory");
+    LUPPP_WARN("Error creating session directory. Does the path: %s exist?",path.c_str());
   }
   
   stringstream audioDirStream;

@@ -96,7 +96,11 @@ class Gui
     /// current special clip:
     int specialTrack;
     int specialScene;
-
+    
+    /// The project directory is the default directoy which is shown upon load/save
+    void setProjectsDir(string dir);
+    string getProjectsDir();
+    
     // save a particular sample to path
     std::string saveBufferPath;
   
@@ -108,6 +112,8 @@ class Gui
     Fl_Group* lupppGroup;
     
     OptionsWindow*    optionWindow;
+    
+    std::string         lupppProjectsDir;
     
     AudioEditor*        audioEditor;
     
