@@ -33,7 +33,7 @@
 #include "trackoutput.hxx"
 #include "timemanager.hxx"
 #include "controllerupdater.hxx"
-
+#include "jacksendreturn.hxx"
 #include "dsp/dsp_reverb.hxx"
 #include "dsp/dsp_dbmeter.hxx"
 
@@ -84,7 +84,7 @@ Jack::Jack( std::string name ) :
   clientActive(false)
 {
   jack = this;
-  
+  lastnframes=0;
   samplerate = jack_get_sample_rate( client );
   
   LUPPP_NOTE("Samplerate %i", samplerate );
@@ -198,14 +198,34 @@ Jack::Jack( std::string name ) :
   {
     /** Setup the tracks:
      *  The TrackOutput gets a pointer to the next AudioProcessor to call:
-     *  In this case, the track's Looper instance.
+     * This is either a JackSendReturn (providing send and return ports)
+     *  or the track's Looper instance.
+     * This is an option in luppp.prfs
     **/
     loopers.push_back( new Looper(i) );
-    trackOutputs.push_back( new TrackOutput(i, loopers.back() ) );
-    
+
+    tracksendreturns.push_back(new JackSendReturn(i,loopers.back(),client));
+    trackOutputs.push_back( new TrackOutput(i, tracksendreturns.back() ) );
+
+
     buffers.audio[Buffers::TRACK_0 + i] = new float[ buffers.nframes ];
+    buffers.audio[Buffers::SEND_TRACK_0+i]=new float[buffers.nframes];
+    buffers.audio[Buffers::RETURN_TRACK_0+i]=new float[buffers.nframes];
+
+
     
     timeManager->registerObserver( loopers.back() );
+    if(gui->enablePerTrackOutput)
+    {
+        char name[50];
+        sprintf(name,"track_%d\n",i);
+        trackJackOutputPorts[i]=jack_port_register( client,
+                                                    name,
+                                                    JACK_DEFAULT_AUDIO_TYPE,
+                                                    JackPortIsOutput,
+                                                    0 );
+
+    }
   }
   
   /// setup DSP instances
@@ -261,9 +281,19 @@ Jack::~Jack()
   delete logic;
   delete gridLogic;
   delete controllerUpdater;
+  delete trackJackOutputPorts;
   
   delete inputMeter;
   delete masterMeter;
+    for(int i = 0; i < ntracks; i++)
+    {
+        delete [] buffers.audio[Buffers::TRACK_0+i];
+        delete [] buffers.audio[Buffers::SEND_TRACK_0+i];
+        delete [] buffers.audio[Buffers::RETURN_TRACK_0+i];
+        delete tracksendreturns[i];
+        delete loopers[i];
+        delete trackOutputs[i];
+    }
 }
 
 void Jack::activate()
@@ -297,6 +327,20 @@ TrackOutput* Jack::getTrackOutput(int t)
   }
 #endif
   
+  return 0;
+}
+
+JackSendReturn* Jack::getJackSendReturn(int t)
+{
+  if ( t >= 0 && t < ntracks)
+    return tracksendreturns.at(t);
+#ifdef DEBUG_TRACKS
+  else
+  {
+    printf( "Jack::getTrackOutput() returning 0x0: invalid track requested!\n" );
+  }
+#endif
+
   return 0;
 }
 
@@ -353,6 +397,13 @@ int Jack::process (jack_nframes_t nframes)
   buffers.audio[Buffers::JACK_MASTER_OUT_R]   = (float*)jack_port_get_buffer( masterOutputR  , nframes );
   buffers.audio[Buffers::JACK_SIDECHAIN_KEY]   = (float*)jack_port_get_buffer(sidechainKeyOutput,nframes);
   buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL]=(float*)jack_port_get_buffer(sidechainSignalOutput,nframes);
+  if(gui->enablePerTrackOutput)
+  {
+      for(int t=0;t<ntracks;t++)
+          buffers.audio[Buffers::JACK_TRACK_0+t]       = (float*)jack_port_get_buffer( trackJackOutputPorts[t]     , nframes );
+
+  }
+
   
   // clear the buffers
   memset( buffers.audio[Buffers::JACK_MASTER_OUT_L] , 0, sizeof(float) * nframes );
@@ -363,6 +414,12 @@ int Jack::process (jack_nframes_t nframes)
   memset( buffers.audio[Buffers::SEND]              , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::SIDECHAIN_KEY]     , 0, sizeof(float) * nframes );
   memset( buffers.audio[Buffers::SIDECHAIN_SIGNAL]  , 0, sizeof(float) * nframes );
+  if(gui->enablePerTrackOutput)
+  {
+      for(int t=0;t<ntracks;t++)
+          memset( buffers.audio[Buffers::JACK_TRACK_0+t]  , 0, sizeof(float) * nframes );
+
+  }
   
   
   //buffers.midi [Buffers::MASTER_MIDI_INPUT]   = (void*) jack_port_get_buffer( masterMidiInput, nframes );
@@ -438,7 +495,7 @@ void Jack::processFrames(int nframes)
   metronome->process( nframes, &buffers );
   
   /// mix input, reverb & post-sidechain in
-  for(unsigned int i = 0; i < buffers.nframes; i++)
+  for(unsigned int i = 0; i < nframes; i++)
   {
     float input= buffers.audio[Buffers::MASTER_INPUT][i] * inputVol;
     
@@ -472,10 +529,8 @@ void Jack::processFrames(int nframes)
     if(fabs(masterVol-masterVolLag)>=fabs(masterVolDiff/10.0))
         masterVolLag+=masterVolDiff/10.0;
     /// mixdown returns into master buffers
-    // FIXME: Returns broken, due to metronome glitch in master output: buffer
-    // writing issue or such. See #95 on github
-    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = L * masterVolLag;// (L + returnL*returnVol) * masterVol;
-    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = R * masterVolLag;// (R + returnR*returnVol) * masterVol;
+    buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = (L + returnL*returnVol) * masterVolLag;
+    buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = (R + returnR*returnVol) * masterVolLag;
     
     /// write SEND content to JACK port
     buffers.audio[Buffers::JACK_SEND_OUT][i] = buffers.audio[Buffers::SEND][i];
@@ -518,8 +573,9 @@ void Jack::processFrames(int nframes)
   // JACK in multiple parts internally in Luppp: used for processing bar() / beat()
   // if a full JACK nframes has been processed, this is extra work: its not that expensive
   /// update buffers by nframes
-  if(nframes<buffers.nframes)
+  if(lastnframes+nframes<buffers.nframes)
   {
+      lastnframes=nframes;
       buffers.audio[Buffers::MASTER_INPUT]        = &buffers.audio[Buffers::MASTER_INPUT]   [nframes];
       buffers.audio[Buffers::MASTER_RETURN_L]     = &buffers.audio[Buffers::MASTER_RETURN_L][nframes];
       buffers.audio[Buffers::MASTER_RETURN_R]     = &buffers.audio[Buffers::MASTER_RETURN_R][nframes];
@@ -530,7 +586,16 @@ void Jack::processFrames(int nframes)
       buffers.audio[Buffers::JACK_MASTER_OUT_R]   = &buffers.audio[Buffers::JACK_MASTER_OUT_R][nframes];
       buffers.audio[Buffers::JACK_SIDECHAIN_KEY]  = &buffers.audio[Buffers::JACK_SIDECHAIN_KEY][nframes];
       buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL]=&buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL][nframes];
+      if(gui->enablePerTrackOutput)
+      {
+          for(int t=0;t<ntracks;t++)
+          {
+              buffers.audio[Buffers::JACK_TRACK_0+t]       = &buffers.audio[Buffers::JACK_TRACK_0+t][nframes];
+          }
+      }
   }
+  else
+      lastnframes=0;
   
   return;
 }
@@ -542,8 +607,14 @@ void Jack::clearInternalBuffers(int nframes)
     memset(buffers.audio[Buffers::SIDECHAIN_SIGNAL],0,sizeof(float)*nframes);
     memset(buffers.audio[Buffers::MASTER_OUT_L],0,sizeof(float)*nframes);
     memset(buffers.audio[Buffers::MASTER_OUT_R],0,sizeof(float)*nframes);
+
     for(int i=0;i<ntracks;i++)
+    {
         memset(buffers.audio[Buffers::TRACK_0 + i],0,sizeof(float)*nframes);
+        memset(buffers.audio[Buffers::SEND_TRACK_0 + i],0,sizeof(float)*nframes);
+
+        memset(buffers.audio[Buffers::RETURN_TRACK_0 + i],0,sizeof(float)*nframes);
+    }
 }
 
 void Jack::masterVolume(float vol)

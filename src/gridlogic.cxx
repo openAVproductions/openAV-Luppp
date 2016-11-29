@@ -215,25 +215,7 @@ void GridLogic::pressed( int track, int scene )
       {
         //LUPPP_NOTE("netralizing & qStop on scene %i due to press on %i", i, scene );
         LooperClip* ilc = jack->getLooper( track )->getClip( i );
-        /*
-        if ( ilc->getState() == GridLogic::STATE_EMPTY ||
-             ilc->getState() == GridLogic::STATE_STOPPED )
-        {
-          // pass
-        }
-        else if ( ilc->somethingQueued() )
-        {
-          LUPPP_NOTE("netralizing & qStop on scene %i due to press on %i", i, scene );
-          ilc->neutralize();
-          jack->getControllerUpdater()->setSceneState(track, i, ilc->getState() );
-        }
-        else // catch all others, netralize & stop
-        {
-          ilc->neutralize();
-          ilc->queueStop();
-          jack->getControllerUpdater()->setSceneState(track, i, ilc->getState() );
-        }
-        */
+        
         ilc->neutralize();
         ilc->queueStop();
         jack->getControllerUpdater()->setSceneState(track, i, ilc->getState() );

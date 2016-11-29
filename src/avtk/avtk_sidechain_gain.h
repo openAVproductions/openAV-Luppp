@@ -165,55 +165,6 @@ class SidechainGain : public Fl_Slider
         cairo_line_to( cr, x + w, y + h * 0.25 + h/2 * _release );
         cairo_set_source_rgba( cr, 1.0, 0.0, 0.f , 1 );
         cairo_stroke( cr );
-        /*
-        float makeupGainPx = makeupGain * h * 0.5;
-        
-        float xDist = 0.1 * w;
-        float yDist = 0.1 * h;
-        
-        float xThresh = x + (w * 0.25) + (w*0.5) * threshVal;
-        float yThresh = y + (h * 0.25) + (h*0.5)*(1-threshVal);
-        
-        float startx = xThresh - xDist;
-        float starty = yThresh + yDist;
-        
-        float cp1x = xThresh;
-        float cp1y = yThresh - makeupGainPx;
-        
-        float cp2x = xThresh;
-        float cp2y = yThresh - makeupGainPx;
-        
-        float endx = xThresh + (xDist*1.2);
-        float endy = yThresh - (yDist*1.2)*(1-ratioVal) - makeupGainPx;
-        
-        // normal line (greyed)
-        cairo_move_to( cr, x , y + h );
-        cairo_line_to( cr, x + w, y );
-        cairo_set_source_rgba( cr,  66 / 255.f,  66 / 255.f ,  66 / 255.f , 0.5 );
-        cairo_set_line_width(cr, 1.4);
-        cairo_stroke( cr );
-        
-        cairo_move_to( cr, x , y + h - makeupGainPx );
-        cairo_line_to( cr, startx, starty - makeupGainPx );
-        
-        // draw curve
-        cairo_curve_to( cr, cp1x, cp1y, cp2x, cp2y, endx, endy );
-        
-        cairo_line_to( cr, x + w, y + (h/4)*ratioVal + (h)*(1-threshVal)*(0.5*ratioVal) - makeupGainPx );
-        
-        cairo_line_to( cr, x + w, y + h );
-        cairo_line_to( cr, x , y + h );
-        cairo_close_path(cr);
-        
-        cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 0.21 );
-        cairo_fill_preserve(cr);
-        
-        cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 1 );
-        cairo_set_line_width(cr, 1.5);
-        cairo_set_line_join( cr, CAIRO_LINE_JOIN_ROUND);
-        cairo_set_line_cap ( cr, CAIRO_LINE_CAP_ROUND);
-        cairo_stroke( cr );
-        */
         
         // stroke outline
         cairo_rectangle(cr, x, y, w, h);
@@ -251,77 +202,7 @@ class SidechainGain : public Fl_Slider
     }
     
     int handle(int event)
-    {
-      /*
-      switch(event)
-      {
-        case FL_PUSH:
-          highlight = 0;
-          mouseRightClicked = false;
-          if ( Fl::event_button() == FL_RIGHT_MOUSE )
-          {
-            active = !active;
-            redraw();
-            mouseRightClicked = true;
-            do_callback();
-          }
-          return 1;
-        case FL_DRAG:
-          {
-            if ( Fl::event_state(FL_BUTTON1) )
-            {
-              if ( mouseClicked == false ) // catch the "click" event
-              {
-                mouseClickedX = Fl::event_x();
-                mouseClickedY = Fl::event_y();
-                mouseClicked = true;
-              }
-              
-              float deltaX = mouseClickedX - Fl::event_x();
-              float deltaY = mouseClickedY - Fl::event_y();
-              
-              float valX = value();
-              valX -= deltaX / 100.f;
-              float valY = makeupGain;
-              valY += deltaY / 100.f;
-              
-              if ( valX > 1.0 ) valX = 1.0;
-              if ( valX < 0.0 ) valX = 0.0;
-              
-              if ( valY > 1.0 ) valY = 1.0;
-              if ( valY < 0.0 ) valY = 0.0;
-              
-              //handle_drag( value + deltaY );
-              set_value( valX );
-              makeupGain = valY;
-              
-              mouseClickedX = Fl::event_x();
-              mouseClickedY = Fl::event_y();
-              redraw();
-              do_callback();
-            }
-          }
-          return 1;
-        case FL_RELEASE:
-          mouseRightClicked = false;
-          if (highlight) {
-            highlight = 0;
-            redraw();
-            do_callback();
-          }
-          mouseClicked = false;
-          return 1;
-        case FL_SHORTCUT:
-          if ( test_shortcut() )
-          {
-            do_callback();
-            return 1;
-          }
-          return 0;
-        default:
-          return Fl_Widget::handle(event);
-      }
-      */
+    { //TODO needed?
       
       return 0;
     }

@@ -56,7 +56,9 @@ class Logic
     void trackRecordArm(int track, bool armed);
     void trackSendActive(int track, int send, bool active);
     void trackSend(int track, int send, float value);
-    
+
+    void trackJackSendActivate(int t, bool active);
+    void trackJackSend(int t, float vol);
     void looperUseAsTempo(int track, int scene);
     void looperClipLenght(int track, int scene, int lenght);
 };

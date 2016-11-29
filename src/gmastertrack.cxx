@@ -194,6 +194,7 @@ static void gmastertrack_button_callback(Fl_Widget *w, void *data)
   }
 }
 
+#define OFST 33
 GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   Fl_Group(x, y, w, h),
   title( strdup(l) ),
@@ -203,14 +204,14 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   clipSel(x + 5, y + 26 + 102, 140, 294,"", true),
   
   source(x+5, y+26, 140, 100, ""),
-  volBox(x+5, y+422, 140, 172, ""),
+  volBox(x+5, y+422, 140, 232, ""),
   
-  transport      ( x + w * 2/4.f - 18, y + 426 + 26 * 0, 44,24, "Stop" ),
-  tapTempo       ( x + w * 2/4.f - 18, y + 426 + 26 * 1, 44,24, "Tap" ),
-  metronomeButton( x + w * 2/4.f - 18, y + 426 + 26 * 2, 44,24,"Metro"),
+  transport      ( x + w * 2/4.f - 18, y + 436 + OFST * 0, 44,28, "Stop" ),
+  tapTempo       ( x + w * 2/4.f - 18, y + 436 + OFST * 1, 44,28, "Tap" ),
+  metronomeButton( x + w * 2/4.f - 18, y + 436 + OFST * 2, 44,28,"Metro"),
   
-  tempoDial      ( x + w * 2/4.f - 18, y + 426 + 41 * 2, 45, 36,"BPM"),
-  returnVol      ( x + w * 2/4.f - 18, y + 426 + 41 * 3, 45, 36,"Return"),
+  tempoDial      ( x + w * 2/4.f - 18, y + 436 + OFST * 3.5, 45, 38,"BPM"),
+  returnVol      ( x + w * 2/4.f - 18, y + 436 + OFST * 5, 45, 38,"Return"),
   
   inputVolume(x + 9,y + 26 + 4, w - 18, 30,""),
   
@@ -223,7 +224,7 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   inputToMix   (x + w*0.8-20,y + 28 + 68, 40, 26,"Mix"),
   inputToMixVol(x + w*0.8-15,y + 28 + 36, 30, 30,""),
   
-  volume(x+106, y +425, 36, 166, "")
+  volume(x+106, y +425, 36, 216, "")
 {
   ID = privateID++;
   
@@ -254,8 +255,6 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   inputToMix.callback   ( gmastertrack_mixButton_callback, 0 );
   inputToMixVol.callback   ( gmastertrack_mixVol_callback, 0 );
   
-  
-  
   tempoDial.align( FL_ALIGN_CENTER );
   
   returnVol.value( 1.f );
@@ -264,7 +263,7 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
   
   for(int i = 0; i < 4; i++)
   {
-    beatLights[i]   = new Avtk::LightButton( x + 11, y + 427 + 41 * i, 38, 38, "" );
+    beatLights[i]   = new Avtk::LightButton( x + 10, y + 437 + 54 * i, 40, 42, "" );
   }
   beatLights[0]->setColor( 1.0, 0.0 , 0.0 );
   beatLights[1]->setColor( 1.0, 0.48, 0.0 );

@@ -62,6 +62,33 @@ class Buffers
       TRACK_5,
       TRACK_6,
       TRACK_7,
+      //Per track sends/returns
+      SEND_TRACK_0,
+      SEND_TRACK_1,
+      SEND_TRACK_2,
+      SEND_TRACK_3,
+      SEND_TRACK_4,
+      SEND_TRACK_5,
+      SEND_TRACK_6,
+      SEND_TRACK_7,
+      RETURN_TRACK_0,
+      RETURN_TRACK_1,
+      RETURN_TRACK_2,
+      RETURN_TRACK_3,
+      RETURN_TRACK_4,
+      RETURN_TRACK_5,
+      RETURN_TRACK_6,
+      RETURN_TRACK_7,
+
+      JACK_TRACK_0,
+      JACK_TRACK_1,
+      JACK_TRACK_2,
+      JACK_TRACK_3,
+      JACK_TRACK_4,
+      JACK_TRACK_5,
+      JACK_TRACK_6,
+      JACK_TRACK_7,
+
       
       BUFFER_COUNT,
     };

@@ -40,7 +40,7 @@ class Metronome;
 class GridLogic;
 class TimeManager;
 class ControllerUpdater;
-
+class JackSendReturn;
 class TrackOutput;
 
 // INPUT_TO
@@ -111,8 +111,10 @@ class Jack
     int bindingScene;
     int bindingSend;
     int bindingActive;
-  
-  private:
+
+    JackSendReturn *getJackSendReturn(int t);
+private:
+    int                 lastnframes;
     jack_client_t* client;
     
     Buffers             buffers;
@@ -124,6 +126,7 @@ class Jack
     ControllerUpdater*  controllerUpdater;
     
     vector<Looper*>         loopers;
+    vector<JackSendReturn*> tracksendreturns;
     vector<TrackOutput*>    trackOutputs;
     
     vector<MidiIO*>   midiIO;
@@ -155,6 +158,7 @@ class Jack
     jack_port_t*  masterInput;
     jack_port_t*  masterOutputL;
     jack_port_t*  masterOutputR;
+
     jack_port_t*  masterReturnL;
     jack_port_t*  masterReturnR;
     jack_port_t*  headphonesPort;
@@ -164,6 +168,8 @@ class Jack
     jack_port_t*  sendOutput;
     
     jack_port_t*  masterMidiInput;
+
+    jack_port_t** trackJackOutputPorts = new jack_port_t*[ntracks];
     
     // JACK callback
     int  process (jack_nframes_t);

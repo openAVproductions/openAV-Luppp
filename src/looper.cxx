@@ -72,7 +72,7 @@ LooperClip* Looper::getClip(int scene)
 }
 
 void Looper::beat()
-{
+{//TODO needed?
     //FIXME: Need to keep looperClips in sync when there exists no int N
     // such that playSpeed*N==1
 //    for(int i=0;i<nscenes;i++)
@@ -136,7 +136,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
         playSpeed = float(actualFrames) / targetFrames;
       }
       
-      float* out = buffers->audio[Buffers::TRACK_0 + track];
+      float* out = buffers->audio[Buffers::SEND_TRACK_0 + track];
       
       for(unsigned int i = 0; i < nframes; i++ )
       {

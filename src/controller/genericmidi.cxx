@@ -209,6 +209,16 @@ void GenericMIDI::trackSendActive(int t, int send, bool a)
   }
 }
 
+void GenericMIDI::trackJackSend(int t, float v)
+{
+
+}
+
+void GenericMIDI::trackJackSendActivate(int t, bool a)
+{
+
+}
+
 /*
 void GenericMIDI::progress(int t, int s, float f)
 {
@@ -591,7 +601,7 @@ void GenericMIDI::setSceneState(int t, int scene, GridLogic::State s)
 
 
 void GenericMIDI::reset()
-{
+{//TODO needed?
   /*
   unsigned char data[3];
   // setup "volume" style rotary display

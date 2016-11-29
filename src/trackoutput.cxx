@@ -108,7 +108,7 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
     if(fabs(_toMaster-_toMasterLag)>=fabs(_toMasterDiff/10.0))
         _toMasterLag+=_toMasterDiff/10.0;
   // get & zero track buffer
-  float* trackBuffer = buffers->audio[Buffers::TRACK_0 + track];
+  float* trackBuffer = buffers->audio[Buffers::RETURN_TRACK_0 + track];
   memset( trackBuffer, 0, sizeof(float)*nframes );
   
   // call process() up the chain
@@ -135,6 +135,9 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
   
   float* masterL       = buffers->audio[Buffers::MASTER_OUT_L];
   float* masterR       = buffers->audio[Buffers::MASTER_OUT_R];
+
+
+  float* jackoutput    = buffers->audio[Buffers::JACK_TRACK_0+track];
   
   for(unsigned int i = 0; i < nframes; i++)
   {
@@ -144,7 +147,8 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
     // post-sidechain *moves* signal between "before/after" ducking, not add!
     masterL[i]       += tmp * _toMasterLag * (1-_toPostSidechain);
     masterR[i]       += tmp * _toMasterLag * (1-_toPostSidechain);
-    
+    if(jackoutput)
+        jackoutput[i]     = tmp * _toMasterLag * (1-_toPostSidechain);
     if ( _toPostfaderActive )
       reverb[i]        += tmp * _toReverb * _toMasterLag;
     

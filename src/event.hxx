@@ -84,6 +84,8 @@ namespace Event
     GRID_SELECT_NEW_CHOSEN, // a different clip is now "special"
     
     /// Track
+    TRACK_JACKSEND,
+    TRACK_JACKSEND_ACTIVATE,
     TRACK_SEND,
     TRACK_SEND_ACTIVE,
     TRACK_SIGNAL_LEVEL,
@@ -471,6 +473,22 @@ class EventTrackSend : public EventBase
     EventTrackSend(int t, SEND_TYPE s, float v): track(t), send(s), value(v){}
 };
 
+class EventTrackJackSend : public EventBase
+{
+  public:
+    int type() { return int(TRACK_JACKSEND); }
+    uint32_t size() { return sizeof(EventTrackJackSend); }
+    static const char* prettyName;
+    const char* name(){ return prettyName; }
+
+    int track;
+
+    float value;
+
+    EventTrackJackSend(){};
+    EventTrackJackSend(int t, float v): track(t), value(v){}
+};
+
 class EventTrackSendActive : public EventBase
 {
   public:
@@ -487,6 +505,20 @@ class EventTrackSendActive : public EventBase
     EventTrackSendActive(int t, SEND_TYPE s, bool a): track(t), send(s), active(a){}
 };
 
+class EventTrackJackSendActivate : public EventBase
+{
+  public:
+    int type() { return int(TRACK_JACKSEND_ACTIVATE); }
+    uint32_t size() { return sizeof(EventTrackJackSendActivate); }
+    static const char* prettyName;
+    const char* name(){ return prettyName; }
+
+    int track;
+    bool active;
+
+    EventTrackJackSendActivate(){};
+    EventTrackJackSendActivate(int t, bool a): track(t), active(a){}
+};
 class EventLooperState : public EventBase
 {
   public:

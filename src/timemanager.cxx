@@ -223,7 +223,8 @@ void TimeManager::process(Buffers* buffers)
     }
     
     // process before beat:
-    jack->processFrames( before );
+    if(before)
+        jack->processFrames( before );
     
     // handle beat:
     // inform observers of new beat FIRST
@@ -246,7 +247,8 @@ void TimeManager::process(Buffers* buffers)
     // process after
     // we need to clear internal buffers in order to write *after* frames to them
     jack->clearInternalBuffers(nframes);
-    jack->processFrames( after );
+    if(after)
+        jack->processFrames( after );
 
     // write new beat to UI (bar info currently not used)
     EventTimeBarBeat e( barCounter, beatCounter );

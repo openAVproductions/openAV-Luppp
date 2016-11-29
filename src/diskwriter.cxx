@@ -126,7 +126,7 @@ void DiskWriter::initialize(std::string path, std::string name )
   if ( sessionDirError )
   {
     // handle by using different filename?
-    LUPPP_WARN("Error creating session directory");
+    LUPPP_WARN("Error creating session directory. Does the path: %s exist?",path.c_str());
   }
   
   stringstream audioDirStream;
@@ -431,6 +431,9 @@ int DiskWriter::writeSession()
     
     cJSON_AddNumberToObject( track, "sendAmount" , gui->getTrack(t)->getSend()       );
     cJSON_AddNumberToObject( track, "sendActive" , gui->getTrack(t)->getSendActive() );
+
+    cJSON_AddNumberToObject( track, "jacksendAmount" , gui->getTrack(t)->getJackSend()       );
+    cJSON_AddNumberToObject( track, "jacksendActive" , gui->getTrack(t)->getJackSendActivate() );
     
     cJSON_AddNumberToObject( track, "xsideAmount", gui->getTrack(t)->getXSide()      );
     cJSON_AddNumberToObject( track, "keyActive"  , gui->getTrack(t)->getKeyActive()  );
@@ -520,7 +523,8 @@ void DiskWriter::writeDefaultConfigToUserHome()
   cJSON* defCtrls = cJSON_CreateArray();
   cJSON_AddItemToObject( prfs, "defaultControllers", defCtrls );
   
-  
+  // per track send and return option
+  cJSON_AddNumberToObject( prfs, "enablePerTrackSendReturns", 0 );
   // test output on console
   // cout << endl << cJSON_Print( prfs ) << endl << endl;
   

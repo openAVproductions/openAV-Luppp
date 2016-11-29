@@ -117,7 +117,19 @@ void ControllerUpdater::setTrackSendActive(int t, int send, bool v)
 void ControllerUpdater::setTrackSend(int t, int send, float v)
 {
   for(unsigned int i = 0; i < c.size(); i++)
-    c.at(i)->trackSend(t, send, v);
+      c.at(i)->trackSend(t, send, v);
+}
+
+void ControllerUpdater::setTrackJackSendActive(int t, bool v)
+{
+    for(unsigned int i = 0; i < c.size(); i++)
+        c.at(i)->trackJackSendActivate(t, v);
+}
+
+void ControllerUpdater::setTrackJackSend(int t, float v)
+{
+    for(unsigned int i = 0; i < c.size(); i++)
+        c.at(i)->trackJackSend(t, v);
 }
 
 void ControllerUpdater::specialScene(int t, int scene)
