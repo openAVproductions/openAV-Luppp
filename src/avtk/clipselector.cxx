@@ -46,7 +46,7 @@ ClipSelector::ClipSelector( int _x, int _y, int _w, int _h,
   
   if ( _master )
   {
-    for(int i = 0; i < 10; i++ )
+    for(int i = 0; i < nscenes; i++ )
     {
       stringstream s;
       s << "Scene " << i + 1;
@@ -123,7 +123,7 @@ void ClipSelector::draw()
     cairo_save( cr );
     
     int clipWidth  = w - 2;
-    int clipHeight = (h / numClips);
+    int clipHeight = (h / nscenes);
     
     // text height adjustment based on clip size
     // small 22, 13
@@ -136,7 +136,7 @@ void ClipSelector::draw()
     int xOff = x+clipHeight/2;
     
     int drawY = y + 1;
-    for( int i = 0; i < numClips; i++) // draw each clip
+    for( int i = 0; i < nscenes; i++) // draw each clip
     {
       int yOff = drawY+ clipHeight/2 -1;
       
@@ -271,10 +271,10 @@ int ClipSelector::handle(int event)
       highlight = 1;
       {
         // calculate the clicked clip number
-        int clipHeight = (h / numClips);
+        int clipHeight = (h / nscenes);
         int clipNum = ( (Fl::event_y() ) - y ) / clipHeight;
-        if (clipNum >= numClips)
-          clipNum = numClips -1; // fix for clicking the lowest pixel
+        if (clipNum >= nscenes)
+          clipNum = nscenes -1; // fix for clicking the lowest pixel
         
         // handle right clicks: popup menu
         if ( Fl::event_state(FL_BUTTON3) )

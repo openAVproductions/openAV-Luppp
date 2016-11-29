@@ -77,9 +77,7 @@ class ClipSelector : public Fl_Button
     
     int ID;
     
-    // FIXME: NSCENES?
-    static const int numClips = 10;
-    ClipState clips[numClips];
+    ClipState* clips = new ClipState[nscenes];
     
     /// indicates if a clip is the "special" clip
     void setSpecial(int scene);
