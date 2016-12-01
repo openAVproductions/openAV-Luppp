@@ -1,17 +1,17 @@
 /*
  * Author: Harry van Haaren 2013
  *         harryhaaren@gmail.com
- * 
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
- *  
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -39,14 +39,30 @@
  * however this would also require significant effort, which does not
  * seem worth the time at the moment.
  */
+
+/* These typedefs are for the poll and handle events of the scripted
+ * controller, to receieve and send events as needed */
+typedef int (*ctlr_poll)(int);
+typedef void (*ctlr_handle)(void *);
+
 class CtlrScript : public Controller
 {
-  public:
-    CtlrScript(std::string filename);
-    
-    std::string getName(){return "CtlrScript";}
-    
-    void bpm(int bpm);
+public:
+	CtlrScript(std::string filename);
+
+	std::string getName()
+	{
+		return "CtlrScript";
+	}
+
+	void bpm(int bpm);
+
+private:
+	void *program;
+	ctlr_poll poll;
+	ctlr_handle handle;
+
+
 };
 
 #endif // LUPPP_CONTROLLER_SCRIPT_H

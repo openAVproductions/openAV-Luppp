@@ -39,6 +39,7 @@
 
 #include "audiobuffer.hxx"
 #include "eventhandler.hxx"
+#include "controller/ctlrscript.hxx"
 #include "controller/genericmidi.hxx"
 #include "controller/guicontroller.hxx"
 
@@ -266,6 +267,11 @@ Jack::Jack( std::string name ) :
   if ( !g )
   {
     LUPPP_ERROR("%s","Error creating LupppGUI Controller instance");
+  }
+  
+  Controller* cs = new CtlrScript("test.c");
+  if(!cs) {
+    LUPPP_ERROR("Error creating CtlrScript instance\n");
   }
   
   // call into the GUI, telling it to register default controllers

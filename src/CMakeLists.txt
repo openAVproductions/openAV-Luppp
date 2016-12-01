@@ -65,6 +65,7 @@ add_executable (luppp version.hxx ${sources} )
 
 
 # Linking
+target_link_libraries( luppp "-ltcc -ldl"            )
 target_link_libraries( luppp ${JACK_LIBRARIES}       )
 target_link_libraries( luppp ${LIBLO_LIBRARIES}      )
 target_link_libraries( luppp ${NTK_LIBRARIES}        )
