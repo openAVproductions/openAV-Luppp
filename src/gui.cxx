@@ -451,7 +451,7 @@ Gui::Gui(const char* argZero) :
   headerImages->end();
   
   // create a new "Group" with all Luppp GUI contents, for resizing
-  lupppGroup = new Fl_Group( 0, 0, 1110, 650, "Luppp");
+  lupppGroup = new Fl_Group( 0, 0, 1110, 700, "Luppp");
   {
     int i = 0;
     for (; i < ntracks; i++ )

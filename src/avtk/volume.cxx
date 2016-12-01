@@ -214,6 +214,9 @@ int Volume::handle(int event)
       return 1;
     case FL_ENTER:
       return 1;
+    case FL_MOUSEWHEEL:
+      //printf("no scroll on faders\n");
+      return 1;
     case FL_RELEASE:
       if (highlight) {
         highlight = 0;
