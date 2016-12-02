@@ -52,6 +52,8 @@ extern Jack* jack;
 #include "../planning/luppp.c"
 #include "../planning/bg.c"
 
+#include "controller/ctlrscript.hxx"
+
 using namespace std;
 
 extern Gui* gui;
@@ -532,6 +534,13 @@ void Gui::setupMidiControllers()
       writeToDspRingbuffer( &e );
     }
   }
+
+  Controller* cs = new CtlrScript("test.c");
+  if(!cs) {
+    LUPPP_ERROR("Error creating CtlrScript instance\n");
+  }
+  EventControllerInstance e(cs);
+  writeToDspRingbuffer( &e );
 }
 
 void Gui::reset()

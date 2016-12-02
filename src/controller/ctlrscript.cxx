@@ -41,7 +41,7 @@ static void error(const char *msg)
 }
 
 #warning TODO: Externalize this to a header which the controllers should\
-	include to understand the event types, and functions for sending
+include to understand the event types, and functions for sending
 struct event_t {
 	uint32_t type;
 	uint32_t size;
@@ -49,7 +49,8 @@ struct event_t {
 
 
 CtlrScript::CtlrScript(std::string filename) :
-	Controller()
+	Controller(),
+	MidiIO()
 {
 	printf("%s, attempting to compile %s\n", __func__, filename.c_str());
 	TCCState *s;
@@ -95,9 +96,47 @@ CtlrScript::CtlrScript(std::string filename) :
 
 #warning FIXME: Free program when needed
 	//free(program);
+
+	// If the controller requests it, register MIDI ports for doing
+	// I/O. How to request this is curently unknown, but we could add
+	// a specific function, a generic function for querying what it
+	// would like, or some other sane extensible method :)
+
+	stat = CONTROLLER_OK;
+}
+
+int CtlrScript::registerComponents()
+{
+	// makes JACK add this controller to the midiObservers list:
+	// note the static_cast<>() is *needed* here for multiple-inheritance
+	MidiIO* m = static_cast<MidiIO*>(this);
+
+	registerMidiPorts( "testScripted" );
+
+	jack->registerMidiIO( m );
+
+	return LUPPP_RETURN_OK;
+}
+
+
+Controller::STATUS CtlrScript::status()
+{
+	return stat;
+}
+
+void CtlrScript::midi(unsigned char* midi)
+{
+	int status  = midi[0];
+	int data    = midi[1];
+	float value = midi[2] / 127.f;
+
+	printf("%s : got %2x %2x %0.2f\n", __func__, status, data, value);
 }
 
 void CtlrScript::bpm(int bpm)
 {
 	printf("%s : %d\n", __func__, bpm);
+
+	struct event_t ev = { 2, 1 };
+	handle(&ev);
 }

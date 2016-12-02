@@ -45,10 +45,13 @@
 typedef int (*ctlr_poll)(int);
 typedef void (*ctlr_handle)(void *);
 
-class CtlrScript : public Controller
+class CtlrScript : public Controller, public MidiIO
 {
 public:
 	CtlrScript(std::string filename);
+
+	/* called to register this instance with JACK */
+	int registerComponents();
 
 	std::string getName()
 	{
@@ -57,10 +60,16 @@ public:
 
 	void bpm(int bpm);
 
+	void midi(unsigned char* midi);
+
+	Controller::STATUS status();
+
 private:
 	void *program;
 	ctlr_poll poll;
 	ctlr_handle handle;
+
+	Controller::STATUS stat;
 
 
 };
