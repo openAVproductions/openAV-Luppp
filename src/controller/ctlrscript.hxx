@@ -59,6 +59,7 @@ public:
 	}
 
 	void bpm(int bpm);
+	void trackSendActive(int t, int send, bool a);
 
 	void midi(unsigned char* midi);
 

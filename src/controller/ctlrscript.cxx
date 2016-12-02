@@ -44,7 +44,6 @@ static void error(const char *msg)
 include to understand the event types, and functions for sending
 struct event_t {
 	uint32_t type;
-	uint32_t size;
 };
 
 
@@ -89,7 +88,7 @@ CtlrScript::CtlrScript(std::string filename) :
 	uint32_t iter = 0;
 	iter = poll(iter);
 
-	struct event_t ev = { 0, 1 };
+	struct event_t ev = { 0 };
 	if(iter == 1)
 		ev.type = 1;
 	handle(&ev);
@@ -133,10 +132,42 @@ void CtlrScript::midi(unsigned char* midi)
 	printf("%s : got %2x %2x %0.2f\n", __func__, status, data, value);
 }
 
+struct event_bpm_t {
+	struct event_t event;
+	int bpm;
+};
+
 void CtlrScript::bpm(int bpm)
 {
 	printf("%s : %d\n", __func__, bpm);
+	//struct event_t ev = { 2, 1 };
 
-	struct event_t ev = { 2, 1 };
+	struct event_bpm_t ev = {
+		.event = { .type = 2 },
+		.bpm = bpm,
+	};
+
+	handle(&ev);
+}
+
+struct event_trac_send_active_t {
+	struct event_t event;
+	int track;
+	int send;
+	int active;
+};
+
+void CtlrScript::trackSendActive(int t, int send, bool a)
+{
+	printf("%s : %d : %d\n", __func__, send, a);
+	struct event_trac_send_active_t ev = {
+		.event = { .type = 3 },
+		.track = t,
+		.send = send,
+		.active = 0,
+	};
+	if(a)
+		ev.active = 1;
+	printf("ev active = %d\n", ev.active);
 	handle(&ev);
 }
