@@ -23,6 +23,7 @@
 #include "controller.hxx"
 
 #include "../observer/midi.hxx"
+#include "luppp_script_api.h"
 
 /** This is a controller using TCC as a backend, which reads .c files
  * as "scripts", but compiles them on the fly and then hooks in the
@@ -43,7 +44,7 @@
 /* These typedefs are for the poll and handle events of the scripted
  * controller, to receieve and send events as needed */
 typedef int (*ctlr_handle_midi)(unsigned char *midi);
-typedef void (*ctlr_handle_event)(void *);
+typedef void (*ctlr_handle_event)(enum EVENT_ID id, void *);
 
 class CtlrScript : public Controller, public MidiIO
 {

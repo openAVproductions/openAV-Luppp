@@ -213,14 +213,12 @@ void CtlrScript::trackSendActive(int t, int send, bool a)
 		return;
 
 	printf("%s : %d : %d\n", __func__, send, a);
-	struct event_trac_send_active_t ev = {
-		.type = 3,
+	struct event_track_send_active ev = {
 		.track = t,
 		.send = send,
 		.active = 0,
 	};
 	if(a)
 		ev.active = 1;
-	printf("ev active = %d\n", ev.active);
-	handle(&ev);
+	handle(EVENT_TRACK_SEND_ACTIVE, &ev);
 }
