@@ -17,8 +17,8 @@
  */
 
 
-#ifndef LUPPP_CONTROLLER_SCRIPT_H
-#define LUPPP_CONTROLLER_SCRIPT_H
+#ifndef LUPPP_SCRIPT_API_H
+#define LUPPP_SCRIPT_API_H
 
 /**
  * This file is the API for the Controller Scripts, allowing them to
@@ -29,6 +29,7 @@
 
 enum EVENT_ID {
 	EVENT_NOP = 0,
+	EVENT_TRACK_SEND,
 	EVENT_TRACK_SEND_ACTIVE,
 };
 
@@ -38,7 +39,14 @@ struct event_track_send_active {
 	int active;
 };
 
-static void luppp_do(enum EVENT_ID id, void* event_struct);
+struct event_track_send {
+	int track;
+	int send;
+	float value;
+};
 
-#endif /* LUPPP_CONTROLLER_SCRIPT_H */
+
+void luppp_do(enum EVENT_ID id, void* event_struct);
+
+#endif /* LUPPP_SCRIPT_API_H */
 

@@ -58,7 +58,6 @@ public:
 		return "CtlrScript";
 	}
 
-	void bpm(int bpm);
 	void trackSendActive(int t, int send, bool a);
 
 	void midi(unsigned char* midi);
@@ -66,6 +65,11 @@ public:
 	Controller::STATUS status();
 
 private:
+	/* a flag stating if the program linked OK. If not, we do not act
+	 * on the script, and do not call *any* function pointers related
+	 * to the script, as they *will* cause a segfault */
+	int program_ok;
+
 	void *program;
 	ctlr_handle_midi  poll;
 	ctlr_handle_event handle;

@@ -18,15 +18,17 @@
 
 #include "ctlrscript.hxx"
 
-#include <iostream>
 #include <errno.h>
+#include <iostream>
+#include <sys/stat.h>
 
 #include "../jack.hxx"
 #include "../event.hxx"
+#include "../logic.hxx"
 #include "../gridlogic.hxx"
 
 #include "../eventhandler.hxx"
-#include <sys/stat.h>
+#include "luppp_script_api.h"
 
 #include "libtcc.h"
 
@@ -42,11 +44,27 @@ static void error(const char *msg)
 	printf("%s\n", msg);
 }
 
-#warning TODO: Externalize this to a header which the controllers should\
-include to understand the event types, and functions for sending
-struct event_t {
-	uint32_t type;
-};
+void luppp_do(enum EVENT_ID id, void* e)
+{
+	printf("%s : event: %d, %p\n", __func__, id, e);
+	switch(id) {
+	case EVENT_TRACK_SEND_ACTIVE: {
+		struct event_track_send_active *ev =
+			(struct event_track_send_active *)e;
+		jack->getLogic()->trackSendActive(ev->track, ev->send,
+						  ev->active);
+		break;
+		}
+	case EVENT_TRACK_SEND: {
+		struct event_track_send *ev =
+			(struct event_track_send *)e;
+		jack->getLogic()->trackSend(ev->track, ev->send,
+						  ev->value);
+		break;
+		}
+	default: break;
+	}
+}
 
 static int file_modify_time(const char *path, time_t *new_time)
 {
@@ -67,6 +85,7 @@ int CtlrScript::compile()
 	if(program) {
 		free(program);
 	}
+	program_ok = 0;
 
 	TCCState *s;
 	s = tcc_new();
@@ -80,6 +99,12 @@ int CtlrScript::compile()
 	int ret = tcc_add_file(s, filename.c_str());
 	if(ret < 0) {
 		printf("gracefully handling error now... \n");
+		return -EINVAL;
+	}
+
+	tcc_add_symbol(s, "luppp_do", (void *)luppp_do);
+	if(ret < 0) {
+		error("failed to insert luppp_do() symbol\n");
 		return -EINVAL;
 	}
 
@@ -107,6 +132,7 @@ int CtlrScript::compile()
 
 	/* Store the time of compiling */
 	file_modify_time(filename.c_str(), &script_load_time);
+	program_ok = 1;
 }
 
 
@@ -163,6 +189,9 @@ void CtlrScript::midi(unsigned char* midi)
 {
 	script_reload();
 
+	if(!program_ok)
+		return;
+
 	int status  = midi[0];
 	int data    = midi[1];
 	float value = midi[2] / 127.f;
@@ -171,26 +200,8 @@ void CtlrScript::midi(unsigned char* midi)
 	int ret = poll(midi);
 }
 
-struct event_bpm_t {
-	struct event_t event;
-	int bpm;
-};
-
-void CtlrScript::bpm(int bpm)
-{
-	printf("%s : %d\n", __func__, bpm);
-	//struct event_t ev = { 2, 1 };
-
-	struct event_bpm_t ev = {
-		.event = { .type = 2 },
-		.bpm = bpm,
-	};
-
-	handle(&ev);
-}
-
 struct event_trac_send_active_t {
-	struct event_t event;
+	int type;
 	int track;
 	int send;
 	int active;
@@ -198,9 +209,12 @@ struct event_trac_send_active_t {
 
 void CtlrScript::trackSendActive(int t, int send, bool a)
 {
+	if(!program_ok)
+		return;
+
 	printf("%s : %d : %d\n", __func__, send, a);
 	struct event_trac_send_active_t ev = {
-		.event = { .type = 3 },
+		.type = 3,
 		.track = t,
 		.send = send,
 		.active = 0,
