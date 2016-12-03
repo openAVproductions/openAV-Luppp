@@ -19,12 +19,14 @@
 #include "ctlrscript.hxx"
 
 #include <iostream>
+#include <errno.h>
 
 #include "../jack.hxx"
 #include "../event.hxx"
 #include "../gridlogic.hxx"
 
 #include "../eventhandler.hxx"
+#include <sys/stat.h>
 
 #include "libtcc.h"
 
@@ -46,14 +48,30 @@ struct event_t {
 	uint32_t type;
 };
 
-
-CtlrScript::CtlrScript(std::string filename) :
-	Controller(),
-	MidiIO()
+static int file_modify_time(const char *path, time_t *new_time)
 {
-	printf("%s, attempting to compile %s\n", __func__, filename.c_str());
-	TCCState *s;
+	if(new_time == 0)
+		return -1;
 
+	struct stat file_stat;
+	int err = stat(path, &file_stat);
+	if (err != 0) {
+		return -2;
+	}
+	*new_time = file_stat.st_mtime;
+	return 0;
+}
+
+int CtlrScript::compile(const char* filename)
+{
+#warning FIXME: Free program when it exists - replace the other version\
+	 Note this is the RT audio thread - so loading / replacing should\
+	 be done in an offline thread.
+	if(program) {
+		free(program);
+	}
+
+	TCCState *s;
 	s = tcc_new();
 	if(!s)
 		error("failed to create tcc context\n");
@@ -62,22 +80,26 @@ CtlrScript::CtlrScript(std::string filename) :
 	tcc_set_options(s, "-g");
 	tcc_set_output_type(s, TCC_OUTPUT_MEMORY);
 
-	int ret = tcc_add_file(s, filename.c_str());
+	int ret = tcc_add_file(s, filename);
 	if(ret < 0) {
 		printf("gracefully handling error now... \n");
-		return;
+		return -EINVAL;
 	}
 
 	program = malloc(tcc_relocate(s, NULL));
 	if(!program)
 		error("failed to alloc mem for program\n");
 	ret = tcc_relocate(s, program);
-	if(ret < 0)
+	if(ret < 0) {
 		error("failed to relocate code to program memory\n");
+		return -EINVAL;
+	}
 
 	poll = (ctlr_poll)tcc_get_symbol(s, "d2_poll");
-	if(!poll)
+	if(!poll) {
 		error("failed to get de poll\n");
+		return -EINVAL;
+	}
 
 	handle = (void (*)(void*))tcc_get_symbol(s, "d2_handle");
 	if(!handle)
@@ -85,21 +107,28 @@ CtlrScript::CtlrScript(std::string filename) :
 
 	tcc_delete(s);
 
+	/* Store the time of compiling */
+	file_modify_time(filename, &script_load_time);
+
 	uint32_t iter = 0;
-	iter = poll(iter);
+	//iter = poll(iter);
 
 	struct event_t ev = { 0 };
 	if(iter == 1)
 		ev.type = 1;
 	handle(&ev);
+}
 
-#warning FIXME: Free program when needed
-	//free(program);
 
-	// If the controller requests it, register MIDI ports for doing
-	// I/O. How to request this is curently unknown, but we could add
-	// a specific function, a generic function for querying what it
-	// would like, or some other sane extensible method :)
+CtlrScript::CtlrScript(std::string filename) :
+	Controller(),
+	MidiIO()
+{
+	printf("%s, attempting to compile %s\n", __func__, filename.c_str());
+
+	int err = compile(filename.c_str());
+	if(err)
+		return;
 
 	stat = CONTROLLER_OK;
 }
@@ -130,6 +159,7 @@ void CtlrScript::midi(unsigned char* midi)
 	float value = midi[2] / 127.f;
 
 	printf("%s : got %2x %2x %0.2f\n", __func__, status, data, value);
+	int ret = poll(midi);
 }
 
 struct event_bpm_t {

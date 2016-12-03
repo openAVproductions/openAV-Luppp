@@ -42,7 +42,7 @@
 
 /* These typedefs are for the poll and handle events of the scripted
  * controller, to receieve and send events as needed */
-typedef int (*ctlr_poll)(int);
+typedef int (*ctlr_poll)(unsigned char *midi);
 typedef void (*ctlr_handle)(void *);
 
 class CtlrScript : public Controller, public MidiIO
@@ -71,6 +71,13 @@ private:
 	ctlr_handle handle;
 
 	Controller::STATUS stat;
+
+
+	int compile(const char* filename);
+
+	/* For tracking when to re-load the script file, this allows
+	 * taking the modified time, and recompiling when needed */
+	time_t script_load_time;
 
 
 };
