@@ -70,10 +70,12 @@ private:
 	ctlr_poll poll;
 	ctlr_handle handle;
 
+	std::string filename;
+
 	Controller::STATUS stat;
 
-
-	int compile(const char* filename);
+	int compile();
+	void script_reload();
 
 	/* For tracking when to re-load the script file, this allows
 	 * taking the modified time, and recompiling when needed */

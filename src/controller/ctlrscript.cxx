@@ -62,11 +62,8 @@ static int file_modify_time(const char *path, time_t *new_time)
 	return 0;
 }
 
-int CtlrScript::compile(const char* filename)
+int CtlrScript::compile()
 {
-#warning FIXME: Free program when it exists - replace the other version\
-	 Note this is the RT audio thread - so loading / replacing should\
-	 be done in an offline thread.
 	if(program) {
 		free(program);
 	}
@@ -80,7 +77,7 @@ int CtlrScript::compile(const char* filename)
 	tcc_set_options(s, "-g");
 	tcc_set_output_type(s, TCC_OUTPUT_MEMORY);
 
-	int ret = tcc_add_file(s, filename);
+	int ret = tcc_add_file(s, filename.c_str());
 	if(ret < 0) {
 		printf("gracefully handling error now... \n");
 		return -EINVAL;
@@ -101,6 +98,7 @@ int CtlrScript::compile(const char* filename)
 		return -EINVAL;
 	}
 
+	/* handles events from Luppp */
 	handle = (void (*)(void*))tcc_get_symbol(s, "d2_handle");
 	if(!handle)
 		error("failed to get d2 handle\n");
@@ -108,25 +106,34 @@ int CtlrScript::compile(const char* filename)
 	tcc_delete(s);
 
 	/* Store the time of compiling */
-	file_modify_time(filename, &script_load_time);
-
-	uint32_t iter = 0;
-	//iter = poll(iter);
-
-	struct event_t ev = { 0 };
-	if(iter == 1)
-		ev.type = 1;
-	handle(&ev);
+	file_modify_time(filename.c_str(), &script_load_time);
 }
 
 
-CtlrScript::CtlrScript(std::string filename) :
+void CtlrScript::script_reload()
+{
+	time_t new_time;
+	int err = file_modify_time(filename.c_str(), &new_time);
+	if(err)
+		return;
+
+	if(new_time > script_load_time) {
+		printf("CtlrScript %d : Reloading script \"%s\"\n",
+		       getID(), filename.c_str());
+		compile();
+	}
+}
+
+
+CtlrScript::CtlrScript(std::string file) :
 	Controller(),
 	MidiIO()
 {
-	printf("%s, attempting to compile %s\n", __func__, filename.c_str());
+	printf("%s, attempting to compile %s\n", __func__, file.c_str());
 
-	int err = compile(filename.c_str());
+	this->filename = file;
+
+	int err = compile();
 	if(err)
 		return;
 
@@ -154,6 +161,8 @@ Controller::STATUS CtlrScript::status()
 
 void CtlrScript::midi(unsigned char* midi)
 {
+	script_reload();
+
 	int status  = midi[0];
 	int data    = midi[1];
 	float value = midi[2] / 127.f;
