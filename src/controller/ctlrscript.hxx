@@ -44,7 +44,7 @@
 /* These typedefs are for the poll and handle events of the scripted
  * controller, to receieve and send events as needed */
 typedef int (*ctlr_handle_midi)(unsigned char *midi);
-typedef void (*ctlr_handle_event)(enum EVENT_ID id, void *);
+typedef void (*ctlr_handle_event)(void *ctlr, enum EVENT_ID id, void *);
 
 class CtlrScript : public Controller, public MidiIO
 {

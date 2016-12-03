@@ -44,6 +44,12 @@ static void error(const char *msg)
 	printf("%s\n", msg);
 }
 
+
+void luppp_write_midi(void *ctlr, unsigned char* msg)
+{
+	((CtlrScript*)ctlr)->writeMidi( msg );
+}
+
 void luppp_do(enum EVENT_ID id, void* e)
 {
 	printf("%s : event: %d, %p\n", __func__, id, e);
@@ -105,6 +111,12 @@ int CtlrScript::compile()
 	tcc_add_symbol(s, "luppp_do", (void *)luppp_do);
 	if(ret < 0) {
 		error("failed to insert luppp_do() symbol\n");
+		return -EINVAL;
+	}
+
+	tcc_add_symbol(s, "luppp_write_midi", (void *)luppp_write_midi);
+	if(ret < 0) {
+		error("failed to insert luppp_write_midi() symbol\n");
 		return -EINVAL;
 	}
 
@@ -220,5 +232,5 @@ void CtlrScript::trackSendActive(int t, int send, bool a)
 	};
 	if(a)
 		ev.active = 1;
-	handle(EVENT_TRACK_SEND_ACTIVE, &ev);
+	handle(this, EVENT_TRACK_SEND_ACTIVE, &ev);
 }

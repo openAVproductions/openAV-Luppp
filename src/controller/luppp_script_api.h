@@ -47,6 +47,7 @@ struct event_track_send {
 
 
 void luppp_do(enum EVENT_ID id, void* event_struct);
+void luppp_write_midi(void *ctlr, unsigned char* midi);
 
 #endif /* LUPPP_SCRIPT_API_H */
 
