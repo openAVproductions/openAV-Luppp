@@ -92,14 +92,14 @@ int CtlrScript::compile()
 		return -EINVAL;
 	}
 
-	poll = (ctlr_poll)tcc_get_symbol(s, "d2_poll");
+	poll = (ctlr_handle_midi)tcc_get_symbol(s, "d2_poll");
 	if(!poll) {
 		error("failed to get de poll\n");
 		return -EINVAL;
 	}
 
 	/* handles events from Luppp */
-	handle = (void (*)(void*))tcc_get_symbol(s, "d2_handle");
+	handle = (ctlr_handle_event)tcc_get_symbol(s, "d2_handle");
 	if(!handle)
 		error("failed to get d2 handle\n");
 

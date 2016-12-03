@@ -1,5 +1,5 @@
 /*
- * Author: Harry van Haaren 2013
+ * Author: Harry van Haaren 2016
  *         harryhaaren@gmail.com
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -42,8 +42,8 @@
 
 /* These typedefs are for the poll and handle events of the scripted
  * controller, to receieve and send events as needed */
-typedef int (*ctlr_poll)(unsigned char *midi);
-typedef void (*ctlr_handle)(void *);
+typedef int (*ctlr_handle_midi)(unsigned char *midi);
+typedef void (*ctlr_handle_event)(void *);
 
 class CtlrScript : public Controller, public MidiIO
 {
@@ -67,8 +67,8 @@ public:
 
 private:
 	void *program;
-	ctlr_poll poll;
-	ctlr_handle handle;
+	ctlr_handle_midi  poll;
+	ctlr_handle_event handle;
 
 	std::string filename;
 
