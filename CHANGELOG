@@ -1,6 +1,33 @@
+1.1: Day, Date 2016
+Features:
+	-> Added saveDirectory option to set the save dir for Luppp sessions
+	-> Added possibility to enable metronom on startup and set volume
+	-> Added possibility to save clips
+	-> Added per track outputs
+	-> Added per track sends/returns
+	-> Added Lag function on slider to avoid jitter
+	-> Added hotkey symbols for en-GB Layout
+	-> Added french version of app data and desktop file
+	-> Added .ctrl file for Launchpad S and APC Mini and APC Key25
+	-> Added ability to adjust knobs with mouse wheel
+	-> Added metronome volume
 
--> Fixed metronome MIDI mapping
--> Added metronome volume
+Fixes:
+	-> Fixed internal buffer misconduct
+	-> Fixed glitches on beats/bars
+	-> Fixed Jack transport state control
+	-> Fixed loosing sync after some time
+	-> Fixed tempo tap issues while transport is not running
+	-> Fixed horizontal Slider issue
+	-> Fixed glitches in output
+	-> Fixed metronome MIDI mapping
+
+Improvements:
+	-> Improved Jack Transport 
+	-> Improved pitch shifting
+	-> Improved TimeManager
+	-> Improved building on non x86_64 plattforms
+	-> Improved BPM Dial
 
 1.0.1: Saturday 30th August 2014
 
