@@ -42,7 +42,7 @@ Looper::Looper(int t) :
   //tmpRecordBuffer = (float*)malloc( sizeof(float) * MAX_BUFFER_SIZE );
   //memset( tmpRecordBuffer, 0, sizeof(float) * MAX_BUFFER_SIZE );
   
-  for(int i = 0; i < 10; i++ )
+  for(int i = 0; i < nscenes; i++ )
   {
     clips[i] = new LooperClip(track, i);
   }

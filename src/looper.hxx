@@ -70,7 +70,7 @@ class Looper : public AudioProcessor, public TimeObserver
     int fpb;
     
     //vector<float> tmpRecordBuffer;
-    LooperClip* clips[10];
+    LooperClip** clips = new LooperClip*[nscenes];
     
     // Pitch Shifting
     void pitchShift(int count, float* input, float* output);
