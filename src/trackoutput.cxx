@@ -48,6 +48,8 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
 
 void TrackOutput::setMaster(float value)
 {
+  if(value < 0.01)
+    value = 0.f;
   _toMaster = value;
   _toMasterDiff=_toMaster-_toMasterLag;
 }
