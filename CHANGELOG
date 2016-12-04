@@ -21,6 +21,7 @@ Fixes:
 	-> Fixed horizontal Slider issue
 	-> Fixed glitches in output
 	-> Fixed metronome MIDI mapping
+	-> Fixed track volume not becoming totally silent
 
 Improvements:
 	-> Improved Jack Transport 
