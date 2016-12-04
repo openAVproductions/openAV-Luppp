@@ -68,6 +68,11 @@ void luppp_do(enum EVENT_ID id, void* e)
 						  ev->value);
 		break;
 		}
+	case EVENT_TRACK_VOLUME: {
+		struct event_track_volume *ev = (struct event_track_volume *)e;
+		jack->getLogic()->trackVolume(ev->track, ev->value);
+		break;
+		}
 	default: break;
 	}
 }

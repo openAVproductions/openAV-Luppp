@@ -29,22 +29,35 @@
 
 enum EVENT_ID {
 	EVENT_NOP = 0,
+	EVENT_TRACK_VOLUME,
 	EVENT_TRACK_SEND,
 	EVENT_TRACK_SEND_ACTIVE,
 };
 
+struct event_track_volume {
+	int track;
+	float value;
+};
+struct event_track_send {
+	int track;
+	int send;
+	float value;
+};
 struct event_track_send_active {
 	int track;
 	int send;
 	int active;
 };
 
-struct event_track_send {
-	int track;
-	int send;
-	float value;
+/*
+struct event {
+	enum EVENT_ID event_id;
+	union {
+		struct event_track_send track_send;
+		struct event_track_send_active track_send_active;
+	};
 };
-
+*/
 
 void luppp_do(enum EVENT_ID id, void* event_struct);
 void luppp_write_midi(void *ctlr, unsigned char* midi);
