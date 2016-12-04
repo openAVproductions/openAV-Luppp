@@ -505,7 +505,8 @@ void GenericMIDI::midi(unsigned char* midi)
         case Event::TRACK_SEND:   jack->getLogic()->trackSend( b->track, b->send, value ); break;
         case Event::TRACK_SEND_ACTIVE: jack->getLogic()->trackSendActive( b->track, b->send, b->active ); break;
         case Event::TRACK_RECORD_ARM: jack->getLogic()->trackRecordArm( b->track, b->active ); break;
-        
+        case Event::TRACK_JACKSEND: jack->getLogic()->trackJackSend(b->track,value); break;
+        case Event::TRACK_JACKSEND_ACTIVATE: jack->getLogic()->trackJackSendActivate(b->track,b->active); break;
         case Event::GRID_EVENT:
             if ( b->active )
               jack->getGridLogic()->pressed( b->track, b->scene );
