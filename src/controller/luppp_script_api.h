@@ -29,12 +29,16 @@
 
 enum EVENT_ID {
 	EVENT_NOP = 0,
+	/* Track Events */
 	EVENT_TRACK_RECORD_ARM,
 	EVENT_TRACK_VOLUME,
 	EVENT_TRACK_SEND,
 	EVENT_TRACK_SEND_ACTIVE,
 	EVENT_TRACK_JACKSEND,
 	EVENT_TRACK_JACKSEND_ACTIVE,
+	/* Grid Events */
+	EVENT_GRID_PRESS_RELEASE,
+	EVENT_GRID_LAUNCH_SCENE,
 };
 
 struct event_track_record_arm {
@@ -62,6 +66,15 @@ struct event_track_send_active {
 	int track;
 	int send;
 	int active;
+};
+
+struct event_grid_launch_scene {
+	int scene;
+};
+struct event_grid_press_release {
+	int track;
+	int scene;
+	int pressed;
 };
 
 /*

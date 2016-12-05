@@ -91,6 +91,22 @@ void luppp_do(enum EVENT_ID id, void* e)
 		jack->getLogic()->trackJackSendActivate(ev->track, ev->active);
 		break;
 		}
+	case EVENT_GRID_PRESS_RELEASE: {
+		struct event_grid_press_release *ev =
+			(struct event_grid_press_release *)e;
+		/* TODO: Refactor to GridLogic::press_release(int pressed);*/
+		if(ev->pressed)
+			jack->getGridLogic()->pressed(ev->track, ev->scene);
+		else
+			jack->getGridLogic()->released(ev->track, ev->scene);
+		break;
+		}
+	case EVENT_GRID_LAUNCH_SCENE: {
+		struct event_grid_launch_scene *ev =
+			(struct event_grid_launch_scene *)e;
+		jack->getGridLogic()->launchScene(ev->scene);
+		break;
+		}
 	default: break;
 	}
 }
