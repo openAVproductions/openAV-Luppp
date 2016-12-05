@@ -121,6 +121,16 @@ void luppp_do(enum EVENT_ID id, void* e)
 		jack->getTimeManager()->tap();
 		break;
 		}
+	case EVENT_MASTER_VOLUME: {
+		struct event_master_volume *ev = (struct event_master_volume *)e;
+		jack->masterVolume(ev->volume);
+		break;
+		}
+	case EVENT_MASTER_RETURN: {
+		struct event_master_return*ev = (struct event_master_return *)e;
+		jack->returnVolume(ev->volume);
+		break;
+		}
 	default: break;
 	}
 }

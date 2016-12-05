@@ -42,6 +42,9 @@ enum EVENT_ID {
 	/* Tempo Events */
 	EVENT_TEMPO_BPM,
 	EVENT_TEMPO_TAP,
+	/* Master Track */
+	EVENT_MASTER_VOLUME,
+	EVENT_MASTER_RETURN,
 };
 
 struct event_track_record_arm {
@@ -85,6 +88,13 @@ struct event_tempo_bpm {
 };
 struct event_tempo_tap {
 	int pressed; /* can be used to turn controller LED on/off */
+};
+
+struct event_master_volume {
+	float volume;
+};
+struct event_master_return {
+	float volume;
 };
 
 /*
