@@ -73,6 +73,12 @@ void luppp_do(enum EVENT_ID id, void* e)
 		jack->getLogic()->trackVolume(ev->track, ev->value);
 		break;
 		}
+	case EVENT_TRACK_RECORD_ARM: {
+		struct event_track_record_arm *ev =
+			(struct event_track_record_arm *)e;
+		jack->getLogic()->trackRecordArm(ev->track, ev->armed);
+		break;
+		}
 	case EVENT_TRACK_JACKSEND: {
 		struct event_track_jack_send *ev =
 			(struct event_track_jack_send *)e;

@@ -29,6 +29,7 @@
 
 enum EVENT_ID {
 	EVENT_NOP = 0,
+	EVENT_TRACK_RECORD_ARM,
 	EVENT_TRACK_VOLUME,
 	EVENT_TRACK_SEND,
 	EVENT_TRACK_SEND_ACTIVE,
@@ -36,6 +37,10 @@ enum EVENT_ID {
 	EVENT_TRACK_JACKSEND_ACTIVE,
 };
 
+struct event_track_record_arm {
+	int track;
+	int armed;
+};
 struct event_track_jack_send {
 	int track;
 	float value;
