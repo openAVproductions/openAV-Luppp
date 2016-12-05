@@ -32,8 +32,18 @@ enum EVENT_ID {
 	EVENT_TRACK_VOLUME,
 	EVENT_TRACK_SEND,
 	EVENT_TRACK_SEND_ACTIVE,
+	EVENT_TRACK_JACKSEND,
+	EVENT_TRACK_JACKSEND_ACTIVE,
 };
 
+struct event_track_jack_send {
+	int track;
+	float value;
+};
+struct event_track_jack_send_active {
+	int track;
+	int active;
+};
 struct event_track_volume {
 	int track;
 	float value;

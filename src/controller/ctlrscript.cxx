@@ -73,6 +73,18 @@ void luppp_do(enum EVENT_ID id, void* e)
 		jack->getLogic()->trackVolume(ev->track, ev->value);
 		break;
 		}
+	case EVENT_TRACK_JACKSEND: {
+		struct event_track_jack_send *ev =
+			(struct event_track_jack_send *)e;
+		jack->getLogic()->trackJackSend(ev->track, ev->value);
+		break;
+		}
+	case EVENT_TRACK_JACKSEND_ACTIVE: {
+		struct event_track_jack_send_active *ev =
+			(struct event_track_jack_send_active *)e;
+		jack->getLogic()->trackJackSendActivate(ev->track, ev->active);
+		break;
+		}
 	default: break;
 	}
 }
