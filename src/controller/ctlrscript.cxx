@@ -26,6 +26,7 @@
 #include "../event.hxx"
 #include "../logic.hxx"
 #include "../gridlogic.hxx"
+#include "../timemanager.hxx"
 
 #include "../eventhandler.hxx"
 #include "luppp_script_api.h"
@@ -105,6 +106,19 @@ void luppp_do(enum EVENT_ID id, void* e)
 		struct event_grid_launch_scene *ev =
 			(struct event_grid_launch_scene *)e;
 		jack->getGridLogic()->launchScene(ev->scene);
+		break;
+		}
+	case EVENT_TEMPO_BPM: {
+		struct event_tempo_bpm *ev = (struct event_tempo_bpm *)e;
+		jack->getTimeManager()->setBpm(ev->bpm);
+		break;
+		}
+	case EVENT_TEMPO_TAP: {
+		struct event_tempo_tap *ev = (struct event_tempo_tap *)e;
+		/* No params, this counts *when* the event arrives, not
+		 * what it contains. A boolean integer indicates pressed
+		 * or released state of the button for LEDs */
+		jack->getTimeManager()->tap();
 		break;
 		}
 	default: break;

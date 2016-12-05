@@ -39,6 +39,9 @@ enum EVENT_ID {
 	/* Grid Events */
 	EVENT_GRID_PRESS_RELEASE,
 	EVENT_GRID_LAUNCH_SCENE,
+	/* Tempo Events */
+	EVENT_TEMPO_BPM,
+	EVENT_TEMPO_TAP,
 };
 
 struct event_track_record_arm {
@@ -75,6 +78,13 @@ struct event_grid_press_release {
 	int track;
 	int scene;
 	int pressed;
+};
+
+struct event_tempo_bpm {
+	float bpm;
+};
+struct event_tempo_tap {
+	int pressed; /* can be used to turn controller LED on/off */
 };
 
 /*
