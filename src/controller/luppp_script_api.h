@@ -73,7 +73,6 @@ struct event_track_send_active {
 	int send;
 	int active;
 };
-
 struct event_grid_launch_scene {
 	int scene;
 };
@@ -82,30 +81,18 @@ struct event_grid_press_release {
 	int scene;
 	int pressed;
 };
-
 struct event_tempo_bpm {
 	float bpm;
 };
 struct event_tempo_tap {
 	int pressed; /* can be used to turn controller LED on/off */
 };
-
 struct event_master_volume {
 	float volume;
 };
 struct event_master_return {
 	float volume;
 };
-
-/*
-struct event {
-	enum EVENT_ID event_id;
-	union {
-		struct event_track_send track_send;
-		struct event_track_send_active track_send_active;
-	};
-};
-*/
 
 void luppp_do(enum EVENT_ID id, void* event_struct);
 void luppp_write_midi(void *ctlr, unsigned char* midi);

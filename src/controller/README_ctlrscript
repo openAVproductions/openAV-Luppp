@@ -1,0 +1,126 @@
+
+CtlrScript is a new Controller backend, which allows parsing of MIDI notes
+and sending Luppp events. Similarly, Luppp events can be parsed, and MIDI
+notes written to the device for feedback.
+
+The interface to/from Luppp is pretty simple, and described in a single
+header file "luppp_script_api.h". Read the file, and you'll see how
+deceptively simple it is :)
+
+Next up is 2 functions, both available from the bottom of the api.h file,
+- luppp_do()
+- luppp_write_midi()
+
+These two functions are the *only* way in which a controller script
+interacts with the Luppp engine.
+
+luppp_do() takes 2 arguments, an EVENT_ID to say what type of event it is
+being passed, and a void* which must point at a struct of the appropriate
+type, filled in with the appropriate details.
+
+An example to demonstrate turning on a send 0 on track 3, ON if the message
+is a note on (0x90) event, and off otherwise:
+
+		struct event_track_send_active e = {
+			.track = 3,
+			.send = 0,
+			.active = (midi[0] == 0x90),
+		};
+		luppp_do(EVENT_TRACK_SEND_ACTIVE, &e);
+
+
+The 2nd function, luppp_write_midi() is hopefully self explanatory. It
+takes a uint8_t *data, see the following example. Note that the MIDI
+message data is hard coded specifically for the device I was testing with:
+
+		unsigned char led_on [3] = {0x90, 0x42, 0x7F};
+		unsigned char led_off[3] = {0x80, 0x42, 0};
+		if(e->active)
+			luppp_write_midi(ctlr, led_on);
+		else
+			luppp_write_midi(ctlr, led_off);
+
+
+In order to implement a script, 2 functions *must* be implemented in the
+script:
+
+int test_poll(unsigned char* midi)
+void test_handle(void *ctlr, enum EVENT_ID id, void *event)
+
+
+Note that *everything* must be exactly like that, AKA: the function *name*
+may not be changed in the current implementation, because "test_poll" is
+looked up. If you're hacking your controller suppport, just change the
+contents of the existing script.
+
+In test_poll() you should handle incoming midi messages, and call
+luppp_do() for any changes you want to make. *DO NOT* call
+luppp_write_midi() from poll(), as that is bad practice.
+
+In test_handle(), you are passed an EVENT_ID, and a void* to an event. This
+pointer should be casted to the correct type (based on the EVENT_ID), and
+then can be read. If the controller is interested in displaying the value,
+it can now call luppp_write_midi() with the ctlr as first parameter, and
+specifying what MIDI data to write.
+
+
+Open your favorite JACK patchbay for MIDI, and connect the
+luppp:testScript_in/out to your controller hardware (use a2jmidid -e & if
+you don't have the controller in JACK MIDI, but only in ALSA MIDI).
+
+General Notes
+-------------
+The controller script currently cannot look-up state (aka, "Luppp, please
+tell me what is the level of the volume on track 6?"). This is needed to
+allow easy scripting, but just not done yet.
+
+The interface exposes *most* of the events that are MIDI learnable in
+current luppp, end goal is to provide all of them: we're just not 100%
+there yet.
+
+This code is all POC, and although very stable here, should not be used
+on stage - you have been warned ;)
+
+
+Installation / Running
+----------------------
+This CtlrScript functionality requires a library called "libtcc", or the
+tiny-c-compiler, which it uses to compile the script files into the
+application. apt-get install libtcc-dev  should do.
+
+You'll need to re-run cmake (ensure to rm CMakeCache.txt from the build dir
+so it re-scans libs etc). make and pray :)
+
+Now for the very POC parts: the "luppp_script_api.h" file *must* be located
+beside the script file that is compiled, and the script file *must* be in
+the same dir as the Luppp binary. So copy the test.c from resources/test.c,
+and copy "luppp_script_api.h" from src/controller/  to build/src.
+
+cd build/src
+cp ../../src/controller/luppp_script_api.h .
+cp ../../resources/controllers/test.c .
+
+end result:
+ls
+$ luppp   luppp_script_api.h    test.c    (+other stuff)
+
+
+OK: now run ./luppp, and the console should print the following:
+CtlrScript, attempting to compile test.c
+compiled ok
+
+If that's the case - well done, we're all set up. To actually *change* the
+script, open test.c (the one beside the luppp binary) in your favorite
+text/programming editor.
+
+Edit the source, change a constant or something small (it must be valid C :)
+and save. Now touch a control on the hardware, and it will send a new MIDI
+message - which checks the last-modified date of the script, and recompiles
+it on the fly if needed. Result:
+
+CtlrScript 1 : Reloading script "test.c"
+compiled ok
+
+If that happened, happy editing / scripting, good luck, and feedback
+welcome!
+
