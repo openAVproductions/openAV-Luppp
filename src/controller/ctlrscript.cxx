@@ -192,22 +192,23 @@ int CtlrScript::compile()
 		return -EINVAL;
 	}
 
-	poll = (ctlr_handle_midi)tcc_get_symbol(s, "d2_poll");
+	poll = (ctlr_handle_midi)tcc_get_symbol(s, "test_poll");
 	if(!poll) {
 		error("failed to get de poll\n");
 		return -EINVAL;
 	}
 
 	/* handles events from Luppp */
-	handle = (ctlr_handle_event)tcc_get_symbol(s, "d2_handle");
+	handle = (ctlr_handle_event)tcc_get_symbol(s, "test_handle");
 	if(!handle)
-		error("failed to get d2 handle\n");
+		error("failed to get test handle\n");
 
 	tcc_delete(s);
 
 	/* Store the time of compiling */
 	file_modify_time(filename.c_str(), &script_load_time);
 	program_ok = 1;
+	printf("compiled ok\n");
 }
 
 
