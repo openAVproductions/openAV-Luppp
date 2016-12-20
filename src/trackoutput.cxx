@@ -107,7 +107,7 @@ void TrackOutput::setSend( int send, float value )
 void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 {
     //compute master volume lag;
-    if(fabs(_toMaster-_toMasterLag)>=fabs(_toMasterDiff/10.0))
+    if(fabs(_toMaster-_toMasterLag)>=fabs(_toMasterDiff/100.0))
         _toMasterLag+=_toMasterDiff/10.0;
   // get & zero track buffer
   float* trackBuffer = buffers->audio[Buffers::RETURN_TRACK_0 + track];
