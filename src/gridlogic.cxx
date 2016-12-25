@@ -93,9 +93,9 @@ void GridLogic::setSelectedScene(int s)
 
 void GridLogic::launchScene( int scene )
 {
-  for(unsigned int t = 0; t < NTRACKS; t++ )
+  for(unsigned int t = 0; t < ntracks; t++ )
   {
-    for(int s = 0; s < NSCENES; s++ )
+    for(int s = 0; s < nscenes; s++ )
     {
       LooperClip* lc = jack->getLooper( t )->getClip( s );
       if ( s == scene )
@@ -127,10 +127,10 @@ void GridLogic::launchScene( int scene )
 void GridLogic::specialScene(int t, int s)
 {
   if ( t < 0 ) t = 0;
-  if ( t >= NTRACKS ) t = NTRACKS-1;
+  if ( t >= ntracks ) t = ntracks-1;
   
   if ( s < 0 ) s = 0;
-  if ( s >= NSCENES ) s = NSCENES-1;
+  if ( s >= nscenes ) s = nscenes-1;
   
   selectedTrack = t;
   selectedScene = s;
@@ -173,7 +173,7 @@ void GridLogic::pressed( int track, int scene )
     if ( s == STATE_STOPPED )
     {
       // hack, stop all scenes, then launch proper one
-      for( int i = 0; i < NTRACKS; i++ )
+      for( int i = 0; i < ntracks; i++ )
       {
         LooperClip* ilc = jack->getLooper( track )->getClip( i );
         if ( ilc->playing() )
@@ -208,7 +208,7 @@ void GridLogic::pressed( int track, int scene )
   // check state of new clip, if getQueuePlay() == true, queueStop() all other scenes
   //if ( lc->getQueuePlay() )
   {
-    for(int i = 0; i < NSCENES; i++)
+    for(int i = 0; i < nscenes; i++)
     {
       // exclude current scene
       if ( i != scene )
@@ -249,9 +249,9 @@ void GridLogic::load(int track, int scene, AudioBuffer* ab)
 void GridLogic::updateState()
 {
   //printf("GridLogic::updateState() stub" );
-  for(int t = 0; t < NTRACKS; t++)
+  for(int t = 0; t < ntracks; t++)
   {
-    for(int s = 0; s < NSCENES; s++)
+    for(int s = 0; s < nscenes; s++)
     {
       GridLogic::State st = jack->getLooper( t )->getClip( s )->getState();
       EventGuiPrint e( GridLogic::StateString[st] );
@@ -269,10 +269,10 @@ void GridLogic::bar()
 #endif
   
   /// iterate over all clips, if they're set to QUEUED, set to the next state
-  for( int i = 0; i < NTRACKS*NSCENES; i++ )
+  for( int i = 0; i < ntracks*nscenes; i++ )
   {
-    int track = i / NSCENES;
-    int scene = i - track * NSCENES;
+    int track = i / nscenes;
+    int scene = i - track * nscenes;
     jack->getLooper( track )->getClip(scene)->bar();
 
 #ifdef DEBUG_CLIP

@@ -385,7 +385,7 @@ void DiskWriter::writeMaster()
   Avtk::ClipSelector* clipSelector = master->getClipSelector();
   cJSON* sceneNames = cJSON_CreateArray();
   cJSON_AddItemToObject( masterTrack, "sceneNames", sceneNames );
-  for(int i = 0; i < NSCENES; i++)
+  for(int i = 0; i < nscenes; i++)
   {
     cJSON* sceneName = cJSON_CreateString( clipSelector->clipName(i).c_str() );
     cJSON_AddItemToArray( sceneNames, sceneName );
@@ -417,7 +417,7 @@ int DiskWriter::writeSession()
   cJSON_AddItemToObject(sessionJson, "tracks", trackArray );
   
   // write tracks into JSON tracks array
-  for(int t = 0; t < NTRACKS; t++)
+  for(int t = 0; t < ntracks; t++)
   {
     cJSON* track = cJSON_CreateObject();
     cJSON_AddItemToArray( trackArray, track );
@@ -444,7 +444,7 @@ int DiskWriter::writeSession()
     
     
     
-    for(int s = 0; s < NSCENES; s++)
+    for(int s = 0; s < nscenes; s++)
     {
       // add empty string to array
       cJSON* clip = cJSON_CreateString( "" );

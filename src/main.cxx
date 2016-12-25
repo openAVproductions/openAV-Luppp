@@ -16,6 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define MAIN
+
 #include "config.hxx"
 #include "version.hxx"
 
@@ -61,18 +63,59 @@ static void gui_static_loadSession_cb(void* inst)
 int main(int argc, char** argv)
 {
   LUPPP_NOTE("Git: %s", GIT_VERSION   );
+
+  ntracks = DEFAULT_TRACKS;
+  nscenes = DEFAULT_SCENES;
   
   bool runTests = false;
   if ( runTests ){} // remove unused warning if not built with BUILD_TESTS
   
   for(int i = 0; i < argc; i++)
   {
-    if ( strcmp(argv[i], "-test" ) == 0 ) {
+    if ( strcmp(argv[i], "-test" ) == 0 ) 
+    {
       runTests = true;
+    }
+    else if ( strcmp(argv[i], "-tracks" ) == 0 )
+    {
+      if( (i+1) < argc ) 
+      {
+        int n = atoi(argv[i+1]);
+        if((0 < n) && (n < 20)) 
+        {
+          ntracks = n;
+          LUPPP_NOTE("Starting with %i Tracks", ntracks);
+        } else {
+          LUPPP_NOTE("Track count too high or low, starting with default track count.");
+        }
+        i++;
+      } 
+      else
+      {
+        LUPPP_NOTE("No track count given, starting with default track count.");
+      }
+    }
+    else if ( strcmp(argv[i], "-scenes" ) == 0 )
+    {
+      if( (i+1) < argc ) 
+      {
+        int n = atoi(argv[i+1]);
+        if((0 < n) && (n < 20)) 
+        {
+          nscenes = n;
+          LUPPP_NOTE("Starting with %i scenes", nscenes);
+        } else {
+          LUPPP_NOTE("Scene count too high or low, starting with default scene count.");
+        }
+        i++;
+      } 
+      else
+      {
+        LUPPP_NOTE("No scene count given, starting with default scene count.");
+      }
     }
     else if ( i != 0 ) // don't try load with the program name!
     {
-      // assume filename, try load it
       Fl::repeat_timeout( 1 / 30.f, &gui_static_loadSession_cb, argv[i] );
     }
   }

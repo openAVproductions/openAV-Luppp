@@ -169,7 +169,7 @@ private:
     
     jack_port_t*  masterMidiInput;
 
-    jack_port_t* trackJackOutputPorts[NTRACKS];
+    jack_port_t** trackJackOutputPorts = new jack_port_t*[ntracks];
     
     // JACK callback
     int  process (jack_nframes_t);

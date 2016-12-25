@@ -454,7 +454,7 @@ Gui::Gui(const char* argZero) :
   lupppGroup = new Fl_Group( 0, 0, 1110, 700, "Luppp");
   {
     int i = 0;
-    for (; i < NTRACKS; i++ )
+    for (; i < ntracks; i++ )
     {
       stringstream s;
       s << "Track " << i+1;
@@ -541,19 +541,19 @@ void Gui::reset()
   writeToDspRingbuffer( &ev );
   
   // clear UI state: track names / scene names
-  for(unsigned int i = 0; i < NTRACKS; i++)
+  for(unsigned int i = 0; i < ntracks; i++)
   {
     stringstream s;
     s << "Track " << i+1;
     tracks.at(i)->bg.setLabel( s.str().c_str() );
     
-    for(unsigned int s = 0; s < NSCENES; s++)
+    for(unsigned int s = 0; s < nscenes; s++)
     {
       tracks.at(i)->getClipSelector()->clipName( s, "" );
     }
   }
   
-  for(unsigned int i = 0; i < NSCENES; i++)
+  for(unsigned int i = 0; i < nscenes; i++)
   {
     stringstream s;
     s << "Scene " << i+1;

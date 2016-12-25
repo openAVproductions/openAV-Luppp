@@ -194,7 +194,7 @@ Jack::Jack( std::string name ) :
   buffers.audio[Buffers::MASTER_OUT_L]   = new float[ buffers.nframes ];
   buffers.audio[Buffers::MASTER_OUT_R]   = new float[ buffers.nframes ];
   
-  for(int i = 0; i < NTRACKS; i++)
+  for(int i = 0; i < ntracks; i++)
   {
     /** Setup the tracks:
      *  The TrackOutput gets a pointer to the next AudioProcessor to call:
@@ -281,10 +281,11 @@ Jack::~Jack()
   delete logic;
   delete gridLogic;
   delete controllerUpdater;
+  delete trackJackOutputPorts;
   
   delete inputMeter;
   delete masterMeter;
-    for(int i = 0; i < NTRACKS; i++)
+    for(int i = 0; i < ntracks; i++)
     {
         delete [] buffers.audio[Buffers::TRACK_0+i];
         delete [] buffers.audio[Buffers::SEND_TRACK_0+i];
@@ -317,7 +318,7 @@ void Jack::quit()
 
 TrackOutput* Jack::getTrackOutput(int t)
 {
-  if ( t >= 0 && t < NTRACKS )
+  if ( t >= 0 && t < ntracks )
     return trackOutputs.at(t);
 #ifdef DEBUG_TRACKS
   else
@@ -331,7 +332,7 @@ TrackOutput* Jack::getTrackOutput(int t)
 
 JackSendReturn* Jack::getJackSendReturn(int t)
 {
-  if ( t >= 0 && t < NTRACKS )
+  if ( t >= 0 && t < ntracks)
     return tracksendreturns.at(t);
 #ifdef DEBUG_TRACKS
   else
@@ -346,7 +347,7 @@ JackSendReturn* Jack::getJackSendReturn(int t)
 
 Looper* Jack::getLooper(int t)
 {
-  if ( t >= 0 && t < NTRACKS )
+  if ( t >= 0 && t < ntracks )
     return loopers.at(t);
 #ifdef DEBUG_TRACKS
   else
@@ -398,7 +399,7 @@ int Jack::process (jack_nframes_t nframes)
   buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL]=(float*)jack_port_get_buffer(sidechainSignalOutput,nframes);
   if(gui->enablePerTrackOutput)
   {
-      for(int t=0;t<NTRACKS;t++)
+      for(int t=0;t<ntracks;t++)
           buffers.audio[Buffers::JACK_TRACK_0+t]       = (float*)jack_port_get_buffer( trackJackOutputPorts[t]     , nframes );
 
   }
@@ -415,7 +416,7 @@ int Jack::process (jack_nframes_t nframes)
   memset( buffers.audio[Buffers::SIDECHAIN_SIGNAL]  , 0, sizeof(float) * nframes );
   if(gui->enablePerTrackOutput)
   {
-      for(int t=0;t<NTRACKS;t++)
+      for(int t=0;t<ntracks;t++)
           memset( buffers.audio[Buffers::JACK_TRACK_0+t]  , 0, sizeof(float) * nframes );
 
   }
@@ -485,7 +486,7 @@ void Jack::processFrames(int nframes)
   }
   
   /// process each track, starting at output and working up signal path
-  for(unsigned int i = 0; i < NTRACKS; i++)
+  for(unsigned int i = 0; i < ntracks; i++)
   {
     trackOutputs.at(i)->process( nframes, &buffers );
   }
@@ -587,7 +588,7 @@ void Jack::processFrames(int nframes)
       buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL]=&buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL][nframes];
       if(gui->enablePerTrackOutput)
       {
-          for(int t=0;t<NTRACKS;t++)
+          for(int t=0;t<ntracks;t++)
           {
               buffers.audio[Buffers::JACK_TRACK_0+t]       = &buffers.audio[Buffers::JACK_TRACK_0+t][nframes];
           }
@@ -606,7 +607,8 @@ void Jack::clearInternalBuffers(int nframes)
     memset(buffers.audio[Buffers::SIDECHAIN_SIGNAL],0,sizeof(float)*nframes);
     memset(buffers.audio[Buffers::MASTER_OUT_L],0,sizeof(float)*nframes);
     memset(buffers.audio[Buffers::MASTER_OUT_R],0,sizeof(float)*nframes);
-    for(int i=0;i<NTRACKS;i++)
+
+    for(int i=0;i<ntracks;i++)
     {
         memset(buffers.audio[Buffers::TRACK_0 + i],0,sizeof(float)*nframes);
         memset(buffers.audio[Buffers::SEND_TRACK_0 + i],0,sizeof(float)*nframes);

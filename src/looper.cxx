@@ -42,7 +42,7 @@ Looper::Looper(int t) :
   //tmpRecordBuffer = (float*)malloc( sizeof(float) * MAX_BUFFER_SIZE );
   //memset( tmpRecordBuffer, 0, sizeof(float) * MAX_BUFFER_SIZE );
   
-  for(int i = 0; i < 10; i++ )
+  for(int i = 0; i < nscenes; i++ )
   {
     clips[i] = new LooperClip(track, i);
   }
@@ -75,7 +75,7 @@ void Looper::beat()
 {//TODO needed?
     //FIXME: Need to keep looperClips in sync when there exists no int N
     // such that playSpeed*N==1
-//    for(int i=0;i<NSCENES;i++)
+//    for(int i=0;i<nscenes;i++)
 //    {
 //        int iph=clips[i]->getPlayhead()+1.0;
 //        long targetFrames = clips[i]->getBeats() * fpb;
@@ -106,7 +106,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 {
   // process each clip individually: this allows for playback of one clip,
   // while another clip records.
-  for ( int clip = 0; clip < NSCENES; clip++ )
+  for ( int clip = 0; clip < nscenes; clip++ )
   {
     // handle state of clip, and do what needs doing:
     // record into buffer, play from buffer, etc
@@ -172,7 +172,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 
 void Looper::resetTimeState()
 {
-    for(int i=0;i<NSCENES;i++)
+    for(int i=0;i<nscenes;i++)
         clips[i]->setPlayHead(0.0);
 }
 

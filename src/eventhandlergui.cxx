@@ -219,7 +219,7 @@ void handleGuiEvents()
           if ( availableRead >= sizeof(EventGridLaunchScene) ) {
             EventGridLaunchScene ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventGridLaunchScene) );
-            for(int i = 0; i < NSCENES; i++)
+            for(int i = 0; i < nscenes; i++)
               gui->getMasterTrack()->getClipSelector()->setState( i, GridLogic::STATE_EMPTY );
             gui->getMasterTrack()->getClipSelector()->setState( ev.scene, GridLogic::STATE_PLAYING );
           } break; }
@@ -229,7 +229,7 @@ void handleGuiEvents()
             EventGridSelectNewChosen ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventGridSelectNewChosen) );
             //LUPPP_NOTE("New special, %i, %i", ev.track, ev.scene);
-            for(int i = 0; i < NTRACKS; i++)
+            for(int i = 0; i < ntracks; i++)
             {
               gui->getTrack(i)->getClipSelector()->setSpecial( i == ev.track ? ev.scene : -1 );
             }
@@ -243,12 +243,12 @@ void handleGuiEvents()
             EventTrackSend ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTrackSend) );
             if ( ev.send == SEND_POSTFADER )
-              if ( ev.track < NTRACKS )
+              if ( ev.track < ntracks )
               {
                 gui->getTrack(ev.track)->setSend(ev.value );
               }
             if ( ev.send == SEND_XSIDE )
-              if (   ev.track < NTRACKS )
+              if (   ev.track < ntracks )
               {
                 gui->getTrack(ev.track)->setXSide( ev.value );
               }
@@ -273,13 +273,13 @@ void handleGuiEvents()
             EventTrackSendActive ev;
             jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTrackSendActive) );
             if ( ev.send == SEND_POSTFADER )
-              if ( ev.track < NTRACKS )
+              if ( ev.track < ntracks )
               {
                 gui->getTrack(ev.track)->setSendActive(ev.active );
               }
             if ( ev.send == SEND_KEY )
             {
-              if ( ev.track < NTRACKS )
+              if ( ev.track < ntracks )
               {
                 gui->getTrack(ev.track)->setKeyActive( ev.active );
               }
