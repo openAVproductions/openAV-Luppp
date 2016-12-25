@@ -45,6 +45,7 @@ class Binding
     int track;
     int scene;
     int send;
+    int color;
     
     /// maps from Gridlogic::State to MIDI output value from binding
     std::map<int,int> clipStateMap;
