@@ -30,25 +30,25 @@
 class JackSendReturn: public AudioProcessor
 {
 public:
-    //Constructor: the registration of the jack send/return is done here
-    JackSendReturn(int trackid,AudioProcessor* prev,jack_client_t* client);
+	//Constructor: the registration of the jack send/return is done here
+	JackSendReturn(int trackid,AudioProcessor* prev,jack_client_t* client);
 
-    //The process callback
-    virtual void process(unsigned int nframes, Buffers* buffers);
+	//The process callback
+	virtual void process(unsigned int nframes, Buffers* buffers);
 
-    //Activate the return chain. When m_active=true then Buffers::RETURN_TRACK_0+m_trackid gets the data
-    //from the return port. The send port always send the incoming data
-    void activate(bool act);
-    void sendVolume(float vol);
+	//Activate the return chain. When m_active=true then Buffers::RETURN_TRACK_0+m_trackid gets the data
+	//from the return port. The send port always send the incoming data
+	void activate(bool act);
+	void sendVolume(float vol);
 
 private:
-    bool m_active;
-    float m_sendvol;
-    jack_port_t* m_sendport;
-    jack_port_t* m_returnport;
-    int m_trackid;
-    AudioProcessor* m_previousProcessor;
-    int m_counter;
+	bool m_active;
+	float m_sendvol;
+	jack_port_t* m_sendport;
+	jack_port_t* m_returnport;
+	int m_trackid;
+	AudioProcessor* m_previousProcessor;
+	int m_counter;
 };
 
 

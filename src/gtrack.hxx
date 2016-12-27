@@ -1,17 +1,17 @@
 /*
  * Author: Harry van Haaren 2013
  *         harryhaaren@gmail.com
- * 
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
- *  
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -45,63 +45,72 @@ using namespace std;
 
 class GTrack : public Fl_Group
 {
-  public:
-    
-    Avtk::Volume*       getVolume(){return &volume;}
-    Avtk::RadialStatus* getRadialStatus(){return &radial;}
-    Avtk::ClipSelector* getClipSelector(){return &clipSel;}
-    
-    GTrack(int x, int y, int w, int h, const char* l = 0 );
-    
-    
-    // getters
-    float getSend();
-    float getXSide();
-    
-    bool getSendActive();
-    bool getKeyActive();
-    bool getRecordActive();
-    
-    // setters
-    void setSend(float s);
-    void setXSide(float s);
-    
-    void setSendActive(bool a);
-    void setKeyActive(bool a);
-    void setRecordActive(bool a);
-    
-    void setJackSend(float s);
-    void setJackSendActivate(bool a);
-  
-    int ID;
-    
-    Avtk::Background bg;
-    
-    Avtk::RadialStatus radial;
-    
-    Avtk::ClipSelector clipSel;
+public:
 
-    Avtk::Box    volBox;
-    
-    Avtk::Volume volume;
-    
-    float getJackSend();
-    bool getJackSendActivate();
+	Avtk::Volume*       getVolume()
+	{
+		return &volume;
+	}
+	Avtk::RadialStatus* getRadialStatus()
+	{
+		return &radial;
+	}
+	Avtk::ClipSelector* getClipSelector()
+	{
+		return &clipSel;
+	}
+
+	GTrack(int x, int y, int w, int h, const char* l = 0 );
+
+
+	// getters
+	float getSend();
+	float getXSide();
+
+	bool getSendActive();
+	bool getKeyActive();
+	bool getRecordActive();
+
+	// setters
+	void setSend(float s);
+	void setXSide(float s);
+
+	void setSendActive(bool a);
+	void setKeyActive(bool a);
+	void setRecordActive(bool a);
+
+	void setJackSend(float s);
+	void setJackSendActivate(bool a);
+
+	int ID;
+
+	Avtk::Background bg;
+
+	Avtk::RadialStatus radial;
+
+	Avtk::ClipSelector clipSel;
+
+	Avtk::Box    volBox;
+
+	Avtk::Volume volume;
+
+	float getJackSend();
+	bool getJackSendActivate();
 private:
-    Avtk::Box         jackSendBox;
-    Avtk::Dial        jackSendDial;
-    Avtk::LightButton jackSendActivate;
+	Avtk::Box         jackSendBox;
+	Avtk::Dial        jackSendDial;
+	Avtk::LightButton jackSendActivate;
 
-    Avtk::Dial        sendDial;
-    Avtk::LightButton sendActive;
-    
-    Avtk::Dial        xsideDial;
-    Avtk::LightButton keyActive;
-    
-    Avtk::LightButton recordActive;
-    
-    
-    static int privateID;
+	Avtk::Dial        sendDial;
+	Avtk::LightButton sendActive;
+
+	Avtk::Dial        xsideDial;
+	Avtk::LightButton keyActive;
+
+	Avtk::LightButton recordActive;
+
+
+	static int privateID;
 };
 
 #endif // LUPPP_G_TRACK_H

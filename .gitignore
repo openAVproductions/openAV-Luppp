@@ -5,6 +5,7 @@ src/*.o
 luppp
 
 *.zip
+*.orig
 
 build/*
 buildTest/*
