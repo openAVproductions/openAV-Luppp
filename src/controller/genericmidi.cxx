@@ -603,6 +603,8 @@ void GenericMIDI::launchScene( int scene )
 		Binding* b = actionToMidi.at(i);
 
 		if ( b->action == GRID_LAUNCH_SCENE ) {
+			unsigned char data[3];
+#if 1
 			for( int i = 0; i < 5; i++ ) {
 				if ( i != scene ) {
 					unsigned char data[3];
@@ -612,7 +614,13 @@ void GenericMIDI::launchScene( int scene )
 					writeMidi( data );
 				}
 			}
-			unsigned char data[3];
+#else
+			data[0] = b->status;
+			data[1] = b->data;
+			data[2] = (b->scene == scene) * 127;
+			writeMidi( data );
+#endif
+
 			data[0] = b->status;
 			data[1] = b->data + scene;
 			data[2] = 127;
