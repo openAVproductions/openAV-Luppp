@@ -364,8 +364,6 @@ Gui::Gui(const char* argZero) :
 	diskReader( new DiskReader() ),
 	diskWriter( new DiskWriter() )
 {
-	LUPPP_NOTE( "%s", "Gui()" );
-
 	gui = this;
 
 	// setup window icon before calling show()
@@ -488,8 +486,6 @@ Gui::Gui(const char* argZero) :
 			nsm_free( nsm );
 			nsm = 0;
 		}
-	} else {
-		LUPPP_NOTE("No session management in use");
 	}
 }
 

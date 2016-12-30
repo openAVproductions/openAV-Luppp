@@ -84,8 +84,6 @@ Jack::Jack( std::string name ) :
 	lastnframes=0;
 	samplerate = jack_get_sample_rate( client );
 
-	LUPPP_NOTE("Samplerate %i", samplerate );
-
 	// construct Observer classes here, not in the initializer list as the Jack*
 	// will be 0x0 until then.
 	timeManager = new TimeManager(),
@@ -203,12 +201,9 @@ Jack::Jack( std::string name ) :
 		tracksendreturns.push_back(new JackSendReturn(i,loopers.back(),client));
 		trackOutputs.push_back( new TrackOutput(i, tracksendreturns.back() ) );
 
-
 		buffers.audio[Buffers::TRACK_0 + i] = new float[ buffers.nframes ];
 		buffers.audio[Buffers::SEND_TRACK_0+i]=new float[buffers.nframes];
 		buffers.audio[Buffers::RETURN_TRACK_0+i]=new float[buffers.nframes];
-
-
 
 		timeManager->registerObserver( loopers.back() );
 		if(gui->enablePerTrackOutput) {
@@ -433,7 +428,6 @@ int Jack::process (jack_nframes_t nframes)
 	}
 	*/
 
-
 	/// update "time" from JACK master, or write master?
 	buffers.transportFrame = jack_get_current_transport_frame(client);
 
@@ -482,7 +476,6 @@ void Jack::processFrames(int nframes)
 		float returnL = buffers.audio[Buffers::MASTER_RETURN_L][i];
 		float returnR = buffers.audio[Buffers::MASTER_RETURN_R][i];
 
-
 		if ( inputToMixEnable ) {
 			// if sending to mix, scale by volume *and* by XSide send
 			float tmp = input * inputToMixVol * (1-inputToXSideVol);
@@ -496,7 +489,6 @@ void Jack::processFrames(int nframes)
 		if ( inputToKeyEnable ) {
 			buffers.audio[Buffers::SIDECHAIN_KEY][i] += input;
 		}
-
 
 		buffers.audio[Buffers::SIDECHAIN_SIGNAL][i] += input * inputToXSideVol;
 
