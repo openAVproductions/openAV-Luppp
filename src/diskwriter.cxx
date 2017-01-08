@@ -95,6 +95,17 @@ void DiskWriter::initialize(std::string path, std::string name )
 	sessionName = name;
 	sessionPath = path;
 
+	/* If project dir doesn't exist yet, create it */
+	int projectDir  = mkdir( path.c_str(),
+				 S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
+	if ( errno == EEXIST ) {
+		//LUPPP_NOTE("project dir %s exists, this is good", path.c_str());
+	} else if ( projectDir ) {
+		LUPPP_WARN("Error creating projectDir: %s", strerror(errno));
+	} else {
+		LUPPP_NOTE("Creating %s directory", path.c_str());
+	}
+
 	// write session.luppp JSON node to <path>/<sessionName>.luppp
 	stringstream sessionDirStream;
 
