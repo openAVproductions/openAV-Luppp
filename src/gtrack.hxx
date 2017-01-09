@@ -66,6 +66,7 @@ public:
 	// getters
 	float getSend();
 	float getXSide();
+	float getPan() {return panDial.value(); }
 
 	bool getSendActive();
 	bool getKeyActive();
@@ -90,6 +91,7 @@ public:
 
 	Avtk::ClipSelector clipSel;
 
+	Avtk::Box    sndBox;
 	Avtk::Box    volBox;
 
 	Avtk::Volume volume;
@@ -108,6 +110,8 @@ private:
 	Avtk::LightButton keyActive;
 
 	Avtk::LightButton recordActive;
+
+	Avtk::Dial        panDial;
 
 
 	static int privateID;

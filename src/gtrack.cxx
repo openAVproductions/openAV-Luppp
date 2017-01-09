@@ -23,6 +23,7 @@ int GTrack::privateID = 0;
 int GMasterTrack::privateID = 0;
 
 static void gtrack_vol_cb(Fl_Widget *w, void *data);
+static void gtrack_pan_cb(Fl_Widget *w, void *data);
 static void gtrack_key_cb(Fl_Widget *w, void *data);
 static void gtrack_xsideDial_cb(Fl_Widget *w, void *data);
 static void gtrack_sendDial_cb(Fl_Widget *w, void *data);
@@ -42,19 +43,18 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
 	jackSendBox(x+5, y+422, 100, 45, ""),
 	jackSendDial(x+21, y+422+8, 30,30, ""),
 	jackSendActivate(x+66, y+422+11, 36,25, "FX"),
-	volBox(x+5, y+422+50, 100, 172, ""),
-	volume(x+66, y +425+50, 36, 166, ""),
+	sndBox(x+5   , y+422+50, 58, 172, ""),
+	volBox(x+5+62, y+422+50, 40, 172, ""),
+	panDial(x+66+7, y +425+54, 30, 30, ""),
+	volume(x+66+4, y +425+50+38, 32, 166-38, ""),
 
+	sendDial   (x+19, y +430 +  50, 30, 30, ""),
+	sendActive (x+ 9, y +430 +  82, 50, 25, "Snd"),
 
+	xsideDial    (x+19, y +430 + 69+50, 30, 30, ""),
+	keyActive  (x+ 9, y +430 + 151, 50, 25, "Key"),
 
-
-	sendDial   (x+21, y +430 +  50, 30, 30, ""),
-	sendActive (x+11, y +430 +  82, 50, 25, "Snd"),
-
-	xsideDial    (x+21, y +430 + 69+50, 30, 30, ""),
-	keyActive  (x+11, y +430 + 151, 50, 25, "Key"),
-
-	recordActive  (x+11, y +430 + 182, 50, 25, "XRec")
+	recordActive  (x+ 9, y +430 + 182, 50, 25, "XRec")
 {
 	ID = privateID++;
 
@@ -69,11 +69,12 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
 	keyActive.callback( gtrack_key_cb, this );
 	keyActive.setColor( 0, 0.6, 1 );
 
-
 	recordActive.setColor( 1, 0.0, 0.0 );
 	recordActive.callback( gtrack_record_cb, this );
 
 	volume.callback( gtrack_vol_cb, this );
+	panDial.callback( gtrack_pan_cb, this );
+	panDial.value( 0.5f );
 
 	jackSendActivate.setColor( 1, 1, 0 );
 	jackSendActivate.callback(gtrack_jacksendactivate_cb,this);
@@ -191,6 +192,13 @@ void gtrack_vol_cb(Fl_Widget *w, void *data)
 	//printf("track %i vol %f\n", track->ID, ((Avtk::Dial*)w)->value() );
 }
 
+void gtrack_pan_cb(Fl_Widget *w, void *data)
+{
+	GTrack* track = (GTrack*) data;
+	/* -1 to 1 range, 0 is center */
+	EventTrackPan e( track->ID, (((Avtk::Dial*)w)->value() * 2) - 1 );
+	writeToDspRingbuffer( &e );
+}
 
 void gtrack_send_cb(Fl_Widget *w, void *data)
 {

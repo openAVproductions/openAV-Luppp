@@ -591,6 +591,16 @@ int DiskReader::readTracks()
 						writeToDspRingbuffer( &e );
 					}
 				}
+				// pan
+				{
+					cJSON* pan = cJSON_GetObjectItem( track, "pan");
+					if( !pan ) {
+						LUPPP_WARN("Track %i has no pan data saved.", t);
+					} else {
+						EventTrackPan e( t, pan->valuedouble );
+						writeToDspRingbuffer( &e );
+					}
+				}
 				// sends
 				{
 					cJSON* send       = cJSON_GetObjectItem( track, "sendAmount");
