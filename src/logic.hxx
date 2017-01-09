@@ -52,6 +52,7 @@ public:
 
 	void masterReturn( int returnNum, float v);
 
+	void trackPan(int track, float pan);
 	void trackVolume(int track, float volume);
 	void trackRecordArm(int track, bool armed);
 	void trackSendActive(int track, int send, bool active);

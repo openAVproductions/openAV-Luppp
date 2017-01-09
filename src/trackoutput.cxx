@@ -36,6 +36,7 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
 	_toMaster        = 0.8;
 	_toMasterLag     = 0.8;
 	_toMasterDiff    = 0;
+	_toMasterPan     = 0.f;
 	_toReverb        = 0.0;
 	_toSidechain     = 0.0;
 	_toPostSidechain = 0.0;
@@ -84,6 +85,11 @@ void TrackOutput::setSendActive( int send, bool a )
 	default:
 		break;
 	}
+}
+
+void TrackOutput::setPan( float pan )
+{
+	_toMasterPan = pan;
 }
 
 void TrackOutput::setSend( int send, float value )
@@ -138,13 +144,20 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 
 	float* jackoutput    = buffers->audio[Buffers::JACK_TRACK_0+track];
 
+	/* Trial + Error leads to this algo - its cheap and cheerful */
+	float p = ((_toMasterPan + 1.0f) * 0.5f) * (M_PI * 0.5);
+	float sin_p = sin(p);
+	float cos_p = cos(p);
+	float pan_r = sin_p * sin_p;
+	float pan_l = cos_p * cos_p;
+
 	for(unsigned int i = 0; i < nframes; i++) {
 		// * master for "post-fader" sends
 		float tmp = trackBuffer[i];
 
 		// post-sidechain *moves* signal between "before/after" ducking, not add!
-		masterL[i]       += tmp * _toMasterLag * (1-_toPostSidechain);
-		masterR[i]       += tmp * _toMasterLag * (1-_toPostSidechain);
+		masterL[i]       += tmp * _toMasterLag * (1-_toPostSidechain) * pan_l;
+		masterR[i]       += tmp * _toMasterLag * (1-_toPostSidechain) * pan_r;
 		if(jackoutput)
 			jackoutput[i]     = tmp * _toMasterLag * (1-_toPostSidechain);
 		if ( _toPostfaderActive )

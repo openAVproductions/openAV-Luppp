@@ -25,6 +25,7 @@ const char* EventMasterInputVol::prettyName = "master:input_vol";
 const char* EventMasterInputTo::prettyName = "master:input_to";
 const char* EventMasterInputToActive::prettyName = "master:input_to_active";
 
+const char* EventTrackPan::prettyName = "track:pan";
 const char* EventTrackVol::prettyName = "track:volume";
 const char* EventTrackSend::prettyName = "track:send";
 const char* EventTrackSendActive::prettyName = "track:send_active";
@@ -73,6 +74,9 @@ const char* Event::getPrettyName( int type )
 		return EventMasterInputToActive::prettyName;
 	}
 
+	case TRACK_PAN: {
+		return EventTrackPan::prettyName;
+	}
 	case TRACK_VOLUME: {
 		return EventTrackVol::prettyName;
 	}

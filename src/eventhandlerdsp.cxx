@@ -322,6 +322,16 @@ void handleDspEvents()
 				}
 			}
 
+			case Event::TRACK_PAN: {
+				if ( availableRead >= sizeof(EventTrackPan) ) {
+					EventTrackPan ev;
+					jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackPan) );
+					jack->getLogic()->trackPan( ev.track, ev.pan );
+					//jack->bindingTrack = ev.track;
+					break;
+				}
+			}
+
 			case Event::TRACK_RECORD_ARM: {
 				if ( availableRead >= sizeof(EventTrackRecordArm) ) {
 					EventTrackRecordArm ev;

@@ -87,6 +87,7 @@ enum EVENT_TYPE {
 	TRACK_SEND_ACTIVE,
 	TRACK_SIGNAL_LEVEL,
 	TRACK_VOLUME,
+	TRACK_PAN,
 	TRACK_RECORD_ARM,
 
 	FX_REVERB,
@@ -476,6 +477,35 @@ public:
 		vol = v;
 	}
 };
+
+class EventTrackPan : public EventBase
+{
+public:
+	int type()
+	{
+		return int(TRACK_PAN);
+	}
+	uint32_t size()
+	{
+		return sizeof(EventTrackPan);
+	}
+	static const char* prettyName;
+	const char* name()
+	{
+		return prettyName;
+	}
+
+	int track;
+	float pan;
+
+	EventTrackPan() {};
+	EventTrackPan(int t, float p)
+	{
+		track = t;
+		pan = p;
+	}
+};
+
 
 class EventTrackRecordArm : public EventBase
 {

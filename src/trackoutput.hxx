@@ -43,6 +43,9 @@ public:
 
 	float getMaster();
 
+	// panning
+	void setPan ( float pan );
+
 	bool recordArm();
 	void recordArm(bool r);
 
@@ -64,6 +67,8 @@ private:
 	float _toMaster;
 	float _toMasterLag;
 	float _toMasterDiff;
+	/* -1 indicates 100% left, 0 is centered, 1 indicates right */
+	float _toMasterPan;
 
 	float _toReverb;
 	float _toSidechain;

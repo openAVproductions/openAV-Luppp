@@ -71,6 +71,14 @@ void Logic::masterReturn( int returnNum, float value )
 	jack->getControllerUpdater()->masterReturnVolume( value );
 }
 
+void Logic::trackPan(int t, float p)
+{
+	if ( t >= 0 && t < NTRACKS ) {
+		jack->getTrackOutput( t )->setPan( p );
+		//jack->getControllerUpdater()->volume( t, v );
+	}
+}
+
 void Logic::trackVolume(int t, float v)
 {
 	if ( t == -1 ) { // master track
