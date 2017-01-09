@@ -599,6 +599,7 @@ int DiskReader::readTracks()
 					} else {
 						EventTrackPan e( t, pan->valuedouble );
 						writeToDspRingbuffer( &e );
+						LUPPP_WARN("Track %i has pan %f", pan->valuedouble);
 					}
 				}
 				// sends

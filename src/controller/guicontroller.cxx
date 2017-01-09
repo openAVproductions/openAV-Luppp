@@ -142,6 +142,12 @@ void LupppGUI::volume(int t, float f)
 	writeToGuiRingbuffer( &e );
 }
 
+void LupppGUI::pan(int t, float p)
+{
+	EventTrackPan e( t, p );
+	writeToGuiRingbuffer( &e );
+}
+
 void LupppGUI::progress(int t, int s, float f)
 {
 	EventLooperProgress e( t, f );

@@ -396,7 +396,6 @@ int DiskWriter::writeSession()
 		cJSON_AddNumberToObject( track, "fader", gui->getTrack(t)->getVolume()->value() );
 		cJSON_AddNumberToObject( track, "pan", gui->getTrack(t)->getPan());
 
-
 		cJSON_AddNumberToObject( track, "sendAmount" , gui->getTrack(t)->getSend()       );
 		cJSON_AddNumberToObject( track, "sendActive" , gui->getTrack(t)->getSendActive() );
 

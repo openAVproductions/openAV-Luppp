@@ -178,6 +178,14 @@ void handleGuiEvents()
 				}
 				break;
 			}
+			case Event::TRACK_PAN: {
+				if ( availableRead >= sizeof(EventTrackPan) ) {
+					EventTrackPan ev;
+					jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTrackPan) );
+					gui->getTrack(ev.track)->setPan( ev.pan );
+				}
+				break;
+			}
 
 
 			case Event::TRACK_RECORD_ARM: {

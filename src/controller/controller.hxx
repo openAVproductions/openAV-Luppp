@@ -84,6 +84,7 @@ public:
 	virtual void specialScene(int t, int scene) {}
 
 	/// track functionality
+	virtual void pan(int t, float p) {}
 	virtual void mute(int t, bool b) {}
 	virtual void volume(int t, float f) {}
 	virtual void progress(int t, int s, float f) {}

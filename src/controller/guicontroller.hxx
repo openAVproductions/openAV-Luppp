@@ -53,6 +53,7 @@ public:
 
 	void specialScene(int t, int scene);
 
+	void pan(int t, float p);
 	void mute(int t, bool b);
 	void volume(int t, float f);
 	void progress(int t, int s, float p);

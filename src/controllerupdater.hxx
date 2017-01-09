@@ -81,6 +81,8 @@ public:
 
 	void volume(int t, float v);
 
+	void pan(int t, float p);
+
 	void tapTempo(bool b);
 
 	void metronomeEnable(bool b);

@@ -75,7 +75,7 @@ void Logic::trackPan(int t, float p)
 {
 	if ( t >= 0 && t < NTRACKS ) {
 		jack->getTrackOutput( t )->setPan( p );
-		//jack->getControllerUpdater()->volume( t, v );
+		jack->getControllerUpdater()->pan( t, p );
 	}
 }
 

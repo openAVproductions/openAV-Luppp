@@ -67,6 +67,7 @@ public:
 	float getSend();
 	float getXSide();
 	float getPan() {return panDial.value(); }
+	float setPan(float p) {panDial.value( (p+1.f)*0.5 ); }
 
 	bool getSendActive();
 	bool getKeyActive();

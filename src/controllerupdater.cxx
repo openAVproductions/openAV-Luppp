@@ -172,6 +172,11 @@ void ControllerUpdater::volume(int t, float v)
 	for(unsigned int i = 0; i < c.size(); i++) c.at(i)->volume(t,v);
 }
 
+void ControllerUpdater::pan(int t, float p)
+{
+	for(unsigned int i = 0; i < c.size(); i++) c.at(i)->pan(t,p);
+}
+
 void ControllerUpdater::tapTempo(bool b)
 {
 	for(unsigned int i = 0; i < c.size(); i++) c.at(i)->tapTempo(b);
