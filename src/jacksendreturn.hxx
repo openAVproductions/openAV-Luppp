@@ -16,8 +16,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef JACKSENDREUTRN_H
+#ifndef JACKSENDRETURN_H
 #define JACKSENDRETURN_H
+
 #include "buffers.hxx"
 #include "audioprocessor.hxx"
 #include <jack/jack.h>
@@ -50,8 +51,5 @@ private:
 	AudioProcessor* m_previousProcessor;
 	int m_counter;
 };
-
-
-
 
 #endif
