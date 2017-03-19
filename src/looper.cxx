@@ -118,8 +118,9 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 			}
 
 			// copy data from input buffer to recording buffer
-			float* input = buffers->audio[Buffers::MASTER_INPUT];
-			clips[clip]->record( nframes, input, 0 );
+			float* inputL = buffers->audio[Buffers::MASTER_INPUT_L];
+			float* inputR = buffers->audio[Buffers::MASTER_INPUT_R];
+			clips[clip]->record( nframes, inputL, inputR);
 		} else if ( clips[clip]->playing() ) {
 			// copy data into tmpBuffer, then pitch-stretch into track buffer
 			long targetFrames = clips[clip]->getBeats() * fpb;
@@ -130,11 +131,14 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 				playSpeed = float(actualFrames) / targetFrames;
 			}
 
+            // TODO stereo sends
 			float* out = buffers->audio[Buffers::SEND_TRACK_0 + track];
 
 			for(unsigned int i = 0; i < nframes; i++ ) {
 				// REFACTOR into system that is better than per sample function calls
-				float tmp = clips[clip]->getSample(playSpeed);
+                float tmpL = 0;
+                float tmpR = 0;
+				clips[clip]->getSample(playSpeed, &tmpL, &tmpR);
 
 				float deltaPitch = 12 * log ( playSpeed ) / log (2);
 				semitoneShift = -deltaPitch;
@@ -143,9 +147,13 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 				//FIXME: pitchShift adds delay even for playSpeed = 1.0!!
 				//we should use something better (e.g librubberband)
 				if(playSpeed!=1.0f)
-					pitchShift( 1, &tmp, &out[i] );
+					pitchShift( 1, &tmpL, &out[i] );
+                    // TODO stereo sends
+					//pitchShift( 1, tmpR, &out[i] );
 				else
-					out[i]+=tmp;
+                    // TODO stereo sends
+					out[i]+=tmpL;
+					//outR[i]+=tmpR;
 			}
 
 			//printf("Looper %i playing(), speed = %f\n", track, playSpeed );

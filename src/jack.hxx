@@ -173,7 +173,8 @@ private:
 	bool clientActive;
 	int samplerate;
 
-	jack_port_t*  masterInput;
+	jack_port_t*  masterInputL;
+	jack_port_t*  masterInputR;
 	jack_port_t*  masterOutputL;
 	jack_port_t*  masterOutputR;
 

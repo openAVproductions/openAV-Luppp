@@ -52,9 +52,12 @@ public:
 
 	long getAudioFrames();
 
-	std::vector<float>& getData();
+    long getSize();
 
-	void nonRtSetSample(std::vector<float>& sample);
+	std::vector<float>& getDataL();
+	std::vector<float>& getDataR();
+
+	void nonRtSetSample(std::vector<float>& sampleL, std::vector<float>& sampleR);
 
 	void nonRtResize(unsigned long size);
 
@@ -72,7 +75,8 @@ protected:
 
 	char name[20];
 
-	std::vector<float> buffer;
+	std::vector<float> bufferL;
+	std::vector<float> bufferR;
 };
 
 #endif
