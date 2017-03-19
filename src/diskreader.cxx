@@ -237,7 +237,8 @@ int DiskReader::loadSample( int track, int scene, string path )
 	/// create buffer, and set the data
 	AudioBuffer* ab = new AudioBuffer();
 	ab->setAudioFrames( buf.size() );
-	ab->nonRtSetSample( buf );
+    // TODO right (stereo)
+	ab->nonRtSetSample( buf, buf );
 
 	//cout << "DiskReader::loadSample() " << path << endl;
 

@@ -121,7 +121,7 @@ void LooperClip::load( AudioBuffer* ab )
 	jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0 );
 
 	// set the endpoint to the buffer's size
-	_recordhead = _buffer->getData().size();
+	_recordhead = _buffer->getSize();
 
 #ifdef DEBUG_BUFFER
 	char buffer [50];
@@ -134,8 +134,9 @@ void LooperClip::load( AudioBuffer* ab )
 void LooperClip::setRequestedBuffer( AudioBuffer* ab )
 {
 	if ( _buffer ) {
-		size_t size = _buffer->getData().size();
-		memcpy( &ab->getData().at(0), &_buffer->getData().at(0), sizeof(float)*size);
+		size_t size = _buffer->getSize();
+		memcpy( &ab->getDataL().at(0), &_buffer->getDataL().at(0), sizeof(float)*size);
+		memcpy( &ab->getDataR().at(0), &_buffer->getDataR().at(0), sizeof(float)*size);
 
 		ab->setID   ( _buffer->getID()    );
 		ab->setBeats( _buffer->getBeats() );
@@ -153,10 +154,13 @@ void LooperClip::setRequestedBuffer( AudioBuffer* ab )
 
 void LooperClip::recieveSaveBuffer( AudioBuffer* saveBuffer )
 {
-	if ( saveBuffer->getData().size() >= _buffer->getData().at(0) ) {
+	if ( saveBuffer->getSize() >= _buffer->getDataL().at(0) ||
+	     saveBuffer->getSize() >= _buffer->getDataR().at(0) ) {
 		// copy current contents into save buffer,
+        // getData() contains L and R buffer, so twice the size is needed
 		size_t framesBySize = _buffer->getAudioFrames();
-		memcpy( &saveBuffer->getData().at(0), &_buffer->getData().at(0), sizeof(float)*framesBySize);
+		memcpy( &saveBuffer->getDataL().at(0), &_buffer->getDataL().at(0), sizeof(float)*framesBySize);
+		memcpy( &saveBuffer->getDataR().at(0), &_buffer->getDataR().at(0), sizeof(float)*framesBySize);
 
 		saveBuffer->setID   ( _buffer->getID()    );
 		saveBuffer->setBeats( _buffer->getBeats() );
@@ -189,11 +193,12 @@ void LooperClip::record(int count, float* L, float* R)
 {
 	// write "count" samples into current buffer.
 	if ( _buffer ) {
-		size_t size = _buffer->getData().size();
+		size_t size = _buffer->getSize();
 
 		for(int i = 0; i < count; i++) {
 			if ( _recordhead < size ) {
-				_buffer->getData().at( _recordhead ) = *L++;
+				_buffer->getDataL().at( _recordhead ) = *L++;
+				_buffer->getDataR().at( _recordhead ) = *R++;
 				_recordhead++;
 			} else {
 				// break: this is *BAD*, audio data is lost but the buffer isn't here
@@ -218,7 +223,8 @@ void LooperClip::record(int count, float* L, float* R)
 unsigned long LooperClip::recordSpaceAvailable()
 {
 	if ( _buffer )
-		return _buffer->getData().size() - _recordhead;
+        // getData() contains L and R buffer, so it is twice the size
+		return _buffer->getSize() - _recordhead;
 
 	return 0;
 }
@@ -226,7 +232,7 @@ unsigned long LooperClip::recordSpaceAvailable()
 size_t LooperClip::audioBufferSize()
 {
 	if ( _buffer ) {
-		return _buffer->getData().size();
+		return _buffer->getSize();
 	}
 	return 0;
 }
@@ -410,11 +416,11 @@ bool LooperClip::newBufferInTransit()
 	return _newBufferInTransit;
 }
 
-float LooperClip::getSample(float playSpeed)
+void LooperClip::getSample(float playSpeed, float* L, float* R)
 {
-	if ( _buffer && _buffer->getData().size() > 0 ) {
+	if ( _buffer && (_buffer->getSize() > 0)) {
 		if ( _playhead >= _recordhead ||
-		     _playhead >= _buffer->getData().size() ||
+		     _playhead >= _buffer->getSize() ||
 		     _playhead < 0  ) {
 			_playhead = 0;
 
@@ -422,14 +428,16 @@ float LooperClip::getSample(float playSpeed)
 			//writeToGuiRingbuffer( &e );
 		}
 
-		std::vector<float>& v = _buffer->getData();
-		float tmp = v.at(_playhead);
+        std::vector<float>& vL = _buffer->getDataL();
+        std::vector<float>& vR = _buffer->getDataR();
+        *L = vL.at(_playhead);
+        *R = vR.at(_playhead);
 		_playhead +=playSpeed;
-
-		return tmp;
 	}
-
-	return 0.f;
+    else {
+        *L = 0.f;
+        *R = 0.f;
+    }
 }
 
 float LooperClip::getProgress()

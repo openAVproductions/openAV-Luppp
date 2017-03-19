@@ -102,7 +102,8 @@ void AudioEditor::show( AudioBuffer* buf, bool modal )
 	if ( !ab ) {
 		LUPPP_WARN("called with ab == 0");
 	} else {
-		std::vector<float>& tmp = ab->getData();
+        // TODO right (stereo)
+		std::vector<float>& tmp = ab->getDataL();
 		int size = tmp.size();
 		waveform->setData( &tmp[0], size );
 

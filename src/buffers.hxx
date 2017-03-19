@@ -28,7 +28,8 @@ public:
 
 	enum BUFFER {
 		// AUDIO
-		MASTER_INPUT  = 0,
+		MASTER_INPUT_L = 0,
+		MASTER_INPUT_R,
 
 		MASTER_OUT_L,
 		MASTER_OUT_R,

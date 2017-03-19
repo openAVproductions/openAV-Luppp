@@ -321,7 +321,8 @@ int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab,
 	// FIXME: the size of the buffer is bigger than the audio contained in it:
 	// calculate the length that needs saving using getBeats() * framesPerBeat
 	if ( ab->getAudioFrames() > 0 )
-		outfile.write( &ab->getData()[0], ab->getAudioFrames() );
+        // TODO right (stereo)
+		outfile.write( &ab->getDataL()[0], ab->getAudioFrames() );
 	else {
 		LUPPP_WARN("%s","Sample has zero samples");
 	}
