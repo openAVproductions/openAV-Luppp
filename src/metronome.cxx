@@ -100,7 +100,8 @@ void Metronome::process(int nframes, Buffers* buffers)
 	if ( not active )
 		return;
 
-	float* out = buffers->audio[Buffers::HEADPHONES_OUT];
+	float* outL = buffers->audio[Buffers::HEADPHONES_OUT_L];
+	float* outR = buffers->audio[Buffers::HEADPHONES_OUT_R];
 
 	float* sample = &beatSample[0];
 	if( playBar ) {
@@ -109,7 +110,8 @@ void Metronome::process(int nframes, Buffers* buffers)
 
 	for(int i = 0; i < nframes; i++) {
 		if ( playPoint < endPoint ) {
-			out[i] += sample[playPoint] * vol;
+			outL[i] += sample[playPoint] * vol;
+			outR[i] += sample[playPoint] * vol;
 			playPoint++;
 		}
 	}

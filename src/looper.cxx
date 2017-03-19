@@ -131,8 +131,8 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 				playSpeed = float(actualFrames) / targetFrames;
 			}
 
-            // TODO stereo sends
-			float* out = buffers->audio[Buffers::SEND_TRACK_0 + track];
+			float* outL = buffers->audio[Buffers::SEND_TRACK_0_L + track];
+			float* outR = buffers->audio[Buffers::SEND_TRACK_0_R + track];
 
 			for(unsigned int i = 0; i < nframes; i++ ) {
 				// REFACTOR into system that is better than per sample function calls
@@ -146,14 +146,14 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 				// write the pitch-shifted signal to the track buffer
 				//FIXME: pitchShift adds delay even for playSpeed = 1.0!!
 				//we should use something better (e.g librubberband)
-				if(playSpeed!=1.0f)
-					pitchShift( 1, &tmpL, &out[i] );
-                    // TODO stereo sends
-					//pitchShift( 1, tmpR, &out[i] );
-				else
-                    // TODO stereo sends
-					out[i]+=tmpL;
-					//outR[i]+=tmpR;
+				if(playSpeed!=1.0f) {
+					pitchShift( 1, &tmpL, &outL[i] );
+					pitchShift( 1, &tmpR, &outR[i] );
+                }
+				else {
+					outL[i]+=tmpL;
+					outR[i]+=tmpR;
+                }
 			}
 
 			//printf("Looper %i playing(), speed = %f\n", track, playSpeed );
