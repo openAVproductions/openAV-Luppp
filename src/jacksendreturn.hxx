@@ -45,8 +45,10 @@ public:
 private:
 	bool m_active;
 	float m_sendvol;
-	jack_port_t* m_sendport;
-	jack_port_t* m_returnport;
+	jack_port_t* m_sendport_l;
+	jack_port_t* m_sendport_r;
+	jack_port_t* m_returnport_l;
+	jack_port_t* m_returnport_r;
 	int m_trackid;
 	AudioProcessor* m_previousProcessor;
 	int m_counter;
