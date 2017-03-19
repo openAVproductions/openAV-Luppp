@@ -151,11 +151,16 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 	float* jackoutputR    = buffers->audio[Buffers::JACK_TRACK_0_R+track];
 
 	/* Trial + Error leads to this algo - its cheap and cheerful */
-	float p = ((_toMasterPan + 1.0f) * 0.5f) * (M_PI * 0.5);
-	float sin_p = sin(p);
-	float cos_p = cos(p);
-	float pan_r = sin_p * sin_p;
-	float pan_l = cos_p * cos_p;
+    float pan_l = 1.0f;
+    float pan_r = 1.0f;
+    if(_toMasterPan <= 0) {
+        // pan to left channel, lower right one
+        pan_r = _toMasterPan + 1.0f;
+    }
+    else {
+        // pan to right channel, lower left one
+        pan_l = (_toMasterPan * -1) + 1.0f;
+    }
 
 	for(unsigned int i = 0; i < nframes; i++) {
 		// * master for "post-fader" sends
