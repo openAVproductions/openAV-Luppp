@@ -164,48 +164,53 @@ int DiskReader::loadSample( int track, int scene, string path )
 {
 	/// load the sample
 	SndfileHandle infile( path, SFM_READ );
-	std::vector<float> buf( infile.frames() * infile.channels() );
-	infile.read( (float*)&buf[0] , infile.frames() * infile.channels() );
+	int chnls = infile.channels();
+	std::vector<float> bufL( infile.frames() / chnls );
+	std::vector<float> bufR( infile.frames() / chnls );
+    std::vector<float> bufTmp( infile.frames() * (chnls-2) );
 
 	if ( infile.error() ) {
 		LUPPP_ERROR("File %s, Error %s", path.c_str(), infile.strError() );
 		return LUPPP_RETURN_ERROR;
 	}
 
-	LUPPP_NOTE("Loading file with  %i chnls, frames %i,buffer size %i", infile.channels(), infile.frames(), buf.size() );
+	LUPPP_NOTE("Loading file with  %i chnls, frames %i, bufferL size %i bufferR size %i", infile.channels(), infile.frames(), bufL.size(), bufR.size() );
 
-	/// kick stereo channel?
-	int chnls = infile.channels();
-	if ( chnls > 1 ) {
-		// we're gonna kick all samples that are *not* channel 1
-		std::vector<float> tmp( buf.size() / chnls );
+	// Read data
+    for(int f=0; f<infile.frames()/chnls; f++) {
+        infile.read( (float*)&bufL[f] , 1 );
+        infile.read( (float*)&bufR[f] , 1 );
 
-		LUPPP_NOTE("Non mono file: %i chnls found, old size %i, new size %i ", infile.channels(), buf.size(), tmp.size() );
-
-		for(size_t i = 0; i < tmp.size(); i++ ) {
-			tmp.at(i) = buf.at( i * chnls );
-		}
-
-		// swap the buffers
-		buf.swap( tmp );
-	}
+        // Read (and ignore) remaining channels
+        for(int c=0; c<chnls-2; c++) {
+            infile.read( (float*)&bufTmp[f], 1);
+        }
+    }
 
 	/// resample?
 	if ( infile.samplerate() != gui->samplerate ) {
 		LUPPP_NOTE("%s%i%s%i", "Resampling from ", infile.samplerate(), " to ", gui->samplerate);
 
 		float resampleRatio = float(gui->samplerate) / infile.samplerate();
-		std::vector<float> resampled( infile.frames() * resampleRatio );
+		std::vector<float> resampledL( infile.frames() / chnls * resampleRatio );
+		std::vector<float> resampledR( infile.frames() / chnls * resampleRatio );
 
-		SRC_DATA data;
-		data.data_in  = &buf[0];
-		data.data_out = &resampled[0];
+		SRC_DATA dataL;
+		SRC_DATA dataR;
+		dataL.data_in  = &bufL[0];
+		dataR.data_in  = &bufR[0];
+		dataL.data_out = &resampledL[0];
+		dataR.data_out = &resampledR[0];
 
-		data.input_frames = infile.frames();
-		data.output_frames = infile.frames() * resampleRatio;
+		dataL.input_frames = infile.frames() / chnls;
+		dataR.input_frames = infile.frames() / chnls;
+		dataL.output_frames = infile.frames() / chnls * resampleRatio;
+		dataR.output_frames = infile.frames() / chnls * resampleRatio;
 
-		data.end_of_input = 0;
-		data.src_ratio = resampleRatio;
+		dataL.end_of_input = 0;
+		dataR.end_of_input = 0;
+		dataL.src_ratio = resampleRatio;
+		dataR.src_ratio = resampleRatio;
 
 		int q = SRC_SINC_FASTEST;
 
@@ -223,22 +228,27 @@ int DiskReader::loadSample( int track, int scene, string path )
 
 
 		// resample quality taken from config file,
-		int ret = src_simple ( &data, q, 1 );
+		int ret = src_simple ( &dataL, q, 1 );
 		if ( ret == 0 )
-			LUPPP_NOTE("%s%i%s%i", "Resampling finished, from ", data.input_frames_used, " to ", data.output_frames_gen );
+			LUPPP_NOTE("%s%i%s%i", "Resampling L finished, from ", dataL.input_frames_used, " to ", dataL.output_frames_gen );
 		else
-			LUPPP_ERROR("%s%i%s%i", "Resampling finished, from ", data.input_frames_used, " to ", data.output_frames_gen );
+			LUPPP_ERROR("%s%i%s%i", "Resampling L finished, from ", dataL.input_frames_used, " to ", dataL.output_frames_gen );
+		ret = src_simple ( &dataR, q, 1 );
+		if ( ret == 0 )
+			LUPPP_NOTE("%s%i%s%i", "Resampling R finished, from ", dataR.input_frames_used, " to ", dataR.output_frames_gen );
+		else
+			LUPPP_ERROR("%s%i%s%i", "Resampling R finished, from ", dataR.input_frames_used, " to ", dataR.output_frames_gen );
 
 		/// exchange buffers, so buf contains the resampled audio
-		buf.swap( resampled );
+		bufL.swap( resampledL );
+		bufR.swap( resampledR );
 	}
 
 
 	/// create buffer, and set the data
 	AudioBuffer* ab = new AudioBuffer();
-	ab->setAudioFrames( buf.size() );
-    // TODO right (stereo)
-	ab->nonRtSetSample( buf, buf );
+	ab->setAudioFrames( bufL.size() );
+	ab->nonRtSetSample( bufL, bufR );
 
 	//cout << "DiskReader::loadSample() " << path << endl;
 
