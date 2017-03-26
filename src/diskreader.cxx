@@ -165,9 +165,9 @@ int DiskReader::loadSample( int track, int scene, string path )
 	/// load the sample
 	SndfileHandle infile( path, SFM_READ );
 	int chnls = infile.channels();
-	std::vector<float> bufL( infile.frames() / chnls );
-	std::vector<float> bufR( infile.frames() / chnls );
-    std::vector<float> bufTmp( infile.frames() * (chnls-2) );
+	std::vector<float> bufL( infile.frames() );
+	std::vector<float> bufR( infile.frames() );
+    float frameBuf[ sizeof(float) * chnls ];
 
 	if ( infile.error() ) {
 		LUPPP_ERROR("File %s, Error %s", path.c_str(), infile.strError() );
@@ -177,13 +177,20 @@ int DiskReader::loadSample( int track, int scene, string path )
 	LUPPP_NOTE("Loading file with  %i chnls, frames %i, bufferL size %i bufferR size %i", infile.channels(), infile.frames(), bufL.size(), bufR.size() );
 
 	// Read data
-    for(int f=0; f<infile.frames()/chnls; f++) {
-        infile.read( (float*)&bufL[f] , 1 );
-        infile.read( (float*)&bufR[f] , 1 );
+    for(int f=0; f<infile.frames(); f++) {
+        infile.readf( frameBuf, 1 );
 
-        // Read (and ignore) remaining channels
-        for(int c=0; c<chnls-2; c++) {
-            infile.read( (float*)&bufTmp[f], 1);
+        // Frist sapmle
+        // used for both channels when file is mono
+        // used for left channel when file is stereo
+        if(chnls > 0) {
+            bufL[f] = frameBuf[0];
+            bufR[f] = frameBuf[0];
+        }
+        // Second sample
+        // used for right channel when file is stereo
+        if(chnls > 1) {
+            bufR[f] = frameBuf[1];
         }
     }
 
