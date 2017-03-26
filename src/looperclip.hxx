@@ -55,7 +55,7 @@ public:
 	void load( AudioBuffer* ab );
 
 	/// audio functionality
-	float getSample(float playSpeed);
+	void getSample(float playSpeed, float* L, float* R);
 	void record(int count, float* L, float* R);
 
 	/// TimeObserver override

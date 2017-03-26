@@ -316,12 +316,18 @@ int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab,
 	}
 
 
-	SndfileHandle outfile( path.str(), SFM_WRITE, SF_FORMAT_WAV | SF_FORMAT_FLOAT, 1, gui->samplerate );
+	SndfileHandle outfile( path.str(), SFM_WRITE, SF_FORMAT_WAV | SF_FORMAT_FLOAT, 2, gui->samplerate );
 
 	// FIXME: the size of the buffer is bigger than the audio contained in it:
 	// calculate the length that needs saving using getBeats() * framesPerBeat
-	if ( ab->getAudioFrames() > 0 )
-		outfile.write( &ab->getData()[0], ab->getAudioFrames() );
+	if ( ab->getAudioFrames() > 0 ) {
+        float frameBuf[ sizeof(float) * 2 ];
+        for(int i=0; i<ab->getAudioFrames(); i++) {
+            frameBuf[0] = ab->getDataL()[i];
+            frameBuf[1] = ab->getDataR()[i];
+            outfile.writef( frameBuf, 1);
+        }
+    }
 	else {
 		LUPPP_WARN("%s","Sample has zero samples");
 	}

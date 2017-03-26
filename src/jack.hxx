@@ -173,21 +173,26 @@ private:
 	bool clientActive;
 	int samplerate;
 
-	jack_port_t*  masterInput;
+	jack_port_t*  masterInputL;
+	jack_port_t*  masterInputR;
 	jack_port_t*  masterOutputL;
 	jack_port_t*  masterOutputR;
 
 	jack_port_t*  masterReturnL;
 	jack_port_t*  masterReturnR;
-	jack_port_t*  headphonesPort;
+	jack_port_t*  headphonesPortL;
+	jack_port_t*  headphonesPortR;
 
-	jack_port_t*  sidechainKeyOutput;
-	jack_port_t*  sidechainSignalOutput;
-	jack_port_t*  sendOutput;
+	jack_port_t*  sidechainKeyOutputL;
+	jack_port_t*  sidechainKeyOutputR;
+	jack_port_t*  sidechainSignalOutputL;
+	jack_port_t*  sidechainSignalOutputR;
+	jack_port_t*  sendOutputL;
+	jack_port_t*  sendOutputR;
 
 	jack_port_t*  masterMidiInput;
 
-	jack_port_t* trackJackOutputPorts[NTRACKS];
+	jack_port_t* trackJackOutputPorts[NTRACKS*2];
 
 	// JACK callback
 	int  process (jack_nframes_t);

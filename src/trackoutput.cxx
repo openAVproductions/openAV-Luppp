@@ -114,14 +114,16 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 	if(fabs(_toMaster-_toMasterLag)>=fabs(_toMasterDiff/100.0))
 		_toMasterLag+=_toMasterDiff/10.0;
 	// get & zero track buffer
-	float* trackBuffer = buffers->audio[Buffers::RETURN_TRACK_0 + track];
-	memset( trackBuffer, 0, sizeof(float)*nframes );
+	float* trackBufferL = buffers->audio[Buffers::RETURN_TRACK_0_L + track];
+	float* trackBufferR = buffers->audio[Buffers::RETURN_TRACK_0_R + track];
+	memset( trackBufferL, 0, sizeof(float)*nframes );
+	memset( trackBufferR, 0, sizeof(float)*nframes );
 
 	// call process() up the chain
 	previousInChain->process( nframes, buffers );
 
 	// run the meter
-	dbMeter->process( nframes, trackBuffer, trackBuffer );
+	dbMeter->process( nframes, trackBufferL, trackBufferR );
 
 	if (uiUpdateCounter > uiUpdateConstant ) {
 		float l = dbMeter->getLeftDB() * _toMasterLag;
@@ -134,41 +136,59 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 	uiUpdateCounter += nframes;
 
 	// copy audio data into reverb / sidechain / master buffers
-	float* reverb        = buffers->audio[Buffers::SEND];
-	float* sidechain     = buffers->audio[Buffers::SIDECHAIN_KEY];
-	float* postSidechain = buffers->audio[Buffers::SIDECHAIN_SIGNAL];
+	float* reverbL        = buffers->audio[Buffers::SEND_L];
+	float* reverbR        = buffers->audio[Buffers::SEND_R];
+	float* sidechainL     = buffers->audio[Buffers::SIDECHAIN_KEY_L];
+	float* sidechainR     = buffers->audio[Buffers::SIDECHAIN_KEY_R];
+	float* postSidechainL = buffers->audio[Buffers::SIDECHAIN_SIGNAL_L];
+	float* postSidechainR = buffers->audio[Buffers::SIDECHAIN_SIGNAL_R];
 
 	float* masterL       = buffers->audio[Buffers::MASTER_OUT_L];
 	float* masterR       = buffers->audio[Buffers::MASTER_OUT_R];
 
 
-	float* jackoutput    = buffers->audio[Buffers::JACK_TRACK_0+track];
+	float* jackoutputL    = buffers->audio[Buffers::JACK_TRACK_0_L+track];
+	float* jackoutputR    = buffers->audio[Buffers::JACK_TRACK_0_R+track];
 
 	/* Trial + Error leads to this algo - its cheap and cheerful */
-	float p = ((_toMasterPan + 1.0f) * 0.5f) * (M_PI * 0.5);
-	float sin_p = sin(p);
-	float cos_p = cos(p);
-	float pan_r = sin_p * sin_p;
-	float pan_l = cos_p * cos_p;
+    float pan_l = 1.0f;
+    float pan_r = 1.0f;
+    if(_toMasterPan <= 0) {
+        // pan to left channel, lower right one
+        pan_r = _toMasterPan + 1.0f;
+    }
+    else {
+        // pan to right channel, lower left one
+        pan_l = (_toMasterPan * -1) + 1.0f;
+    }
 
 	for(unsigned int i = 0; i < nframes; i++) {
 		// * master for "post-fader" sends
-		float tmp = trackBuffer[i];
+		float tmpL = trackBufferL[i];
+		float tmpR = trackBufferR[i];
 
 		// post-sidechain *moves* signal between "before/after" ducking, not add!
-		masterL[i]       += tmp * _toMasterLag * (1-_toPostSidechain) * pan_l;
-		masterR[i]       += tmp * _toMasterLag * (1-_toPostSidechain) * pan_r;
-		if(jackoutput)
-			jackoutput[i]     = tmp * _toMasterLag * (1-_toPostSidechain);
-		if ( _toPostfaderActive )
-			reverb[i]        += tmp * _toReverb * _toMasterLag;
+		masterL[i]       += tmpL * _toMasterLag * (1-_toPostSidechain) * pan_l;
+		masterR[i]       += tmpR * _toMasterLag * (1-_toPostSidechain) * pan_r;
+		if(jackoutputL)
+			jackoutputL[i]     = tmpL * _toMasterLag * (1-_toPostSidechain);
+		if(jackoutputR)
+			jackoutputR[i]     = tmpR * _toMasterLag * (1-_toPostSidechain);
+		if ( _toPostfaderActive ) {
+			reverbL[i]        += tmpL * _toReverb * _toMasterLag;
+			reverbR[i]        += tmpR * _toReverb * _toMasterLag;
+        }
 
-		if ( _toXSideActive )
-			postSidechain[i] += tmp * _toPostSidechain * _toMasterLag;
+		if ( _toXSideActive ) {
+			postSidechainL[i] += tmpL * _toPostSidechain * _toMasterLag;
+			postSidechainR[i] += tmpR * _toPostSidechain * _toMasterLag;
+        }
 
 		// turning down an element in the mix should *NOT* influence sidechaining
-		if ( _toKeyActive )
-			sidechain[i]     += tmp;
+		if ( _toKeyActive ) {
+			sidechainL[i]     += tmpL;
+			sidechainR[i]     += tmpR;
+        }
 
 	}
 }

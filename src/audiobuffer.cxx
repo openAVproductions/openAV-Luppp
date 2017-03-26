@@ -17,6 +17,7 @@
  */
 
 #include "audiobuffer.hxx"
+#include "config.hxx"
 
 #include <stdio.h>
 
@@ -31,7 +32,8 @@ AudioBuffer::AudioBuffer(unsigned long size)
 	// FIXME recorded buffers don't get an ID, using garbage IDs
 	/// no ID assigned: it *takes* the one from the previous buffer!
 	init();
-	buffer.resize(size);
+	bufferL.resize(size);
+	bufferR.resize(size);
 }
 
 void AudioBuffer::init()
@@ -98,18 +100,32 @@ long AudioBuffer::getAudioFrames()
 	return audioFrames;
 }
 
-std::vector<float>& AudioBuffer::getData()
+long AudioBuffer::getSize()
 {
-	return buffer;
+    if(bufferL.size() != bufferR.size()) {
+        LUPPP_WARN("left and right channels of audio buffer have different size: %i vs %i", bufferL.size(), bufferR.size() );
+    }
+    return std::min(bufferL.size(), bufferR.size());
 }
 
-void AudioBuffer::nonRtSetSample(std::vector<float>& sample)
+std::vector<float>& AudioBuffer::getDataL()
 {
-	buffer.swap(sample);
+	return bufferL;
+}
+std::vector<float>& AudioBuffer::getDataR()
+{
+	return bufferR;
+}
+
+void AudioBuffer::nonRtSetSample(std::vector<float>& sampleL, std::vector<float>& sampleR)
+{
+	bufferL.swap(sampleL);
+	bufferR.swap(sampleR);
 }
 void AudioBuffer::nonRtResize(unsigned long size)
 {
-	buffer.resize(size);
+	bufferL.resize(size);
+	bufferR.resize(size);
 }
 
 /*

@@ -109,11 +109,17 @@ Jack::Jack( std::string name ) :
 	uiUpdateCounter  = buffers.samplerate / 30;
 	uiUpdateConstant = buffers.samplerate / 30;
 
-	masterInput  = jack_port_register( client,
-	                                   "master_in",
-	                                   JACK_DEFAULT_AUDIO_TYPE,
-	                                   JackPortIsInput,
-	                                   0 );
+	masterInputL  = jack_port_register( client,
+	                                    "master_in_left",
+	                                    JACK_DEFAULT_AUDIO_TYPE,
+	                                    JackPortIsInput,
+	                                    0 );
+
+	masterInputR  = jack_port_register( client,
+	                                    "master_in_right",
+	                                    JACK_DEFAULT_AUDIO_TYPE,
+	                                    JackPortIsInput,
+	                                    0 );
 
 	masterReturnL = jack_port_register( client,
 	                                    "master_return_left",
@@ -139,29 +145,53 @@ Jack::Jack( std::string name ) :
 	                                    JackPortIsOutput,
 	                                    0 );
 
-	headphonesPort = jack_port_register( client,
-	                                     "headphone_out",
-	                                     JACK_DEFAULT_AUDIO_TYPE,
-	                                     JackPortIsOutput,
-	                                     0 );
+	headphonesPortL = jack_port_register( client,
+	                                      "headphone_out_l",
+	                                      JACK_DEFAULT_AUDIO_TYPE,
+	                                      JackPortIsOutput,
+	                                      0 );
 
-	sendOutput    = jack_port_register( client,
-	                                    "send_out",
+	headphonesPortR = jack_port_register( client,
+	                                      "headphone_out_r",
+	                                      JACK_DEFAULT_AUDIO_TYPE,
+	                                      JackPortIsOutput,
+	                                      0 );
+
+	sendOutputL   = jack_port_register( client,
+	                                    "send_out_l",
 	                                    JACK_DEFAULT_AUDIO_TYPE,
 	                                    JackPortIsOutput,
 	                                    0 );
 
-	sidechainKeyOutput= jack_port_register( client,
-	                                        "sidechain_key",
-	                                        JACK_DEFAULT_AUDIO_TYPE,
-	                                        JackPortIsOutput,
-	                                        0 );
+	sendOutputR   = jack_port_register( client,
+	                                    "send_out_r",
+	                                    JACK_DEFAULT_AUDIO_TYPE,
+	                                    JackPortIsOutput,
+	                                    0 );
 
-	sidechainSignalOutput= jack_port_register( client,
-	                       "sidechain_signal",
-	                       JACK_DEFAULT_AUDIO_TYPE,
-	                       JackPortIsOutput,
-	                       0 );
+	sidechainKeyOutputL = jack_port_register( client,
+	                                          "sidechain_key_l",
+	                                          JACK_DEFAULT_AUDIO_TYPE,
+	                                          JackPortIsOutput,
+	                                          0 );
+
+	sidechainKeyOutputR = jack_port_register( client,
+	                                          "sidechain_key_r",
+	                                          JACK_DEFAULT_AUDIO_TYPE,
+	                                          JackPortIsOutput,
+	                                          0 );
+
+	sidechainSignalOutputL = jack_port_register( client,
+	                         "sidechain_signal_l",
+	                         JACK_DEFAULT_AUDIO_TYPE,
+	                         JackPortIsOutput,
+	                         0 );
+
+	sidechainSignalOutputR = jack_port_register( client,
+	                         "sidechain_signal_r",
+	                         JACK_DEFAULT_AUDIO_TYPE,
+	                         JackPortIsOutput,
+	                         0 );
 
 	/*
 	masterMidiInput  = jack_port_register( client,
@@ -182,9 +212,12 @@ Jack::Jack( std::string name ) :
 	inputToXSideVol   = 0.f;
 
 	/// prepare internal buffers
-	buffers.audio[Buffers::SEND]           = new float[ buffers.nframes ];
-	buffers.audio[Buffers::SIDECHAIN_KEY]  = new float[ buffers.nframes ];
-	buffers.audio[Buffers::SIDECHAIN_SIGNAL]=new float[ buffers.nframes ];
+	buffers.audio[Buffers::SEND_L]            = new float[ buffers.nframes ];
+	buffers.audio[Buffers::SEND_R]            = new float[ buffers.nframes ];
+	buffers.audio[Buffers::SIDECHAIN_KEY_L]   = new float[ buffers.nframes ];
+	buffers.audio[Buffers::SIDECHAIN_KEY_R]   = new float[ buffers.nframes ];
+	buffers.audio[Buffers::SIDECHAIN_SIGNAL_L]= new float[ buffers.nframes ];
+	buffers.audio[Buffers::SIDECHAIN_SIGNAL_R]= new float[ buffers.nframes ];
 
 	buffers.audio[Buffers::MASTER_OUT_L]   = new float[ buffers.nframes ];
 	buffers.audio[Buffers::MASTER_OUT_R]   = new float[ buffers.nframes ];
@@ -201,19 +234,29 @@ Jack::Jack( std::string name ) :
 		tracksendreturns.push_back(new JackSendReturn(i,loopers.back(),client));
 		trackOutputs.push_back( new TrackOutput(i, tracksendreturns.back() ) );
 
-		buffers.audio[Buffers::TRACK_0 + i] = new float[ buffers.nframes ];
-		buffers.audio[Buffers::SEND_TRACK_0+i]=new float[buffers.nframes];
-		buffers.audio[Buffers::RETURN_TRACK_0+i]=new float[buffers.nframes];
+        int o = i*2;
+		buffers.audio[Buffers::TRACK_0_L + o] = new float[ buffers.nframes ];
+		buffers.audio[Buffers::TRACK_0_R + o] = new float[ buffers.nframes ];
+		buffers.audio[Buffers::SEND_TRACK_0_L+o]=new float[buffers.nframes];
+		buffers.audio[Buffers::SEND_TRACK_0_R+o]=new float[buffers.nframes];
+		buffers.audio[Buffers::RETURN_TRACK_0_L+o]=new float[buffers.nframes];
+		buffers.audio[Buffers::RETURN_TRACK_0_R+o]=new float[buffers.nframes];
 
 		timeManager->registerObserver( loopers.back() );
 		if(gui->enablePerTrackOutput) {
 			char name[50];
-			sprintf(name,"track_%d\n",i);
-			trackJackOutputPorts[i]=jack_port_register( client,
+			sprintf(name,"track_%d_l",i);
+			trackJackOutputPorts[o]=jack_port_register( client,
 			                        name,
 			                        JACK_DEFAULT_AUDIO_TYPE,
 			                        JackPortIsOutput,
 			                        0 );
+			sprintf(name,"track_%d_r",i);
+			trackJackOutputPorts[o+1]=jack_port_register( client,
+			                          name,
+			                          JACK_DEFAULT_AUDIO_TYPE,
+			                          JackPortIsOutput,
+			                          0 );
 
 		}
 	}
@@ -272,9 +315,13 @@ Jack::~Jack()
 	delete inputMeter;
 	delete masterMeter;
 	for(int i = 0; i < NTRACKS; i++) {
-		delete [] buffers.audio[Buffers::TRACK_0+i];
-		delete [] buffers.audio[Buffers::SEND_TRACK_0+i];
-		delete [] buffers.audio[Buffers::RETURN_TRACK_0+i];
+        int o = i*2;
+		delete [] buffers.audio[Buffers::TRACK_0_L+o];
+		delete [] buffers.audio[Buffers::TRACK_0_R+o];
+		delete [] buffers.audio[Buffers::SEND_TRACK_0_L+o];
+		delete [] buffers.audio[Buffers::SEND_TRACK_0_R+o];
+		delete [] buffers.audio[Buffers::RETURN_TRACK_0_L+o];
+		delete [] buffers.audio[Buffers::RETURN_TRACK_0_R+o];
 		delete tracksendreturns[i];
 		delete loopers[i];
 		delete trackOutputs[i];
@@ -303,7 +350,7 @@ void Jack::quit()
 
 TrackOutput* Jack::getTrackOutput(int t)
 {
-	if ( t >= 0 && t < NTRACKS )
+	if ( t >= 0 && t < NTRACKS*2 )
 		return trackOutputs.at(t);
 #ifdef DEBUG_TRACKS
 	else {
@@ -316,7 +363,7 @@ TrackOutput* Jack::getTrackOutput(int t)
 
 JackSendReturn* Jack::getJackSendReturn(int t)
 {
-	if ( t >= 0 && t < NTRACKS )
+	if ( t >= 0 && t < NTRACKS*2 )
 		return tracksendreturns.at(t);
 #ifdef DEBUG_TRACKS
 	else {
@@ -330,7 +377,7 @@ JackSendReturn* Jack::getJackSendReturn(int t)
 
 Looper* Jack::getLooper(int t)
 {
-	if ( t >= 0 && t < NTRACKS )
+	if ( t >= 0 && t < NTRACKS*2 )
 		return loopers.at(t);
 #ifdef DEBUG_TRACKS
 	else {
@@ -367,20 +414,27 @@ void Jack::unregisterMidiIO( MidiIO* mo )
 int Jack::process (jack_nframes_t nframes)
 {
 	/// get buffers
-	buffers.audio[Buffers::MASTER_INPUT]        = (float*)jack_port_get_buffer( masterInput    , nframes );
-	buffers.audio[Buffers::MASTER_RETURN_L]     = (float*)jack_port_get_buffer( masterReturnL  , nframes );
-	buffers.audio[Buffers::MASTER_RETURN_R]     = (float*)jack_port_get_buffer( masterReturnR  , nframes );
-	buffers.audio[Buffers::HEADPHONES_OUT]      = (float*)jack_port_get_buffer( headphonesPort , nframes );
+	buffers.audio[Buffers::MASTER_INPUT_L]        = (float*)jack_port_get_buffer( masterInputL,           nframes );
+	buffers.audio[Buffers::MASTER_INPUT_R]        = (float*)jack_port_get_buffer( masterInputR,           nframes );
+	buffers.audio[Buffers::MASTER_RETURN_L]       = (float*)jack_port_get_buffer( masterReturnL,          nframes );
+	buffers.audio[Buffers::MASTER_RETURN_R]       = (float*)jack_port_get_buffer( masterReturnR,          nframes );
+	buffers.audio[Buffers::HEADPHONES_OUT_L]      = (float*)jack_port_get_buffer( headphonesPortL,        nframes );
+	buffers.audio[Buffers::HEADPHONES_OUT_R]      = (float*)jack_port_get_buffer( headphonesPortR,        nframes );
 
-	buffers.audio[Buffers::JACK_SEND_OUT]       = (float*)jack_port_get_buffer( sendOutput     , nframes );
-	buffers.audio[Buffers::JACK_MASTER_OUT_L]   = (float*)jack_port_get_buffer( masterOutputL  , nframes );
-	buffers.audio[Buffers::JACK_MASTER_OUT_R]   = (float*)jack_port_get_buffer( masterOutputR  , nframes );
-	buffers.audio[Buffers::JACK_SIDECHAIN_KEY]   = (float*)jack_port_get_buffer(sidechainKeyOutput,nframes);
-	buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL]=(float*)jack_port_get_buffer(sidechainSignalOutput,nframes);
+	buffers.audio[Buffers::JACK_SEND_OUT_L]        = (float*)jack_port_get_buffer( sendOutputL,           nframes );
+	buffers.audio[Buffers::JACK_SEND_OUT_R]        = (float*)jack_port_get_buffer( sendOutputR,           nframes );
+	buffers.audio[Buffers::JACK_MASTER_OUT_L]      = (float*)jack_port_get_buffer( masterOutputL,         nframes );
+	buffers.audio[Buffers::JACK_MASTER_OUT_R]      = (float*)jack_port_get_buffer( masterOutputR,         nframes );
+	buffers.audio[Buffers::JACK_SIDECHAIN_KEY_L]   = (float*)jack_port_get_buffer( sidechainKeyOutputL,   nframes );
+	buffers.audio[Buffers::JACK_SIDECHAIN_KEY_R]   = (float*)jack_port_get_buffer( sidechainKeyOutputR,   nframes );
+	buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL_L]= (float*)jack_port_get_buffer( sidechainSignalOutputL,nframes );
+	buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL_R]= (float*)jack_port_get_buffer( sidechainSignalOutputR,nframes );
 	if(gui->enablePerTrackOutput) {
-		for(int t=0; t<NTRACKS; t++)
-			buffers.audio[Buffers::JACK_TRACK_0+t]       = (float*)jack_port_get_buffer( trackJackOutputPorts[t]     , nframes );
-
+		for(int t=0; t<NTRACKS; t++) {
+            int o = t*2;
+			buffers.audio[Buffers::JACK_TRACK_0_L+o] = (float*)jack_port_get_buffer( trackJackOutputPorts[o],   nframes );
+			buffers.audio[Buffers::JACK_TRACK_0_R+o] = (float*)jack_port_get_buffer( trackJackOutputPorts[o+1], nframes );
+        }
 	}
 
 
@@ -389,14 +443,20 @@ int Jack::process (jack_nframes_t nframes)
 	memset( buffers.audio[Buffers::JACK_MASTER_OUT_R] , 0, sizeof(float) * nframes );
 	memset( buffers.audio[Buffers::MASTER_OUT_L]      , 0, sizeof(float) * nframes );
 	memset( buffers.audio[Buffers::MASTER_OUT_R]      , 0, sizeof(float) * nframes );
-	memset( buffers.audio[Buffers::HEADPHONES_OUT]    , 0, sizeof(float) * nframes );
-	memset( buffers.audio[Buffers::SEND]              , 0, sizeof(float) * nframes );
-	memset( buffers.audio[Buffers::SIDECHAIN_KEY]     , 0, sizeof(float) * nframes );
-	memset( buffers.audio[Buffers::SIDECHAIN_SIGNAL]  , 0, sizeof(float) * nframes );
+	memset( buffers.audio[Buffers::HEADPHONES_OUT_L]  , 0, sizeof(float) * nframes );
+	memset( buffers.audio[Buffers::HEADPHONES_OUT_R]  , 0, sizeof(float) * nframes );
+	memset( buffers.audio[Buffers::SEND_L]            , 0, sizeof(float) * nframes );
+	memset( buffers.audio[Buffers::SEND_R]            , 0, sizeof(float) * nframes );
+	memset( buffers.audio[Buffers::SIDECHAIN_KEY_L]   , 0, sizeof(float) * nframes );
+	memset( buffers.audio[Buffers::SIDECHAIN_KEY_R]   , 0, sizeof(float) * nframes );
+	memset( buffers.audio[Buffers::SIDECHAIN_SIGNAL_L], 0, sizeof(float) * nframes );
+	memset( buffers.audio[Buffers::SIDECHAIN_SIGNAL_R], 0, sizeof(float) * nframes );
 	if(gui->enablePerTrackOutput) {
-		for(int t=0; t<NTRACKS; t++)
-			memset( buffers.audio[Buffers::JACK_TRACK_0+t]  , 0, sizeof(float) * nframes );
-
+		for(int t=0; t<NTRACKS; t++) {
+            int o = t*2;
+			memset( buffers.audio[Buffers::JACK_TRACK_0_L+o], 0, sizeof(float) * nframes );
+			memset( buffers.audio[Buffers::JACK_TRACK_0_R+o], 0, sizeof(float) * nframes );
+        }
 	}
 
 
@@ -469,7 +529,8 @@ void Jack::processFrames(int nframes)
 
 	/// mix input, reverb & post-sidechain in
 	for(unsigned int i = 0; i < nframes; i++) {
-		float input= buffers.audio[Buffers::MASTER_INPUT][i] * inputVol;
+		float inputL = buffers.audio[Buffers::MASTER_INPUT_L][i] * inputVol;
+		float inputR = buffers.audio[Buffers::MASTER_INPUT_R][i] * inputVol;
 
 		float L    = buffers.audio[Buffers::MASTER_OUT_L][i];
 		float R    = buffers.audio[Buffers::MASTER_OUT_R][i];
@@ -478,19 +539,23 @@ void Jack::processFrames(int nframes)
 
 		if ( inputToMixEnable ) {
 			// if sending to mix, scale by volume *and* by XSide send
-			float tmp = input * inputToMixVol * (1-inputToXSideVol);
-			L += tmp;
-			R += tmp;
+			float tmpL = inputL * inputToMixVol * (1-inputToXSideVol);
+			float tmpR = inputR * inputToMixVol * (1-inputToXSideVol);
+			L += tmpL;
+			R += tmpR;
 		}
 		if ( inputToSendEnable ) {
 			// post-mix-send amount: hence * inputToMixVol
-			buffers.audio[Buffers::SEND][i] += input * inputToSendVol * inputToMixVol;
+			buffers.audio[Buffers::SEND_L][i] += inputL * inputToSendVol * inputToMixVol;
+			buffers.audio[Buffers::SEND_R][i] += inputR * inputToSendVol * inputToMixVol;
 		}
 		if ( inputToKeyEnable ) {
-			buffers.audio[Buffers::SIDECHAIN_KEY][i] += input;
+			buffers.audio[Buffers::SIDECHAIN_KEY_R][i] += inputL;
+			buffers.audio[Buffers::SIDECHAIN_KEY_R][i] += inputR;
 		}
 
-		buffers.audio[Buffers::SIDECHAIN_SIGNAL][i] += input * inputToXSideVol;
+		buffers.audio[Buffers::SIDECHAIN_SIGNAL_L][i] += inputL * inputToXSideVol;
+		buffers.audio[Buffers::SIDECHAIN_SIGNAL_R][i] += inputR * inputToXSideVol;
 
 		//compute master volume lag;
 		if(fabs(masterVol-masterVolLag)>=fabs(masterVolDiff/10.0))
@@ -500,14 +565,17 @@ void Jack::processFrames(int nframes)
 		buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = (R + returnR*returnVol) * masterVolLag;
 
 		/// write SEND content to JACK port
-		buffers.audio[Buffers::JACK_SEND_OUT][i] = buffers.audio[Buffers::SEND][i];
-		buffers.audio[Buffers::JACK_SIDECHAIN_KEY][i] = buffers.audio[Buffers::SIDECHAIN_KEY][i];
-		buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL][i] = buffers.audio[Buffers::SIDECHAIN_SIGNAL][i];
+		buffers.audio[Buffers::JACK_SEND_OUT_L][i] = buffers.audio[Buffers::SEND_L][i];
+		buffers.audio[Buffers::JACK_SEND_OUT_R][i] = buffers.audio[Buffers::SEND_R][i];
+		buffers.audio[Buffers::JACK_SIDECHAIN_KEY_L][i] = buffers.audio[Buffers::SIDECHAIN_KEY_L][i];
+		buffers.audio[Buffers::JACK_SIDECHAIN_KEY_R][i] = buffers.audio[Buffers::SIDECHAIN_KEY_R][i];
+		buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL_L][i] = buffers.audio[Buffers::SIDECHAIN_SIGNAL_L][i];
+		buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL_R][i] = buffers.audio[Buffers::SIDECHAIN_SIGNAL_R][i];
 	}
 
 
 	/// db meter on master input & output
-	inputMeter->process( nframes, buffers.audio[Buffers::MASTER_INPUT], buffers.audio[Buffers::MASTER_INPUT]);
+	inputMeter->process( nframes, buffers.audio[Buffers::MASTER_INPUT_L], buffers.audio[Buffers::MASTER_INPUT_R]);
 	masterMeter->process(nframes, buffers.audio[Buffers::JACK_MASTER_OUT_L], buffers.audio[Buffers::JACK_MASTER_OUT_R] );
 
 	if ( uiUpdateCounter > uiUpdateConstant ) {
@@ -541,19 +609,26 @@ void Jack::processFrames(int nframes)
 	/// update buffers by nframes
 	if(lastnframes+nframes<buffers.nframes) {
 		lastnframes=nframes;
-		buffers.audio[Buffers::MASTER_INPUT]        = &buffers.audio[Buffers::MASTER_INPUT]   [nframes];
-		buffers.audio[Buffers::MASTER_RETURN_L]     = &buffers.audio[Buffers::MASTER_RETURN_L][nframes];
-		buffers.audio[Buffers::MASTER_RETURN_R]     = &buffers.audio[Buffers::MASTER_RETURN_R][nframes];
-		buffers.audio[Buffers::HEADPHONES_OUT]      = &buffers.audio[Buffers::HEADPHONES_OUT] [nframes];
+		buffers.audio[Buffers::MASTER_INPUT_L]         = &buffers.audio[Buffers::MASTER_INPUT_L][nframes];
+		buffers.audio[Buffers::MASTER_INPUT_R]         = &buffers.audio[Buffers::MASTER_INPUT_R][nframes];
+		buffers.audio[Buffers::MASTER_RETURN_L]        = &buffers.audio[Buffers::MASTER_RETURN_L][nframes];
+		buffers.audio[Buffers::MASTER_RETURN_R]        = &buffers.audio[Buffers::MASTER_RETURN_R][nframes];
+		buffers.audio[Buffers::HEADPHONES_OUT_L]       = &buffers.audio[Buffers::HEADPHONES_OUT_L][nframes];
+		buffers.audio[Buffers::HEADPHONES_OUT_R]       = &buffers.audio[Buffers::HEADPHONES_OUT_R][nframes];
 
-		buffers.audio[Buffers::JACK_SEND_OUT]       = &buffers.audio[Buffers::JACK_SEND_OUT][nframes];
-		buffers.audio[Buffers::JACK_MASTER_OUT_L]   = &buffers.audio[Buffers::JACK_MASTER_OUT_L][nframes];
-		buffers.audio[Buffers::JACK_MASTER_OUT_R]   = &buffers.audio[Buffers::JACK_MASTER_OUT_R][nframes];
-		buffers.audio[Buffers::JACK_SIDECHAIN_KEY]  = &buffers.audio[Buffers::JACK_SIDECHAIN_KEY][nframes];
-		buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL]=&buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL][nframes];
+		buffers.audio[Buffers::JACK_SEND_OUT_L]        = &buffers.audio[Buffers::JACK_SEND_OUT_L][nframes];
+		buffers.audio[Buffers::JACK_SEND_OUT_R]        = &buffers.audio[Buffers::JACK_SEND_OUT_R][nframes];
+		buffers.audio[Buffers::JACK_MASTER_OUT_L]      = &buffers.audio[Buffers::JACK_MASTER_OUT_L][nframes];
+		buffers.audio[Buffers::JACK_MASTER_OUT_R]      = &buffers.audio[Buffers::JACK_MASTER_OUT_R][nframes];
+		buffers.audio[Buffers::JACK_SIDECHAIN_KEY_L]   = &buffers.audio[Buffers::JACK_SIDECHAIN_KEY_L][nframes];
+		buffers.audio[Buffers::JACK_SIDECHAIN_KEY_R]   = &buffers.audio[Buffers::JACK_SIDECHAIN_KEY_R][nframes];
+		buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL_L]= &buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL_L][nframes];
+		buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL_R]= &buffers.audio[Buffers::JACK_SIDECHAIN_SIGNAL_R][nframes];
 		if(gui->enablePerTrackOutput) {
 			for(int t=0; t<NTRACKS; t++) {
-				buffers.audio[Buffers::JACK_TRACK_0+t]       = &buffers.audio[Buffers::JACK_TRACK_0+t][nframes];
+                int o = t*2;
+				buffers.audio[Buffers::JACK_TRACK_0_L+o]   = &buffers.audio[Buffers::JACK_TRACK_0_L+o][nframes];
+				buffers.audio[Buffers::JACK_TRACK_0_L+o+1] = &buffers.audio[Buffers::JACK_TRACK_0_L+o+1][nframes];
 			}
 		}
 	} else
@@ -564,16 +639,23 @@ void Jack::processFrames(int nframes)
 
 void Jack::clearInternalBuffers(int nframes)
 {
-	memset(buffers.audio[Buffers::SEND],0,sizeof(float)*nframes);
-	memset(buffers.audio[Buffers::SIDECHAIN_KEY],0,sizeof(float)*nframes);
-	memset(buffers.audio[Buffers::SIDECHAIN_SIGNAL],0,sizeof(float)*nframes);
+	memset(buffers.audio[Buffers::SEND_L],0,sizeof(float)*nframes);
+	memset(buffers.audio[Buffers::SEND_R],0,sizeof(float)*nframes);
+	memset(buffers.audio[Buffers::SIDECHAIN_KEY_L],0,sizeof(float)*nframes);
+	memset(buffers.audio[Buffers::SIDECHAIN_KEY_R],0,sizeof(float)*nframes);
+	memset(buffers.audio[Buffers::SIDECHAIN_SIGNAL_L],0,sizeof(float)*nframes);
+	memset(buffers.audio[Buffers::SIDECHAIN_SIGNAL_R],0,sizeof(float)*nframes);
 	memset(buffers.audio[Buffers::MASTER_OUT_L],0,sizeof(float)*nframes);
 	memset(buffers.audio[Buffers::MASTER_OUT_R],0,sizeof(float)*nframes);
 	for(int i=0; i<NTRACKS; i++) {
-		memset(buffers.audio[Buffers::TRACK_0 + i],0,sizeof(float)*nframes);
-		memset(buffers.audio[Buffers::SEND_TRACK_0 + i],0,sizeof(float)*nframes);
+        int o = i*2;
+		memset(buffers.audio[Buffers::TRACK_0_L + o],0,sizeof(float)*nframes);
+		memset(buffers.audio[Buffers::TRACK_0_R + o],0,sizeof(float)*nframes);
+		memset(buffers.audio[Buffers::SEND_TRACK_0_L + o],0,sizeof(float)*nframes);
+		memset(buffers.audio[Buffers::SEND_TRACK_0_R + o],0,sizeof(float)*nframes);
 
-		memset(buffers.audio[Buffers::RETURN_TRACK_0 + i],0,sizeof(float)*nframes);
+		memset(buffers.audio[Buffers::RETURN_TRACK_0_L + o],0,sizeof(float)*nframes);
+		memset(buffers.audio[Buffers::RETURN_TRACK_0_R + o],0,sizeof(float)*nframes);
 	}
 }
 
