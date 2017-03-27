@@ -151,16 +151,15 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 	float* jackoutputR    = buffers->audio[Buffers::JACK_TRACK_0_R+track];
 
 	/* Trial + Error leads to this algo - its cheap and cheerful */
-    float pan_l = 1.0f;
-    float pan_r = 1.0f;
-    if(_toMasterPan <= 0) {
-        // pan to left channel, lower right one
-        pan_r = _toMasterPan + 1.0f;
-    }
-    else {
-        // pan to right channel, lower left one
-        pan_l = (_toMasterPan * -1) + 1.0f;
-    }
+	float pan_l = 1.0f;
+	float pan_r = 1.0f;
+	if(_toMasterPan <= 0) {
+		// pan to left channel, lower right one
+		pan_r = _toMasterPan + 1.0f;
+	} else {
+		// pan to right channel, lower left one
+		pan_l = (_toMasterPan * -1) + 1.0f;
+	}
 
 	for(unsigned int i = 0; i < nframes; i++) {
 		// * master for "post-fader" sends
@@ -177,18 +176,18 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 		if ( _toPostfaderActive ) {
 			reverbL[i]        += tmpL * _toReverb * _toMasterLag;
 			reverbR[i]        += tmpR * _toReverb * _toMasterLag;
-        }
+		}
 
 		if ( _toXSideActive ) {
 			postSidechainL[i] += tmpL * _toPostSidechain * _toMasterLag;
 			postSidechainR[i] += tmpR * _toPostSidechain * _toMasterLag;
-        }
+		}
 
 		// turning down an element in the mix should *NOT* influence sidechaining
 		if ( _toKeyActive ) {
 			sidechainL[i]     += tmpL;
 			sidechainR[i]     += tmpR;
-        }
+		}
 
 	}
 }
