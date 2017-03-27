@@ -136,8 +136,8 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 
 			for(unsigned int i = 0; i < nframes; i++ ) {
 				// REFACTOR into system that is better than per sample function calls
-                float tmpL = 0;
-                float tmpR = 0;
+				float tmpL = 0;
+				float tmpR = 0;
 				clips[clip]->getSample(playSpeed, &tmpL, &tmpR);
 
 				float deltaPitch = 12 * log ( playSpeed ) / log (2);
@@ -149,11 +149,10 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 				if(playSpeed!=1.0f) {
 					pitchShift( 1, &tmpL, &outL[i] );
 					pitchShift( 1, &tmpR, &outR[i] );
-                }
-				else {
+				} else {
 					outL[i]+=tmpL;
 					outR[i]+=tmpR;
-                }
+				}
 			}
 
 			//printf("Looper %i playing(), speed = %f\n", track, playSpeed );
