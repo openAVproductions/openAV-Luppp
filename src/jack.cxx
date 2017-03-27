@@ -245,13 +245,13 @@ Jack::Jack( std::string name ) :
 		timeManager->registerObserver( loopers.back() );
 		if(gui->enablePerTrackOutput) {
 			char name[50];
-			sprintf(name,"track_%d_l",i);
+			sprintf(name,"track_%d_l",i + 1);
 			trackJackOutputPorts[o]=jack_port_register( client,
 			                        name,
 			                        JACK_DEFAULT_AUDIO_TYPE,
 			                        JackPortIsOutput,
 			                        0 );
-			sprintf(name,"track_%d_r",i);
+			sprintf(name,"track_%d_r",i + 1);
 			trackJackOutputPorts[o+1]=jack_port_register( client,
 			                          name,
 			                          JACK_DEFAULT_AUDIO_TYPE,

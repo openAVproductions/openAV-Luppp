@@ -7,13 +7,14 @@ JackSendReturn::JackSendReturn(int trackid, AudioProcessor *prev, jack_client_t 
 	:m_trackid(trackid), m_previousProcessor(prev), m_sendvol(1.0f)
 {
 	char name[50];
-	sprintf(name, "Send_track_%d_l\n",trackid);
+	int trackid_human = trackid + 1;
+	sprintf(name, "Send_track_%d_l\n",trackid_human);
 	m_sendport_l=jack_port_register(client,name,JACK_DEFAULT_AUDIO_TYPE,JackPortIsOutput,0);
-	sprintf(name, "Send_track_%d_r\n",trackid);
+	sprintf(name, "Send_track_%d_r\n",trackid_human);
 	m_sendport_r=jack_port_register(client,name,JACK_DEFAULT_AUDIO_TYPE,JackPortIsOutput,0);
-	sprintf(name, "Return_track_%d_l\n",trackid);
+	sprintf(name, "Return_track_%d_l\n",trackid_human);
 	m_returnport_l=jack_port_register(client,name,JACK_DEFAULT_AUDIO_TYPE,JackPortIsInput,0);
-	sprintf(name, "Return_track_%d_r\n",trackid);
+	sprintf(name, "Return_track_%d_r\n",trackid_human);
 	m_returnport_r=jack_port_register(client,name,JACK_DEFAULT_AUDIO_TYPE,JackPortIsInput,0);
 	m_active=false;
 	m_counter=0;
