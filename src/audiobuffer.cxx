@@ -102,10 +102,10 @@ long AudioBuffer::getAudioFrames()
 
 long AudioBuffer::getSize()
 {
-    if(bufferL.size() != bufferR.size()) {
-        LUPPP_WARN("left and right channels of audio buffer have different size: %i vs %i", bufferL.size(), bufferR.size() );
-    }
-    return std::min(bufferL.size(), bufferR.size());
+	if(bufferL.size() != bufferR.size()) {
+		LUPPP_WARN("left and right channels of audio buffer have different size: %i vs %i", bufferL.size(), bufferR.size() );
+	}
+	return std::min(bufferL.size(), bufferR.size());
 }
 
 std::vector<float>& AudioBuffer::getDataL()

@@ -52,7 +52,7 @@ public:
 
 	long getAudioFrames();
 
-    long getSize();
+	long getSize();
 
 	std::vector<float>& getDataL();
 	std::vector<float>& getDataR();

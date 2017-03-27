@@ -167,7 +167,7 @@ int DiskReader::loadSample( int track, int scene, string path )
 	int chnls = infile.channels();
 	std::vector<float> bufL( infile.frames() );
 	std::vector<float> bufR( infile.frames() );
-    float frameBuf[ sizeof(float) * chnls ];
+	float frameBuf[ sizeof(float) * chnls ];
 
 	if ( infile.error() ) {
 		LUPPP_ERROR("File %s, Error %s", path.c_str(), infile.strError() );
@@ -177,22 +177,22 @@ int DiskReader::loadSample( int track, int scene, string path )
 	LUPPP_NOTE("Loading file with  %i chnls, frames %i, bufferL size %i bufferR size %i", infile.channels(), infile.frames(), bufL.size(), bufR.size() );
 
 	// Read data
-    for(int f=0; f<infile.frames(); f++) {
-        infile.readf( frameBuf, 1 );
+	for(int f=0; f<infile.frames(); f++) {
+		infile.readf( frameBuf, 1 );
 
-        // Frist sapmle
-        // used for both channels when file is mono
-        // used for left channel when file is stereo
-        if(chnls > 0) {
-            bufL[f] = frameBuf[0];
-            bufR[f] = frameBuf[0];
-        }
-        // Second sample
-        // used for right channel when file is stereo
-        if(chnls > 1) {
-            bufR[f] = frameBuf[1];
-        }
-    }
+		// Frist sapmle
+		// used for both channels when file is mono
+		// used for left channel when file is stereo
+		if(chnls > 0) {
+			bufL[f] = frameBuf[0];
+			bufR[f] = frameBuf[0];
+		}
+		// Second sample
+		// used for right channel when file is stereo
+		if(chnls > 1) {
+			bufR[f] = frameBuf[1];
+		}
+	}
 
 	/// resample?
 	if ( infile.samplerate() != gui->samplerate ) {
@@ -632,10 +632,10 @@ int DiskReader::readTracks()
 						LUPPP_WARN("Track %i has no send data saved.", t);
 					} else {
 						EventTrackSendActive e1( t, SEND_POSTFADER, sendActive->valueint );
-						EventTrackSendActive e2( t, SEND_KEY      , keyActive ->valueint );
+						EventTrackSendActive e2( t, SEND_KEY, keyActive ->valueint );
 
-						EventTrackSend e3( t, SEND_XSIDE     , xside->valuedouble );
-						EventTrackSend e4( t, SEND_POSTFADER , send->valuedouble  );
+						EventTrackSend e3( t, SEND_XSIDE, xside->valuedouble );
+						EventTrackSend e4( t, SEND_POSTFADER, send->valuedouble  );
 
 
 						writeToDspRingbuffer( &e1 );

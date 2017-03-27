@@ -97,7 +97,7 @@ void DiskWriter::initialize(std::string path, std::string name )
 
 	/* If project dir doesn't exist yet, create it */
 	int projectDir  = mkdir( path.c_str(),
-				 S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
+	                         S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
 	if ( errno == EEXIST ) {
 		//LUPPP_NOTE("project dir %s exists, this is good", path.c_str());
 	} else if ( projectDir ) {
@@ -193,15 +193,15 @@ int DiskWriter::writeControllerFile( Controller* c )
 				cJSON_AddItemToObject( binding, "action", cJSON_CreateString( actionName ) );
 
 				cJSON_AddNumberToObject( binding, "status", b.at(i)->status );
-				cJSON_AddNumberToObject( binding, "data"  , b.at(i)->data   );
+				cJSON_AddNumberToObject( binding, "data", b.at(i)->data   );
 
 				// only add JSON elements if they're not the "invalid" defaults
 				if ( b.at(i)->track != -2 )
-					cJSON_AddNumberToObject( binding, "track" , b.at(i)->track  );
+					cJSON_AddNumberToObject( binding, "track", b.at(i)->track  );
 				if ( b.at(i)->scene != -1 )
-					cJSON_AddNumberToObject( binding, "scene" , b.at(i)->scene  );
+					cJSON_AddNumberToObject( binding, "scene", b.at(i)->scene  );
 				if ( b.at(i)->send  != -1 )
-					cJSON_AddNumberToObject( binding, "send"  , b.at(i)->send   );
+					cJSON_AddNumberToObject( binding, "send", b.at(i)->send   );
 				if ( b.at(i)->active!= -1 )
 					cJSON_AddNumberToObject( binding, "active", b.at(i)->active );
 
@@ -321,14 +321,13 @@ int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab,
 	// FIXME: the size of the buffer is bigger than the audio contained in it:
 	// calculate the length that needs saving using getBeats() * framesPerBeat
 	if ( ab->getAudioFrames() > 0 ) {
-        float frameBuf[ sizeof(float) * 2 ];
-        for(int i=0; i<ab->getAudioFrames(); i++) {
-            frameBuf[0] = ab->getDataL()[i];
-            frameBuf[1] = ab->getDataR()[i];
-            outfile.writef( frameBuf, 1);
-        }
-    }
-	else {
+		float frameBuf[ sizeof(float) * 2 ];
+		for(int i=0; i<ab->getAudioFrames(); i++) {
+			frameBuf[0] = ab->getDataL()[i];
+			frameBuf[1] = ab->getDataR()[i];
+			outfile.writef( frameBuf, 1);
+		}
+	} else {
 		LUPPP_WARN("%s","Sample has zero samples");
 	}
 
@@ -402,14 +401,14 @@ int DiskWriter::writeSession()
 		cJSON_AddNumberToObject( track, "fader", gui->getTrack(t)->getVolume()->value() );
 		cJSON_AddNumberToObject( track, "pan", gui->getTrack(t)->getPan());
 
-		cJSON_AddNumberToObject( track, "sendAmount" , gui->getTrack(t)->getSend()       );
-		cJSON_AddNumberToObject( track, "sendActive" , gui->getTrack(t)->getSendActive() );
+		cJSON_AddNumberToObject( track, "sendAmount", gui->getTrack(t)->getSend()       );
+		cJSON_AddNumberToObject( track, "sendActive", gui->getTrack(t)->getSendActive() );
 
-		cJSON_AddNumberToObject( track, "jacksendAmount" , gui->getTrack(t)->getJackSend()       );
-		cJSON_AddNumberToObject( track, "jacksendActive" , gui->getTrack(t)->getJackSendActivate() );
+		cJSON_AddNumberToObject( track, "jacksendAmount", gui->getTrack(t)->getJackSend()       );
+		cJSON_AddNumberToObject( track, "jacksendActive", gui->getTrack(t)->getJackSendActivate() );
 
 		cJSON_AddNumberToObject( track, "xsideAmount", gui->getTrack(t)->getXSide()      );
-		cJSON_AddNumberToObject( track, "keyActive"  , gui->getTrack(t)->getKeyActive()  );
+		cJSON_AddNumberToObject( track, "keyActive", gui->getTrack(t)->getKeyActive()  );
 
 		// write clipData vector into clip placeholder
 		cJSON* clips = cJSON_CreateArray();
