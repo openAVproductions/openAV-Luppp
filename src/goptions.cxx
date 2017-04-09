@@ -359,7 +359,10 @@ void ControllerUI::addBinding( Binding* b )
 		// button to remove a binding, uses bindingsID vector to get unique number
 		stringstream id;
 		id << b->ID;
-		Fl_Button* but = new Fl_Button(35, 35, 25, 25, strdup(id.str().c_str() ) );
+		char *str = strdup(id.str().c_str());
+		Fl_Button* but = new Fl_Button(35, 35, 25, 25, str );
+		if(!but)
+			free(str);
 		but->callback( deleteBindingFromController, this );
 		but->redraw();
 
