@@ -615,7 +615,7 @@ int DiskReader::readTracks()
 					if( !pan ) {
 						LUPPP_WARN("Track %i has no pan data saved.", t);
 					} else {
-						EventTrackPan e( t, pan->valuedouble );
+						EventTrackPan e( t, (pan->valuedouble*2)-1.f );
 						writeToDspRingbuffer( &e );
 						LUPPP_WARN("Track %i has pan %f", pan->valuedouble);
 					}
