@@ -167,7 +167,7 @@ int DiskReader::loadSample( int track, int scene, string path )
 	int chnls = infile.channels();
 	std::vector<float> bufL( infile.frames() );
 	std::vector<float> bufR( infile.frames() );
-	float frameBuf[ sizeof(float) * chnls ];
+	float frameBuf[ chnls ];
 
 	if ( infile.error() ) {
 		LUPPP_ERROR("File %s, Error %s", path.c_str(), infile.strError() );

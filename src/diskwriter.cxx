@@ -321,7 +321,7 @@ int DiskWriter::writeAudioBuffer(int track, int scene, AudioBuffer* ab,
 	// FIXME: the size of the buffer is bigger than the audio contained in it:
 	// calculate the length that needs saving using getBeats() * framesPerBeat
 	if ( ab->getAudioFrames() > 0 ) {
-		float frameBuf[ sizeof(float) * 2 ];
+		float frameBuf[ 2 ];
 		for(int i=0; i<ab->getAudioFrames(); i++) {
 			frameBuf[0] = ab->getDataL()[i];
 			frameBuf[1] = ab->getDataR()[i];
