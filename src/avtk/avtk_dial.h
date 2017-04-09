@@ -54,6 +54,7 @@ public:
 	}
 
 	bool highlight;
+	bool pan_style;
 	int x, y, w, h;
 	char* _label;
 
@@ -112,10 +113,19 @@ public:
 			cairo_set_source_rgb(cr, 0.1, 0.1, 0.1 );
 			cairo_stroke(cr);
 
-			float angle = 2.46 + ( 4.54 * value() );
-			cairo_set_line_width(cr, lineWidth);
-			cairo_arc(cr, x+w/2,y+h/2, radius, 2.46, angle );
+			if(!pan_style) {
+				float angle = 2.46 + ( 4.54 * value() );
+				cairo_arc(cr, x+w/2,y+h/2, radius, 2.46, angle );
+			} else {
+				float angle = 2.46 + ( 4.54 * value() );
+				float mid   = 2.46 + ( 4.54 * 0.5 );
+				if(angle >= mid)
+					cairo_arc(cr, x+w/2,y+h/2, radius, mid, angle);
+				else
+					cairo_arc_negative(cr, x+w/2,y+h/2, radius, mid, angle);
+			}
 			cairo_line_to(cr, x+w/2,y+h/2);
+			cairo_set_line_width(cr, lineWidth);
 			cairo_set_source_rgba(cr, 1.0, 0.48,   0, 0.8);
 			cairo_stroke(cr);
 

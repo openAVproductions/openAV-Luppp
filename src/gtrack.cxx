@@ -75,6 +75,7 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
 	volume.callback( gtrack_vol_cb, this );
 	panDial.callback( gtrack_pan_cb, this );
 	panDial.value( 0.5f );
+	panDial.pan_style = 1;
 
 	jackSendActivate.setColor( 1, 1, 0 );
 	jackSendActivate.callback(gtrack_jacksendactivate_cb,this);
