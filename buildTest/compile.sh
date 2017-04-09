@@ -13,7 +13,7 @@ set -e
 # setup environment: Copy material for tests to /tmp
 cp -r ../src/tests/lupppTestMaterial /tmp
 
-rm CMakeCache.txt
+rm -f CMakeCache.txt
 
 scan-build cmake -DBUILD_TESTS=1 ../
 
