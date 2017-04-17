@@ -33,7 +33,6 @@ Metronome::Metronome() :
 	TimeObserver(),
 	playBar    (false),
 	active     (false),
-	vol        (1),
 	playPoint  (0)
 {
 	//Create Beat/Bar samples
@@ -49,6 +48,8 @@ Metronome::Metronome() :
 		beatSample[i]= sin(i*scale);
 		barSample [i]= sin(i*scale*2);
 	}
+
+	setVolume(0.5);
 
 	// don't play after creation
 	playPoint = endPoint + 1;
@@ -71,8 +72,8 @@ void Metronome::setActive(bool a)
 
 void Metronome::setVolume( float v )
 {
-	vol = v;
-	printf(" vol = %f \n", vol );
+	vol = v * 0.5;
+	//printf(" vol = %f \n", vol );
 }
 
 void Metronome::bar()
