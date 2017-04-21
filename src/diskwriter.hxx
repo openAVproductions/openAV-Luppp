@@ -54,6 +54,7 @@ class DiskWriter
 {
 public:
 	DiskWriter();
+	~DiskWriter();
 
 	/// sets up session write path etc
 	void initialize( std::string path, std::string sessionName );
@@ -82,8 +83,8 @@ public:
 #endif
 
 private:
-	cJSON* sessionJson;
-	cJSON* audioJson;
+	cJSON* sessionJson = nullptr;
+	cJSON* audioJson = nullptr;
 
 	bool foldersCreated;
 	std::string sessionName;

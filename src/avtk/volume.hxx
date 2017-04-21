@@ -52,7 +52,6 @@ private:
 	bool orientationHorizontal;
 
 	int x, y, w, h;
-	const char* label;
 
 	int mouseClickedX;
 	int mouseClickedY;

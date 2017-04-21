@@ -50,7 +50,14 @@ IF(RELEASE_BUILD)
   SET(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -g -Wall -W -Wno-unused-variable ")
 ENDIF(RELEASE_BUILD)
 
-if( ${ARCHITECTURE} STREQUAL "x86_64" )
+IF(WITH_ASAN)
+  SET(CMAKE_C_COMPILER "/usr/bin/clang")
+  SET(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g -fsanitize=address -fno-omit-frame-pointer")
+  SET(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -O0 -g -fsanitize=address -fno-omit-frame-pointer")
+ENDIF()
+
+if( ${ARCHITECTURE} STREQUAL "x86_64" AND NOT WITH_ASAN)
   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -O3 -msse2")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -msse2")
 else()
@@ -63,6 +70,12 @@ FILE(GLOB sources *.cxx  avtk/*.cxx cjson/*.c controller/*.cxx dsp/*.cxx observe
 # Compile binary
 add_executable (luppp version.hxx ${sources} )
 
+# require a C++11 compiler
+set_target_properties(luppp PROPERTIES 
+    CXX_STANDARD 11 
+    CXX_STANDARD_REQUIRED YES
+    CXX_EXTENSIONS NO
+)
 
 # Linking
 target_link_libraries( luppp ${JACK_LIBRARIES}       )

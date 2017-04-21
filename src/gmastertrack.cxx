@@ -263,7 +263,7 @@ void GMasterTrack::setBpm( int b )
 	tempoDial.value( ( bpm - 60 ) / 160.f );
 	std::stringstream s;
 	s << bpm;
-	tempoDial.setLabel( s.str().c_str() );
+	tempoDial.copy_label( s.str().c_str() );
 }
 
 void GMasterTrack::setInputVol(float f)

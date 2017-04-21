@@ -35,14 +35,14 @@ class Waveform : public Fl_Widget
 {
 public:
 	Waveform(int _x, int _y, int _w, int _h, const char *_label=0 ):
-		Fl_Widget(_x, _y, _w, _h, _label)
+		Fl_Widget(_x, _y, _w, _h), 
+		data(_w)
 	{
+		copy_label(_label);
 		x = _x;
 		y = _y;
 		w = _w;
 		h = _h;
-
-		label = _label;
 
 		highlight = false;
 		newWaveform = false;
@@ -50,14 +50,12 @@ public:
 		waveformCr = 0;
 		waveformSurf = 0;
 
-
-		data = (float*)malloc( sizeof(float) * w );
-
 		srand (time(NULL));
 
-		for (int i = 0; i < _w; i++) {
-			data[i] = rand() / RAND_MAX / 0.75;
-		}
+		std::generate(data.begin(), data.end(), []() -> float {
+				return rand() / RAND_MAX / 0.75;
+			}
+		);
 
 		newWaveform = true;
 
@@ -67,7 +65,6 @@ public:
 	bool strokeRim;
 	bool highlight;
 	int x, y, w, h;
-	const char* label;
 
 	cairo_t*          waveformCr;
 	cairo_surface_t*  waveformSurf;
@@ -75,13 +72,12 @@ public:
 	bool newWaveform;
 
 	long   dataSize;
-	float* data;
+	std::vector<float> data;
 
-	void setData( float* d, long size )
+	void setData( const std::vector<float>& newdata )
 	{
 		//cout << "AvtkWaveform: setDataPtr = " << data << endl;
-		dataSize = size;
-		data = d;
+		data = newdata;
 		newWaveform = true;
 
 
@@ -137,7 +133,7 @@ public:
 				cairo_set_dash ( waveformCr, dashes, 0, 0.0);
 
 
-				if ( !data ) {
+				if ( !data.empty() ) {
 					// draw X
 					cairo_move_to( cr,  0    , 0     );
 					cairo_line_to( cr,  0 + w, 0 + h );
@@ -241,11 +237,8 @@ public:
 
 		// FIXME: needs to be resampled, not clipped at end
 		// delete old data, and resize it
-		float* newData = (float*)malloc( sizeof(float) * w );
 
-		memcpy( newData, data, newSize );
-		free ( data );
-		data = newData;
+		data.resize(w);
 
 		newWaveform = true;
 

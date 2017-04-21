@@ -105,8 +105,8 @@ void AudioEditor::show( AudioBuffer* buf, bool modal )
 	}
 
 	std::vector<float>& tmp = ab->getDataL();
-	int size = tmp.size();
-	waveform->setData( &tmp[0], size );
+	const auto size = tmp.size();
+	waveform->setData( tmp );
 
 	const int beats[]= {1,2,4,8,16,32,64};
 

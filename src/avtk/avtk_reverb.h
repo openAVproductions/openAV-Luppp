@@ -29,8 +29,9 @@ class Reverb : public Fl_Slider
 {
 public:
 	Reverb(int _x, int _y, int _w, int _h, const char *_label =0):
-		Fl_Slider(_x, _y, _w, _h, _label)
+		Fl_Slider(_x, _y, _w, _h)
 	{
+		copy_label(_label);
 		x = _x;
 		y = _y;
 		w = _w;
@@ -41,8 +42,6 @@ public:
 		damp= 0.5;
 
 		active = false;
-
-		label = _label;
 
 		highlight = false;
 		mouseOver = false;
@@ -96,7 +95,6 @@ public:
 	bool mouseOver;
 	bool highlight;
 	int x, y, w, h;
-	const char* label;
 
 	void draw()
 	{

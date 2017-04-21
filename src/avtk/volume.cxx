@@ -21,14 +21,13 @@
 using namespace Avtk;
 
 Volume::Volume(int _x, int _y, int _w, int _h, const char *_label ):
-	Fl_Slider(_x, _y, _w, _h, _label)
+	Fl_Slider(_x, _y, _w, _h)
 {
+	copy_label(_label);
 	x = _x;
 	y = _y;
 	w = _w;
 	h = _h;
-
-	label = _label;
 
 	mouseClickedX = 0;
 	mouseClickedY = 0;

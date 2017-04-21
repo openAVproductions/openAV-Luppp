@@ -29,7 +29,7 @@ class LightButton : public Fl_Button
 {
 public:
 	LightButton(int _x, int _y, int _w, int _h, const char *_label):
-		Fl_Button(_x, _y, _w, _h, _label)
+		Fl_Button(_x, _y, _w, _h)
 	{
 		x = _x;
 		y = _y;
@@ -48,8 +48,6 @@ public:
 		_outg = _g;
 		_outb = _b;
 
-		label = _label;
-
 		_highlight = false;
 		mouseOver = false;
 	}
@@ -57,7 +55,6 @@ public:
 	bool mouseOver;
 	bool _highlight;
 	int x, y, w, h;
-	const char* label;
 	float _r, _g, _b;       // foreground colour
 	float _bgr, _bgg, _bgb; // background colour
 	float _outr, _outg, _outb; // outline colour

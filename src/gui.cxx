@@ -442,7 +442,7 @@ Gui::Gui(const char* argZero) :
 		for (; i < NTRACKS; i++ ) {
 			stringstream s;
 			s << "Track " << i+1;
-			tracks.push_back( new GTrack(8 + i * 118, 40, 110, 650, s.str().c_str() ) );
+			tracks.push_back( std::make_shared<GTrack>(8 + i * 118, 40, 110, 650, s.str().c_str() ) );
 		}
 		master = new GMasterTrack(8 + i * 118, 40, 150, 650, "Master");
 	}
@@ -515,7 +515,7 @@ void Gui::reset()
 	for(unsigned int i = 0; i < NTRACKS; i++) {
 		stringstream s;
 		s << "Track " << i+1;
-		tracks.at(i)->bg.setLabel( s.str().c_str() );
+		tracks.at(i)->bg.copy_label( s.str().c_str() );
 
 		for(unsigned int s = 0; s < NSCENES; s++) {
 			tracks.at(i)->getClipSelector()->clipName( s, "" );
@@ -530,7 +530,7 @@ void Gui::reset()
 
 }
 
-GTrack* Gui::getTrack(int id)
+std::shared_ptr<GTrack> Gui::getTrack(int id) const
 {
 	return tracks.at(id);
 }
@@ -915,10 +915,4 @@ Gui::~Gui()
 	delete diskWriter;
 
 	delete master;
-
-	for(unsigned int i = 0; i < tracks.size(); i++) {
-		delete tracks.at(i);
-	}
-
-
 }

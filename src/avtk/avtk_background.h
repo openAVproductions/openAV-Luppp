@@ -34,33 +34,18 @@ class Background : public Fl_Widget
 {
 public:
 	Background(int _x, int _y, int _w, int _h, const char *_label = 0):
-		Fl_Widget(_x, _y, _w, _h, _label)
+		Fl_Widget(_x, _y, _w, _h)
 	{
+		copy_label(_label);
 		x = _x;
 		y = _y;
 		w = _w;
 		h = _h;
 
-		label = strdup(_label);
-
 		highlight = false;
 	}
 	bool highlight;
 	int x, y, w, h;
-	const char* label;
-
-	void setLabel(const char* l)
-	{
-		if( label )
-			free( (char*) label);
-
-		label = strdup( l );
-		redraw();
-	}
-	const char* getLabel()
-	{
-		return label;
-	}
 
 	void draw()
 	{
@@ -87,7 +72,7 @@ public:
 			cairo_move_to( cr, x + 10, y + 14 );
 			cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 1 );
 			cairo_set_font_size( cr, 10 );
-			cairo_show_text( cr, label );
+			cairo_show_text( cr, label() );
 
 			// lower stripe
 			cairo_move_to( cr, x    , y + 20 );
@@ -122,8 +107,7 @@ public:
 			if ( Fl::event_state(FL_BUTTON3) && Fl::event_y() < y + 20 ) {
 				const char* name = fl_input( "Track name: ", "" );
 				if ( name ) {
-					free( (char*) label );
-					label = strdup( name );
+					copy_label(name);
 					redraw();
 				}
 				return 1;

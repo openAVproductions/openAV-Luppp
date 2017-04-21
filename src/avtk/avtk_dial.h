@@ -44,13 +44,6 @@ public:
 		mouseClicked = false;
 
 		highlight = false;
-		_label = strdup( _lab );
-	}
-
-	~Dial()
-	{
-		if( _label )
-			free( _label );
 	}
 
 	bool highlight;
@@ -65,17 +58,6 @@ public:
 	bool mouseClicked;
 
 	bool drawLabel;
-
-	void setLabel( const char* newLabel )
-	{
-		if( _label )
-			free( _label );
-
-		_label = strdup( newLabel );
-
-		label( _label );
-		redraw();
-	}
 
 	void draw()
 	{

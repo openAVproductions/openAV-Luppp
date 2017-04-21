@@ -39,8 +39,8 @@ jack_ringbuffer_t* rbToDsp = 0;
 jack_ringbuffer_t* rbToGui = 0;
 
 // global static pointers, for access from EventHandlerGui and EventHandlerDsp
-Gui * gui  = 0;
-Jack* jack = 0;
+Gui * gui  = nullptr;
+Jack* jack = nullptr;
 
 
 void signalHanlder(int signum)
@@ -130,6 +130,7 @@ int main(int argc, char** argv)
 
 	gui->show();
 
+    delete gui;
 
 	return 0;
 }

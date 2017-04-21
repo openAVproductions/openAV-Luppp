@@ -21,6 +21,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
@@ -68,7 +69,7 @@ public:
 	void addMidiControllerToSetup(std::string);
 	void setupMidiControllers();
 
-	GTrack* getTrack(int id);
+    std::shared_ptr<GTrack> getTrack(int id) const;
 	GMasterTrack* getMasterTrack()
 	{
 		return master;
@@ -137,7 +138,7 @@ private:
 
 	GMasterTrack*       master;
 
-	vector<GTrack*>     tracks;
+	vector<std::shared_ptr<GTrack>>     tracks;
 
 	// FIXME: refactor tooltip code out..?
 	std::string         tooltip;

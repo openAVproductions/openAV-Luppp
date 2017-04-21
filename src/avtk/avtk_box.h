@@ -30,8 +30,9 @@ class Box : public Fl_Widget
 {
 public:
 	Box(int _x, int _y, int _w, int _h, const char *_label = 0):
-		Fl_Widget(_x, _y, _w, _h, _label)
+		Fl_Widget(_x, _y, _w, _h)
 	{
+		copy_label(_label);
 		x = _x;
 		y = _y;
 		w = _w;
@@ -39,28 +40,12 @@ public:
 
 		r = g = b = 0;
 
-		label = strdup(_label);
-
 		highlight = false;
 	}
 	bool highlight;
 	int x, y, w, h;
-	const char* label;
 
 	int r,g,b;
-
-	void setLabel(const char* l)
-	{
-		if( label )
-			free( (char*) label);
-
-		label = strdup( l );
-		redraw();
-	}
-	const char* getLabel()
-	{
-		return label;
-	}
 
 	void setColor( int red, int green, int blue )
 	{
