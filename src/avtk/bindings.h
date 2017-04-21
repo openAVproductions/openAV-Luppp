@@ -37,7 +37,6 @@ public:
 	bool mouseOver;
 	bool highlight;
 	int x, y, w, h;
-	const char* label;
 
 	void add( Binding* b );
 

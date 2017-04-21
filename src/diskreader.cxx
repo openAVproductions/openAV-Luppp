@@ -596,7 +596,7 @@ int DiskReader::readTracks()
 					if( !name ) {
 						LUPPP_WARN("Track %i has no name data saved.", t);
 					} else {
-						gui->getTrack(t)->bg.setLabel( name->valuestring );
+						gui->getTrack(t)->bg.copy_label( name->valuestring );
 					}
 				}
 				// fader

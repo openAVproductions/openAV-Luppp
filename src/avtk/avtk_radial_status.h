@@ -29,14 +29,13 @@ class RadialStatus : public Fl_Slider
 {
 public:
 	RadialStatus(int _x, int _y, int _w, int _h, const char *_label = 0):
-		Fl_Slider(_x, _y, _w, _h, _label)
+		Fl_Slider(_x, _y, _w, _h)
 	{
+		copy_label(_label);
 		x = _x;
 		y = _y;
 		w = _w;
 		h = _h;
-
-		label = _label;
 
 		previousAngle = -1;
 
@@ -64,8 +63,6 @@ public:
 	bool mouseOver;
 	bool highlight;
 	int x, y, w, h;
-	const char* label;
-
 	int previousAngle;
 
 	float _r, _g, _b;       // foreground colour

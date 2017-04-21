@@ -57,14 +57,13 @@ class Unit : public Fl_Button
 {
 public:
 	Unit(int _x, int _y, int _w, int _h, const char *_label):
-		Fl_Button(_x, _y, _w, _h, _label)
+		Fl_Button(_x, _y, _w, _h)
 	{
+		copy_label(_label);
 		x = _x;
 		y = _y;
 		w = _w;
 		h = _h;
-
-		label = _label;
 
 		highlight = false;
 		mouseOver = false;
@@ -83,7 +82,6 @@ public:
 	bool mouseOver;
 	bool highlight;
 	int x, y, w, h;
-	const char* label;
 
 	void draw()
 	{

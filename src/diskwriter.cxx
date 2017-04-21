@@ -88,7 +88,14 @@ DiskWriter::DiskWriter()
 	} else {
 		LUPPP_NOTE("Creating .config/openAV/luppp directory");
 	}
-};
+}
+
+DiskWriter::~DiskWriter()
+{
+	// reset the cJSON objects
+	cJSON_Delete( sessionJson );
+	cJSON_Delete( audioJson   );
+}
 
 void DiskWriter::initialize(std::string path, std::string name )
 {
@@ -396,7 +403,7 @@ int DiskWriter::writeSession()
 
 		// add track metadata: volumes, sends etc
 		cJSON_AddNumberToObject( track, "ID", t );
-		cJSON_AddStringToObject( track, "name", gui->getTrack(t)->bg.getLabel() );
+		cJSON_AddStringToObject( track, "name", gui->getTrack(t)->bg.label() );
 
 		cJSON_AddNumberToObject( track, "fader", gui->getTrack(t)->getVolume()->value() );
 		cJSON_AddNumberToObject( track, "pan", gui->getTrack(t)->getPan());

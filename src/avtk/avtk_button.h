@@ -20,7 +20,7 @@
 #ifndef AVTK_BUTTON_H
 #define AVTK_BUTTON_H
 
-#include <FL/Fl_Button.H>
+#include <ntk/FL/Fl_Button.H>
 
 namespace Avtk
 {
@@ -29,15 +29,13 @@ class Button : public Fl_Button
 {
 public:
 	Button(int _x, int _y, int _w, int _h, const char *_label):
-		Fl_Button(_x, _y, _w, _h, _label)
+		Fl_Button(_x, _y, _w, _h)
 	{
+		copy_label(_label);
 		x = _x;
 		y = _y;
 		w = _w;
 		h = _h;
-
-		labelMe = _label;
-		setLabel( labelMe );
 
 		_r = 1.0;
 		_g = 0.48;
@@ -63,14 +61,6 @@ public:
 	bool mouseOver;
 	bool highlight;
 	int x, y, w, h;
-	const char* labelMe;
-
-	void setLabel( const char* l)
-	{
-		labelMe = l;
-		label( labelMe );
-		redraw();
-	}
 
 	float _r, _g, _b;       // foreground colour
 	float _bgr, _bgg, _bgb; // background colour
