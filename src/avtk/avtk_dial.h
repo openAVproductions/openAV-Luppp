@@ -30,9 +30,10 @@ namespace Avtk
 class Dial : public Fl_Slider
 {
 public:
-	Dial(int _x, int _y, int _w, int _h, const char* _lab=0):
-		Fl_Slider(_x, _y, _w, _h, _lab)
+	Dial(int _x, int _y, int _w, int _h, const char* _label=0):
+		Fl_Slider(_x, _y, _w, _h)
 	{
+		copy_label(_label);
 		x = _x;
 		y = _y;
 		w = _w;
@@ -49,7 +50,6 @@ public:
 	bool highlight;
 	bool pan_style;
 	int x, y, w, h;
-	char* _label;
 
 	float radius;
 	float lineWidth;
