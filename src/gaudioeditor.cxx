@@ -80,7 +80,7 @@ AudioEditor::AudioEditor()
 	for(int i = 0; i < 7; i++) {
 		stringstream s;
 		s << i;
-		beatButtons[i] = new Avtk::Button(5 + i * 50, 160, 40,30, strdup(names[i]) );
+		beatButtons[i] = new Avtk::Button(5 + i * 50, 160, 40,30, names[i] );
 	}
 	window->end();
 
