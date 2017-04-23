@@ -262,9 +262,7 @@ int DiskReader::loadSample( int track, int scene, string path )
 	bool loadableBuffer = false;
 
 	// retrieve sample metadata from sample.cfg using filename as key
-	//char* tmp = strdup( path.c_str() );
-	std::string baseName = path.substr(path.find_last_of("/\\") + 1);
-	//char* baseName = basename( tmp );
+	const auto baseName = path.substr(path.find_last_of("/\\") + 1);
 	//cout << "tmp " << tmp << " baseName " << baseName << endl;
 	ab->setName( baseName );
 
