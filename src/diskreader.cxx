@@ -282,13 +282,14 @@ int DiskReader::loadSample( int track, int scene, string path )
 		if ( file_length > 0 ) {
 			sampleFile.seekg(0, std::ios_base::beg);
 			sampleFile.clear();
-			char *sampleString = new char[file_length];
-			sampleFile.read(sampleString, file_length);
+			std::vector<char> sampleString(file_length + 1);
+			sampleFile.read(sampleString.data(), file_length);
+			sampleString.back() = '\0';
 
 			//cout << "Sample file:" << endl << sampleString << endl;
 			//cout << "Sample file (parsed):" << endl << cJSON_Parse( sampleString ) << endl;
 
-			cJSON* audioJson = cJSON_Parse( sampleString );
+			cJSON* audioJson = cJSON_Parse( sampleString.data() );
 			if (!audioJson) {
 				LUPPP_ERROR("%s %s","Error in Sample JSON before: ", cJSON_GetErrorPtr() );
 				return LUPPP_RETURN_ERROR;
@@ -323,7 +324,6 @@ int DiskReader::loadSample( int track, int scene, string path )
 			}
 
 			cJSON_Delete( audioJson );
-			delete[] sampleString;
 		} else {
 			// this means there's no audio.cfg file found for the sample: show the user
 			// the file, and ask what the intended beat number is, and load the AudioBuffer
