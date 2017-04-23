@@ -45,7 +45,6 @@ public:
 		h = _h;
 
 		highlight = false;
-		newWaveform = false;
 
 		waveformCr = 0;
 		waveformSurf = 0;
@@ -66,12 +65,11 @@ public:
 	bool highlight;
 	int x, y, w, h;
 
-	cairo_t*          waveformCr;
-	cairo_surface_t*  waveformSurf;
+	cairo_t*          waveformCr = nullptr;
+	cairo_surface_t*  waveformSurf = nullptr;
 
-	bool newWaveform;
+	bool newWaveform = false;
 
-	long   dataSize;
 	std::vector<float> data;
 
 	void setData( const std::vector<float>& newdata )
@@ -79,7 +77,6 @@ public:
 		//cout << "AvtkWaveform: setDataPtr = " << data << endl;
 		data = newdata;
 		newWaveform = true;
-
 
 		damage(FL_DAMAGE_ALL);
 	}
@@ -133,7 +130,7 @@ public:
 				cairo_set_dash ( waveformCr, dashes, 0, 0.0);
 
 
-				if ( !data.empty() ) {
+				if ( data.empty() ) {
 					// draw X
 					cairo_move_to( cr,  0    , 0     );
 					cairo_line_to( cr,  0 + w, 0 + h );
@@ -156,7 +153,7 @@ public:
 					float currentSample = 0.f;
 
 					// find how many samples per pixel
-					int samplesPerPix = int(dataSize / float(w));
+					const auto samplesPerPix = int(data.size() / float(w));
 					//cout << "width = " << w << "  sampsPerPx " << samplesPerPix << endl;
 
 					// loop over each pixel value we need
@@ -237,11 +234,9 @@ public:
 
 		// FIXME: needs to be resampled, not clipped at end
 		// delete old data, and resize it
-
 		data.resize(w);
 
 		newWaveform = true;
-
 
 		redraw();
 	}
