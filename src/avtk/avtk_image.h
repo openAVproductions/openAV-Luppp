@@ -40,14 +40,13 @@ class Image : public Fl_Widget
 {
 public:
 	Image(int _x, int _y, int _w, int _h, const char *_label=0 ):
-		Fl_Widget(_x, _y, _w, _h, _label)
+		Fl_Widget(_x, _y, _w, _h)
 	{
+		copy_label(_label);
 		x = _x;
 		y = _y;
 		w = _w;
 		h = _h;
-
-		label = _label;
 
 		bits = -1;
 		imageDataPtr = 0;
@@ -65,7 +64,6 @@ public:
 	}
 
 	int x, y, w, h;
-	const char* label;
 
 	int bits;
 	const unsigned char* imageDataPtr;

@@ -31,6 +31,8 @@ public:
 	LightButton(int _x, int _y, int _w, int _h, const char *_label):
 		Fl_Button(_x, _y, _w, _h)
 	{
+		copy_label(_label);
+
 		x = _x;
 		y = _y;
 		w = _w;
