@@ -262,8 +262,9 @@ int DiskReader::loadSample( int track, int scene, string path )
 	bool loadableBuffer = false;
 
 	// retrieve sample metadata from sample.cfg using filename as key
-	char* tmp = strdup( path.c_str() );
-	char* baseName = basename( tmp );
+	//char* tmp = strdup( path.c_str() );
+	std::string baseName = path.substr(path.find_last_of("/\\") + 1);
+	//char* baseName = basename( tmp );
 	//cout << "tmp " << tmp << " baseName " << baseName << endl;
 	ab->setName( baseName );
 
@@ -295,7 +296,7 @@ int DiskReader::loadSample( int track, int scene, string path )
 				return LUPPP_RETURN_ERROR;
 			}
 
-			cJSON* sample = cJSON_GetObjectItem( audioJson, baseName );
+			cJSON* sample = cJSON_GetObjectItem( audioJson, baseName.c_str() );
 			if ( sample ) {
 				cJSON* beats = cJSON_GetObjectItem( sample, "beats" );
 				cJSON* name  = cJSON_GetObjectItem( sample, "name" );
@@ -325,7 +326,6 @@ int DiskReader::loadSample( int track, int scene, string path )
 
 			cJSON_Delete( audioJson );
 			delete[] sampleString;
-			free ( tmp );
 		} else {
 			// this means there's no audio.cfg file found for the sample: show the user
 			// the file, and ask what the intended beat number is, and load the AudioBuffer
@@ -340,7 +340,7 @@ int DiskReader::loadSample( int track, int scene, string path )
 				std::string sub = name.substr( i );
 				ab->setName( sub.c_str() );
 
-				LUPPP_NOTE("AudioBuffer %s set %i beats", ab->getName(), ab->getBeats() );
+				LUPPP_NOTE("AudioBuffer %s set %i beats", ab->getName().c_str(), ab->getBeats() );
 
 				loadableBuffer = true;
 			}

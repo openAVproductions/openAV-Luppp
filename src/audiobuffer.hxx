@@ -41,9 +41,9 @@ public:
 	void setID(int id);
 
 	int getID();
-	void setName(const char* n);
+	void setName(const std::string& n);
 
-	char* getName();
+	const std::string& getName() const;
 	int getBeats();
 
 	void setBeats(int b);
@@ -73,7 +73,7 @@ protected:
 	/// buffer.size(), which also has non-used space at the end.
 	long audioFrames;
 
-	char name[20];
+	std::string name;
 
 	std::vector<float> bufferL;
 	std::vector<float> bufferR;

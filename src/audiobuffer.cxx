@@ -40,8 +40,6 @@ void AudioBuffer::init()
 {
 	numBeats = 0;
 	audioFrames = 0;
-	memset( name, 0, sizeof(char)*20 );
-	//sprintf( name, "%i", ID );
 }
 
 /// this function is used for "resizing" an exisiting buffer, and should
@@ -56,20 +54,18 @@ int AudioBuffer::getID()
 	return ID;
 }
 
-void AudioBuffer::setName(const char* n)
+void AudioBuffer::setName(const std::string& n)
 {
-	memcpy( name, n, sizeof(char)* 19 );
-
-	if ( strlen(n) > 19 ) {
+	name = n;
+	if (n.size() > 20) {
 #ifdef DEBUG_BUFFER
 		cout << "AudioBuffer setName too long, truncating." << endl;
 #endif
-		return;
+		name.resize(20);
 	}
-
 }
 
-char* AudioBuffer::getName()
+const std::string& AudioBuffer::getName() const
 {
 	return name;
 }
