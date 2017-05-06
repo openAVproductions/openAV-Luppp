@@ -81,7 +81,8 @@ static void updateLinkCB(Fl_Widget* w, void* data)
 
 	str << l;
 
-	system( str.str().c_str() );
+	int ret = system( str.str().c_str() );
+	/* if it fails it fails.. */
 }
 
 static void writeBindEnable(Fl_Widget* w, void* data)
