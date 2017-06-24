@@ -1,7 +1,9 @@
 Luppp - OpenAV Productions
 ===============================
 
-Official page: http://openavproductions.com/luppp
+  * [Official web page](http://openavproductions.com/luppp)
+  * [Demo videos](https://www.youtube.com/playlist?list=PLPVwzZjovbBxIik8lUisH5XdLzALDeY9j)
+  * [User documentation](http://openavproductions.com/doc/luppp.html)
 
 This is the repository of Luppp, the live looping tool.
 
@@ -34,13 +36,6 @@ cd build
 ./compile.sh
 ./run.sh
 ```
-
-
-Usage
------
-There are a range of demo videos and tutorials available
-on OpenAV's youtube channel:
-www.youtube.com/user/openAVproductions
 
 
 Issues
