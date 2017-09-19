@@ -6,13 +6,13 @@ message( STATUS "Architecture:  ${ARCHITECTURE}" )
 # Find depend libraries
 find_package(PkgConfig)
 
-pkg_check_modules(CAIRO cairo REQUIRED)
-include_directories( ${CAIRO_INCLUDE_DIRS}  )
-link_directories   ( ${CAIRO_LIBRARY_DIRS}  )
-
 pkg_check_modules(NTK ntk REQUIRED)
 include_directories( ${NTK_INCLUDE_DIRS}  )
 link_directories   ( ${NTK_LIBRARY_DIRS}  )
+
+pkg_check_modules(CAIRO cairo REQUIRED)
+include_directories( ${CAIRO_INCLUDE_DIRS}  )
+link_directories   ( ${CAIRO_LIBRARY_DIRS}  )
 
 pkg_check_modules(LIBLO liblo REQUIRED)
 include_directories( ${LIBLO_INCLUDE_DIRS}  )
