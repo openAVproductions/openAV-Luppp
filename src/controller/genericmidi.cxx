@@ -495,10 +495,16 @@ void GenericMIDI::midi(unsigned char* midi)
 				jack->getLogic()->trackJackSendActivate(b->track,b->active);
 				break;
 			case Event::GRID_EVENT:
-				if ( b->active )
+				if ( b->active == 1 ) {
+					/* press */
 					jack->getGridLogic()->pressed( b->track, b->scene );
-				else
+				} else if ( b->active == -1 ) {
+					/* clear */
+					jack->getGridLogic()->clear( b->track, b->scene );
+				} else {
+					/* release */
 					jack->getGridLogic()->released( b->track, b->scene );
+				}
 				break;
 
 			case Event::GRID_SELECT_CLIP_EVENT:

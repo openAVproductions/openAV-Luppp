@@ -61,6 +61,9 @@ public:
 	/// button press / click event
 	void pressed( int track, int scene );
 
+	/// clears the clip at this location
+	void clear( int track, int scene );
+
 	/// button release / click-release event
 	void released( int track, int scene );
 

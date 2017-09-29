@@ -211,6 +211,12 @@ void GridLogic::pressed( int track, int scene )
 	jack->getControllerUpdater()->setSceneState(track, scene, s );
 }
 
+void GridLogic::clear( int track, int scene )
+{
+	jack->getLooper( track )->getClip( scene )->init();
+	jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0 );
+	jack->getControllerUpdater()->setSceneState( track, scene, GridLogic::STATE_EMPTY );
+}
 
 void GridLogic::released( int track, int scene )
 {
