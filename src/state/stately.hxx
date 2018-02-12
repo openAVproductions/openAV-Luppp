@@ -34,6 +34,8 @@ class Stately
 public:
 	Stately();
 
+	virtual ~Stately() {}
+
 	/// this function being called resets the state of the instance to blank
 	virtual void reset();
 
