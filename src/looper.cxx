@@ -146,7 +146,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 				// write the pitch-shifted signal to the track buffer
 				//FIXME: pitchShift adds delay even for playSpeed = 1.0!!
 				//we should use something better (e.g librubberband)
-				if(playSpeed!=1.0f) {
+				if(0) { //playSpeed!=1.0f) {
 					pitchShift( 1, &tmpL, &outL[i] );
 					pitchShift( 1, &tmpR, &outR[i] );
 				} else {
