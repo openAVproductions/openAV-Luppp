@@ -30,3 +30,7 @@ subdir('controller')
 subdir('observer')
 subdir('state')
 subdir('avtk')
+
+if(get_option('tests') == true)
+  subdir('tests')
+endif

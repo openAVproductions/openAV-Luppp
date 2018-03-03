@@ -1,10 +1,16 @@
-project('openav_luppp', ['c','cpp'])
+project( 'openav_luppp', ['c','cpp'],
+  default_options : [
+    'cpp_std=c++11',
+    ])
 
 conf_data = configuration_data()
 conf_data.set('version', '1.1.1')
 
-#add_project_arguments('-std=c99', language : 'c')
-#add_project_arguments('-std=c++11', language : 'cpp')
+
+if(get_option('tests') == true)
+  add_project_arguments('-DBUILD_TESTS', language : 'cpp')
+endif
+
 add_project_arguments('-Wno-unused-variable', language : 'cpp')
 add_project_arguments('-Wno-reorder', language : 'cpp')
 add_project_arguments('-Wno-sign-compare', language : 'cpp')
