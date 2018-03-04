@@ -38,5 +38,5 @@ foreach dep : dep_names
 endforeach
 
 # compile the main project
-executable('luppp', luppp_src,
+executable('luppp', luppp_src + [version_hxx],
     dependencies: deps)
