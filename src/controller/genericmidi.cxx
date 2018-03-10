@@ -612,15 +612,8 @@ void GenericMIDI::launchScene( int scene )
 			unsigned char data[3];
 			data[0] = b->status;
 			data[1] = b->data;
+			data[2] = (i == scene) * 127;
 			
-			if ( i != scene ) 
-			{
-				data[2] = 0;
-			} 
-			else 
-			{
-				data[2] = 127;
-			}
 			//LUPPP_NOTE("this = %i GenericMIDI::launchScene()", this );
 			writeMidi( data );
 
