@@ -611,7 +611,7 @@ void GenericMIDI::launchScene( int scene )
 		if ( b->action == GRID_LAUNCH_SCENE ) {
 			unsigned char data[3];
 			data[0] = b->status;
-			data[1] = b->data + i;
+			data[1] = b->data;
 			
 			if ( i != scene ) 
 			{
