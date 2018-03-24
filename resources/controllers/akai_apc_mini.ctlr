@@ -697,6 +697,54 @@
 			"status": 176,
 			"data": 55,
 			"track": 7
+		},
+		{
+			"action": "grid:launch_scene",
+			"status": 144,
+			"data": 82,
+			"scene": 0
+		},
+		{
+			"action": "grid:launch_scene",
+			"status": 144,
+			"data": 83,
+			"scene": 1
+		},
+		{
+			"action": "grid:launch_scene",
+			"status": 144,
+			"data": 84,
+			"scene": 2
+		},
+		{
+			"action": "grid:launch_scene",
+			"status": 144,
+			"data": 85,
+			"scene": 3
+		},
+		{
+			"action": "grid:launch_scene",
+			"status": 144,
+			"data": 86,
+			"scene": 4
+		},
+		{
+			"action": "grid:launch_scene",
+			"status": 144,
+			"data": 87,
+			"scene": 5
+		},
+		{
+			"action": "grid:launch_scene",
+			"status": 144,
+			"data": 88,
+			"scene": 6
+		},
+		{
+			"action": "grid:launch_scene",
+			"status": 144,
+			"data": 89,
+			"scene": 7
 		}
 	],
 	"outputBindings": [
@@ -1731,6 +1779,54 @@
 				"queuePlaying": 2,
 				"queueRecording": 4
 			}
+		}, 
+		{
+			"action": "grid:launch_scene",
+			"status": 144,
+			"data": 82,
+			"scene": 0
+		}, 
+		{
+			"action": "grid:launch_scene",
+			"status": 144,
+			"data": 83,
+			"scene": 1
+		}, 
+		{
+			"action": "grid:launch_scene",
+			"status": 144,
+			"data": 84,
+			"scene": 2
+		}, 
+		{
+			"action": "grid:launch_scene",
+			"status": 144,
+			"data": 85,
+			"scene": 3
+		}, 
+		{
+			"action": "grid:launch_scene",
+			"status": 144,
+			"data": 86,
+			"scene": 4
+		}, 
+		{
+			"action": "grid:launch_scene",
+			"status": 144,
+			"data": 87,
+			"scene": 5
+		}, 
+		{
+			"action": "grid:launch_scene",
+			"status": 144,
+			"data": 88,
+			"scene": 6
+		}, 
+		{
+			"action": "grid:launch_scene",
+			"status": 144,
+			"data": 89,
+			"scene": 7
 		}
 	]
 }
