@@ -66,6 +66,8 @@ public:
 		return "CtlraScript";
 	}
 
+	virtual void poll();
+
 	const char *getCtlraName(int type, int id);
 
 	void barBeat(int bar, int beat);

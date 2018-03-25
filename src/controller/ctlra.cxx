@@ -274,14 +274,13 @@ luppp_event_func(struct ctlra_dev_t* dev, uint32_t num_events,
 	c->ctlra_forward(dev, num_events, events);
 }
 
-void CtlraScript::poll_devices()
+void CtlraScript::poll()
 {
 	if(!dev) {
 		printf("%s error, no dev!\n", __func__);
 		return;
 	}
 
-	//ctlra_rt_safe_idle_iter(dev);
 	ctlra_idle_iter(dev);
 }
 

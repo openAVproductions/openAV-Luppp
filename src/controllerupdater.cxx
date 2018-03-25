@@ -74,6 +74,13 @@ Controller* ControllerUpdater::getController(int id)
 	return 0;
 }
 
+void ControllerUpdater::poll()
+{
+	for(unsigned int i = 0; i < c.size(); i++)
+		c.at(i)->poll();
+}
+
+
 void ControllerUpdater::reset()
 {
 	for(unsigned int i = 0; i < c.size(); i++)

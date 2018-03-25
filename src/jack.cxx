@@ -459,13 +459,14 @@ int Jack::process (jack_nframes_t nframes)
 		}
 	}
 
-
 	//buffers.midi [Buffers::MASTER_MIDI_INPUT]   = (void*) jack_port_get_buffer( masterMidiInput, nframes );
 
 	/// init buffers for each MidiIO
 	for(unsigned int i = 0; i < midiIO.size(); i++ ) {
 		midiIO.at(i)->initBuffers( nframes );
 	}
+
+	controllerUpdater->poll();
 
 	/// do events from the ringbuffer
 	handleDspEvents();

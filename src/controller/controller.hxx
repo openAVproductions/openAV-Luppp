@@ -50,6 +50,8 @@ public:
 		return 0;
 	}
 
+	virtual void poll() {}
+
 	virtual ~Controller() {};
 
 	/// get the status of the controller

@@ -55,6 +55,7 @@ public:
 	/// returns a Controller* from ID
 	Controller* getController(int id);
 
+	void poll();
 	void reset();
 	void mute(int t, bool b);
 
