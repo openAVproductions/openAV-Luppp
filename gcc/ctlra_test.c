@@ -24,6 +24,7 @@ int test_ctlra(int num, struct ctlra_event_t **events)
 		switch(e->type) {
 		case CTLRA_EVENT_BUTTON: {
 			int id = e->button.id;
+			printf("button id = %d\n", id);
 			switch(id) {
 			case 7: shift = e->button.pressed; break;
 			case 21: mode = MODE_SCENE; break;

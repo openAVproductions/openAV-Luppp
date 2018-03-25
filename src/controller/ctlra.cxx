@@ -286,32 +286,21 @@ void CtlraScript::poll_devices()
 }
 
 static int
-accept_dev_func(const struct ctlra_dev_info_t *info,
-                    ctlra_event_func *event_func,
-                    ctlra_feedback_func *feedback_func,
-                    ctlra_remove_dev_func *remove_func,
-                    void **userdata_for_event_func,
-                    void *userdata)
+accept_dev_func(struct ctlra_t *ctlra,
+		const struct ctlra_dev_info_t *info,
+		struct ctlra_dev_t *dev,
+		void *userdata)
 {
 	printf("LupppCtlra: accepting %s %s\n", info->vendor, info->device);
-	/* Fill in the callbacks the device needs to function.
-	 * In this example, all events are routed to the above functions,
-	 * which simply print the event that occurred. Look at the daemon/
-	 * example in order to see how to send MIDI messages for events */
-	*event_func    = luppp_event_func;
-
-	/* TODO: Feedback */
-#if 0
-	//*feedback_func = luppp_feedback_func;
-	//*remove_func   = luppp_remove_func;
-#endif
-	/* Optionally provide a userdata. It is passed to the callback
-	 * functions simple_event_func() and simple_feedback_func(). */
-	*userdata_for_event_func = userdata;
-
+	ctlra_dev_set_event_func(dev, luppp_event_func);
+	/*
+	ctlra_dev_set_feedback_func(dev, luppp_feedback_func);
+	ctlra_dev_set_screen_feedback_func(dev, luppp_screen_redraw_func);
+	ctlra_dev_set_remove_func(dev, luppp_remove_func);
+	*/
+	ctlra_dev_set_callback_userdata(dev, userdata);
 	return 1;
 }
-
 
 CtlraScript::CtlraScript(std::string file) :
 	Controller(),
@@ -337,7 +326,8 @@ CtlraScript::CtlraScript(std::string file) :
 	}
 
 	// TODO: rework accept dev to new signature
-	//int num_devs = ctlra_probe(dev, accept_dev_func, this);
+	int num_devs = ctlra_probe(dev, accept_dev_func, this);
+	LUPPP_NOTE("Num devs %d\n", num_devs);
 
 	stat = CONTROLLER_OK;
 }
