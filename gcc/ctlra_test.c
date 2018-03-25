@@ -31,6 +31,14 @@ int test_ctlra(int num, struct ctlra_event_t **events)
 			case 22: mode = MODE_PATTERN; break;
 			case 23: mode = MODE_PAD; break;
 			case 24: if(shift) mode = MODE_VOLUME; break;
+
+			case 63: printf("ecndoer press\n");
+				struct event_grid_launch_scene ev = {
+					4
+				};
+				luppp_do(EVENT_GRID_LAUNCH_SCENE, &ev);
+				break;
+
 			default: printf("button %d\n", id); break;
 			}
 			break;
