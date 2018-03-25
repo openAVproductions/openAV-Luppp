@@ -315,10 +315,12 @@ accept_dev_func(const struct ctlra_dev_info_t *info,
 
 CtlraScript::CtlraScript(std::string file) :
 	Controller(),
-	MidiIO()
+	MidiIO(),
+	program(0)
 {
 	/* Step 1: compile script */
 	this->filename = file;
+	LUPPP_NOTE("CtlraScript() got file %s", file.c_str());
 
 	int err = compile();
 	if(err) {
