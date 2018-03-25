@@ -51,7 +51,7 @@ void LooperClip::init()
 	_queuePlay  = false;
 	_queueStop  = false;
 	_queueRecord= false;
-    _wantedBeats= -0;
+	_wantedBeats= -0;
 
 	if ( _buffer ) {
 		_buffer->init();
@@ -60,8 +60,6 @@ void LooperClip::init()
 
 	_playhead   = 0;
 	_recordhead = 0;
-
-
 }
 
 void LooperClip::save()
@@ -190,12 +188,12 @@ void LooperClip::setPlayHead(float ph)
 
 void LooperClip::setWantedBeats(int beats)
 {
-    _wantedBeats = beats;
+	_wantedBeats = beats;
 }
 
 int LooperClip::getWantedBeats()
 {
-    return _wantedBeats;
+	return _wantedBeats;
 }
 
 void LooperClip::record(int count, float* L, float* R)
