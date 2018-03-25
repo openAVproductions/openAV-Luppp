@@ -51,6 +51,7 @@ void LooperClip::init()
 	_queuePlay  = false;
 	_queueStop  = false;
 	_queueRecord= false;
+    _wantedBeats= -0;
 
 	if ( _buffer ) {
 		_buffer->init();
@@ -184,14 +185,22 @@ void LooperClip::setPlayHead(float ph)
 	if(!_recording&&_playing) {
 		_playhead = ph;
 		jack->getControllerUpdater()->setTrackSceneProgress(track, scene, getProgress() );
-	}
+    }
 }
 
+void LooperClip::setWantedBeats(int beats)
+{
+    _wantedBeats = beats;
+}
 
+int LooperClip::getWantedBeats()
+{
+    return _wantedBeats;
+}
 
 void LooperClip::record(int count, float* L, float* R)
 {
-	// write "count" samples into current buffer.
+    // write "count" samples into current buffer.
 	if ( _buffer ) {
 		size_t size = _buffer->getSize();
 
@@ -240,8 +249,12 @@ size_t LooperClip::audioBufferSize()
 void LooperClip::setBeats(int beats)
 {
 	if ( _buffer ) {
+        if(_buffer->getBeats() == 0)
+            setWantedBeats( beats );
 		_buffer->setBeats( beats );
-	}
+    } else {
+        setWantedBeats( beats );
+    }
 }
 
 int LooperClip::getBeats()
