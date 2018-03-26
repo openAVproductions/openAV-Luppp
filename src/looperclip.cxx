@@ -60,8 +60,6 @@ void LooperClip::init()
 
 	_playhead   = 0;
 	_recordhead = 0;
-
-
 }
 
 void LooperClip::save()
@@ -188,14 +186,18 @@ void LooperClip::setPlayHead(float ph)
     }
 }
 
-void LooperClip::setWantedBeats(int beats)
+void LooperClip::setBarsToRecord(int bars)
 {
-    _wantedBeats = beats;
+	_wantedBeats = bars * 4; // we set bars
 }
 
-int LooperClip::getWantedBeats()
+int LooperClip::getBeatsToRecord()
 {
-    return _wantedBeats;
+	return _wantedBeats;
+}
+
+int LooperClip::getBarsToRecord(){
+	return _wantedBeats / 4;
 }
 
 void LooperClip::record(int count, float* L, float* R)
@@ -249,12 +251,8 @@ size_t LooperClip::audioBufferSize()
 void LooperClip::setBeats(int beats)
 {
 	if ( _buffer ) {
-        if(_buffer->getBeats() == 0)
-            setWantedBeats( beats );
 		_buffer->setBeats( beats );
-    } else {
-        setWantedBeats( beats );
-    }
+	}
 }
 
 int LooperClip::getBeats()

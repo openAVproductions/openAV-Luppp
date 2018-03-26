@@ -104,6 +104,11 @@ public:
 	int handle(int event);
 
 	void resize(int X, int Y, int W, int H);
+	int findClipNum();
+	int getLastClipNum();
+
+private:
+	int clipNum;
 };
 
 } // Avtk

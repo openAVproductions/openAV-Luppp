@@ -224,7 +224,6 @@ void handleDspEvents()
 				break;
 			}
 
-
 			case Event::LOOPER_LOAD: {
 				if ( availableRead >= sizeof(EventLooperLoad) ) {
 					EventLooperLoad ev;
@@ -266,8 +265,12 @@ void handleDspEvents()
 				}
 				break;
 			}
-
-
+			case Event::EVENT_LOOPER_BARS_TO_RECORD: {
+				EventLooperBarsToRecord ev;
+				jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventLooperBarsToRecord) );
+				jack->getLogic()->looperBarsToRecord( ev.track, ev.scene, ev.bars );
+				break;
+			}
 			case Event::LOOPER_LOOP_USE_AS_TEMPO: {
 				if ( availableRead >= sizeof(EventLooperUseAsTempo) ) {
 					EventLooperUseAsTempo ev;

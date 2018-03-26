@@ -62,6 +62,7 @@ public:
 	void trackJackSend(int t, float vol);
 	void looperUseAsTempo(int track, int scene);
 	void looperClipLenght(int track, int scene, int lenght);
+	void looperBarsToRecord(int track, int scene, int bars);
 };
 
 #endif // LUPPP_LOGIC_H

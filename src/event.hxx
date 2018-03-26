@@ -79,6 +79,7 @@ enum EVENT_TYPE {
 	GRID_SELECT_CLIP_ENABLE, // enable selecting a clip from the grid
 	GRID_SELECT_CLIP_EVENT, // a press / release on the selected clip
 	GRID_SELECT_NEW_CHOSEN, // a different clip is now "special"
+	EVENT_LOOPER_BARS_TO_RECORD, // choose how many bars to record
 
 	/// Track
 	TRACK_JACKSEND,
@@ -266,6 +267,25 @@ public:
 	int scene;
 	EventGridSelectNewChosen(int t = -1, int s = -1):track(t),scene(s) {}
 };
+
+class EventLooperBarsToRecord : public EventBase
+{
+public:
+	int type()
+	{
+		return int(EVENT_LOOPER_BARS_TO_RECORD);
+	}
+	uint32_t size()
+	{
+		return sizeof(EventLooperBarsToRecord);
+	}
+
+	int track;
+	int scene;
+	int bars;
+	EventLooperBarsToRecord(int t = -1, int s = -1, int b = -1) : track(t), scene(s), bars(b) {}
+};
+
 
 class EventQuit : public EventBase
 {

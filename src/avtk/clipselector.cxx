@@ -31,7 +31,7 @@ namespace Avtk
 {
 
 ClipSelector::ClipSelector( int _x, int _y, int _w, int _h,
-                            const char *_label, bool master ) :
+							const char *_label, bool master ) :
 	Fl_Button(_x, _y, _w, _h)
 {
 	copy_label(_label);
@@ -232,7 +232,41 @@ void ClipSelector::resize(int X, int Y, int W, int H)
 	redraw();
 }
 
+void setRecordBarsCb(Fl_Widget *w, void* data)
+{
+	ClipSelector *track = (ClipSelector*)w;
+	long bars = (long)data;
+	if(bars == -2){
+		const char* answer = fl_input("Enter a custom number: ");
+		bars = atoi(answer);
+	}
 
+	EventLooperBarsToRecord e(track->ID, track->getLastClipNum(), bars);
+	writeToDspRingbuffer( &e );
+}
+
+void setLengthCb(Fl_Widget *w, void* data)
+{
+	ClipSelector *track = (ClipSelector*)w;
+	long beats = (long)data;
+	EventLooperLoopLength e(track->ID, track->getLastClipNum(), beats);
+	writeToDspRingbuffer( &e );
+}
+
+int ClipSelector::findClipNum() {
+	// calculate the clicked clip number
+	int clipHeight = (h / numClips);
+	clipNum = ( (Fl::event_y() ) - y ) / clipHeight;
+	if (clipNum >= numClips)
+		clipNum = numClips -1; // fix for clicking the lowest pixel
+
+	return clipNum;
+}
+
+int ClipSelector::getLastClipNum()
+{
+	return clipNum;
+}
 
 int ClipSelector::handle(int event)
 {
@@ -245,11 +279,7 @@ int ClipSelector::handle(int event)
 	case FL_PUSH:
 		highlight = 1;
 		{
-			// calculate the clicked clip number
-			int clipHeight = (h / numClips);
-			int clipNum = ( (Fl::event_y() ) - y ) / clipHeight;
-			if (clipNum >= numClips)
-				clipNum = numClips -1; // fix for clicking the lowest pixel
+			findClipNum();
 
 			// handle right clicks: popup menu
 			if ( Fl::event_state(FL_BUTTON3) ) {
@@ -269,13 +299,25 @@ int ClipSelector::handle(int event)
 					{ "Save" },
 					{ "Special"},
 					{ "Beats",  0,   0, 0, FL_SUBMENU | FL_MENU_DIVIDER },
-					{"1       "},
-					{"2"},
-					{"4"},
-					{"8"},
-					{"16"},
-					{"32"},
-					{"64"},
+					{"1 ", 0, setLengthCb, (void*)1,0},
+					{"2 ", 0, setLengthCb, (void*)2,0},
+					{"4 ", 0, setLengthCb, (void*)4,0},
+					{"8 ", 0, setLengthCb, (void*)8,0},
+					{"16 ", 0, setLengthCb, (void*)16,0},
+					{"32 ", 0, setLengthCb, (void*)32,0},
+					{"64 ", 0, setLengthCb, (void*)64,0},
+					{0},
+					{ "Bars to record",  0,   0, 0, FL_SUBMENU | FL_MENU_DIVIDER},
+					{"1 ", 0, setRecordBarsCb, (void*)1,0},
+					{"2 ", 0, setRecordBarsCb, (void*)2,0},
+					{"3 ", 0, setRecordBarsCb, (void*)3,0},
+					{"4 ", 0, setRecordBarsCb, (void*)4,0},
+					{"5 ", 0, setRecordBarsCb, (void*)5,0},
+					{"6 ", 0, setRecordBarsCb, (void*)6,0},
+					{"7 ", 0, setRecordBarsCb, (void*)7,0},
+					{"8 ", 0, setRecordBarsCb, (void*)8,0},
+					{"Custom", 0, setRecordBarsCb, (void*)-2,0},
+					{"Endless", 0, setRecordBarsCb, (void*)-1,0},
 					{0},
 					//{ "Record" },
 					{ "Use as tempo" },
@@ -302,27 +344,6 @@ int ClipSelector::handle(int event)
 						free(tmp);
 						gui->selectSaveSample( ID, clipNum );
 					}
-				} else if ( strcmp(m->label(), "1       ") == 0 ) {
-					EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,1);
-					writeToDspRingbuffer( &e );
-				} else if ( strcmp(m->label(), "2") == 0 ) {
-					EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,2);
-					writeToDspRingbuffer( &e );
-				} else if ( strcmp(m->label(), "4") == 0 ) {
-					EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,4);
-					writeToDspRingbuffer( &e );
-				} else if ( strcmp(m->label(), "8") == 0 ) {
-					EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,8);
-					writeToDspRingbuffer( &e );
-				} else if ( strcmp(m->label(), "16") == 0 ) {
-					EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,16);
-					writeToDspRingbuffer( &e );
-				} else if ( strcmp(m->label(), "32") == 0 ) {
-					EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,32);
-					writeToDspRingbuffer( &e );
-				} else if ( strcmp(m->label(), "64") == 0 ) {
-					EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,64);
-					writeToDspRingbuffer( &e );
 				} else if ( strcmp(m->label(), "Use as tempo") == 0 ) {
 					EventLooperUseAsTempo e (ID, clipNum);
 					writeToDspRingbuffer( &e );
@@ -338,6 +359,8 @@ int ClipSelector::handle(int event)
 					// for a clip to become 0
 					EventGridState e( ID, clipNum, GridLogic::STATE_EMPTY );
 					writeToDspRingbuffer( &e );
+				} else {
+					 m->do_callback(this, m->user_data());
 				}
 			} else {
 				if ( _master ) {

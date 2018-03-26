@@ -110,7 +110,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 		// handle state of clip, and do what needs doing:
 		// record into buffer, play from buffer, etc
 		if ( clips[clip]->recording() ) {
-            if(clips[clip]->getWantedBeats() > 0 && clips[clip]->getBeats() >= clips[clip]->getWantedBeats() - 4)
+			if(clips[clip]->getBeatsToRecord() > 0 && clips[clip]->getBeats() >= clips[clip]->getBeatsToRecord() - 4)
                 clips[clip]->queuePlay(true);
 
 			if ( clips[clip]->recordSpaceAvailable() <  LOOPER_SAMPLES_BEFORE_REQUEST &&

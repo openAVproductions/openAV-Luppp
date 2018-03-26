@@ -116,9 +116,9 @@ public:
 	///reset the play head to zero. Does nothing when recording
 	void setPlayHead(float ph);
 
-    void setWantedBeats(int beats);
-
-    int getWantedBeats();
+	void setBarsToRecord(int bars);
+	int getBeatsToRecord();
+	int getBarsToRecord();
 
 #ifdef BUILD_TESTS
 	// used only in test cases
