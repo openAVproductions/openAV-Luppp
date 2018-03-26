@@ -238,7 +238,10 @@ void setRecordBarsCb(Fl_Widget *w, void* data)
 	long bars = (long)data;
 	if(bars == -2){
 		const char* answer = fl_input("Enter a custom number: ");
-		bars = atoi(answer);
+		if(!answer)
+			bars = -1;
+		else
+			bars = atoi(answer);
 	}
 
 	EventLooperBarsToRecord e(track->ID, track->getLastClipNum(), bars);
