@@ -51,7 +51,7 @@ void LooperClip::init()
 	_queuePlay  = false;
 	_queueStop  = false;
 	_queueRecord= false;
-    _wantedBeats= -0;
+	_wantedBeats= -0;
 
 	if ( _buffer ) {
 		_buffer->init();

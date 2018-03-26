@@ -116,6 +116,7 @@ public:
 	///reset the play head to zero. Does nothing when recording
 	void setPlayHead(float ph);
 
+	// set how many beats to record (up to full bar)
 	void setBarsToRecord(int bars);
 	int getBeatsToRecord();
 	int getBarsToRecord();
@@ -126,9 +127,9 @@ public:
 #endif
 
 private:
-    int track, scene;
+	int track, scene;
 
-    /** Luppp needs more than the current state of the clip to accuratly handle
+	/** Luppp needs more than the current state of the clip to accuratly handle
 	 *  it. The current state of the grid is kept up-to-date by GridLogic
 	 *  abstracting detail away, sending GridLogic::State to Controllers.
 	**/
@@ -144,7 +145,8 @@ private:
 
 	float _playhead;
 	float _recordhead;
-    int _wantedBeats;
+	int _wantedBeats;
+
 	AudioBuffer* _buffer;
 };
 

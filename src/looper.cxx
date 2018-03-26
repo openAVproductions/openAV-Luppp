@@ -111,7 +111,8 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 		// record into buffer, play from buffer, etc
 		if ( clips[clip]->recording() ) {
 			if(clips[clip]->getBeatsToRecord() > 0 && clips[clip]->getBeats() >= clips[clip]->getBeatsToRecord() - 4)
-                clips[clip]->queuePlay(true);
+				clips[clip]->queuePlay(true);
+
 
 			if ( clips[clip]->recordSpaceAvailable() <  LOOPER_SAMPLES_BEFORE_REQUEST &&
 			     !clips[clip]->newBufferInTransit() ) {
