@@ -169,8 +169,17 @@ static void gmastertrack_button_callback(Fl_Widget *w, void *data)
 
 
 	} else if ( strcmp( w->label(), "Tap" ) == 0 ) {
-		EventTimeTempoTap e;
-		writeToDspRingbuffer( &e );
+		if ( Fl::event_button() == FL_RIGHT_MOUSE ) {
+			const char* answer = fl_input("Enter BPM value: ");
+			if(answer) {
+				int bpm = atoi(answer);
+				EventTimeBPM e = EventTimeBPM( bpm );
+				writeToDspRingbuffer( &e );
+			}
+		} else {
+			EventTimeTempoTap e;
+			writeToDspRingbuffer( &e );
+		}
 	} else {
 		LUPPP_WARN("Error: unknown command string");
 	}
