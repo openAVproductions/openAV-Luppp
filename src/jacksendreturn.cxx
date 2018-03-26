@@ -36,10 +36,12 @@ void JackSendReturn::process(unsigned int nframes, Buffers *buffers)
 
 	//Process previous AudioProcessor
 	m_previousProcessor->process(nframes,buffers);
-	float* sendL=(float*)jack_port_get_buffer(m_sendport_l,(jack_nframes_t)(buffers->nframes));
-	float* sendR=(float*)jack_port_get_buffer(m_sendport_r,(jack_nframes_t)(buffers->nframes));
-	float* retL=(float*)jack_port_get_buffer(m_returnport_l,(jack_nframes_t)(buffers->nframes));
-	float* retR=(float*)jack_port_get_buffer(m_returnport_r,(jack_nframes_t)(buffers->nframes));
+
+	float* sendL=(float*)jack_port_get_buffer(m_sendport_l,  (jack_nframes_t)(buffers->nframes));
+	float* sendR=(float*)jack_port_get_buffer(m_sendport_r,  (jack_nframes_t)(buffers->nframes));
+	float* retL =(float*)jack_port_get_buffer(m_returnport_l,(jack_nframes_t)(buffers->nframes));
+	float* retR =(float*)jack_port_get_buffer(m_returnport_r,(jack_nframes_t)(buffers->nframes));
+
 	if(offset) {
 		sendL+=offset;
 		sendR+=offset;
@@ -50,11 +52,7 @@ void JackSendReturn::process(unsigned int nframes, Buffers *buffers)
 	for(int i=0; i<nframes; i++) {
 		sendL[i]=m_sendvol*sendtrackL[i];
 		sendR[i]=m_sendvol*sendtrackR[i];
-    }
-//    if(nframes!=buffers->nframes)
-//    {
-//        cout<<send<<endl;
-//    }
+	}
 
 	if(offset)
 		assert(offset+nframes==buffers->nframes);
@@ -62,13 +60,11 @@ void JackSendReturn::process(unsigned int nframes, Buffers *buffers)
 	if(m_active) {
 		memcpy(rettrackL,retL,nframes*sizeof(float));
 		memcpy(rettrackR,retR,nframes*sizeof(float));
-    }
+	}
 	else {
-		memcpy(rettrackL,
-		       sendtrackL,nframes*sizeof(float));
-		memcpy(rettrackR,
-		       sendtrackR,nframes*sizeof(float));
-    }
+		memcpy(rettrackL, sendtrackL,nframes*sizeof(float));
+		memcpy(rettrackR, sendtrackR,nframes*sizeof(float));
+	}
 	m_counter+=nframes;
 
 }
