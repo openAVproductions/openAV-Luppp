@@ -211,14 +211,12 @@ void ClipSelector::draw()
 
 			// clip bars
 			if(!_master) {
-				int bars = clips[i].getBeats() / 4;
-				int barsToRecord = clips[i].getBarsToRecord();
-				bars = (bars == 0) ? barsToRecord : bars;
-				if(bars > 0) {
+				const char * bars = clips[i].getBarsString();
+				if(bars) {
 					cairo_move_to( cr, x + clipHeight + 5, drawY + textHeight + 8);
 					cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 0.9 );
 					cairo_set_font_size( cr, 8 );
-					cairo_show_text( cr, std::to_string(bars).c_str());
+					cairo_show_text( cr, bars);
 				}
 			}
 

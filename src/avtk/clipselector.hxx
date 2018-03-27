@@ -71,23 +71,31 @@ public:
 
 	// we wrap it here, so there may be no
 	// fuzz with the looperclip
-	int getBeats(){
+	const char * getBarsString(){
 		if(!lclip)
 			return 0;
 
-		return lclip->getBeats();
-	}
+		int beats = lclip->getBeats();
+		int barsToRecord = lclip->getBarsToRecord();
+		int bars = (beats == 0) ? barsToRecord : beats / 4;
 
-	int getBarsToRecord(){
-		if(!lclip)
+		if (bars <= 0)
 			return 0;
-		return lclip->getBarsToRecord();
+
+		if(bars != lastBars)
+			barsText = std::to_string(bars);
+
+		return barsText.c_str();
 	}
 
 private:
 	GridLogic::State state;
 	std::string name;
 	LooperClip* lclip;
+	std::string barsText;
+
+	// tmp
+	int lastBars;
 };
 
 class ClipSelector : public Fl_Button
