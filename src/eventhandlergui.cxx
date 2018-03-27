@@ -140,6 +140,13 @@ void handleGuiEvents()
 					//jack->setLooperLoopLength( ev.track, ev.scale );
 				} break;
 			}
+			case Event::LOOPER_BARS_TO_RECORD: {
+				if ( availableRead >= sizeof(EventLooperLoopLength) ) {
+					EventLooperBarsToRecord ev;
+					jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventLooperBarsToRecord) );
+				}
+				break;
+			}
 			case Event::LOOPER_PROGRESS: {
 				if ( availableRead >= sizeof(EventLooperProgress) ) {
 					EventLooperProgress ev;

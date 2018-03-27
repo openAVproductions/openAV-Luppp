@@ -172,6 +172,14 @@ void handleDspEvents()
 			}
 
 			// ========= GRID =====
+			case Event::GRID_INIT: {
+				if ( availableRead >= sizeof(EventGridInit) ) {
+					EventGridInit ev;
+					jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventGridInit) );
+					jack->getLogic()->setupClips( ev.clips, ev.numClips, ev.track );
+				}
+				break;
+			}
 			case Event::GRID_STATE: {
 				if ( availableRead >= sizeof(EventGridState) ) {
 					EventGridState ev;
@@ -265,10 +273,12 @@ void handleDspEvents()
 				}
 				break;
 			}
-			case Event::EVENT_LOOPER_BARS_TO_RECORD: {
-				EventLooperBarsToRecord ev;
-				jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventLooperBarsToRecord) );
-				jack->getLogic()->looperBarsToRecord( ev.track, ev.scene, ev.bars );
+			case Event::LOOPER_BARS_TO_RECORD: {
+				if ( availableRead >= sizeof(EventLooperBarsToRecord) ) {
+					EventLooperBarsToRecord ev;
+					jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventLooperBarsToRecord) );
+					jack->getLogic()->looperBarsToRecord( ev.track, ev.scene, ev.bars );
+				}
 				break;
 			}
 			case Event::LOOPER_LOOP_USE_AS_TEMPO: {

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Author: Harry van Haaren 2013
  *         harryhaaren@gmail.com
  *
@@ -31,10 +31,13 @@
 #include "looper.hxx"
 #include "gridlogic.hxx"
 #include "transport.hxx"
-
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 using namespace std;
+
+namespace Avtk {
+ class ClipState;
+}
 
 namespace Event
 {
@@ -79,7 +82,7 @@ enum EVENT_TYPE {
 	GRID_SELECT_CLIP_ENABLE, // enable selecting a clip from the grid
 	GRID_SELECT_CLIP_EVENT, // a press / release on the selected clip
 	GRID_SELECT_NEW_CHOSEN, // a different clip is now "special"
-	EVENT_LOOPER_BARS_TO_RECORD, // choose how many bars to record
+	GRID_INIT, // init the cells with references to the looper clips
 
 	/// Track
 	TRACK_JACKSEND,
@@ -98,6 +101,7 @@ enum EVENT_TYPE {
 	LOOPER_PROGRESS,
 	LOOPER_LOOP_LENGTH,
 	LOOPER_LOOP_USE_AS_TEMPO,
+	LOOPER_BARS_TO_RECORD, // choose how many bars to record
 
 	/// Transport etc
 	METRONOME_ACTIVE,
@@ -273,7 +277,7 @@ class EventLooperBarsToRecord : public EventBase
 public:
 	int type()
 	{
-		return int(EVENT_LOOPER_BARS_TO_RECORD);
+		return int(LOOPER_BARS_TO_RECORD);
 	}
 	uint32_t size()
 	{
@@ -600,6 +604,26 @@ public:
 	EventStateSaveFinish() {};
 };
 
+class EventGridInit : public EventBase
+{
+public:
+	int type()
+	{
+		return int(GRID_INIT);
+	}
+	uint32_t size()
+	{
+		return sizeof(EventGridInit);
+	}
+
+	int numClips;
+	int track;
+	Avtk::ClipState *clips;
+
+	EventGridInit() {};
+	EventGridInit(Avtk::ClipState * c, int n, int t): clips(c), numClips(n), track(t) {}
+};
+
 class EventGridEvent : public EventBase
 {
 public:
@@ -624,6 +648,7 @@ public:
 	EventGridEvent() {};
 	EventGridEvent(int t, int s, bool p): track(t), scene(s), pressed(p) {}
 };
+
 
 class EventGridState : public EventBase
 {

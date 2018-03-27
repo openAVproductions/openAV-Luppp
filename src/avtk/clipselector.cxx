@@ -45,7 +45,7 @@ ClipSelector::ClipSelector( int _x, int _y, int _w, int _h,
 	_master = master;
 
 	if ( _master ) {
-		for(int i = 0; i < 10; i++ ) {
+		for(int i = 0; i < numClips; i++ ) {
 			stringstream s;
 			s << "Scene " << i + 1;
 			clips[i].setName( s.str() );
@@ -62,6 +62,10 @@ ClipSelector::ClipSelector( int _x, int _y, int _w, int _h,
 void ClipSelector::setID( int id )
 {
 	ID = id;
+	if(!_master){
+		EventGridInit e (clips, numClips, ID);
+		writeToDspRingbuffer( &e );
+	}
 }
 
 
@@ -204,6 +208,19 @@ void ClipSelector::draw()
 			std::string tmp = clips[i].getName().substr(0,8);
 
 			cairo_show_text( cr, tmp.c_str() );
+
+			// clip bars
+			if(!_master) {
+				int bars = clips[i].getBeats() / 4;
+				int barsToRecord = clips[i].getBarsToRecord();
+				bars = (bars == 0) ? barsToRecord : bars;
+				if(bars > 0) {
+					cairo_move_to( cr, x + clipHeight + 5, drawY + textHeight + 8);
+					cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 0.9 );
+					cairo_set_font_size( cr, 8 );
+					cairo_show_text( cr, std::to_string(bars).c_str());
+				}
+			}
 
 			// special indicator?
 			if ( i == special ) {

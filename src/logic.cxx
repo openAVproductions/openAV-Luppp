@@ -156,8 +156,20 @@ void Logic::looperBarsToRecord(int t, int s, int b)
 {
 	if ( t >= 0 && t < NTRACKS ) {
 		jack->getLooper( t )->getClip( s )->setBarsToRecord(b);
-	} else {
-		LUPPP_WARN("invalid track number %i: check controller map has \"track\" field.", t );
+	} else {		LUPPP_WARN("invalid track number %i: check controller map has \"track\" field.", t );
+	}
+}
+
+void Logic::setupClips(Avtk::ClipState clips[], int clipNum, int t)
+{
+	if(!clips)
+		return;
+
+	Looper * looper = jack->getLooper( t );
+	for(int i = 0; i < clipNum; i++){
+		LooperClip * tmp = looper->getClip(i);
+		if(tmp)
+			clips[i].setLooperClip(tmp);
 	}
 }
 

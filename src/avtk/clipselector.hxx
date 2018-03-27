@@ -41,7 +41,8 @@ class ClipState
 public:
 	ClipState() :
 		state(GridLogic::STATE_EMPTY),
-		name("")
+		name(""),
+		lclip(0) // I would use nullptr, but thats not common here...
 	{}
 
 	void setName(std::string n)
@@ -64,9 +65,29 @@ public:
 		return state;
 	}
 
+	void setLooperClip(LooperClip* lc){
+		lclip = lc;
+	}
+
+	// we wrap it here, so there may be no
+	// fuzz with the looperclip
+	int getBeats(){
+		if(!lclip)
+			return 0;
+
+		return lclip->getBeats();
+	}
+
+	int getBarsToRecord(){
+		if(!lclip)
+			return 0;
+		return lclip->getBarsToRecord();
+	}
+
 private:
 	GridLogic::State state;
 	std::string name;
+	LooperClip* lclip;
 };
 
 class ClipSelector : public Fl_Button
