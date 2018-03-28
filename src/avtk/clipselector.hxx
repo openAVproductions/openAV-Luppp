@@ -107,7 +107,7 @@ public:
 	int ID;
 
 	// FIXME: NSCENES?
-	static const int numClips = 10;
+	static const int numClips = 11;
 	ClipState clips[numClips];
 
 	/// indicates if a clip is the "special" clip

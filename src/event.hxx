@@ -616,9 +616,9 @@ public:
 		return sizeof(EventGridInit);
 	}
 
+	Avtk::ClipState *clips;
 	int numClips;
 	int track;
-	Avtk::ClipState *clips;
 
 	EventGridInit() {};
 	EventGridInit(Avtk::ClipState * c, int n, int t): clips(c), numClips(n), track(t) {}
