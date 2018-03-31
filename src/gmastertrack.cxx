@@ -173,8 +173,11 @@ static void gmastertrack_button_callback(Fl_Widget *w, void *data)
 			const char* answer = fl_input("Enter BPM value: ");
 			if(answer) {
 				int bpm = atoi(answer);
-				EventTimeBPM e = EventTimeBPM( bpm );
-				writeToDspRingbuffer( &e );
+				
+				if ( bpm >= MIN_TEMPO && bpm <= MAX_TEMPO) {
+					EventTimeBPM e = EventTimeBPM( bpm );
+					writeToDspRingbuffer( &e );
+				}
 			}
 		} else {
 			EventTimeTempoTap e;
