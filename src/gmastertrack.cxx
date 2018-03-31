@@ -23,7 +23,7 @@
 static void gmastertrack_tempoDial_callback(Fl_Widget *w, void *data)
 {
 	Avtk::Dial* b = (Avtk::Dial*)w;
-	float bpm = (int)(b->value() * 160.f + 60);
+	float bpm = (int)(b->value() * (float)(MAX_TEMPO - MIN_TEMPO) + MIN_TEMPO);
 	if(std::fabs(bpm-round(bpm))) {
 		LUPPP_WARN("%f",bpm);
 	}
@@ -269,7 +269,7 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
 void GMasterTrack::setBpm( int b )
 {
 	bpm = b;
-	tempoDial.value( ( bpm - 60 ) / 160.f );
+	tempoDial.value( ( bpm - MIN_TEMPO ) / (float)(MAX_TEMPO-MIN_TEMPO) );
 	std::stringstream s;
 	s << bpm;
 	tempoDial.copy_label( s.str().c_str() );
