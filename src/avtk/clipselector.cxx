@@ -62,10 +62,6 @@ ClipSelector::ClipSelector( int _x, int _y, int _w, int _h,
 void ClipSelector::setID( int id )
 {
 	ID = id;
-	if(!_master){
-		EventGridInit e (clips, numClips, ID);
-		writeToDspRingbuffer( &e );
-	}
 }
 
 
@@ -91,7 +87,12 @@ std::string ClipSelector::clipName(int clip)
 void ClipSelector::clipName(int clip, std::string name)
 {
 	clips[clip].setName( name );
-	redraw();
+    redraw();
+}
+
+void ClipSelector::setClipBeats(int scene, int beats, bool isBeatsToRecord)
+{
+    clips[scene].setBeats(beats, isBeatsToRecord);
 }
 
 void ClipSelector::setSpecial(int scene)
@@ -423,7 +424,18 @@ int ClipSelector::handle(int event)
 		return 0;
 	default:
 		return Fl_Widget::handle(event);
-	}
+    }
+}
+
+void ClipState::setBeats(int beats, bool isBarsToRecord)
+{
+    if(beats > 0) {
+        barsText = std::to_string(beats/4);
+        if(isBarsToRecord)
+            barsText = "(" + barsText + ")";
+    }
+    else
+        barsText = std::string("");
 }
 
 } // Avtk

@@ -41,9 +41,9 @@ class ClipState
 public:
 	ClipState() :
 		state(GridLogic::STATE_EMPTY),
-		name(""),
-		lclip(0) // I would use nullptr, but thats not common here...
-	{}
+        name(""),
+        barsText("")
+    {}
 
 	void setName(std::string n)
 	{
@@ -65,33 +65,15 @@ public:
 		return state;
 	}
 
-	void setLooperClip(LooperClip* lc){
-		lclip = lc;
-	}
+    void setBeats(int beats, bool isBarsToRecord);
 
-	// we wrap it here, so there may be no
-	// fuzz with the looperclip
-	const char * getBarsString(){
-		if(!lclip)
-			return 0;
-
-		int beats = lclip->getBeats();
-		int barsToRecord = lclip->getBarsToRecord();
-		int bars = (beats == 0) ? barsToRecord : beats / 4;
-
-		if (bars <= 0)
-			return 0;
-
-		if(bars != lastBars)
-			barsText = std::to_string(bars);
-
+    const char * getBarsString(){
 		return barsText.c_str();
 	}
 
 private:
-	GridLogic::State state;
+    GridLogic::State state;
 	std::string name;
-	LooperClip* lclip;
 	std::string barsText;
 
 	// tmp
@@ -127,6 +109,8 @@ public:
 	void setState( int clipNum, GridLogic::State s );
 
 	void clipName(int clip, std::string name);
+    void setClipBeats(int scene, int beats, bool isBeatsToRecord);
+
 	std::string clipName(int clip);
 
 	void draw();

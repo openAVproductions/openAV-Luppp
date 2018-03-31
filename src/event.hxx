@@ -35,10 +35,6 @@
 
 using namespace std;
 
-namespace Avtk {
- class ClipState;
-}
-
 namespace Event
 {
 enum SEND_TYPE {
@@ -82,7 +78,6 @@ enum EVENT_TYPE {
 	GRID_SELECT_CLIP_ENABLE, // enable selecting a clip from the grid
 	GRID_SELECT_CLIP_EVENT, // a press / release on the selected clip
 	GRID_SELECT_NEW_CHOSEN, // a different clip is now "special"
-	GRID_INIT, // init the cells with references to the looper clips
 
 	/// Track
 	TRACK_JACKSEND,
@@ -132,6 +127,9 @@ enum EVENT_TYPE {
 
 	// for keeping loop index's inside the enum
 	EVENT_TYPE_FINAL,
+
+    // Clip
+    CLIP_BEATS_CHANGED,
 };
 
 /// returns the pretty name of an event
@@ -602,26 +600,6 @@ public:
 	}
 
 	EventStateSaveFinish() {};
-};
-
-class EventGridInit : public EventBase
-{
-public:
-	int type()
-	{
-		return int(GRID_INIT);
-	}
-	uint32_t size()
-	{
-		return sizeof(EventGridInit);
-	}
-
-	Avtk::ClipState *clips;
-	int numClips;
-	int track;
-
-	EventGridInit() {};
-	EventGridInit(Avtk::ClipState * c, int n, int t): clips(c), numClips(n), track(t) {}
 };
 
 class EventGridEvent : public EventBase
@@ -1194,6 +1172,27 @@ public:
 	{
 		return &target[0];
 	}
+};
+
+class EventClipBeatsChanged : public EventBase
+{
+public:
+    int type()
+    {
+        return int(CLIP_BEATS_CHANGED);
+    }
+    uint32_t size()
+    {
+        return sizeof(EventClipBeatsChanged);
+    }
+
+    int track;
+    int scene;
+    int beats;
+    bool isBeatsToRecord;
+
+    EventClipBeatsChanged() {}
+    EventClipBeatsChanged(int t, int s, int b, bool i) : track(t), scene(s), beats(b), isBeatsToRecord(i) {}
 };
 
 

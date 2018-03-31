@@ -17,6 +17,7 @@
  */
 
 #include "audiobuffer.hxx"
+#include "eventhandler.hxx"
 #include "config.hxx"
 
 #include <stdio.h>

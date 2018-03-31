@@ -64,7 +64,6 @@ public:
 	void looperUseAsTempo(int track, int scene);
 	void looperClipLenght(int track, int scene, int lenght);
 	void looperBarsToRecord(int track, int scene, int bars);
-	void setupClips(Avtk::ClipState clips[], int clipNum, int t);
 };
 
 #endif // LUPPP_LOGIC_H

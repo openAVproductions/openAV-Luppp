@@ -160,19 +160,6 @@ void Logic::looperBarsToRecord(int t, int s, int b)
 	}
 }
 
-void Logic::setupClips(Avtk::ClipState clips[], int clipNum, int t)
-{
-	if(!clips)
-		return;
-
-	Looper * looper = jack->getLooper( t );
-	for(int i = 0; i < clipNum; i++){
-		LooperClip * tmp = looper->getClip(i);
-		if(tmp)
-			clips[i].setLooperClip(tmp);
-	}
-}
-
 void Logic::looperUseAsTempo(int t, int s)
 {
 	size_t clipBeats  = jack->getLooper( t )->getClip( s )->getBeats();

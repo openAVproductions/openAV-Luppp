@@ -171,15 +171,7 @@ void handleDspEvents()
 				break;
 			}
 
-			// ========= GRID =====
-			case Event::GRID_INIT: {
-				if ( availableRead >= sizeof(EventGridInit) ) {
-					EventGridInit ev;
-					jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventGridInit) );
-					jack->getLogic()->setupClips( ev.clips, ev.numClips, ev.track );
-				}
-				break;
-			}
+			// ========= GRID =====			
 			case Event::GRID_STATE: {
 				if ( availableRead >= sizeof(EventGridState) ) {
 					EventGridState ev;
@@ -484,7 +476,7 @@ void handleDspEvents()
 				cout << "DSP: Unkown message!! Will clog ringbuffer" << endl;
 				// just do nothing
 				break;
-			}
+            }
 			}
 		} else {
 			// next call will get the half-written event

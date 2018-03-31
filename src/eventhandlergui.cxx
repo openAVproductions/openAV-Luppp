@@ -140,13 +140,6 @@ void handleGuiEvents()
 					//jack->setLooperLoopLength( ev.track, ev.scale );
 				} break;
 			}
-			case Event::LOOPER_BARS_TO_RECORD: {
-				if ( availableRead >= sizeof(EventLooperLoopLength) ) {
-					EventLooperBarsToRecord ev;
-					jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventLooperBarsToRecord) );
-				}
-				break;
-			}
 			case Event::LOOPER_PROGRESS: {
 				if ( availableRead >= sizeof(EventLooperProgress) ) {
 					EventLooperProgress ev;
@@ -286,6 +279,14 @@ void handleGuiEvents()
 				break;
 			}
 
+            case Event::CLIP_BEATS_CHANGED: {
+                if ( availableRead >= sizeof(EventClipBeatsChanged) ) {
+                    EventClipBeatsChanged ev;
+                    jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventClipBeatsChanged) );
+                    gui->getTrack(ev.track)->getClipSelector()->setClipBeats(ev.scene, ev.beats, ev.isBeatsToRecord);
+                }
+                break;
+            }
 
 			case Event::TRACK_SEND: {
 				if ( availableRead >= sizeof(EventTrackSend) ) {
@@ -297,7 +298,7 @@ void handleGuiEvents()
 						}
 					if ( ev.send == SEND_XSIDE )
 						if (   ev.track < NTRACKS ) {
-							gui->getTrack(ev.track)->setXSide( ev.value );
+                            gui->getTrack(ev.track)->setXSide( ev.value );
 						}
 				}
 				break;

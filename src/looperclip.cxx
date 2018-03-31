@@ -16,8 +16,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "looperclip.hxx"
-
 #include <stdio.h>
 #include "config.hxx"
 #include "jack.hxx"
@@ -50,8 +48,9 @@ void LooperClip::init()
 
 	_queuePlay  = false;
 	_queueStop  = false;
-	_queueRecord= false;
-	_wantedBeats= -0;
+    _queueRecord= false;
+    _wantedBeats= -1;
+    setBeats(0);
 
 	if ( _buffer ) {
 		_buffer->init();
@@ -115,6 +114,8 @@ void LooperClip::load( AudioBuffer* ab )
 	}
 
 	_buffer = ab;
+    EventClipBeatsChanged e( track, scene, _wantedBeats, true );
+    writeToGuiRingbuffer( &e );
 
 	_playhead = 0;
 	jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0 );
@@ -182,13 +183,15 @@ void LooperClip::setPlayHead(float ph)
 {
 	if(!_recording&&_playing) {
 		_playhead = ph;
-		jack->getControllerUpdater()->setTrackSceneProgress(track, scene, getProgress() );
+        jack->getControllerUpdater()->setTrackSceneProgress( track, scene, getProgress() );
     }
 }
 
 void LooperClip::setBarsToRecord(int bars)
 {
-	_wantedBeats = bars * 4; // we set bars
+    _wantedBeats = bars * 4; // we set beats
+    EventClipBeatsChanged e( track, scene, _wantedBeats, true);
+    writeToGuiRingbuffer(&e);
 }
 
 int LooperClip::getBeatsToRecord()
@@ -252,7 +255,11 @@ void LooperClip::setBeats(int beats)
 {
 	if ( _buffer ) {
 		_buffer->setBeats( beats );
-	}
+    }
+
+    // Even on Reset!
+    EventClipBeatsChanged e(track, scene, beats, false);
+    writeToGuiRingbuffer(&e);
 }
 
 int LooperClip::getBeats()
@@ -284,10 +291,10 @@ void LooperClip::bar()
 	GridLogic::State s = GridLogic::STATE_EMPTY;
 
 	// first update the buffer, as time has passed
-	if ( _recording ) {
+    if ( _recording ) {
 		// FIXME: assumes 4 beats in a bar
-		_buffer->setBeats( _buffer->getBeats() + 4 );
-		_buffer->setAudioFrames( jack->getTimeManager()->getFpb() * _buffer->getBeats() );
+        setBeats( _buffer->getBeats() + 4 );
+        _buffer->setAudioFrames( jack->getTimeManager()->getFpb() * _buffer->getBeats() );
 	}
 
 	if ( _playhead >= _recordhead ) {
