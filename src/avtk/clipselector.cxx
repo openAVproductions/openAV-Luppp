@@ -24,6 +24,8 @@
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 #include "../gui.hxx"
+#define RECORD_BARS_MENU_ITEM(num) { #num, 0, setRecordBarsCb, (void*)num, FL_MENU_RADIO | ((clips[clipNum].getBeatsToRecord() == num*4) ? FL_ACTIVATE : 0) }
+#define RECORD_LENGTH_MENU_ITEM(num) {#num, 0, setLengthCb, (void*)num}
 
 extern Gui* gui;
 
@@ -318,25 +320,22 @@ int ClipSelector::handle(int event)
 					{ "Save" },
 					{ "Special"},
 					{ "Beats",  0,   0, 0, FL_SUBMENU | FL_MENU_DIVIDER },
-					{"1 ", 0, setLengthCb, (void*)1,0},
-					{"2 ", 0, setLengthCb, (void*)2,0},
-					{"4 ", 0, setLengthCb, (void*)4,0},
-					{"8 ", 0, setLengthCb, (void*)8,0},
-					{"16 ", 0, setLengthCb, (void*)16,0},
-					{"32 ", 0, setLengthCb, (void*)32,0},
-					{"64 ", 0, setLengthCb, (void*)64,0},
+                    RECORD_LENGTH_MENU_ITEM(1),
+                    RECORD_LENGTH_MENU_ITEM(2),
+                    RECORD_LENGTH_MENU_ITEM(4),
+                    RECORD_LENGTH_MENU_ITEM(8),
+                    RECORD_LENGTH_MENU_ITEM(16),
+                    RECORD_LENGTH_MENU_ITEM(32),
+                    RECORD_LENGTH_MENU_ITEM(64),
 					{0},
-					{ "Bars to record",  0,   0, 0, FL_SUBMENU | FL_MENU_DIVIDER},
-					{"1 ", 0, setRecordBarsCb, (void*)1,0},
-					{"2 ", 0, setRecordBarsCb, (void*)2,0},
-					{"3 ", 0, setRecordBarsCb, (void*)3,0},
-					{"4 ", 0, setRecordBarsCb, (void*)4,0},
-					{"5 ", 0, setRecordBarsCb, (void*)5,0},
-					{"6 ", 0, setRecordBarsCb, (void*)6,0},
-					{"7 ", 0, setRecordBarsCb, (void*)7,0},
-					{"8 ", 0, setRecordBarsCb, (void*)8,0},
-					{"Custom", 0, setRecordBarsCb, (void*)-2,0},
-					{"Endless", 0, setRecordBarsCb, (void*)-1,0},
+                    { "Bars to record",  0,   0, 0, FL_SUBMENU | FL_MENU_DIVIDER },
+                    RECORD_BARS_MENU_ITEM(1),
+                    RECORD_BARS_MENU_ITEM(2),
+                    RECORD_BARS_MENU_ITEM(4),
+                    RECORD_BARS_MENU_ITEM(6),
+                    RECORD_BARS_MENU_ITEM(8),
+                    {"Endless", 0, setRecordBarsCb, (void*)-1, FL_MENU_DIVIDER | (clips[clipNum].getBeatsToRecord() < 0) ? FL_ACTIVATE : 0 },
+                    {"Custom", 0, setRecordBarsCb, (void*)-2},
 					{0},
 					//{ "Record" },
 					{ "Use as tempo" },
@@ -427,12 +426,17 @@ int ClipSelector::handle(int event)
     }
 }
 
-void ClipState::setBeats(int beats, bool isBarsToRecord)
+void ClipState::setBeats(int numBeats, bool isBeatsToRecord)
 {
-    if(beats > 0) {
-        barsText = std::to_string(beats/4);
-        if(isBarsToRecord)
+    if(numBeats > 0) {
+        barsText = std::to_string(numBeats/4);
+        if(isBeatsToRecord){
             barsText = "(" + barsText + ")";
+            beatsToRecord = numBeats;
+        } else {
+            beats = numBeats;
+            beatsToRecord = -1;
+        }
     }
     else
         barsText = std::string("");

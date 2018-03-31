@@ -477,7 +477,7 @@ void handleDspEvents()
 				// just do nothing
 				break;
             }
-			}
+            }
 		} else {
 			// next call will get the half-written event
 			return;

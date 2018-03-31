@@ -65,7 +65,11 @@ public:
 		return state;
 	}
 
-    void setBeats(int beats, bool isBarsToRecord);
+    int getBeatsToRecord(){
+        return beatsToRecord;
+    }
+
+    void setBeats(int numBeats, bool isBeatsToRecord);
 
     const char * getBarsString(){
 		return barsText.c_str();
@@ -76,8 +80,9 @@ private:
 	std::string name;
 	std::string barsText;
 
-	// tmp
-	int lastBars;
+
+    int beatsToRecord;
+    int beats;
 };
 
 class ClipSelector : public Fl_Button
