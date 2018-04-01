@@ -221,7 +221,7 @@ void handleGuiEvents()
 						delete ev.ab;
 					} else {
 						gui->getDiskWriter()->writeAudioBuffer(ev.track, ev.scene, ev.ab,
-						                                       gui->saveBufferPath.c_str());
+															   gui->saveBufferPath.c_str());
 						gui->saveBufferPath = "";
 					}
 
@@ -279,14 +279,14 @@ void handleGuiEvents()
 				break;
 			}
 
-            case Event::CLIP_BEATS_CHANGED: {
-                if ( availableRead >= sizeof(EventClipBeatsChanged) ) {
-                    EventClipBeatsChanged ev;
-                    jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventClipBeatsChanged) );
-                    gui->getTrack(ev.track)->getClipSelector()->setClipBeats(ev.scene, ev.beats, ev.isBeatsToRecord);
-                }
-                break;
-            }
+			case Event::CLIP_BEATS_CHANGED: {
+				if ( availableRead >= sizeof(EventClipBeatsChanged) ) {
+					EventClipBeatsChanged ev;
+					jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventClipBeatsChanged) );
+					gui->getTrack(ev.track)->getClipSelector()->setClipBeats(ev.scene, ev.beats, ev.isBeatsToRecord);
+				}
+				break;
+			}
 
 			case Event::TRACK_SEND: {
 				if ( availableRead >= sizeof(EventTrackSend) ) {
@@ -298,7 +298,7 @@ void handleGuiEvents()
 						}
 					if ( ev.send == SEND_XSIDE )
 						if (   ev.track < NTRACKS ) {
-                            gui->getTrack(ev.track)->setXSide( ev.value );
+							gui->getTrack(ev.track)->setXSide( ev.value );
 						}
 				}
 				break;
@@ -499,4 +499,3 @@ void writeToGuiRingbuffer(EventBase* e)
 }
 
 #endif // LUPPP_EVENT_HANDLER_DSP_H
-

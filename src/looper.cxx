@@ -115,7 +115,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 
 
 			if ( clips[clip]->recordSpaceAvailable() <  LOOPER_SAMPLES_BEFORE_REQUEST &&
-			     !clips[clip]->newBufferInTransit() ) {
+				 !clips[clip]->newBufferInTransit() ) {
 				EventLooperClipRequestBuffer e( track, clip, clips[clip]->audioBufferSize() + LOOPER_SAMPLES_UPDATE_SIZE);
 				writeToGuiRingbuffer( &e );
 				clips[clip]->newBufferInTransit(true);
@@ -199,11 +199,11 @@ void Looper::pitchShift(int count, float* input, float* output)
 		int iTemp5 = int(fTemp4);
 		float out=output[0];
 		out += (float)(((1 - fTemp3) * (((fTemp4 - iTemp5) *
-		                                 fVec0[(IOTA-int((int((1 + iTemp5)) & 65535)))&65535]) + ((0 - ((
-		                                                 fRec0[0] + fSlow3) - iTemp5)) * fVec0[(IOTA-int((iTemp5 & 65535)))
-		                                                                 &65535]))) + (fTemp3 * (((fRec0[0] - iTemp1) * fVec0[(IOTA-int((int(
-		                                                                                 iTemp2) & 65535)))&65535]) + ((iTemp2 - fRec0[0]) * fVec0[(IOTA-int((
-		                                                                                                 iTemp1 & 65535)))&65535]))));
+										 fVec0[(IOTA-int((int((1 + iTemp5)) & 65535)))&65535]) + ((0 - ((
+														 fRec0[0] + fSlow3) - iTemp5)) * fVec0[(IOTA-int((iTemp5 & 65535)))
+																		 &65535]))) + (fTemp3 * (((fRec0[0] - iTemp1) * fVec0[(IOTA-int((int(
+																						 iTemp2) & 65535)))&65535]) + ((iTemp2 - fRec0[0]) * fVec0[(IOTA-int((
+																										 iTemp1 & 65535)))&65535]))));
 
 		output[0]=out;
 		fRec0[1] = fRec0[0];

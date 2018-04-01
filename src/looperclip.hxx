@@ -151,4 +151,3 @@ private:
 };
 
 #endif // LUPPP_LOOPER_CLIP_H
-

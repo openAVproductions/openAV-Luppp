@@ -23,7 +23,7 @@
 #include <stdint.h>
 
 /*
-    event.hxx
+	event.hxx
 
   This file provides declarations for each type of event that the engine uses.
 */
@@ -128,8 +128,8 @@ enum EVENT_TYPE {
 	// for keeping loop index's inside the enum
 	EVENT_TYPE_FINAL,
 
-    // Clip
-    CLIP_BEATS_CHANGED,
+	// Clip
+	CLIP_BEATS_CHANGED,
 };
 
 /// returns the pretty name of an event
@@ -1177,24 +1177,23 @@ public:
 class EventClipBeatsChanged : public EventBase
 {
 public:
-    int type()
-    {
-        return int(CLIP_BEATS_CHANGED);
-    }
-    uint32_t size()
-    {
-        return sizeof(EventClipBeatsChanged);
-    }
+	int type()
+	{
+		return int(CLIP_BEATS_CHANGED);
+	}
+	uint32_t size()
+	{
+		return sizeof(EventClipBeatsChanged);
+	}
 
-    int track;
-    int scene;
-    int beats;
-    bool isBeatsToRecord;
+	int track;
+	int scene;
+	int beats;
+	bool isBeatsToRecord;
 
-    EventClipBeatsChanged() {}
-    EventClipBeatsChanged(int t, int s, int b, bool i) : track(t), scene(s), beats(b), isBeatsToRecord(i) {}
+	EventClipBeatsChanged() {}
+	EventClipBeatsChanged(int t, int s, int b, bool i) : track(t), scene(s), beats(b), isBeatsToRecord(i) {}
 };
 
 
 #endif // LUPPP_EVENT_H
-

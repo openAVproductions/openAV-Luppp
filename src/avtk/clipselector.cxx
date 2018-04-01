@@ -89,12 +89,12 @@ std::string ClipSelector::clipName(int clip)
 void ClipSelector::clipName(int clip, std::string name)
 {
 	clips[clip].setName( name );
-    redraw();
+	redraw();
 }
 
 void ClipSelector::setClipBeats(int scene, int beats, bool isBeatsToRecord)
 {
-    clips[scene].setBeats(beats, isBeatsToRecord);
+	clips[scene].setBeats(beats, isBeatsToRecord);
 }
 
 void ClipSelector::setSpecial(int scene)
@@ -320,22 +320,22 @@ int ClipSelector::handle(int event)
 					{ "Save" },
 					{ "Special"},
 					{ "Beats",  0,   0, 0, FL_SUBMENU | FL_MENU_DIVIDER },
-                    RECORD_LENGTH_MENU_ITEM(1),
-                    RECORD_LENGTH_MENU_ITEM(2),
-                    RECORD_LENGTH_MENU_ITEM(4),
-                    RECORD_LENGTH_MENU_ITEM(8),
-                    RECORD_LENGTH_MENU_ITEM(16),
-                    RECORD_LENGTH_MENU_ITEM(32),
-                    RECORD_LENGTH_MENU_ITEM(64),
+					RECORD_LENGTH_MENU_ITEM(1),
+					RECORD_LENGTH_MENU_ITEM(2),
+					RECORD_LENGTH_MENU_ITEM(4),
+					RECORD_LENGTH_MENU_ITEM(8),
+					RECORD_LENGTH_MENU_ITEM(16),
+					RECORD_LENGTH_MENU_ITEM(32),
+					RECORD_LENGTH_MENU_ITEM(64),
 					{0},
-                    { "Bars to record",  0,   0, 0, FL_SUBMENU | FL_MENU_DIVIDER },
-                    RECORD_BARS_MENU_ITEM(1),
-                    RECORD_BARS_MENU_ITEM(2),
-                    RECORD_BARS_MENU_ITEM(4),
-                    RECORD_BARS_MENU_ITEM(6),
-                    RECORD_BARS_MENU_ITEM(8),
-                    {"Endless", 0, setRecordBarsCb, (void*)-1, FL_MENU_DIVIDER | (clips[clipNum].getBeatsToRecord() < 0) ? FL_ACTIVATE : 0 },
-                    {"Custom", 0, setRecordBarsCb, (void*)-2},
+					{ "Bars to record",  0,   0, 0, FL_SUBMENU | FL_MENU_DIVIDER },
+					RECORD_BARS_MENU_ITEM(1),
+					RECORD_BARS_MENU_ITEM(2),
+					RECORD_BARS_MENU_ITEM(4),
+					RECORD_BARS_MENU_ITEM(6),
+					RECORD_BARS_MENU_ITEM(8),
+					{"Endless", 0, setRecordBarsCb, (void*)-1, FL_MENU_DIVIDER | (clips[clipNum].getBeatsToRecord() < 0) ? FL_ACTIVATE : 0 },
+					{"Custom", 0, setRecordBarsCb, (void*)-2},
 					{0},
 					//{ "Record" },
 					{ "Use as tempo" },
@@ -423,24 +423,23 @@ int ClipSelector::handle(int event)
 		return 0;
 	default:
 		return Fl_Widget::handle(event);
-    }
+	}
 }
 
 void ClipState::setBeats(int numBeats, bool isBeatsToRecord)
 {
-    if(numBeats > 0) {
-        barsText = std::to_string(numBeats/4);
-        if(isBeatsToRecord){
-            barsText = "(" + barsText + ")";
-            beatsToRecord = numBeats;
-        } else {
-            beats = numBeats;
-            beatsToRecord = -1;
-        }
-    }
-    else
-        barsText = std::string("");
+	if(numBeats > 0) {
+		barsText = std::to_string(numBeats/4);
+		if(isBeatsToRecord){
+			barsText = "(" + barsText + ")";
+			beatsToRecord = numBeats;
+		} else {
+			beats = numBeats;
+			beatsToRecord = -1;
+		}
+	}
+	else
+		barsText = std::string("");
 }
 
 } // Avtk
-

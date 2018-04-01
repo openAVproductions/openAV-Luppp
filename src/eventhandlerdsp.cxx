@@ -171,7 +171,7 @@ void handleDspEvents()
 				break;
 			}
 
-			// ========= GRID =====			
+			// ========= GRID =====
 			case Event::GRID_STATE: {
 				if ( availableRead >= sizeof(EventGridState) ) {
 					EventGridState ev;
@@ -307,10 +307,10 @@ void handleDspEvents()
 				break;
 			/*{
 			  if ( availableRead >= sizeof(EventFxReverb) ) {
-			    EventFxReverb ev;
-			    jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventFxReverb) );
-			    // TODO implement reverb
-			    break; }
+				EventFxReverb ev;
+				jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventFxReverb) );
+				// TODO implement reverb
+				break; }
 			  }
 			*/
 			case Event::TRACK_VOLUME: {
@@ -476,8 +476,8 @@ void handleDspEvents()
 				cout << "DSP: Unkown message!! Will clog ringbuffer" << endl;
 				// just do nothing
 				break;
-            }
-            }
+			}
+			}
 		} else {
 			// next call will get the half-written event
 			return;
@@ -499,4 +499,3 @@ void writeToDspRingbuffer(EventBase* e)
 }
 
 #endif // LUPPP_EVENT_HANDLER_DSP_H
-
