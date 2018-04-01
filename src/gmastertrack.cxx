@@ -170,8 +170,7 @@ static void gmastertrack_button_callback(Fl_Widget *w, void *data)
 
 	} else if ( strcmp( w->label(), "Tap" ) == 0 ) {
 		if ( Fl::event_button() == FL_RIGHT_MOUSE ) {
-			string question = "Enter BPM value (between " + to_string(MIN_TEMPO) + " and " + to_string(MAX_TEMPO) + "):";
-			const char* answer = fl_input(question.c_str());
+			const char* answer = fl_input("Enter BPM value (range %d and %d):", 0, MIN_TEMPO, MAX_TEMPO);
 			if(answer) {
 				int bpm = atoi(answer);
 				
