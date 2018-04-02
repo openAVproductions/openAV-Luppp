@@ -70,7 +70,7 @@ private:
 	int fpb;
 
 	//vector<float> tmpRecordBuffer;
-	LooperClip* clips[10];
+	LooperClip* clips[NSCENES];
 
 	// Pitch Shifting
 	void pitchShift(int count, float* input, float* output);
