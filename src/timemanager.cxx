@@ -82,7 +82,7 @@ void TimeManager::setBpm(float bpm)
 
 void TimeManager::setBpmZeroOne(float b)
 {
-	setBpm( b * (MAX_TEMPO - MIN_TEMPO) + MIN_TEMPO ); // 60 - 220
+	setBpm( b * (MAX_TEMPO - MIN_TEMPO) + MIN_TEMPO ); // MIN_TEMPO - MAX_TEMPO
 }
 
 
