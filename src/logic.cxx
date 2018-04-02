@@ -41,6 +41,11 @@ void Logic::setBpm(float bpm)
 	jack->getTimeManager()->setBpm( bpm );
 }
 
+void Logic::setBpmZeroOne(float bpm)
+{
+	jack->getTimeManager()->setBpmZeroOne( bpm );
+}
+
 void Logic::metronomeEnable(bool b)
 {
 	jack->getMetronome()->setActive(b);
