@@ -4,6 +4,19 @@
 	"link": "",
 	"inputBindings": [
 		{
+			"action" : "grid:select_clip_enable",
+			"status" : 144,
+			"data"   : 98,
+			"active" : 1
+		},
+		{
+			"action" : "grid:select_clip_enable",
+			"status" : 128,
+			"data"   : 98,
+			"active" : 0
+		},
+		
+		{
 			"action": "grid:event",
 			"status": 144,
 			"data": 56,
