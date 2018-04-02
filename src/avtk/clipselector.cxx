@@ -429,7 +429,7 @@ int ClipSelector::handle(int event)
 void ClipState::setBeats(int numBeats, bool isBeatsToRecord)
 {
 	if(numBeats > 0) {
-		barsText = std::to_string(numBeats/4);
+        barsText = std::to_string(numBeats) + "/" + std::to_string(numBeats/4);
 		if(isBeatsToRecord){
 			barsText = "(" + barsText + ")";
 			beatsToRecord = numBeats;
