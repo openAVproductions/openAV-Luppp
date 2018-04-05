@@ -23,7 +23,7 @@
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 #include "../gui.hxx"
-#define RECORD_BARS_MENU_ITEM(num) { #num, 0, setRecordBarsCb, (void*)num, FL_MENU_RADIO | ((clips[clipNum].getBeatsToRecord() == num*4) ? FL_ACTIVATE : 0 | empty ? 0 : FL_MENU_INACTIVE) }
+#define RECORD_BARS_MENU_ITEM(num) { #num, 0, setRecordBarsCb, (void*)num, FL_MENU_RADIO | ((clips[clipNum].getBeatsToRecord() == num*4) ? FL_MENU_VALUE : 0) | (empty ? 0 : FL_MENU_INACTIVE) }
 #define RECORD_LENGTH_MENU_ITEM(num) {#num, 0, setLengthCb, (void*)num, empty ? FL_MENU_INACTIVE : 0}
 
 extern Gui* gui;
@@ -289,14 +289,14 @@ void setRecordBarsCb(Fl_Widget *w, void* data)
 		const char* answer = fl_input("Enter a custom number: ");
         if(!answer) {
             bars = -1;
-            fl_message("Please enter value between 1 and %.", MAX_BARS);
+            fl_message("Please enter value between 1 and %i.", MAX_BARS);
         } else
 			bars = atoi(answer);
 	}
 
-    if(bars <= 0 || bars > MAX_BARS) {
+    if(bars > MAX_BARS) {
         bars = -1;
-        fl_message("Please enter value between 1 and %.", MAX_BARS);
+        fl_message("Please enter value between 1 and %i.", MAX_BARS);
     }
 
 	EventLooperBarsToRecord e(track->ID, track->getLastClipNum(), bars);
@@ -372,10 +372,9 @@ int ClipSelector::handle(int event)
 					RECORD_BARS_MENU_ITEM(4),
 					RECORD_BARS_MENU_ITEM(6),
 					RECORD_BARS_MENU_ITEM(8),
-                    {"Endless", 0, setRecordBarsCb, (void*)-1, FL_MENU_DIVIDER | FL_MENU_RADIO | ((clips[clipNum].getBeatsToRecord() <= 0) ? FL_ACTIVATE : 0)
-                     | empty ? 0 : FL_MENU_INACTIVE},
+                    {"Endless", 0, setRecordBarsCb, (void*)-1, FL_MENU_DIVIDER | FL_MENU_RADIO | ((clips[clipNum].getBeatsToRecord() <= 0) ? FL_MENU_VALUE : 0) | (empty ? 0 : FL_MENU_INACTIVE)},
                     {"Custom", 0, setRecordBarsCb, (void*)-2, empty ? 0 : FL_MENU_INACTIVE},
-					{0},
+                    {0},
 					//{ "Record" },
 					{ "Use as tempo" },
 					{ "Rename", 0, 0, 0, FL_MENU_DIVIDER},
