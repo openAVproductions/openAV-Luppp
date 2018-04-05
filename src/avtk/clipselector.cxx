@@ -210,6 +210,26 @@ void ClipSelector::draw()
 			cairo_line_to( cr, x+clipHeight-1, drawY + clipHeight - 2);
 			cairo_stroke(cr);
 
+            int beatLen = 0;
+
+            // clip bars
+            if(!_master) {
+                const char * bars = clips[i].getBarsText();
+                const char * beats = clips[i].getBeatsText();
+                bool toRecord = clips[i].getBeatsToRecord() == -1;
+
+                if(strlen(bars)) {
+                    cairo_move_to( cr, x + clipWidth - 5 - getCairoTextWith(cr, bars), drawY + textHeight - 8);
+                    cairo_set_source_rgba( cr, 255 / 255.f, (toRecord) ? 255 / 255.f : 0 , 255 / 255.f , 0.9 );
+                    cairo_set_font_size( cr, 11 );
+                    cairo_show_text( cr, bars);
+
+                    beatLen =  getCairoTextWith(cr, beats);
+                    cairo_move_to( cr, x + clipWidth -  5 - beatLen, drawY + textHeight + 7);
+                    cairo_show_text( cr, beats);
+                }
+            }
+
 			// clip name
 			cairo_move_to( cr, x + clipHeight + 5, drawY + textHeight );
 			cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 0.9 );
@@ -218,29 +238,14 @@ void ClipSelector::draw()
             std::string tmp = clips[i].getName();
 
             // trim the names
-            while(getCairoTextWith(cr, tmp.c_str()) > clipWidth - (clipHeight + 20)){
+            while(getCairoTextWith(cr, tmp.c_str()) > clipWidth - (clipHeight + 15 + beatLen)){
                 tmp = tmp.substr(0, tmp.length() - 4);
                 tmp += "…";
             }
 
-			cairo_show_text( cr, tmp.c_str() );
+            cairo_show_text( cr, tmp.c_str() );
 
-			// clip bars
-			if(!_master) {
-                const char * bars = clips[i].getBarsText();
-                const char * beats = clips[i].getBeatsText();
-
-                if(strlen(bars)) {
-                    cairo_move_to( cr, x + clipWidth - 5 - getCairoTextWith(cr, bars), drawY + textHeight - 8);
-                    cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 0.9 );
-                    cairo_set_font_size( cr, 11 );
-                    cairo_show_text( cr, bars);
-                    cairo_move_to( cr, x + clipWidth -  5 - getCairoTextWith(cr, beats), drawY + textHeight + 7);
-                    cairo_show_text( cr, beats);
-                }
-            }
-
-			// special indicator?
+			// special indicator
 			if ( i == special ) {
 				cairo_rectangle( cr, x+2, drawY, clipWidth -1, clipHeight - 3 );
 				cairo_set_source_rgba(cr, 0.0, 153 / 255.f, 1.0, alpha);
