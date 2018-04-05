@@ -880,7 +880,17 @@ int Gui::keyboardHandler(int event)
 		}
 	}
 
-	// keyboard arrows to special key mapping
+	// keyboard arrows / space to special key mapping
+	if ( Fl::event_key( 32 ) &&  Fl::event_state( FL_SHIFT ) ) { //spacebar + shift
+		EventGridState e( gui->specialTrack, gui->specialScene, GridLogic::STATE_EMPTY  );
+		writeToDspRingbuffer( &e );
+		return 1;
+	}
+	if ( Fl::event_key( 32 ) ) { //spacebar
+		EventGridEvent e( gui->specialTrack, gui->specialScene, true );
+		writeToDspRingbuffer( &e );
+		return 1;
+	}
 	if ( Fl::event_key( FL_Left  ) ) {
 		EventGridSelectNewChosen e( gui->specialTrack-1, gui->specialScene  );
 		writeToDspRingbuffer( &e );

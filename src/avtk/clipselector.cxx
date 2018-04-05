@@ -47,7 +47,7 @@ ClipSelector::ClipSelector( int _x, int _y, int _w, int _h,
 	_master = master;
 
 	if ( _master ) {
-		for(int i = 0; i < numClips; i++ ) {
+		for(int i = 0; i < NSCENES; i++ ) {
 			stringstream s;
 			s << "Scene " << i + 1;
 			clips[i].setName( s.str() );

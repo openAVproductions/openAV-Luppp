@@ -76,7 +76,7 @@ public:
 		clips[5].state = UnitState::UNIT_STOPPING;
 	}
 
-	static const int numClips = 10;
+	static const int numClips = NSCENES;
 	UnitState clips[numClips];
 
 	bool mouseOver;

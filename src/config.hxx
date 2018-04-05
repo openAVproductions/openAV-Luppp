@@ -51,6 +51,10 @@
 #define NSCENES 10
 #define MAX_BUFFER_SIZE 1024
 
+///     TEMPO
+#define MIN_TEMPO 60
+#define MAX_TEMPO 220
+
 #define CONTROLLERS_PREALLOC 20
 
 // nsamples remaining during recording before Looper requests larger buffer

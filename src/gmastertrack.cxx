@@ -23,7 +23,7 @@
 static void gmastertrack_tempoDial_callback(Fl_Widget *w, void *data)
 {
 	Avtk::Dial* b = (Avtk::Dial*)w;
-	float bpm = (int)(b->value() * 160.f + 60);
+	float bpm = (int)(b->value() * (float)(MAX_TEMPO - MIN_TEMPO) + MIN_TEMPO);
 	if(std::fabs(bpm-round(bpm))) {
 		LUPPP_WARN("%f",bpm);
 	}
@@ -169,8 +169,20 @@ static void gmastertrack_button_callback(Fl_Widget *w, void *data)
 
 
 	} else if ( strcmp( w->label(), "Tap" ) == 0 ) {
-		EventTimeTempoTap e;
-		writeToDspRingbuffer( &e );
+		if ( Fl::event_button() == FL_RIGHT_MOUSE ) {
+			const char* answer = fl_input("Enter BPM value (range %d and %d):", 0, MIN_TEMPO, MAX_TEMPO);
+			if(answer) {
+				int bpm = atoi(answer);
+				
+				if ( bpm >= MIN_TEMPO && bpm <= MAX_TEMPO) {
+					EventTimeBPM e = EventTimeBPM( bpm );
+					writeToDspRingbuffer( &e );
+				}
+			}
+		} else {
+			EventTimeTempoTap e;
+			writeToDspRingbuffer( &e );
+		}
 	} else {
 		LUPPP_WARN("Error: unknown command string");
 	}
@@ -260,7 +272,7 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
 void GMasterTrack::setBpm( int b )
 {
 	bpm = b;
-	tempoDial.value( ( bpm - 60 ) / 160.f );
+	tempoDial.value( ( bpm - MIN_TEMPO ) / (float)(MAX_TEMPO - MIN_TEMPO) );
 	std::stringstream s;
 	s << bpm;
 	tempoDial.copy_label( s.str().c_str() );

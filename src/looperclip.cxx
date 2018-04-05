@@ -450,9 +450,9 @@ void LooperClip::getSample(float playSpeed, float* L, float* R)
 
 		std::vector<float>& vL = _buffer->getDataL();
 		std::vector<float>& vR = _buffer->getDataR();
-		*L = vL.at(_playhead);
-		*R = vR.at(_playhead);
-		_playhead +=playSpeed;
+		*L = vL[_playhead];
+		*R = vR[_playhead];
+		_playhead += playSpeed;
 	} else {
 		*L = 0.f;
 		*R = 0.f;

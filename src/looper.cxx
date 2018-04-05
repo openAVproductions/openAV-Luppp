@@ -42,7 +42,7 @@ Looper::Looper(int t) :
 	//tmpRecordBuffer = (float*)malloc( sizeof(float) * MAX_BUFFER_SIZE );
 	//memset( tmpRecordBuffer, 0, sizeof(float) * MAX_BUFFER_SIZE );
 
-	for(int i = 0; i < 10; i++ ) {
+	for(int i = 0; i < NSCENES; i++ ) {
 		clips[i] = new LooperClip(track, i);
 	}
 
@@ -150,7 +150,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 				// write the pitch-shifted signal to the track buffer
 				//FIXME: pitchShift adds delay even for playSpeed = 1.0!!
 				//we should use something better (e.g librubberband)
-				if(playSpeed!=1.0f) {
+				if(0) { //playSpeed!=1.0f) {
 					pitchShift( 1, &tmpL, &outL[i] );
 					pitchShift( 1, &tmpR, &outR[i] );
 				} else {
