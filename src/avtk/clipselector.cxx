@@ -285,14 +285,19 @@ void setRecordBarsCb(Fl_Widget *w, void* data)
 
 	ClipSelector *track = (ClipSelector*)w;
 	long bars = (long)data;
-	if(bars == -2){        
+    if(bars == -2) {
 		const char* answer = fl_input("Enter a custom number: ");
-        if(!answer || atoi(bars) <= 0|| atoi(bars) > MAX_BARS) {
+        if(!answer) {
             bars = -1;
             fl_message("Please enter value between 1 and %.", MAX_BARS);
         } else
 			bars = atoi(answer);
 	}
+
+    if(bars <= 0 || bars > MAX_BARS) {
+        bars = -1;
+        fl_message("Please enter value between 1 and %.", MAX_BARS);
+    }
 
 	EventLooperBarsToRecord e(track->ID, track->getLastClipNum(), bars);
 	writeToDspRingbuffer( &e );
