@@ -93,7 +93,8 @@ void ClipSelector::clipName(int clip, std::string name)
 
 void ClipSelector::setClipBeats(int scene, int beats, bool isBeatsToRecord)
 {
-	clips[scene].setBeats(beats, isBeatsToRecord);
+    clips[scene].setBeats(beats, isBeatsToRecord);
+    redraw();
 }
 
 double getCairoTextWith(cairo_t * cr, const char * str)
@@ -286,10 +287,9 @@ void setRecordBarsCb(Fl_Widget *w, void* data)
 	long bars = (long)data;
 	if(bars == -2){        
 		const char* answer = fl_input("Enter a custom number: ");
-        bars = atoi(answer);
-        if(!answer || bars <= 0|| bars > MAX_BARS) {
+        if(!answer || atoi(bars) <= 0|| atoi(bars) > MAX_BARS) {
             bars = -1;
-            fl_message("Invalid Input. You may enter a number smaller than %i!", MAX_BARS);
+            fl_message("Please enter value between 1 and %.", MAX_BARS);
         } else
 			bars = atoi(answer);
 	}
@@ -367,7 +367,7 @@ int ClipSelector::handle(int event)
 					RECORD_BARS_MENU_ITEM(4),
 					RECORD_BARS_MENU_ITEM(6),
 					RECORD_BARS_MENU_ITEM(8),
-                    {"Endless", 0, setRecordBarsCb, (void*)-1, FL_MENU_DIVIDER | (clips[clipNum].getBeatsToRecord() <= 0) ? FL_ACTIVATE : 0
+                    {"Endless", 0, setRecordBarsCb, (void*)-1, FL_MENU_DIVIDER | FL_MENU_RADIO | ((clips[clipNum].getBeatsToRecord() <= 0) ? FL_ACTIVATE : 0)
                      | empty ? 0 : FL_MENU_INACTIVE},
                     {"Custom", 0, setRecordBarsCb, (void*)-2, empty ? 0 : FL_MENU_INACTIVE},
 					{0},
