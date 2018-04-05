@@ -218,7 +218,8 @@ void ClipSelector::draw()
                 bool toRecord = clips[i].getBeats() <= 0 && clips[i].getBeatsToRecord() > 0; // If there are BeatsToRecord, but no Beats
 
                 if(strlen(bars)) {
-                    cairo_set_source_rgba( cr, 255 / 255.f, (toRecord) ? 0 : 255 / 255.f, 255 / 255.f , 0.9 );
+                    if(toRecord) cairo_set_source_rgba(cr, 1.f,  0 / 255.f ,  0 / 255.f, 1.f);
+                    else cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f, 255 / 255.f , 0.9 );
 
                     cairo_move_to( cr,  x + clipWidth - 5 - getCairoTextWith(cr, bars), drawY + textHeight - 8);
                     cairo_set_font_size( cr, 11 );
