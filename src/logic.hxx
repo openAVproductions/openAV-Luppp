@@ -42,7 +42,8 @@ public:
 	Logic();
 
 	void tapTempo();
-	void setBpm(float bpm); /// 0-1 input
+	void setBpm(float bpm); // actual BPM input
+	void setBpmZeroOne( float bpm ); /// 0-1 input
 
 	void metronomeEnable(bool b);
 
