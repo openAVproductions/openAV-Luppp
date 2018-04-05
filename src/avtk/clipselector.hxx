@@ -69,6 +69,10 @@ public:
 		return beatsToRecord;
 	}
 
+    int getBeats(){
+        return beats;
+    }
+
 	void setBeats(int numBeats, bool isBeatsToRecord);
 
     const char *getBeatsText() {
