@@ -65,6 +65,7 @@
 #define LUPPP_RETURN_WARNING  1
 #define LUPPP_RETURN_ERROR    2
 
+#define MAX_BARS 100
 
 ///     debug.hxx for printing convienience
 #include "debug.hxx"

@@ -85,8 +85,8 @@ private:
     std::string beatsText;
     std::string barsText;
 
-	int beatsToRecord;
-	int beats;
+    int beatsToRecord = -1;
+    int beats = 0;
 };
 
 class ClipSelector : public Fl_Button

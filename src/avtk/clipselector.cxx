@@ -18,7 +18,6 @@
 
 
 #include "clipselector.hxx"
-#include <stdio.h>
 #include <unistd.h>
 
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
@@ -219,8 +218,9 @@ void ClipSelector::draw()
                 bool toRecord = clips[i].getBeatsToRecord() == -1;
 
                 if(strlen(bars)) {
-                    cairo_move_to( cr, x + clipWidth - 5 - getCairoTextWith(cr, bars), drawY + textHeight - 8);
                     cairo_set_source_rgba( cr, 255 / 255.f, (toRecord) ? 255 / 255.f : 0 , 255 / 255.f , 0.9 );
+
+                    cairo_move_to( cr,  x + clipWidth - 5 - getCairoTextWith(cr, bars), drawY + textHeight - 8);
                     cairo_set_font_size( cr, 11 );
                     cairo_show_text( cr, bars);
 
@@ -239,6 +239,10 @@ void ClipSelector::draw()
 
             // trim the names
             while(getCairoTextWith(cr, tmp.c_str()) > clipWidth - (clipHeight + 15 + beatLen)){
+                if(tmp.length() < 4){
+                    tmp = "";
+                    break;
+                }
                 tmp = tmp.substr(0, tmp.length() - 4);
                 tmp += "…";
             }
@@ -274,13 +278,18 @@ void ClipSelector::resize(int X, int Y, int W, int H)
 
 void setRecordBarsCb(Fl_Widget *w, void* data)
 {
+    if(!w || !data)
+        return;
+
 	ClipSelector *track = (ClipSelector*)w;
 	long bars = (long)data;
-	if(bars == -2){
+	if(bars == -2){        
 		const char* answer = fl_input("Enter a custom number: ");
-		if(!answer)
-			bars = -1;
-		else
+        bars = atoi(answer);
+        if(!answer || bars <= 0|| bars > MAX_BARS) {
+            bars = -1;
+            fl_message("Invalid Input. You may enter a number smaller than %i!", MAX_BARS);
+        } else
 			bars = atoi(answer);
 	}
 
@@ -351,14 +360,15 @@ int ClipSelector::handle(int event)
 					RECORD_LENGTH_MENU_ITEM(32),
 					RECORD_LENGTH_MENU_ITEM(64),
 					{0},
-                    { "Bars to record",  0,   0, 0, FL_SUBMENU | FL_MENU_DIVIDER },
+                    { "Bars to record",  0,   0, 0, FL_SUBMENU | FL_MENU_DIVIDER},
 					RECORD_BARS_MENU_ITEM(1),
 					RECORD_BARS_MENU_ITEM(2),
 					RECORD_BARS_MENU_ITEM(4),
 					RECORD_BARS_MENU_ITEM(6),
 					RECORD_BARS_MENU_ITEM(8),
-					{"Endless", 0, setRecordBarsCb, (void*)-1, FL_MENU_DIVIDER | (clips[clipNum].getBeatsToRecord() < 0) ? FL_ACTIVATE : 0 },
-					{"Custom", 0, setRecordBarsCb, (void*)-2},
+                    {"Endless", 0, setRecordBarsCb, (void*)-1, FL_MENU_DIVIDER | (clips[clipNum].getBeatsToRecord() <= 0) ? FL_ACTIVATE : 0
+                     | empty ? 0 : FL_MENU_INACTIVE},
+                    {"Custom", 0, setRecordBarsCb, (void*)-2, empty ? 0 : FL_MENU_INACTIVE},
 					{0},
 					//{ "Record" },
 					{ "Use as tempo" },
@@ -454,9 +464,13 @@ void ClipState::setBeats(int numBeats, bool isBeatsToRecord)
 	if(numBeats > 0) {
         beatsText = std::to_string(numBeats);
         barsText = std::to_string(numBeats/4);
-        beats = numBeats;
-
-        beatsToRecord = (isBeatsToRecord)  ? numBeats : -1;
+        if(isBeatsToRecord){
+              beatsToRecord = numBeats;
+        } else {
+            beats = numBeats;
+            if(numBeats <= 0)
+                beatsToRecord = -1;
+        }
 	}
 	else
         barsText = beatsText = std::string("");
