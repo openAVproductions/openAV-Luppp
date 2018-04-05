@@ -18,7 +18,7 @@
 
 
 #include "clipselector.hxx"
-
+#include <stdio.h>
 #include <unistd.h>
 
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
@@ -95,6 +95,13 @@ void ClipSelector::clipName(int clip, std::string name)
 void ClipSelector::setClipBeats(int scene, int beats, bool isBeatsToRecord)
 {
 	clips[scene].setBeats(beats, isBeatsToRecord);
+}
+
+double getCairoTextWith(cairo_t * cr, const char * str)
+{
+    cairo_text_extents_t ex;
+    cairo_text_extents(cr, str, &ex);
+    return ex.width;
 }
 
 void ClipSelector::setSpecial(int scene)
@@ -208,20 +215,30 @@ void ClipSelector::draw()
 			cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 0.9 );
 			cairo_set_font_size( cr, 11 );
 
-			std::string tmp = clips[i].getName().substr(0,8);
+            std::string tmp = clips[i].getName();
+
+            // trim the names
+            while(getCairoTextWith(cr, tmp.c_str()) > clipWidth - (clipHeight + 20)){
+                tmp = tmp.substr(0, tmp.length() - 4);
+                tmp += "…";
+            }
 
 			cairo_show_text( cr, tmp.c_str() );
 
 			// clip bars
 			if(!_master) {
-				const char * bars = clips[i].getBarsString();
-				if(bars) {
-					cairo_move_to( cr, x + clipHeight + 5, drawY + textHeight + 8);
-					cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 0.9 );
-					cairo_set_font_size( cr, 8 );
-					cairo_show_text( cr, bars);
-				}
-			}
+                const char * bars = clips[i].getBarsText();
+                const char * beats = clips[i].getBeatsText();
+
+                if(strlen(bars)) {
+                    cairo_move_to( cr, x + clipWidth - 5 - getCairoTextWith(cr, bars), drawY + textHeight - 8);
+                    cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 0.9 );
+                    cairo_set_font_size( cr, 11 );
+                    cairo_show_text( cr, bars);
+                    cairo_move_to( cr, x + clipWidth -  5 - getCairoTextWith(cr, beats), drawY + textHeight + 7);
+                    cairo_show_text( cr, beats);
+                }
+            }
 
 			// special indicator?
 			if ( i == special ) {
@@ -429,17 +446,13 @@ int ClipSelector::handle(int event)
 void ClipState::setBeats(int numBeats, bool isBeatsToRecord)
 {
 	if(numBeats > 0) {
-        barsText = std::to_string(numBeats) + "/" + std::to_string(numBeats/4);
-		if(isBeatsToRecord){
-			barsText = "(" + barsText + ")";
-			beatsToRecord = numBeats;
-		} else {
-			beats = numBeats;
-			beatsToRecord = -1;
-		}
+        beatsText = std::to_string(numBeats);
+        barsText = std::to_string(numBeats/4);
+        beats = numBeats;
+
+        beatsToRecord = (isBeatsToRecord)  ? numBeats : -1;
 	}
 	else
-		barsText = std::string("");
+        barsText = beatsText = std::string("");
 }
-
 } // Avtk
