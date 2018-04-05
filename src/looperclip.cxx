@@ -189,9 +189,11 @@ void LooperClip::setPlayHead(float ph)
 
 void LooperClip::setBarsToRecord(int bars)
 {
-	_wantedBeats = bars * 4; // we set beats
-	EventClipBeatsChanged e( track, scene, _wantedBeats, true);
-	writeToGuiRingbuffer(&e);
+    if(!(_playing || _queuePlay || _queueStop || _loaded)) {
+        _wantedBeats = bars * 4; // we set beats
+        EventClipBeatsChanged e( track, scene, _wantedBeats, true);
+        writeToGuiRingbuffer(&e);
+    }
 }
 
 int LooperClip::getBeatsToRecord()
@@ -253,13 +255,13 @@ size_t LooperClip::audioBufferSize()
 
 void LooperClip::setBeats(int beats)
 {
-	if ( _buffer ) {
-		_buffer->setBeats( beats );
-	}
+    if (_loaded || _playing || _queuePlay || _queueStop || beats == 0) {
+        if(_buffer)
+            _buffer->setBeats( beats );
 
-	// Even on Reset!
-	EventClipBeatsChanged e(track, scene, beats, false);
-	writeToGuiRingbuffer(&e);
+        EventClipBeatsChanged e(track, scene, beats, false);
+        writeToGuiRingbuffer(&e);
+	}
 }
 
 int LooperClip::getBeats()

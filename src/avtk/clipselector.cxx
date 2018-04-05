@@ -24,8 +24,8 @@
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 #include "../gui.hxx"
-#define RECORD_BARS_MENU_ITEM(num) { #num, 0, setRecordBarsCb, (void*)num, FL_MENU_RADIO | ((clips[clipNum].getBeatsToRecord() == num*4) ? FL_ACTIVATE : 0) }
-#define RECORD_LENGTH_MENU_ITEM(num) {#num, 0, setLengthCb, (void*)num}
+#define RECORD_BARS_MENU_ITEM(num) { #num, 0, setRecordBarsCb, (void*)num, FL_MENU_RADIO | ((clips[clipNum].getBeatsToRecord() == num*4) ? FL_ACTIVATE : 0 | empty ? 0 : FL_MENU_INACTIVE) }
+#define RECORD_LENGTH_MENU_ITEM(num) {#num, 0, setLengthCb, (void*)num, empty ? FL_MENU_INACTIVE : 0}
 
 extern Gui* gui;
 
@@ -337,11 +337,12 @@ int ClipSelector::handle(int event)
 				}
 
 
+                bool empty =  clips[clipNum].getState() == GridLogic::STATE_EMPTY;
 				Fl_Menu_Item rclick_menu[] = {
 					{ "Load" },
 					{ "Save" },
 					{ "Special"},
-					{ "Beats",  0,   0, 0, FL_SUBMENU | FL_MENU_DIVIDER },
+                    { "Beats",  0,   0, 0, FL_SUBMENU | FL_MENU_DIVIDER },
 					RECORD_LENGTH_MENU_ITEM(1),
 					RECORD_LENGTH_MENU_ITEM(2),
 					RECORD_LENGTH_MENU_ITEM(4),
@@ -350,7 +351,7 @@ int ClipSelector::handle(int event)
 					RECORD_LENGTH_MENU_ITEM(32),
 					RECORD_LENGTH_MENU_ITEM(64),
 					{0},
-					{ "Bars to record",  0,   0, 0, FL_SUBMENU | FL_MENU_DIVIDER },
+                    { "Bars to record",  0,   0, 0, FL_SUBMENU | FL_MENU_DIVIDER },
 					RECORD_BARS_MENU_ITEM(1),
 					RECORD_BARS_MENU_ITEM(2),
 					RECORD_BARS_MENU_ITEM(4),
