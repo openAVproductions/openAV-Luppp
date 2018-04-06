@@ -49,7 +49,7 @@ void LooperClip::init()
 	_queuePlay  = false;
 	_queueStop  = false;
 	_queueRecord= false;
-	_wantedBeats= -1;
+    _beatsToRecord= -1;
 	setBeats(0);
 
 	if ( _buffer ) {
@@ -114,7 +114,7 @@ void LooperClip::load( AudioBuffer* ab )
 	}
 
 	_buffer = ab;
-	EventClipBeatsChanged e( track, scene, _wantedBeats, true );
+    EventClipBeatsChanged e( track, scene, _beatsToRecord, true );
 	writeToGuiRingbuffer( &e );
 
 	_playhead = 0;
@@ -190,19 +190,19 @@ void LooperClip::setPlayHead(float ph)
 void LooperClip::setBarsToRecord(int bars)
 {
     if(!(_playing || _queuePlay || _queueStop || _loaded)) {
-        _wantedBeats = bars * 4; // we set beats
-        EventClipBeatsChanged e( track, scene, _wantedBeats, true);
+        _beatsToRecord = bars * 4; // we set beats
+        EventClipBeatsChanged e( track, scene, _beatsToRecord, true);
         writeToGuiRingbuffer(&e);
     }
 }
 
 int LooperClip::getBeatsToRecord()
 {
-	return _wantedBeats;
+    return _beatsToRecord;
 }
 
 int LooperClip::getBarsToRecord(){
-	return _wantedBeats / 4;
+    return _beatsToRecord / 4;
 }
 
 void LooperClip::record(int count, float* L, float* R)
