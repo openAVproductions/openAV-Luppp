@@ -275,61 +275,6 @@ void GenericMIDI::volume(int t, float f)
 {
 
 }
-
-void GenericMIDI::noteOn( int track, int note, int vel )
-{
-  printf("apc noteOn: t = %i, n = %i, vel = %i\n", track, note, vel);
-  if ( note >= 53 && note <= 57 )
-  {
-    if ( shiftPressed )
-    {
-      footpedalTrack = track;
-      footpedalScene = note - 53;
-    }
-    else
-      jack->getGridLogic()->pressed( track, note - 53 );
-    return;
-  }
-
-
-  switch( note )
-  {
-    case 48: { // record
-        jack->getLogic()->trackRecordArm(track, true);
-        } break;
-    case 49: { // solo / cue
-        jack->getLogic()->trackSend(track, SEND_KEY, 1);
-        } break;
-
-    case 82: // Master Scene Clips
-    case 83:
-    case 84:
-    case 85:
-    case 86: {
-        jack->getGridLogic()->launchScene(note - 82);
-        } break;
-
-    case 98:  { // Shift
-        shiftPressed = true;
-        break; }
-
-    case 99: { // tap tempo
-        jack->getLogic()->tapTempo();
-        jack->getControllerUpdater()->tapTempo( true );
-        } break;
-    case 100: { // nudge +
-
-        } break;
-    case 101: { // nudge -
-
-        } break;
-
-    default:
-        break;
-  }
-
-
-}
 */
 
 void GenericMIDI::midi(unsigned char* midi)
