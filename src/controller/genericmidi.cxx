@@ -204,17 +204,6 @@ void GenericMIDI::trackJackSendActivate(int t, bool a)
 }
 
 /*
-void GenericMIDI::progress(int t, int s, float f)
-{
-
-  unsigned char data[3];
-  data[0] = 176;
-  data[1] = 48; // record enable LED
-  data[2] = 127 * f;
-  jack->midiObserverWriteMIDI( _port,  &data[0] );
-
-}
-
 void GenericMIDI::trackSend(int t, int send, float v)
 {
   if ( t >= NTRACKS)
