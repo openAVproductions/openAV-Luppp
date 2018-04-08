@@ -367,67 +367,7 @@ void GenericMIDI::noteOff( int track, int note, int vel )
         break; }
   }
 }
-
-void GenericMIDI::ccChange( int track, int cc, float value )
-{
-  if ( track >= 0 && track < NTRACKS )
-  {
-    switch( cc )
-    {
-      /// Track faders
-      case 7: {
-          jack->getLogic()->trackVolume( track, value );
-          break; }
-      case 14: { // master
-          jack->getLogic()->trackVolume( -1, value );
-          break; }
-
-      /// X-Fader
-      case 15: {
-          jack->getTimeManager()->setBpm( 60 + value * 180 );
-          break; }
-
-      /// Device Control
-      case 16: {
-          //jack->getLogic()->trackSend( track, SEND_KEY, value );
-          break; }
-      case 17: {
-          jack->getLogic()->trackSend( track, SEND_XSIDE, value );
-          break; }
-      case 18: {
-          jack->getLogic()->trackSend( track, SEND_POSTFADER, value );
-          break; }
-
-
-      case 64: { // FootSwitch 1
-          if ( value > 0.5 )
-          {
-            printf("footpedal press %i, %i\n", footpedalTrack, footpedalScene );
-            jack->getGridLogic()->pressed( footpedalTrack, footpedalScene );
-          }
-          else
-          {
-            printf("footpedal release %i, %i\n", footpedalTrack, footpedalScene );
-            jack->getGridLogic()->released( footpedalTrack, footpedalScene );
-          } break; }
-      case 67:  { // FootSwitch 2
-
-          break; }
-    }
-  }
-  else
-  // tracks outside normal track range
-  // handle master track buttons etc here
-  {
-    if ( cc == 16 ) // master device control select
-    {
-
-    }
-  }
-}
-
 */
-
 
 void GenericMIDI::midi(unsigned char* midi)
 {
