@@ -204,38 +204,6 @@ void GenericMIDI::trackJackSendActivate(int t, bool a)
 }
 
 /*
-void GenericMIDI::trackSend(int t, int send, float v)
-{
-  if ( t >= NTRACKS)
-  {
-    // master track
-    return;
-  }
-
-  unsigned char data[3];
-
-  if ( send == SEND_KEY )
-  {
-    data[0] = 144 + t;
-    data[1] = 49;
-    data[2] = v > 0.5 ? 127 : 0 ;
-  }
-  else if ( send == SEND_XSIDE )
-  {
-    data[0] = 176 + t;
-    data[1] = 16;
-    data[2] = 127 * v;
-  }
-  else if ( send == SEND_POSTFADER )
-  {
-    data[0] = 176 + t;
-    data[1] = 17;
-    data[2] = 127 * v;
-  }
-
-  jack->midiObserverWriteMIDI( _port,  &data[0] );
-}
-
 void GenericMIDI::launchScene( int s )
 {
   unsigned char data[3];
