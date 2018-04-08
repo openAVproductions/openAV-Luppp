@@ -269,12 +269,6 @@ void GenericMIDI::mute(int t, bool b)
 {
 
 }
-
-
-void GenericMIDI::volume(int t, float f)
-{
-
-}
 */
 
 void GenericMIDI::midi(unsigned char* midi)
