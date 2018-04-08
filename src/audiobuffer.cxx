@@ -123,13 +123,3 @@ void AudioBuffer::nonRtResize(unsigned long size)
 	bufferL.resize(size);
 	bufferR.resize(size);
 }
-
-/*
-ostream& AudioBuffer::operator<<(ostream& o, const AudioBuffer& a)
-{
-  o << "AudioBuffer " << a.name <<
-        " beats: " << a.numBeats <<
-        " audioFrames: " << a.audioFrames << endl;
-  return o;
-}
-*/

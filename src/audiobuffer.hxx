@@ -61,8 +61,6 @@ public:
 
 	void nonRtResize(unsigned long size);
 
-	//friend ostream& operator<<(ostream& o, const AudioBuffer& a);
-
 protected:
 	static int privateID;
 	int ID;
