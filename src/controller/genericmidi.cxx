@@ -203,31 +203,6 @@ void GenericMIDI::trackJackSendActivate(int t, bool a)
 
 }
 
-/*
-void GenericMIDI::launchScene( int s )
-{
-  unsigned char data[3];
-
-  for(int i = 0; i < 5; i++ )
-  {
-    data[0] = 128;
-    data[1] = 82 + i; // scene play
-    data[2] = 0;
-    jack->midiObserverWriteMIDI( _port,  &data[0] );
-  }
-
-  data[0] = 144;
-  data[1] = 82 + s;
-  data[2] = 127;
-  jack->midiObserverWriteMIDI( _port,  &data[0] );
-}
-
-void GenericMIDI::mute(int t, bool b)
-{
-
-}
-*/
-
 void GenericMIDI::midi(unsigned char* midi)
 {
 	int status = midi[0];
