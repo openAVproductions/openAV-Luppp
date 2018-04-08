@@ -330,43 +330,6 @@ void GenericMIDI::noteOn( int track, int note, int vel )
 
 
 }
-
-void GenericMIDI::noteOff( int track, int note, int vel )
-{
-  printf("apc noteOff: t = %i, n = %i, vel = %i\n", track, note, vel);
-  if ( note >= 53 && note <= 57 )
-  {
-    jack->getGridLogic()->released( track, note - 53 );
-  }
-
-  switch( note )
-  {
-    case 48: { // record
-        jack->getLogic()->trackRecordArm(track, false);
-        } break;
-    case 49: { // solo / cue
-        jack->getLogic()->trackSend(track, SEND_KEY, 0);
-        }
-
-    case 99: { // tap tempo
-        EventTimeTempoTap e(false);
-        writeToGuiRingbuffer( &e );
-        } break;
-
-    case 82: // scene launch
-    case 83:
-    case 84:
-    case 85:
-    case 86: {
-        int s = jack->getGridLogic()->getLaunchedScene();
-        launchScene( s );
-        } break ;
-
-    case 98:  { // Shift
-        shiftPressed = false;
-        break; }
-  }
-}
 */
 
 void GenericMIDI::midi(unsigned char* midi)
