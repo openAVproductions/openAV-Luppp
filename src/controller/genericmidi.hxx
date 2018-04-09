@@ -52,9 +52,6 @@ public:
 	std::string getAuthor();
 	std::string getEmail();
 
-	/// track actions
-	//void mute(int t, bool b);
-
 	void metronomeEnable(bool b);
 
 	void launchScene( int scene );
@@ -64,14 +61,6 @@ public:
 
 	void recordArm(int t, bool b);
 	void setSceneState(int track, int clip, GridLogic::State s);
-
-	/*
-	void progress(int t, int s, float f);
-	void launchScene( int scene );
-
-	/// track FX
-	void trackSend(int t, int send, float v);
-	*/
 
 	void trackSend(int t, int send, float v);
 	void trackSendActive(int t, int send, bool a);

@@ -397,14 +397,6 @@ Gui::Gui(const char* argZero) :
 
 	window.color( fl_rgb_color (7,7,7) );
 
-	/*
-	tooltipLabel = new Fl_2(130, 25, 500, 20, "");
-	tooltipLabel->labelcolor( FL_LIGHT2 );
-	tooltipLabel->color( FL_DARK2 );
-	tooltipLabel->hide();
-	//tooltipLabel->align( FL_ALIGN_TOP_LEFT );
-	*/
-
 	// horizontal no-resize-images group
 	Fl_Group* headerImages = new Fl_Group( 0, 0, 1110, 650, "header");
 	{

@@ -96,10 +96,6 @@ Jack::Jack( std::string name ) :
 
 	resetMidiBindingState();
 
-	//GenericMIDI* tmp = new GenericMIDI("akai_apc.ctlr");
-	//tmp->registerComponents();
-	//controllerUpdater->registerController( static_cast<Controller*>(tmp) );
-
 	buffers.nframes = jack_get_buffer_size( client );
 	buffers.samplerate = jack_get_sample_rate( client );
 
