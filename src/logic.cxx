@@ -157,6 +157,14 @@ void Logic::looperClipLenght(int t, int s, int l)
 }
 
 
+void Logic::looperBarsToRecord(int t, int s, int b)
+{
+	if ( t >= 0 && t < NTRACKS ) {
+		jack->getLooper( t )->getClip( s )->setBarsToRecord(b);
+	} else {		LUPPP_WARN("invalid track number %i: check controller map has \"track\" field.", t );
+	}
+}
+
 void Logic::looperUseAsTempo(int t, int s)
 {
 	size_t clipBeats  = jack->getLooper( t )->getClip( s )->getBeats();
