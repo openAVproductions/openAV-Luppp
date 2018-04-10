@@ -104,6 +104,21 @@ double getCairoTextWith(cairo_t * cr, const char * str)
     return ex.width;
 }
 
+void trimToFit(cairo_t * cr, std::string * str, double maxWidth)
+{
+	double ellWidth = getCairoTextWith(cr, "…");
+	double textWidth = getCairoTextWith(cr, str->c_str());
+
+	if(textWidth > maxWidth) {
+		while(textWidth + ellWidth > maxWidth){
+			str->pop_back();
+			textWidth = getCairoTextWith(cr, str->c_str());
+		}
+
+		*str += "…";
+	}
+}
+
 void ClipSelector::setSpecial(int scene)
 {
 	if ( special == -1 && scene == -1 ) {
@@ -238,17 +253,7 @@ void ClipSelector::draw()
 			cairo_set_font_size( cr, 11 );
 
             std::string tmp = clips[i].getName();
-
-            // trim the names
-            while(getCairoTextWith(cr, tmp.c_str()) > clipWidth - (clipHeight + 15 + beatLen)){
-                if(tmp.length() < 4){
-                    tmp = "";
-                    break;
-                }
-                tmp = tmp.substr(0, tmp.length() - 4);
-                tmp += "…";
-            }
-
+			trimToFit(cr, &tmp, clipWidth - (clipHeight + 15 + beatLen));
             cairo_show_text( cr, tmp.c_str() );
 
 			// special indicator
