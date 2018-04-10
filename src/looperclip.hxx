@@ -145,7 +145,7 @@ private:
 
 	float _playhead;
 	float _recordhead;
-    int _beatsToRecord;
+	int _beatsToRecord;
 
 	AudioBuffer* _buffer;
 };
