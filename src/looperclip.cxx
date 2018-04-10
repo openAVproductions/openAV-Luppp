@@ -114,7 +114,7 @@ void LooperClip::load( AudioBuffer* ab )
 	}
 
 	_buffer = ab;
-    EventClipBeatsChanged e( track, scene, _beatsToRecord, true );
+	EventClipBeatsChanged e( track, scene, _beatsToRecord, true );
 	writeToGuiRingbuffer( &e );
 
 	_playhead = 0;
@@ -155,7 +155,7 @@ void LooperClip::setRequestedBuffer( AudioBuffer* ab )
 void LooperClip::recieveSaveBuffer( AudioBuffer* saveBuffer )
 {
 	if ( saveBuffer->getSize() >= _buffer->getDataL().at(0) ||
-		 saveBuffer->getSize() >= _buffer->getDataR().at(0) ) {
+	     saveBuffer->getSize() >= _buffer->getDataR().at(0) ) {
 		// copy current contents into save buffer,
 		// getData() contains L and R buffer, so twice the size is needed
 		size_t framesBySize = _buffer->getAudioFrames();
@@ -198,11 +198,11 @@ void LooperClip::setBarsToRecord(int bars)
 
 int LooperClip::getBeatsToRecord()
 {
-    return _beatsToRecord;
+	return _beatsToRecord;
 }
 
 int LooperClip::getBarsToRecord(){
-    return _beatsToRecord / 4;
+	return _beatsToRecord / 4;
 }
 
 void LooperClip::record(int count, float* L, float* R)
@@ -440,8 +440,8 @@ void LooperClip::getSample(float playSpeed, float* L, float* R)
 {
 	if ( _buffer && (_buffer->getSize() > 0)) {
 		if ( _playhead >= _recordhead ||
-			 _playhead >= _buffer->getSize() ||
-			 _playhead < 0  ) {
+		     _playhead >= _buffer->getSize() ||
+		     _playhead < 0  ) {
 			_playhead = 0;
 
 			EventGuiPrint e( "LooperClip resetting _playhead" );

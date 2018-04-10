@@ -72,9 +72,9 @@ LooperClip* Looper::getClip(int scene)
 
 void Looper::beat()
 {
-//TODO needed?
-//FIXME: Need to keep looperClips in sync when there exists no int N
-// such that playSpeed*N==1
+	//TODO needed?
+	//FIXME: Need to keep looperClips in sync when there exists no int N
+	// such that playSpeed*N==1
 //    for(int i=0;i<NSCENES;i++)
 //    {
 //        int iph=clips[i]->getPlayhead()+1.0;
@@ -113,7 +113,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 				clips[clip]->queuePlay(true);
 
 			if ( clips[clip]->recordSpaceAvailable() <  LOOPER_SAMPLES_BEFORE_REQUEST &&
-				 !clips[clip]->newBufferInTransit() ) {
+			     !clips[clip]->newBufferInTransit() ) {
 				EventLooperClipRequestBuffer e( track, clip, clips[clip]->audioBufferSize() + LOOPER_SAMPLES_UPDATE_SIZE);
 				writeToGuiRingbuffer( &e );
 				clips[clip]->newBufferInTransit(true);

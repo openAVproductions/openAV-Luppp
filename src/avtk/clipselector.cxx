@@ -32,7 +32,7 @@ namespace Avtk
 {
 
 ClipSelector::ClipSelector( int _x, int _y, int _w, int _h,
-							const char *_label, bool master ) :
+                            const char *_label, bool master ) :
 	Fl_Button(_x, _y, _w, _h)
 {
 	copy_label(_label);

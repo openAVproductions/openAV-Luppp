@@ -23,7 +23,7 @@
 #include <stdint.h>
 
 /*
-	event.hxx
+  event.hxx
 
   This file provides declarations for each type of event that the engine uses.
 */
