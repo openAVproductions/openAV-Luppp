@@ -546,7 +546,7 @@ void Jack::processFrames(int nframes)
 			buffers.audio[Buffers::SEND_R][i] += inputR * inputToSendVol * inputToMixVol;
 		}
 		if ( inputToKeyEnable ) {
-			buffers.audio[Buffers::SIDECHAIN_KEY_R][i] += inputL;
+			buffers.audio[Buffers::SIDECHAIN_KEY_L][i] += inputL;
 			buffers.audio[Buffers::SIDECHAIN_KEY_R][i] += inputR;
 		}
 
