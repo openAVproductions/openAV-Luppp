@@ -22,14 +22,15 @@ JackSendReturn::JackSendReturn(int trackid, AudioProcessor *prev, jack_client_t 
 
 void JackSendReturn::process(unsigned int nframes, Buffers *buffers)
 {
+	int trackoffset = m_trackid * 2;
 	//Reset send buffer
 	int offset=m_counter%(buffers->nframes);
-	float* sendtrackL=&(buffers->audio[Buffers::SEND_TRACK_0_L+m_trackid][0]);
-	float* sendtrackR=&(buffers->audio[Buffers::SEND_TRACK_0_R+m_trackid][0]);
+	float* sendtrackL=&(buffers->audio[Buffers::SEND_TRACK_0_L + trackoffset][0]);
+	float* sendtrackR=&(buffers->audio[Buffers::SEND_TRACK_0_R + trackoffset][0]);
 
 
-	float* rettrackL=&(buffers->audio[Buffers::RETURN_TRACK_0_L+m_trackid][0]);
-	float* rettrackR=&(buffers->audio[Buffers::RETURN_TRACK_0_R+m_trackid][0]);
+	float* rettrackL=&(buffers->audio[Buffers::RETURN_TRACK_0_L + trackoffset][0]);
+	float* rettrackR=&(buffers->audio[Buffers::RETURN_TRACK_0_R + trackoffset][0]);
 
 	memset(sendtrackL,0,nframes*sizeof(float));
 	memset(sendtrackR,0,nframes*sizeof(float));
