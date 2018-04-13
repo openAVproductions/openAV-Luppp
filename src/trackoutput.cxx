@@ -110,7 +110,8 @@ void TrackOutput::setSend( int send, float value )
 
 void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 {
-	int trackoffset = track * 2; // because we use stereo now, we need to skip two buffers per track
+	// index = first-track + (track * channels)
+	int trackoffset = track * NCHANNELS;
 
 	//compute master volume lag;
 	if(fabs(_toMaster-_toMasterLag)>=fabs(_toMasterDiff/100.0))

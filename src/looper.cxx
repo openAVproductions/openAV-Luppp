@@ -131,7 +131,8 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 				playSpeed = float(actualFrames) / targetFrames;
 			}
 
-			int trackoffset = track * 2;
+			// index = first-track + (track * channels)
+			int trackoffset = track * NCHANNELS;
 			float* outL = buffers->audio[Buffers::SEND_TRACK_0_L + trackoffset];
 			float* outR = buffers->audio[Buffers::SEND_TRACK_0_R + trackoffset];
 
