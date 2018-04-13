@@ -624,7 +624,7 @@ void Jack::processFrames(int nframes)
 			for(int t=0; t<NTRACKS; t++) {
 				int o = t*2;
 				buffers.audio[Buffers::JACK_TRACK_0_L+o]   = &buffers.audio[Buffers::JACK_TRACK_0_L+o][nframes];
-				buffers.audio[Buffers::JACK_TRACK_0_L+o+1] = &buffers.audio[Buffers::JACK_TRACK_0_L+o+1][nframes];
+				buffers.audio[Buffers::JACK_TRACK_0_R+o]   = &buffers.audio[Buffers::JACK_TRACK_0_R+o][nframes];
 			}
 		}
 	} else
