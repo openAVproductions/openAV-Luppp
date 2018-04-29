@@ -66,7 +66,7 @@ private:
 	/// This prohibits audible jumps when rapidly changing the volume
 	float _toMaster;
 	float _toMasterLag;
-	float _toMasterDiff;
+
 	/* -1 indicates 100% left, 0 is centered, 1 indicates right */
 	float _toMasterPan;
 

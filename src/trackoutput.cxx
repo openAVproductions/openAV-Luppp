@@ -35,7 +35,7 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
 
 	_toMaster        = 0.8;
 	_toMasterLag     = 0.8;
-	_toMasterDiff    = 0;
+
 	_toMasterPan     = 0.f;
 	_toReverb        = 0.0;
 	_toSidechain     = 0.0;
@@ -52,7 +52,6 @@ void TrackOutput::setMaster(float value)
 	if(value < 0.01)
 		value = 0.f;
 	_toMaster = value;
-	_toMasterDiff=_toMaster-_toMasterLag;
 }
 
 float TrackOutput::getMaster()
@@ -114,8 +113,8 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 	int trackoffset = track * NCHANNELS;
 
 	//compute master volume lag;
-	if(fabs(_toMaster-_toMasterLag)>=fabs(_toMasterDiff/100.0))
-		_toMasterLag+=_toMasterDiff/10.0;
+	_toMasterLag += 0.05 * (_toMaster - _toMasterLag);
+	
 	// get & zero track buffer
 	float* trackBufferL = buffers->audio[Buffers::RETURN_TRACK_0_L + trackoffset];
 	float* trackBufferR = buffers->audio[Buffers::RETURN_TRACK_0_R + trackoffset];
@@ -165,6 +164,10 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 	}
 
 	for(unsigned int i = 0; i < nframes; i++) {
+
+		//compute master volume lag;
+		_toMasterLag += 0.05 * (_toMaster - _toMasterLag);
+
 		// * master for "post-fader" sends
 		float tmpL = trackBufferL[i];
 		float tmpR = trackBufferR[i];
