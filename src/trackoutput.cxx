@@ -113,7 +113,7 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 	int trackoffset = track * NCHANNELS;
 
 	//compute master volume lag;
-	_toMasterLag += 0.05 * (_toMaster - _toMasterLag);
+	_toMasterLag += SMOOTHING_CONST * (_toMaster - _toMasterLag);
 	
 	// get & zero track buffer
 	float* trackBufferL = buffers->audio[Buffers::RETURN_TRACK_0_L + trackoffset];
@@ -166,7 +166,7 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 	for(unsigned int i = 0; i < nframes; i++) {
 
 		//compute master volume lag;
-		_toMasterLag += 0.05 * (_toMaster - _toMasterLag);
+		_toMasterLag += SMOOTHING_CONST * (_toMaster - _toMasterLag);
 
 		// * master for "post-fader" sends
 		float tmpL = trackBufferL[i];

@@ -566,7 +566,7 @@ void Jack::processFrames(int nframes)
 		buffers.audio[Buffers::SIDECHAIN_SIGNAL_R][i] += inputR * inputToXSideVol;
 
 		//compute master volume lag;
-		masterVolLag += 0.05 * (masterVol - masterVolLag);
+		masterVolLag += SMOOTHING_CONST * (masterVol - masterVolLag);
 		/// mixdown returns into master buffers
 		buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = (L + returnL*returnVol) * masterVolLag;
 		buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = (R + returnR*returnVol) * masterVolLag;
