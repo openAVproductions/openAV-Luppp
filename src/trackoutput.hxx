@@ -68,7 +68,10 @@ private:
 	float _toMasterLag;
 
 	/* -1 indicates 100% left, 0 is centered, 1 indicates right */
-	float _toMasterPan;
+	float _panL;
+	float _panR;
+	float _panLLag;
+	float _panRLag;
 
 	float _toReverb;
 	float _toSidechain;

@@ -36,7 +36,11 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
 	_toMaster        = 0.8;
 	_toMasterLag     = 0.8;
 
-	_toMasterPan     = 0.f;
+	_panL = 1.0f;
+	_panR = 1.0f;
+	_panLLag = 1.0f;
+	_panRLag = 1.0f;
+
 	_toReverb        = 0.0;
 	_toSidechain     = 0.0;
 	_toPostSidechain = 0.0;
@@ -88,7 +92,17 @@ void TrackOutput::setSendActive( int send, bool a )
 
 void TrackOutput::setPan( float pan )
 {
-	_toMasterPan = pan;
+	/* Trial + Error leads to this algo - its cheap and cheerful */
+	if (pan <= 0)
+	{
+		// pan to left channel, lower right one
+		_panR = pan + 1.0f;
+	}
+	else
+	{
+		// pan to right channel, lower left one
+		_panL = (pan * -1) + 1.0f;
+	}
 }
 
 void TrackOutput::setSend( int send, float value )
@@ -114,7 +128,7 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 
 	//compute master volume lag;
 	_toMasterLag += SMOOTHING_CONST * (_toMaster - _toMasterLag);
-	
+
 	// get & zero track buffer
 	float* trackBufferL = buffers->audio[Buffers::RETURN_TRACK_0_L + trackoffset];
 	float* trackBufferR = buffers->audio[Buffers::RETURN_TRACK_0_R + trackoffset];
@@ -152,29 +166,22 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 	float* jackoutputL    = buffers->audio[Buffers::JACK_TRACK_0_L + trackoffset];
 	float* jackoutputR    = buffers->audio[Buffers::JACK_TRACK_0_R + trackoffset];
 
-	/* Trial + Error leads to this algo - its cheap and cheerful */
-	float pan_l = 1.0f;
-	float pan_r = 1.0f;
-	if(_toMasterPan <= 0) {
-		// pan to left channel, lower right one
-		pan_r = _toMasterPan + 1.0f;
-	} else {
-		// pan to right channel, lower left one
-		pan_l = (_toMasterPan * -1) + 1.0f;
-	}
-
 	for(unsigned int i = 0; i < nframes; i++) {
 
 		//compute master volume lag;
 		_toMasterLag += SMOOTHING_CONST * (_toMaster - _toMasterLag);
+
+		// compute pan lags:
+		_panLLag += SMOOTHING_CONST * (_panL - _panLLag);
+		_panRLag += SMOOTHING_CONST * (_panR - _panRLag);
 
 		// * master for "post-fader" sends
 		float tmpL = trackBufferL[i];
 		float tmpR = trackBufferR[i];
 
 		// post-sidechain *moves* signal between "before/after" ducking, not add!
-		masterL[i]       += tmpL * _toMasterLag * (1-_toPostSidechain) * pan_l;
-		masterR[i]       += tmpR * _toMasterLag * (1-_toPostSidechain) * pan_r;
+		masterL[i]       += tmpL * _toMasterLag * (1-_toPostSidechain) * _panLLag;
+		masterR[i]       += tmpR * _toMasterLag * (1-_toPostSidechain) * _panRLag;
 		if(jackoutputL)
 			jackoutputL[i]     = tmpL * _toMasterLag * (1-_toPostSidechain);
 		if(jackoutputR)
