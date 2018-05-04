@@ -73,7 +73,9 @@ private:
 	float _panLLag;
 	float _panRLag;
 
-	float _toReverb;
+	float _toSend;
+	float _toSendLag;
+	
 	float _toSidechain;
 	float _toPostSidechain;
 

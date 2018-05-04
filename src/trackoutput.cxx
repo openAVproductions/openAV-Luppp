@@ -41,7 +41,9 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
 	_panLLag = 1.0f;
 	_panRLag = 1.0f;
 
-	_toReverb        = 0.0;
+	_toSend = 0.0;
+	_toSendLag = 0.0;
+
 	_toSidechain     = 0.0;
 	_toPostSidechain = 0.0;
 
@@ -109,7 +111,7 @@ void TrackOutput::setSend( int send, float value )
 {
 	switch( send ) {
 	case SEND_POSTFADER:
-		_toReverb = value;
+		_toSend = value;
 		break;
 	case SEND_KEY:
 		// setSendActive() handles on/off for this send
@@ -151,9 +153,9 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 
 	uiUpdateCounter += nframes;
 
-	// copy audio data into reverb / sidechain / master buffers
-	float* reverbL        = buffers->audio[Buffers::SEND_L];
-	float* reverbR        = buffers->audio[Buffers::SEND_R];
+	// copy audio data into send / sidechain / master buffers
+	float* sendL          = buffers->audio[Buffers::SEND_L];
+	float* sendR          = buffers->audio[Buffers::SEND_R];
 	float* sidechainL     = buffers->audio[Buffers::SIDECHAIN_KEY_L];
 	float* sidechainR     = buffers->audio[Buffers::SIDECHAIN_KEY_R];
 	float* postSidechainL = buffers->audio[Buffers::SIDECHAIN_SIGNAL_L];
@@ -171,9 +173,12 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 		//compute master volume lag;
 		_toMasterLag += SMOOTHING_CONST * (_toMaster - _toMasterLag);
 
-		// compute pan lags:
+		// compute pan lag:
 		_panLLag += SMOOTHING_CONST * (_panL - _panLLag);
 		_panRLag += SMOOTHING_CONST * (_panR - _panRLag);
+
+		// compute send volume lag:
+		_toSendLag += SMOOTHING_CONST * (_toSend - _toSendLag);
 
 		// * master for "post-fader" sends
 		float tmpL = trackBufferL[i];
@@ -187,8 +192,8 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 		if(jackoutputR)
 			jackoutputR[i]     = tmpR * _toMasterLag * (1-_toPostSidechain);
 		if ( _toPostfaderActive ) {
-			reverbL[i]        += tmpL * _toReverb * _toMasterLag;
-			reverbR[i]        += tmpR * _toReverb * _toMasterLag;
+			sendL[i]        += tmpL * _toSendLag * _toMasterLag;
+			sendR[i]        += tmpR * _toSendLag * _toMasterLag;
 		}
 
 		if ( _toXSideActive ) {
