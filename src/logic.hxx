@@ -20,6 +20,7 @@
 #define LUPPP_LOGIC_H
 
 #include "event.hxx"
+#include "avtk/clipselector.hxx"
 
 /** Logic
  *  This class contains an interface exposing most functionality in Luppp. The
@@ -63,6 +64,7 @@ public:
 	void trackJackSend(int t, float vol);
 	void looperUseAsTempo(int track, int scene);
 	void looperClipLenght(int track, int scene, int lenght);
+	void looperBarsToRecord(int track, int scene, int bars);
 };
 
 #endif // LUPPP_LOGIC_H

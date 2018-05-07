@@ -116,6 +116,11 @@ public:
 	///reset the play head to zero. Does nothing when recording
 	void setPlayHead(float ph);
 
+	// set how many beats to record (up to full bar)
+	void setBarsToRecord(int bars);
+	int getBeatsToRecord();
+	int getBarsToRecord();
+
 #ifdef BUILD_TESTS
 	// used only in test cases
 	void setState( bool load, bool play, bool rec, bool qPlay, bool qStop, bool qRec );
@@ -140,10 +145,11 @@ private:
 
 	long double _playhead;
 	float _recordhead;
-
 	unsigned int _barsPlayed;
+	
+	int _beatsToRecord;
+
 	AudioBuffer* _buffer;
 };
 
 #endif // LUPPP_LOOPER_CLIP_H
-

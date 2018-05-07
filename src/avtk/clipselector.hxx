@@ -41,7 +41,8 @@ class ClipState
 public:
 	ClipState() :
 		state(GridLogic::STATE_EMPTY),
-		name("")
+		name(""),
+		barsText("")
 	{}
 
 	void setName(std::string n)
@@ -64,16 +65,39 @@ public:
 		return state;
 	}
 
+	int getBeatsToRecord(){
+		return beatsToRecord;
+	}
+
+	int getBeats(){
+		return beats;
+	}
+
+	void setBeats(int numBeats, bool isBeatsToRecord);
+
+	const char *getBeatsText() {
+		return beatsText.c_str();
+	}
+
+	const char *getBarsText() {
+		return barsText.c_str();
+	}
+
 private:
 	GridLogic::State state;
 	std::string name;
+	std::string beatsText;
+	std::string barsText;
+
+	int beatsToRecord = -1;
+	int beats = 0;
 };
 
 class ClipSelector : public Fl_Button
 {
 public:
 	ClipSelector( int _x, int _y, int _w, int _h,
-	              const char *_label, bool master = false);
+		      char *_label, bool master = false);
 
 	int ID;
 
@@ -97,15 +121,19 @@ public:
 	void setState( int clipNum, GridLogic::State s );
 
 	void clipName(int clip, std::string name);
+	void setClipBeats(int scene, int beats, bool isBeatsToRecord);
+
 	std::string clipName(int clip);
 
 	void draw();
 	int handle(int event);
 
 	void resize(int X, int Y, int W, int H);
-};
+	int getLastClipNum();
 
+private:
+	int clipNum;
+};
 } // Avtk
 
 #endif // AVTK_CLIP_SELECTOR_H
-
