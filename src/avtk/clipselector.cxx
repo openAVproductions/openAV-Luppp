@@ -18,12 +18,13 @@
 
 
 #include "clipselector.hxx"
-
 #include <unistd.h>
 
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 #include "../gui.hxx"
+#define RECORD_BARS_MENU_ITEM(num) { #num, 0, setRecordBarsCb, (void*)num, FL_MENU_RADIO | ((clips[clipNum].getBeatsToRecord() == num*4) ? FL_MENU_VALUE : 0) | (empty ? 0 : FL_MENU_INACTIVE) }
+#define RECORD_LENGTH_MENU_ITEM(num) {#num, 0, setLengthCb, (void*)num, empty ? FL_MENU_INACTIVE : 0}
 
 extern Gui* gui;
 
@@ -88,6 +89,34 @@ void ClipSelector::clipName(int clip, std::string name)
 {
 	clips[clip].setName( name );
 	redraw();
+}
+
+void ClipSelector::setClipBeats(int scene, int beats, bool isBeatsToRecord)
+{
+	clips[scene].setBeats(beats, isBeatsToRecord);
+	redraw();
+}
+
+double getCairoTextWith(cairo_t * cr, const char * str)
+{
+    cairo_text_extents_t ex;
+    cairo_text_extents(cr, str, &ex);
+    return ex.width;
+}
+
+void trimStringToFit(cairo_t * cr, std::string * str, double maxWidth)
+{
+	double ellWidth = getCairoTextWith(cr, "…");
+	double textWidth = getCairoTextWith(cr, str->c_str());
+
+	if(textWidth > maxWidth) {
+		while(textWidth + ellWidth > maxWidth){
+			str->pop_back();
+			textWidth = getCairoTextWith(cr, str->c_str());
+		}
+
+		*str += "…";
+	}
 }
 
 void ClipSelector::setSpecial(int scene)
@@ -196,16 +225,38 @@ void ClipSelector::draw()
 			cairo_line_to( cr, x+clipHeight-1, drawY + clipHeight - 2);
 			cairo_stroke(cr);
 
+			int beatLen = 0;
+
+			// clip bars
+			if(!_master) {
+				const char * bars = clips[i].getBarsText();
+				const char * beats = clips[i].getBeatsText();
+				bool toRecord = clips[i].getBeats() <= 0 && clips[i].getBeatsToRecord() > 0; // If there are BeatsToRecord, but no Beats
+
+				if(strlen(bars)) {
+					if(toRecord) cairo_set_source_rgba(cr, 1.f,  0 / 255.f ,  0 / 255.f, 1.f);
+					else cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f, 255 / 255.f , 0.9 );
+
+					cairo_move_to( cr,  x + clipWidth - 5 - getCairoTextWith(cr, bars), drawY + textHeight - 8);
+					cairo_set_font_size( cr, 11 );
+					cairo_show_text( cr, bars);
+
+					beatLen =  getCairoTextWith(cr, beats);
+					cairo_move_to( cr, x + clipWidth -  5 - beatLen, drawY + textHeight + 7);
+					cairo_show_text( cr, beats);
+				}
+			}
+
 			// clip name
 			cairo_move_to( cr, x + clipHeight + 5, drawY + textHeight );
 			cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 0.9 );
 			cairo_set_font_size( cr, 11 );
 
-			std::string tmp = clips[i].getName().substr(0,8);
-
+			std::string tmp = clips[i].getName();
+			trimStringToFit(cr, &tmp, clipWidth - (clipHeight + 15 + beatLen));
 			cairo_show_text( cr, tmp.c_str() );
 
-			// special indicator?
+			// special indicator
 			if ( i == special ) {
 				cairo_rectangle( cr, x+2, drawY, clipWidth -1, clipHeight - 3 );
 				cairo_set_source_rgba(cr, 0.0, 153 / 255.f, 1.0, alpha);
@@ -232,7 +283,43 @@ void ClipSelector::resize(int X, int Y, int W, int H)
 	redraw();
 }
 
+void setRecordBarsCb(Fl_Widget *w, void* data)
+{
+	if(!w || !data)
+		return;
 
+	ClipSelector *track = (ClipSelector*)w;
+	long bars = (long)data;
+	if(bars == -2) {
+		const char* answer = fl_input("Enter a custom number: ");
+		if(!answer) {
+			bars = -1;
+			fl_message("Please enter value between 1 and %i.", MAX_BARS);
+		} else
+			bars = atoi(answer);
+	}
+
+	if(bars > MAX_BARS) {
+		bars = -1;
+		fl_message("Please enter value between 1 and %i.", MAX_BARS);
+	}
+
+	EventLooperBarsToRecord e(track->ID, track->getLastClipNum(), bars);
+	writeToDspRingbuffer( &e );
+}
+
+void setLengthCb(Fl_Widget *w, void* data)
+{
+	ClipSelector *track = (ClipSelector*)w;
+	long beats = (long)data;
+	EventLooperLoopLength e(track->ID, track->getLastClipNum(), beats);
+	writeToDspRingbuffer( &e );
+}
+
+int ClipSelector::getLastClipNum()
+{
+	return clipNum;
+}
 
 int ClipSelector::handle(int event)
 {
@@ -247,9 +334,11 @@ int ClipSelector::handle(int event)
 		{
 			// calculate the clicked clip number
 			int clipHeight = (h / numClips);
-			int clipNum = ( (Fl::event_y() ) - y ) / clipHeight;
+			clipNum = ( (Fl::event_y() ) - y ) / clipHeight;
 			if (clipNum >= numClips)
 				clipNum = numClips -1; // fix for clicking the lowest pixel
+
+			return clipNum;
 
 			// handle right clicks: popup menu
 			if ( Fl::event_state(FL_BUTTON3) ) {
@@ -264,18 +353,28 @@ int ClipSelector::handle(int event)
 				}
 
 
+                bool empty =  clips[clipNum].getState() == GridLogic::STATE_EMPTY;
 				Fl_Menu_Item rclick_menu[] = {
 					{ "Load" },
 					{ "Save" },
 					{ "Special"},
 					{ "Beats",  0,   0, 0, FL_SUBMENU | FL_MENU_DIVIDER },
-					{"1       "},
-					{"2"},
-					{"4"},
-					{"8"},
-					{"16"},
-					{"32"},
-					{"64"},
+					RECORD_LENGTH_MENU_ITEM(1),
+					RECORD_LENGTH_MENU_ITEM(2),
+					RECORD_LENGTH_MENU_ITEM(4),
+					RECORD_LENGTH_MENU_ITEM(8),
+					RECORD_LENGTH_MENU_ITEM(16),
+					RECORD_LENGTH_MENU_ITEM(32),
+					RECORD_LENGTH_MENU_ITEM(64),
+					{0},
+					{ "Bars to record",  0,   0, 0, FL_SUBMENU | FL_MENU_DIVIDER},
+					RECORD_BARS_MENU_ITEM(1),
+					RECORD_BARS_MENU_ITEM(2),
+					RECORD_BARS_MENU_ITEM(4),
+					RECORD_BARS_MENU_ITEM(6),
+					RECORD_BARS_MENU_ITEM(8),
+					{"Endless", 0, setRecordBarsCb, (void*)-1, FL_MENU_DIVIDER | FL_MENU_RADIO | ((clips[clipNum].getBeatsToRecord() <= 0) ? FL_MENU_VALUE : 0) | (empty ? 0 : FL_MENU_INACTIVE)},
+					{"Custom", 0, setRecordBarsCb, (void*)-2, empty ? 0 : FL_MENU_INACTIVE},
 					{0},
 					//{ "Record" },
 					{ "Use as tempo" },
@@ -302,27 +401,6 @@ int ClipSelector::handle(int event)
 						free(tmp);
 						gui->selectSaveSample( ID, clipNum );
 					}
-				} else if ( strcmp(m->label(), "1       ") == 0 ) {
-					EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,1);
-					writeToDspRingbuffer( &e );
-				} else if ( strcmp(m->label(), "2") == 0 ) {
-					EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,2);
-					writeToDspRingbuffer( &e );
-				} else if ( strcmp(m->label(), "4") == 0 ) {
-					EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,4);
-					writeToDspRingbuffer( &e );
-				} else if ( strcmp(m->label(), "8") == 0 ) {
-					EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,8);
-					writeToDspRingbuffer( &e );
-				} else if ( strcmp(m->label(), "16") == 0 ) {
-					EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,16);
-					writeToDspRingbuffer( &e );
-				} else if ( strcmp(m->label(), "32") == 0 ) {
-					EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,32);
-					writeToDspRingbuffer( &e );
-				} else if ( strcmp(m->label(), "64") == 0 ) {
-					EventLooperLoopLength e = EventLooperLoopLength(ID, clipNum ,64);
-					writeToDspRingbuffer( &e );
 				} else if ( strcmp(m->label(), "Use as tempo") == 0 ) {
 					EventLooperUseAsTempo e (ID, clipNum);
 					writeToDspRingbuffer( &e );
@@ -338,6 +416,8 @@ int ClipSelector::handle(int event)
 					// for a clip to become 0
 					EventGridState e( ID, clipNum, GridLogic::STATE_EMPTY );
 					writeToDspRingbuffer( &e );
+				} else {
+					 m->do_callback(this, m->user_data());
 				}
 			} else {
 				if ( _master ) {
@@ -385,5 +465,21 @@ int ClipSelector::handle(int event)
 	}
 }
 
+void ClipState::setBeats(int numBeats, bool isBeatsToRecord)
+{
+	if(numBeats > 0) {
+		beatsText = std::to_string(numBeats);
+		barsText = std::to_string(numBeats/4);
+		if(isBeatsToRecord){
+			beatsToRecord = numBeats;
+			beats = 0;
+		} else {
+			beats = numBeats;
+			if(numBeats <= 0)
+				beatsToRecord = -1;
+		}
+	}
+	else
+		barsText = beatsText = std::string("");
+}
 } // Avtk
-
