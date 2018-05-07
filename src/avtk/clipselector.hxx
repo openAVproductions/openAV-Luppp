@@ -97,7 +97,7 @@ class ClipSelector : public Fl_Button
 {
 public:
 	ClipSelector( int _x, int _y, int _w, int _h,
-		      char *_label, bool master = false);
+		      const char *_label, bool master = false);
 
 	int ID;
 
