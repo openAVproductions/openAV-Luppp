@@ -118,8 +118,8 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 			}
 
 			// copy data from input buffer to recording buffer
-			float* inputL = buffers->audio[Buffers::MASTER_INPUT_L];
-			float* inputR = buffers->audio[Buffers::MASTER_INPUT_R];
+			float* inputL = buffers->audio[Buffers::MASTER_INPUT_L] * jack->getInputVolume;
+			float* inputR = buffers->audio[Buffers::MASTER_INPUT_R] * jack->getInputVolume;
 			clips[clip]->record( nframes, inputL, inputR);
 		} else if ( clips[clip]->playing() ) {
 			// copy data into tmpBuffer, then pitch-stretch into track buffer
