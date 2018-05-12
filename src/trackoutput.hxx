@@ -77,6 +77,7 @@ private:
 	
 	float _toSidechain;
 	float _toPostSidechain;
+	float _toPostSidechainLag;
 
 	bool _toPostfaderActive;
 	bool _toKeyActive;

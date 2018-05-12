@@ -44,8 +44,11 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
 	_toSend = 0.0;
 	_toSendLag = 0.0;
 
+	// TODO this is unused and can be removed
 	_toSidechain     = 0.0;
-	_toPostSidechain = 0.0;
+
+	_toPostSidechain    = 0.0;
+	_toPostSidechainLag = 0.0;
 
 	_toPostfaderActive        = 0;
 	_toKeyActive     = 0;
@@ -180,25 +183,28 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 		// compute send volume lag:
 		_toSendLag += SMOOTHING_CONST * (_toSend - _toSendLag);
 
+		// compute sidechain signal lag
+		_toPostSidechainLag += SMOOTHING_CONST * (_toPostSidechain - _toPostSidechainLag);
+ 
 		// * master for "post-fader" sends
 		float tmpL = trackBufferL[i];
-		float tmpR = trackBufferR[i];
+		float tmpR = trackBufferR[i]; 
 
 		// post-sidechain *moves* signal between "before/after" ducking, not add!
-		masterL[i]       += tmpL * _toMasterLag * (1-_toPostSidechain) * _panLLag;
-		masterR[i]       += tmpR * _toMasterLag * (1-_toPostSidechain) * _panRLag;
+		masterL[i]       += tmpL * _toMasterLag * (1-_toPostSidechainLag) * _panLLag;
+		masterR[i]       += tmpR * _toMasterLag * (1-_toPostSidechainLag) * _panRLag;
 		if(jackoutputL)
-			jackoutputL[i]     = tmpL * _toMasterLag * (1-_toPostSidechain);
+			jackoutputL[i]     = tmpL * _toMasterLag * (1-_toPostSidechainLag);
 		if(jackoutputR)
-			jackoutputR[i]     = tmpR * _toMasterLag * (1-_toPostSidechain);
+			jackoutputR[i]     = tmpR * _toMasterLag * (1-_toPostSidechainLag);
 		if ( _toPostfaderActive ) {
 			sendL[i]        += tmpL * _toSendLag * _toMasterLag;
 			sendR[i]        += tmpR * _toSendLag * _toMasterLag;
 		}
 
 		if ( _toXSideActive ) {
-			postSidechainL[i] += tmpL * _toPostSidechain * _toMasterLag;
-			postSidechainR[i] += tmpR * _toPostSidechain * _toMasterLag;
+			postSidechainL[i] += tmpL * _toPostSidechainLag * _toMasterLag;
+			postSidechainR[i] += tmpR * _toPostSidechainLag * _toMasterLag;
 		}
 
 		// turning down an element in the mix should *NOT* influence sidechaining
