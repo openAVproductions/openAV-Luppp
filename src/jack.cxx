@@ -550,11 +550,12 @@ void Jack::processFrames(int nframes)
 			float tmpR = inputR * inputToMixVol * (1-inputToXSideVol);
 			L += tmpL;
 			R += tmpR;
-		}
-		if ( inputToSendEnable ) {
-			// post-mix-send amount: hence * inputToMixVol
-			buffers.audio[Buffers::SEND_L][i] += inputL * inputToSendVol * inputToMixVol;
-			buffers.audio[Buffers::SEND_R][i] += inputR * inputToSendVol * inputToMixVol;
+			
+			if ( inputToSendEnable ) {
+				// post-mix-send amount: hence * inputToMixVol
+				buffers.audio[Buffers::SEND_L][i] += inputL * inputToSendVol * inputToMixVol;
+				buffers.audio[Buffers::SEND_R][i] += inputR * inputToSendVol * inputToMixVol;
+			}
 		}
 		if ( inputToKeyEnable ) {
 			buffers.audio[Buffers::SIDECHAIN_KEY_L][i] += inputL;

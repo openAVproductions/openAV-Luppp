@@ -101,6 +101,11 @@ public:
 	{
 		return controllerUpdater;
 	}
+	
+	float getInputVolume() 
+	{
+		return inputVol;
+	}
 
 	void transportRolling(bool rolling);
 
