@@ -71,7 +71,7 @@ void Jack::resetMidiBindingState()
 	bindingTrack = -2;
 	bindingScene = -1;
 	bindingSend  = -1;
-	bindingActive= -1;
+	bindingActive= 1;
 }
 
 Jack::Jack( std::string name ) :
