@@ -131,8 +131,10 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 				playSpeed = float(actualFrames) / targetFrames;
 			}
 
-			float* outL = buffers->audio[Buffers::SEND_TRACK_0_L + track];
-			float* outR = buffers->audio[Buffers::SEND_TRACK_0_R + track];
+			// index = first-track + (track * channels)
+			int trackoffset = track * NCHANNELS;
+			float* outL = buffers->audio[Buffers::SEND_TRACK_0_L + trackoffset];
+			float* outR = buffers->audio[Buffers::SEND_TRACK_0_R + trackoffset];
 
 			for(unsigned int i = 0; i < nframes; i++ ) {
 				// REFACTOR into system that is better than per sample function calls

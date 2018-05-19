@@ -110,12 +110,15 @@ void TrackOutput::setSend( int send, float value )
 
 void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 {
+	// index = first-track + (track * channels)
+	int trackoffset = track * NCHANNELS;
+
 	//compute master volume lag;
 	if(fabs(_toMaster-_toMasterLag)>=fabs(_toMasterDiff/100.0))
 		_toMasterLag+=_toMasterDiff/10.0;
 	// get & zero track buffer
-	float* trackBufferL = buffers->audio[Buffers::RETURN_TRACK_0_L + track];
-	float* trackBufferR = buffers->audio[Buffers::RETURN_TRACK_0_R + track];
+	float* trackBufferL = buffers->audio[Buffers::RETURN_TRACK_0_L + trackoffset];
+	float* trackBufferR = buffers->audio[Buffers::RETURN_TRACK_0_R + trackoffset];
 	memset( trackBufferL, 0, sizeof(float)*nframes );
 	memset( trackBufferR, 0, sizeof(float)*nframes );
 
@@ -147,8 +150,8 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 	float* masterR       = buffers->audio[Buffers::MASTER_OUT_R];
 
 
-	float* jackoutputL    = buffers->audio[Buffers::JACK_TRACK_0_L+track];
-	float* jackoutputR    = buffers->audio[Buffers::JACK_TRACK_0_R+track];
+	float* jackoutputL    = buffers->audio[Buffers::JACK_TRACK_0_L + trackoffset];
+	float* jackoutputR    = buffers->audio[Buffers::JACK_TRACK_0_R + trackoffset];
 
 	/* Trial + Error leads to this algo - its cheap and cheerful */
 	float pan_l = 1.0f;

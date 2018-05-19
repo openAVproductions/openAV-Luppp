@@ -49,6 +49,7 @@
 ///     GENERAL
 #define NTRACKS 8
 #define NSCENES 10
+#define NCHANNELS 2
 #define MAX_BUFFER_SIZE 1024
 
 ///     TEMPO
