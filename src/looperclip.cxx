@@ -16,8 +16,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "looperclip.hxx"
-
 #include <stdio.h>
 #include "config.hxx"
 #include "jack.hxx"
@@ -51,6 +49,8 @@ void LooperClip::init()
 	_queuePlay  = false;
 	_queueStop  = false;
 	_queueRecord= false;
+	_beatsToRecord= -1;
+	setBeats(0);
 
 	if ( _buffer ) {
 		_buffer->init();
@@ -59,8 +59,6 @@ void LooperClip::init()
 
 	_playhead   = 0;
 	_recordhead = 0;
-
-
 }
 
 void LooperClip::save()
@@ -116,6 +114,8 @@ void LooperClip::load( AudioBuffer* ab )
 	}
 
 	_buffer = ab;
+	EventClipBeatsChanged e( track, scene, _beatsToRecord, true );
+	writeToGuiRingbuffer( &e );
 
 	_playhead = 0;
 	jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0 );
@@ -183,11 +183,27 @@ void LooperClip::setPlayHead(float ph)
 {
 	if(!_recording&&_playing) {
 		_playhead = ph;
-		jack->getControllerUpdater()->setTrackSceneProgress(track, scene, getProgress() );
+		jack->getControllerUpdater()->setTrackSceneProgress( track, scene, getProgress() );
 	}
 }
 
+void LooperClip::setBarsToRecord(int bars)
+{
+	if(!(_playing || _queuePlay || _queueStop || _loaded)) {
+		_beatsToRecord = bars * 4; // we set beats
+		EventClipBeatsChanged e( track, scene, _beatsToRecord, true);
+		writeToGuiRingbuffer(&e);
+	}
+}
 
+int LooperClip::getBeatsToRecord()
+{
+	return _beatsToRecord;
+}
+
+int LooperClip::getBarsToRecord(){
+	return _beatsToRecord / 4;
+}
 
 void LooperClip::record(int count, float* L, float* R)
 {
@@ -239,8 +255,12 @@ size_t LooperClip::audioBufferSize()
 
 void LooperClip::setBeats(int beats)
 {
-	if ( _buffer ) {
-		_buffer->setBeats( beats );
+	if (_loaded || _playing || _queuePlay || _queueStop || beats == 0) {
+		if(_buffer)
+			_buffer->setBeats( beats );
+
+		EventClipBeatsChanged e(track, scene, beats, false);
+		writeToGuiRingbuffer(&e);
 	}
 }
 
@@ -275,7 +295,7 @@ void LooperClip::bar()
 	// first update the buffer, as time has passed
 	if ( _recording ) {
 		// FIXME: assumes 4 beats in a bar
-		_buffer->setBeats( _buffer->getBeats() + 4 );
+		setBeats( _buffer->getBeats() + 4 );
 		_buffer->setAudioFrames( jack->getTimeManager()->getFpb() * _buffer->getBeats() );
 	}
 

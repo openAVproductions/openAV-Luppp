@@ -89,7 +89,6 @@ void Looper::beat()
 //        clips[i]->setPlayHead(iph-(iph%fpb)*playSpeed);
 
 //    }
-
 }
 
 void Looper::setRequestedBuffer(int s, AudioBuffer* ab)
@@ -110,6 +109,9 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 		// handle state of clip, and do what needs doing:
 		// record into buffer, play from buffer, etc
 		if ( clips[clip]->recording() ) {
+			if(clips[clip]->getBeatsToRecord() > 0 && clips[clip]->getBeats() >= clips[clip]->getBeatsToRecord() - 4)
+				clips[clip]->queuePlay(true);
+
 			if ( clips[clip]->recordSpaceAvailable() <  LOOPER_SAMPLES_BEFORE_REQUEST &&
 			     !clips[clip]->newBufferInTransit() ) {
 				EventLooperClipRequestBuffer e( track, clip, clips[clip]->audioBufferSize() + LOOPER_SAMPLES_UPDATE_SIZE);
@@ -203,12 +205,11 @@ void Looper::pitchShift(int count, float* input, float* output)
 		int iTemp5 = int(fTemp4);
 		float out=output[0];
 		out += (float)(((1 - fTemp3) * (((fTemp4 - iTemp5) *
-		                                 fVec0[(IOTA-int((int((1 + iTemp5)) & 65535)))&65535]) + ((0 - ((
-		                                                 fRec0[0] + fSlow3) - iTemp5)) * fVec0[(IOTA-int((iTemp5 & 65535)))
-		                                                                 &65535]))) + (fTemp3 * (((fRec0[0] - iTemp1) * fVec0[(IOTA-int((int(
-		                                                                                 iTemp2) & 65535)))&65535]) + ((iTemp2 - fRec0[0]) * fVec0[(IOTA-int((
-		                                                                                                 iTemp1 & 65535)))&65535]))));
-
+												 fVec0[(IOTA-int((int((1 + iTemp5)) & 65535)))&65535]) + ((0 - ((
+																 fRec0[0] + fSlow3) - iTemp5)) * fVec0[(IOTA-int((iTemp5 & 65535)))
+																				 &65535]))) + (fTemp3 * (((fRec0[0] - iTemp1) * fVec0[(IOTA-int((int(
+																								 iTemp2) & 65535)))&65535]) + ((iTemp2 - fRec0[0]) * fVec0[(IOTA-int((
+																												 iTemp1 & 65535)))&65535]))));
 		output[0]=out;
 		fRec0[1] = fRec0[0];
 		IOTA = IOTA+1;
