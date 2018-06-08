@@ -285,6 +285,9 @@ void LooperClip::bar()
 	}
 
 	if ( _playing && _barsPlayed >= getBeats() / 4) {
+#ifdef DEBUG_TIME
+			cout << "reset: " << _playhead << " - " << _barsPlayed << "\n";
+#endif
 		_barsPlayed = 0;
 		_playhead = 0;
 	}
