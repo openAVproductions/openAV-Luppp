@@ -46,7 +46,7 @@
 //#define DEBUG_MIDI              1
 
 // print out few information about looper timing
-#define DEBUG_TIME                1
+//#define DEBUG_TIME                1
 
 
 ///     GENERAL
