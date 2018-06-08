@@ -60,6 +60,7 @@ void LooperClip::init()
 	_playhead   = 0;
 	_recordhead = 0;
 
+	_barsPlayed = 0;
 
 }
 
@@ -277,6 +278,18 @@ void LooperClip::bar()
 		// FIXME: assumes 4 beats in a bar
 		_buffer->setBeats( _buffer->getBeats() + 4 );
 		_buffer->setAudioFrames( jack->getTimeManager()->getFpb() * _buffer->getBeats() );
+	}
+
+	if ( _playing ) {
+		_barsPlayed++;
+	}
+
+	if ( _playing && _barsPlayed >= getBeats() / 4) {
+#ifdef DEBUG_TIME
+			cout << "reset: " << _playhead << " - " << _barsPlayed << "\n";
+#endif
+		_barsPlayed = 0;
+		_playhead = 0;
 	}
 
 	if ( _playhead >= _recordhead ) {

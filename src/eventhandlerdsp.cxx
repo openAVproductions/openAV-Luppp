@@ -283,7 +283,7 @@ void handleDspEvents()
 				if ( availableRead >= sizeof(EventTimeBPM) ) {
 					EventTimeBPM ev;
 					jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTimeBPM) );
-					jack->getTimeManager()->setBpm(ev.bpm);
+					jack->getTimeManager()->queueBpmChange(ev.bpm);
 				}
 				break;
 			}

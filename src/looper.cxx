@@ -23,6 +23,10 @@
 
 #include <cmath>
 
+#ifdef DEBUG_TIME
+	#include <iomanip>
+#endif
+
 #include "jack.hxx"
 #include "audiobuffer.hxx"
 #include "eventhandler.hxx"
@@ -135,6 +139,10 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 
 			if ( targetFrames != 0 && actualFrames != 0 ) {
 				playSpeed = float(actualFrames) / targetFrames;
+
+#ifdef DEBUG_TIME
+					cout << fixed << setprecision(20) << playSpeed << "\n";
+#endif
 			}
 
 			// index = first-track + (track * channels)

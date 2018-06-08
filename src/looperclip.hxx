@@ -140,6 +140,8 @@ private:
 
 	float _playhead;
 	float _recordhead;
+
+	unsigned int _barsPlayed;
 	AudioBuffer* _buffer;
 };
 
