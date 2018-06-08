@@ -65,25 +65,31 @@ int TimeManager::getFpb()
 	return fpb;
 }
 
-void TimeManager::setBpm(float bpm)
+void TimeManager::queueBpmChange(float bpm)
 {
 #ifdef DEBUG_TIME
 	LUPPP_NOTE("%s %f","setBpm()",bpm);
 #endif
-	setFpb( samplerate / bpm * 60 );
-	barCounter  = 0;
-	beatCounter = 0;
-	beatFrameCountdown = -1;
+	queueFpbChange( samplerate / bpm * 60 );
 }
 
-void TimeManager::setBpmZeroOne(float b)
+void TimeManager::queueBpmChangeZeroOne(float b)
 {
-	setBpm( b * (MAX_TEMPO - MIN_TEMPO) + MIN_TEMPO ); // MIN_TEMPO - MAX_TEMPO
+	queueBpmChange( b * (MAX_TEMPO - MIN_TEMPO) + MIN_TEMPO ); // MIN_TEMPO - MAX_TEMPO
 }
 
+void TimeManager::queueFpbChange( float f )
+{
+	_bpmChangeQueued = true;
+	_nextFpb = f;
+}
 
 void TimeManager::setFpb(float f)
 {
+	barCounter  = 0;
+	beatCounter = 0;
+	beatFrameCountdown = -1;
+
 	fpb = f;
 	int bpm = ( samplerate * 60) / f;
 
@@ -143,7 +149,7 @@ void TimeManager::tap()
 		writeToGuiRingbuffer( &e );
 
 
-		setFpb(average);
+		queueFpbChange(average);
 
 		// reset, so next 3 taps restart process
 		tapTempoPos = 0;
@@ -223,6 +229,12 @@ void TimeManager::process(Buffers* buffers)
 			}
 			barCounter++;
 			//beatCounter=0;
+
+			if(_bpmChangeQueued)
+			{
+				setFpb(_nextFpb);
+				_bpmChangeQueued = false;
+			}
 		}
 
 		// process after
