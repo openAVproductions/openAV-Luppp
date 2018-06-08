@@ -45,6 +45,9 @@
 // Jack print controller out MIDI, loading etc
 //#define DEBUG_MIDI              1
 
+// print out few information about looper timing
+#define DEBUG_TIME                1
+
 
 ///     GENERAL
 #define NTRACKS 8
