@@ -224,7 +224,6 @@ void handleDspEvents()
 				break;
 			}
 
-
 			case Event::LOOPER_LOAD: {
 				if ( availableRead >= sizeof(EventLooperLoad) ) {
 					EventLooperLoad ev;
@@ -266,8 +265,14 @@ void handleDspEvents()
 				}
 				break;
 			}
-
-
+			case Event::LOOPER_BARS_TO_RECORD: {
+				if ( availableRead >= sizeof(EventLooperBarsToRecord) ) {
+					EventLooperBarsToRecord ev;
+					jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventLooperBarsToRecord) );
+					jack->getLogic()->looperBarsToRecord( ev.track, ev.scene, ev.bars );
+				}
+				break;
+			}
 			case Event::LOOPER_LOOP_USE_AS_TEMPO: {
 				if ( availableRead >= sizeof(EventLooperUseAsTempo) ) {
 					EventLooperUseAsTempo ev;
@@ -486,4 +491,3 @@ void writeToDspRingbuffer(EventBase* e)
 }
 
 #endif // LUPPP_EVENT_HANDLER_DSP_H
-

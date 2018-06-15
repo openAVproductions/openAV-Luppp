@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Author: Harry van Haaren 2013
  *         harryhaaren@gmail.com
  *
@@ -23,7 +23,7 @@
 #include <stdint.h>
 
 /*
-    event.hxx
+  event.hxx
 
   This file provides declarations for each type of event that the engine uses.
 */
@@ -31,7 +31,6 @@
 #include "looper.hxx"
 #include "gridlogic.hxx"
 #include "transport.hxx"
-
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 using namespace std;
@@ -97,6 +96,7 @@ enum EVENT_TYPE {
 	LOOPER_PROGRESS,
 	LOOPER_LOOP_LENGTH,
 	LOOPER_LOOP_USE_AS_TEMPO,
+	LOOPER_BARS_TO_RECORD, // choose how many bars to record
 
 	/// Transport etc
 	METRONOME_ACTIVE,
@@ -127,6 +127,9 @@ enum EVENT_TYPE {
 
 	// for keeping loop index's inside the enum
 	EVENT_TYPE_FINAL,
+
+	// Clip
+	CLIP_BEATS_CHANGED,
 };
 
 /// returns the pretty name of an event
@@ -266,6 +269,25 @@ public:
 	int scene;
 	EventGridSelectNewChosen(int t = -1, int s = -1):track(t),scene(s) {}
 };
+
+class EventLooperBarsToRecord : public EventBase
+{
+public:
+	int type()
+	{
+		return int(LOOPER_BARS_TO_RECORD);
+	}
+	uint32_t size()
+	{
+		return sizeof(EventLooperBarsToRecord);
+	}
+
+	int track;
+	int scene;
+	int bars;
+	EventLooperBarsToRecord(int t = -1, int s = -1, int b = -1) : track(t), scene(s), bars(b) {}
+};
+
 
 class EventQuit : public EventBase
 {
@@ -604,6 +626,7 @@ public:
 	EventGridEvent() {};
 	EventGridEvent(int t, int s, bool p): track(t), scene(s), pressed(p) {}
 };
+
 
 class EventGridState : public EventBase
 {
@@ -1151,6 +1174,26 @@ public:
 	}
 };
 
+class EventClipBeatsChanged : public EventBase
+{
+public:
+	int type()
+	{
+		return int(CLIP_BEATS_CHANGED);
+	}
+	uint32_t size()
+	{
+		return sizeof(EventClipBeatsChanged);
+	}
+
+	int track;
+	int scene;
+	int beats;
+	bool isBeatsToRecord;
+
+	EventClipBeatsChanged() {}
+	EventClipBeatsChanged(int t, int s, int b, bool i) : track(t), scene(s), beats(b), isBeatsToRecord(i) {}
+};
+
 
 #endif // LUPPP_EVENT_H
-
