@@ -21,6 +21,10 @@
 #include <iostream>
 #include <cstdio>
 
+#ifdef DEBUG_TIME
+	#include <iomanip>
+#endif
+
 #include "buffers.hxx"
 #include "eventhandler.hxx"
 
@@ -38,7 +42,7 @@ TimeManager::TimeManager():
 {
 	samplerate = jack->getSamplerate();
 	// 120 BPM default
-	fpb = samplerate / 2;
+	_fpb = samplerate / 2;
 
 	//Counter for current bar/beat
 	barCounter  = 0;
@@ -60,17 +64,19 @@ TimeManager::TimeManager():
 }
 
 
-int TimeManager::getFpb()
+double TimeManager::getFpb()
 {
-	return fpb;
+	return _fpb;
 }
 
 void TimeManager::queueBpmChange(float bpm)
 {
+	double frames = (double)samplerate * (double)60 / (double)bpm;
 #ifdef DEBUG_TIME
 	LUPPP_NOTE("%s %f","setBpm()",bpm);
+	cout << "calculated: " << fixed << setprecision(20) << frames << "\n";
 #endif
-	queueFpbChange( samplerate / bpm * 60 );
+	queueFpbChange( frames );
 }
 
 void TimeManager::queueBpmChangeZeroOne(float b)
@@ -78,19 +84,19 @@ void TimeManager::queueBpmChangeZeroOne(float b)
 	queueBpmChange( b * (MAX_TEMPO - MIN_TEMPO) + MIN_TEMPO ); // MIN_TEMPO - MAX_TEMPO
 }
 
-void TimeManager::queueFpbChange( float f )
+void TimeManager::queueFpbChange( double f )
 {
 	_bpmChangeQueued = true;
 	_nextFpb = f;
 }
 
-void TimeManager::setFpb(float f)
+void TimeManager::setFpb(double f)
 {
 	barCounter  = 0;
 	beatCounter = 0;
 	beatFrameCountdown = -1;
 
-	fpb = f;
+	_fpb = f;
 	int bpm = ( samplerate * 60) / f;
 
 	char buffer [50];
@@ -102,7 +108,7 @@ void TimeManager::setFpb(float f)
 	writeToGuiRingbuffer( &e2 );
 
 	for(uint i = 0; i < observers.size(); i++) {
-		observers.at(i)->setFpb(fpb);
+		observers.at(i)->setFpb(_fpb);
 	}
 }
 
@@ -110,9 +116,9 @@ void TimeManager::registerObserver(TimeObserver* o)
 {
 	//LUPPP_NOTE("%s","registerObserver()");
 	observers.push_back(o);
-	o->setFpb( fpb );
+	o->setFpb( _fpb );
 
-	int bpm = ( samplerate * 60) / fpb;
+	int bpm = ( samplerate * 60) / _fpb;
 	EventTimeBPM e2( bpm );
 	writeToGuiRingbuffer( &e2 );
 }
@@ -196,7 +202,7 @@ void TimeManager::process(Buffers* buffers)
 		//length of beat is not multiple of nframes, so need to process last frames of last beat *before* setting next beat
 		//then set new beat (get the queued actions: play, rec etc)
 		// then process first frames *after* new beat
-		int before=(beatCounter*fpb)%nframes;
+		int before=int(beatCounter*_fpb)%nframes;
 		int after=nframes-before;
 
 		if ( before < nframes && after <= nframes && before + after == nframes ) {
@@ -249,7 +255,7 @@ void TimeManager::process(Buffers* buffers)
 
 
 
-		beatFrameCountdown = fpb-after;
+		beatFrameCountdown = _fpb-after;
 		beatCounter++;
 	} else {
 		jack->processFrames( nframes );
@@ -260,14 +266,14 @@ void TimeManager::process(Buffers* buffers)
 	totalFrameCounter += nframes;
 
 	// write BPM / transport info to JACK
-	int bpm = ( samplerate * 60) / fpb;
+	int bpm = ( samplerate * 60) / _fpb;
 	if ( buffers->transportPosition ) {
 		buffers->transportPosition->valid = (jack_position_bits_t)(JackPositionBBT | JackTransportPosition);
 
 		buffers->transportPosition->bar  = beatCounter / 4 + 1;// bars 1-based
 		buffers->transportPosition->beat = (beatCounter % 4) + 1; // beats 1-4
 
-		float part = float( fpb-beatFrameCountdown) / fpb;
+		float part = float( _fpb-beatFrameCountdown) / _fpb;
 		buffers->transportPosition->tick = part > 1.0f? 0.9999*1920 : part*1920;
 
 		buffers->transportPosition->frame = totalFrameCounter;

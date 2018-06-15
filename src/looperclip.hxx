@@ -55,7 +55,7 @@ public:
 	void load( AudioBuffer* ab );
 
 	/// audio functionality
-	void getSample(float playSpeed, float* L, float* R);
+	void getSample(long double playSpeed, float* L, float* R);
 	void record(int count, float* L, float* R);
 
 	/// TimeObserver override
@@ -138,7 +138,7 @@ private:
 
 	bool _newBufferInTransit;
 
-	float _playhead;
+	long double _playhead;
 	float _recordhead;
 
 	unsigned int _barsPlayed;

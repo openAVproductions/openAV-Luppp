@@ -35,11 +35,11 @@ class TimeManager
 public:
 	TimeManager();
 
-	int getFpb();
+	double getFpb();
 	void queueBpmChange(float bpm);
 	void queueBpmChangeZeroOne(float bpm);
-	void queueFpbChange(float f);
-	void setFpb(float f);
+	void queueFpbChange(double f);
+	void setFpb(double f);
 
 	/// add a component to be updated for time events
 	void registerObserver(TimeObserver* o);
@@ -66,8 +66,8 @@ private:
 	TRANSPORT_STATE transportState;
 
 	/// number of frames per beat
-	int fpb;
-	int _nextFpb;
+	double _fpb;
+	double _nextFpb;
 
 	/// holds the number of frames processed
 	long long totalFrameCounter;

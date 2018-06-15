@@ -88,7 +88,7 @@ void Metronome::beat()
 	playBar = false;
 }
 
-void Metronome::setFpb(int f)
+void Metronome::setFpb(double f)
 {
 	fpb = f;
 

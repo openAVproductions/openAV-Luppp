@@ -31,6 +31,7 @@
 #include "audiobuffer.hxx"
 #include "eventhandler.hxx"
 #include "controllerupdater.hxx"
+#include "timemanager.hxx"
 
 extern Jack* jack;
 
@@ -52,7 +53,7 @@ Looper::Looper(int t) :
 
 	tmpBuffer.resize( MAX_BUFFER_SIZE );
 
-	fpb = 22050;
+	fpb = jack->getTimeManager()->getFpb();
 
 	// init faust pitch shift variables
 	fSamplingFreq = jack->getSamplerate();
@@ -101,7 +102,7 @@ void Looper::setRequestedBuffer(int s, AudioBuffer* ab)
 	clips[s]->setRequestedBuffer( ab );
 }
 
-void Looper::setFpb(int f)
+void Looper::setFpb(double f)
 {
 	fpb = f;
 }
@@ -135,10 +136,14 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 			// copy data into tmpBuffer, then pitch-stretch into track buffer
 			long targetFrames = clips[clip]->getBeats() * fpb;
 			long actualFrames = clips[clip]->getActualAudioLength();//getBufferLenght();
-			float playSpeed = 1.0;
+#ifdef DEBUG_TIME
+				cout << "FPB: " << fpb << "\n";
+				cout << "Target: " << targetFrames << " - Actual: " << actualFrames << "\n";
+#endif
+			long double playSpeed = 1.0;
 
 			if ( targetFrames != 0 && actualFrames != 0 ) {
-				playSpeed = float(actualFrames) / targetFrames;
+				playSpeed = (long double)(actualFrames) / (long double)(targetFrames);
 
 #ifdef DEBUG_TIME
 					cout << fixed << setprecision(20) << playSpeed << "\n";

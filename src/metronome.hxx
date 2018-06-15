@@ -38,14 +38,14 @@ public:
 
 	void bar();
 	void beat();
-	void setFpb(int f);
+	void setFpb(double f);
 
 	void setVolume( float v );
 
 	void process(int nframes, Buffers* buffers);
 
 private:
-	int fpb;
+	double fpb;
 	bool playBar;
 	bool active;
 	float vol;
