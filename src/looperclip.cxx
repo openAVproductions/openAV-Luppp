@@ -429,7 +429,7 @@ bool LooperClip::newBufferInTransit()
 	return _newBufferInTransit;
 }
 
-void LooperClip::getSample(float playSpeed, float* L, float* R)
+void LooperClip::getSample(long double playSpeed, float* L, float* R)
 {
 	if ( _buffer && (_buffer->getSize() > 0)) {
 		if ( _playhead >= _recordhead ||
@@ -443,8 +443,8 @@ void LooperClip::getSample(float playSpeed, float* L, float* R)
 
 		std::vector<float>& vL = _buffer->getDataL();
 		std::vector<float>& vR = _buffer->getDataR();
-		*L = vL[_playhead];
-		*R = vR[_playhead];
+		*L = vL[_playhead+0.5];
+		*R = vR[_playhead+0.5];
 		_playhead += playSpeed;
 	} else {
 		*L = 0.f;
