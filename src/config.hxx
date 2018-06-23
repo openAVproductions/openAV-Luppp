@@ -69,6 +69,9 @@
 #define LUPPP_RETURN_WARNING  1
 #define LUPPP_RETURN_ERROR    2
 
+// Smoothing value
+#define SMOOTHING_CONST 0.05
+
 
 ///     debug.hxx for printing convienience
 #include "debug.hxx"

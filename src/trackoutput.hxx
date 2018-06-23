@@ -62,17 +62,22 @@ private:
 	int track;
 
 	bool  _recordArm;
-	/// _toMasterLag is a volume that lags behind _toMaster when setMaster() is called
-	/// This prohibits audible jumps when rapidly changing the volume
+	
+	// the *Lag values lag behind the corresponding values to avoid audible jumps in volume
 	float _toMaster;
 	float _toMasterLag;
-	float _toMasterDiff;
-	/* -1 indicates 100% left, 0 is centered, 1 indicates right */
-	float _toMasterPan;
 
-	float _toReverb;
+	float _panL;
+	float _panR;
+	float _panLLag;
+	float _panRLag;
+
+	float _toSend;
+	float _toSendLag;
+	
 	float _toSidechain;
 	float _toPostSidechain;
+	float _toPostSidechainLag;
 
 	bool _toPostfaderActive;
 	bool _toKeyActive;

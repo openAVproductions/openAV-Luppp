@@ -35,11 +35,20 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
 
 	_toMaster        = 0.8;
 	_toMasterLag     = 0.8;
-	_toMasterDiff    = 0;
-	_toMasterPan     = 0.f;
-	_toReverb        = 0.0;
+
+	_panL = 1.0f;
+	_panR = 1.0f;
+	_panLLag = 1.0f;
+	_panRLag = 1.0f;
+
+	_toSend = 0.0;
+	_toSendLag = 0.0;
+
+	// TODO this is unused and can be removed
 	_toSidechain     = 0.0;
-	_toPostSidechain = 0.0;
+
+	_toPostSidechain    = 0.0;
+	_toPostSidechainLag = 0.0;
 
 	_toPostfaderActive        = 0;
 	_toKeyActive     = 0;
@@ -52,7 +61,6 @@ void TrackOutput::setMaster(float value)
 	if(value < 0.01)
 		value = 0.f;
 	_toMaster = value;
-	_toMasterDiff=_toMaster-_toMasterLag;
 }
 
 float TrackOutput::getMaster()
@@ -89,14 +97,24 @@ void TrackOutput::setSendActive( int send, bool a )
 
 void TrackOutput::setPan( float pan )
 {
-	_toMasterPan = pan;
+	/* Trial + Error leads to this algo - its cheap and cheerful */
+	if (pan <= 0)
+	{
+		// pan to left channel, lower right one
+		_panR = pan + 1.0f;
+	}
+	else
+	{
+		// pan to right channel, lower left one
+		_panL = (pan * -1) + 1.0f;
+	}
 }
 
 void TrackOutput::setSend( int send, float value )
 {
 	switch( send ) {
 	case SEND_POSTFADER:
-		_toReverb = value;
+		_toSend = value;
 		break;
 	case SEND_KEY:
 		// setSendActive() handles on/off for this send
@@ -114,8 +132,8 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 	int trackoffset = track * NCHANNELS;
 
 	//compute master volume lag;
-	if(fabs(_toMaster-_toMasterLag)>=fabs(_toMasterDiff/100.0))
-		_toMasterLag+=_toMasterDiff/10.0;
+	_toMasterLag += SMOOTHING_CONST * (_toMaster - _toMasterLag);
+
 	// get & zero track buffer
 	float* trackBufferL = buffers->audio[Buffers::RETURN_TRACK_0_L + trackoffset];
 	float* trackBufferR = buffers->audio[Buffers::RETURN_TRACK_0_R + trackoffset];
@@ -138,9 +156,9 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 
 	uiUpdateCounter += nframes;
 
-	// copy audio data into reverb / sidechain / master buffers
-	float* reverbL        = buffers->audio[Buffers::SEND_L];
-	float* reverbR        = buffers->audio[Buffers::SEND_R];
+	// copy audio data into send / sidechain / master buffers
+	float* sendL          = buffers->audio[Buffers::SEND_L];
+	float* sendR          = buffers->audio[Buffers::SEND_R];
 	float* sidechainL     = buffers->audio[Buffers::SIDECHAIN_KEY_L];
 	float* sidechainR     = buffers->audio[Buffers::SIDECHAIN_KEY_R];
 	float* postSidechainL = buffers->audio[Buffers::SIDECHAIN_SIGNAL_L];
@@ -153,37 +171,40 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 	float* jackoutputL    = buffers->audio[Buffers::JACK_TRACK_0_L + trackoffset];
 	float* jackoutputR    = buffers->audio[Buffers::JACK_TRACK_0_R + trackoffset];
 
-	/* Trial + Error leads to this algo - its cheap and cheerful */
-	float pan_l = 1.0f;
-	float pan_r = 1.0f;
-	if(_toMasterPan <= 0) {
-		// pan to left channel, lower right one
-		pan_r = _toMasterPan + 1.0f;
-	} else {
-		// pan to right channel, lower left one
-		pan_l = (_toMasterPan * -1) + 1.0f;
-	}
-
 	for(unsigned int i = 0; i < nframes; i++) {
+
+		//compute master volume lag;
+		_toMasterLag += SMOOTHING_CONST * (_toMaster - _toMasterLag);
+
+		// compute pan lag:
+		_panLLag += SMOOTHING_CONST * (_panL - _panLLag);
+		_panRLag += SMOOTHING_CONST * (_panR - _panRLag);
+
+		// compute send volume lag:
+		_toSendLag += SMOOTHING_CONST * (_toSend - _toSendLag);
+
+		// compute sidechain signal lag
+		_toPostSidechainLag += SMOOTHING_CONST * (_toPostSidechain - _toPostSidechainLag);
+ 
 		// * master for "post-fader" sends
 		float tmpL = trackBufferL[i];
-		float tmpR = trackBufferR[i];
+		float tmpR = trackBufferR[i]; 
 
 		// post-sidechain *moves* signal between "before/after" ducking, not add!
-		masterL[i]       += tmpL * _toMasterLag * (1-_toPostSidechain) * pan_l;
-		masterR[i]       += tmpR * _toMasterLag * (1-_toPostSidechain) * pan_r;
+		masterL[i]       += tmpL * _toMasterLag * (1-_toPostSidechainLag) * _panLLag;
+		masterR[i]       += tmpR * _toMasterLag * (1-_toPostSidechainLag) * _panRLag;
 		if(jackoutputL)
-			jackoutputL[i]     = tmpL * _toMasterLag * (1-_toPostSidechain);
+			jackoutputL[i]     = tmpL * _toMasterLag * (1-_toPostSidechainLag);
 		if(jackoutputR)
-			jackoutputR[i]     = tmpR * _toMasterLag * (1-_toPostSidechain);
+			jackoutputR[i]     = tmpR * _toMasterLag * (1-_toPostSidechainLag);
 		if ( _toPostfaderActive ) {
-			reverbL[i]        += tmpL * _toReverb * _toMasterLag;
-			reverbR[i]        += tmpR * _toReverb * _toMasterLag;
+			sendL[i]        += tmpL * _toSendLag * _toMasterLag;
+			sendR[i]        += tmpR * _toSendLag * _toMasterLag;
 		}
 
 		if ( _toXSideActive ) {
-			postSidechainL[i] += tmpL * _toPostSidechain * _toMasterLag;
-			postSidechainR[i] += tmpR * _toPostSidechain * _toMasterLag;
+			postSidechainL[i] += tmpL * _toPostSidechainLag * _toMasterLag;
+			postSidechainR[i] += tmpR * _toPostSidechainLag * _toMasterLag;
 		}
 
 		// turning down an element in the mix should *NOT* influence sidechaining

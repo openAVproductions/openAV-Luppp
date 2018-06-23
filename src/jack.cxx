@@ -265,7 +265,7 @@ Jack::Jack( std::string name ) :
 	inputVol = 1.0f;
 	masterVol = 0.75f;
 	masterVolLag =0.75f;
-	masterVolDiff =0.0f;
+
 	masterMeter = new DBMeter( buffers.samplerate );
 	inputMeter  = new DBMeter( buffers.samplerate );
 
@@ -566,8 +566,7 @@ void Jack::processFrames(int nframes)
 		buffers.audio[Buffers::SIDECHAIN_SIGNAL_R][i] += inputR * inputToXSideVol;
 
 		//compute master volume lag;
-		if(fabs(masterVol-masterVolLag)>=fabs(masterVolDiff/10.0))
-			masterVolLag+=masterVolDiff/10.0;
+		masterVolLag += SMOOTHING_CONST * (masterVol - masterVolLag);
 		/// mixdown returns into master buffers
 		buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = (L + returnL*returnVol) * masterVolLag;
 		buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = (R + returnR*returnVol) * masterVolLag;
@@ -673,7 +672,6 @@ void Jack::clearInternalBuffers(int nframes)
 void Jack::masterVolume(float vol)
 {
 	masterVol = vol;
-	masterVolDiff=masterVol-masterVolLag;
 }
 
 void Jack::returnVolume(float vol)
