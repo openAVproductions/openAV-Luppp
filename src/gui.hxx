@@ -40,6 +40,8 @@
 // non-session-manager integration
 #include "nsm.h"
 
+// Ctlra/Mappa integration
+#include "mappa.hxx"
 
 using namespace std;
 
@@ -52,6 +54,8 @@ public:
 	~Gui();
 
 	int show();
+
+	int iter();
 
 	int quit();
 	void askQuit();
@@ -146,6 +150,8 @@ private:
 
 	// non-session-manager
 	nsm_client_t* nsm;
+
+	Mappa *mappa;
 
 	static int keyboardHandler(int event);
 };

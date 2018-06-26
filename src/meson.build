@@ -23,6 +23,7 @@ luppp_src = files(
   'looperclip.cxx',
   'looper.cxx',
   'main.cxx',
+  'mappa.cxx',
   'metronome.cxx',
   'timemanager.cxx',
   'trackoutput.cxx'

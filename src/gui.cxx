@@ -19,6 +19,7 @@
 #include "gui.hxx"
 #include "avtk/avtk_image.h"
 #include "avtk/avtk_button.h"
+#include "mappa.hxx"
 
 #include <sstream>
 
@@ -76,9 +77,19 @@ void close_cb(Fl_Widget*o, void*)
 		gui->quit();
 	}
 }
+
+int Gui::iter()
+{
+	mappa->iter();
+	return 0;
+}
+
 static void gui_static_read_rb(void* inst)
 {
 	handleGuiEvents();
+
+	Gui *gui = (Gui *)inst;
+	gui->iter();
 
 	Fl::repeat_timeout( 1 / 30.f, &gui_static_read_rb, inst);
 }
@@ -454,6 +465,8 @@ Gui::Gui(const char* argZero) :
 	// Create AudioEditor after window.end() has been called
 	audioEditor = new AudioEditor();
 
+	mappa = new Mappa();
+
 	// read settings file using diskreader, and setup controllers etc
 	int prefs = diskReader->loadPreferences();
 	if ( prefs != LUPPP_RETURN_OK ) {
@@ -495,6 +508,8 @@ void Gui::setupMidiControllers()
 			writeToDspRingbuffer( &e );
 		}
 	}
+
+	mappa->register_targets();
 }
 
 void Gui::reset()
