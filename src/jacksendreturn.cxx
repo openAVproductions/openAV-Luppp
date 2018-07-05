@@ -17,6 +17,7 @@ JackSendReturn::JackSendReturn(int trackid, AudioProcessor *prev, jack_client_t 
 	sprintf(name, "Return_track_%d_r\n",trackid_human);
 	_returnPortR=jack_port_register(client,name,JACK_DEFAULT_AUDIO_TYPE,JackPortIsInput,0);
 	_active=false;
+	_activeLag = 0;
 	_counter=0;
 }
 
@@ -56,19 +57,16 @@ void JackSendReturn::process(unsigned int nframes, Buffers *buffers)
 
 		sendL[i] = _sendVolLag * sendtrackL[i];
 		sendR[i] = _sendVolLag * sendtrackR[i];
+
+		_activeLag += SMOOTHING_CONST * (float(_active) - _activeLag);
+
+		rettrackL[i] = retL[i] * _activeLag + sendtrackL[i] * std::fabs(_activeLag - 1);
+		rettrackR[i] = retR[i] * _activeLag + sendtrackR[i] * std::fabs(_activeLag - 1);
 	}
 
 	if(offset)
 		assert(offset+nframes==buffers->nframes);
 
-	if(_active) {
-		memcpy(rettrackL,retL,nframes*sizeof(float));
-		memcpy(rettrackR,retR,nframes*sizeof(float));
-	}
-	else {
-		memcpy(rettrackL, sendtrackL,nframes*sizeof(float));
-		memcpy(rettrackR, sendtrackR,nframes*sizeof(float));
-	}
 	_counter+=nframes;
 
 }

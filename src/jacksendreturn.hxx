@@ -44,6 +44,8 @@ public:
 
 private:
 	bool _active;
+	float _activeLag;
+	
 	float _sendVol;
 	float _sendVolLag;
 
