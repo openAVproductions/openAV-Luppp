@@ -52,8 +52,10 @@ void JackSendReturn::process(unsigned int nframes, Buffers *buffers)
 	}
 
 	for(int i=0; i<nframes; i++) {
-		sendL[i]=_sendVol*sendtrackL[i];
-		sendR[i]=_sendVol*sendtrackR[i];
+		_sendVolLag += SMOOTHING_CONST * (_sendVol - _sendVolLag);
+
+		sendL[i] = _sendVolLag * sendtrackL[i];
+		sendR[i] = _sendVolLag * sendtrackR[i];
 	}
 
 	if(offset)

@@ -45,6 +45,8 @@ public:
 private:
 	bool _active;
 	float _sendVol;
+	float _sendVolLag;
+
 	jack_port_t* _sendPortL;
 	jack_port_t* _sendPortR;
 	jack_port_t* _returnPortL;
