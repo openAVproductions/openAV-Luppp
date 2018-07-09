@@ -51,6 +51,8 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
 	_toPostSidechainLag = 0.0;
 
 	_toPostfaderActive        = 0;
+	_toPostfaderActiveLag 	  = 0;
+	
 	_toKeyActive     = 0;
 	_toXSideActive = true;
 }
@@ -185,7 +187,10 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 
 		// compute sidechain signal lag
 		_toPostSidechainLag += SMOOTHING_CONST * (_toPostSidechain - _toPostSidechainLag);
- 
+
+		// compute discrete lag values
+		_toPostfaderActiveLag += SMOOTHING_CONST * (float(_toPostfaderActive) - _toPostfaderActiveLag);
+
 		// * master for "post-fader" sends
 		float tmpL = trackBufferL[i];
 		float tmpR = trackBufferR[i]; 
@@ -197,11 +202,10 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 			jackoutputL[i]     = tmpL * _toMasterLag * (1-_toPostSidechainLag);
 		if(jackoutputR)
 			jackoutputR[i]     = tmpR * _toMasterLag * (1-_toPostSidechainLag);
-		if ( _toPostfaderActive ) {
-			sendL[i]        += tmpL * _toSendLag * _toMasterLag;
-			sendR[i]        += tmpR * _toSendLag * _toMasterLag;
-		}
-
+		
+		sendL[i] += tmpL * _toSendLag * _toMasterLag * _toPostfaderActiveLag;
+		sendR[i] += tmpR * _toSendLag * _toMasterLag * _toPostfaderActiveLag;
+		
 		if ( _toXSideActive ) {
 			postSidechainL[i] += tmpL * _toPostSidechainLag * _toMasterLag;
 			postSidechainR[i] += tmpR * _toPostSidechainLag * _toMasterLag;

@@ -80,6 +80,8 @@ private:
 	float _toPostSidechainLag;
 
 	bool _toPostfaderActive;
+	float _toPostfaderActiveLag;
+
 	bool _toKeyActive;
 	bool _toXSideActive;
 
