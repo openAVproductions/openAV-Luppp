@@ -180,8 +180,10 @@ private:
 
 	bool  inputToKeyEnable;
 	float inputToKeyEnableLag;
-	
+
 	bool  inputToMixEnable;
+	float inputToMixEnableLag;
+
 	bool  inputToSendEnable;
 
 	// JACK member variables
