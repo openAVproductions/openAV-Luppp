@@ -203,6 +203,7 @@ Jack::Jack( std::string name ) :
 	inputToMixEnable  = false;
 	inputToSendEnable = false;
 	inputToKeyEnable  = false;
+	inputToKeyEnableLag = 0;
 	inputToMixVol     = 0.f;
 	inputToMixVolLag  = 0.f;
 	inputToSendVol    = 0.f;
@@ -547,6 +548,8 @@ void Jack::processFrames(int nframes)
 		returnVolLag += SMOOTHING_CONST * (returnVol - returnVolLag);
 		inputVolLag += SMOOTHING_CONST * (inputVol - inputVolLag);
 
+		inputToKeyEnableLag += SMOOTHING_CONST * (inputToKeyEnable - inputToKeyEnableLag);
+
 		float inputL = buffers.audio[Buffers::MASTER_INPUT_L][i] * inputVolLag;
 		float inputR = buffers.audio[Buffers::MASTER_INPUT_R][i] * inputVolLag;
 
@@ -568,10 +571,10 @@ void Jack::processFrames(int nframes)
 				buffers.audio[Buffers::SEND_R][i] += inputR * inputToSendVolLag * inputToMixVolLag;
 			}
 		}
-		if ( inputToKeyEnable ) {
-			buffers.audio[Buffers::SIDECHAIN_KEY_L][i] += inputL;
-			buffers.audio[Buffers::SIDECHAIN_KEY_R][i] += inputR;
-		}
+		
+		buffers.audio[Buffers::SIDECHAIN_KEY_L][i] += inputL * inputToKeyEnableLag;
+		buffers.audio[Buffers::SIDECHAIN_KEY_R][i] += inputR * inputToKeyEnableLag;
+		
 
 		buffers.audio[Buffers::SIDECHAIN_SIGNAL_L][i] += inputL * inputToXSideVolLag;
 		buffers.audio[Buffers::SIDECHAIN_SIGNAL_R][i] += inputR * inputToXSideVolLag;
