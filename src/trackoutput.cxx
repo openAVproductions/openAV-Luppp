@@ -52,8 +52,10 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
 
 	_toPostfaderActive        = 0;
 	_toPostfaderActiveLag 	  = 0;
-	
+
 	_toKeyActive     = 0;
+	_toKeyActiveLag  = 0;
+
 	_toXSideActive = true;
 }
 
@@ -190,7 +192,8 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 
 		// compute discrete lag values
 		_toPostfaderActiveLag += SMOOTHING_CONST * (float(_toPostfaderActive) - _toPostfaderActiveLag);
-
+		_toKeyActiveLag       += SMOOTHING_CONST * (float(_toKeyActive) - _toKeyActiveLag);
+		
 		// * master for "post-fader" sends
 		float tmpL = trackBufferL[i];
 		float tmpR = trackBufferR[i]; 
@@ -212,11 +215,8 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 		}
 
 		// turning down an element in the mix should *NOT* influence sidechaining
-		if ( _toKeyActive ) {
-			sidechainL[i]     += tmpL;
-			sidechainR[i]     += tmpR;
-		}
-
+		sidechainL[i]     += tmpL * _toKeyActiveLag;
+		sidechainR[i]     += tmpR * _toKeyActiveLag;
 	}
 }
 
