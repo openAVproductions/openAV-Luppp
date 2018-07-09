@@ -185,6 +185,7 @@ private:
 	float inputToMixEnableLag;
 
 	bool  inputToSendEnable;
+	float inputToSendEnableLag;
 
 	// JACK member variables
 	bool clientActive;
