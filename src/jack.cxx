@@ -266,6 +266,7 @@ Jack::Jack( std::string name ) :
 
 	/// setup DSP instances
 	inputVol = 1.0f;
+	inputVolLag = 1.0f;
 	masterVol = 0.75f;
 	masterVolLag =0.75f;
 
@@ -544,9 +545,10 @@ void Jack::processFrames(int nframes)
 		inputToSendVolLag += SMOOTHING_CONST * (inputToSendVol - inputToSendVolLag);
 		inputToXSideVolLag += SMOOTHING_CONST * (inputToXSideVol - inputToXSideVolLag);
 		returnVolLag += SMOOTHING_CONST * (returnVol - returnVolLag);
+		inputVolLag += SMOOTHING_CONST * (inputVol - inputVolLag);
 
-		float inputL = buffers.audio[Buffers::MASTER_INPUT_L][i] * inputVol;
-		float inputR = buffers.audio[Buffers::MASTER_INPUT_R][i] * inputVol;
+		float inputL = buffers.audio[Buffers::MASTER_INPUT_L][i] * inputVolLag;
+		float inputR = buffers.audio[Buffers::MASTER_INPUT_R][i] * inputVolLag;
 
 		float L    = buffers.audio[Buffers::MASTER_OUT_L][i];
 		float R    = buffers.audio[Buffers::MASTER_OUT_R][i];
@@ -598,7 +600,7 @@ void Jack::processFrames(int nframes)
 		// instead of scaling whole buffer, just scale output by vol
 		EventTrackSignalLevel e(-1, masterMeter->getLeftDB(), masterMeter->getRightDB() );
 		writeToGuiRingbuffer( &e );
-		EventTrackSignalLevel e2(-2, inputMeter->getLeftDB() * inputVol, inputMeter->getRightDB() * inputVol );
+		EventTrackSignalLevel e2(-2, inputMeter->getLeftDB() * inputVolLag, inputMeter->getRightDB() * inputVol );
 		writeToGuiRingbuffer( &e2 );
 
 		uiUpdateCounter = 0;

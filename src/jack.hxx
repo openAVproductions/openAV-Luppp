@@ -157,10 +157,12 @@ private:
 	// FX
 	DBMeter* inputMeter;
 	DBMeter* masterMeter;
-
-	float inputVol;
-	/// _toMasterLag is a volume that lags behind _toMaster when setMaster() is called
+	
+	/// *Lag are values that lag behind their corresponding value
 	/// This prohibits audible jumps when rapidly changing the volume
+	float inputVol;
+	float inputVolLag;
+	
 	float masterVol;
 	float masterVolLag;
 
