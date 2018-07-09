@@ -208,6 +208,7 @@ Jack::Jack( std::string name ) :
 	inputToSendVol    = 0.f;
 	inputToSendVolLag = 0.f;
 	inputToXSideVol   = 0.f;
+	inputToXSideVolLag = 0.f;
 
 	/// prepare internal buffers
 	buffers.audio[Buffers::SEND_L]            = new float[ buffers.nframes ];
@@ -541,6 +542,7 @@ void Jack::processFrames(int nframes)
 		// compute *lags für smoothing
 		inputToMixVolLag += SMOOTHING_CONST * (inputToMixVol - inputToMixVolLag);
 		inputToSendVolLag += SMOOTHING_CONST * (inputToSendVol - inputToSendVolLag);
+		inputToXSideVolLag += SMOOTHING_CONST * (inputToXSideVol - inputToXSideVolLag);
 
 		float inputL = buffers.audio[Buffers::MASTER_INPUT_L][i] * inputVol;
 		float inputR = buffers.audio[Buffers::MASTER_INPUT_R][i] * inputVol;
@@ -552,8 +554,8 @@ void Jack::processFrames(int nframes)
 
 		if ( inputToMixEnable ) {
 			// if sending to mix, scale by volume *and* by XSide send
-			float tmpL = inputL * inputToMixVolLag * (1-inputToXSideVol);
-			float tmpR = inputR * inputToMixVolLag * (1-inputToXSideVol);
+			float tmpL = inputL * inputToMixVolLag * (1-inputToXSideVolLag);
+			float tmpR = inputR * inputToMixVolLag * (1-inputToXSideVolLag);
 			L += tmpL;
 			R += tmpR;
 			
@@ -568,8 +570,8 @@ void Jack::processFrames(int nframes)
 			buffers.audio[Buffers::SIDECHAIN_KEY_R][i] += inputR;
 		}
 
-		buffers.audio[Buffers::SIDECHAIN_SIGNAL_L][i] += inputL * inputToXSideVol;
-		buffers.audio[Buffers::SIDECHAIN_SIGNAL_R][i] += inputR * inputToXSideVol;
+		buffers.audio[Buffers::SIDECHAIN_SIGNAL_L][i] += inputL * inputToXSideVolLag;
+		buffers.audio[Buffers::SIDECHAIN_SIGNAL_R][i] += inputR * inputToXSideVolLag;
 
 		//compute master volume lag;
 		masterVolLag += SMOOTHING_CONST * (masterVol - masterVolLag);

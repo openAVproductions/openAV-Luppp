@@ -170,8 +170,9 @@ private:
 
 	float inputToSendVol;
 	float inputToSendVolLag;
-	
+
 	float inputToXSideVol;
+	float inputToXSideVolLag;
 
 	bool  inputToKeyEnable;
 	bool  inputToMixEnable;
