@@ -206,6 +206,7 @@ Jack::Jack( std::string name ) :
 	inputToMixVol     = 0.f;
 	inputToMixVolLag  = 0.f;
 	inputToSendVol    = 0.f;
+	inputToSendVolLag = 0.f;
 	inputToXSideVol   = 0.f;
 
 	/// prepare internal buffers
@@ -539,6 +540,7 @@ void Jack::processFrames(int nframes)
 	for(unsigned int i = 0; i < nframes; i++) {
 		// compute *lags für smoothing
 		inputToMixVolLag += SMOOTHING_CONST * (inputToMixVol - inputToMixVolLag);
+		inputToSendVolLag += SMOOTHING_CONST * (inputToSendVol - inputToSendVolLag);
 
 		float inputL = buffers.audio[Buffers::MASTER_INPUT_L][i] * inputVol;
 		float inputR = buffers.audio[Buffers::MASTER_INPUT_R][i] * inputVol;
@@ -557,8 +559,8 @@ void Jack::processFrames(int nframes)
 			
 			if ( inputToSendEnable ) {
 				// post-mix-send amount: hence * inputToMixVol
-				buffers.audio[Buffers::SEND_L][i] += inputL * inputToSendVol * inputToMixVolLag;
-				buffers.audio[Buffers::SEND_R][i] += inputR * inputToSendVol * inputToMixVolLag;
+				buffers.audio[Buffers::SEND_L][i] += inputL * inputToSendVolLag * inputToMixVolLag;
+				buffers.audio[Buffers::SEND_R][i] += inputR * inputToSendVolLag * inputToMixVolLag;
 			}
 		}
 		if ( inputToKeyEnable ) {
