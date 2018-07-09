@@ -138,7 +138,7 @@ public:
 	JackSendReturn *getJackSendReturn(int t);
 private:
 	int                 lastnframes;
-	jack_client_t* client;
+	jack_client_t*      client;
 
 	Buffers             buffers;
 	TimeManager*        timeManager;
@@ -166,6 +166,8 @@ private:
 	float returnVol;
 
 	float inputToMixVol;
+	float inputToMixVolLag;
+
 	float inputToSendVol;
 	float inputToXSideVol;
 

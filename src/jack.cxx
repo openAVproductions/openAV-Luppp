@@ -204,6 +204,7 @@ Jack::Jack( std::string name ) :
 	inputToSendEnable = false;
 	inputToKeyEnable  = false;
 	inputToMixVol     = 0.f;
+	inputToMixVolLag  = 0.f;
 	inputToSendVol    = 0.f;
 	inputToXSideVol   = 0.f;
 
@@ -536,6 +537,9 @@ void Jack::processFrames(int nframes)
 
 	/// mix input, reverb & post-sidechain in
 	for(unsigned int i = 0; i < nframes; i++) {
+		// compute *lags für smoothing
+		inputToMixVolLag += SMOOTHING_CONST * (inputToMixVol - inputToMixVolLag);
+
 		float inputL = buffers.audio[Buffers::MASTER_INPUT_L][i] * inputVol;
 		float inputR = buffers.audio[Buffers::MASTER_INPUT_R][i] * inputVol;
 
@@ -546,15 +550,15 @@ void Jack::processFrames(int nframes)
 
 		if ( inputToMixEnable ) {
 			// if sending to mix, scale by volume *and* by XSide send
-			float tmpL = inputL * inputToMixVol * (1-inputToXSideVol);
-			float tmpR = inputR * inputToMixVol * (1-inputToXSideVol);
+			float tmpL = inputL * inputToMixVolLag * (1-inputToXSideVol);
+			float tmpR = inputR * inputToMixVolLag * (1-inputToXSideVol);
 			L += tmpL;
 			R += tmpR;
 			
 			if ( inputToSendEnable ) {
 				// post-mix-send amount: hence * inputToMixVol
-				buffers.audio[Buffers::SEND_L][i] += inputL * inputToSendVol * inputToMixVol;
-				buffers.audio[Buffers::SEND_R][i] += inputR * inputToSendVol * inputToMixVol;
+				buffers.audio[Buffers::SEND_L][i] += inputL * inputToSendVol * inputToMixVolLag;
+				buffers.audio[Buffers::SEND_R][i] += inputR * inputToSendVol * inputToMixVolLag;
 			}
 		}
 		if ( inputToKeyEnable ) {
