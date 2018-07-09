@@ -163,7 +163,9 @@ private:
 	/// This prohibits audible jumps when rapidly changing the volume
 	float masterVol;
 	float masterVolLag;
+
 	float returnVol;
+	float returnVolLag;
 
 	float inputToMixVol;
 	float inputToMixVolLag;

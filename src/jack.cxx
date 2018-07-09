@@ -199,7 +199,7 @@ Jack::Jack( std::string name ) :
 
 
 	returnVol = 1.0f;
-
+	returnVolLag = 1.0f;
 	inputToMixEnable  = false;
 	inputToSendEnable = false;
 	inputToKeyEnable  = false;
@@ -543,6 +543,7 @@ void Jack::processFrames(int nframes)
 		inputToMixVolLag += SMOOTHING_CONST * (inputToMixVol - inputToMixVolLag);
 		inputToSendVolLag += SMOOTHING_CONST * (inputToSendVol - inputToSendVolLag);
 		inputToXSideVolLag += SMOOTHING_CONST * (inputToXSideVol - inputToXSideVolLag);
+		returnVolLag += SMOOTHING_CONST * (returnVol - returnVolLag);
 
 		float inputL = buffers.audio[Buffers::MASTER_INPUT_L][i] * inputVol;
 		float inputR = buffers.audio[Buffers::MASTER_INPUT_R][i] * inputVol;
@@ -576,8 +577,8 @@ void Jack::processFrames(int nframes)
 		//compute master volume lag;
 		masterVolLag += SMOOTHING_CONST * (masterVol - masterVolLag);
 		/// mixdown returns into master buffers
-		buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = (L + returnL*returnVol) * masterVolLag;
-		buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = (R + returnR*returnVol) * masterVolLag;
+		buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = (L + returnL*returnVolLag) * masterVolLag;
+		buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = (R + returnR*returnVolLag) * masterVolLag;
 
 		/// write SEND content to JACK port
 		buffers.audio[Buffers::JACK_SEND_OUT_L][i] = buffers.audio[Buffers::SEND_L][i];
