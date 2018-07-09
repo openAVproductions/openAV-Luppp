@@ -136,6 +136,8 @@ public:
 	int bindingActive;
 
 	JackSendReturn *getJackSendReturn(int t);
+
+	const float smoothing_value;
 private:
 	int                 lastnframes;
 	jack_client_t*      client;

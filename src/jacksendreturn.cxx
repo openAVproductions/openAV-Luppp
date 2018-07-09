@@ -53,12 +53,12 @@ void JackSendReturn::process(unsigned int nframes, Buffers *buffers)
 	}
 
 	for(int i=0; i<nframes; i++) {
-		_sendVolLag += SMOOTHING_CONST * (_sendVol - _sendVolLag);
+		_sendVolLag += jack->smoothing_value * (_sendVol - _sendVolLag);
 
 		sendL[i] = _sendVolLag * sendtrackL[i];
 		sendR[i] = _sendVolLag * sendtrackR[i];
 
-		_activeLag += SMOOTHING_CONST * (float(_active) - _activeLag);
+		_activeLag += jack->smoothing_value * (float(_active) - _activeLag);
 
 		rettrackL[i] = retL[i] * _activeLag + sendtrackL[i] * std::fabs(_activeLag - 1);
 		rettrackR[i] = retR[i] * _activeLag + sendtrackR[i] * std::fabs(_activeLag - 1);

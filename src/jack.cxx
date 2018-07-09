@@ -78,11 +78,15 @@ Jack::Jack( std::string name ) :
 	client( jack_client_open ( name.c_str(), JackNullOption, 0, 0 ) ),
 	state( new State() ),
 	controllerUpdater( new ControllerUpdater() ),
-	clientActive(false)
+	clientActive(false),
+	smoothing_value(SMOOTHING_CONST * (44100.f / samplerate))
 {
 	jack = this;
 	lastnframes=0;
 	samplerate = jack_get_sample_rate( client );
+
+	// calculate smoothing value for current sample rate
+	//smoothing_value = SMOOTHING_CONST * (44100.f / samplerate);
 
 	// construct Observer classes here, not in the initializer list as the Jack*
 	// will be 0x0 until then.
@@ -544,15 +548,15 @@ void Jack::processFrames(int nframes)
 	/// mix input, reverb & post-sidechain in
 	for(unsigned int i = 0; i < nframes; i++) {
 		// compute *lags für smoothing
-		inputToMixVolLag += SMOOTHING_CONST * (inputToMixVol - inputToMixVolLag);
-		inputToSendVolLag += SMOOTHING_CONST * (inputToSendVol - inputToSendVolLag);
-		inputToXSideVolLag += SMOOTHING_CONST * (inputToXSideVol - inputToXSideVolLag);
-		returnVolLag += SMOOTHING_CONST * (returnVol - returnVolLag);
-		inputVolLag += SMOOTHING_CONST * (inputVol - inputVolLag);
+		inputToMixVolLag += smoothing_value * (inputToMixVol - inputToMixVolLag);
+		inputToSendVolLag += smoothing_value * (inputToSendVol - inputToSendVolLag);
+		inputToXSideVolLag += smoothing_value * (inputToXSideVol - inputToXSideVolLag);
+		returnVolLag += smoothing_value * (returnVol - returnVolLag);
+		inputVolLag += smoothing_value * (inputVol - inputVolLag);
 
-		inputToKeyEnableLag += SMOOTHING_CONST * (inputToKeyEnable - inputToKeyEnableLag);
-		inputToMixEnableLag += SMOOTHING_CONST * (inputToMixEnable - inputToMixEnableLag);
-		inputToSendEnableLag += SMOOTHING_CONST * (inputToSendEnable - inputToSendEnableLag);
+		inputToKeyEnableLag += smoothing_value * (inputToKeyEnable - inputToKeyEnableLag);
+		inputToMixEnableLag += smoothing_value * (inputToMixEnable - inputToMixEnableLag);
+		inputToSendEnableLag += smoothing_value * (inputToSendEnable - inputToSendEnableLag);
 
 		float inputL = buffers.audio[Buffers::MASTER_INPUT_L][i] * inputVolLag;
 		float inputR = buffers.audio[Buffers::MASTER_INPUT_R][i] * inputVolLag;
@@ -581,7 +585,7 @@ void Jack::processFrames(int nframes)
 		buffers.audio[Buffers::SIDECHAIN_SIGNAL_R][i] += inputR * inputToXSideVolLag;
 
 		//compute master volume lag;
-		masterVolLag += SMOOTHING_CONST * (masterVol - masterVolLag);
+		masterVolLag += smoothing_value * (masterVol - masterVolLag);
 		/// mixdown returns into master buffers
 		buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = (L + returnL*returnVolLag) * masterVolLag;
 		buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = (R + returnR*returnVolLag) * masterVolLag;
