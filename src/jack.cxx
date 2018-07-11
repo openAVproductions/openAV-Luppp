@@ -78,15 +78,14 @@ Jack::Jack( std::string name ) :
 	client( jack_client_open ( name.c_str(), JackNullOption, 0, 0 ) ),
 	state( new State() ),
 	controllerUpdater( new ControllerUpdater() ),
-	clientActive(false),
-	smoothing_value(SMOOTHING_CONST * (44100.f / samplerate))
+	clientActive(false)
 {
 	jack = this;
 	lastnframes=0;
 	samplerate = jack_get_sample_rate( client );
 
 	// calculate smoothing value for current sample rate
-	//smoothing_value = SMOOTHING_CONST * (44100.f / samplerate);
+	smoothing_value = SMOOTHING_CONST * (44100.f / samplerate);
 
 	// construct Observer classes here, not in the initializer list as the Jack*
 	// will be 0x0 until then.
