@@ -1,3 +1,19 @@
+1.1.1: Sunday 9th April 2017
+Cleanup:
+	-> astyle: global restyle of codebase
+	-> cleanup startup prints and blank lines
+	-> cmake: update makefiles to not clobber flags vars
+
+Features:
+	-> create project dir if not already there
+	-> pan for each track
+	-> full stereo signal chain
+	-> cmake: fix build flags to enable optimized builds on x86_64
+
+Fixes:
+	-> fix possible mem leak if loading a MIDI binding fails
+	-> fixed possible mem leak in goptions dialog
+
 1.1: Saturday 24th December 2016
 Features:
 	-> Added saveDirectory option to set the save dir for Luppp sessions
