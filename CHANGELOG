@@ -1,4 +1,4 @@
-1.1: Day, Date 2016
+1.1: Saturday 24th December 2016
 Features:
 	-> Added saveDirectory option to set the save dir for Luppp sessions
 	-> Added possibility to enable metronom on startup and set volume
@@ -11,6 +11,7 @@ Features:
 	-> Added .ctrl file for Launchpad S and APC Mini and APC Key25
 	-> Added ability to adjust knobs with mouse wheel
 	-> Added metronome volume
+	-> New header images
 
 Fixes:
 	-> Fixed internal buffer misconduct
