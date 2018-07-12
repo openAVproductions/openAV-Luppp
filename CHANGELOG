@@ -1,3 +1,28 @@
+NEW VERSION: DAY DATE 2018
+
+Features:
+	-> clear clip with MIDI
+	-> build with meson
+	-> space triggers special clip
+	-> manual BPM input (right click on Tap-Button)
+
+Improvements:
+	-> reduce default metronome volume
+	-> make label code consistent
+	-> mute compiler warnings
+	-> remove all hard coded scene numbers
+	-> add some debug outputs
+
+Fixes:
+	-> fix several leaks and errors
+	-> fix broken waveforms
+	-> fix fltk/ntk conflict
+	-> fix generic MIDI launch bug
+	-> fix wrong output mapping
+	-> fix input signal flow
+	-> fix input volume for clip recording
+	-> fix timing issues after changing playspeed
+
 1.1.1: Sunday 9th April 2017
 Cleanup:
 	-> astyle: global restyle of codebase
