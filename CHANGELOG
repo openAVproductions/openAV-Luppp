@@ -5,6 +5,7 @@ Features:
 	-> build with meson
 	-> space triggers special clip
 	-> manual BPM input (right click on Tap-Button)
+	-> avoid noise on all controls
 
 Improvements:
 	-> reduce default metronome volume
