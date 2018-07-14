@@ -7,7 +7,7 @@ Luppp - OpenAV Productions
 
 This is the repository of Luppp, the live looping tool.
 
-![screenshot](https://raw.github.com/harryhaaren/openAV-Luppp/master/resources/screenshots/1.0.png "Luppp 1.0 Screenshot")
+![screenshot](resources/screenshots/1.1.png "Luppp 1.0 Screenshot")
 
 Intro
 -----
@@ -40,7 +40,7 @@ cd build
 
 Issues
 ------
-Please report bugs on www.github.com/harryhaaren/luppp/issues
+Please report bugs on github.com/openAVproductions/openAV-Luppp/issues
 
 
 Contact
