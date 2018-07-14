@@ -119,7 +119,8 @@ void LooperClip::load( AudioBuffer* ab )
 	_buffer = ab;
 
 	_playhead = 0;
-	jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0 );
+	_barsPlayed = 0;
+	jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0);
 
 	// set the endpoint to the buffer's size
 	_recordhead = _buffer->getSize();
@@ -294,6 +295,7 @@ void LooperClip::bar()
 
 	if ( _playhead >= _recordhead ) {
 		_playhead = 0.f;
+		_barsPlayed = 0;
 	}
 
 	if ( _queuePlay && _loaded ) {
@@ -305,7 +307,10 @@ void LooperClip::bar()
 		change = true;
 
 		_playhead = 0;
-	} else if ( _queueStop && _loaded ) {
+		_barsPlayed = 0;
+	}
+	else if (_queueStop && _loaded)
+	{
 		_playing   = false;
 		s = GridLogic::STATE_STOPPED;
 		_recording = false;
@@ -436,6 +441,7 @@ void LooperClip::getSample(long double playSpeed, float* L, float* R)
 		     _playhead >= _buffer->getSize() ||
 		     _playhead < 0  ) {
 			_playhead = 0;
+			_barsPlayed = 0;
 
 			EventGuiPrint e( "LooperClip resetting _playhead" );
 			//writeToGuiRingbuffer( &e );
