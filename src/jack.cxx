@@ -84,6 +84,9 @@ Jack::Jack( std::string name ) :
 	lastnframes=0;
 	samplerate = jack_get_sample_rate( client );
 
+	// calculate smoothing value for current sample rate
+	smoothing_value = SMOOTHING_CONST * (44100.f / samplerate);
+
 	// construct Observer classes here, not in the initializer list as the Jack*
 	// will be 0x0 until then.
 	timeManager = new TimeManager(),
@@ -199,13 +202,19 @@ Jack::Jack( std::string name ) :
 
 
 	returnVol = 1.0f;
-
+	returnVolLag = 1.0f;
 	inputToMixEnable  = false;
+	inputToMixEnableLag = 0.f;
 	inputToSendEnable = false;
+	inputToSendEnableLag = 0.f;
 	inputToKeyEnable  = false;
+	inputToKeyEnableLag = 0.f;
 	inputToMixVol     = 0.f;
+	inputToMixVolLag  = 0.f;
 	inputToSendVol    = 0.f;
+	inputToSendVolLag = 0.f;
 	inputToXSideVol   = 0.f;
+	inputToXSideVolLag = 0.f;
 
 	/// prepare internal buffers
 	buffers.audio[Buffers::SEND_L]            = new float[ buffers.nframes ];
@@ -263,6 +272,7 @@ Jack::Jack( std::string name ) :
 
 	/// setup DSP instances
 	inputVol = 1.0f;
+	inputVolLag = 1.0f;
 	masterVol = 0.75f;
 	masterVolLag =0.75f;
 
@@ -536,40 +546,48 @@ void Jack::processFrames(int nframes)
 
 	/// mix input, reverb & post-sidechain in
 	for(unsigned int i = 0; i < nframes; i++) {
-		float inputL = buffers.audio[Buffers::MASTER_INPUT_L][i] * inputVol;
-		float inputR = buffers.audio[Buffers::MASTER_INPUT_R][i] * inputVol;
+		// compute *lags für smoothing
+		inputToMixVolLag += smoothing_value * (inputToMixVol - inputToMixVolLag);
+		inputToSendVolLag += smoothing_value * (inputToSendVol - inputToSendVolLag);
+		inputToXSideVolLag += smoothing_value * (inputToXSideVol - inputToXSideVolLag);
+		returnVolLag += smoothing_value * (returnVol - returnVolLag);
+		inputVolLag += smoothing_value * (inputVol - inputVolLag);
+
+		inputToKeyEnableLag += smoothing_value * (inputToKeyEnable - inputToKeyEnableLag);
+		inputToMixEnableLag += smoothing_value * (inputToMixEnable - inputToMixEnableLag);
+		inputToSendEnableLag += smoothing_value * (inputToSendEnable - inputToSendEnableLag);
+
+		float inputL = buffers.audio[Buffers::MASTER_INPUT_L][i] * inputVolLag;
+		float inputR = buffers.audio[Buffers::MASTER_INPUT_R][i] * inputVolLag;
 
 		float L    = buffers.audio[Buffers::MASTER_OUT_L][i];
 		float R    = buffers.audio[Buffers::MASTER_OUT_R][i];
 		float returnL = buffers.audio[Buffers::MASTER_RETURN_L][i];
 		float returnR = buffers.audio[Buffers::MASTER_RETURN_R][i];
 
-		if ( inputToMixEnable ) {
-			// if sending to mix, scale by volume *and* by XSide send
-			float tmpL = inputL * inputToMixVol * (1-inputToXSideVol);
-			float tmpR = inputR * inputToMixVol * (1-inputToXSideVol);
-			L += tmpL;
-			R += tmpR;
+		// if sending to mix, scale by volume *and* by XSide send
+		float tmpL = inputL * inputToMixVolLag * inputToMixEnableLag;
+		float tmpR = inputR * inputToMixVolLag * inputToMixEnableLag;
+		L += tmpL * (1-inputToXSideVolLag);
+		R += tmpR * (1-inputToXSideVolLag);
+		
+		// post-mix-send amount: hence * inputToMixVol
+		buffers.audio[Buffers::SEND_L][i] += tmpL * inputToSendVolLag * inputToSendEnableLag;
+		buffers.audio[Buffers::SEND_R][i] += tmpR * inputToSendVolLag * inputToSendEnableLag;
 			
-			if ( inputToSendEnable ) {
-				// post-mix-send amount: hence * inputToMixVol
-				buffers.audio[Buffers::SEND_L][i] += inputL * inputToSendVol * inputToMixVol;
-				buffers.audio[Buffers::SEND_R][i] += inputR * inputToSendVol * inputToMixVol;
-			}
-		}
-		if ( inputToKeyEnable ) {
-			buffers.audio[Buffers::SIDECHAIN_KEY_L][i] += inputL;
-			buffers.audio[Buffers::SIDECHAIN_KEY_R][i] += inputR;
-		}
+		
+		buffers.audio[Buffers::SIDECHAIN_KEY_L][i] += inputL * inputToKeyEnableLag;
+		buffers.audio[Buffers::SIDECHAIN_KEY_R][i] += inputR * inputToKeyEnableLag;
+		
 
-		buffers.audio[Buffers::SIDECHAIN_SIGNAL_L][i] += inputL * inputToXSideVol;
-		buffers.audio[Buffers::SIDECHAIN_SIGNAL_R][i] += inputR * inputToXSideVol;
+		buffers.audio[Buffers::SIDECHAIN_SIGNAL_L][i] += inputL * inputToXSideVolLag;
+		buffers.audio[Buffers::SIDECHAIN_SIGNAL_R][i] += inputR * inputToXSideVolLag;
 
 		//compute master volume lag;
-		masterVolLag += SMOOTHING_CONST * (masterVol - masterVolLag);
+		masterVolLag += smoothing_value * (masterVol - masterVolLag);
 		/// mixdown returns into master buffers
-		buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = (L + returnL*returnVol) * masterVolLag;
-		buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = (R + returnR*returnVol) * masterVolLag;
+		buffers.audio[Buffers::JACK_MASTER_OUT_L][i] = (L + returnL*returnVolLag) * masterVolLag;
+		buffers.audio[Buffers::JACK_MASTER_OUT_R][i] = (R + returnR*returnVolLag) * masterVolLag;
 
 		/// write SEND content to JACK port
 		buffers.audio[Buffers::JACK_SEND_OUT_L][i] = buffers.audio[Buffers::SEND_L][i];
@@ -589,7 +607,7 @@ void Jack::processFrames(int nframes)
 		// instead of scaling whole buffer, just scale output by vol
 		EventTrackSignalLevel e(-1, masterMeter->getLeftDB(), masterMeter->getRightDB() );
 		writeToGuiRingbuffer( &e );
-		EventTrackSignalLevel e2(-2, inputMeter->getLeftDB() * inputVol, inputMeter->getRightDB() * inputVol );
+		EventTrackSignalLevel e2(-2, inputMeter->getLeftDB() * inputVolLag, inputMeter->getRightDB() * inputVol );
 		writeToGuiRingbuffer( &e2 );
 
 		uiUpdateCounter = 0;

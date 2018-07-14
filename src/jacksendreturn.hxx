@@ -37,21 +37,25 @@ public:
 	//The process callback
 	virtual void process(unsigned int nframes, Buffers* buffers);
 
-	//Activate the return chain. When m_active=true then Buffers::RETURN_TRACK_0+m_trackid gets the data
+	//Activate the return chain. When _active=true then Buffers::RETURN_TRACK_0+_trackid gets the data
 	//from the return port. The send port always send the incoming data
 	void activate(bool act);
 	void sendVolume(float vol);
 
 private:
-	bool m_active;
-	float m_sendvol;
-	jack_port_t* m_sendport_l;
-	jack_port_t* m_sendport_r;
-	jack_port_t* m_returnport_l;
-	jack_port_t* m_returnport_r;
-	int m_trackid;
-	AudioProcessor* m_previousProcessor;
-	int m_counter;
+	bool _active;
+	float _activeLag;
+	
+	float _sendVol;
+	float _sendVolLag;
+
+	jack_port_t* _sendPortL;
+	jack_port_t* _sendPortR;
+	jack_port_t* _returnPortL;
+	jack_port_t* _returnPortR;
+	int _trackId;
+	AudioProcessor* _previousProcessor;
+	int _counter;
 };
 
 #endif

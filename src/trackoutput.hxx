@@ -80,7 +80,11 @@ private:
 	float _toPostSidechainLag;
 
 	bool _toPostfaderActive;
+	float _toPostfaderActiveLag;
+
 	bool _toKeyActive;
+	float _toKeyActiveLag;
+
 	bool _toXSideActive;
 
 	/// Pointer to "previous" processor: the graph is backwards
