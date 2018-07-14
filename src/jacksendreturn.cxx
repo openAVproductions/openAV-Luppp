@@ -60,8 +60,8 @@ void JackSendReturn::process(unsigned int nframes, Buffers *buffers)
 
 		_activeLag += jack->smoothing_value * (float(_active) - _activeLag);
 
-		rettrackL[i] = retL[i] * _activeLag + sendtrackL[i] * std::fabs(_activeLag - 1);
-		rettrackR[i] = retR[i] * _activeLag + sendtrackR[i] * std::fabs(_activeLag - 1);
+		rettrackL[i] = retL[i] * _activeLag + sendtrackL[i] * fabs(_activeLag - 1);
+		rettrackR[i] = retR[i] * _activeLag + sendtrackR[i] * fabs(_activeLag - 1);
 	}
 
 	if(offset)
