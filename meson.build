@@ -25,6 +25,7 @@ subdir('src')
 dep_names = [
   'ntk',
   'cairo',
+  'openav_ctlra',
   'liblo',
   'jack',
   'sndfile',
@@ -39,4 +40,5 @@ endforeach
 
 # compile the main project
 executable('luppp', luppp_src + [version_hxx],
+    link_args : ['-ltcc', '-ldl'],
     dependencies: deps)

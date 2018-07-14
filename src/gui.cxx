@@ -32,6 +32,7 @@ extern Jack* jack;
 #include "audiobuffer.hxx"
 #include "controller/nonseq.hxx"
 #include "controller/genericmidi.hxx"
+#include "controller/ctlra.hxx"
 
 #include "icon.xpm"
 #include <FL/x.H>
@@ -460,6 +461,17 @@ Gui::Gui(const char* argZero) :
 		LUPPP_WARN("No preferences loaded, using defaults.");
 	} else {
 		LUPPP_NOTE("Loaded preferences");
+	}
+
+	// Ctlra init stuff
+	LUPPP_NOTE("%s","Add Ctlra Controller in GUI()");
+	std::string ctlra_path = "ctlra_test.c";
+	Controller* c = new CtlraScript( ctlra_path );
+	if ( c->status() == Controller::CONTROLLER_OK ) {
+		EventControllerInstance e(c);
+		writeToDspRingbuffer( &e );
+	} else {
+		LUPPP_ERROR("Ctlra Controller initialization failed!");
 	}
 
 	// NSM stuff
