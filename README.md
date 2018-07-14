@@ -7,7 +7,7 @@ Luppp - OpenAV Productions
 
 This is the repository of Luppp, the live looping tool.
 
-![screenshot](resources/screenshots/1.2.png "Luppp 1.0 Screenshot")
+![screenshot](resources/screenshots/1.2.png "Luppp 1.2 Screenshot")
 
 Intro
 -----
