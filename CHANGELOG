@@ -1,4 +1,46 @@
-1.1: Day, Date 2016
+NEW VERSION: DAY DATE 2018
+
+Features:
+	-> clear clip with MIDI
+	-> build with meson
+	-> space triggers special clip
+	-> manual BPM input (right click on Tap-Button)
+	-> avoid noise on all controls
+
+Improvements:
+	-> reduce default metronome volume
+	-> make label code consistent
+	-> mute compiler warnings
+	-> remove all hard coded scene numbers
+	-> add some debug outputs
+
+Fixes:
+	-> fix several leaks and errors
+	-> fix broken waveforms
+	-> fix fltk/ntk conflict
+	-> fix generic MIDI launch bug
+	-> fix wrong output mapping
+	-> fix input signal flow
+	-> fix input volume for clip recording
+	-> fix timing issues after changing playspeed
+
+1.1.1: Sunday 9th April 2017
+Cleanup:
+	-> astyle: global restyle of codebase
+	-> cleanup startup prints and blank lines
+	-> cmake: update makefiles to not clobber flags vars
+
+Features:
+	-> create project dir if not already there
+	-> pan for each track
+	-> full stereo signal chain
+	-> cmake: fix build flags to enable optimized builds on x86_64
+
+Fixes:
+	-> fix possible mem leak if loading a MIDI binding fails
+	-> fixed possible mem leak in goptions dialog
+
+1.1: Saturday 24th December 2016
 Features:
 	-> Added saveDirectory option to set the save dir for Luppp sessions
 	-> Added possibility to enable metronom on startup and set volume
@@ -11,6 +53,7 @@ Features:
 	-> Added .ctrl file for Launchpad S and APC Mini and APC Key25
 	-> Added ability to adjust knobs with mouse wheel
 	-> Added metronome volume
+	-> New header images
 
 Fixes:
 	-> Fixed internal buffer misconduct
