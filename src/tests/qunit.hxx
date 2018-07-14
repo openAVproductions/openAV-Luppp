@@ -73,12 +73,10 @@ namespace QUnit {
         int verboseLevel_;
         int errors_;
         int tests_;
-        
-        bool openFileOnFail;
     };
   
     inline UnitTest::UnitTest( int verboseLevel, bool openFail )
-        : verboseLevel_(verboseLevel) , errors_(0) , tests_(0), openFileOnFail(openFail) {
+        : verboseLevel_(verboseLevel) , errors_(0) , tests_(0) {
     }
   
     inline UnitTest::~UnitTest() {
@@ -134,13 +132,6 @@ namespace QUnit {
         else
         {
           cout << QUNIT_COLOUR_ERROR << "FAILED";
-          if ( openFileOnFail )
-          {
-            std::stringstream s;
-            
-            s << "geany" << file << " --line " << line;
-            system( s.str().c_str() );
-          }
         }
         cout << QUNIT_COLOUR_RESET << " : ";
         if( compare ) {
