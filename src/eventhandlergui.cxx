@@ -249,9 +249,11 @@ void handleGuiEvents()
 					gui->getTrack(ev.track)->getClipSelector()->setState( ev.scene, ev.state );
 					if ( ev.state == GridLogic::STATE_RECORDING )
 						gui->getTrack(ev.track)->getRadialStatus()->recording( true );
-					else if ( ev.state == GridLogic::STATE_EMPTY )
+					else if ( ev.state == GridLogic::STATE_EMPTY ) {
 						// reset clip name if clip gets cleared
-						gui->getTrack(ev.track)->getClipSelector()->clips[ ev.scene ].setName(""); 
+						gui->getTrack(ev.track)->getClipSelector()->clips[ ev.scene ].setName("");
+						gui->getTrack(ev.track)->getRadialStatus()->recording(false);
+					}
 					else
 						gui->getTrack(ev.track)->getRadialStatus()->recording( false );
 				}
