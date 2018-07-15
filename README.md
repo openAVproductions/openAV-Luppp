@@ -40,7 +40,7 @@ cd build
 
 Issues
 ------
-Please report bugs on github.com/openAVproductions/openAV-Luppp/issues
+Please report bugs on [github.com/openAVproductions/openAV-Luppp/issues](http://github.com/openAVproductions/openAV-Luppp/issues)
 
 
 Contact
