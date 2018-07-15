@@ -45,6 +45,8 @@ public:
 		mouseClicked = false;
 
 		highlight = false;
+
+		pan_style = 0;
 	}
 
 	bool highlight;
