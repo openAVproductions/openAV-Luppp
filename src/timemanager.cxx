@@ -86,6 +86,16 @@ void TimeManager::queueBpmChangeZeroOne(float b)
 
 void TimeManager::queueFpbChange( double f )
 {
+	float bpm = (samplerate * 60.f) / f;
+	if(bpm < MIN_TEMPO || bpm > MAX_TEMPO) {
+		char buffer[128];
+		snprintf(buffer, sizeof(buffer), "drop TM::qfpb() %d bpm = %d",
+			 (int)f, (int)bpm);
+		EventGuiPrint e( buffer );
+		writeToGuiRingbuffer( &e );
+		return;
+	}
+
 	_bpmChangeQueued = true;
 	_nextFpb = f;
 }
