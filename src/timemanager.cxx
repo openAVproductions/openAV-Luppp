@@ -110,7 +110,8 @@ void TimeManager::setFpb(double f)
 	int bpm = ( samplerate * 60) / f;
 
 	char buffer [50];
-	sprintf (buffer, "TM, setFpb() %i, bpm = %i", int(f), int(bpm) );
+	snprintf(buffer, sizeof(buffer), "TM, setFpb() %i, bpm = %i",
+		  int(f), int(bpm) );
 	EventGuiPrint e( buffer );
 	writeToGuiRingbuffer( &e );
 
@@ -153,14 +154,16 @@ void TimeManager::tap()
 
 		if( average < 13000 ) {
 			char buffer [50];
-			sprintf (buffer, "TM, tap() average too slow! quitting");
+			snprintf(buffer, sizeof(buffer),
+				 "TM, tap() average too slow! quitting");
 			EventGuiPrint e( buffer );
 			writeToGuiRingbuffer( &e );
 			return;
 		}
 
 		char buffer [50];
-		sprintf (buffer, "TM, tap() average = %i", average );
+		snprintf(buffer, sizeof(buffer), "TM, tap() average = %i",
+			 average);
 		EventGuiPrint e( buffer );
 		writeToGuiRingbuffer( &e );
 
@@ -217,13 +220,16 @@ void TimeManager::process(Buffers* buffers)
 
 		if ( before < nframes && after <= nframes && before + after == nframes ) {
 			char buffer [50];
-//      sprintf (buffer, "Timing OK: before %i, after %i, b+a %i",  before, after, before+after );
+//      snprintf(buffer, sizeof(buffer), "Timing OK: before %i, after %i, b+a %i",
+//               before, after, before+after );
 //      EventGuiPrint e2( buffer );
 //      writeToGuiRingbuffer( &e2 );
 
 		} else {
 			char buffer [50];
-			sprintf (buffer, "Timing Error: before: %i, after %i", before, after );
+			snprintf(buffer, sizeof(buffer),
+				 "Timing Error: before: %i, after %i",
+				 before, after );
 			EventGuiPrint e2( buffer );
 			writeToGuiRingbuffer( &e2 );
 		}
