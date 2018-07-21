@@ -82,7 +82,8 @@ static void updateLinkCB(Fl_Widget* w, void* data)
 	str << l;
 
 	int ret = system( str.str().c_str() );
-	/* if it fails it fails.. */
+	/* if it fails it fails... (void) to mute clang warning */
+	(void)ret;
 }
 
 static void writeBindEnable(Fl_Widget* w, void* data)
