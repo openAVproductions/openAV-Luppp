@@ -4,7 +4,7 @@ project( 'openav_luppp', ['c','cpp'],
     ])
 
 conf_data = configuration_data()
-conf_data.set('version', '1.1.1')
+conf_data.set('version', '1.2.0')
 
 
 if(get_option('tests') == true)

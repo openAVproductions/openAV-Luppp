@@ -32,9 +32,10 @@ Install
 Run the following commands from the top directory to configure & install Luppp:
 
 ```bash
+meson build
 cd build
-./compile.sh
-./run.sh
+ninja
+./luppp
 ```
 
 
