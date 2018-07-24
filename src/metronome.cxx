@@ -35,18 +35,31 @@ Metronome::Metronome() :
 	active     (false),
 	playPoint  (0)
 {
+	const uint32_t sr = jack->getSamplerate();
+	const uint32_t bipDuration = (sr / 10);
 	//Create Beat/Bar samples
-	beatSample=new float[jack->getSamplerate()];
-	barSample=new float[jack->getSamplerate()];
+	beatSample=new float[bipDuration];
+	barSample=new float[bipDuration];
 	// create beat and bar samples
-	endPoint = ( jack->getSamplerate()/10 );
+	endPoint = bipDuration;
 	// samples per cycle of
-	float scale = 2 * 3.1415 *880/jack->getSamplerate();
+	float scale = 2 * 3.1415 *880 / sr;
 
 	// And fill it up
-	for(int i=0; i < jack->getSamplerate(); i++) {
+	for(int i=0; i < bipDuration; i++) {
 		beatSample[i]= sin(i*scale);
 		barSample [i]= sin(i*scale*2);
+	}
+
+	uint32_t fade_smps = (bipDuration / 10.f);
+	for(int i = 0; i < fade_smps; i++) {
+		float f = (i / (float)fade_smps);
+		f = (f * f * f);
+		beatSample[i] *= f;
+		barSample [i] *= f;
+
+		beatSample[bipDuration-1-i] *= f;
+		barSample [bipDuration-1-i] *= f;
 	}
 
 	setVolume(0.5);
