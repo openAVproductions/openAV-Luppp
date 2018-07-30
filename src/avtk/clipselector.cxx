@@ -230,20 +230,16 @@ void ClipSelector::draw()
 			// clip bars
 			if(!_master) {
 				const char * bars = clips[i].getBarsText();
-				const char * beats = clips[i].getBeatsText();
+
 				bool toRecord = clips[i].getBeats() <= 0 && clips[i].getBeatsToRecord() > 0; // If there are BeatsToRecord, but no Beats
 
 				if(strlen(bars)) {
 					if(toRecord) cairo_set_source_rgba(cr, 1.f,  0 / 255.f ,  0 / 255.f, 1.f);
 					else cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f, 255 / 255.f , 0.9 );
 
-					cairo_move_to( cr,  x + clipWidth - 5 - getCairoTextWith(cr, bars), drawY + textHeight - 8);
+					cairo_move_to( cr,  x + clipWidth - 5 - getCairoTextWith(cr, bars), drawY + textHeight);
 					cairo_set_font_size( cr, 11 );
 					cairo_show_text( cr, bars);
-
-					beatLen =  getCairoTextWith(cr, beats);
-					cairo_move_to( cr, x + clipWidth -  5 - beatLen, drawY + textHeight + 7);
-					cairo_show_text( cr, beats);
 				}
 			}
 
@@ -466,7 +462,6 @@ int ClipSelector::handle(int event)
 void ClipState::setBeats(int numBeats, bool isBeatsToRecord)
 {
 	if(numBeats > 0) {
-		beatsText = std::to_string(numBeats);
 		barsText = std::to_string(numBeats/4);
 		if(isBeatsToRecord){
 			beatsToRecord = numBeats;
@@ -478,6 +473,6 @@ void ClipState::setBeats(int numBeats, bool isBeatsToRecord)
 		}
 	}
 	else
-		barsText = beatsText = std::string("");
+		barsText = std::string("");
 }
 } // Avtk

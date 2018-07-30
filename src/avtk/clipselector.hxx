@@ -75,10 +75,6 @@ public:
 
 	void setBeats(int numBeats, bool isBeatsToRecord);
 
-	const char *getBeatsText() {
-		return beatsText.c_str();
-	}
-
 	const char *getBarsText() {
 		return barsText.c_str();
 	}
@@ -86,7 +82,7 @@ public:
 private:
 	GridLogic::State state;
 	std::string name;
-	std::string beatsText;
+	
 	std::string barsText;
 
 	int beatsToRecord = -1;
