@@ -41,8 +41,7 @@ class ClipState
 public:
 	ClipState() :
 		state(GridLogic::STATE_EMPTY),
-		name(""),
-		barsText("")
+		name("")
 	{}
 
 	void setName(std::string n)
@@ -75,16 +74,10 @@ public:
 
 	void setBars(int numBars, bool isBarsToRecord);
 
-	const char *getBarsText() {
-		return barsText.c_str();
-	}
-
-private:
+  private:
 	GridLogic::State state;
 	std::string name;
 	
-	std::string barsText;
-
 	int barsToRecord = -1;
 	int bars = 0;
 };

@@ -229,17 +229,25 @@ void ClipSelector::draw()
 
 			// clip bars
 			if(!_master) {
-				const char * bars = clips[i].getBarsText();
+				// TODO move this to member function of ClipState
+				int bars = clips[i].getBars();
+				int barsToRecord = clips[i].getBarsToRecord();
+				const char *barsText = "";
+
+				if (bars > 0)
+					barsText = std::to_string(bars).c_str();
+				else if (barsToRecord > 0)
+					barsText = std::to_string(barsToRecord).c_str();
 
 				bool toRecord = clips[i].getBars() <= 0 && clips[i].getBarsToRecord() > 0; // If there are BarsToRecord, but no Bars
 
-				if(strlen(bars)) {
+				if(strlen(barsText)) {
 					if(toRecord) cairo_set_source_rgba(cr, 1.f,  0 / 255.f ,  0 / 255.f, 1.f);
 					else cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f, 255 / 255.f , 0.9 );
 
-					cairo_move_to( cr,  x + clipWidth - 5 - getCairoTextWith(cr, bars), drawY + textHeight);
+					cairo_move_to( cr,  x + clipWidth - 5 - getCairoTextWith(cr, barsText), drawY + textHeight);
 					cairo_set_font_size( cr, 11 );
-					cairo_show_text( cr, bars);
+					cairo_show_text( cr, barsText);
 				}
 			}
 
@@ -461,18 +469,12 @@ int ClipSelector::handle(int event)
 
 void ClipState::setBars(int numBars, bool isBarsToRecord)
 {
-	if(numBars > 0) {
-		barsText = std::to_string(numBars);
-		if(isBarsToRecord){
-			barsToRecord = numBars;
-			bars = 0;
-		} else {
-			bars = numBars;
-			if(numBars <= 0)
-				barsToRecord = -1;
-		}
+	if ( isBarsToRecord ) {
+		barsToRecord = numBars;
+		bars = 0;
+	} else {
+		bars = numBars;
+		barsToRecord = 0;
 	}
-	else
-		barsText = std::string("");
 }
 } // Avtk
