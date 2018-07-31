@@ -462,7 +462,6 @@ int ClipSelector::handle(int event)
 void ClipState::setBeats(int numBeats, bool isBeatsToRecord)
 {
 	if(numBeats > 0) {
-		beatsText = std::to_string(numBeats);
 		barsText = std::to_string(numBeats/4);
 		if(isBeatsToRecord){
 			beatsToRecord = numBeats;
@@ -474,6 +473,6 @@ void ClipState::setBeats(int numBeats, bool isBeatsToRecord)
 		}
 	}
 	else
-		barsText = beatsText = std::string("");
+		barsText = std::string("");
 }
 } // Avtk
