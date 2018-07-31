@@ -65,15 +65,15 @@ public:
 		return state;
 	}
 
-	int getBeatsToRecord(){
-		return beatsToRecord;
+	int getBarsToRecord(){
+		return barsToRecord;
 	}
 
-	int getBeats(){
-		return beats;
+	int getBars(){
+		return bars;
 	}
 
-	void setBeats(int numBeats, bool isBeatsToRecord);
+	void setBars(int numBars, bool isBarsToRecord);
 
 	const char *getBarsText() {
 		return barsText.c_str();
@@ -85,8 +85,8 @@ private:
 	
 	std::string barsText;
 
-	int beatsToRecord = -1;
-	int beats = 0;
+	int barsToRecord = -1;
+	int bars = 0;
 };
 
 class ClipSelector : public Fl_Button
@@ -117,7 +117,7 @@ public:
 	void setState( int clipNum, GridLogic::State s );
 
 	void clipName(int clip, std::string name);
-	void setClipBeats(int scene, int beats, bool isBeatsToRecord);
+	void setClipBars(int scene, int bars, bool isBarsToRecord);
 
 	std::string clipName(int clip);
 

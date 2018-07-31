@@ -280,10 +280,10 @@ void handleGuiEvents()
 			}
 
 			case Event::CLIP_BEATS_CHANGED: {
-				if ( availableRead >= sizeof(EventClipBeatsChanged) ) {
-					EventClipBeatsChanged ev;
-					jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventClipBeatsChanged) );
-					gui->getTrack(ev.track)->getClipSelector()->setClipBeats(ev.scene, ev.beats, ev.isBeatsToRecord);
+				if ( availableRead >= sizeof(EventClipBarsChanged) ) {
+					EventClipBarsChanged ev;
+					jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventClipBarsChanged) );
+					gui->getTrack(ev.track)->getClipSelector()->setClipBars(ev.scene, ev.bars, ev.isBarsToRecord);
 				}
 				break;
 			}

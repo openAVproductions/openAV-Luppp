@@ -1174,7 +1174,7 @@ public:
 	}
 };
 
-class EventClipBeatsChanged : public EventBase
+class EventClipBarsChanged : public EventBase
 {
 public:
 	int type()
@@ -1183,16 +1183,16 @@ public:
 	}
 	uint32_t size()
 	{
-		return sizeof(EventClipBeatsChanged);
+		return sizeof(EventClipBarsChanged);
 	}
 
 	int track;
 	int scene;
-	int beats;
-	bool isBeatsToRecord;
+	int bars;
+	bool isBarsToRecord;
 
-	EventClipBeatsChanged() {}
-	EventClipBeatsChanged(int t, int s, int b, bool i) : track(t), scene(s), beats(b), isBeatsToRecord(i) {}
+	EventClipBarsChanged() {}
+	EventClipBarsChanged(int t, int s, int b, bool i) : track(t), scene(s), bars(b), isBarsToRecord(i) {}
 };
 
 

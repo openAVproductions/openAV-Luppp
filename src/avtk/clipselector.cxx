@@ -23,7 +23,7 @@
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 #include "../gui.hxx"
-#define RECORD_BARS_MENU_ITEM(num) { #num, 0, setRecordBarsCb, (void*)num, FL_MENU_RADIO | ((clips[clipNum].getBeatsToRecord() == num*4) ? FL_MENU_VALUE : 0) | (empty ? 0 : FL_MENU_INACTIVE) }
+#define RECORD_BARS_MENU_ITEM(num) { #num, 0, setRecordBarsCb, (void*)num, FL_MENU_RADIO | ((clips[clipNum].getBarsToRecord() == num) ? FL_MENU_VALUE : 0) | (empty ? 0 : FL_MENU_INACTIVE) }
 #define RECORD_LENGTH_MENU_ITEM(num) {#num, 0, setLengthCb, (void*)num, empty ? FL_MENU_INACTIVE : 0}
 
 extern Gui* gui;
@@ -91,9 +91,9 @@ void ClipSelector::clipName(int clip, std::string name)
 	redraw();
 }
 
-void ClipSelector::setClipBeats(int scene, int beats, bool isBeatsToRecord)
+void ClipSelector::setClipBars(int scene, int bars, bool isBarsToRecord)
 {
-	clips[scene].setBeats(beats, isBeatsToRecord);
+	clips[scene].setBars(bars, isBarsToRecord);
 	redraw();
 }
 
@@ -231,7 +231,7 @@ void ClipSelector::draw()
 			if(!_master) {
 				const char * bars = clips[i].getBarsText();
 
-				bool toRecord = clips[i].getBeats() <= 0 && clips[i].getBeatsToRecord() > 0; // If there are BeatsToRecord, but no Beats
+				bool toRecord = clips[i].getBars() <= 0 && clips[i].getBarsToRecord() > 0; // If there are BarsToRecord, but no Bars
 
 				if(strlen(bars)) {
 					if(toRecord) cairo_set_source_rgba(cr, 1.f,  0 / 255.f ,  0 / 255.f, 1.f);
@@ -367,7 +367,7 @@ int ClipSelector::handle(int event)
 					RECORD_BARS_MENU_ITEM(4),
 					RECORD_BARS_MENU_ITEM(6),
 					RECORD_BARS_MENU_ITEM(8),
-					{"Endless", 0, setRecordBarsCb, (void*)-1, FL_MENU_DIVIDER | FL_MENU_RADIO | ((clips[clipNum].getBeatsToRecord() <= 0) ? FL_MENU_VALUE : 0) | (empty ? 0 : FL_MENU_INACTIVE)},
+					{"Endless", 0, setRecordBarsCb, (void*)-1, FL_MENU_DIVIDER | FL_MENU_RADIO | ((clips[clipNum].getBarsToRecord() <= 0) ? FL_MENU_VALUE : 0) | (empty ? 0 : FL_MENU_INACTIVE)},
 					{"Custom", 0, setRecordBarsCb, (void*)-2, empty ? 0 : FL_MENU_INACTIVE},
 					{0},
 					//{ "Record" },
@@ -459,17 +459,17 @@ int ClipSelector::handle(int event)
 	}
 }
 
-void ClipState::setBeats(int numBeats, bool isBeatsToRecord)
+void ClipState::setBars(int numBars, bool isBarsToRecord)
 {
-	if(numBeats > 0) {
-		barsText = std::to_string(numBeats/4);
-		if(isBeatsToRecord){
-			beatsToRecord = numBeats;
-			beats = 0;
+	if(numBars > 0) {
+		barsText = std::to_string(numBars);
+		if(isBarsToRecord){
+			barsToRecord = numBars;
+			bars = 0;
 		} else {
-			beats = numBeats;
-			if(numBeats <= 0)
-				beatsToRecord = -1;
+			bars = numBars;
+			if(numBars <= 0)
+				barsToRecord = -1;
 		}
 	}
 	else

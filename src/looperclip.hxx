@@ -116,9 +116,8 @@ public:
 	///reset the play head to zero. Does nothing when recording
 	void setPlayHead(float ph);
 
-	// set how many beats to record (up to full bar)
+	// set how many bars to record (up to full bar)
 	void setBarsToRecord(int bars);
-	int getBeatsToRecord();
 	int getBarsToRecord();
 
 #ifdef BUILD_TESTS
@@ -147,7 +146,7 @@ private:
 	float _recordhead;
 	unsigned int _barsPlayed;
 	
-	int _beatsToRecord;
+	int _barsToRecord;
 
 	AudioBuffer* _buffer;
 };
