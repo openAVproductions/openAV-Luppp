@@ -99,11 +99,6 @@ public:
 	/// set buffer state
 	void setBeats(int beats);
 
-	/// Luppp internal buffer resizing
-	void newBufferInTransit(bool n);
-	bool newBufferInTransit();
-	unsigned long recordSpaceAvailable();
-
 	/** used to update the size of the buffer for this looperclip. The current
 	 *  data is copied into the new buffer, then the smaller buffer is sent
 	 *  for de-allocation.
@@ -143,6 +138,11 @@ private:
 
 	unsigned int _barsPlayed;
 	AudioBuffer* _buffer;
+
+	/// Luppp internal buffer resizing
+	void newBufferInTransit(bool n);
+	bool newBufferInTransit();
+	unsigned long recordSpaceAvailable();
 };
 
 #endif // LUPPP_LOOPER_CLIP_H
