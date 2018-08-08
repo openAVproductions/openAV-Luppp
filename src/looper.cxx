@@ -115,13 +115,6 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 		// handle state of clip, and do what needs doing:
 		// record into buffer, play from buffer, etc
 		if ( clips[clip]->recording() ) {
-			if ( clips[clip]->recordSpaceAvailable() <  LOOPER_SAMPLES_BEFORE_REQUEST &&
-			     !clips[clip]->newBufferInTransit() ) {
-				EventLooperClipRequestBuffer e( track, clip, clips[clip]->audioBufferSize() + LOOPER_SAMPLES_UPDATE_SIZE);
-				writeToGuiRingbuffer( &e );
-				clips[clip]->newBufferInTransit(true);
-			}
-
 			// copy data from input buffer to recording buffer
 			float* inputL = buffers->audio[Buffers::MASTER_INPUT_L];
 			float* inputR = buffers->audio[Buffers::MASTER_INPUT_R];

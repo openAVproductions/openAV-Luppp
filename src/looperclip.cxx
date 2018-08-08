@@ -38,7 +38,7 @@ LooperClip::LooperClip(int t, int s) :
 	scene(s)
 {
 	_buffer = new AudioBuffer();
-	_buffer->nonRtResize( 4410 );
+	_buffer->nonRtResize( LOOPER_SAMPLES_UPDATE_SIZE );
 	init();
 }
 
@@ -193,6 +193,11 @@ void LooperClip::setPlayHead(float ph)
 
 void LooperClip::record(int count, float* L, float* R)
 {
+	if (recordSpaceAvailable() < LOOPER_SAMPLES_BEFORE_REQUEST && !newBufferInTransit()) {
+		EventLooperClipRequestBuffer e( track, scene, audioBufferSize() + LOOPER_SAMPLES_UPDATE_SIZE);
+		writeToGuiRingbuffer( &e );
+		newBufferInTransit(true);
+	}
 	// write "count" samples into current buffer.
 	if ( _buffer ) {
 		size_t size = _buffer->getSize();
