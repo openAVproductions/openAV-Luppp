@@ -87,7 +87,7 @@ void AudioBuffer::setAudioFrames(long af)
 {
 	audioFrames = af;
 #ifdef DEBUG_BUFFER
-	cout << "AudioBuffer " << ID << " has "  << audioFrames << " audioFrames\n" << endl;
+	cout << "AudioBuffer " << ID << " has "  << audioFrames << " audioFrames" << " and " << getSize() << " Buffersize\n" << endl;
 #endif
 }
 

@@ -40,6 +40,11 @@ LooperClip::LooperClip(int t, int s) :
 	_buffer = new AudioBuffer();
 	_buffer->nonRtResize( LOOPER_SAMPLES_UPDATE_SIZE );
 	init();
+
+#ifdef DEBUG_BUFFER
+	cout << "AudioBuffer " << _buffer->getID() << " has size (init): "  << _buffer->getSize() << endl;
+#endif
+	
 }
 
 void LooperClip::init()

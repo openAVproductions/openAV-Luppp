@@ -373,7 +373,7 @@ void handleGuiEvents()
 					EventLooperClipRequestBuffer returnEvent(ev.track, ev.scene, ab);
 					writeToDspRingbuffer( &returnEvent );
 #ifdef DEBUG_BUFFER
-					printf("new buffer going to track %i, scene %i\n",ev.track, ev.scene);
+					printf("new buffer going to track %i, scene %i, size %lu\n",ev.track, ev.scene, ev.numElements);
 #endif
 				}
 				break;
