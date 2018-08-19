@@ -167,6 +167,11 @@ public:
 	{
 		return sizeof(EventTransportState);
 	}
+	static const char* prettyName;
+	const char* name()
+	{
+		return prettyName;
+	}
 	TRANSPORT_STATE ts;
 	EventTransportState(): ts( TRANSPORT_STOPPED ) {}
 	EventTransportState( TRANSPORT_STATE t): ts(t) {}

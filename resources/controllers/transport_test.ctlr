@@ -1,0 +1,20 @@
+{
+	"name":	"transport start/stop testing",
+	"author":	"OpenAV",
+	"link":	"",
+	"inputBindings":	[{
+			"action":	"transport_state",
+			"status":	144,
+			"data":	60,
+			"track":	0,
+			"scene":	0,
+			"active":	0
+		}, {
+			"action":	"transport_state",
+			"status":	144,
+			"data":	61,
+			"track":	0,
+			"scene":	0,
+			"active":	1
+		}]
+}

@@ -505,6 +505,12 @@ int Jack::process (jack_nframes_t nframes)
 	}
 	*/
 
+	/// process each MidiIO registered MIDI port
+	for(unsigned int i = 0; i < midiIO.size(); i++ ) {
+		midiIO.at(i)->process( nframes );
+	}
+
+
 	/// update "time" from JACK master, or write master?
 	buffers.transportFrame = jack_get_current_transport_frame(client);
 
@@ -530,11 +536,6 @@ void Jack::processFrames(int nframes)
 	EventGuiPrint e2( buffer );
 	writeToGuiRingbuffer( &e2 );
 	*/
-
-	/// process each MidiIO registered MIDI port
-	for(unsigned int i = 0; i < midiIO.size(); i++ ) {
-		midiIO.at(i)->process( nframes );
-	}
 
 	/// process each track, starting at output and working up signal path
 	for(unsigned int i = 0; i < NTRACKS; i++) {

@@ -208,9 +208,6 @@ void TimeManager::process(Buffers* buffers)
 
 	int nframes = buffers->nframes;
 
-
-
-
 	if ( beatFrameCountdown < nframes ) {
 		//length of beat is not multiple of nframes, so need to process last frames of last beat *before* setting next beat
 		//then set new beat (get the queued actions: play, rec etc)

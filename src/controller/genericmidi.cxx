@@ -27,6 +27,7 @@
 #include "../jack.hxx"
 #include "../logic.hxx"
 #include "../gridlogic.hxx"
+#include "../timemanager.hxx"
 
 #include "../eventhandler.hxx"
 
@@ -325,6 +326,12 @@ void GenericMIDI::midi(unsigned char* midi)
 			case Event::METRONOME_ACTIVE:
 				jack->getLogic()->metronomeEnable( b->active );
 				break;
+			case Event::TRANSPORT: {
+				//printf("TRANSPORT MIDI EVENT MATCH\n");
+				enum TRANSPORT_STATE ts = b->active ?
+					TRANSPORT_ROLLING : TRANSPORT_STOPPED;
+				jack->getTimeManager()->setTransportState( ts );
+				} break;
 
 			case Event::MASTER_VOL:
 				jack->getLogic()->trackVolume( -1     , value );
@@ -637,6 +644,9 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
 	} else if ( strcmp( actionJson->valuestring, "metronome:active" ) == 0 ) {
 		tmp->action = Event::METRONOME_ACTIVE;
 		LUPPP_NOTE("binding metro active event, tmp->active == %i", tmp->active );
+	} else if ( strcmp( actionJson->valuestring, "transport_state" ) == 0 ) {
+		tmp->action = Event::TRANSPORT;
+		LUPPP_NOTE("binding transport state event, tmp->active == %i", tmp->active );
 	}
 
 	// check for valid event: otherwise pass

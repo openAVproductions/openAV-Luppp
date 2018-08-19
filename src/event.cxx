@@ -37,6 +37,7 @@ const char* EventTimeBPM::prettyName = "tempo_bpm";
 const char* EventTimeTempoTap::prettyName = "tempo_tap";
 const char* EventMetronomeActive::prettyName = "metronome:active";
 const char* EventMetronomeVolume::prettyName = "metronome:volume";
+const char* EventTransportState::prettyName = "transport_state";
 
 const char* EventGridEvent::prettyName = "grid:event";
 const char* EventGridLaunchScene::prettyName = "grid:launch_scene";
@@ -108,6 +109,10 @@ const char* Event::getPrettyName( int type )
 	}
 	case GRID_LAUNCH_SCENE: {
 		return EventGridLaunchScene::prettyName;
+	}
+
+	case TRANSPORT: {
+		return EventTransportState::prettyName;
 	}
 
 	case METRONOME_ACTIVE: {
