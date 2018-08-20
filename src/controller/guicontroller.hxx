@@ -50,6 +50,7 @@ public:
 
 	void bpm(int bpm);
 	void tapTempo( bool b );
+	void transportState(enum TRANSPORT_STATE ts);
 
 	void specialScene(int t, int scene);
 

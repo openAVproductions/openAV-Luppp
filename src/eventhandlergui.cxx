@@ -361,6 +361,14 @@ void handleGuiEvents()
 				}
 				break;
 			}
+			case Event::TRANSPORT: {
+				if ( availableRead >= sizeof(EventTransportState) ) {
+					EventTransportState ev;
+					jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventTransportState) );
+					gui->getMasterTrack()->transportState( ev.ts );
+				}
+				break;
+			}
 
 
 			case Event::LOOPER_REQUEST_BUFFER: {

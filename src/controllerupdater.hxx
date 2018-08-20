@@ -84,6 +84,7 @@ public:
 	void pan(int t, float p);
 
 	void tapTempo(bool b);
+	void transportState(enum TRANSPORT_STATE ts);
 
 	void metronomeEnable(bool b);
 

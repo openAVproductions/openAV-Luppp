@@ -111,21 +111,25 @@ static void gmastertrack_mixVol_callback(Fl_Widget *w, void *data)
 	writeToDspRingbuffer( &e );
 }
 
+static void transportStateSet(Avtk::LightButton *b, int rolling)
+{
+	if( rolling ) {
+		b->label( "Stop" );
+		b->value( 0 );
+	} else {
+		b->label( "Play" );
+		b->value( 1 );
+	}
+}
+
 static void gmastertrack_transport_callback(Fl_Widget *w, void *data)
 {
 	Avtk::LightButton* b = (Avtk::LightButton*)w;
-	if( b->value() ) {
-		EventTransportState e = EventTransportState( TRANSPORT_ROLLING );
-		writeToDspRingbuffer( &e );
-		w->label( "Stop" );
-		b->value( 0 );
-	} else {
-		EventTransportState e = EventTransportState( TRANSPORT_STOPPED );
-		writeToDspRingbuffer( &e );
-		w->label( "Play" );
-		b->value( 1 );
-	}
-
+	int rolling = b->value() > 0.5f;
+	EventTransportState e = EventTransportState(rolling ?
+			TRANSPORT_ROLLING : TRANSPORT_STOPPED);
+	writeToDspRingbuffer( &e );
+	transportStateSet(b, rolling);
 }
 
 static void gmastertrack_button_callback(Fl_Widget *w, void *data)
@@ -327,6 +331,13 @@ void GMasterTrack::setTapTempo( bool b )
 {
 	tapTempo.setHighlight( b );
 }
+
+void GMasterTrack::transportState(enum TRANSPORT_STATE ts)
+{
+	Avtk::LightButton* b = (Avtk::LightButton*)&transport;
+	transportStateSet(b, ts == TRANSPORT_ROLLING );
+}
+
 
 void GMasterTrack::setBarBeat(int b, int beat)
 {

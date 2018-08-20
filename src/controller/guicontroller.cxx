@@ -130,6 +130,12 @@ void LupppGUI::tapTempo( bool b )
 	writeToGuiRingbuffer( &e );
 }
 
+void LupppGUI::transportState(enum TRANSPORT_STATE ts)
+{
+	EventTransportState e(ts);
+	writeToGuiRingbuffer( &e );
+}
+
 void LupppGUI::bpm(int bpm)
 {
 	EventTimeBPM e(bpm);

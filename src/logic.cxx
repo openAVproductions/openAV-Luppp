@@ -32,10 +32,10 @@ Logic::Logic()
 
 }
 
-
 void Logic::transportState(enum TRANSPORT_STATE ts)
 {
 	jack->getTimeManager()->setTransportState( ts );
+	jack->getControllerUpdater()->transportState( ts );
 }
 
 void Logic::tapTempo()

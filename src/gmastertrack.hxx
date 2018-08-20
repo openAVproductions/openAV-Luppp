@@ -39,6 +39,7 @@
 #include "avtk/clipselector.hxx"
 
 #include "eventhandler.hxx"
+#include "transport.hxx"
 
 using namespace std;
 
@@ -59,6 +60,7 @@ public:
 	void setInputToActive(int to, bool f);
 
 	void metronomeEnable( bool b );
+	void transportState(enum TRANSPORT_STATE ts);
 
 	Avtk::Volume* getInputVolume();
 	Avtk::Volume* getVolume();

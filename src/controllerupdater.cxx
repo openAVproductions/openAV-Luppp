@@ -182,6 +182,11 @@ void ControllerUpdater::tapTempo(bool b)
 	for(unsigned int i = 0; i < c.size(); i++) c.at(i)->tapTempo(b);
 }
 
+void ControllerUpdater::transportState(enum TRANSPORT_STATE ts)
+{
+	for(unsigned int i = 0; i < c.size(); i++) c.at(i)->transportState(ts);
+}
+
 void ControllerUpdater::metronomeEnable(bool b)
 {
 	for(unsigned int i = 0; i < c.size(); i++) c.at(i)->metronomeEnable(b);

@@ -23,6 +23,7 @@
 #include <string>
 
 #include "../gridlogic.hxx"
+#include "../transport.hxx"
 
 /** Controller
  *  This is the base class for any device that interacts with Luppp.
@@ -79,6 +80,7 @@ public:
 	/// Time
 	virtual void bpm(int bpm) {}
 	virtual void tapTempo(bool b) {}
+	virtual void transportState(enum TRANSPORT_STATE ts) {}
 
 	/// Special
 	virtual void specialScene(int t, int scene) {}
