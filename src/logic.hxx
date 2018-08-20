@@ -20,6 +20,7 @@
 #define LUPPP_LOGIC_H
 
 #include "event.hxx"
+#include "transport.hxx"
 
 /** Logic
  *  This class contains an interface exposing most functionality in Luppp. The
@@ -41,6 +42,7 @@ class Logic
 public:
 	Logic();
 
+	void transportState(enum TRANSPORT_STATE ts);
 	void tapTempo();
 	void setBpm(float bpm); // actual BPM input
 	void setBpmZeroOne( float bpm ); /// 0-1 input

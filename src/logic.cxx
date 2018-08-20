@@ -26,9 +26,16 @@ extern Jack* jack;
 #include "trackoutput.hxx"
 #include "metronome.hxx"
 #include "jacksendreturn.hxx"
+
 Logic::Logic()
 {
 
+}
+
+
+void Logic::transportState(enum TRANSPORT_STATE ts)
+{
+	jack->getTimeManager()->setTransportState( ts );
 }
 
 void Logic::tapTempo()

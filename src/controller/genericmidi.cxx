@@ -326,12 +326,10 @@ void GenericMIDI::midi(unsigned char* midi)
 			case Event::METRONOME_ACTIVE:
 				jack->getLogic()->metronomeEnable( b->active );
 				break;
-			case Event::TRANSPORT: {
-				//printf("TRANSPORT MIDI EVENT MATCH\n");
-				enum TRANSPORT_STATE ts = b->active ?
-					TRANSPORT_ROLLING : TRANSPORT_STOPPED;
-				jack->getTimeManager()->setTransportState( ts );
-				} break;
+			case Event::TRANSPORT:
+				jack->getLogic()->transportState( b->active ?
+					TRANSPORT_ROLLING : TRANSPORT_STOPPED );
+				break;
 
 			case Event::MASTER_VOL:
 				jack->getLogic()->trackVolume( -1     , value );
