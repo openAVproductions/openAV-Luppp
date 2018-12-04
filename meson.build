@@ -39,4 +39,5 @@ endforeach
 
 # compile the main project
 executable('luppp', luppp_src + [version_hxx],
+    install: true,
     dependencies: deps)
