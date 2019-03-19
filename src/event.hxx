@@ -65,7 +65,8 @@ enum EVENT_TYPE {
 	MASTER_RETURN,
 	RECORD,
 
-	SESSION_SAVE,       // save action
+	SESSION_SAVE,       // save hole session
+	CLIP_SAVE,	 // save single clip
 	STATE_RESET, // reset all state
 	STATE_SAVE_FINISH,// save action finished, flush metadata to disk
 	STATE_SAVE_BUFFER,// save an individual AudioBuffer* to disk
@@ -548,6 +549,25 @@ public:
 	}
 
 	EventSessionSave() {}
+};
+
+class EventClipSave : public EventBase
+{
+public:
+	int type()
+	{
+		return int(CLIP_SAVE);
+	}
+	uint32_t size()
+	{
+		return sizeof(EventClipSave);
+	}
+
+	int track;
+	int scene;
+
+	EventClipSave(): track(0), scene(0) {};
+	EventClipSave(int t, int s): track(t), scene(s) {}
 };
 
 class EventStateReset : public EventBase
@@ -1034,9 +1054,8 @@ public:
 	int scene;
 	// pointer to the AudioBuffer to be saved
 	AudioBuffer* ab;
-	bool no_dealloc;
 
-	EventStateSaveBuffer(): track(0), scene(0), ab(0), no_dealloc(0) {}
+	EventStateSaveBuffer(): track(0), scene(0), ab(0) {}
 	EventStateSaveBuffer(int t, int s, AudioBuffer* a): track(t), scene(s), ab(a) {}
 };
 

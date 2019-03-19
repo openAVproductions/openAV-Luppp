@@ -214,14 +214,10 @@ void handleGuiEvents()
 #ifdef DEBUG_SAVE
 					cout << "EventSaveBuffer: " << ev.track << " " << ev.scene << " " << ev.ab->getID() << endl;
 #endif
-					gui->getDiskWriter()->writeAudioBuffer( ev.track, ev.scene, ev.ab );
-					// de allocate the AudioBuffer only if reqested
-					if(!ev.no_dealloc) {
+					if(gui->saveBufferPath.empty()) {
 						gui->getDiskWriter()->writeAudioBuffer( ev.track, ev.scene, ev.ab );
-						delete ev.ab;
 					} else {
-						gui->getDiskWriter()->writeAudioBuffer(ev.track, ev.scene, ev.ab,
-						                                       gui->saveBufferPath.c_str());
+						gui->getDiskWriter()->writeAudioBuffer(ev.track, ev.scene, ev.ab, gui->saveBufferPath.c_str());
 						gui->saveBufferPath = "";
 					}
 
