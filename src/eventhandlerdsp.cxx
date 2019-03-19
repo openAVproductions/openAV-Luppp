@@ -91,10 +91,10 @@ void handleDspEvents()
 			}
 
 			// ========= SAVE =====
-			case Event::STATE_SAVE: {
-				if ( availableRead >= sizeof(EventStateSave) ) {
-					EventStateSave ev;
-					jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventStateSave) );
+			case Event::SESSION_SAVE: {
+				if ( availableRead >= sizeof(EventSessionSave) ) {
+					EventSessionSave ev;
+					jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventSessionSave) );
 					jack->getState()->save();
 				}
 				break;

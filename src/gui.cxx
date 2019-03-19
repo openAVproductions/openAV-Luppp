@@ -182,7 +182,7 @@ static void gui_header_callback(Fl_Widget *w, void *data)
 		if ( name ) {
 			gui->getDiskWriter()->initialize( gui->getProjectsDir().c_str(), name );
 			LUPPP_NOTE("%s %s","Saving session as ", name );
-			EventStateSave e;
+			EventSessionSave e;
 			writeToDspRingbuffer( &e );
 		}
 	} else if ( strcmp(m->label(), "Setup") == 0 ) {
@@ -349,7 +349,7 @@ static int cb_nsm_save ( char **out_msg, void *userdata )
 	LUPPP_NOTE("NSM: saving..." );
 
 	// disk-writer already initialized to the right directory, so just write!
-	EventStateSave e;
+	EventSessionSave e;
 	writeToDspRingbuffer( &e );
 
 	return 0;
