@@ -65,7 +65,7 @@ enum EVENT_TYPE {
 	MASTER_RETURN,
 	RECORD,
 
-	STATE_SAVE,       // save action
+	SESSION_SAVE,       // save action
 	STATE_RESET, // reset all state
 	STATE_SAVE_FINISH,// save action finished, flush metadata to disk
 	STATE_SAVE_BUFFER,// save an individual AudioBuffer* to disk
@@ -535,19 +535,19 @@ public:
 	}
 };
 
-class EventStateSave : public EventBase
+class EventSessionSave : public EventBase
 {
 public:
 	int type()
 	{
-		return int(STATE_SAVE);
+		return int(SESSION_SAVE);
 	}
 	uint32_t size()
 	{
-		return sizeof(EventStateSave);
+		return sizeof(EventSessionSave);
 	}
 
-	EventStateSave() {}
+	EventSessionSave() {}
 };
 
 class EventStateReset : public EventBase
