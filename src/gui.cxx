@@ -247,10 +247,8 @@ string Gui::getProjectsDir()
 
 void Gui::selectSaveSample( int track, int scene )
 {
-	EventStateSaveBuffer e;
-	e.track = track,
-	  e.scene = scene,
-	    writeToDspRingbuffer( &e );
+	EventClipSave e = EventClipSave(track, scene);
+	writeToDspRingbuffer( &e );
 }
 
 char *
