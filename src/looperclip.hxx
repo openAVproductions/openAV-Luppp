@@ -83,11 +83,6 @@ public:
 	long  getActualAudioLength();
 	size_t audioBufferSize();
 
-	AudioBuffer* getAudioBuffer()
-	{
-		return _buffer;
-	}
-
 	/// set clip state
 	void  queuePlay(bool=true);
 	void  queueStop();
