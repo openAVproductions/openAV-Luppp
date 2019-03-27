@@ -88,6 +88,10 @@ public:
 	void  queueStop();
 	void  queueRecord();
 
+	void setPlaying();
+	void setRecording();
+	void setStopped();
+
 	void  neutralize(); // removes all play || record states if on
 	bool  somethingQueued(); // returns true if any state is queued
 

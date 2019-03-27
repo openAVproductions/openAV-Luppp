@@ -108,13 +108,7 @@ void LooperClip::reset()
 /// loads a sample: eg from disk, unloading current sample if necessary
 void LooperClip::load( AudioBuffer* ab )
 {
-	_loaded = true;
-	_recording = false;
-	_playing    = false;
-
-	_queuePlay  = false;
-	_queueStop  = false;
-	_queueRecord= false;
+	setStopped();
 
 	if ( _buffer ) {
 		EventDeallocateBuffer e( _buffer );
@@ -228,8 +222,6 @@ void LooperClip::record(int count, float* L, float* R)
 			}
 		}
 	}
-
-	_loaded = true;
 }
 
 unsigned long LooperClip::recordSpaceAvailable()
@@ -281,8 +273,6 @@ long LooperClip::getActualAudioLength()
 
 void LooperClip::bar()
 {
-	bool change = false;
-	GridLogic::State s = GridLogic::STATE_EMPTY;
 
 	// first update the buffer, as time has passed
 	if ( _recording ) {
@@ -295,6 +285,7 @@ void LooperClip::bar()
 		_barsPlayed++;
 	}
 
+	// FIXME assumes 4 beats in a bar
 	if ( _playing && _barsPlayed >= getBeats() / 4) {
 #ifdef DEBUG_TIME
 			cout << "reset: " << _playhead << " - " << _barsPlayed << "\n";
@@ -309,48 +300,25 @@ void LooperClip::bar()
 	}
 
 	if ( _queuePlay && _loaded ) {
-		//LUPPP_NOTE("QPLay + loaded" );
-		_playing = true;
-		s = GridLogic::STATE_PLAYING;
-		_recording = false;
-		_queuePlay = false;
-		change = true;
-
-		_playhead = 0;
-		_barsPlayed = 0;
+		setPlaying();
 	}
 	else if (_queueStop && _loaded)
 	{
-		_playing   = false;
-		s = GridLogic::STATE_STOPPED;
-		_recording = false;
-		_queueStop = false;
-		change = true;
-		// set "progress" to zero, as we're stopped!
-		jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0 );
-	} else if ( _queueRecord ) {
-		_recording   = true;
-		s = GridLogic::STATE_RECORDING;
-		_playing     = false;
-		_queueRecord = false;
-		change = true;
-
-		if ( _buffer ) {
-			_buffer->setBeats( 0 );
-		}
-
-		_recordhead = 0;
-	} else if ( _queuePlay ) {
+		setStopped();
+	} 
+	else if ( _queueRecord ) 
+	{
+		setRecording();
+	} 
+	else if ( _queuePlay ) 
+	{
 		// clip was queued, but there's nothing loaded
+		// TODO manage this with Function
 		_queuePlay = false;
-		change = true;
-	}
-
-	if ( change ) {
-		jack->getControllerUpdater()->setSceneState(track, scene, s );
 	}
 }
 
+// TODO rename to resetQueues()
 void LooperClip::neutralize()
 {
 	_queuePlay = false;
@@ -375,7 +343,6 @@ void LooperClip::queuePlay(bool qP)
 
 void LooperClip::queueStop()
 {
-	// comment
 	if ( _loaded ) {
 		_queueStop   = true;
 		_queuePlay   = false;
@@ -387,6 +354,59 @@ void LooperClip::queueRecord()
 	_queueRecord = true;
 	_queuePlay   = false;
 	_queueStop   = false;
+}
+
+void LooperClip::setRecording()
+{
+	_loaded 	= true;
+	_playing    = false;
+	_recording  = true;
+
+	_queuePlay  = false;
+	_queueStop  = false;
+	_queueRecord= false;
+
+	_recordhead = 0;
+
+	if ( _buffer ) {
+		_buffer->setBeats( 0 );
+	}
+
+	jack->getControllerUpdater()->setSceneState(track, scene, GridLogic::STATE_RECORDING);
+}
+
+void LooperClip::setPlaying() 
+{
+	_loaded 	= true;
+	_playing    = true;
+	_recording  = false;
+
+	_queuePlay  = false;
+	_queueStop  = false;
+	_queueRecord= false;
+
+	_barsPlayed = 0;
+	_playhead 	= 0;
+
+	jack->getControllerUpdater()->setSceneState(track, scene, GridLogic::STATE_PLAYING );
+}
+
+void LooperClip::setStopped()
+{
+	_loaded		= true;
+	_playing    = false;
+	_recording  = false;
+
+	_queuePlay  = false;
+	_queueStop  = false;
+	_queueRecord= false;
+
+	_barsPlayed = 0;
+	_playhead   = 0;
+
+	// set "progress" to zero, as we're stopped!
+	jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0 );
+	jack->getControllerUpdater()->setSceneState(track, scene, GridLogic::STATE_STOPPED );
 }
 
 GridLogic::State LooperClip::getState()
