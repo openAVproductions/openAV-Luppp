@@ -278,7 +278,7 @@ void LooperClip::bar()
 	}
 
 	// FIXME assumes 4 beats in a bar
-	if ( _playing && _barsPlayed >= getBeats() / 4 || _playhead >= _recordhead) {
+	if ( (_playing && _barsPlayed >= getBeats() / 4) || _playhead >= _recordhead) {
 		_barsPlayed = 0;
 		_playhead = 0;
 #ifdef DEBUG_TIME
