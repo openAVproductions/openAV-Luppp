@@ -117,10 +117,6 @@ void LooperClip::load( AudioBuffer* ab )
 
 	_buffer = ab;
 
-	_playhead = 0;
-	_barsPlayed = 0;
-	jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0);
-
 	// set the endpoint to the buffer's size
 	_recordhead = _buffer->getSize();
 
@@ -182,6 +178,7 @@ void LooperClip::recieveSaveBuffer( AudioBuffer* saveBuffer )
 
 void LooperClip::setPlayHead(float ph)
 {
+	// TODO set _barsPlayed correctly, is this a good idea to allow playhead setting from outside?
 	if(!_recording&&_playing) {
 		_playhead = ph;
 		jack->getControllerUpdater()->setTrackSceneProgress(track, scene, getProgress() );
@@ -263,11 +260,6 @@ long LooperClip::getBufferLenght()
 
 long LooperClip::getActualAudioLength()
 {
-	char cbuffer [50];
-//    sprintf (cbuffer, "LooperClip recordhead %f,audioFrames %d \n",_recordhead,(int)_buffer->getAudioFrames());
-//    EventGuiPrint e( cbuffer );
-//    writeToGuiRingbuffer( &e );
-//    printf(cbuffer);
 	return _buffer->getAudioFrames();
 }
 
@@ -286,20 +278,15 @@ void LooperClip::bar()
 	}
 
 	// FIXME assumes 4 beats in a bar
-	if ( _playing && _barsPlayed >= getBeats() / 4) {
+	if ( _playing && _barsPlayed >= getBeats() / 4 || _playhead >= _recordhead) {
+		_barsPlayed = 0;
+		_playhead = 0;
 #ifdef DEBUG_TIME
 			cout << "reset: " << _playhead << " - " << _barsPlayed << "\n";
 #endif
-		_barsPlayed = 0;
-		_playhead = 0;
 	}
 
-	if ( _playhead >= _recordhead ) {
-		_playhead = 0.f;
-		_barsPlayed = 0;
-	}
-
-	if ( _queuePlay && _loaded ) {
+	if ( _queuePlay ) {
 		setPlaying();
 	}
 	else if (_queueStop && _loaded)
@@ -310,20 +297,13 @@ void LooperClip::bar()
 	{
 		setRecording();
 	} 
-	else if ( _queuePlay ) 
-	{
-		// clip was queued, but there's nothing loaded
-		// TODO manage this with Function
-		_queuePlay = false;
-	}
 }
 
-// TODO rename to resetQueues()
-void LooperClip::neutralize()
+void LooperClip::resetQueues()
 {
-	_queuePlay = false;
+	_queuePlay   = false;
 	_queueRecord = false;
-	_queueStop = false;
+	_queueStop   = false;
 }
 
 bool LooperClip::somethingQueued()
@@ -377,36 +357,43 @@ void LooperClip::setRecording()
 
 void LooperClip::setPlaying() 
 {
-	_loaded 	= true;
-	_playing    = true;
-	_recording  = false;
+	if ( _loaded ) {
+		_loaded 	= true;
+		_playing    = true;
+		_recording  = false;
 
-	_queuePlay  = false;
-	_queueStop  = false;
-	_queueRecord= false;
+		_queuePlay  = false;
+		_queueStop  = false;
+		_queueRecord= false;
 
-	_barsPlayed = 0;
-	_playhead 	= 0;
+		_barsPlayed = 0;
+		_playhead 	= 0;
 
-	jack->getControllerUpdater()->setSceneState(track, scene, GridLogic::STATE_PLAYING );
+		jack->getControllerUpdater()->setSceneState(track, scene, GridLogic::STATE_PLAYING );
+	} else {
+		resetQueues();
+	}
 }
 
 void LooperClip::setStopped()
 {
-	_loaded		= true;
-	_playing    = false;
-	_recording  = false;
+	if ( _loaded ) {
+		_playing    = false;
+		_recording  = false;
 
-	_queuePlay  = false;
-	_queueStop  = false;
-	_queueRecord= false;
+		_queuePlay  = false;
+		_queueStop  = false;
+		_queueRecord= false;
 
-	_barsPlayed = 0;
-	_playhead   = 0;
+		_barsPlayed = 0;
+		_playhead   = 0;
 
-	// set "progress" to zero, as we're stopped!
-	jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0 );
-	jack->getControllerUpdater()->setSceneState(track, scene, GridLogic::STATE_STOPPED );
+		// set "progress" to zero, as we're stopped!
+		jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0 );
+		jack->getControllerUpdater()->setSceneState(track, scene, GridLogic::STATE_STOPPED );
+	} else {
+		resetQueues();
+	}
 }
 
 GridLogic::State LooperClip::getState()

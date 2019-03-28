@@ -92,7 +92,7 @@ public:
 	void setRecording();
 	void setStopped();
 
-	void  neutralize(); // removes all play || record states if on
+	void  resetQueues(); // removes all queued States
 	bool  somethingQueued(); // returns true if any state is queued
 
 	/// set buffer state
