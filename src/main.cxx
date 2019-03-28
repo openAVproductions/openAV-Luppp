@@ -60,19 +60,22 @@ static void gui_static_loadSession_cb(void* inst)
 
 int main(int argc, char** argv)
 {
-	LUPPP_NOTE("Git: %s", GIT_VERSION   );
-
 	bool runTests = false;
 	if ( runTests ) {} // remove unused warning if not built with BUILD_TESTS
 
 	for(int i = 0; i < argc; i++) {
 		if ( strcmp(argv[i], "-test" ) == 0 ) {
 			runTests = true;
+		} else if ( strcmp(argv[i], "--version" ) == 0  || strcmp(argv[i], "-v" ) == 0 ) {
+			printf("%s\n", GIT_VERSION);
+			return 0;
 		} else if ( i != 0 ) { // don't try load with the program name!
 			// assume filename, try load it
 			Fl::repeat_timeout( 1 / 30.f, &gui_static_loadSession_cb, argv[i] );
 		}
 	}
+
+	LUPPP_NOTE("Git: %s", GIT_VERSION   );
 
 	// setup the environment
 	AVOIDDENORMALS();
