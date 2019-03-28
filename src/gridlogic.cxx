@@ -101,7 +101,7 @@ void GridLogic::launchScene( int scene )
 					lc->queueStop();
 					jack->getControllerUpdater()->setSceneState( t, s, lc->getState() );
 				} else if ( lc->somethingQueued() ) {
-					lc->neutralize();
+					lc->resetQueues();
 					jack->getControllerUpdater()->setSceneState( t, s, lc->getState() );
 				}
 			}
@@ -181,10 +181,10 @@ void GridLogic::pressed( int track, int scene )
 
 		// don't re-trigger if already playing!
 		if ( s == STATE_STOP_QUEUED && lc->playing() )
-			lc->neutralize();
+			lc->resetQueues();
 
 		if ( s == STATE_RECORD_QUEUED )
-			lc->neutralize();
+			lc->resetQueues();
 	}
 
 	// check state of new clip, if getQueuePlay() == true, queueStop() all other scenes
@@ -196,7 +196,7 @@ void GridLogic::pressed( int track, int scene )
 				//LUPPP_NOTE("netralizing & qStop on scene %i due to press on %i", i, scene );
 				LooperClip* ilc = jack->getLooper( track )->getClip( i );
 
-				ilc->neutralize();
+				ilc->resetQueues();
 				ilc->queueStop();
 				jack->getControllerUpdater()->setSceneState(track, i, ilc->getState() );
 			}
