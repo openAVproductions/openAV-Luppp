@@ -1,6 +1,7 @@
 version_hxx = vcs_tag(
     input  : 'version.hxx.in',
-    output : 'version.hxx')
+    output : 'version.hxx',
+    fallback: 'Version info could not be red.')
 
 luppp_src = files(
   'audiobuffer.cxx',
