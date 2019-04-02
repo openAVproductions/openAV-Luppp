@@ -377,7 +377,7 @@ void LooperClip::setPlaying()
 
 void LooperClip::setStopped()
 {
-	if ( _loaded ) {
+		_loaded 	= true;
 		_playing    = false;
 		_recording  = false;
 
@@ -391,9 +391,6 @@ void LooperClip::setStopped()
 		// set "progress" to zero, as we're stopped!
 		jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0 );
 		jack->getControllerUpdater()->setSceneState(track, scene, GridLogic::STATE_STOPPED );
-	} else {
-		resetQueues();
-	}
 }
 
 GridLogic::State LooperClip::getState()
