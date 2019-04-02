@@ -352,13 +352,12 @@ void LooperClip::setRecording()
 		_buffer->setBeats( 0 );
 	}
 
-	jack->getControllerUpdater()->setSceneState(track, scene, GridLogic::STATE_RECORDING);
+	jack->getControllerUpdater()->setSceneState(track, scene, getState());
 }
 
 void LooperClip::setPlaying() 
 {
 	if ( _loaded ) {
-		_loaded 	= true;
 		_playing    = true;
 		_recording  = false;
 
@@ -368,11 +367,10 @@ void LooperClip::setPlaying()
 
 		_barsPlayed = 0;
 		_playhead 	= 0;
-
-		jack->getControllerUpdater()->setSceneState(track, scene, GridLogic::STATE_PLAYING );
 	} else {
 		resetQueues();
 	}
+	jack->getControllerUpdater()->setSceneState(track, scene, getState() );
 }
 
 void LooperClip::setStopped()
