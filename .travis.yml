@@ -1,0 +1,23 @@
+sudo: required
+language: cpp
+dist: xenial
+compiler:
+- gcc
+os:
+- linux
+install:
+- echo $HOME
+- echo $PWD
+- sudo apt-get install libjpeg-dev libsndfile1-dev libsigc++-2.0-dev libfontconfig1-dev libxft-dev libcairo-dev python3-pip python3-setuptools python3-wheel liblo-dev libjack-dev libsamplerate0-dev ninja-build
+- if cd ntk; then git pull; else git://git.tuxfamily.org/gitroot/non/fltk.git ntk && cd ntk; fi
+- sudo ./waf configure build install && cd ..
+- pip3 install meson
+script:
+- meson build
+- ninja -C build
+- ninja -C build test
+
+cache: 
+  directories:
+    - $PWD/ntk
+    - $HOME/.cache/pip
