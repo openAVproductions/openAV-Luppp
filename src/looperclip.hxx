@@ -143,6 +143,8 @@ private:
 	void setRecording();
 	void setStopped();
 	void setEmpty();
+
+	void updateController();
 };
 
 #endif // LUPPP_LOOPER_CLIP_H

@@ -322,6 +322,7 @@ void LooperClip::queuePlay()
 		_queueStop = false;
 		_queueRecord = false;
 	}
+	updateController();
 }
 
 void LooperClip::queueStop()
@@ -332,6 +333,7 @@ void LooperClip::queueStop()
 		_queueStop = true;
 		_queueRecord = false;
 	}
+	updateController();
 }
 
 void LooperClip::queueRecord()
@@ -342,6 +344,7 @@ void LooperClip::queueRecord()
 		_queueStop = false;
 		_queueRecord = true;
 	}
+	updateController();
 }
 
 void LooperClip::setRecording()
@@ -360,7 +363,7 @@ void LooperClip::setRecording()
 		_buffer->setBeats( 0 );
 	}
 
-	jack->getControllerUpdater()->setSceneState(track, scene, getState());
+	updateController();
 }
 
 void LooperClip::setPlaying() 
@@ -378,7 +381,7 @@ void LooperClip::setPlaying()
 	} else {
 		resetQueues();
 	}
-	jack->getControllerUpdater()->setSceneState(track, scene, getState() );
+	updateController();
 }
 
 void LooperClip::setStopped()
@@ -395,8 +398,13 @@ void LooperClip::setStopped()
 		_playhead   = 0;
 
 		// set "progress" to zero, as we're stopped!
-		jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0 );
-		jack->getControllerUpdater()->setSceneState(track, scene, GridLogic::STATE_STOPPED );
+		updateController();
+}
+
+void LooperClip::updateController()
+{
+	jack->getControllerUpdater()->setSceneState(track, scene, getState());
+	jack->getControllerUpdater()->setTrackSceneProgress(track, scene, getProgress());
 }
 
 GridLogic::State LooperClip::getState()
