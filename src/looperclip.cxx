@@ -37,8 +37,7 @@ LooperClip::LooperClip(int t, int s) :
 	track(t),
 	scene(s)
 {
-	_buffer = new AudioBuffer();
-	_buffer->nonRtResize( LOOPER_SAMPLES_UPDATE_SIZE );
+	_buffer = new AudioBuffer(LOOPER_SAMPLES_UPDATE_SIZE);
 	init();
 
 #ifdef DEBUG_BUFFER
@@ -174,16 +173,15 @@ void LooperClip::recieveSaveBuffer( AudioBuffer* saveBuffer )
 	}
 }
 
-void LooperClip::setPlayHead(float ph)
+void LooperClip::resetPlayHead()
 {
-	// TODO set _barsPlayed correctly, is this a good idea to allow playhead setting from outside?
-	if(!_recording&&_playing) {
-		_playhead = ph;
-		jack->getControllerUpdater()->setTrackSceneProgress(track, scene, getProgress() );
+	if (!_recording)
+	{
+		_playhead = 0;
+		_barsPlayed = 0;
+		updateController();
 	}
 }
-
-
 
 void LooperClip::record(int count, float* L, float* R)
 {
@@ -481,7 +479,6 @@ float LooperClip::getProgress()
 {
 	if ( _buffer && _playing ) {
 		float p = float(_playhead) / _recordhead;
-		//printf("LooperClip progress %f\n", p );
 		return p;
 	}
 	return 0.f;

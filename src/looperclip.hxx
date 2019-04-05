@@ -104,7 +104,7 @@ public:
 	void recieveSaveBuffer( AudioBuffer* ab );
 
 	///reset the play head to zero. Does nothing when recording
-	void setPlayHead(float ph);
+	void resetPlayHead();
 
 #ifdef BUILD_TESTS
 	// used only in test cases
