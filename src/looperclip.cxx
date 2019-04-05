@@ -314,26 +314,34 @@ bool LooperClip::somethingQueued()
 	return false;
 }
 
-void LooperClip::queuePlay(bool qP)
+void LooperClip::queuePlay()
 {
-	_queuePlay   = true;
-	_queueStop   = false;
-	_queueRecord = false;
+	if (_loaded && !somethingQueued())
+	{
+		_queuePlay = true;
+		_queueStop = false;
+		_queueRecord = false;
+	}
 }
 
 void LooperClip::queueStop()
 {
-	if ( _loaded ) {
-		_queueStop   = true;
-		_queuePlay   = false;
+	if (_loaded && _playing && !somethingQueued())
+	{
+		_queuePlay = false;
+		_queueStop = true;
+		_queueRecord = false;
 	}
 }
 
 void LooperClip::queueRecord()
 {
-	_queueRecord = true;
-	_queuePlay   = false;
-	_queueStop   = false;
+	if (!_loaded && !somethingQueued())
+	{
+		_queuePlay = false;
+		_queueStop = false;
+		_queueRecord = true;
+	}
 }
 
 void LooperClip::setRecording()
