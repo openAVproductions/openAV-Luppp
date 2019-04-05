@@ -84,13 +84,9 @@ public:
 	size_t audioBufferSize();
 
 	/// set clip state
-	void  queuePlay(bool=true);
+	void  queuePlay();
 	void  queueStop();
 	void  queueRecord();
-
-	void setPlaying();
-	void setRecording();
-	void setStopped();
 
 	void  resetQueues(); // removes all queued States
 	bool  somethingQueued(); // returns true if any state is queued
@@ -142,6 +138,11 @@ private:
 	void newBufferInTransit(bool n);
 	bool newBufferInTransit();
 	unsigned long recordSpaceAvailable();
+
+	void setPlaying();
+	void setRecording();
+	void setStopped();
+	void setEmpty();
 };
 
 #endif // LUPPP_LOOPER_CLIP_H
