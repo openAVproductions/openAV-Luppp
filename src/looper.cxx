@@ -186,7 +186,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 void Looper::resetTimeState()
 {
 	for(int i=0; i<NSCENES; i++)
-		clips[i]->setPlayHead(0.0);
+		clips[i]->resetPlayHead();
 }
 
 void Looper::pitchShift(int count, float* input, float* output)
