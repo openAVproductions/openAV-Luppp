@@ -338,7 +338,7 @@ void LooperClip::queueStop()
 
 void LooperClip::queueRecord()
 {
-	if (!_loaded && !somethingQueued())
+	if (!somethingQueued())
 	{
 		_queuePlay = false;
 		_queueStop = false;
