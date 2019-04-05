@@ -142,7 +142,6 @@ private:
 	void setPlaying();
 	void setRecording();
 	void setStopped();
-	void setEmpty();
 
 	void updateController();
 };

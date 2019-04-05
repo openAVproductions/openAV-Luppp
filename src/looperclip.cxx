@@ -53,9 +53,7 @@ void LooperClip::init()
 	_playing    = false;
 	_recording  = false;
 
-	_queuePlay  = false;
-	_queueStop  = false;
-	_queueRecord= false;
+	resetQueues();
 
 	if ( _buffer ) {
 		_buffer->init();
@@ -66,7 +64,7 @@ void LooperClip::init()
 	_recordhead = 0;
 
 	_barsPlayed = 0;
-
+	updateController();
 }
 
 void LooperClip::save()
@@ -224,7 +222,6 @@ void LooperClip::record(int count, float* L, float* R)
 unsigned long LooperClip::recordSpaceAvailable()
 {
 	if ( _buffer )
-		// getData() contains L and R buffer, so it is twice the size
 		return _buffer->getSize() - _recordhead;
 
 	return 0;
@@ -353,9 +350,7 @@ void LooperClip::setRecording()
 	_playing    = false;
 	_recording  = true;
 
-	_queuePlay  = false;
-	_queueStop  = false;
-	_queueRecord= false;
+	resetQueues();
 
 	_recordhead = 0;
 
@@ -372,9 +367,7 @@ void LooperClip::setPlaying()
 		_playing    = true;
 		_recording  = false;
 
-		_queuePlay  = false;
-		_queueStop  = false;
-		_queueRecord= false;
+		resetQueues();
 
 		_barsPlayed = 0;
 		_playhead 	= 0;
@@ -390,9 +383,7 @@ void LooperClip::setStopped()
 		_playing    = false;
 		_recording  = false;
 
-		_queuePlay  = false;
-		_queueStop  = false;
-		_queueRecord= false;
+		resetQueues();
 
 		_barsPlayed = 0;
 		_playhead   = 0;
