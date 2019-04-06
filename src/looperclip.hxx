@@ -42,27 +42,30 @@ class AudioBuffer;
  * to dynamically stretch / process the audio appropriately. Controllers and the
  * UI are updated from this data.
  *
- * This class inherits from SaveAble to save its state.
+ * This class inherits from Stately to save its state.
 **/
 class LooperClip : public Stately
 {
 public:
 	LooperClip(int track, int scene);
 
+	/// Set everything up
 	void init();
 
 	/// loads a sample: eg from disk, unloading current sample if necessary
 	void load( AudioBuffer* ab );
 
-	/// audio functionality
+	/// Return one Sample according to current playSpeed
 	void getSample(long double playSpeed, float* L, float* R);
+	/// Record $count Samples into internal Buffer
 	void record(int count, float* L, float* R);
 
 	/// TimeObserver override
 	void bar();
 
-	/// SaveAble overrides
+	/// Start process of saving the clip
 	void save();
+	/// Reset the clip to initial state
 	void reset();
 
 	/// analyses current _playing _recording vars, returns the current State
@@ -73,23 +76,31 @@ public:
 	bool getQueuePlay();
 	bool recording();
 
-	/// get buffer details
+	/// Get number of Beats in the Buffer
 	int   getBeats();
+	/// Get playback progress
 	float getProgress();
+	/// Get position of the playhead
 	float getPlayhead();
-	//Return the length of the complete buffer
+
+	/// Return the length of the complete buffer
 	long  getBufferLenght();
-	//Return the nr of samples holding actual audio. This is less then getBufferLength();
+	/// Return the nr of samples holding actual audio. This is less then getBufferLength();
 	long  getActualAudioLength();
+	/// Return Size of the Buffer
 	size_t audioBufferSize();
 
-	/// set clip state
+	/// Queue Play
 	void  queuePlay();
+	/// Queue Stop
 	void  queueStop();
+	/// Queue Record
 	void  queueRecord();
 
-	void  resetQueues(); // removes all queued States
-	bool  somethingQueued(); // returns true if any state is queued
+	// removes all queued States
+	void  resetQueues(); 
+	// returns true if any state is queued
+	bool  somethingQueued(); 
 
 	/// set buffer state
 	void setBeats(int beats);
@@ -103,7 +114,7 @@ public:
 	/// used for saving the contents of this buffer to disk
 	void recieveSaveBuffer( AudioBuffer* ab );
 
-	///reset the play head to zero. Does nothing when recording
+	/// reset the play head to zero. Does nothing when recording
 	void resetPlayHead();
 
 #ifdef BUILD_TESTS
@@ -134,15 +145,21 @@ private:
 	unsigned int _barsPlayed;
 	AudioBuffer* _buffer;
 
-	/// Luppp internal buffer resizing
-	void newBufferInTransit(bool n);
+	/// Request new internal Buffer
+	void requestNewBuffer();
+	/// Get if a new internal Buffer is on the way
 	bool newBufferInTransit();
+	/// Get available Space to record
 	unsigned long recordSpaceAvailable();
 
+	/// Change State to Playing
 	void setPlaying();
+	/// Change State to Recording
 	void setRecording();
+	/// Change State to Stopped
 	void setStopped();
 
+	/// Updates all the controllers with the current state
 	void updateController();
 };
 

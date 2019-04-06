@@ -86,19 +86,6 @@ void LooperClip::save()
 
 void LooperClip::reset()
 {
-	// TODO make the LooperClip reset to initial state
-	if ( _loaded ) {
-		char buffer [50];
-		sprintf (buffer, "LC::reset() track %i, scene %i", track,scene);
-		EventGuiPrint e( buffer );
-		writeToGuiRingbuffer( &e );
-
-		// set "progress" to zero as there's no clip anymore
-		jack->getControllerUpdater()->setTrackSceneProgress(track, scene, 0 );
-	} else {
-		//SaveAble::done();
-	}
-
 	init();
 }
 
@@ -186,9 +173,7 @@ void LooperClip::resetPlayHead()
 void LooperClip::record(int count, float* L, float* R)
 {
 	if (recordSpaceAvailable() < LOOPER_SAMPLES_BEFORE_REQUEST && !newBufferInTransit()) {
-		EventLooperClipRequestBuffer e( track, scene, audioBufferSize() + LOOPER_SAMPLES_UPDATE_SIZE);
-		writeToGuiRingbuffer( &e );
-		newBufferInTransit(true);
+		requestNewBuffer();
 	}
 	// write "count" samples into current buffer.
 	if ( _buffer ) {
@@ -441,9 +426,11 @@ bool LooperClip::recording()
 	return _recording;
 }
 
-void LooperClip::newBufferInTransit(bool n)
+void LooperClip::requestNewBuffer()
 {
-	_newBufferInTransit = n;
+	EventLooperClipRequestBuffer e( track, scene, audioBufferSize() + LOOPER_SAMPLES_UPDATE_SIZE);
+	writeToGuiRingbuffer( &e );
+	_newBufferInTransit = true;
 }
 
 bool LooperClip::newBufferInTransit()
@@ -457,11 +444,7 @@ void LooperClip::getSample(long double playSpeed, float* L, float* R)
 		if ( _playhead >= _recordhead ||
 		     _playhead >= _buffer->getSize() ||
 		     _playhead < 0  ) {
-			_playhead = 0;
-			_barsPlayed = 0;
-
-			EventGuiPrint e( "LooperClip resetting _playhead" );
-			//writeToGuiRingbuffer( &e );
+			resetPlayHead();
 		}
 
 		std::vector<float>& vL = _buffer->getDataL();
