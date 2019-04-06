@@ -13,9 +13,10 @@ install:
 - sudo ./waf configure build install && cd ..
 - pip3 install meson
 script:
-- meson build
+- meson --prefix /usr build
 - ninja -C build
 - ninja -C build test
+- DESTDIR=./appdir -C build install
 
 cache: 
   directories:
