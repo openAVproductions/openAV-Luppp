@@ -16,7 +16,7 @@ script:
 - meson --prefix /usr build
 - ninja -C build
 - ninja -C build test
-- DESTDIR=./appdir -C build install
+- DESTDIR=./appdir ninja -C build install
 
 cache: 
   directories:
