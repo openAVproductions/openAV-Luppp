@@ -209,6 +209,9 @@ void LooperClip::record(int count, float* L, float* R)
 			}
 		}
 	}
+
+	_loaded = true;
+	_recFpb = jack->getTimeManager()->getFpb();
 }
 
 unsigned long LooperClip::recordSpaceAvailable()
@@ -263,6 +266,8 @@ void LooperClip::bar()
 
 	if ( _playing ) {
 		_barsPlayed++;
+		cout << "Clip " << track << ":" << scene << " " << _playhead
+		     << "\n";
 	}
 
 	// FIXME assumes 4 beats in a bar
@@ -489,6 +494,15 @@ void LooperClip::getSample(long double playSpeed, float* L, float* R)
 		     _playhead >= _buffer->getSize() ||
 		     _playhead < 0  ) {
 			resetPlayHead();
+			
+			// FIXME is there a better way than just output 0 if frames are missing?
+			*L = 0.f;
+			*R = 0.f;
+			_playhead += playSpeed;
+			return;
+
+			EventGuiPrint e( "LooperClip resetting _playhead" );
+			//writeToGuiRingbuffer( &e );
 		}
 
 		std::vector<float>& vL = _buffer->getDataL();
