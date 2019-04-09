@@ -127,8 +127,8 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 			clips[clip]->record( nframes, inputL, inputR);
 		} else if ( clips[clip]->playing() ) {
 			// copy data into tmpBuffer, then pitch-stretch into track buffer
-			long targetFrames = clips[clip]->getBeats() * fpb;
-			long actualFrames = clips[clip]->getActualAudioLength();//getBufferLenght();
+			long targetFrames = fpb;
+			long actualFrames = clips[clip]->getRecFpb();//getBufferLenght();
 #ifdef DEBUG_TIME
 				cout << "FPB: " << fpb << "\n";
 				cout << "Target: " << targetFrames << " - Actual: " << actualFrames << "\n";
