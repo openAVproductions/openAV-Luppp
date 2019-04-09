@@ -1,3 +1,12 @@
+1.2.1 Monday 15th April 2019
+
+Features:
+	-> Print version number with `luppp --version`
+
+Improvements:
+	-> Minor meson build improvements
+	-> clang-format configuration to improve code style
+
 1.2: Tuesday 24th July 2018
 
 Features:
