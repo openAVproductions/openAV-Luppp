@@ -245,7 +245,6 @@ long LooperClip::getActualAudioLength()
 
 void LooperClip::bar()
 {
-
 	// first update the buffer, as time has passed
 	if ( _recording ) {
 		// FIXME: assumes 4 beats in a bar
