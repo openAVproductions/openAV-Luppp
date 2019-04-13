@@ -106,7 +106,7 @@ void Metronome::setFpb(double f)
 	fpb = f;
 
 	// disable play until next beat
-	playPoint = endPoint + 1;
+	//playPoint = endPoint + 1;
 }
 
 void Metronome::process(int nframes, Buffers* buffers)
