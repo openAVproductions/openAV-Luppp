@@ -68,6 +68,7 @@ private:
 	/// number of frames per beat
 	double _fpb;
 	double _nextFpb;
+	double _fpbLag;
 
 	/// holds the number of frames processed
 	long long totalFrameCounter;

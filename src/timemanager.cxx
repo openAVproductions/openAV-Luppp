@@ -43,6 +43,7 @@ TimeManager::TimeManager():
 	samplerate = jack->getSamplerate();
 	// 120 BPM default
 	_fpb = samplerate / 2;
+	_fpbLag = _fpb;
 
 	//Counter for current bar/beat
 	barCounter  = 0;
@@ -102,9 +103,13 @@ void TimeManager::queueFpbChange( double f )
 
 void TimeManager::setFpb(double f)
 {
-	barCounter  = 0;
-	beatCounter = 0;
-	beatFrameCountdown = -1;
+	// barCounter  = 0;
+	// beatCounter = 0;
+	// beatFrameCountdown = -1;
+
+	double ratio = f / _fpb;
+	cout << "Faktor: " << ratio << "\n";
+	beatFrameCountdown *= ratio;
 
 	_fpb = f;
 	int bpm = ( samplerate * 60) / f;
@@ -198,6 +203,15 @@ void TimeManager::setTransportState( TRANSPORT_STATE s )
 
 void TimeManager::process(Buffers* buffers)
 {
+	if(_bpmChangeQueued) {
+		_fpbLag += 0.1 * (_nextFpb - _fpbLag);
+		cout << "Lag: " << _fpbLag << " Next: " << _nextFpb << " Actual: " << _fpb << "\n";
+		setFpb(_fpbLag);
+		if (abs((int)_fpbLag - (int)_nextFpb) <= 1) {
+			_bpmChangeQueued = false;
+			cout << "finish\n";
+		}
+	}
 	// time signature?
 	//buffers->transportPosition->beats_per_bar = 4;
 	//buffers->transportPosition->beat_type     = 4;
@@ -251,12 +265,6 @@ void TimeManager::process(Buffers* buffers)
 			}
 			barCounter++;
 			//beatCounter=0;
-
-			if(_bpmChangeQueued)
-			{
-				setFpb(_nextFpb);
-				_bpmChangeQueued = false;
-			}
 		}
 
 		// process after
