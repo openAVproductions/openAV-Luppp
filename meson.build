@@ -41,3 +41,7 @@ endforeach
 executable('luppp', luppp_src + [version_hxx],
     install: true,
     dependencies: deps)
+
+install_data('resources/metadata/luppp.desktop', install_dir: 'share/applications')
+install_data('resources/metadata/luppp.appdata.xml', install_dir: 'share/appdata')
+install_data('resources/icons/luppp.png', install_dir: 'share/pixmaps')
