@@ -23,11 +23,11 @@ script:
 - ./linuxdeployqt-continuous-x86_64.AppImage build/appdir/usr/share/applications/*.desktop -appimage
 after_success:
 - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-- bash upload.sh Luppp*.AppImage*  
+- bash upload.sh Luppp*.AppImage*
 branches:
   except:
     #- Do not build tags that we create when we upload to GitHub Releases
     - /^(?i:continuous)/
-cache: 
+cache:
   directories:
     - $HOME/.cache/pip
