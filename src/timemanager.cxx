@@ -204,7 +204,7 @@ void TimeManager::setTransportState( TRANSPORT_STATE s )
 void TimeManager::process(Buffers* buffers)
 {
 	if(_bpmChangeQueued) {
-		_fpbLag += 0.1 * (_nextFpb - _fpbLag);
+		_fpbLag += _nextFpb - _fpbLag;
 		cout << "Lag: " << _fpbLag << " Next: " << _nextFpb << " Actual: " << _fpb << "\n";
 		setFpb(_fpbLag);
 		if (abs((int)_fpbLag - (int)_nextFpb) <= 1) {
