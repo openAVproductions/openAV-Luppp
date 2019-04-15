@@ -272,7 +272,10 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
 void GMasterTrack::setBpm( int b )
 {
 	bpm = b;
-	tempoDial.value( ( bpm - MIN_TEMPO ) / (float)(MAX_TEMPO - MIN_TEMPO) );
+	if(!tempoDial.mouseClicked) {
+		tempoDial.value(
+			(bpm - MIN_TEMPO) / (float)(MAX_TEMPO - MIN_TEMPO));
+	}
 	std::stringstream s;
 	s << bpm;
 	tempoDial.copy_label( s.str().c_str() );
