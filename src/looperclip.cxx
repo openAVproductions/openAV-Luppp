@@ -103,6 +103,7 @@ void LooperClip::load( AudioBuffer* ab )
 
 	// set the endpoint to the buffer's size
 	_recordhead = _buffer->getSize();
+	_recFpb = _recordhead / _buffer->getBeats();
 
 #ifdef DEBUG_BUFFER
 	char buffer [50];
