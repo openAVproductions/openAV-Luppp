@@ -107,9 +107,10 @@ void TimeManager::setFpb(double f)
 	// beatCounter = 0;
 	// beatFrameCountdown = -1;
 
-	double ratio = f / _fpb;
-	cout << "Faktor: " << ratio << "\n";
-	beatFrameCountdown *= ratio;
+	long double ratio = (long double)f / (long double)_fpb;
+	cout << "Faktor: " << ratio << "alt: " << beatFrameCountdown << "\n";
+	beatFrameCountdown = beatFrameCountdown * ratio;
+	cout << "Countdown: " << beatFrameCountdown << "\n";
 
 	_fpb = f;
 	int bpm = ( samplerate * 60) / f;
