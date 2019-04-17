@@ -204,13 +204,12 @@ void TimeManager::setTransportState( TRANSPORT_STATE s )
 void TimeManager::process(Buffers* buffers)
 {
 	if(_bpmChangeQueued) {
-		_fpbLag += _nextFpb - _fpbLag;
-		cout << "Lag: " << _fpbLag << " Next: " << _nextFpb << " Actual: " << _fpb << "\n";
+		_fpbLag = _nextFpb;
+		cout << "Lag: " << _fpbLag << " Next: " << _nextFpb
+		     << " Actual: " << _fpb << "\n";
 		setFpb(_fpbLag);
-		if (abs((int)_fpbLag - (int)_nextFpb) <= 1) {
-			_bpmChangeQueued = false;
-			cout << "finish\n";
-		}
+		_bpmChangeQueued = false;
+		cout << "finish\n";
 	}
 	// time signature?
 	//buffers->transportPosition->beats_per_bar = 4;
