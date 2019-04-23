@@ -136,7 +136,8 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 			long double playSpeed = 1.0;
 
 			if ( targetFrames != 0 && actualFrames != 0 ) {
-				playSpeed = (long double)(actualFrames) / (long double)(targetFrames);
+				playSpeed = (long double)(targetFrames) /
+					    (long double)(actualFrames);
 
 #ifdef DEBUG_TIME
 					cout << fixed << setprecision(20) << playSpeed << "\n";
@@ -148,28 +149,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 			float* outL = buffers->audio[Buffers::SEND_TRACK_0_L + trackoffset];
 			float* outR = buffers->audio[Buffers::SEND_TRACK_0_R + trackoffset];
 
-			for(unsigned int i = 0; i < nframes; i++ ) {
-				// REFACTOR into system that is better than per sample function calls
-				float tmpL = 0;
-				float tmpR = 0;
-				clips[clip]->getSample(playSpeed, &tmpL, &tmpR);
-
-				float deltaPitch = 12 * log ( playSpeed ) / log (2);
-				semitoneShift = -deltaPitch;
-
-				// write the pitch-shifted signal to the track buffer
-				//FIXME: pitchShift adds delay even for playSpeed = 1.0!!
-				//we should use something better (e.g librubberband)
-				if(0) { //playSpeed!=1.0f) {
-					pitchShift( 1, &tmpL, &outL[i] );
-					pitchShift( 1, &tmpR, &outR[i] );
-				} else {
-					outL[i]+=tmpL;
-					outR[i]+=tmpR;
-				}
-			}
-
-			//printf("Looper %i playing(), speed = %f\n", track, playSpeed );
+			clips[clip]->getSamples(nframes, playSpeed, outL, outR);
 
 			if ( uiUpdateCounter > uiUpdateConstant ) {
 				jack->getControllerUpdater()->setTrackSceneProgress(track, clip, clips[clip]->getProgress() );

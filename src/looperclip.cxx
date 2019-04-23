@@ -38,6 +38,15 @@ LooperClip::LooperClip(int t, int s) :
 	scene(s)
 {
 	_buffer = new AudioBuffer(LOOPER_SAMPLES_UPDATE_SIZE);
+
+	stretcher = new RubberBand::RubberBandStretcher(jack->getSamplerate(),
+		2,
+		RubberBand::RubberBandStretcher::OptionProcessRealTime |
+			RubberBand::RubberBandStretcher::OptionThreadingAuto |
+			RubberBand::RubberBandStretcher::OptionTransientsCrisp |
+			RubberBand::RubberBandStretcher::OptionDetectorPercussive);
+	stretcher->setMaxProcessSize(jack->getBuffersize());
+
 	init();
 
 #ifdef DEBUG_BUFFER
@@ -436,6 +445,42 @@ bool LooperClip::newBufferInTransit()
 {
 	return _newBufferInTransit;
 }
+
+void
+LooperClip::getSamples(
+	unsigned int nframes, long double playspeed, float *L, float *R)
+{
+	stretcher->setTimeRatio(playspeed);
+	int samples_available = stretcher->available();
+
+	float *bufs[2];
+	bufs[0] = L;
+	bufs[1] = R;
+
+	vector<float> vL;
+	vector<float> vR;
+
+	if(_buffer && (_buffer->getSize() > 0)) {
+		vL = _buffer->getDataL();
+		vR = _buffer->getDataR();
+	}
+
+	while(samples_available < nframes) {
+		size_t req = stretcher->getSamplesRequired();
+		size_t use = min(req, (size_t)nframes);
+		for(unsigned int i = 0; i < use; i++) {
+			if(_playhead > _recordhead)
+				_playhead = 0;
+			L[i] = vL[_playhead];
+			R[i] = vR[_playhead];
+			_playhead++;
+		}
+		stretcher->process(bufs, use, false);
+		samples_available = stretcher->available();
+	}
+
+	stretcher->retrieve(bufs, nframes);
+};
 
 void LooperClip::getSample(long double playSpeed, float* L, float* R)
 {
