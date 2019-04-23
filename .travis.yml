@@ -23,6 +23,7 @@ addons:
       - libjack-dev
       - libsamplerate0-dev
       - ninja-build
+      - librubberband-dev
 install:
 - git clone git://git.tuxfamily.org/gitroot/non/fltk.git ntk
 - cd ntk && sudo ./waf configure build install && cd ..
