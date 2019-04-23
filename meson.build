@@ -29,7 +29,8 @@ dep_names = [
   'jack',
   'sndfile',
   'samplerate',
-  'x11'
+  'x11',
+  'rubberband'
   ]
 deps = []
 
