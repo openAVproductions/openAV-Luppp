@@ -6,7 +6,7 @@ compiler:
 os:
 - linux
 env:
-  - UPLOADTOOL_SUFFIX=TRAVIS_BRANCH
+  - UPLOADTOOL_SUFFIX=$TRAVIS_BRANCH
 install:
 - echo $HOME
 - echo $PWD
