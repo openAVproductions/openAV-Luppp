@@ -24,10 +24,8 @@ addons:
       - libsamplerate0-dev
       - ninja-build
 install:
-- echo $HOME
-- echo $PWD
-- if cd ntk; then git pull; else git clone git://git.tuxfamily.org/gitroot/non/fltk.git ntk && cd ntk; fi
-- sudo ./waf configure build install && cd ..
+- git clone git://git.tuxfamily.org/gitroot/non/fltk.git ntk
+- cd ntk && sudo ./waf configure build install && cd ..
 - pip3 install meson
 script:
 - meson --prefix /usr build
