@@ -30,6 +30,10 @@ pkg_check_modules(SAMPLERATE samplerate REQUIRED)
 include_directories( ${SAMPLERATE_INCLUDE_DIRS}  )
 link_directories   ( ${SAMPLERATE_LIBRARY_DIRS}  )
 
+pkg_check_modules(RUBBERBAND rubberband REQUIRED)
+include_directories( ${RUBBERBAND_INCLUDE_DIRS}  )
+link_directories   ( ${RUBBERBAND_LIBRARY_DIRS}  )
+
 # needed for setting icon in WM
 pkg_check_modules(X11 x11 REQUIRED)
 include_directories( ${X11_INCLUDE_DIRS}  )
@@ -85,6 +89,7 @@ target_link_libraries( luppp ${CAIRO_LIBRARIES}      )
 target_link_libraries( luppp ${SNDFILE_LIBRARIES}    )
 target_link_libraries( luppp ${SAMPLERATE_LIBRARIES} )
 target_link_libraries( luppp ${X11_LIBRARIES}        )
+target_link_libraries( luppp ${RUBBERBAND_LIBRARIES} )
 
 # Check build type, linking with gcov for code analysis if needed
 IF(BUILD_TESTS)
