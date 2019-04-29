@@ -63,6 +63,8 @@ void LooperClip::init()
 
 	resetQueues();
 
+	_smoothVolume = 1;
+
 	if ( _buffer ) {
 		_buffer->init();
 	}
@@ -366,6 +368,8 @@ void LooperClip::setPlaying()
 
 		resetQueues();
 
+		_smoothVolume = 0;
+
 		_barsPlayed = 0;
 		_playhead 	= 0;
 	} else {
@@ -477,9 +481,12 @@ LooperClip::getSamples(
 		for(unsigned int i = 0; i < use; i++) {
 			if(_playhead > _recordhead)
 				_playhead = 0;
-			L[i] = vL[_playhead];
-			R[i] = vR[_playhead];
+			L[i] = vL[_playhead] * _smoothVolume;
+			R[i] = vR[_playhead] * _smoothVolume;
 			_playhead++;
+
+			_smoothVolume += jack->smoothing_value *
+				       (1 - _smoothVolume);
 		}
 		stretcher->process(bufs, use, false);
 		samples_available = stretcher->available();

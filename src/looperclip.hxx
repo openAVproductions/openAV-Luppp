@@ -151,6 +151,8 @@ private:
 	float _recordhead;
 	int _recFpb;
 
+	float _smoothVolume;
+
 	unsigned int _barsPlayed;
 	AudioBuffer* _buffer;
 
