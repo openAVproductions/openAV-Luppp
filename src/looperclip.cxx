@@ -456,6 +456,13 @@ void
 LooperClip::getSamples(
 	unsigned int nframes, long double playspeed, float *L, float *R)
 {
+	stretcher->setTimeRatio(playspeed);
+	int samples_available = stretcher->available();
+
+	float *bufs[2];
+	bufs[0] = L;
+	bufs[1] = R;
+
 	vector<float> vL;
 	vector<float> vR;
 
@@ -464,38 +471,21 @@ LooperClip::getSamples(
 		vR = _buffer->getDataR();
 	}
 
-	if(playspeed != 1.0) {
-		stretcher->setTimeRatio(playspeed);
-		int samples_available = stretcher->available();
-
-		float *bufs[2];
-		bufs[0] = L;
-		bufs[1] = R;
-
-		while(samples_available < nframes) {
-			size_t req = stretcher->getSamplesRequired();
-			size_t use = min(req, (size_t)nframes);
-			for(unsigned int i = 0; i < use; i++) {
-				if(_playhead > _recordhead)
-					_playhead = 0;
-				L[i] = vL[_playhead];
-				R[i] = vR[_playhead];
-				_playhead++;
-			}
-			stretcher->process(bufs, use, false);
-			samples_available = stretcher->available();
-		}
-		stretcher->retrieve(bufs, nframes);
-		
-	} else {
-		for(unsigned int i = 0; i < nframes; i++) {
+	while(samples_available < nframes) {
+		size_t req = stretcher->getSamplesRequired();
+		size_t use = min(req, (size_t)nframes);
+		for(unsigned int i = 0; i < use; i++) {
 			if(_playhead > _recordhead)
 				_playhead = 0;
 			L[i] = vL[_playhead];
 			R[i] = vR[_playhead];
 			_playhead++;
 		}
+		stretcher->process(bufs, use, false);
+		samples_available = stretcher->available();
 	}
+
+	stretcher->retrieve(bufs, nframes);
 };
 
 void LooperClip::getSample(long double playSpeed, float* L, float* R)
