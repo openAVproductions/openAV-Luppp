@@ -2,7 +2,7 @@
 
 ## Features:
 
-* Print version number with `luppp * * version`
+* Print version number with `luppp --version`
 
 ## Improvements:
 
