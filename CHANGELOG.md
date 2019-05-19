@@ -7,7 +7,7 @@
 ## Improvements:
 
 * Minor meson build improvements
-* clang* format configuration to improve code style
+* clang-format configuration to improve code style
 
 # 1.2: Tuesday 24th July 2018
 
@@ -15,7 +15,7 @@
 * clear clip with MIDI
 * build with meson
 * space triggers special clip
-* manual BPM input (right click on Tap* Button)
+* manual BPM input (right click on Tap-Button)
 
 ## Improvements:
 * avoid noise on all controls
@@ -62,7 +62,7 @@
 * Added per track outputs
 * Added per track sends/returns
 * Added Lag function on slider to avoid jitter
-* Added hotkey symbols for en* GB Layout
+* Added hotkey symbols for en-GB Layout
 * Added french version of app data and desktop file
 * Added .ctrl file for Launchpad S and APC Mini and APC Key25
 * Added ability to adjust knobs with mouse wheel
