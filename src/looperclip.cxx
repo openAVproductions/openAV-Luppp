@@ -62,6 +62,10 @@ void LooperClip::init()
 	_playhead   = 0;
 	_recordhead = 0;
 
+	_playbackSpeed = 1;
+	_nextPlaybackSpeed = 1;
+	_playbackSpeedChange = false;
+
 	_barsPlayed = 0;
 	updateController();
 }
@@ -225,7 +229,9 @@ size_t LooperClip::audioBufferSize()
 void LooperClip::setBeats(int beats)
 {
 	if ( _buffer ) {
-		_buffer->setBeats( beats );
+		_nextPlaybackSpeed =
+			(long double)_buffer->getBeats() / (long double)beats;
+		_playbackSpeedChange = true;
 	}
 }
 
@@ -256,17 +262,19 @@ void LooperClip::bar()
 		_buffer->setAudioFrames( jack->getTimeManager()->getFpb() * _buffer->getBeats() );
 	}
 
+	if(_playbackSpeedChange) {
+		_playbackSpeed = _nextPlaybackSpeed;
+		_playbackSpeedChange = false;
+	}
+
 	if ( _playing ) {
 		_barsPlayed++;
 	}
 
 	// FIXME assumes 4 beats in a bar
-	if ( (_playing && _barsPlayed >= getBeats() / 4) || _playhead >= _recordhead) {
-		_barsPlayed = 0;
-		_playhead = 0;
-#ifdef DEBUG_TIME
-			cout << "reset: " << _playhead << " - " << _barsPlayed << "\n";
-#endif
+	if((_playing && _barsPlayed >= (getBeats() / 4 / _playbackSpeed)) ||
+		(_playing && _playhead >= _recordhead)) {
+		resetPlayHead();
 	}
 
 	if ( _queuePlay ) {
@@ -444,11 +452,10 @@ bool LooperClip::newBufferInTransit()
 void
 LooperClip::getSample(long double playSpeed, float *L, float *R)
 {
+	playSpeed *= _playbackSpeed;
 	if(_buffer && (_buffer->getSize() > 0)) {
 		if(_playhead >= _recordhead ||
 			_playhead >= _buffer->getSize() || _playhead < 0) {
-			resetPlayHead();
-
 			// FIXME is there a better way than just output 0 if frames are missing?
 			*L = 0.f;
 			*R = 0.f;

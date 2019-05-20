@@ -147,6 +147,10 @@ private:
 	float _recordhead;
 	int _recFpb;
 
+	long double _playbackSpeed;
+	long double _nextPlaybackSpeed;
+	bool _playbackSpeedChange;
+
 	unsigned int _barsPlayed;
 	AudioBuffer* _buffer;
 
