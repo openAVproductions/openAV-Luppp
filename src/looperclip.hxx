@@ -89,6 +89,10 @@ public:
 	long  getActualAudioLength();
 	/// Return Size of the Buffer
 	size_t audioBufferSize();
+	int
+	getRecFpb() {
+		return _recFpb;
+	};
 
 	/// Queue Play
 	void  queuePlay();
@@ -141,6 +145,11 @@ private:
 
 	long double _playhead;
 	float _recordhead;
+	int _recFpb;
+
+	long double _playbackSpeed;
+	long double _nextPlaybackSpeed;
+	bool _playbackSpeedChange;
 
 	unsigned int _barsPlayed;
 	AudioBuffer* _buffer;

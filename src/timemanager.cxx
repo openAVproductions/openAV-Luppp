@@ -102,9 +102,9 @@ void TimeManager::queueFpbChange( double f )
 
 void TimeManager::setFpb(double f)
 {
-	barCounter  = 0;
-	beatCounter = 0;
-	beatFrameCountdown = -1;
+	// allign beatFrameCountdown
+	long double ratio = (long double)f / (long double)_fpb;
+	beatFrameCountdown = beatFrameCountdown * ratio;
 
 	_fpb = f;
 	int bpm = ( samplerate * 60) / f;
@@ -198,6 +198,10 @@ void TimeManager::setTransportState( TRANSPORT_STATE s )
 
 void TimeManager::process(Buffers* buffers)
 {
+	if(_bpmChangeQueued) {
+		setFpb(_nextFpb);
+		_bpmChangeQueued = false;
+	}
 	// time signature?
 	//buffers->transportPosition->beats_per_bar = 4;
 	//buffers->transportPosition->beat_type     = 4;
@@ -251,12 +255,6 @@ void TimeManager::process(Buffers* buffers)
 			}
 			barCounter++;
 			//beatCounter=0;
-
-			if(_bpmChangeQueued)
-			{
-				setFpb(_nextFpb);
-				_bpmChangeQueued = false;
-			}
 		}
 
 		// process after
