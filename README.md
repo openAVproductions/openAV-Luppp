@@ -1,9 +1,9 @@
 Luppp - OpenAV Productions
 ===============================
 
-  * [Official web page](http://openavproductions.com/luppp)
-  * [Demo videos](https://www.youtube.com/playlist?list=PLPVwzZjovbBxIik8lUisH5XdLzALDeY9j)
-  * [User documentation](http://openavproductions.com/doc/luppp.html)
+*   [Official web page](http://openavproductions.com/luppp)
+*   [Demo videos](https://www.youtube.com/playlist?list=PLPVwzZjovbBxIik8lUisH5XdLzALDeY9j)
+*   [User documentation](http://openavproductions.com/doc/luppp.html)
 
 This is the repository of Luppp, the live looping tool.
 
@@ -56,11 +56,9 @@ ninja
 ./luppp
 ```
 
-
 Issues
 ------
 Please report bugs on [github.com/openAVproductions/openAV-Luppp/issues](http://github.com/openAVproductions/openAV-Luppp/issues)
-
 
 Contact
 -------
