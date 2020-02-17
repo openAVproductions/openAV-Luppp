@@ -1,5 +1,4 @@
 # openAV Luppp Changelog
-========================
 
 ## 1.2.1 Monday 15th April 2019
 
