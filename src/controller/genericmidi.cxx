@@ -126,6 +126,18 @@ std::string GenericMIDI::getEmail()
 void GenericMIDI::volume(int t, float f)
 {
 
+	for(unsigned int i = 0; i < actionToMidi.size(); i++) {
+		Binding* b = actionToMidi.at(i);
+
+		if ( b->action == TRACK_VOLUME && b->track == t ) {
+			unsigned char data[3];
+			data[0] = b->status;
+			data[1] = b->data;
+			data[2] = f * 127;
+			writeMidi( data );
+			return;
+		}
+	}
 }
 
 void GenericMIDI::recordArm(int t, bool enabled)
