@@ -222,6 +222,8 @@ private:
 	             jack_position_t*,
 	             int );
 
+	void connect(jack_port_id_t, jack_port_id_t, int);
+
 	// static JACK callbacks
 	static int static_process  (jack_nframes_t, void *);
 
@@ -230,6 +232,8 @@ private:
 	                            jack_position_t*,
 	                            int,
 	                            void* );
+
+	static void static_connect (jack_port_id_t, jack_port_id_t, int, void *);
 
 	// UI update variables
 	int uiUpdateCounter;

@@ -42,20 +42,16 @@ MidiIO::~MidiIO()
 }
 
 
-void MidiIO::writeMidi( unsigned char* data )
+void MidiIO::writeMidi( unsigned char* data, unsigned int length )
 {
 	void* portBuffer = jack_port_get_buffer( jackOutputPort, jack->getBuffersize() );
 
-	unsigned char* buffer = jack_midi_event_reserve( portBuffer, 0, 3);
+	unsigned char* buffer = jack_midi_event_reserve( portBuffer, 0, sizeof(unsigned char)*length );
 	if( buffer == 0 ) {
 		return;
 	} else {
-		//memcpy( buffer, data, sizeof(unsigned char)*3 );
-		buffer[0] = data[0];
-		buffer[1] = data[1];
-		buffer[2] = data[2];
+		memcpy( buffer, data, sizeof(unsigned char)*length );
 	}
-
 }
 
 int MidiIO::registerMidiPorts(std::string name)
@@ -122,4 +118,14 @@ void MidiIO::process(int nframes)
 		index++;
 	}
 
+}
+
+bool MidiIO::isMyOutput(jack_port_t* port)
+{
+	return port == jackOutputPort;
+}
+
+bool MidiIO::isMyInput(jack_port_t* port)
+{
+	return port == jackInputPort;
 }

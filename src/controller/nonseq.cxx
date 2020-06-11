@@ -41,7 +41,7 @@ void NonSeq::launchScene( int scene )
 	data[2] = scene;
 
 	//LUPPP_NOTE("NonSeq::launchScene() %i, %i, %i\n", data[0],data[1],data[2] );
-	writeMidi( data );
+	writeMidi( data, 3 );
 }
 
 std::string NonSeq::getName()
@@ -65,7 +65,7 @@ void NonSeq::setSceneState(int track, int scene, GridLogic::State s)
 	data[2] = track;
 
 	//LUPPP_NOTE("NonSeq::setSceneState() %i, %i, %i\n", data[0],data[1],data[2] );
-	writeMidi( data );
+	writeMidi( data, 3 );
 }
 
 

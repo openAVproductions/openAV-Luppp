@@ -86,6 +86,8 @@ public:
 	void setupBinding( LupppAction eventType, int midiStatus, int midiData, int track, int scene, int send, int active );
 	void removeBinding( int bindingID );
 
+	void midiConnect(jack_port_t* a, jack_port_t* b);
+
 private:
 	STATUS stat;
 

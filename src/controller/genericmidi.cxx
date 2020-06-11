@@ -138,7 +138,7 @@ void GenericMIDI::recordArm(int t, bool enabled)
 			data[0] = b->status;
 			data[1] = b->data;
 			data[2] = enabled ? 127 : 0;
-			writeMidi( data );
+			writeMidi( data, 3 );
 			return;
 		}
 	}
@@ -154,7 +154,7 @@ void GenericMIDI::metronomeEnable(bool enabled)
 			data[0] = b->status;
 			data[1] = b->data;
 			data[2] = enabled ? 127 : 0;
-			writeMidi( data );
+			writeMidi( data, 3 );
 			return;
 		}
 	}
@@ -171,7 +171,7 @@ void GenericMIDI::trackSend(int t, int send, float v)
 			data[0] = b->status;
 			data[1] = b->data;
 			data[2] = v * 127;
-			writeMidi( data );
+			writeMidi( data, 3 );
 			return;
 		}
 	}
@@ -187,7 +187,7 @@ void GenericMIDI::trackSendActive(int t, int send, bool a)
 			data[0] = b->status;
 			data[1] = b->data;
 			data[2] = a ? 127 : 0;
-			writeMidi( data );
+			writeMidi( data, 3 );
 			return;
 		}
 	}
@@ -352,7 +352,7 @@ void GenericMIDI::setSceneState(int t, int scene, GridLogic::State s)
 					data[2] = it->second;
 
 					//LUPPP_NOTE("GenericMIDI::sceneState() writing event %i, %i, %i", data[0],data[1],data[2] );
-					writeMidi( data );
+					writeMidi( data, 3 );
 				}
 			}
 		}
@@ -388,12 +388,28 @@ void GenericMIDI::launchScene( int scene )
 			data[2] = (i == scene) * 127;
 			
 			//LUPPP_NOTE("this = %i GenericMIDI::launchScene()", this );
-			writeMidi( data );
+			writeMidi( data, 3 );
 		}
 	}
 
 }
 
+void GenericMIDI::midiConnect(jack_port_t* a, jack_port_t *b)
+{
+	// skip unless this controller's output port is connected
+	if (!isMyOutput(a) && !isMyOutput(b)) {
+		return;
+	}
+
+	for(unsigned int i = 0; i < actionToMidi.size(); i++) {
+		Binding* b = actionToMidi.at(i);
+
+		if ( b->action == MIDI_CONNECT && b->dataListSize > 0 ) {
+			writeMidi( b->dataList, b->dataListSize );
+		}
+	}
+
+}
 
 int GenericMIDI::loadController( std::string file )
 {
@@ -558,6 +574,27 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
 		LUPPP_WARN("Binding doesn't have action field: fix .ctlr file");
 		delete tmp;
 		return 0;
+	}
+
+	if ( strcmp( actionJson->valuestring, "midi:connect" ) == 0 ) {
+		tmp->action = Event::MIDI_CONNECT;
+
+		cJSON* dataList = cJSON_GetObjectItem( binding, "dataList" );
+		if ( !dataList ) {
+			LUPPP_WARN("Binding midi connect: doesn't have dataList field");
+			delete tmp;
+			return 0;
+		}
+
+		tmp->dataListSize = cJSON_GetArraySize( dataList );
+		tmp->dataList = new unsigned char[tmp->dataListSize];
+
+		for(int i = 0; i < tmp->dataListSize; i++ ) {
+			cJSON* dataListItem = cJSON_GetArrayItem( dataList, i );
+			tmp->dataList[i] = dataListItem->valueint;
+		}
+
+		return tmp;
 	}
 
 	cJSON* statusJson = cJSON_GetObjectItem( binding, "status" );

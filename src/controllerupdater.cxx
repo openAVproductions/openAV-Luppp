@@ -186,3 +186,13 @@ void ControllerUpdater::metronomeEnable(bool b)
 {
 	for(unsigned int i = 0; i < c.size(); i++) c.at(i)->metronomeEnable(b);
 }
+
+void ControllerUpdater::midiConnect(jack_port_t *a, jack_port_t *b)
+{
+	for(unsigned int i = 0; i < c.size(); i++) c.at(i)->midiConnect(a, b);
+}
+
+void ControllerUpdater::midiDisconnect(jack_port_t *a, jack_port_t *b)
+{
+	for(unsigned int i = 0; i < c.size(); i++) c.at(i)->midiDisconnect(a, b);
+}
