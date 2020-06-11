@@ -130,7 +130,7 @@ void GenericMIDI::masterVolume(float f, Event::SOURCE s)
 		Binding* b = actionToMidi.at(i);
 
 		if ( b->action == MASTER_VOL) {
-			if ( /*b->echo ||*/ s != Event::SOURCE_MIDI ) {
+			if ( b->echo || s != Event::SOURCE_MIDI ) {
 				unsigned char data[3];
 				data[0] = b->status;
 				data[1] = b->data;
@@ -149,7 +149,7 @@ void GenericMIDI::volume(int t, float f, Event::SOURCE s)
 		Binding* b = actionToMidi.at(i);
 
 		if ( b->action == TRACK_VOLUME && b->track == t ) {
-			if ( /*b->echo ||*/ s != Event::SOURCE_MIDI ) {
+			if ( b->echo || s != SOURCE_MIDI ) {
 				unsigned char data[3];
 				data[0] = b->status;
 				data[1] = b->data;
@@ -603,6 +603,12 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
 
 	tmp->status = statusJson->valueint;
 	tmp->data   = dataJson->valueint;
+
+	// gets the echo value from the JSON string
+	cJSON* echoJson = cJSON_GetObjectItem( binding, "echo" );
+	if ( echoJson ) {
+		tmp->echo = dataJson->valueint;
+	}
 
 	// gets the Action type from the JSON string
 	cJSON* activeJson = cJSON_GetObjectItem( binding, "active" );
