@@ -123,19 +123,40 @@ std::string GenericMIDI::getEmail()
 	return email;
 }
 
-void GenericMIDI::volume(int t, float f)
+void GenericMIDI::masterVolume(float f, Event::SOURCE s)
+{
+
+	for(unsigned int i = 0; i < actionToMidi.size(); i++) {
+		Binding* b = actionToMidi.at(i);
+
+		if ( b->action == MASTER_VOL) {
+			if ( /*b->echo ||*/ s != Event::SOURCE_MIDI ) {
+				unsigned char data[3];
+				data[0] = b->status;
+				data[1] = b->data;
+				data[2] = f * 127;
+				writeMidi( data );
+				return;
+			}
+		}
+	}
+}
+
+void GenericMIDI::volume(int t, float f, Event::SOURCE s)
 {
 
 	for(unsigned int i = 0; i < actionToMidi.size(); i++) {
 		Binding* b = actionToMidi.at(i);
 
 		if ( b->action == TRACK_VOLUME && b->track == t ) {
-			unsigned char data[3];
-			data[0] = b->status;
-			data[1] = b->data;
-			data[2] = f * 127;
-			writeMidi( data );
-			return;
+			if ( /*b->echo ||*/ s != Event::SOURCE_MIDI ) {
+				unsigned char data[3];
+				data[0] = b->status;
+				data[1] = b->data;
+				data[2] = f * 127;
+				writeMidi( data );
+				return;
+			}
 		}
 	}
 }
@@ -263,7 +284,7 @@ void GenericMIDI::midi(unsigned char* midi)
 
 			switch( b->action ) {
 			case Event::TRACK_VOLUME:
-				jack->getLogic()->trackVolume( b->track, value );
+				jack->getLogic()->trackVolume( b->track, value, Event::SOURCE_MIDI );
 				break;
 			case Event::TRACK_SEND:
 				jack->getLogic()->trackSend( b->track, b->send, value );
@@ -339,7 +360,7 @@ void GenericMIDI::midi(unsigned char* midi)
 				break;
 
 			case Event::MASTER_VOL:
-				jack->getLogic()->trackVolume( -1     , value );
+				jack->getLogic()->trackVolume( -1     , value, Event::SOURCE_MIDI );
 				break;
 			}
 		}

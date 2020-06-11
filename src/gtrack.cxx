@@ -188,7 +188,7 @@ void gtrack_xsideDial_cb(Fl_Widget *w, void *data)
 void gtrack_vol_cb(Fl_Widget *w, void *data)
 {
 	GTrack* track = (GTrack*) data;
-	EventTrackVol e( track->ID, ((Avtk::Volume*)w)->value() );
+	EventTrackVol e( track->ID, ((Avtk::Volume*)w)->value(), Event::SOURCE_GUI );
 	writeToDspRingbuffer( &e );
 	//printf("track %i vol %f\n", track->ID, ((Avtk::Dial*)w)->value() );
 }

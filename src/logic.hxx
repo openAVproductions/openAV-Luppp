@@ -54,7 +54,7 @@ public:
 	void masterReturn( int returnNum, float v);
 
 	void trackPan(int track, float pan);
-	void trackVolume(int track, float volume);
+	void trackVolume(int track, float volume, Event::SOURCE source);
 	void trackRecordArm(int track, bool armed);
 	void trackSendActive(int track, int send, bool active);
 	void trackSend(int track, int send, float value);

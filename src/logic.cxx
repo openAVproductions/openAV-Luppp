@@ -84,14 +84,14 @@ void Logic::trackPan(int t, float p)
 	}
 }
 
-void Logic::trackVolume(int t, float v)
+void Logic::trackVolume(int t, float v, Event::SOURCE s)
 {
 	if ( t == -1 ) { // master track
 		jack->masterVolume(v);
-		jack->getControllerUpdater()->masterVolume( v );
+		jack->getControllerUpdater()->masterVolume( v, s );
 	} else if ( t >= 0 && t < NTRACKS ) {
 		jack->getTrackOutput( t )->setMaster( v );
-		jack->getControllerUpdater()->volume( t, v );
+		jack->getControllerUpdater()->volume( t, v, s );
 	} else {
 		LUPPP_WARN("invalid track number %i: check controller map has \"track\" field.", t );
 	}

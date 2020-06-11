@@ -20,6 +20,7 @@
 #ifndef LUPPP_GENERIC_MIDI_H
 #define LUPPP_GENERIC_MIDI_H
 
+#include "../event.hxx"
 #include "controller.hxx"
 
 #include <string>
@@ -56,7 +57,8 @@ public:
 
 	void launchScene( int scene );
 
-	void volume(int t, float f);
+	void masterVolume(float f, Event::SOURCE s);
+	void volume(int t, float f, Event::SOURCE s);
 
 
 	void recordArm(int t, bool b);

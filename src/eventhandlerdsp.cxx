@@ -299,7 +299,7 @@ void handleDspEvents()
 				if ( availableRead >= sizeof(EventTrackVol) ) {
 					EventTrackVol ev;
 					jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackVol) );
-					jack->getLogic()->trackVolume( ev.track, ev.vol );
+					jack->getLogic()->trackVolume( ev.track, ev.vol, ev.source );
 					jack->bindingTrack = ev.track;
 					break;
 				}

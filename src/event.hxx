@@ -53,6 +53,11 @@ enum INPUT_TO {
 	INPUT_TO_XSIDE,
 	INPUT_TO_SIDE_KEY,
 };
+enum SOURCE {
+	SOURCE_MIDI = 0,
+	SOURCE_GUI,
+	SOURCE_LOAD,
+};
 
 enum EVENT_TYPE {
 	// default event type
@@ -470,12 +475,14 @@ public:
 
 	int track;
 	float vol;
+	SOURCE source;
 
 	EventTrackVol() {};
-	EventTrackVol(int t, float v)
+	EventTrackVol(int t, float v, SOURCE s)
 	{
 		track = t;
 		vol = v;
+		source = s;
 	}
 };
 

@@ -58,7 +58,7 @@ public:
 	void reset();
 	void mute(int t, bool b);
 
-	void masterVolume(float v);
+	void masterVolume(float v, Event::SOURCE s);
 	void masterReturnVolume(float v);
 	void masterInputToActive(int to, bool v);
 	void masterInputTo( int inputTo, float vol );
@@ -79,7 +79,7 @@ public:
 
 	void recordArm(int t, bool r);
 
-	void volume(int t, float v);
+	void volume(int t, float v, Event::SOURCE s);
 
 	void pan(int t, float p);
 

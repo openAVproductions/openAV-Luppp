@@ -22,6 +22,7 @@
 
 #include <string>
 
+#include "../event.hxx"
 #include "../gridlogic.hxx"
 
 /** Controller
@@ -65,7 +66,7 @@ public:
 	virtual void masterInputVol(float f) {}
 	virtual void masterInputTo(int to,float f) {}
 	virtual void masterInputToActive(int to,float f) {}
-	virtual void masterVolume(float f) {}
+	virtual void masterVolume(float f, Event::SOURCE s) {}
 	virtual void masterReturnVolume(float f) {}
 	virtual void metronomeEnable(bool b) {}
 
@@ -86,7 +87,7 @@ public:
 	/// track functionality
 	virtual void pan(int t, float p) {}
 	virtual void mute(int t, bool b) {}
-	virtual void volume(int t, float f) {}
+	virtual void volume(int t, float f, Event::SOURCE s) {}
 	virtual void progress(int t, int s, float f) {}
 	virtual void recordArm(int t, bool r) {}
 	virtual void setSceneState(int track, int scene, GridLogic::State s) {}

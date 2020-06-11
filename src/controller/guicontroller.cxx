@@ -138,7 +138,7 @@ void LupppGUI::bpm(int bpm)
 
 void LupppGUI::volume(int t, float f)
 {
-	EventTrackVol e( t, f );
+	EventTrackVol e( t, f, Event::SOURCE_GUI );
 	writeToGuiRingbuffer( &e );
 }
 

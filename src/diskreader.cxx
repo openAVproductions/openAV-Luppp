@@ -437,7 +437,7 @@ int DiskReader::readMaster()
 		{
 			cJSON* fader = cJSON_GetObjectItem( master, "fader");
 			if ( fader ) {
-				EventTrackVol e( -1, fader->valuedouble );
+				EventTrackVol e( -1, fader->valuedouble, Event::SOURCE_LOAD );
 				writeToDspRingbuffer( &e );
 			}
 		}
@@ -603,7 +603,7 @@ int DiskReader::readTracks()
 					if( !fader ) {
 						LUPPP_WARN("Track %i has no fader data saved.", t);
 					} else {
-						EventTrackVol e( t, fader->valuedouble );
+						EventTrackVol e( t, fader->valuedouble, Event::SOURCE_LOAD );
 						writeToDspRingbuffer( &e );
 					}
 				}

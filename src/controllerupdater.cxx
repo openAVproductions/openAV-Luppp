@@ -86,10 +86,10 @@ void ControllerUpdater::mute(int t, bool b)
 		c.at(i)->mute(t,b);
 }
 
-void ControllerUpdater::masterVolume(float v)
+void ControllerUpdater::masterVolume(float v, Event::SOURCE s)
 {
 	for(unsigned int i = 0; i < c.size(); i++)
-		c.at(i)->masterVolume(v);
+		c.at(i)->masterVolume(v, s);
 }
 
 void ControllerUpdater::masterReturnVolume(float v)
@@ -167,9 +167,9 @@ void ControllerUpdater::recordArm(int t, bool r)
 		c.at(i)->recordArm(t,r);
 }
 
-void ControllerUpdater::volume(int t, float v)
+void ControllerUpdater::volume(int t, float v, Event::SOURCE s)
 {
-	for(unsigned int i = 0; i < c.size(); i++) c.at(i)->volume(t,v);
+	for(unsigned int i = 0; i < c.size(); i++) c.at(i)->volume(t,v,s);
 }
 
 void ControllerUpdater::pan(int t, float p)
