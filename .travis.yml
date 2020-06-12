@@ -9,6 +9,8 @@ env:
   - UPLOADTOOL_SUFFIX=$TRAVIS_BRANCH
 addons:
   apt:
+    sources:
+      - sourceline: deb http://archive.ubuntu.com/ubuntu xenial-backports universe
     packages:
       - libjpeg-dev
       - libsndfile1-dev
@@ -22,7 +24,7 @@ addons:
       - liblo-dev
       - libjack-dev
       - libsamplerate0-dev
-      - ninja-build
+      - ninja-build/xenial-backports
 install:
 - git clone git://git.tuxfamily.org/gitroot/non/fltk.git ntk
 - cd ntk && sudo ./waf configure build install && cd ..
