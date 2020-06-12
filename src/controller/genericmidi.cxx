@@ -607,7 +607,7 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
 	// gets the echo value from the JSON string
 	cJSON* echoJson = cJSON_GetObjectItem( binding, "echo" );
 	if ( echoJson ) {
-		tmp->echo = dataJson->valueint;
+		tmp->echo = echoJson->valueint;
 	}
 
 	// gets the Action type from the JSON string

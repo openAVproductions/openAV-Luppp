@@ -54,7 +54,8 @@ enum INPUT_TO {
 	INPUT_TO_SIDE_KEY,
 };
 enum SOURCE {
-	SOURCE_MIDI = 0,
+	SOURCE_UNKNOWN = 0,
+	SOURCE_MIDI,
 	SOURCE_GUI,
 	SOURCE_LOAD,
 };
@@ -411,7 +412,8 @@ public:
 	}
 
 	float vol;
-	EventMasterVol(float v = 0) : vol(v) {}
+	SOURCE source;
+	EventMasterVol(float v = 0, SOURCE s = SOURCE_UNKNOWN) : vol(v), source(s) {}
 };
 
 class EventMasterInputVol : public EventBase

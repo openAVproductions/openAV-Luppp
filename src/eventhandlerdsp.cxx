@@ -122,7 +122,7 @@ void handleDspEvents()
 			// ========= MASTER ===
 			case Event::MASTER_VOL: {
 				if ( availableRead >= sizeof(EventMasterVol) ) {
-					EventMasterVol ev(0);
+					EventMasterVol ev;
 					jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMasterVol) );
 					jack->masterVolume( ev.vol );
 				}

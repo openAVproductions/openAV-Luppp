@@ -52,9 +52,9 @@ void LupppGUI::masterInputToActive(int to,float f)
 	writeToGuiRingbuffer( &e );
 }
 
-void LupppGUI::masterVolume(float f)
+void LupppGUI::masterVolume(float f, SOURCE s)
 {
-	EventMasterVol e( f );
+	EventMasterVol e( f, s );
 	writeToGuiRingbuffer( &e );
 }
 
@@ -136,9 +136,9 @@ void LupppGUI::bpm(int bpm)
 	writeToGuiRingbuffer( &e );
 }
 
-void LupppGUI::volume(int t, float f)
+void LupppGUI::volume(int t, float f, SOURCE s)
 {
-	EventTrackVol e( t, f, Event::SOURCE_GUI );
+	EventTrackVol e( t, f, s );
 	writeToGuiRingbuffer( &e );
 }
 

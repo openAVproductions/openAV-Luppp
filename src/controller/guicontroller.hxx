@@ -34,7 +34,7 @@ public:
 		return "Luppp GUI";
 	}
 
-	void masterVolume(float f);
+	void masterVolume(float f, SOURCE s);
 	void masterReturnVolume(float f);
 	void masterInputVol(float v);
 	void masterInputTo(int to,float f);
@@ -55,7 +55,7 @@ public:
 
 	void pan(int t, float p);
 	void mute(int t, bool b);
-	void volume(int t, float f);
+	void volume(int t, float f, SOURCE s);
 	void progress(int t, int s, float p);
 	void recordArm(int t, bool b);
 	void launchScene( int scene );
