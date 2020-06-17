@@ -309,7 +309,7 @@ void handleDspEvents()
 				if ( availableRead >= sizeof(EventTrackPan) ) {
 					EventTrackPan ev;
 					jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackPan) );
-					jack->getLogic()->trackPan( ev.track, ev.pan );
+					jack->getLogic()->trackPan( ev.track, ev.pan, ev.source );
 					//jack->bindingTrack = ev.track;
 					break;
 				}
@@ -354,7 +354,7 @@ void handleDspEvents()
 				if ( availableRead >= sizeof(EventTrackJackSend) ) {
 					EventTrackJackSend ev;
 					jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackJackSend) );
-					jack->getLogic()->trackJackSend(ev.track,ev.value);
+					jack->getLogic()->trackJackSend( ev.track, ev.value, ev.source);
 					jack->bindingTrack  = ev.track;
 				}
 				break;
@@ -364,7 +364,7 @@ void handleDspEvents()
 				if ( availableRead >= sizeof(EventTrackSend) ) {
 					EventTrackSend ev;
 					jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTrackSend) );
-					jack->getLogic()->trackSend( ev.track, ev.send, ev.value );
+					jack->getLogic()->trackSend( ev.track, ev.send, ev.value, ev.source );
 					jack->bindingTrack = ev.track;
 					jack->bindingSend  = ev.send;
 				}

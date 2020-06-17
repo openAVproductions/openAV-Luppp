@@ -46,9 +46,9 @@ void LupppGUI::masterInputTo(int to,float f)
 	writeToGuiRingbuffer( &e );
 }
 
-void LupppGUI::masterInputToActive(int to,float f)
+void LupppGUI::masterInputToActive(int to, bool a)
 {
-	EventMasterInputToActive e( (Event::INPUT_TO)to, f );
+	EventMasterInputToActive e( (Event::INPUT_TO)to, a );
 	writeToGuiRingbuffer( &e );
 }
 
@@ -77,9 +77,9 @@ void LupppGUI::recordArm(int t, bool r)
 	writeToGuiRingbuffer( &e );
 }
 
-void LupppGUI::trackSend(int t, int send, float r)
+void LupppGUI::trackSend(int t, int send, float r, SOURCE s)
 {
-	EventTrackSend e( t, static_cast<Event::SEND_TYPE>(send), r );
+	EventTrackSend e( t, static_cast<Event::SEND_TYPE>(send), r, s );
 	writeToGuiRingbuffer( &e );
 }
 
@@ -95,9 +95,9 @@ void LupppGUI::trackSendActive(int t, int send, bool a)
 	writeToGuiRingbuffer( &e );
 }
 
-void LupppGUI::trackJackSend(int t, float v)
+void LupppGUI::trackJackSend(int t, float v, SOURCE s)
 {
-	EventTrackJackSend e(t,v);
+	EventTrackJackSend e( t, v, s );
 	writeToGuiRingbuffer(&e);
 }
 
@@ -142,9 +142,9 @@ void LupppGUI::volume(int t, float f, SOURCE s)
 	writeToGuiRingbuffer( &e );
 }
 
-void LupppGUI::pan(int t, float p)
+void LupppGUI::pan(int t, float p, SOURCE s)
 {
-	EventTrackPan e( t, p );
+	EventTrackPan e( t, p, s );
 	writeToGuiRingbuffer( &e );
 }
 

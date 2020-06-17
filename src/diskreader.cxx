@@ -613,7 +613,7 @@ int DiskReader::readTracks()
 					if( !pan ) {
 						LUPPP_WARN("Track %i has no pan data saved.", t);
 					} else {
-						EventTrackPan e( t, (pan->valuedouble*2)-1.f );
+						EventTrackPan e( t, (pan->valuedouble*2)-1, Event::SOURCE_LOAD );
 						writeToDspRingbuffer( &e );
 						LUPPP_WARN("Track %i has pan %f", pan->valuedouble);
 					}
@@ -632,8 +632,8 @@ int DiskReader::readTracks()
 						EventTrackSendActive e1( t, SEND_POSTFADER, sendActive->valueint );
 						EventTrackSendActive e2( t, SEND_KEY, keyActive ->valueint );
 
-						EventTrackSend e3( t, SEND_XSIDE, xside->valuedouble );
-						EventTrackSend e4( t, SEND_POSTFADER, send->valuedouble  );
+						EventTrackSend e3( t, SEND_XSIDE, xside->valuedouble, Event::SOURCE_LOAD );
+						EventTrackSend e4( t, SEND_POSTFADER, send->valuedouble, Event::SOURCE_LOAD );
 
 
 						writeToDspRingbuffer( &e1 );
@@ -644,7 +644,7 @@ int DiskReader::readTracks()
 					cJSON* jacksend       = cJSON_GetObjectItem( track, "jacksendAmount");
 					cJSON* jacksendActive = cJSON_GetObjectItem( track, "jacksendActive");
 					if(jacksend) {
-						EventTrackJackSend ev(t,jacksend->valuedouble);
+						EventTrackJackSend ev( t, jacksend->valuedouble, Event::SOURCE_LOAD );
 						writeToDspRingbuffer(&ev);
 					}
 					if(jacksendActive) {
