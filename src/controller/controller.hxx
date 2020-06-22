@@ -21,6 +21,7 @@
 #define LUPPP_CONTROLLER_H
 
 #include <string>
+#include <jack/jack.h>
 
 #include "../gridlogic.hxx"
 
