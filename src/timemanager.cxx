@@ -268,6 +268,7 @@ void TimeManager::process(Buffers* buffers)
 		// write new beat to UI (bar info currently not used)
 		EventTimeBarBeat e( barCounter, beatCounter );
 		writeToGuiRingbuffer( &e );
+		writeToDspRingbuffer( &e );
 
 
 

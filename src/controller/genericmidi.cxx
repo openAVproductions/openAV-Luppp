@@ -203,6 +203,18 @@ void GenericMIDI::trackJackSendActivate(int t, bool a)
 
 }
 
+void GenericMIDI::setBarBeat(int ba, int be)
+{
+	for(unsigned int i = 0; i < actionToMidi.size(); i++) {
+		Binding* b = actionToMidi.at(i);
+
+		// 4 beats per bar hardcoded
+		if ( b->action == TIME_BAR_BEAT && b->beat == be % 4 ) {
+			writeMidi( b->dataList, b->dataListSize );
+		}
+	}
+}
+
 void GenericMIDI::midi(unsigned char* midi)
 {
 	int status = midi[0];
@@ -582,6 +594,35 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
 		cJSON* dataList = cJSON_GetObjectItem( binding, "dataList" );
 		if ( !dataList ) {
 			LUPPP_WARN("Binding midi connect: doesn't have dataList field");
+			delete tmp;
+			return 0;
+		}
+
+		tmp->dataListSize = cJSON_GetArraySize( dataList );
+		tmp->dataList = new unsigned char[tmp->dataListSize];
+
+		for(int i = 0; i < tmp->dataListSize; i++ ) {
+			cJSON* dataListItem = cJSON_GetArrayItem( dataList, i );
+			tmp->dataList[i] = dataListItem->valueint;
+		}
+
+		return tmp;
+	}
+
+	if ( strcmp( actionJson->valuestring, "metronome:beat" ) == 0 ) {
+		tmp->action = Event::TIME_BAR_BEAT;
+
+		cJSON* beatJson = cJSON_GetObjectItem( binding, "beat"     );
+		if ( !beatJson ) {
+			LUPPP_WARN("Binding metronome beat: doesn't have beat field");
+			delete tmp;
+			return 0;
+		}
+		tmp->beat = beatJson->valueint;
+
+		cJSON* dataList = cJSON_GetObjectItem( binding, "dataList" );
+		if ( !dataList ) {
+			LUPPP_WARN("Binding metronome beat: doesn't have dataList field");
 			delete tmp;
 			return 0;
 		}

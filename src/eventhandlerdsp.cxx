@@ -290,6 +290,14 @@ void handleDspEvents()
 				}
 				break;
 			}
+			case Event::TIME_BAR_BEAT: {
+				if ( availableRead >= sizeof(EventTimeBarBeat) ) {
+					EventTimeBarBeat ev;
+					jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventTimeBarBeat) );
+					jack->getControllerUpdater()->setBarBeat(ev.bar, ev.beat);
+				}
+				break;
+			}
 
 			// ======== FX ===========
 

@@ -73,6 +73,8 @@ public:
 	bool footswitchNextScene;
 	bool footswitchPrevScene;
 
+	virtual void setBarBeat(int ba, int be);
+
 
 	void reset();
 

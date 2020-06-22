@@ -80,6 +80,7 @@ public:
 	/// Time
 	virtual void bpm(int bpm) {}
 	virtual void tapTempo(bool b) {}
+	virtual void setBarBeat(int ba, int be) {}
 
 	/// Special
 	virtual void specialScene(int t, int scene) {}

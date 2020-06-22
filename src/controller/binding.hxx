@@ -53,6 +53,7 @@ public:
 	int track;
 	int scene;
 	int send;
+	int beat;
 
 	/// maps from Gridlogic::State to MIDI output value from binding
 	std::map<int,int> clipStateMap;

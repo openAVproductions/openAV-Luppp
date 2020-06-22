@@ -187,6 +187,11 @@ void ControllerUpdater::metronomeEnable(bool b)
 	for(unsigned int i = 0; i < c.size(); i++) c.at(i)->metronomeEnable(b);
 }
 
+void ControllerUpdater::setBarBeat(int ba, int be)
+{
+	for(unsigned int i = 0; i < c.size(); i++) c.at(i)->setBarBeat(ba, be);
+}
+
 void ControllerUpdater::midiConnect(jack_port_t *a, jack_port_t *b)
 {
 	for(unsigned int i = 0; i < c.size(); i++) c.at(i)->midiConnect(a, b);
