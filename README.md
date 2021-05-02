@@ -23,7 +23,9 @@ CAIRO
 LIBLO
 LIBSNDFILE
 LIBSAMPLERATE
-NTK  ( git clone git://git.tuxfamily.org/gitroot/non/fltk.git ntk )
+NTK  ( git clone git://git.tuxfamily.org/gitroot/non/fltk.git ntk
+    or git clone https://git.kx.studio/non/ntk )
+
 ```
 
 Install
