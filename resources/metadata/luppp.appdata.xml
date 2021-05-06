@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application>
-  <id type="desktop">luppp.desktop</id>
-  <licence>CC0</licence>
+<component type="desktop-application">
+  <id>luppp.desktop</id>
+  <project_license>GPL-3.0</project_license>
+  <metadata_license>CC0-1.0</metadata_license>
   <name>OpenAV Luppp</name>
   <description>
     <p>
@@ -22,8 +23,10 @@
   </description>
   <screenshots>
     <!-- the width and height are optional, but suggested -->
-    <screenshot type="default" width="1110" height="650">https://raw.github.com/harryhaaren/openAV-Luppp/master/resources/screenshots/1.0.png</screenshot>
+    <screenshot type="default" width="1110" height="650">
+      <image>https://raw.github.com/harryhaaren/openAV-Luppp/master/resources/screenshots/1.0.png</image>
+    </screenshot>
   </screenshots>
   <url type="homepage">http://openavproductions.com/luppp</url>
-  <updatecontact>zbyszek@in.waw.pl</updatecontact>
-</application>
+  <update_contact>zbyszek@in.waw.pl</update_contact>
+</component>
