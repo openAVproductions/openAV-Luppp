@@ -901,6 +901,12 @@ int Gui::keyboardHandler(int event)
 		writeToDspRingbuffer( &e );
 		return 1;
 	}
+	if ( Fl::event_key( FL_Delete  ) ) {
+		EventGridState e( gui->specialTrack, gui->specialScene,
+				  GridLogic::STATE_EMPTY);
+		writeToDspRingbuffer( &e );
+		return 1;
+	}
 
 	return 0;
 }
