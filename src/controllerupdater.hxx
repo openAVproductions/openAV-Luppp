@@ -21,6 +21,7 @@
 
 #include <vector>
 #include <iostream>
+#include <jack/jack.h>
 
 #include "controller/controller.hxx"
 
@@ -86,6 +87,9 @@ public:
 	void tapTempo(bool b);
 
 	void metronomeEnable(bool b);
+
+	void midiConnect(jack_port_t* a, jack_port_t* b);
+	void midiDisconnect(jack_port_t* a, jack_port_t* b);
 
 private:
 	std::vector<Controller*> c;

@@ -295,6 +295,12 @@ Jack::Jack( std::string name ) :
 		LUPPP_ERROR("%s","Error setting timebase callback");
 	}
 
+	if ( jack_set_port_connect_callback(client,
+                                        static_connect,
+                                        static_cast<void*>(this)) ) {
+		LUPPP_ERROR("%s","Error setting JACK connect callback");
+    }
+
 	//Controller* m = new AkaiAPC();
 
 	// TODO: Add GUI dialog to add controllers, and insert them into the controller map.
@@ -758,6 +764,12 @@ int Jack::timebase(jack_transport_state_t state,
 	return 0;
 }
 
+void Jack::connect(jack_port_id_t a, jack_port_id_t b, int connect)
+{
+	EventMidiConnect e(a, b, connect);
+	writeToDspRingbuffer( &e );
+}
+
 int Jack::static_process(jack_nframes_t nframes, void *instance)
 {
 	return static_cast<Jack*>(instance)->process(nframes);
@@ -770,4 +782,9 @@ int Jack::static_timebase(jack_transport_state_t state,
                           void* instance)
 {
 	return static_cast<Jack*>(instance)->timebase(state,nframes, pos, newPos );
+}
+
+void Jack::static_connect(jack_port_id_t a, jack_port_id_t b, int connect, void *instance)
+{
+	static_cast<Jack*>(instance)->connect(a, b, connect);
 }

@@ -21,6 +21,7 @@
 #define LUPPP_CONTROLLER_H
 
 #include <string>
+#include <jack/jack.h>
 
 #include "../gridlogic.hxx"
 
@@ -94,6 +95,10 @@ public:
 
 	/// reset controller
 	virtual void reset();
+
+	/// Jack MIDI (dis)connect
+	virtual void midiConnect( jack_port_t* a, jack_port_t *b ) {}
+	virtual void midiDisconnect( jack_port_t* a, jack_port_t *b ) {}
 
 private:
 	static int privateID;
