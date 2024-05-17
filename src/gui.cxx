@@ -51,6 +51,7 @@ extern Jack* jack;
 #include "../planning/header.c"
 #include "../planning/luppp.c"
 #include "../planning/bg.c"
+#include "../planning/settings.c"
 
 using namespace std;
 
@@ -97,7 +98,8 @@ void option_controller_cb(Fl_Widget*,void* data)
 static void gui_header_callback(Fl_Widget *w, void *data)
 {
 	Gui* g = (Gui*)data;
-	if ( Fl::event_x() > 130 ) {
+
+	if ( Fl::event_x() > 166 ) {
 		return;
 	}
 
@@ -116,7 +118,7 @@ static void gui_header_callback(Fl_Widget *w, void *data)
 		rclick_menu[2].deactivate();
 	}
 
-	Fl_Menu_Item *m = (Fl_Menu_Item*) rclick_menu->popup( 10, 38, 0, 0, 0);
+	Fl_Menu_Item *m = (Fl_Menu_Item*) rclick_menu->popup( 130, 38, 0, 0, 0);
 
 	if ( !m ) {
 		return;
@@ -405,7 +407,10 @@ Gui::Gui(const char* argZero) :
 
 			Avtk::Image* lupppImage = new Avtk::Image(0,0,130,36,"luppp");
 			lupppImage->setPixbuf( lupppImg.pixel_data, 4 );
-			lupppImage->callback( gui_header_callback, this );
+
+			Avtk::Image* settingsImage = new Avtk::Image(131,0,36,36,"settings");
+			settingsImage->setPixbuf( settingsImg.pixel_data, 4 );
+			settingsImage->callback( gui_header_callback, this );
 
 			Avtk::Image* headerImage = new Avtk::Image( window.w() - 270,0,270,36,"header");
 			headerImage->setPixbuf( header.pixel_data, 4 );
