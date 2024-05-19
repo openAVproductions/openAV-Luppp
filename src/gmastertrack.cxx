@@ -230,23 +230,29 @@ GMasterTrack::GMasterTrack(int x, int y, int w, int h, const char* l ) :
 	inputVolume.callback( gmastertrack_inputVolume_callback, 0 );
 
 	transport.callback( gmastertrack_transport_callback, &ID );
+	transport.tooltip("Stop/Start Playback");
 
 	tapTempo.callback( gmastertrack_button_callback, &ID );
+	tapTempo.tooltip("Left click to tap pattern. Right click to set BPM Value");
 
 	metronomeButton.callback( gmastertrack_button_callback, 0 );
+	metronomeButton.tooltip("Activate Metronome");
 
 	tempoDial.callback( gmastertrack_tempoDial_callback, 0 );
 
 	inputToSend.setColor( 0, 1.0, 0 );
 	inputToSend.callback( gmastertrack_sendButton_callback, 0 );
+	inputToSend.tooltip("Activate the Send output.\n\nKnob above sets the amount, e.g. Reverb");
 	inputToSendVol.callback( gmastertrack_sendVol_callback, 0 );
 
 	inputToSidechainKey.setColor( 0, 0.6, 1 );
 	inputToSidechainKey.callback( gmastertrack_sidchainKeyButton_callback, 0 );
+	inputToSidechainKey.tooltip("Sets the input as Key-Signal for Sidechaining.\n\nKnob above sets how much of the input goes to the Sidechain-Signal");
 	inputToSidechainSignalVol.value( 0 );
 	inputToSidechainSignalVol.callback( gmastertrack_xSideVol_callback, 0 );
 
 	inputToMix.callback   ( gmastertrack_mixButton_callback, 0 );
+	inputToMix.tooltip("Routes input to master out to monitor what you play.\n\nKnob above sets the volume to the master outs");
 	inputToMixVol.callback   ( gmastertrack_mixVol_callback, 0 );
 
 	tempoDial.align( FL_ALIGN_CENTER );
