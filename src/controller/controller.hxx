@@ -68,6 +68,7 @@ public:
 	virtual void masterVolume(float f) {}
 	virtual void masterReturnVolume(float f) {}
 	virtual void metronomeEnable(bool b) {}
+	virtual void EventTransportState(bool b) {}  // add play pause to midi controller?
 
 	/// FX
 	virtual void trackSend(int t, int send, float v) {}
