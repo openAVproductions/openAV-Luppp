@@ -20,6 +20,7 @@
 #ifndef LUPPP_GENERIC_MIDI_H
 #define LUPPP_GENERIC_MIDI_H
 
+#include "../event.hxx"
 #include "controller.hxx"
 
 #include <string>
@@ -56,16 +57,18 @@ public:
 
 	void launchScene( int scene );
 
-	void volume(int t, float f);
+	void masterVolume(float f, Event::SOURCE s);
+	void volume(int t, float f, Event::SOURCE s);
+	void pan(int t, float f, Event::SOURCE s);
 
 
 	void recordArm(int t, bool b);
 	void setSceneState(int track, int clip, GridLogic::State s);
 
-	void trackSend(int t, int send, float v);
+	void trackSend(int t, int send, float v, Event::SOURCE s);
 	void trackSendActive(int t, int send, bool a);
 
-	virtual void trackJackSend(int t, float v);
+	virtual void trackJackSend(int t, float v, Event::SOURCE s);
 	virtual void trackJackSendActivate(int t, bool a);
 
 	/// footswitch -> scene launch controls

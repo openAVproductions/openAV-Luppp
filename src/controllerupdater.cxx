@@ -86,10 +86,10 @@ void ControllerUpdater::mute(int t, bool b)
 		c.at(i)->mute(t,b);
 }
 
-void ControllerUpdater::masterVolume(float v)
+void ControllerUpdater::masterVolume(float v, Event::SOURCE s)
 {
 	for(unsigned int i = 0; i < c.size(); i++)
-		c.at(i)->masterVolume(v);
+		c.at(i)->masterVolume(v, s);
 }
 
 void ControllerUpdater::masterReturnVolume(float v)
@@ -109,10 +109,10 @@ void ControllerUpdater::setTrackSendActive(int t, int send, bool v)
 	for(unsigned int i = 0; i < c.size(); i++)
 		c.at(i)->trackSendActive(t, send, v);
 }
-void ControllerUpdater::setTrackSend(int t, int send, float v)
+void ControllerUpdater::setTrackSend(int t, int send, float v, Event::SOURCE s)
 {
 	for(unsigned int i = 0; i < c.size(); i++)
-		c.at(i)->trackSend(t, send, v);
+		c.at(i)->trackSend(t, send, v, s);
 }
 
 void ControllerUpdater::setTrackJackSendActive(int t, bool v)
@@ -121,10 +121,10 @@ void ControllerUpdater::setTrackJackSendActive(int t, bool v)
 		c.at(i)->trackJackSendActivate(t, v);
 }
 
-void ControllerUpdater::setTrackJackSend(int t, float v)
+void ControllerUpdater::setTrackJackSend(int t, float v, Event::SOURCE s)
 {
 	for(unsigned int i = 0; i < c.size(); i++)
-		c.at(i)->trackJackSend(t, v);
+		c.at(i)->trackJackSend(t, v, s);
 }
 
 void ControllerUpdater::specialScene(int t, int scene)
@@ -167,14 +167,14 @@ void ControllerUpdater::recordArm(int t, bool r)
 		c.at(i)->recordArm(t,r);
 }
 
-void ControllerUpdater::volume(int t, float v)
+void ControllerUpdater::volume(int t, float v, Event::SOURCE s)
 {
-	for(unsigned int i = 0; i < c.size(); i++) c.at(i)->volume(t,v);
+	for(unsigned int i = 0; i < c.size(); i++) c.at(i)->volume(t,v,s);
 }
 
-void ControllerUpdater::pan(int t, float p)
+void ControllerUpdater::pan(int t, float p, Event::SOURCE s)
 {
-	for(unsigned int i = 0; i < c.size(); i++) c.at(i)->pan(t,p);
+	for(unsigned int i = 0; i < c.size(); i++) c.at(i)->pan(t,p,s);
 }
 
 void ControllerUpdater::tapTempo(bool b)

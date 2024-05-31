@@ -58,7 +58,7 @@ public:
 	void reset();
 	void mute(int t, bool b);
 
-	void masterVolume(float v);
+	void masterVolume(float v, Event::SOURCE s);
 	void masterReturnVolume(float v);
 	void masterInputToActive(int to, bool v);
 	void masterInputTo( int inputTo, float vol );
@@ -66,10 +66,10 @@ public:
 
 	void setTrackSceneProgress(int t, int s, float p);
 	void setTrackSendActive(int t, int send, bool v);
-	void setTrackSend(int t, int send, float v);
+	void setTrackSend(int t, int send, float v, Event::SOURCE s);
 
 	void setTrackJackSendActive(int t, bool v);
-	void setTrackJackSend(int t, float v);
+	void setTrackJackSend(int t, float v, Event::SOURCE s);
 
 	void specialScene(int t, int scene);
 
@@ -79,9 +79,9 @@ public:
 
 	void recordArm(int t, bool r);
 
-	void volume(int t, float v);
+	void volume(int t, float v, Event::SOURCE s);
 
-	void pan(int t, float p);
+	void pan(int t, float p, Event::SOURCE s);
 
 	void tapTempo(bool b);
 

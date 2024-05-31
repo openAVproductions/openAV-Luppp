@@ -34,18 +34,18 @@ public:
 		return "Luppp GUI";
 	}
 
-	void masterVolume(float f);
+	void masterVolume(float f, SOURCE s);
 	void masterReturnVolume(float f);
 	void masterInputVol(float v);
 	void masterInputTo(int to,float f);
-	void masterInputToActive(int to,float f);
+	void masterInputToActive(int to,bool a);
 
 	void metronomeEnable(bool b);
 
-	void trackSend(int t, int send, float r);
+	void trackSend(int t, int send, float r, SOURCE s);
 	void trackSendActive(int t, int send, bool a);
 
-	virtual void trackJackSend(int t, float v);
+	virtual void trackJackSend(int t, float v, SOURCE s);
 	virtual void trackJackSendActivate(int t, bool a);
 
 	void bpm(int bpm);
@@ -53,9 +53,9 @@ public:
 
 	void specialScene(int t, int scene);
 
-	void pan(int t, float p);
+	void pan(int t, float p, SOURCE s);
 	void mute(int t, bool b);
-	void volume(int t, float f);
+	void volume(int t, float f, SOURCE s);
 	void progress(int t, int s, float p);
 	void recordArm(int t, bool b);
 	void launchScene( int scene );
