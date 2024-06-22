@@ -24,6 +24,7 @@
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 #include "../gui.hxx"
+#include "../hotkeymanager.hxx"
 
 extern Gui* gui;
 
@@ -278,6 +279,7 @@ int ClipSelector::handle(int event)
 					{ "Use as tempo" },
 					{ "Rename", 0, 0, 0, FL_MENU_DIVIDER},
 					{ "Clear" },
+					{ "Assign Hotkey" },
 					{ 0 }
 				};
 				Fl_Menu_Item *m = (Fl_Menu_Item*) rclick_menu->popup(Fl::event_x(), Fl::event_y(), 0, 0, 0);
@@ -285,6 +287,25 @@ int ClipSelector::handle(int event)
 					return 0;
 				} else if ( strcmp(m->label(), "Load") == 0 ) {
 					gui->selectLoadSample( ID, clipNum );
+				} else if ( strcmp(m->label(), "Assign Hotkey") == 0 ) {
+					
+					int currentKey = getCurrentKeyForClip(ID, clipNum);
+					char currentKeyStr[2] = {0};
+					
+					if (currentKey) {
+						currentKeyStr[0] = static_cast<char>(currentKey);
+					}
+										
+					const char* hotkey = fl_input( "Assign hotkey: ", currentKeyStr );
+					// char buffer [50];
+					// snprintf(buffer, sizeof(buffer), "Hot key assignment: %i, %i, %s", ID, clipNum, hotkey);
+					// printf("%s\n", buffer);
+					
+					if (hotkey && strlen(hotkey) == 1) {
+						int newKey = static_cast<int>(hotkey[0]);
+						addKeyToGrid(newKey, ID, clipNum);
+					}
+
 				} else if ( strcmp(m->label(), "Save") == 0 ) {
 					//gui->saveBufferPath = "/tmp/test.wav";
 					char* tmp = gui->selectSavePath();
