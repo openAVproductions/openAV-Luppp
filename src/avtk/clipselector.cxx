@@ -305,7 +305,9 @@ int ClipSelector::handle(int event)
 					}
 
 					int newKey = dialog->getHotkey();
-					updateKeyToGrid(currentKey, newKey, ID, clipNum);
+					if (newKey) {
+						updateKeyToGrid(currentKey, newKey, ID, clipNum);
+					}
 					
 				} else if ( strcmp(m->label(), "Save") == 0 ) {
 					//gui->saveBufferPath = "/tmp/test.wav";
