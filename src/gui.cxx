@@ -180,9 +180,11 @@ static void gui_header_callback(Fl_Widget *w, void *data)
 
 		return;
 	} else if ( strcmp(m->label(), "Save Session   ") == 0 ) {
-		const char* name = fl_input( "Save session as", gui->getDiskWriter()->getLastSaveName().c_str() );
+		const string projectsDir = gui->getProjectsDir();
+		string prompt = "Save session as " + projectsDir;
+		const char* name = fl_input( prompt.c_str(), gui->getDiskWriter()->getLastSaveName().c_str() );
 		if ( name ) {
-			gui->getDiskWriter()->initialize( gui->getProjectsDir().c_str(), name );
+			gui->getDiskWriter()->initialize( projectsDir, name );
 			LUPPP_NOTE("%s %s","Saving session as ", name );
 			EventSessionSave e;
 			writeToDspRingbuffer( &e );
