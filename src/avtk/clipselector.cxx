@@ -277,9 +277,9 @@ int ClipSelector::handle(int event)
 					{0},
 					//{ "Record" },
 					{ "Use as tempo" },
+					{ "Assign Hotkey" },
 					{ "Rename", 0, 0, 0, FL_MENU_DIVIDER},
 					{ "Clear" },
-					{ "Assign Hotkey" },
 					{ 0 }
 				};
 				Fl_Menu_Item *m = (Fl_Menu_Item*) rclick_menu->popup(Fl::event_x(), Fl::event_y(), 0, 0, 0);
@@ -303,7 +303,7 @@ int ClipSelector::handle(int event)
 					
 					if (hotkey && strlen(hotkey) == 1) {
 						int newKey = static_cast<int>(hotkey[0]);
-						addKeyToGrid(newKey, ID, clipNum);
+						updateKeyToGrid(currentKey, newKey, ID, clipNum);
 					}
 
 				} else if ( strcmp(m->label(), "Save") == 0 ) {

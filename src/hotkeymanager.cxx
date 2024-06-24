@@ -12,6 +12,22 @@ void addKeyToGrid(int key, int id, int clipNumber) {
     keyToGrid[key] = {id, clipNumber};
 }
 
+void updateKeyToGrid(int oldKey, int newkey, int id, int clipNumber) {
+    removeKeyFromGrid(oldKey, id, clipNumber);
+    removeKeyFromGrid(newkey, id, clipNumber); // remove previous assignment of new key if it exists
+    addKeyToGrid(newkey, id, clipNumber);
+}
+
+void removeKeyFromGrid(int key, int id, int clipNumber) {
+    for (auto it = keyToGrid.begin(); it != keyToGrid.end(); ) {
+        if (it->second.first == id && it->second.second == clipNumber) {
+            it = keyToGrid.erase(it);  // Remove the existing mapping and get the new iterator
+        } else {
+            ++it;  // Move to the next element
+        }
+    }
+}
+
 int getCurrentKeyForClip(int id, int clipNumber) {
     for (const auto& pair : keyToGrid) {
         if (pair.second.first == id && pair.second.second == clipNumber) {
