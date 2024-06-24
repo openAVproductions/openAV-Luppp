@@ -579,9 +579,9 @@ int Gui::keyboardHandler(int event)
 		
 		// Check if the event text is a single character and in our map
         if (eventKey) {
-			char buffer [50];
-			snprintf(buffer, sizeof(buffer), "Keyboard input: %s | %i", eventText, eventKey);
-			printf("%s\n", buffer);
+			// char buffer [50];
+			// snprintf(buffer, sizeof(buffer), "Keyboard input: %s | %i", eventText, eventKey);
+			// printf("%s\n", buffer);
 
             if (keyToGrid.find(eventKey) != keyToGrid.end()) {
                 auto gridPos = keyToGrid[eventKey];

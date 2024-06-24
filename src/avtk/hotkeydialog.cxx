@@ -18,7 +18,7 @@ int HotkeyDialog::handle(int event) {
     switch (event) {
     case FL_KEYDOWN:
         hotkey = Fl::event_key();
-        std::cout << "Hotkey captured: " << hotkey << std::endl;
+        //std::cout << "Hotkey captured: " << hotkey << std::endl;
         hide();
         return 1;
     case FL_SHORTCUT:
