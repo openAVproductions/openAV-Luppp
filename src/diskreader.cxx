@@ -98,7 +98,7 @@ int DiskReader::loadPreferences()
 		string dir=getenv("HOME");
 		if(projDir) {
 			stringstream s;
-			s<<dir<<"/"<<projDir->valuestring;
+			s<<dir<<"/.local/share"<<"/"<<projDir->valuestring;
 			dir=s.str();
 		}
 		gui->setProjectsDir(dir);
