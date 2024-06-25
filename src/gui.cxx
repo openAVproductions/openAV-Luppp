@@ -554,7 +554,7 @@ int Gui::quit()
 	// ensure the subwindows are closed
 	optionWindow->hide();
 	audioEditor->hide();
-
+	gui->getDiskWriter()->writeDefaultConfigToUserHome();
 	// quit main window, causing program termination
 	window.hide();
 
@@ -577,7 +577,6 @@ int Gui::keyboardHandler(int event)
 		const char* eventText = Fl::event_text();
 		int eventKey = Fl::event_key();
 		
-		// Check if the event text is a single character and in our map
         if (eventKey) {
 			// char buffer [50];
 			// snprintf(buffer, sizeof(buffer), "Keyboard input: %s | %i", eventText, eventKey);
