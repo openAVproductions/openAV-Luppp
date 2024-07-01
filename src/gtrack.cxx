@@ -63,14 +63,17 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
 	sendDial.callback( gtrack_sendDial_cb, this );
 	sendActive.setColor( 0, 1.0, 0.0 );
 	sendActive.callback( gtrack_send_cb, this );
+	sendActive.tooltip("Activate send on this track.\n\nKnob above sets amount.");
 
 	xsideDial.callback( gtrack_xsideDial_cb, this );
 	xsideDial.align( FL_ALIGN_BOTTOM );
 	keyActive.callback( gtrack_key_cb, this );
 	keyActive.setColor( 0, 0.6, 1 );
+	keyActive.tooltip("Sets track as Key-Signal for Sidechaining.\n\nKnob above sets how much of the input goes to the Sidechain-signal out to master.");
 
 	recordActive.setColor( 1, 0.0, 0.0 );
 	recordActive.callback( gtrack_record_cb, this );
+	recordActive.tooltip("Arm track recording (?)");
 
 	volume.callback( gtrack_vol_cb, this );
 	panDial.callback( gtrack_pan_cb, this );
@@ -79,6 +82,7 @@ GTrack::GTrack(int x, int y, int w, int h, const char* l ) :
 
 	jackSendActivate.setColor( 1, 1, 0 );
 	jackSendActivate.callback(gtrack_jacksendactivate_cb,this);
+	jackSendActivate.tooltip("Add FX");
 	jackSendDial.align(FL_ALIGN_INSIDE);
 	jackSendDial.callback(gtrack_jacksend_cb,this);
 	jackSendDial.value(1.0);
@@ -238,7 +242,7 @@ void gtrack_record_cb(Fl_Widget *w, void *data)
 		EventTrackRecordArm e( track->ID, 0.0f );
 		writeToDspRingbuffer( &e );
 	}
-	//printf("track %i record Arm %s\n", track->ID, b ? "off" : "on" );
+	printf("track %i record Arm %s\n", track->ID, b ? "off" : "on" );
 }
 
 void gtrack_jacksendactivate_cb(Fl_Widget* w,void *data)
