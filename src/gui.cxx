@@ -194,7 +194,7 @@ static void gui_header_callback(Fl_Widget *w, void *data)
 	}
 }
 
-OptionsWindow* Gui::getMidiOptionsWindow()
+MidiOptionsWindow* Gui::getMidiOptionsWindow()
 {
 	return midiOptionWindow;
 }
@@ -452,7 +452,7 @@ Gui::Gui(const char* argZero) :
 	tracks.at( specialTrack )->getClipSelector()->setSpecial( specialScene );
 
 
-	midiOptionWindow = new OptionsWindow();
+	midiOptionWindow = new MidiOptionsWindow();
 
 	// Create AudioEditor after window.end() has been called
 	audioEditor = new AudioEditor();
