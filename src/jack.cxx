@@ -101,7 +101,6 @@ Jack::Jack( std::string name ) :
 
 	buffers.nframes = jack_get_buffer_size( client );
 	buffers.samplerate = jack_get_sample_rate( client );
-
 	EventSamplerate e(buffers.samplerate);
 	writeToGuiRingbuffer( &e );
 
@@ -294,6 +293,7 @@ Jack::Jack( std::string name ) :
 	                                static_cast<void*>(this)) ) {
 		LUPPP_ERROR("%s","Error setting timebase callback");
 	}
+	setBufferSizeCallback();
 
 	//Controller* m = new AkaiAPC();
 
@@ -739,6 +739,18 @@ void Jack::inputToActive(INPUT_TO to, bool a)
 int Jack::getBuffersize()
 {
 	return jack_get_buffer_size( client );
+}
+
+int Jack::setBufferSizeCallback()
+{
+	return jack_set_buffer_size_callback(client, bufferSizeCallback, this);
+}
+
+int Jack::bufferSizeCallback(jack_nframes_t nframes, void *arg)
+{
+	Jack* jackInstance = static_cast<Jack*>(arg);
+	jackInstance->buffers.nframes = nframes;
+	return 0;
 }
 
 int Jack::getSamplerate()

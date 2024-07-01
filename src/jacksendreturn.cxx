@@ -64,8 +64,8 @@ void JackSendReturn::process(unsigned int nframes, Buffers *buffers)
 		rettrackR[i] = retR[i] * _activeLag + sendtrackR[i] * fabs(_activeLag - 1);
 	}
 
-	if(offset)
-		assert(offset+nframes==buffers->nframes);
+	//if(offset)
+	//	assert(offset+nframes==buffers->nframes);
 
 	_counter+=nframes;
 

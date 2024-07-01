@@ -66,6 +66,8 @@ public:
 
 	int getBuffersize();
 	int getSamplerate();
+	int setBufferSizeCallback();
+	static int bufferSizeCallback(jack_nframes_t nframes, void *arg);
 
 	// Luppp process callback: bar() events can occur between these
 	void processFrames(int nframes);
