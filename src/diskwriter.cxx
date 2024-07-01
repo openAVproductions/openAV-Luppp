@@ -31,6 +31,7 @@
 #include <FL/fl_ask.H>
 
 #include "gui.hxx"
+#include "hotkeymanager.hxx"
 #include "gmastertrack.hxx"
 
 #include "controller/genericmidi.hxx"
@@ -474,9 +475,29 @@ void DiskWriter::writeDefaultConfigToUserHome()
 
 	// per track send and return option
 	cJSON_AddNumberToObject( prfs, "enablePerTrackSendReturns", 0 );
+
+	cJSON* hotkeyAssignment = cJSON_CreateObject();
+
+    // Iterate through the keyToGrid map and add each key-value pair to hotkeyAssignment
+    for (const auto& pair : keyToGrid) {
+        int key = pair.first;
+        int id = pair.second.first;
+        int clipNumber = pair.second.second;
+
+        // Create an array for the id and clipNumber
+        cJSON* array = cJSON_CreateArray();
+        cJSON_AddItemToArray(array, cJSON_CreateNumber(id));
+        cJSON_AddItemToArray(array, cJSON_CreateNumber(clipNumber));
+
+        // Convert key to string and add to hotkeyAssignment
+        cJSON_AddItemToObject(hotkeyAssignment, std::to_string(key).c_str(), array);
+    }
+    cJSON_AddItemToObject(prfs, "hotkeyAssignment", hotkeyAssignment);
+	
 	// test output on console
 	// cout << endl << cJSON_Print( prfs ) << endl << endl;
-
+	
+	
 
 	// write JSON to .config/openAV/luppp/luppp.prfs
 	stringstream f;

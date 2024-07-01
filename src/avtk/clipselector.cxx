@@ -18,12 +18,14 @@
 
 
 #include "clipselector.hxx"
+#include "hotkeydialog.hxx"
 
 #include <unistd.h>
 
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 #include "../gui.hxx"
+#include "../hotkeymanager.hxx"
 
 extern Gui* gui;
 
@@ -276,6 +278,7 @@ int ClipSelector::handle(int event)
 					{0},
 					//{ "Record" },
 					{ "Use as tempo" },
+					{ "Assign Hotkey" },
 					{ "Rename", 0, 0, 0, FL_MENU_DIVIDER},
 					{ "Clear" },
 					{ 0 }
@@ -285,6 +288,33 @@ int ClipSelector::handle(int event)
 					return 0;
 				} else if ( strcmp(m->label(), "Load") == 0 ) {
 					gui->selectLoadSample( ID, clipNum );
+				} else if ( strcmp(m->label(), "Assign Hotkey") == 0 ) {
+					int currentKey = getCurrentKeyForClip(ID, clipNum);
+					char currentKeyStr[2] = {0};
+					
+					if (currentKey) {
+						currentKeyStr[0] = static_cast<char>(currentKey);
+					}
+										
+					string title = "Assign New Hotkey";
+					string message = "\nCurrent key: ";
+					if (currentKeyStr[0]){
+						message = message + string(1,  currentKeyStr[0]) + "\n\n";
+					} else {
+						message = message + "No key set\n\n";
+					}
+					message = message + "Press new hotkey:";
+					HotkeyDialog* dialog = new HotkeyDialog(300, 125, title.c_str(), message.c_str());
+					dialog->show();
+					while (dialog->shown()) {
+						Fl::wait();
+					}
+
+					int newKey = dialog->getHotkey();
+					if (newKey) {
+						updateKeyToGrid(currentKey, newKey, ID, clipNum);
+					}
+					
 				} else if ( strcmp(m->label(), "Save") == 0 ) {
 					//gui->saveBufferPath = "/tmp/test.wav";
 					char* tmp = gui->selectSavePath();

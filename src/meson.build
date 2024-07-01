@@ -18,6 +18,7 @@ luppp_src = files(
   'gridlogic.cxx',
   'gtrack.cxx',
   'gui.cxx',
+  'hotkeymanager.cxx',
   'jack.cxx',
   'jacksendreturn.cxx',
   'logic.cxx',
