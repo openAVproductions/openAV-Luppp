@@ -412,7 +412,7 @@ ControllerUI::~ControllerUI()
 
 OptionsWindow::OptionsWindow()
 {
-	window = new Fl_Double_Window(400,400,"Options");
+	window = new Fl_Double_Window(400,400,"Midi Options");
 
 	window->set_non_modal();
 

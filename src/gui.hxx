@@ -57,7 +57,7 @@ public:
 	void askQuit();
 
 	/// returns the options window
-	OptionsWindow* getOptionsWindow();
+	OptionsWindow* getMidiOptionsWindow();
 
 	/// open audio editor window with an AudioBuffer
 	AudioEditor* getAudioEditor();
@@ -127,7 +127,7 @@ private:
 
 	Fl_Group* lupppGroup;
 
-	OptionsWindow*    optionWindow;
+	OptionsWindow*    midiOptionWindow;
 
 	std::string         lupppProjectsDir;
 
