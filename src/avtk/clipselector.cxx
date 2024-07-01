@@ -297,7 +297,13 @@ int ClipSelector::handle(int event)
 					}
 										
 					string title = "Assign New Hotkey";
-					string message = "\nCurrent assignment: " + string(1,  currentKeyStr[0]) + "\n\nPress new hotkey:";
+					string message = "\nCurrent key: ";
+					if (currentKeyStr[0]){
+						message = message + string(1,  currentKeyStr[0]) + "\n\n";
+					} else {
+						message = message + "No key set\n\n";
+					}
+					message = message + "Press new hotkey:";
 					HotkeyDialog* dialog = new HotkeyDialog(300, 125, title.c_str(), message.c_str());
 					dialog->show();
 					while (dialog->shown()) {
