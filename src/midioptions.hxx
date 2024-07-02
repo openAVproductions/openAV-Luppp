@@ -83,9 +83,9 @@ private:
 	std::string target;
 	std::string author;
 	std::string link;
+	std::string authorMessage;
 
-	Avtk::Button* authorLabel;
-	Avtk::Button* linkLabel;
+	Fl_Button* authorLabel;
 
 	std::vector<int> bindingID;
 

@@ -105,7 +105,7 @@ static void updateLinkCB(Fl_Widget* w, void* data)
 
 }
 
-static void exportMidiBinding(Fl_Widget* w, void* data)
+static void exportMidiBindingCB(Fl_Widget* w, void* data)
 {
 	updateAuthorCB(w, data);
 	updateLinkCB(w, data);
@@ -134,7 +134,7 @@ static void removeControllerCB(Fl_Widget* w, void* data)
 	self->optionsWindow->tabs->redraw();
 
 	// FIXME: confirm action here?
-
+	
 	//LUPPP_NOTE("Removing controllerID %i", self->controllerID );
 	EventControllerInstanceRemove e( self->controllerID );
 	writeToDspRingbuffer( &e );
@@ -149,7 +149,7 @@ static void addNewController(Fl_Widget* w, void* ud)
 
 	GenericMIDI* c = 0;
 
-	const char* name = fl_input( "MIDI Controller name: ", "" );
+	const char* name = fl_input( "MIDI Controller Name: ", "" );
 	if ( name ) {
 		c = new GenericMIDI( 0, name);
 	} else {
@@ -251,41 +251,36 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
 
 	widget = new Fl_Group(x, y, w, h, name.c_str());
 	{
-		// Author Label
-		Fl_Box* authorLabelStat = new Fl_Box(x + 10, y + 10, 180, 25, "Author:");
-		authorLabelStat->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-
-		// Link Label
-		Fl_Box* linkLabelStat = new Fl_Box(x + 210, y + 10, 180, 25, "URL:");
-		linkLabelStat->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-
-		// Author / Link Buttons
-		authorLabel = new Avtk::Button(x + 10, y + 35, 180, 25, "Update Author");
-		linkLabel = new Avtk::Button(x + 210, y + 35, 180, 25, "Update Link");
-
-		authorLabel->callback(updateAuthorCB, this);
-		linkLabel->callback(updateLinkCB, this);
-
 		// Binding / Target
-		Fl_Box* bindingDescription = new Fl_Box(x + 10, y + 70, w - 20, 25, "Click 'Start Binding Mode' and then click a control to target it. After a target is selected, send a MIDI event to bind it.");
+		Fl_Box* bindingDescription = new Fl_Box(x + 10, y + 15, w - 20, 25, "Click 'Start Binding Mode' and then click a control to target it. After a target is selected, send a MIDI event to bind it.");
 		bindingDescription->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 
-		bindEnable = new Avtk::LightButton(x + 10, y + 100, 140, 25, "Start Binding Mode");
+		bindEnable = new Avtk::LightButton(x + 10, y + 45, 140, 25, "Start Binding Mode");
 		bindEnable->tooltip("Activate binding mode and click a control to map it to the target");
 
-		targetLabelStat = new Fl_Box(x + 160, y + 100, 60, 25, "Target:");
-		targetLabel = new Fl_Box(x + 230, y + 100, 160, 25, "");
+		targetLabelStat = new Fl_Box(x + 160, y + 45, 60, 25, "Target:");
+		targetLabel = new Fl_Box(x + 230, y + 45, 160, 25, "");
 
 		// Save / Remove Buttons
-		writeControllerBtn = new Avtk::Button(x + 10, y + h - 40, 180, 25, "Save Binding");
-		removeController = new Avtk::Button(x + 210, y + h - 40, 180, 25, "Remove Binding");
-		exportControllerBtn = new Avtk::Button(x + 410, y + h - 40, 180, 25, "Export Binding");
-		exportControllerBtn->callback(exportMidiBinding, this);
+		writeControllerBtn = new Avtk::Button(x + 10, y + h - 40, 180, 25, "Save Bindings");
+		removeController = new Avtk::Button(x + 210, y + h - 40, 180, 25, "Remove Bindings");
+		exportControllerBtn = new Avtk::Button(x + 410, y + h - 40, 180, 25, "Export Bindings");
+
+		// Author Label
+		authorLabel = new Fl_Button(x + 610, y + h - 40, 180, 25, "");
+		authorLabel->align(FL_ALIGN_RIGHT | FL_ALIGN_INSIDE);
+		authorLabel->box(FL_NO_BOX); // Makes the button look like a label
+		authorLabel->labelfont(FL_HELVETICA_ITALIC);
+		authorLabel->labelsize(12);
+		authorLabel->labelcolor(FL_WHITE);
+		authorLabel->callback(updateLinkCB, this);
+		
+		exportControllerBtn->callback(exportMidiBindingCB, this);
 
 		// Scroll and Pack for Bindings
-		scroll = new Fl_Scroll(x + 10, y + 140, w - 20, h - 180);
+		scroll = new Fl_Scroll(x + 5, y + 85, 800, 245);
 		{
-			bindingsPack = new Fl_Pack(x + 5, y + 5, w - 30, h - 190);
+			bindingsPack = new Fl_Pack(x + 5, y + 85, w - 15, 250-10);
 			bindingsPack->end();
 			bindingsPack->spacing(2);
 			bindingsPack->box(FL_DOWN_FRAME);
@@ -329,16 +324,20 @@ void ControllerUI::setTarget( const char* n )
 
 void ControllerUI::setAuthor(std::string a)
 {
-	author = a;
-	authorLabel->label( author.c_str() );
-	authorLabel->redraw();
+	if (a != "") {
+		author = a;
+		authorMessage = "Made by " + author;
+		
+		authorLabel->label( authorMessage.c_str() );
+		authorLabel->redraw();
+	}
+	
 }
 
 void ControllerUI::setLink(std::string e)
 {
-	link = e;
-	linkLabel->label( link.c_str() );
-	linkLabel->redraw();
+	link = e;	
+	authorLabel->redraw();
 }
 
 void ControllerUI::setBindEnable( bool b )
@@ -445,7 +444,6 @@ ControllerUI::~ControllerUI()
 
 
 	delete authorLabel;
-	delete linkLabel;
 
 	delete targetLabel;
 	delete targetLabelStat;
@@ -456,11 +454,13 @@ ControllerUI::~ControllerUI()
 
 MidiOptionsWindow::MidiOptionsWindow()
 {
-	window = new Fl_Double_Window(885,400,"Midi Options");
+	int windowW = 815;
+	int windowH = 400;
+	window = new Fl_Double_Window(windowW, windowH, "MIDI Options");
 
 	window->set_non_modal();
 
-	tabs = new Fl_Tabs(0, 0, 885, 400);
+	tabs = new Fl_Tabs(0, 0, windowW, windowH);
 
 	window->resizable( tabs );
 
@@ -469,8 +469,8 @@ MidiOptionsWindow::MidiOptionsWindow()
 
 	addGroup = new Fl_Group(x,y,w,h,"New");
 	{
-		newButton = new Avtk::Button( x+2, y+2, w-4, 30, "Create New MIDI Binding");
-		loadButton = new Avtk::Button( x+2, y+2+32, w-4, 30, "Load Existing MIDI Binding");
+		newButton = new Avtk::Button( x+2, y+2, w-4, 30, "Create New MIDI Bindings");
+		loadButton = new Avtk::Button( x+2, y+2+32, w-4, 30, "Load Existing MIDI Bindings");
 	}
 	addGroup->end();
 	tabs->end();
