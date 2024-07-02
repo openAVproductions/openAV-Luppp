@@ -107,7 +107,7 @@ static void gui_header_callback(Fl_Widget *w, void *data)
 		{ "New Session" },
 		{ "Load Session" },
 		{ "Save Session   ", 0, 0, 0, FL_MENU_DIVIDER},
-		{ "Midi Options", 0, 0, 0, FL_MENU_DIVIDER},
+		{ "MIDI Options", 0, 0, 0, FL_MENU_DIVIDER},
 		{ "Quit" },
 		{ 0 }
 	};
@@ -187,7 +187,7 @@ static void gui_header_callback(Fl_Widget *w, void *data)
 			EventSessionSave e;
 			writeToDspRingbuffer( &e );
 		}
-	} else if ( strcmp(m->label(), "Midi Options") == 0 ) {
+	} else if ( strcmp(m->label(), "MIDI Options") == 0 ) {
 		g->getMidiOptionsWindow()->show();
 	} else if ( strcmp(m->label(), "Quit") == 0 ) {
 		g->askQuit();

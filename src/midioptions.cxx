@@ -74,7 +74,7 @@ static void updateLinkCB(Fl_Widget* w, void* data)
 	// Check if the link is empty
     if (l.empty()) {
         // Prompt for the link
-        const char* newLink = fl_input("Enter the link:", "");
+        const char* newLink = fl_input("URL to your page (optional):", "");
         if (newLink) {
             // Set the new link
             c->setLink(newLink);
@@ -103,6 +103,12 @@ static void updateLinkCB(Fl_Widget* w, void* data)
     }
 
 
+}
+
+static void exportMidiBinding(Fl_Widget* w, void* data)
+{
+	updateAuthorCB(w, data);
+	updateLinkCB(w, data);
 }
 
 static void writeBindEnable(Fl_Widget* w, void* data)
@@ -239,51 +245,59 @@ static void deleteBindingFromController(Fl_Widget* w, void* ud)
 ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
 {
 	name = n;
+	if (n == "") {
+		name = "Untitled";
+	}
 
 	widget = new Fl_Group(x, y, w, h, name.c_str());
-{
-    // Author Label
-    Fl_Box* authorLabelStat = new Fl_Box(x + 10, y + 10, 180, 25, "Author:");
-    authorLabelStat->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+	{
+		// Author Label
+		Fl_Box* authorLabelStat = new Fl_Box(x + 10, y + 10, 180, 25, "Author:");
+		authorLabelStat->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 
-    // Link Label
-    Fl_Box* linkLabelStat = new Fl_Box(x + 210, y + 10, 180, 25, "Link:");
-    linkLabelStat->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+		// Link Label
+		Fl_Box* linkLabelStat = new Fl_Box(x + 210, y + 10, 180, 25, "URL:");
+		linkLabelStat->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 
-    // Author / Link Buttons
-    authorLabel = new Avtk::Button(x + 10, y + 35, 180, 25, "Update Author");
-    linkLabel = new Avtk::Button(x + 210, y + 35, 180, 25, "Update Link");
+		// Author / Link Buttons
+		authorLabel = new Avtk::Button(x + 10, y + 35, 180, 25, "Update Author");
+		linkLabel = new Avtk::Button(x + 210, y + 35, 180, 25, "Update Link");
 
-    authorLabel->callback(updateAuthorCB, this);
-    linkLabel->callback(updateLinkCB, this);
+		authorLabel->callback(updateAuthorCB, this);
+		linkLabel->callback(updateLinkCB, this);
 
-    // Binding / Target
-    bindEnable = new Avtk::LightButton(x + 10, y + 70, 120, 25, "Enable Binding");
-    targetLabelStat = new Fl_Box(x + 140, y + 70, 60, 25, "Target:");
-    targetLabel = new Fl_Box(x + 210, y + 70, 180, 25, "");
+		// Binding / Target
+		Fl_Box* bindingDescription = new Fl_Box(x + 10, y + 70, w - 20, 25, "Click 'Start Binding Mode' and then click a control to target it. After a target is selected, send a MIDI event to bind it.");
+		bindingDescription->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 
-    // Save / Remove Buttons
-    writeControllerBtn = new Avtk::Button(x + 10, y + h - 40, 180, 25, "Save Binding");
-    removeController = new Avtk::Button(x + 210, y + h - 40, 180, 25, "Remove Binding");
+		bindEnable = new Avtk::LightButton(x + 10, y + 100, 140, 25, "Start Binding Mode");
+		bindEnable->tooltip("Activate binding mode and click a control to map it to the target");
 
-    // Scroll and Pack for Bindings
-    scroll = new Fl_Scroll(x + 10, y + 110, w - 20, h - 150);
-    {
-        bindingsPack = new Fl_Pack(x + 5, y + 5, w - 30, h - 160);
-        bindingsPack->end();
-        bindingsPack->spacing(2);
-        bindingsPack->box(FL_DOWN_FRAME);
-    }
-    scroll->resizable(bindingsPack);
-    scroll->box(FL_DOWN_FRAME);
-    scroll->type(Fl_Scroll::VERTICAL_ALWAYS);
-    scroll->end();
+		targetLabelStat = new Fl_Box(x + 160, y + 100, 60, 25, "Target:");
+		targetLabel = new Fl_Box(x + 230, y + 100, 160, 25, "");
 
-    widget->resizable(scroll);
-    widget->end();
-}
+		// Save / Remove Buttons
+		writeControllerBtn = new Avtk::Button(x + 10, y + h - 40, 180, 25, "Save Binding");
+		removeController = new Avtk::Button(x + 210, y + h - 40, 180, 25, "Remove Binding");
+		exportControllerBtn = new Avtk::Button(x + 410, y + h - 40, 180, 25, "Export Binding");
+		exportControllerBtn->callback(exportMidiBinding, this);
 
+		// Scroll and Pack for Bindings
+		scroll = new Fl_Scroll(x + 10, y + 140, w - 20, h - 180);
+		{
+			bindingsPack = new Fl_Pack(x + 5, y + 5, w - 30, h - 190);
+			bindingsPack->end();
+			bindingsPack->spacing(2);
+			bindingsPack->box(FL_DOWN_FRAME);
+		}
+		scroll->resizable(bindingsPack);
+		scroll->box(FL_DOWN_FRAME);
+		scroll->type(Fl_Scroll::VERTICAL_ALWAYS);
+		scroll->end();
 
+		widget->resizable(scroll);
+		widget->end();
+	}
 
 	widget->end();
 
@@ -442,11 +456,11 @@ ControllerUI::~ControllerUI()
 
 MidiOptionsWindow::MidiOptionsWindow()
 {
-	window = new Fl_Double_Window(400,400,"Midi Options");
+	window = new Fl_Double_Window(885,400,"Midi Options");
 
 	window->set_non_modal();
 
-	tabs = new Fl_Tabs(0, 0, 400, 400);
+	tabs = new Fl_Tabs(0, 0, 885, 400);
 
 	window->resizable( tabs );
 

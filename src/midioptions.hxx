@@ -95,6 +95,7 @@ private:
 	Avtk::LightButton* bindEnable;
 	Avtk::Button* removeController;
 	Avtk::Button* writeControllerBtn;
+	Avtk::Button* exportControllerBtn;
 };
 
 class MidiOptionsWindow
