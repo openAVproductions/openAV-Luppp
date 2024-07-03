@@ -256,15 +256,15 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
 		bindingDescription->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 
 		bindEnable = new Avtk::LightButton(x + 10, y + 45, 140, 25, "Start Binding Mode");
-		bindEnable->tooltip("Activate binding mode and click a control to map it to the target");
+		bindEnable->tooltip("Activate binding mode and click a control to target it.");
 
 		targetLabelStat = new Fl_Box(x + 160, y + 45, 60, 25, "Target:");
 		targetLabel = new Fl_Box(x + 230, y + 45, 160, 25, "");
 
 		// Save / Remove Buttons
 		writeControllerBtn = new Avtk::Button(x + 10, y + h - 40, 180, 25, "Save Bindings");
-		removeController = new Avtk::Button(x + 210, y + h - 40, 180, 25, "Remove Bindings");
-		exportControllerBtn = new Avtk::Button(x + 410, y + h - 40, 180, 25, "Export Bindings");
+		exportControllerBtn = new Avtk::Button(x + 210, y + h - 40, 180, 25, "Export Bindings");
+		removeController = new Avtk::Button(x + 410, y + h - 40, 180, 25, "Remove Current Tab");
 
 		// Author Label
 		authorLabel = new Fl_Button(x + 610, y + h - 40, 180, 25, "");
@@ -274,6 +274,7 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
 		authorLabel->labelsize(12);
 		authorLabel->labelcolor(FL_WHITE);
 		authorLabel->callback(updateLinkCB, this);
+		authorLabel->hide();
 		
 		exportControllerBtn->callback(exportMidiBindingCB, this);
 
@@ -330,13 +331,14 @@ void ControllerUI::setAuthor(std::string a)
 		
 		authorLabel->label( authorMessage.c_str() );
 		authorLabel->redraw();
+		authorLabel->show();
 	}
 	
 }
 
 void ControllerUI::setLink(std::string e)
 {
-	link = e;	
+	link = e;
 	authorLabel->redraw();
 }
 
@@ -469,8 +471,8 @@ MidiOptionsWindow::MidiOptionsWindow()
 
 	addGroup = new Fl_Group(x,y,w,h,"New");
 	{
-		newButton = new Avtk::Button( x+2, y+2, w-4, 30, "Create New MIDI Bindings");
-		loadButton = new Avtk::Button( x+2, y+2+32, w-4, 30, "Load Existing MIDI Bindings");
+		newButton = new Avtk::Button( x+2, y+2, w-4, 30, "Create New MIDI Controller Bindings");
+		loadButton = new Avtk::Button( x+2, y+2+32, w-4, 30, "Load Existing MIDI Controller Bindings");
 	}
 	addGroup->end();
 	tabs->end();
