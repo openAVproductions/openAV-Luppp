@@ -366,11 +366,17 @@ void ControllerUI::addBinding( Binding* b )
 	// push the bindingID onto the vector
 	bindingID.push_back( b->ID );
 
+	// Determine the background color based on the current number of children
+	Fl_Color DARK_GREY = fl_rgb_color(60, 60, 60);
+    Fl_Color bgColor = (b->ID % 2 == 0) ? FL_BACKGROUND_COLOR : DARK_GREY;
+
 	// create a horizontal pack, add that to the bindingsPack
 	Fl_Pack* tmp = new Fl_Pack( 35, 35, 25, 25);
 	{
 		tmp->type( Fl_Pack::HORIZONTAL );
 		tmp->spacing( 2 );
+		tmp->color(bgColor);
+		//tmp->box(FL_FLAT_BOX);
 
 		stringstream s;
 
@@ -407,15 +413,25 @@ void ControllerUI::addBinding( Binding* b )
 		stringstream id;
 		id << b->ID;
 		char *str = strdup(id.str().c_str());
-		Fl_Button* but = new Fl_Button(35, 35, 25, 25, str );
+
+		Fl_Box* label = new Fl_Box(0, 0, 750, 25, strdup(s.str().c_str()) );
+		label->align( FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
+		label->color(bgColor); // Set the background color to match the row
+        label->box(FL_FLAT_BOX); // Ensure the background color is applied
+		label->redraw();
+
+		Fl_Button* but = new Fl_Button(0, 0, 25, 25, "X" );
 		if(!but)
 			free(str);
 		but->callback( deleteBindingFromController, this );
+		Fl_Color LIGHT_RED = fl_rgb_color(255, 102, 102);
+		but->labelcolor(LIGHT_RED);
+		but->color(bgColor);
 		but->redraw();
 
-		Fl_Box* b = new Fl_Box(35, 35, 400, 25, strdup(s.str().c_str()) );
-		b->align( FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
-		b->redraw();
+		tmp->add(label);
+		tmp->add(but);
+		
 	}
 	tmp->end();
 
