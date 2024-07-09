@@ -108,8 +108,12 @@ static void updateLinkCB(Fl_Widget* w, void* data)
 static void exportMidiBindingCB(Fl_Widget* w, void* data)
 {
 	updateAuthorCB(w, data);
-	updateLinkCB(w, data);
-}
+	ControllerUI* c = (ControllerUI*)data;
+	std::string l = c->getLink();
+	// Check if the link is empty
+    if (l.empty()) {
+		updateLinkCB(w, data);
+}	}
 
 static void writeBindEnable(Fl_Widget* w, void* data)
 {
@@ -376,7 +380,6 @@ void ControllerUI::addBinding( Binding* b )
 		tmp->type( Fl_Pack::HORIZONTAL );
 		tmp->spacing( 2 );
 		tmp->color(bgColor);
-		//tmp->box(FL_FLAT_BOX);
 
 		stringstream s;
 
