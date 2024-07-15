@@ -226,26 +226,6 @@ static void writeControllerFile(Fl_Widget* w, void* data)
 	writeToDspRingbuffer( &e );
 }
 
-
-static void deleteBindingFromController(Fl_Widget* w, void* ud)
-{
-	ControllerUI* self = (ControllerUI*)ud;
-	stringstream s;
-	s << w->label();
-	int tmp;
-	s >> tmp;
-	LUPPP_NOTE("CtlrID %i: Deleting binding with ID %i", self->controllerID, tmp );
-
-	EventControllerBindingRemove e( self->controllerID, tmp );
-	writeToDspRingbuffer( &e );
-
-	// remove "this" widget (and its parent Pack) from the list of MIDI bindings:
-	self->bindingsPack->remove( w->parent() );
-	self->bindingsPack->redraw();
-	self->scroll->redraw();
-}
-
-
 ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
 {
 	name = n;
@@ -412,21 +392,35 @@ void ControllerUI::addBinding( Binding* b )
 				s << " Off";
 		}
 
-		// button to remove a binding, uses bindingsID vector to get unique number
-		stringstream id;
-		id << b->ID;
-		char *str = strdup(id.str().c_str());
+		
 
 		Fl_Box* label = new Fl_Box(0, 0, 750, 25, strdup(s.str().c_str()) );
 		label->align( FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
-		label->color(bgColor); // Set the background color to match the row
+		label->color(bgColor);
         label->box(FL_FLAT_BOX); // Ensure the background color is applied
 		label->redraw();
-
+		
+		// button to remove a binding, uses bindingsID vector to get unique number
+		int id = b->ID;
 		Fl_Button* but = new Fl_Button(0, 0, 25, 25, "X" );
-		if(!but)
-			free(str);
-		but->callback( deleteBindingFromController, this );
+
+		but->callback([](Fl_Widget* w, void* ud) {
+			auto* data = static_cast<std::pair<ControllerUI*, int>*>(ud);
+			ControllerUI* self = data->first;
+			int id = data->second;
+
+			LUPPP_NOTE("CtlrID %i: Deleting binding with ID %i", self->controllerID, id);
+
+			EventControllerBindingRemove e(self->controllerID, id);
+			writeToDspRingbuffer(&e);
+
+			// remove this widget from the list of MIDI bindings
+			self->bindingsPack->remove(w->parent());
+			self->bindingsPack->redraw();
+			self->scroll->redraw();
+			
+			delete data;
+		}, new std::pair<ControllerUI*, int>(this, id));
 		Fl_Color LIGHT_RED = fl_rgb_color(255, 102, 102);
 		but->labelcolor(LIGHT_RED);
 		but->color(bgColor);
