@@ -159,12 +159,13 @@ void DiskWriter::writeControllerInfo( CONTROLLER_INFO c, std::string s )
 	controllerInfo[c] = s;
 }
 
-int renameControllerCfgPath(std::stringstream &controllerCfgPath) {
+int renameControllerCfgPath(stringstream &controllerCfgPath, GenericMIDI* g) {
     const char* name = fl_input("New name for .ctlr file:");
-    if (name) {
+    if (name && name[0] != '\0') {
         // clear the filename
         controllerCfgPath.str("");
         controllerCfgPath << getenv("HOME") << "/.config/openAV/luppp/controllers/" << name << ".ctlr";
+		g->setName(name);
         LUPPP_NOTE("New .ctlr filename %s\n", controllerCfgPath.str().c_str());
         return LUPPP_RETURN_OK;
     } else {
@@ -233,14 +234,18 @@ int DiskWriter::writeControllerFile( Controller* c )
 		}
 
 		// write the sample JSON node to <samplePath>/sample.cfg
-		std::stringstream controllerCfgPath;
+		stringstream controllerCfgPath;
 		controllerCfgPath << getenv("HOME") << "/.config/openAV/luppp/controllers/" << g->getName() << ".ctlr";
-		
 		if (g->getName() == "") 
 		{
 			int action = fl_choice("No controller name given", "Cancel", "Rename", 0);
-			if ( action == 1 ) {
-				renameControllerCfgPath(controllerCfgPath);
+			if ( action == 0 ) {
+				return LUPPP_RETURN_OK;
+			} else if ( action == 1 ) {
+				int status = renameControllerCfgPath(controllerCfgPath, g);
+				if (status == LUPPP_RETURN_ERROR) {
+					return LUPPP_RETURN_ERROR;
+				}
 			}
 		}
 
@@ -248,18 +253,20 @@ int DiskWriter::writeControllerFile( Controller* c )
 		if ( infile.good() ) {
 			// file exists: ask user overwrite or rename?
 			//LUPPP_WARN("Controller filename exists: prompting user to overwrite y/n?");
-			int action = fl_choice("Controller exists, action?", "Cancel", "Rename", "Overwrite");
+			ostringstream oss;
+			oss << "Controller " << g->getName() << " exists, action?";
+			int action = fl_choice(oss.str().c_str(), "Cancel", "Rename", "Overwrite");
 
 			if ( action == 0 ) {
 				// return OK, as user has chosen to cancel writing the file
 				return LUPPP_RETURN_OK;
 			} else if ( action == 1 ) {
-				renameControllerCfgPath(controllerCfgPath);
+				renameControllerCfgPath(controllerCfgPath, g);
 			} else {
 				// just overwrite the file, no action
 			}
 		}
-		g->setName("New file");
+		
 		LUPPP_NOTE("Writing %s.ctlr file to disk", g->getName().c_str() );
 
 		ofstream controllerCfgFile;

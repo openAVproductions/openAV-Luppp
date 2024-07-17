@@ -154,7 +154,7 @@ static void addNewController(Fl_Widget* w, void* ud)
 	GenericMIDI* c = 0;
 
 	const char* name = fl_input( "MIDI Controller Name: ", "" );
-	if ( name ) {
+	if ( name && name[0] != '\0') {
 		c = new GenericMIDI( 0, name);
 	} else {
 		return;
@@ -419,7 +419,7 @@ void ControllerUI::addBinding( Binding* b )
 			self->bindingsPack->redraw();
 			self->scroll->redraw();
 			
-			delete data;
+			//delete data;
 		}, new std::pair<ControllerUI*, int>(this, id));
 		Fl_Color LIGHT_RED = fl_rgb_color(255, 102, 102);
 		but->labelcolor(LIGHT_RED);
