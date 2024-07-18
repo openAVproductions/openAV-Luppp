@@ -509,7 +509,7 @@ int Jack::process (jack_nframes_t nframes)
 	buffers.transportFrame = jack_get_current_transport_frame(client);
 
 	if (nframes > 1024) {
-		LUPPP_ERROR("Buffer size too high. Reduce JACK buffer size.");
+		LUPPP_ERROR("Buffer size too high. Reduce JACK buffer size, max 1024.");
 	}
 	// time manager deals with detecting bar() / beat() events, and calls
 	// processFrames() with the appropriate nframes
