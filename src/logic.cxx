@@ -76,22 +76,22 @@ void Logic::masterReturn( int returnNum, float value )
 	jack->getControllerUpdater()->masterReturnVolume( value );
 }
 
-void Logic::trackPan(int t, float p)
+void Logic::trackPan(int t, float p, Event::SOURCE s)
 {
 	if ( t >= 0 && t < NTRACKS ) {
 		jack->getTrackOutput( t )->setPan( p );
-		jack->getControllerUpdater()->pan( t, p );
+		jack->getControllerUpdater()->pan( t, p, s );
 	}
 }
 
-void Logic::trackVolume(int t, float v)
+void Logic::trackVolume(int t, float v, Event::SOURCE s)
 {
 	if ( t == -1 ) { // master track
 		jack->masterVolume(v);
-		jack->getControllerUpdater()->masterVolume( v );
+		jack->getControllerUpdater()->masterVolume( v, s );
 	} else if ( t >= 0 && t < NTRACKS ) {
 		jack->getTrackOutput( t )->setMaster( v );
-		jack->getControllerUpdater()->volume( t, v );
+		jack->getControllerUpdater()->volume( t, v, s );
 	} else {
 		LUPPP_WARN("invalid track number %i: check controller map has \"track\" field.", t );
 	}
@@ -117,11 +117,11 @@ void Logic::trackSendActive(int t, int s, bool v)
 	}
 }
 
-void Logic::trackSend(int t, int send, float v)
+void Logic::trackSend(int t, int send, float v, Event::SOURCE s)
 {
 	if ( t >= 0 && t < NTRACKS ) {
 		jack->getTrackOutput( t )->setSend( send, v );
-		jack->getControllerUpdater()->setTrackSend( t, send, v );
+		jack->getControllerUpdater()->setTrackSend( t, send, v, s );
 	} else {
 		LUPPP_WARN("invalid track number %i: check controller map has \"track\" field.", t );
 	}
@@ -137,11 +137,11 @@ void Logic::trackJackSendActivate(int t, bool active)
 	}
 }
 
-void Logic::trackJackSend(int t, float vol)
+void Logic::trackJackSend(int t, float vol, Event::SOURCE s)
 {
 	if ( t >= 0 && t < NTRACKS ) {
 		jack->getJackSendReturn(t)->sendVolume(vol);
-		jack->getControllerUpdater()->setTrackJackSend( t, vol );
+		jack->getControllerUpdater()->setTrackJackSend( t, vol, s );
 	} else {
 		LUPPP_WARN("invalid track number %i: check controller map has \"track\" field.", t );
 	}

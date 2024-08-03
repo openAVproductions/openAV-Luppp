@@ -53,6 +53,12 @@ enum INPUT_TO {
 	INPUT_TO_XSIDE,
 	INPUT_TO_SIDE_KEY,
 };
+enum SOURCE {
+	SOURCE_UNKNOWN = 0,
+	SOURCE_MIDI,
+	SOURCE_GUI,
+	SOURCE_LOAD,
+};
 
 enum EVENT_TYPE {
 	// default event type
@@ -406,7 +412,8 @@ public:
 	}
 
 	float vol;
-	EventMasterVol(float v = 0) : vol(v) {}
+	SOURCE source;
+	EventMasterVol(float v = 0, SOURCE s = SOURCE_UNKNOWN) : vol(v), source(s) {}
 };
 
 class EventMasterInputVol : public EventBase
@@ -448,7 +455,8 @@ public:
 
 	RETURN_TYPE ret;
 	float vol;
-	EventMasterReturn(RETURN_TYPE s=RETURN_INVALID, float v=0): ret(s), vol(v) {}
+
+	EventMasterReturn(RETURN_TYPE st=RETURN_INVALID, float v=0): ret(st), vol(v) {}
 };
 
 class EventTrackVol : public EventBase
@@ -470,13 +478,10 @@ public:
 
 	int track;
 	float vol;
+	SOURCE source;
 
 	EventTrackVol() {};
-	EventTrackVol(int t, float v)
-	{
-		track = t;
-		vol = v;
-	}
+	EventTrackVol(int t, float v, SOURCE s): track(t), vol(v), source(s) { }
 };
 
 class EventTrackPan : public EventBase
@@ -498,13 +503,10 @@ public:
 
 	int track;
 	float pan;
+	SOURCE source;
 
 	EventTrackPan() {};
-	EventTrackPan(int t, float p)
-	{
-		track = t;
-		pan = p;
-	}
+	EventTrackPan(int t, float p, SOURCE s): track(t), pan(p), source(s) { }
 };
 
 
@@ -710,9 +712,10 @@ public:
 	int track;
 	SEND_TYPE send;
 	float value;
+	SOURCE source;
 
 	EventTrackSend() {};
-	EventTrackSend(int t, SEND_TYPE s, float v): track(t), send(s), value(v) {}
+	EventTrackSend(int t, SEND_TYPE st, float v, SOURCE s): track(t), send(st), value(v), source(s) {}
 };
 
 class EventTrackJackSend : public EventBase
@@ -733,11 +736,11 @@ public:
 	}
 
 	int track;
-
 	float value;
+	SOURCE source;
 
 	EventTrackJackSend() {};
-	EventTrackJackSend(int t, float v): track(t), value(v) {}
+	EventTrackJackSend(int t, float v, SOURCE s): track(t), value(v), source(s) {}
 };
 
 class EventTrackSendActive : public EventBase
@@ -925,7 +928,9 @@ public:
 	}
 
 	float vol;
-	EventMetronomeVolume(float v = 0.f) : vol(v) {}
+	SOURCE source;
+
+	EventMetronomeVolume(float v = 0.f, SOURCE s = SOURCE_UNKNOWN) : vol(v), source(s) {}
 };
 
 class EventTimeBPM : public EventBase

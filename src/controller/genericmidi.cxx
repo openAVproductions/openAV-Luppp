@@ -123,9 +123,61 @@ std::string GenericMIDI::getEmail()
 	return email;
 }
 
-void GenericMIDI::volume(int t, float f)
+void GenericMIDI::masterVolume(float f, Event::SOURCE s)
 {
 
+	for(unsigned int i = 0; i < actionToMidi.size(); i++) {
+		Binding* b = actionToMidi.at(i);
+
+		if ( b->action == MASTER_VOL) {
+			if ( b->echo || s != Event::SOURCE_MIDI ) {
+				unsigned char data[3];
+				data[0] = b->status;
+				data[1] = b->data;
+				data[2] = f * 127;
+				writeMidi( data );
+				return;
+			}
+		}
+	}
+}
+
+void GenericMIDI::volume(int t, float f, Event::SOURCE s)
+{
+
+	for(unsigned int i = 0; i < actionToMidi.size(); i++) {
+		Binding* b = actionToMidi.at(i);
+
+		if ( b->action == TRACK_VOLUME && b->track == t ) {
+			if ( b->echo || s != SOURCE_MIDI ) {
+				unsigned char data[3];
+				data[0] = b->status;
+				data[1] = b->data;
+				data[2] = f * 127;
+				writeMidi( data );
+				return;
+			}
+		}
+	}
+}
+
+void GenericMIDI::pan(int t, float f, Event::SOURCE s)
+{
+
+	for(unsigned int i = 0; i < actionToMidi.size(); i++) {
+		Binding* b = actionToMidi.at(i);
+
+		if ( b->action == TRACK_PAN && b->track == t ) {
+			if ( b->echo || s != SOURCE_MIDI ) {
+				unsigned char data[3];
+				data[0] = b->status;
+				data[1] = b->data;
+				data[2] = 0.5 * (f + 1) * 127;
+				writeMidi( data );
+				return;
+			}
+		}
+	}
 }
 
 void GenericMIDI::recordArm(int t, bool enabled)
@@ -160,19 +212,21 @@ void GenericMIDI::metronomeEnable(bool enabled)
 	}
 }
 
-void GenericMIDI::trackSend(int t, int send, float v)
+void GenericMIDI::trackSend(int t, int send, float v, Event::SOURCE s)
 {
 
 	for(unsigned int i = 0; i < actionToMidi.size(); i++) {
 		Binding* b = actionToMidi.at(i);
 
 		if ( b->action == TRACK_SEND && b->track == t && b->send == send ) {
-			unsigned char data[3];
-			data[0] = b->status;
-			data[1] = b->data;
-			data[2] = v * 127;
-			writeMidi( data );
-			return;
+			if ( b->echo || s != SOURCE_MIDI ) {
+				unsigned char data[3];
+				data[0] = b->status;
+				data[1] = b->data;
+				data[2] = v * 127;
+				writeMidi( data );
+				return;
+			}
 		}
 	}
 }
@@ -193,13 +247,39 @@ void GenericMIDI::trackSendActive(int t, int send, bool a)
 	}
 }
 
-void GenericMIDI::trackJackSend(int t, float v)
+void GenericMIDI::trackJackSend(int t, float v, Event::SOURCE s)
 {
+	for(unsigned int i = 0; i < actionToMidi.size(); i++) {
+		Binding* b = actionToMidi.at(i);
+
+		if ( b->action == TRACK_JACKSEND && b->track == t ) {
+			if ( b->echo || s != SOURCE_MIDI ) {
+				unsigned char data[3];
+				data[0] = b->status;
+				data[1] = b->data;
+				data[2] = v * 127;
+				writeMidi( data );
+				return;
+			}
+		}
+	}
 
 }
 
 void GenericMIDI::trackJackSendActivate(int t, bool a)
 {
+	for(unsigned int i = 0; i < actionToMidi.size(); i++) {
+		Binding* b = actionToMidi.at(i);
+
+		if ( b->action == TRACK_JACKSEND_ACTIVATE && b->track == t ) {
+			unsigned char data[3];
+			data[0] = b->status;
+			data[1] = b->data;
+			data[2] = a ? 127 : 0;
+			writeMidi( data );
+			return;
+		}
+	}
 
 }
 
@@ -251,10 +331,13 @@ void GenericMIDI::midi(unsigned char* midi)
 
 			switch( b->action ) {
 			case Event::TRACK_VOLUME:
-				jack->getLogic()->trackVolume( b->track, value );
+				jack->getLogic()->trackVolume( b->track, value, Event::SOURCE_MIDI );
+				break;
+			case Event::TRACK_PAN:
+				jack->getLogic()->trackPan( b->track, 2 * value - 1, Event::SOURCE_MIDI );
 				break;
 			case Event::TRACK_SEND:
-				jack->getLogic()->trackSend( b->track, b->send, value );
+				jack->getLogic()->trackSend( b->track, b->send, value, Event::SOURCE_MIDI );
 				break;
 			case Event::TRACK_SEND_ACTIVE:
 				jack->getLogic()->trackSendActive( b->track, b->send, b->active );
@@ -263,7 +346,7 @@ void GenericMIDI::midi(unsigned char* midi)
 				jack->getLogic()->trackRecordArm( b->track, b->active );
 				break;
 			case Event::TRACK_JACKSEND:
-				jack->getLogic()->trackJackSend(b->track,value);
+				jack->getLogic()->trackJackSend( b->track, value, Event::SOURCE_MIDI );
 				break;
 			case Event::TRACK_JACKSEND_ACTIVATE:
 				jack->getLogic()->trackJackSendActivate(b->track,b->active);
@@ -327,7 +410,7 @@ void GenericMIDI::midi(unsigned char* midi)
 				break;
 
 			case Event::MASTER_VOL:
-				jack->getLogic()->trackVolume( -1     , value );
+				jack->getLogic()->trackVolume( -1     , value, Event::SOURCE_MIDI );
 				break;
 			}
 		}
@@ -570,6 +653,12 @@ Binding* GenericMIDI::setupBinding( cJSON* binding )
 
 	tmp->status = statusJson->valueint;
 	tmp->data   = dataJson->valueint;
+
+	// gets the echo value from the JSON string
+	cJSON* echoJson = cJSON_GetObjectItem( binding, "echo" );
+	if ( echoJson ) {
+		tmp->echo = echoJson->valueint;
+	}
 
 	// gets the Action type from the JSON string
 	cJSON* activeJson = cJSON_GetObjectItem( binding, "active" );

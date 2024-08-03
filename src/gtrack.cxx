@@ -155,7 +155,7 @@ bool GTrack::getJackSendActivate()
 void gtrack_sendDial_cb(Fl_Widget *w, void *data)
 {
 	GTrack* track = (GTrack*) data;
-	EventTrackSend e( track->ID, SEND_POSTFADER, ((Avtk::Dial*)w)->value() );
+	EventTrackSend e( track->ID, SEND_POSTFADER, ((Avtk::Dial*)w)->value(), Event::SOURCE_GUI );
 	writeToDspRingbuffer( &e );
 	//printf("track %i reverb send %f\n", track->ID, ((Avtk::Dial*)w)->value() );
 }
@@ -180,7 +180,7 @@ void gtrack_key_cb(Fl_Widget *w, void *data)
 void gtrack_xsideDial_cb(Fl_Widget *w, void *data)
 {
 	GTrack* track = (GTrack*) data;
-	EventTrackSend e( track->ID, SEND_XSIDE, ((Avtk::Dial*)w)->value() );
+	EventTrackSend e( track->ID, SEND_XSIDE, ((Avtk::Dial*)w)->value(), Event::SOURCE_GUI );
 	writeToDspRingbuffer( &e );
 	//printf("track %i side send %f\n", track->ID, ((Avtk::Dial*)w)->value() );
 }
@@ -188,7 +188,7 @@ void gtrack_xsideDial_cb(Fl_Widget *w, void *data)
 void gtrack_vol_cb(Fl_Widget *w, void *data)
 {
 	GTrack* track = (GTrack*) data;
-	EventTrackVol e( track->ID, ((Avtk::Volume*)w)->value() );
+	EventTrackVol e( track->ID, ((Avtk::Volume*)w)->value(), Event::SOURCE_GUI );
 	writeToDspRingbuffer( &e );
 	//printf("track %i vol %f\n", track->ID, ((Avtk::Dial*)w)->value() );
 }
@@ -197,7 +197,7 @@ void gtrack_pan_cb(Fl_Widget *w, void *data)
 {
 	GTrack* track = (GTrack*) data;
 	/* -1 to 1 range, 0 is center */
-	EventTrackPan e( track->ID, (((Avtk::Dial*)w)->value() * 2) - 1 );
+	EventTrackPan e( track->ID, (((Avtk::Dial*)w)->value() * 2) - 1, Event::SOURCE_GUI );
 	writeToDspRingbuffer( &e );
 }
 
@@ -221,7 +221,7 @@ void gtrack_jacksend_cb(Fl_Widget *w, void *data)
 	GTrack* track = (GTrack*) data;
 	Avtk::Dial* d = (Avtk::Dial*)w;
 	float v = d->value();
-	EventTrackJackSend ev(track->ID,v);
+	EventTrackJackSend ev( track->ID, v, Event::SOURCE_GUI);
 	writeToDspRingbuffer(&ev);
 
 	//printf("track %i reverb send %s\n", track->ID, b ? "true" : "false" );
