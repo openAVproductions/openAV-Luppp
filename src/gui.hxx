@@ -26,7 +26,7 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
 
-#include "goptions.hxx"
+#include "midioptions.hxx"
 
 #include "config.hxx"
 #include "gtrack.hxx"
@@ -57,7 +57,7 @@ public:
 	void askQuit();
 
 	/// returns the options window
-	OptionsWindow* getOptionsWindow();
+	MidiOptionsWindow* getMidiOptionsWindow();
 
 	/// open audio editor window with an AudioBuffer
 	AudioEditor* getAudioEditor();
@@ -127,7 +127,7 @@ private:
 
 	Fl_Group* lupppGroup;
 
-	OptionsWindow*    optionWindow;
+	MidiOptionsWindow*    midiOptionWindow;
 
 	std::string         lupppProjectsDir;
 

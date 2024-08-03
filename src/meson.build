@@ -14,7 +14,7 @@ luppp_src = files(
   'eventhandlergui.cxx',
   'gaudioeditor.cxx',
   'gmastertrack.cxx',
-  'goptions.cxx',
+  'midioptions.cxx',
   'gridlogic.cxx',
   'gtrack.cxx',
   'gui.cxx',

@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "goptions.hxx"
+#include "midioptions.hxx"
 
 #include "eventhandler.hxx"
 
@@ -31,7 +31,7 @@
 #include "gui.hxx"
 extern Gui* gui;
 
-static void addControllerUiDsp(OptionsWindow* self, GenericMIDI* c)
+static void addControllerUiDsp(MidiOptionsWindow* self, GenericMIDI* c)
 {
 	// add the controller to the UI
 	int x, y, w, h;
@@ -70,25 +70,54 @@ static void updateAuthorCB(Fl_Widget* w, void* data)
 static void updateLinkCB(Fl_Widget* w, void* data)
 {
 	ControllerUI* c = (ControllerUI*)data;
+	std::string l = c->getLink();
+	// Check if the link is empty
+    if (l.empty()) {
+        // Prompt for the link
+        const char* newLink = fl_input("URL to your page (optional):", "");
+        if (newLink) {
+            // Set the new link
+            c->setLink(newLink);
+            l = newLink; // Update the link variable
+        }
+    } else {
+		stringstream str;
+		str << "xdg-open ";
 
-	stringstream str;
-	str << "xdg-open ";
+		// add http:// if its not in the string
+		std::string l =  c->getLink();
+		if ( ( l.find("http") ) == std::string::npos )
+			str << " http://";
 
-	// add http:// if its not in the string
-	std::string l =  c->getLink();
-	if ( ( l.find("http") ) == std::string::npos )
-		str << " http://";
+		str << l;
 
-	str << l;
+		int ret = system( str.str().c_str() );
+		/* if it fails it fails... (void) to mute clang warning */
+		(void)ret;
+	}
 
-	int ret = system( str.str().c_str() );
-	/* if it fails it fails... (void) to mute clang warning */
-	(void)ret;
+    // the link is still empty :(
+    if (l.empty()) {
+        LUPPP_NOTE("No link provided.");
+        return;
+    }
+
+
 }
+
+static void exportMidiBindingCB(Fl_Widget* w, void* data)
+{
+	updateAuthorCB(w, data);
+	ControllerUI* c = (ControllerUI*)data;
+	std::string l = c->getLink();
+	// Check if the link is empty
+    if (l.empty()) {
+		updateLinkCB(w, data);
+}	}
 
 static void writeBindEnable(Fl_Widget* w, void* data)
 {
-	OptionsWindow* o = (OptionsWindow*) data;
+	MidiOptionsWindow* o = (MidiOptionsWindow*) data;
 	//LUPPP_NOTE("MIDI bind mode");
 
 	Avtk::LightButton* l = (Avtk::LightButton*)w;
@@ -109,7 +138,7 @@ static void removeControllerCB(Fl_Widget* w, void* data)
 	self->optionsWindow->tabs->redraw();
 
 	// FIXME: confirm action here?
-
+	
 	//LUPPP_NOTE("Removing controllerID %i", self->controllerID );
 	EventControllerInstanceRemove e( self->controllerID );
 	writeToDspRingbuffer( &e );
@@ -119,13 +148,13 @@ static void removeControllerCB(Fl_Widget* w, void* data)
 
 static void addNewController(Fl_Widget* w, void* ud)
 {
-	OptionsWindow* self = (OptionsWindow*)ud;
+	MidiOptionsWindow* self = (MidiOptionsWindow*)ud;
 	LUPPP_NOTE("%s","ADD Controller cb");
 
 	GenericMIDI* c = 0;
 
-	const char* name = fl_input( "Controller name: ", "" );
-	if ( name ) {
+	const char* name = fl_input( "MIDI Controller Name: ", "" );
+	if ( name && name[0] != '\0') {
 		c = new GenericMIDI( 0, name);
 	} else {
 		return;
@@ -143,7 +172,7 @@ static void addNewController(Fl_Widget* w, void* ud)
 
 static void selectLoadController(Fl_Widget* w, void* data)
 {
-	OptionsWindow* self = (OptionsWindow*)data;
+	MidiOptionsWindow* self = (MidiOptionsWindow*)data;
 
 	// FIXME: refactor
 	string path;
@@ -197,64 +226,59 @@ static void writeControllerFile(Fl_Widget* w, void* data)
 	writeToDspRingbuffer( &e );
 }
 
-
-static void deleteBindingFromController(Fl_Widget* w, void* ud)
-{
-	ControllerUI* self = (ControllerUI*)ud;
-	stringstream s;
-	s << w->label();
-	int tmp;
-	s >> tmp;
-	LUPPP_NOTE("CtlrID %i: Deleting binding with ID %i", self->controllerID, tmp );
-
-	EventControllerBindingRemove e( self->controllerID, tmp );
-	writeToDspRingbuffer( &e );
-
-	// remove "this" widget (and its parent Pack) from the list of MIDI bindings:
-	self->bindingsPack->remove( w->parent() );
-	self->bindingsPack->redraw();
-	self->scroll->redraw();
-}
-
-
 ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
 {
 	name = n;
+	if (n == "") {
+		name = "Untitled";
+	}
 
-	widget = new Fl_Group( x, y, w, h, name.c_str());
+	widget = new Fl_Group(x, y, w, h, name.c_str());
 	{
-		// author / link
-		authorLabel = new Avtk::Button( x + 5, y + 5, 190, 25, "Author?" );
-		linkLabel   = new Avtk::Button( x + 7+ w/2, y + 5, 190, 25, "Link?" );
+		// Binding / Target
+		Fl_Box* bindingDescription = new Fl_Box(x + 10, y + 15, w - 20, 25, "Click 'Start Binding Mode' and then click a control to target it. After a target is selected, send a MIDI event to bind it.");
+		bindingDescription->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 
-		authorLabel->label("Author?");
-		authorLabel->label("Link?");
+		bindEnable = new Avtk::LightButton(x + 10, y + 45, 140, 25, "Start Binding Mode");
+		bindEnable->tooltip("Activate binding mode and click a control to target it.");
 
-		authorLabel->callback( updateAuthorCB, this );
-		linkLabel->callback( updateLinkCB, this );
+		targetLabelStat = new Fl_Box(x + 160, y + 45, 60, 25, "Target:");
+		targetLabel = new Fl_Box(x + 230, y + 45, 160, 25, "");
 
-		// binding / target
-		targetLabelStat = new Fl_Box(x + 100,y + 32, 75, 25,"Target: ");
-		targetLabel = new Fl_Box(x + 140,y + 32, 200, 25,"");
-		bindEnable = new Avtk::LightButton(x + 5, y + 32, 100, 25, "Bind Enable");
+		// Save / Remove Buttons
+		writeControllerBtn = new Avtk::Button(x + 10, y + h - 40, 180, 25, "Save Bindings");
+		exportControllerBtn = new Avtk::Button(x + 210, y + h - 40, 180, 25, "Export Bindings");
+		removeController = new Avtk::Button(x + 410, y + h - 40, 180, 25, "Remove Current Tab");
 
-		writeControllerBtn = new Avtk::Button( x + 5, y + h - 27, 100, 25, "Save" );
-		removeController = new Avtk::Button( x + 110, y + h - 27, 100, 25, "Remove");
+		// Author Label
+		authorLabel = new Fl_Button(x + 610, y + h - 40, 180, 25, "");
+		authorLabel->align(FL_ALIGN_RIGHT | FL_ALIGN_INSIDE);
+		authorLabel->box(FL_NO_BOX); // Makes the button look like a label
+		authorLabel->labelfont(FL_HELVETICA_ITALIC);
+		authorLabel->labelsize(12);
+		authorLabel->labelcolor(FL_WHITE);
+		authorLabel->callback(updateLinkCB, this);
+		authorLabel->hide();
+		
+		exportControllerBtn->callback(exportMidiBindingCB, this);
 
-		scroll = new Fl_Scroll( x + 5, y + 82, 395, 265 );
+		// Scroll and Pack for Bindings
+		scroll = new Fl_Scroll(x + 5, y + 85, 800, 245);
 		{
-			bindingsPack = new Fl_Pack( x + 5, y + 82, w - 15, 270-10);
+			bindingsPack = new Fl_Pack(x + 5, y + 85, w - 15, 250-10);
 			bindingsPack->end();
-			bindingsPack->spacing( 2 );
+			bindingsPack->spacing(2);
 			bindingsPack->box(FL_DOWN_FRAME);
 		}
-		scroll->resizable( bindingsPack );
-		scroll->box( FL_DOWN_FRAME );
-		scroll->type( Fl_Scroll::VERTICAL_ALWAYS );
+		scroll->resizable(bindingsPack);
+		scroll->box(FL_DOWN_FRAME);
+		scroll->type(Fl_Scroll::VERTICAL_ALWAYS);
 		scroll->end();
 
-		widget->resizable( scroll );
+		widget->resizable(scroll);
+		widget->end();
 	}
+
 	widget->end();
 
 	widget->redraw();
@@ -269,7 +293,7 @@ ControllerUI::ControllerUI(int x, int y, int w, int h, std::string n, int ID)
 	writeControllerBtn->callback( writeControllerFile, this );
 }
 
-void OptionsWindow::setTarget(const char* n)
+void MidiOptionsWindow::setTarget(const char* n)
 {
 	for(unsigned int i = 0; i < controllers.size(); i++ ) {
 		controllers.at(i)->setTarget( n );
@@ -285,16 +309,21 @@ void ControllerUI::setTarget( const char* n )
 
 void ControllerUI::setAuthor(std::string a)
 {
-	author = a;
-	authorLabel->label( author.c_str() );
-	authorLabel->redraw();
+	if (a != "") {
+		author = a;
+		authorMessage = "Made by " + author;
+		
+		authorLabel->label( authorMessage.c_str() );
+		authorLabel->redraw();
+		authorLabel->show();
+	}
+	
 }
 
 void ControllerUI::setLink(std::string e)
 {
 	link = e;
-	linkLabel->label( link.c_str() );
-	linkLabel->redraw();
+	authorLabel->redraw();
 }
 
 void ControllerUI::setBindEnable( bool b )
@@ -321,11 +350,16 @@ void ControllerUI::addBinding( Binding* b )
 	// push the bindingID onto the vector
 	bindingID.push_back( b->ID );
 
+	// Determine the background color based on the current number of children
+	Fl_Color DARK_GREY = fl_rgb_color(60, 60, 60);
+    Fl_Color bgColor = (b->ID % 2 == 0) ? FL_BACKGROUND_COLOR : DARK_GREY;
+
 	// create a horizontal pack, add that to the bindingsPack
 	Fl_Pack* tmp = new Fl_Pack( 35, 35, 25, 25);
 	{
 		tmp->type( Fl_Pack::HORIZONTAL );
 		tmp->spacing( 2 );
+		tmp->color(bgColor);
 
 		stringstream s;
 
@@ -358,19 +392,43 @@ void ControllerUI::addBinding( Binding* b )
 				s << " Off";
 		}
 
+		
+
+		Fl_Box* label = new Fl_Box(0, 0, 750, 25, strdup(s.str().c_str()) );
+		label->align( FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
+		label->color(bgColor);
+        label->box(FL_FLAT_BOX); // Ensure the background color is applied
+		label->redraw();
+		
 		// button to remove a binding, uses bindingsID vector to get unique number
-		stringstream id;
-		id << b->ID;
-		char *str = strdup(id.str().c_str());
-		Fl_Button* but = new Fl_Button(35, 35, 25, 25, str );
-		if(!but)
-			free(str);
-		but->callback( deleteBindingFromController, this );
+		int id = b->ID;
+		Fl_Button* but = new Fl_Button(0, 0, 25, 25, "X" );
+
+		but->callback([](Fl_Widget* w, void* ud) {
+			auto* data = static_cast<std::pair<ControllerUI*, int>*>(ud);
+			ControllerUI* self = data->first;
+			int id = data->second;
+
+			LUPPP_NOTE("CtlrID %i: Deleting binding with ID %i", self->controllerID, id);
+
+			EventControllerBindingRemove e(self->controllerID, id);
+			writeToDspRingbuffer(&e);
+
+			// remove this widget from the list of MIDI bindings
+			self->bindingsPack->remove(w->parent());
+			self->bindingsPack->redraw();
+			self->scroll->redraw();
+			
+			//delete data;
+		}, new std::pair<ControllerUI*, int>(this, id));
+		Fl_Color LIGHT_RED = fl_rgb_color(255, 102, 102);
+		but->labelcolor(LIGHT_RED);
+		but->color(bgColor);
 		but->redraw();
 
-		Fl_Box* b = new Fl_Box(35, 35, 400, 25, strdup(s.str().c_str()) );
-		b->align( FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
-		b->redraw();
+		tmp->add(label);
+		tmp->add(but);
+		
 	}
 	tmp->end();
 
@@ -401,7 +459,6 @@ ControllerUI::~ControllerUI()
 
 
 	delete authorLabel;
-	delete linkLabel;
 
 	delete targetLabel;
 	delete targetLabelStat;
@@ -410,23 +467,25 @@ ControllerUI::~ControllerUI()
 	delete writeControllerBtn;
 }
 
-OptionsWindow::OptionsWindow()
+MidiOptionsWindow::MidiOptionsWindow()
 {
-	window = new Fl_Double_Window(400,400,"Options");
+	int windowW = 815;
+	int windowH = 400;
+	window = new Fl_Double_Window(windowW, windowH, "MIDI Options");
 
 	window->set_non_modal();
 
-	tabs = new Fl_Tabs(0, 0, 400, 400);
+	tabs = new Fl_Tabs(0, 0, windowW, windowH);
 
 	window->resizable( tabs );
 
 	int x, y, w, h;
 	tabs->client_area( x, y, w, h, 25 );
 
-	addGroup = new Fl_Group(x,y,w,h,"Add");
+	addGroup = new Fl_Group(x,y,w,h,"New");
 	{
-		newButton = new Avtk::Button( x+2, y+2, w-4, 30, "New Generic MIDI");
-		loadButton = new Avtk::Button( x+2, y+2+32, w-4, 30, "Load Generic MIDI");
+		newButton = new Avtk::Button( x+2, y+2, w-4, 30, "Create New MIDI Controller Bindings");
+		loadButton = new Avtk::Button( x+2, y+2+32, w-4, 30, "Load Existing MIDI Controller Bindings");
 	}
 	addGroup->end();
 	tabs->end();
@@ -437,7 +496,7 @@ OptionsWindow::OptionsWindow()
 	window->end();
 }
 
-OptionsWindow::~OptionsWindow()
+MidiOptionsWindow::~MidiOptionsWindow()
 {
 	delete newButton;
 	delete loadButton;
@@ -446,17 +505,17 @@ OptionsWindow::~OptionsWindow()
 	delete window;
 }
 
-void OptionsWindow::show()
+void MidiOptionsWindow::show()
 {
 	window->show();
 }
 
-void OptionsWindow::hide()
+void MidiOptionsWindow::hide()
 {
 	window->hide();
 }
 
-ControllerUI* OptionsWindow::getControllerUI(int id)
+ControllerUI* MidiOptionsWindow::getControllerUI(int id)
 {
 	for(unsigned int i = 0; i < controllers.size(); i++ ) {
 		if ( controllers.at(i)->controllerID == id ) {
