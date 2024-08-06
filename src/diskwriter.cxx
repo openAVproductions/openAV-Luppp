@@ -478,21 +478,21 @@ void DiskWriter::writeDefaultConfigToUserHome()
 
 	cJSON* hotkeyAssignment = cJSON_CreateObject();
 
-    // Iterate through the keyToGrid map and add each key-value pair to hotkeyAssignment
-    for (const auto& pair : keyToGrid) {
-        int key = pair.first;
-        int id = pair.second.first;
-        int clipNumber = pair.second.second;
+	// Iterate through the keyToGrid map and add each key-value pair to hotkeyAssignment
+	for (const auto& pair : keyToGrid) {
+		int key = pair.first;
+		int id = pair.second.first;
+		int clipNumber = pair.second.second;
 
-        // Create an array for the id and clipNumber
-        cJSON* array = cJSON_CreateArray();
-        cJSON_AddItemToArray(array, cJSON_CreateNumber(id));
-        cJSON_AddItemToArray(array, cJSON_CreateNumber(clipNumber));
+		// Create an array for the id and clipNumber
+		cJSON* array = cJSON_CreateArray();
+		cJSON_AddItemToArray(array, cJSON_CreateNumber(id));
+		cJSON_AddItemToArray(array, cJSON_CreateNumber(clipNumber));
 
-        // Convert key to string and add to hotkeyAssignment
-        cJSON_AddItemToObject(hotkeyAssignment, std::to_string(key).c_str(), array);
-    }
-    cJSON_AddItemToObject(prfs, "hotkeyAssignment", hotkeyAssignment);
+		// Convert key to string and add to hotkeyAssignment
+		cJSON_AddItemToObject(hotkeyAssignment, std::to_string(key).c_str(), array);
+	}
+	cJSON_AddItemToObject(prfs, "hotkeyAssignment", hotkeyAssignment);
 	
 	// test output on console
 	// cout << endl << cJSON_Print( prfs ) << endl << endl;
