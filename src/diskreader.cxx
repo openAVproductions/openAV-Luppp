@@ -98,7 +98,7 @@ int DiskReader::loadPreferences()
 			keyToGrid.clear();
 			cJSON* key = hotkeyAssignment->child;
 			while (key) {
-				int keycode = std::stoi(key->string);
+				int keycode = atoi(key->string);
 				cJSON* gridArray = key;
 				if (cJSON_GetArraySize(gridArray) == 2) {
 					int x = cJSON_GetArrayItem(gridArray, 0)->valueint;
