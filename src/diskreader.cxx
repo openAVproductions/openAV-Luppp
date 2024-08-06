@@ -31,7 +31,7 @@
 #include "audiobuffer.hxx"
 #include "eventhandler.hxx"
 #include "gmastertrack.hxx"
-
+#include "hotkeymanager.hxx"
 #include "controller/genericmidi.hxx"
 
 #include <sndfile.hh>
@@ -93,6 +93,23 @@ int DiskReader::loadPreferences()
 			LUPPP_NOTE("No default controllers active.");
 		}
 
+		cJSON* hotkeyAssignment = cJSON_GetObjectItem(preferencesJson, "hotkeyAssignment");
+		if (hotkeyAssignment) {
+			keyToGrid.clear();
+			cJSON* key = hotkeyAssignment->child;
+			while (key) {
+				int keycode = atoi(key->string);
+				cJSON* gridArray = key;
+				if (cJSON_GetArraySize(gridArray) == 2) {
+					int x = cJSON_GetArrayItem(gridArray, 0)->valueint;
+					int y = cJSON_GetArrayItem(gridArray, 1)->valueint;
+					keyToGrid[keycode] = {x, y};
+				}
+				key = key->next;
+			}
+		} else {
+			LUPPP_WARN("No hotkeyAssignment found in preferences");
+		}
 
 		cJSON* projDir=cJSON_GetObjectItem(preferencesJson,"saveDirectory");
 		string dir=getenv("HOME");

@@ -17,6 +17,7 @@
  */
 
 #include "gui.hxx"
+#include "hotkeymanager.hxx"
 #include "avtk/avtk_image.h"
 #include "avtk/avtk_button.h"
 
@@ -37,6 +38,7 @@ extern Jack* jack;
 #include <FL/x.H>
 #include <FL/fl_draw.H>
 
+#include <map>
 #include <stdlib.h>
 #include <FL/Fl.H>
 #include <FL/fl_ask.H>
@@ -554,7 +556,7 @@ int Gui::quit()
 	// ensure the subwindows are closed
 	optionWindow->hide();
 	audioEditor->hide();
-
+	gui->getDiskWriter()->writeDefaultConfigToUserHome();
 	// quit main window, causing program termination
 	window.hide();
 
@@ -571,308 +573,53 @@ void Gui::askQuit()
 
 int Gui::keyboardHandler(int event)
 {
-
 	switch( event ) {
 	case FL_SHORTCUT:
-		if     ( strcmp( Fl::event_text(), "1" ) == 0 ) {
-			EventGridEvent e( 0, 0, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "2" ) == 0 ) {
-			EventGridEvent e( 1, 0, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "3" ) == 0 ) {
-			EventGridEvent e( 2, 0, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "4" ) == 0 ) {
-			EventGridEvent e( 3, 0, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "5" ) == 0 ) {
-			EventGridEvent e( 4, 0, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "6" ) == 0 ) {
-			EventGridEvent e( 5, 0, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "7" ) == 0 ) {
-			EventGridEvent e( 6, 0, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "8" ) == 0 ) {
-			EventGridEvent e( 7, 0, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		}
 
-		else if( strcmp( Fl::event_text(), "!" ) == 0 ) {
-			EventGridState e( 0, 0, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "@" ) == 0 ) {
-			EventGridState e( 1, 0, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "\"" ) == 0 ) {
-			EventGridState e( 1, 0, GridLogic::STATE_EMPTY );        // for UK/Ireland keyboards
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "#" ) == 0 ) {
-			EventGridState e( 2, 0, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "£" ) == 0 ) {
-			EventGridState e( 2, 0, GridLogic::STATE_EMPTY );        // for UK/Ireland keyboards
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "$" ) == 0 ) {
-			EventGridState e( 3, 0, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "%" ) == 0 ) {
-			EventGridState e( 4, 0, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "^" ) == 0 ) {
-			EventGridState e( 5, 0, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "&" ) == 0 ) {
-			EventGridState e( 6, 0, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "*" ) == 0 ) {
-			EventGridState e( 7, 0, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		}
+		const char* eventText = Fl::event_text();
+		int eventKey = Fl::event_key();
+		
+		if (eventKey) {
+			// char buffer [50];
+			// snprintf(buffer, sizeof(buffer), "Keyboard input: %s | %i", eventText, eventKey);
+			// printf("%s\n", buffer);
 
-		else if( strcmp( Fl::event_text(), "q" ) == 0 ) {
-			EventGridEvent e( 0, 1, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "w" ) == 0 ) {
-			EventGridEvent e( 1, 1, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "e" ) == 0 ) {
-			EventGridEvent e( 2, 1, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "r" ) == 0 ) {
-			EventGridEvent e( 3, 1, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "t" ) == 0 ) {
-			EventGridEvent e( 4, 1, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "y" ) == 0 ) {
-			EventGridEvent e( 5, 1, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "u" ) == 0 ) {
-			EventGridEvent e( 6, 1, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "i" ) == 0 ) {
-			EventGridEvent e( 7, 1, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		}
+			if (keyToGrid.find(eventKey) != keyToGrid.end()) {
+				auto gridPos = keyToGrid[eventKey];
+				int x = gridPos.first;
+				int y = gridPos.second;
 
-		else if( strcmp( Fl::event_text(), "Q" ) == 0 ) {
-			EventGridState e( 0, 1, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "W" ) == 0 ) {
-			EventGridState e( 1, 1, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "E" ) == 0 ) {
-			EventGridState e( 2, 1, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "R" ) == 0 ) {
-			EventGridState e( 3, 1, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "T" ) == 0 ) {
-			EventGridState e( 4, 1, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "Y" ) == 0 ) {
-			EventGridState e( 5, 1, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "U" ) == 0 ) {
-			EventGridState e( 6, 1, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "I" ) == 0 ) {
-			EventGridState e( 7, 1, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		}
+				// Check if Shift is held down
+				bool shiftHeld = (Fl::event_state() & FL_SHIFT) != 0;
 
-		else if( strcmp( Fl::event_text(), "a" ) == 0 ) {
-			EventGridEvent e( 0, 2, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "s" ) == 0 ) {
-			EventGridEvent e( 1, 2, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "d" ) == 0 ) {
-			EventGridEvent e( 2, 2, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "f" ) == 0 ) {
-			EventGridEvent e( 3, 2, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "g" ) == 0 ) {
-			EventGridEvent e( 4, 2, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "h" ) == 0 ) {
-			EventGridEvent e( 5, 2, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "j" ) == 0 ) {
-			EventGridEvent e( 6, 2, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "k" ) == 0 ) {
-			EventGridEvent e( 7, 2, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		}
+				if (shiftHeld) {
+					EventGridState e(x, y, GridLogic::STATE_EMPTY);
+					writeToDspRingbuffer(&e);
+				} else {
+					EventGridEvent e(x, y, true);
+					writeToDspRingbuffer(&e);
+				}
 
-		else if( strcmp( Fl::event_text(), "A" ) == 0 ) {
-			EventGridState e( 0, 2, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "S" ) == 0 ) {
-			EventGridState e( 1, 2, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "D" ) == 0 ) {
-			EventGridState e( 2, 2, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "F" ) == 0 ) {
-			EventGridState e( 3, 2, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "G" ) == 0 ) {
-			EventGridState e( 4, 2, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "H" ) == 0 ) {
-			EventGridState e( 5, 2, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "J" ) == 0 ) {
-			EventGridState e( 6, 2, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "K" ) == 0 ) {
-			EventGridState e( 7, 2, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		}
-
-		else if( strcmp( Fl::event_text(), "z" ) == 0 ) {
-			EventGridEvent e( 0, 3, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "x" ) == 0 ) {
-			EventGridEvent e( 1, 3, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "c" ) == 0 ) {
-			EventGridEvent e( 2, 3, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "v" ) == 0 ) {
-			EventGridEvent e( 3, 3, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "b" ) == 0 ) {
-			EventGridEvent e( 4, 3, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "n" ) == 0 ) {
-			EventGridEvent e( 5, 3, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "m" ) == 0 ) {
-			EventGridEvent e( 6, 3, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "," ) == 0 ) {
-			EventGridEvent e( 7, 3, true );
-			writeToDspRingbuffer( &e );
-			return 1;
-		}
-
-		else if( strcmp( Fl::event_text(), "Z" ) == 0 ) {
-			EventGridState e( 0, 3, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "X" ) == 0 ) {
-			EventGridState e( 1, 3, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "C" ) == 0 ) {
-			EventGridState e( 2, 3, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "V" ) == 0 ) {
-			EventGridState e( 3, 3, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "B" ) == 0 ) {
-			EventGridState e( 4, 3, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "N" ) == 0 ) {
-			EventGridState e( 5, 3, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "M" ) == 0 ) {
-			EventGridState e( 6, 3, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "<" ) == 0 ) {
-			EventGridState e( 7, 3, GridLogic::STATE_EMPTY );
-			writeToDspRingbuffer( &e );
-			return 1;
-		}
-
-		else if( strcmp( Fl::event_text(), "9" ) == 0 ) {
-			EventGridLaunchScene e( 0 );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "o" ) == 0 ) {
-			EventGridLaunchScene e( 1 );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "l" ) == 0 ) {
-			EventGridLaunchScene e( 2 );
-			writeToDspRingbuffer( &e );
-			return 1;
-		} else if( strcmp( Fl::event_text(), "." ) == 0 ) {
-			EventGridLaunchScene e( 3 );
-			writeToDspRingbuffer( &e );
-			return 1;
-		}
-
-		else {
+				return 1;
+				
+			} else if( strcmp( eventText, "9" ) == 0 ) {
+				EventGridLaunchScene e( 0 );
+				writeToDspRingbuffer( &e );
+				return 1;
+			} else if( strcmp( eventText, "o" ) == 0 ) {
+				EventGridLaunchScene e( 1 );
+				writeToDspRingbuffer( &e );
+				return 1;
+			} else if( strcmp( eventText, "l" ) == 0 ) {
+				EventGridLaunchScene e( 2 );
+				writeToDspRingbuffer( &e );
+				return 1;
+			} else if( strcmp( eventText, "." ) == 0 ) {
+				EventGridLaunchScene e( 3 );
+				writeToDspRingbuffer( &e );
+				return 1;
+			}
+		} else {
 			//printf("%s\n", Fl::event_text() ); return 1;
 		}
 	}
