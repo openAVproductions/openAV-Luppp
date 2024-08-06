@@ -577,29 +577,30 @@ int Gui::keyboardHandler(int event)
 		const char* eventText = Fl::event_text();
 		int eventKey = Fl::event_key();
 		
-        if (eventKey) {
+		if (eventKey) {
 			// char buffer [50];
 			// snprintf(buffer, sizeof(buffer), "Keyboard input: %s | %i", eventText, eventKey);
 			// printf("%s\n", buffer);
 
-            if (keyToGrid.find(eventKey) != keyToGrid.end()) {
-                auto gridPos = keyToGrid[eventKey];
-                int x = gridPos.first;
-                int y = gridPos.second;
+			if (keyToGrid.find(eventKey) != keyToGrid.end()) {
+				auto gridPos = keyToGrid[eventKey];
+				int x = gridPos.first;
+				int y = gridPos.second;
 
-                // Check if Shift is held down
-                bool shiftHeld = (Fl::event_state() & FL_SHIFT) != 0;
+				// Check if Shift is held down
+				bool shiftHeld = (Fl::event_state() & FL_SHIFT) != 0;
 
-                if (shiftHeld) {
-                    EventGridState e(x, y, GridLogic::STATE_EMPTY);
-                    writeToDspRingbuffer(&e);
-                } else {
-                    EventGridEvent e(x, y, true);
-                    writeToDspRingbuffer(&e);
-                }
+				if (shiftHeld) {
+					EventGridState e(x, y, GridLogic::STATE_EMPTY);
+					writeToDspRingbuffer(&e);
+				} else {
+					EventGridEvent e(x, y, true);
+					writeToDspRingbuffer(&e);
+				}
 
-                return 1;
-            } else if( strcmp( eventText, "9" ) == 0 ) {
+				return 1;
+				
+			} else if( strcmp( eventText, "9" ) == 0 ) {
 				EventGridLaunchScene e( 0 );
 				writeToDspRingbuffer( &e );
 				return 1;
@@ -616,10 +617,7 @@ int Gui::keyboardHandler(int event)
 				writeToDspRingbuffer( &e );
 				return 1;
 			}
-		}
-		
-
-		else {
+		} else {
 			//printf("%s\n", Fl::event_text() ); return 1;
 		}
 	}
