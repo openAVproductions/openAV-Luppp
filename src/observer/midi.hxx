@@ -50,7 +50,11 @@ public:
 
 	virtual void midi(unsigned char* /*data*/) {};
 
-	void writeMidi( unsigned char* /*data*/ );
+	void writeMidi(unsigned char* /*data*/, unsigned int length);
+
+protected:
+	bool isMyOutput(jack_port_t*);
+	bool isMyInput(jack_port_t*);
 
 private:
 	bool portsRegistered;

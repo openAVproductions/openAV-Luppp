@@ -124,6 +124,8 @@ enum EVENT_TYPE {
 	CONTROLLER_BINDING_MADE,
 	CONTROLLER_BINDING_REMOVE,
 
+	MIDI_CONNECT,
+
 	QUIT,
 
 	// for keeping loop index's inside the enum
@@ -1167,6 +1169,31 @@ public:
 	char* getMessage()
 	{
 		return &target[0];
+	}
+};
+
+class EventMidiConnect : public EventBase
+{
+public:
+	int type()
+	{
+		return int(MIDI_CONNECT);
+	}
+	uint32_t size()
+	{
+		return sizeof(EventMidiConnect);
+	}
+
+	jack_port_id_t a;
+	jack_port_id_t b;
+	bool connect;
+
+	EventMidiConnect() {}
+	EventMidiConnect(jack_port_id_t a, jack_port_id_t b, int connect)
+	{
+		this->a = a;
+		this->b = b;
+		this->connect = connect;
 	}
 };
 

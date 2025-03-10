@@ -27,6 +27,7 @@
 
 #include "buffers.hxx"
 #include "eventhandler.hxx"
+#include "controllerupdater.hxx"
 
 #include "observer/time.hxx"
 
@@ -268,6 +269,8 @@ void TimeManager::process(Buffers* buffers)
 		// write new beat to UI (bar info currently not used)
 		EventTimeBarBeat e( barCounter, beatCounter );
 		writeToGuiRingbuffer( &e );
+		// and send to cotroller output
+		jack->getControllerUpdater()->setBarBeat(barCounter, beatCounter);
 
 
 

@@ -454,6 +454,26 @@ void handleDspEvents()
 				break;
 			}
 
+			case Event::MIDI_CONNECT: {
+				if ( availableRead >= sizeof(EventMidiConnect) ) {
+					EventMidiConnect ev;
+					jack_ringbuffer_read( rbToDsp, (char*)&ev, sizeof(EventMidiConnect) );
+
+					// get the jack ports, and notify controllers
+
+					jack_client_t* c = jack->getJackClientPointer();
+					jack_port_t* portA = jack_port_by_id( c, ev.a );
+					jack_port_t* portB = jack_port_by_id( c, ev.b );
+
+					if ( ev.connect > 0 ) {
+						jack->getControllerUpdater()->midiConnect( portA, portB );
+					} else {
+						jack->getControllerUpdater()->midiDisconnect( portA, portB );
+					}
+				}
+				break;
+			}
+
 			default: {
 				cout << "DSP: Unkown message!! Will clog ringbuffer" << endl;
 				// just do nothing

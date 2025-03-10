@@ -73,6 +73,8 @@ public:
 	bool footswitchNextScene;
 	bool footswitchPrevScene;
 
+	virtual void setBarBeat(int ba, int be);
+
 
 	void reset();
 
@@ -85,6 +87,8 @@ public:
 	// for adding bindings from MIDI / GUI event pair
 	void setupBinding( LupppAction eventType, int midiStatus, int midiData, int track, int scene, int send, int active );
 	void removeBinding( int bindingID );
+
+	void midiConnect(jack_port_t* a, jack_port_t* b);
 
 private:
 	STATUS stat;
