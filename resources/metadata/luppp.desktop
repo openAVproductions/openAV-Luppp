@@ -10,4 +10,4 @@ Exec=luppp
 Terminal=false
 StartupNotify=true
 Icon=luppp
-X-NSM-capable=true
+X-NSM-Capable=true
