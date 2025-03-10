@@ -28,7 +28,7 @@ typedef int LupppAction;
 class Binding
 {
 public:
-	Binding() : status(0), data(0), action(0), active(1),
+	Binding() : status(0), data(0), echo(1), action(0), active(1),
 		track(-2),scene(-1),send(-1)
 	{
 		ID = privateID++;
@@ -38,6 +38,7 @@ public:
 
 	unsigned char status;
 	unsigned char data;
+	unsigned char echo;
 
 	/// the action this binding relates to: this is an integer based on the
 	/// event.hxx enumeration of event types

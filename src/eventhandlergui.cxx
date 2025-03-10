@@ -108,7 +108,7 @@ void handleGuiEvents()
 			}
 			case Event::MASTER_VOL: {
 				if ( availableRead >= sizeof(EventMasterVol) ) {
-					EventMasterVol ev(0);
+					EventMasterVol ev;
 					jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventMasterVol) );
 					gui->getMasterTrack()->getVolume()->fader( ev.vol );
 				}
