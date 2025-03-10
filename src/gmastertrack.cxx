@@ -117,12 +117,12 @@ static void gmastertrack_transport_callback(Fl_Widget *w, void *data)
 	if( b->value() ) {
 		EventTransportState e = EventTransportState( TRANSPORT_ROLLING );
 		writeToDspRingbuffer( &e );
-		w->label( "Stop" );
+		w->label( "@#||" );  // Changed stop to pause symbol
 		b->value( 0 );
 	} else {
 		EventTransportState e = EventTransportState( TRANSPORT_STOPPED );
 		writeToDspRingbuffer( &e );
-		w->label( "Play" );
+		w->label( "@#>" );  // play symbol
 		b->value( 1 );
 	}
 
