@@ -38,7 +38,7 @@
 #include "avtk/avtk_light_button.h"
 
 class Binding;
-class OptionsWindow;
+class MidiOptionsWindow;
 
 /// contains UI elements to represent one controller
 class ControllerUI
@@ -72,7 +72,7 @@ public:
 
 	std::string name;
 
-	OptionsWindow* optionsWindow;
+	MidiOptionsWindow* optionsWindow;
 
 	// public to redraw when removing from static
 	Fl_Scroll* scroll;
@@ -83,9 +83,9 @@ private:
 	std::string target;
 	std::string author;
 	std::string link;
+	std::string authorMessage;
 
-	Avtk::Button* authorLabel;
-	Avtk::Button* linkLabel;
+	Fl_Button* authorLabel;
 
 	std::vector<int> bindingID;
 
@@ -95,13 +95,14 @@ private:
 	Avtk::LightButton* bindEnable;
 	Avtk::Button* removeController;
 	Avtk::Button* writeControllerBtn;
+	Avtk::Button* exportControllerBtn;
 };
 
-class OptionsWindow
+class MidiOptionsWindow
 {
 public:
-	OptionsWindow();
-	~OptionsWindow();
+	MidiOptionsWindow();
+	~MidiOptionsWindow();
 
 	void show();
 	void hide();

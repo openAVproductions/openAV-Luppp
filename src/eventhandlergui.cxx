@@ -409,7 +409,7 @@ void handleGuiEvents()
 				if ( availableRead >= sizeof(EventControllerBindingEnable) ) {
 					EventControllerBindingEnable ev;
 					jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerBindingEnable) );
-					ControllerUI* c = gui->getOptionsWindow()->getControllerUI( ev.controllerID );
+					ControllerUI* c = gui->getMidiOptionsWindow()->getControllerUI( ev.controllerID );
 					if ( c )
 						c->setBindEnable( ev.enable );
 					else
@@ -422,7 +422,7 @@ void handleGuiEvents()
 				if ( availableRead >= sizeof(EventControllerBindingTarget) ) {
 					EventControllerBindingTarget ev;
 					jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerBindingTarget) );
-					gui->getOptionsWindow()->setTarget( ev.target );
+					gui->getMidiOptionsWindow()->setTarget( ev.target );
 				}
 				break;
 			}
@@ -431,7 +431,7 @@ void handleGuiEvents()
 				if ( availableRead >= sizeof(EventControllerBindingMade) ) {
 					EventControllerBindingMade ev;
 					jack_ringbuffer_read( rbToGui, (char*)&ev, sizeof(EventControllerBindingMade) );
-					ControllerUI* c = gui->getOptionsWindow()->getControllerUI( ev.controllerID );
+					ControllerUI* c = gui->getMidiOptionsWindow()->getControllerUI( ev.controllerID );
 					if ( c )
 						c->addBinding( (Binding*)ev.binding );
 					else

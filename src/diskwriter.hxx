@@ -96,7 +96,6 @@ private:
 
 	// convienice functions for code separation
 	void writeMaster();
-
 	std::string controllerInfo[CONTROLLER_INFO_SIZE];
 };
 

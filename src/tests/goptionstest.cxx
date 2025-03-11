@@ -17,7 +17,7 @@
  */
 
 
-#include "../goptions.hxx"
+#include "../midioptions.hxx"
 
 #ifdef BUILD_TESTS
 
