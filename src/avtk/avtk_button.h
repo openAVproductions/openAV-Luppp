@@ -20,7 +20,8 @@
 #ifndef AVTK_BUTTON_H
 #define AVTK_BUTTON_H
 
-#include <ntk/FL/Fl_Button.H>
+#include <FL/Fl_Button.H>
+#include "avtk_helpers.h"
 
 namespace Avtk
 {
@@ -89,7 +90,7 @@ public:
 	void draw()
 	{
 		if (damage() & FL_DAMAGE_ALL) {
-			cairo_t *cr = Fl::cairo_cc();
+			avtk_cairo_begin(w, h);
 
 			cairo_save( cr );
 
@@ -126,19 +127,26 @@ public:
 			cairo_stroke(cr);
 
 			cairo_restore( cr );
-
-			draw_label();
-		}
-	}
-
+			
+			// Draw label with Cairo if present
+			if ( label() ) {
+				cairo_save( cr );
+				cairo_select_font_face( cr, "sans-serif", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD );
+				cairo_set_font_size( cr, 11 );
+				cairo_set_source_rgb( cr, 0.9, 0.9, 0.9 );
+				
+				cairo_text_extents_t extents;
+				cairo_text_extents( cr, label(), &extents );
+				
+				// Center label in widget
+				cairo_move_to( cr, x + (w - extents.width) / 2, y + (h + extents.height) / 2 );
+				cairo_show_text( cr, label() );
+				cairo_restore( cr );
+			}
+	}	}
 	void resize(int X, int Y, int W, int H)
 	{
 		Fl_Widget::resize(X,Y,W,H);
-		x = X;
-		y = Y;
-		w = W;
-		h = H;
-		redraw();
 	}
 
 	int handle(int event)

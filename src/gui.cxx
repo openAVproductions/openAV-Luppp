@@ -51,7 +51,6 @@ extern Jack* jack;
 #include "../planning/header.c"
 #include "../planning/luppp.c"
 #include "../planning/bg.c"
-#include "../planning/settings.c"
 
 using namespace std;
 
@@ -98,8 +97,7 @@ void option_controller_cb(Fl_Widget*,void* data)
 static void gui_header_callback(Fl_Widget *w, void *data)
 {
 	Gui* g = (Gui*)data;
-
-	if ( Fl::event_x() > 166 ) {
+	if ( Fl::event_x() > 130 ) {
 		return;
 	}
 
@@ -118,7 +116,7 @@ static void gui_header_callback(Fl_Widget *w, void *data)
 		rclick_menu[2].deactivate();
 	}
 
-	Fl_Menu_Item *m = (Fl_Menu_Item*) rclick_menu->popup( 130, 38, 0, 0, 0);
+	Fl_Menu_Item *m = (Fl_Menu_Item*) rclick_menu->popup( 10, 38, 0, 0, 0);
 
 	if ( !m ) {
 		return;
@@ -180,11 +178,9 @@ static void gui_header_callback(Fl_Widget *w, void *data)
 
 		return;
 	} else if ( strcmp(m->label(), "Save Session   ") == 0 ) {
-		const string projectsDir = gui->getProjectsDir();
-		string prompt = "Save session as " + projectsDir;
-		const char* name = fl_input( "%s", gui->getDiskWriter()->getLastSaveName().c_str(), prompt.c_str() );
+		const char* name = fl_input( "Save session as", gui->getDiskWriter()->getLastSaveName().c_str() );
 		if ( name ) {
-			gui->getDiskWriter()->initialize( projectsDir, name );
+			gui->getDiskWriter()->initialize( gui->getProjectsDir().c_str(), name );
 			LUPPP_NOTE("%s %s","Saving session as ", name );
 			EventSessionSave e;
 			writeToDspRingbuffer( &e );
@@ -369,6 +365,7 @@ Gui::Gui(const char* argZero) :
 	gui = this;
 
 	// setup window icon before calling show()
+#ifndef __APPLE__
 	fl_open_display();
 	Fl_Pixmap* pixmap = new Fl_Pixmap( icon_xpm );
 	Fl_Offscreen lupppIcon = XCreatePixmap(fl_display, RootWindow(fl_display, fl_screen),
@@ -381,6 +378,11 @@ Gui::Gui(const char* argZero) :
 	XFreeGC(fl_display, fl_gc);
 
 	window.icon( (void*)lupppIcon );
+#else
+	// macOS: Icons are set via Info.plist / .app bundle
+	// Initialize FLTK font system to avoid crashes in Fl_Tabs::client_area()
+	fl_font(FL_HELVETICA, 14);
+#endif
 
 	// setup callback to signalChecker()
 	Fl::add_timeout( 0.1, (Fl_Timeout_Handler)&signalChecker, 0 );
@@ -409,10 +411,7 @@ Gui::Gui(const char* argZero) :
 
 			Avtk::Image* lupppImage = new Avtk::Image(0,0,130,36,"luppp");
 			lupppImage->setPixbuf( lupppImg.pixel_data, 4 );
-
-			Avtk::Image* settingsImage = new Avtk::Image(131,0,36,36,"settings");
-			settingsImage->setPixbuf( settingsImg.pixel_data, 4 );
-			settingsImage->callback( gui_header_callback, this );
+			lupppImage->callback( gui_header_callback, this );
 
 			Avtk::Image* headerImage = new Avtk::Image( window.w() - 270,0,270,36,"header");
 			headerImage->setPixbuf( header.pixel_data, 4 );

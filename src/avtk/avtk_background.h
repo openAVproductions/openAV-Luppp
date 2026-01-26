@@ -22,6 +22,7 @@
 
 #include <FL/Fl_Widget.H>
 #include <FL/fl_ask.H>
+#include "avtk_helpers.h"
 
 #include <valarray>
 #include <string>
@@ -50,7 +51,7 @@ public:
 	void draw()
 	{
 		if (damage() & FL_DAMAGE_ALL) {
-			cairo_t *cr = Fl::cairo_cc();
+			avtk_cairo_begin(w, h);
 
 			cairo_save( cr );
 
@@ -71,6 +72,7 @@ public:
 			// text
 			cairo_move_to( cr, x + 10, y + 14 );
 			cairo_set_source_rgba( cr, 0 / 255.f, 153 / 255.f , 255 / 255.f , 1 );
+			cairo_select_font_face( cr, "sans-serif", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL );
 			cairo_set_font_size( cr, 10 );
 			cairo_show_text( cr, label() );
 

@@ -18,6 +18,7 @@
 
 
 #include "clipselector.hxx"
+#include "avtk_helpers.h"
 
 #include <unistd.h>
 
@@ -107,7 +108,7 @@ void ClipSelector::draw()
 			highlight = false;
 		}
 
-		cairo_t *cr = Fl::cairo_cc();
+		avtk_cairo_begin(w, h);
 
 		cairo_save( cr );
 
@@ -196,6 +197,7 @@ void ClipSelector::draw()
 			// clip name
 			cairo_move_to( cr, x + clipHeight + 5, drawY + textHeight );
 			cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 0.9 );
+			cairo_select_font_face( cr, "sans-serif", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL );
 			cairo_set_font_size( cr, 11 );
 
 			std::string tmp = clips[i].getName().substr(0,8);

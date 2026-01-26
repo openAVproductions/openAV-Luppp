@@ -22,31 +22,10 @@ luppp_src = []
 subdir('src')
 
 # macOS-specific FLTK detection using fltk-config
-# Use find_program to locate fltk-config dynamically
-fltk_config = find_program('fltk-config', required: true, dirs: ['/opt/homebrew/bin', '/usr/local/bin'])
-fltk_result = run_command(fltk_config, '--cxxflags', check: true)
-fltk_cflags_raw = fltk_result.stdout().strip().split()
-fltk_result = run_command(fltk_config, '--ldflags', check: true)
-fltk_ldflags_raw = fltk_result.stdout().strip().split()
-
-# Filter out x86_64 architecture flags and ensure arm64 for Apple Silicon
-fltk_cflags = []
-foreach flag : fltk_cflags_raw
-  if flag != '-arch' and flag != 'x86_64'
-    fltk_cflags += flag
-  endif
-endforeach
-
-fltk_ldflags = []
-foreach flag : fltk_ldflags_raw
-  if flag != '-arch' and flag != 'x86_64'
-    fltk_ldflags += flag
-  endif
-endforeach
-
-# Force arm64 architecture for Apple Silicon
-fltk_cflags += ['-arch', 'arm64']
-fltk_ldflags += ['-arch', 'arm64']
+fltk_result = run_command('/usr/local/opt/fltk@1.3/bin/fltk-config', '--cxxflags', check: true)
+fltk_cflags = fltk_result.stdout().strip().split()
+fltk_result = run_command('/usr/local/opt/fltk@1.3/bin/fltk-config', '--ldflags', check: true)
+fltk_ldflags = fltk_result.stdout().strip().split()
 
 add_project_arguments(fltk_cflags, language : 'cpp')
 

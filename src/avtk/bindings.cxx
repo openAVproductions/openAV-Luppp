@@ -18,6 +18,7 @@
 
 
 #include "bindings.h"
+#include "avtk_helpers.h"
 
 #include <sstream>
 
@@ -45,10 +46,11 @@ Bindings::Bindings( int _x, int _y, int _w, int _h, const char *_label ) :
 void Bindings::draw()
 {
 	if (damage() & FL_DAMAGE_ALL) {
-		cairo_t *cr = Fl::cairo_cc();
+		avtk_cairo_begin(w, h);
 		cairo_save( cr );
 
 		cairo_set_source_rgba( cr, 255 / 255.f, 255 / 255.f , 255 / 255.f , 1 );
+		cairo_select_font_face( cr, "sans-serif", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL );
 		cairo_set_font_size( cr, 11 );
 		cairo_move_to( cr, x + 7, y+15 );
 		cairo_show_text( cr, "Action:" );

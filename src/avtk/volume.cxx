@@ -17,6 +17,7 @@
  */
 
 #include "volume.hxx"
+#include "avtk_helpers.h"
 
 using namespace Avtk;
 
@@ -90,7 +91,7 @@ void Volume::set_active(bool a)
 void Volume::draw()
 {
 	if (damage() & FL_DAMAGE_ALL) {
-		cairo_t *cr = Fl::cairo_cc();
+		avtk_cairo_begin(w, h);
 
 		cairo_save( cr );
 

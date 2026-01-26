@@ -21,6 +21,7 @@
 #define AVTK_BOX_H
 
 #include <FL/Fl_Widget.H>
+#include "avtk_helpers.h"
 
 namespace Avtk
 {
@@ -59,7 +60,7 @@ public:
 	void draw()
 	{
 		if (damage() & FL_DAMAGE_ALL) {
-			cairo_t *cr = Fl::cairo_cc();
+			avtk_cairo_begin(w, h);
 
 			cairo_save( cr );
 

@@ -22,6 +22,7 @@
 
 #include <FL/Fl_Widget.H>
 #include <FL/Fl_Slider.H>
+#include "avtk_helpers.h"
 #include <valarray>
 #include <string>
 
@@ -105,7 +106,7 @@ public:
 	void draw()
 	{
 		if (damage() & FL_DAMAGE_ALL) {
-			cairo_t *cr = Fl::cairo_cc();
+			avtk_cairo_begin(w, h);
 
 			cairo_save( cr );
 

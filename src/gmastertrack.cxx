@@ -18,7 +18,7 @@
 
 #include "gmastertrack.hxx"
 
-#include <FL/Fl_Menu_Item.H>
+#include <FL/fl_ask.H>
 
 static void gmastertrack_tempoDial_callback(Fl_Widget *w, void *data)
 {
@@ -132,28 +132,17 @@ static void gmastertrack_button_callback(Fl_Widget *w, void *data)
 {
 	if ( strcmp( w->label(), "Metro" ) == 0 ) {
 		if ( Fl::event_button() == FL_RIGHT_MOUSE ) {
-			// popup volume menu: 10 "steps of volume"
-			Fl_Menu_Item rclick_menu[] = {
-				{ "Vol 100%" },
-				{ "Vol  75%" },
-				{ "Vol  50%" },
-				{ "Vol  25%"},
-				{ 0 }
-			};
-
-			Fl_Menu_Item *m = (Fl_Menu_Item*) rclick_menu->popup( Fl::event_x(), Fl::event_y(), 0, 0, 0);
-
+			// Use simple choice dialog instead of popup menu to avoid Fl_Menu_Item bug
+			int choice = fl_choice("Select Metronome Volume:", "Vol 100%", "Vol 75%", "Vol 50%", "Vol 25%");
+			
 			float v = 0.f;
-			if ( !m ) {
-				return;
-			} else if ( strcmp(m->label(), "Vol 100%") == 0 ) {
-				v = 1;
-			} else if ( strcmp(m->label(), "Vol  75%") == 0 ) {
-				v = 0.75;
-			} else if ( strcmp(m->label(), "Vol  50%") == 0 ) {
-				v = 0.5;
-			} else
-				v = 0.25;
+			switch(choice) {
+				case 0: v = 1.0; break;
+				case 1: v = 0.75; break;
+				case 2: v = 0.5; break;
+				case 3: v = 0.25; break;
+				default: return;
+			}
 
 			LUPPP_NOTE("metro vol = %f", v );
 

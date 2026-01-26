@@ -20,6 +20,7 @@
 #define AVTK_WAVEFORM_H
 
 #include <FL/Fl_Widget.H>
+#include "avtk_helpers.h"
 #include <vector>
 #include <string>
 #include <iostream>
@@ -84,7 +85,7 @@ public:
 	void draw()
 	{
 		if (damage() & FL_DAMAGE_ALL) {
-			cairo_t *cr = Fl::cairo_cc();
+			avtk_cairo_begin(w, h);
 			cairo_save(cr);
 
 			// clear the surface
@@ -141,8 +142,7 @@ public:
 
 					// draw text
 					cairo_move_to( cr,  0 + (w/2.f) - 65, 0 + (h/2.f) + 10 );
-					cairo_set_source_rgb ( cr, 0.6,0.6,0.6);
-					cairo_set_font_size( cr, 20 );
+					cairo_set_source_rgb ( cr, 0.6,0.6,0.6);				cairo_select_font_face( cr, "sans-serif", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL );					cairo_set_font_size( cr, 20 );
 					cairo_show_text( cr, "No data loaded" );
 				} else {
 					// don't draw every sample
