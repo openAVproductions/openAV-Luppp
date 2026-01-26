@@ -21,6 +21,9 @@
 
 #include <stdio.h>
 
+// Static member initialization
+int AudioBuffer::privateID = 0;
+
 AudioBuffer::AudioBuffer()
 {
 	ID = privateID++;

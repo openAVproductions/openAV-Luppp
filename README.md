@@ -88,6 +88,74 @@ ninja
 ./luppp
 ```
 
+Audio Backend Configuration
+----------------------------
+
+Luppp supports multiple audio backends for cross-platform compatibility:
+
+### JACK Backend (Default)
+
+The default audio backend uses JACK for low-latency audio I/O. This is the recommended backend for Linux and macOS users running a JACK server.
+
+```bash
+# Standard build with JACK (default)
+meson setup build
+cd build
+ninja
+./luppp
+```
+
+**Requirements**: JACK audio server must be installed and running.
+
+### RtAudio Backend (Cross-Platform)
+
+For systems without JACK or for native audio API integration, use the RtAudio backend:
+
+```bash
+# Build with RtAudio backend
+meson setup build -Daudio_backend=rtaudio
+cd build
+ninja
+./luppp
+```
+
+The RtAudio backend automatically selects the appropriate native audio API:
+- **macOS**: CoreAudio
+- **Linux**: ALSA
+- **Windows**: WASAPI
+
+### Switching Backends
+
+To reconfigure an existing build directory:
+
+```bash
+# Switch from JACK to RtAudio
+meson configure build -Daudio_backend=rtaudio
+cd build
+ninja
+
+# Switch back to JACK
+meson configure build -Daudio_backend=jack
+cd build
+ninja
+```
+
+### Platform-Specific Notes
+
+**macOS with RtAudio:**
+- Uses CoreAudio directly (no JACK required)
+- Lower latency possible with native CoreAudio integration
+- MIDI support via CoreMIDI (RtMidi)
+
+**Linux with RtAudio:**
+- Uses ALSA directly
+- Requires `libasound2-dev` package
+- May have higher latency than JACK
+
+**Windows with RtAudio:**
+- Uses WASAPI for modern Windows audio
+- Native Windows MIDI support
+
 
 Issues
 ------

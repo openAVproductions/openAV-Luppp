@@ -1,1 +1,2 @@
 option('tests', type : 'boolean', value : true, description : 'Build tests')
+option('audio_backend', type : 'combo', choices : ['jack', 'rtaudio'], value : 'jack', description : 'Audio backend to use (jack or rtaudio)')

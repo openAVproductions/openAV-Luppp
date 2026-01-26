@@ -36,6 +36,7 @@ public:
 	TimeManager();
 
 	double getFpb();
+	void setSamplerate(int sr);  // Set samplerate after construction
 	void queueBpmChange(float bpm);
 	void queueBpmChangeZeroOne(float bpm);
 	void queueFpbChange(double f);

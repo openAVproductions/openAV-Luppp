@@ -19,6 +19,8 @@
 #ifndef LUPPP_JACK_H
 #define LUPPP_JACK_H
 
+#include "audioengine.hxx"
+
 // Library
 #include <vector>
 #include <cstring>
@@ -51,8 +53,9 @@ using namespace std;
 /** Jack
   This code contains the JACK client.
   It allows reading / writing of audio / midi.
+  Implements AudioEngine interface.
 **/
-class Jack
+class Jack : public AudioEngine
 {
 public:
 	Jack(std::string name);
@@ -60,60 +63,62 @@ public:
 
 	static void setup(std::string name);
 
-	void activate();
-	/// quits the JACK client, destroying ports etc. Call only on exit of Luppp.
-	void quit();
+	// AudioEngine interface implementation
+	virtual void activate() override;
+	virtual void quit() override;
+	virtual int getBuffersize() override;
+	virtual int getSamplerate() override;
+	virtual void processFrames(int nframes) override;
+	virtual void clearInternalBuffers(int nframes) override;
 
-	int getBuffersize();
-	int getSamplerate();
-	int setBufferSizeCallback();
-	static int bufferSizeCallback(jack_nframes_t nframes, void *arg);
+	virtual Looper* getLooper(int t) override;
+	virtual TrackOutput* getTrackOutput(int t) override;
 
-	// Luppp process callback: bar() events can occur between these
-	void processFrames(int nframes);
-
-	//Sets the first nframes of all the internal output buffers to zero. NO LIMIT CHECKS
-	void clearInternalBuffers(int nframes);
-
-	/// get functions for components owned by Jack
-	Looper*             getLooper(int t);
-	TrackOutput*        getTrackOutput(int t);
-
-	State*              getState()
+	virtual State* getState() override
 	{
 		return state;
 	}
-	Logic*              getLogic()
+	virtual Logic* getLogic() override
 	{
 		return logic;
 	}
-	Metronome*          getMetronome()
+	virtual Metronome* getMetronome() override
 	{
 		return metronome;
 	}
-	GridLogic*          getGridLogic()
+	virtual GridLogic* getGridLogic() override
 	{
 		return gridLogic;
 	}
-	TimeManager*        getTimeManager()
+	virtual TimeManager* getTimeManager() override
 	{
 		return timeManager;
 	}
-	ControllerUpdater*  getControllerUpdater()
+	virtual ControllerUpdater* getControllerUpdater() override
 	{
 		return controllerUpdater;
 	}
+
+	virtual void transportRolling(bool rolling) override;
+	virtual void transportState(bool rolling) override
+	{
+		transportRolling(rolling);
+	}
+
+	virtual void midiBindingEnable(int eventType, int track, int scene, int send, int active) override;
+	virtual void midiBindingDisable() override;
+
+	virtual void registerMidiIO(MidiIO* mo) override;
+	virtual void unregisterMidiIO(MidiIO* mo) override;
+
+	// JACK-specific methods
+	int setBufferSizeCallback();
+	static int bufferSizeCallback(jack_nframes_t nframes, void *arg);
 	
 	float getInputVolume() 
 	{
 		return inputVol;
 	}
-
-	void transportRolling(bool rolling);
-
-	/// register a MIDI observer
-	void registerMidiIO( MidiIO* mo );
-	void unregisterMidiIO( MidiIO* mo );
 
 	/// set the master i/o volume / sends
 	void inputVolume( float vol );
@@ -129,7 +134,7 @@ public:
 
 	void resetMidiBindingState();
 
-	// MIDI binding creation
+	// MIDI binding creation (public for legacy access)
 	bool bindingEventRecordEnable;
 	int bindingEventType;
 	int bindingTrack;

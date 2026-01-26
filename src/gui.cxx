@@ -29,6 +29,9 @@
 #include "jack.hxx"
 extern Jack* jack;
 
+#include "audioengine.hxx"
+extern AudioEngine* g_pAudioEngine;
+
 #include "audiobuffer.hxx"
 #include "controller/nonseq.hxx"
 #include "controller/genericmidi.hxx"
@@ -324,10 +327,20 @@ static int cb_nsm_open (const char *name,
 {
 	LUPPP_NOTE("NSM: Open, displayname: %s", display_name );
 
-	Jack::setup( client_id );
+	// Initialize AudioEngine if not already done (NSM delayed initialization)
+	if (!g_pAudioEngine) {
+#ifdef AUDIO_BACKEND_JACK
+		Jack::setup( client_id );
+#elif defined(AUDIO_BACKEND_RTAUDIO)
+		g_pAudioEngine = AudioEngine::create(client_id, "rtaudio");
+		if (g_pAudioEngine) {
+			g_pAudioEngine->activate();
+		}
+#endif
+	}
 
 	// we *must* get the samplerate here: loading files depends on this information!
-	gui->samplerate = jack->getSamplerate();
+	gui->samplerate = g_pAudioEngine ? g_pAudioEngine->getSamplerate() : 44100;
 
 	stringstream loadPath;
 	loadPath << name;

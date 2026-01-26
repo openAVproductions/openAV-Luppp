@@ -24,6 +24,9 @@
 #include <fstream>
 #include <iostream>
 
+#include "../audioengine.hxx"
+extern AudioEngine* g_pAudioEngine;
+
 #include "../jack.hxx"
 #include "../logic.hxx"
 #include "../gridlogic.hxx"
@@ -220,7 +223,7 @@ void GenericMIDI::midi(unsigned char* midi)
 		              jack->bindingActive );
 
 		// reset jack state, so bindings defaults are setup after each creation
-		jack->resetMidiBindingState();
+		g_pAudioEngine->resetMidiBindingState();
 
 		// binding is now created, so disable GUI binding enable button
 		EventControllerBindingEnable e( getID(), false );

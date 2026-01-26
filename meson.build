@@ -11,12 +11,43 @@ if(get_option('tests') == true)
   add_project_arguments('-DBUILD_TESTS', language : 'cpp')
 endif
 
+# Audio backend selection
+audio_backend = get_option('audio_backend')
+message('Selected audio backend: ' + audio_backend)
+
+if audio_backend == 'jack'
+  add_project_arguments('-DAUDIO_BACKEND_JACK', language : 'cpp')
+elif audio_backend == 'rtaudio'
+  add_project_arguments('-DAUDIO_BACKEND_RTAUDIO', language : 'cpp')
+  
+  # Platform-specific RtAudio configuration
+  if host_machine.system() == 'darwin'
+    add_project_arguments('-D__MACOSX_CORE__', language : 'cpp')
+    message('RtAudio: Using CoreAudio backend for macOS')
+  elif host_machine.system() == 'linux'
+    add_project_arguments('-D__LINUX_ALSA__', language : 'cpp')
+    message('RtAudio: Using ALSA backend for Linux')
+  elif host_machine.system() == 'windows'
+    add_project_arguments('-D__WINDOWS_WASAPI__', language : 'cpp')
+    message('RtAudio: Using WASAPI backend for Windows')
+  endif
+endif
+
 add_project_arguments('-Wno-unused-variable', language : 'cpp')
 add_project_arguments('-Wno-reorder', language : 'cpp')
 add_project_arguments('-Wno-sign-compare', language : 'cpp')
 
 cc  = meson.get_compiler('c')
 cpp = meson.get_compiler('cpp')
+
+# Force ARM64 architecture on macOS (Apple Silicon)
+if host_machine.system() == 'darwin'
+  add_project_arguments('-arch', 'arm64', language: 'c')
+  add_project_arguments('-arch', 'arm64', language: 'cpp')
+  add_project_link_arguments('-arch', 'arm64', language: 'c')
+  add_project_link_arguments('-arch', 'arm64', language: 'cpp')
+  message('Forcing ARM64 architecture for Apple Silicon')
+endif
 
 luppp_src = []
 subdir('src')
@@ -54,15 +85,33 @@ add_project_arguments(fltk_cflags, language : 'cpp')
 dep_names = [
   'cairo',
   'liblo',
-  'jack',
   'sndfile',
   'samplerate',
+  'jack',  # Always needed for jack_ringbuffer utility functions
   ]
+
 deps = []
 
 foreach dep : dep_names
   deps += dependency(dep)
 endforeach
+
+# RtAudio-specific platform dependencies
+if audio_backend == 'rtaudio'
+  if host_machine.system() == 'darwin'
+    # macOS: Add CoreAudio, CoreMIDI and CoreFoundation frameworks
+    deps += dependency('appleframeworks', modules: ['CoreAudio', 'CoreMIDI', 'CoreFoundation'])
+  elif host_machine.system() == 'linux'
+    # Linux: Add ALSA
+    deps += dependency('alsa')
+    deps += dependency('threads')
+  elif host_machine.system() == 'windows'
+    # Windows: WASAPI is part of Windows SDK, no extra deps needed
+  endif
+else
+  # JACK backend also needs jack ringbuffer even though we already added jack dependency
+  # This ensures all JACK symbols are available
+endif
 
 # Add FLTK as a declared dependency
 fltk_dep = declare_dependency(

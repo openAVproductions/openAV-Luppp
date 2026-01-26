@@ -18,6 +18,9 @@
 
 #include "logic.hxx"
 
+#include "audioengine.hxx"
+extern AudioEngine* g_pAudioEngine;
+
 #include "jack.hxx"
 extern Jack* jack;
 
@@ -26,6 +29,7 @@ extern Jack* jack;
 #include "trackoutput.hxx"
 #include "metronome.hxx"
 #include "jacksendreturn.hxx"
+
 Logic::Logic()
 {
 
@@ -33,65 +37,65 @@ Logic::Logic()
 
 void Logic::tapTempo()
 {
-	jack->getTimeManager()->tap();
+	g_pAudioEngine->getTimeManager()->tap();
 }
 
 void Logic::setBpm(float bpm)
 {
-	jack->getTimeManager()->queueBpmChange( bpm );
+	g_pAudioEngine->getTimeManager()->queueBpmChange( bpm );
 }
 
 void Logic::setBpmZeroOne(float bpm)
 {
-	jack->getTimeManager()->queueBpmChangeZeroOne( bpm );
+	g_pAudioEngine->getTimeManager()->queueBpmChangeZeroOne( bpm );
 }
 
 void Logic::metronomeEnable(bool b)
 {
-	jack->getMetronome()->setActive(b);
-	jack->getControllerUpdater()->metronomeEnable( b );
+	g_pAudioEngine->getMetronome()->setActive(b);
+	g_pAudioEngine->getControllerUpdater()->metronomeEnable( b );
 }
 
 void Logic::masterInputVol( float v )
 {
-	jack->inputVolume( v );
-	jack->getControllerUpdater()->masterInputVol( v );
+	g_pAudioEngine->inputVolume( v );
+	g_pAudioEngine->getControllerUpdater()->masterInputVol( v );
 }
 
 void Logic::masterInputTo( int to, float v )
 {
-	jack->inputTo( (Event::INPUT_TO)to, v );
-	jack->getControllerUpdater()->masterInputTo( to, v );
+	g_pAudioEngine->inputTo( (Event::INPUT_TO)to, v );
+	g_pAudioEngine->getControllerUpdater()->masterInputTo( to, v );
 }
 
 void Logic::masterInputToActive( int inputTo, bool active)
 {
-	jack->inputToActive( (Event::INPUT_TO)inputTo, active);
-	jack->getControllerUpdater()->masterInputToActive( (int)inputTo, active );
+	g_pAudioEngine->inputToActive( (Event::INPUT_TO)inputTo, active);
+	g_pAudioEngine->getControllerUpdater()->masterInputToActive( (int)inputTo, active );
 }
 
 void Logic::masterReturn( int returnNum, float value )
 {
-	jack->returnVolume( value );
-	jack->getControllerUpdater()->masterReturnVolume( value );
+	g_pAudioEngine->returnVolume( value );
+	g_pAudioEngine->getControllerUpdater()->masterReturnVolume( value );
 }
 
 void Logic::trackPan(int t, float p)
 {
 	if ( t >= 0 && t < NTRACKS ) {
-		jack->getTrackOutput( t )->setPan( p );
-		jack->getControllerUpdater()->pan( t, p );
+		g_pAudioEngine->getTrackOutput( t )->setPan( p );
+		g_pAudioEngine->getControllerUpdater()->pan( t, p );
 	}
 }
 
 void Logic::trackVolume(int t, float v)
 {
 	if ( t == -1 ) { // master track
-		jack->masterVolume(v);
-		jack->getControllerUpdater()->masterVolume( v );
+		g_pAudioEngine->masterVolume(v);
+		g_pAudioEngine->getControllerUpdater()->masterVolume( v );
 	} else if ( t >= 0 && t < NTRACKS ) {
-		jack->getTrackOutput( t )->setMaster( v );
-		jack->getControllerUpdater()->volume( t, v );
+		g_pAudioEngine->getTrackOutput( t )->setMaster( v );
+		g_pAudioEngine->getControllerUpdater()->volume( t, v );
 	} else {
 		LUPPP_WARN("invalid track number %i: check controller map has \"track\" field.", t );
 	}
@@ -130,8 +134,12 @@ void Logic::trackSend(int t, int send, float v)
 void Logic::trackJackSendActivate(int t, bool active)
 {
 	if ( t >= 0 && t < NTRACKS ) {
+#ifdef AUDIO_BACKEND_JACK
 		jack->getJackSendReturn(t)->activate(active);
 		jack->getControllerUpdater()->setTrackJackSendActive( t, active );
+#else
+		LUPPP_NOTE("trackJackSendActivate not available with RtAudio backend");
+#endif
 	} else {
 		LUPPP_WARN("invalid track number %i: check controller map has \"track\" field.", t );
 	}
@@ -140,8 +148,12 @@ void Logic::trackJackSendActivate(int t, bool active)
 void Logic::trackJackSend(int t, float vol)
 {
 	if ( t >= 0 && t < NTRACKS ) {
+#ifdef AUDIO_BACKEND_JACK
 		jack->getJackSendReturn(t)->sendVolume(vol);
 		jack->getControllerUpdater()->setTrackJackSend( t, vol );
+#else
+		LUPPP_NOTE("trackJackSend not available with RtAudio backend");
+#endif
 	} else {
 		LUPPP_WARN("invalid track number %i: check controller map has \"track\" field.", t );
 	}

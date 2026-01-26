@@ -18,13 +18,15 @@
 
 #include "time.hxx"
 
-#include "../jack.hxx"
-extern Jack* jack;
+#include "../audioengine.hxx"
+extern AudioEngine* g_pAudioEngine;
 
 #include "../timemanager.hxx"
 
 TimeObserver::TimeObserver()
 {
-	jack->getTimeManager()->registerObserver( this );
+	// Register with TimeManager if g_pAudioEngine is available
+	if (g_pAudioEngine && g_pAudioEngine != nullptr) {
+		g_pAudioEngine->getTimeManager()->registerObserver( this );
+	}
 }
-

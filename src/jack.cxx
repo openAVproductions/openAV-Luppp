@@ -45,8 +45,6 @@
 
 using namespace std;
 
-int AudioBuffer::privateID = 0;
-
 // static pointers from main
 extern Gui* gui;
 extern Jack* jack;
@@ -72,6 +70,21 @@ void Jack::resetMidiBindingState()
 	bindingScene = -1;
 	bindingSend  = -1;
 	bindingActive= 1;
+}
+
+void Jack::midiBindingEnable(int eventType, int track, int scene, int send, int active)
+{
+	bindingEventRecordEnable = true;
+	bindingEventType = eventType;
+	bindingTrack = track;
+	bindingScene = scene;
+	bindingSend = send;
+	bindingActive = active;
+}
+
+void Jack::midiBindingDisable()
+{
+	resetMidiBindingState();
 }
 
 Jack::Jack( std::string name ) :
@@ -549,7 +562,7 @@ void Jack::processFrames(int nframes)
 
 	/// mix input, reverb & post-sidechain in
 	for(unsigned int i = 0; i < nframes; i++) {
-		// compute *lags für smoothing
+		// compute *lags for smoothing
 		inputToMixVolLag += smoothing_value * (inputToMixVol - inputToMixVolLag);
 		inputToSendVolLag += smoothing_value * (inputToSendVol - inputToSendVolLag);
 		inputToXSideVolLag += smoothing_value * (inputToXSideVol - inputToXSideVolLag);

@@ -25,7 +25,8 @@
 #include "buffers.hxx"
 #include "observer/time.hxx"
 
-extern Jack* jack;
+#include "audioengine.hxx"
+extern AudioEngine* g_pAudioEngine;
 
 using namespace std;
 
@@ -35,7 +36,7 @@ Metronome::Metronome() :
 	active     (false),
 	playPoint  (0)
 {
-	const uint32_t sr = jack->getSamplerate();
+	const uint32_t sr = g_pAudioEngine ? g_pAudioEngine->getSamplerate() : 44100;
 	const uint32_t bipDuration = (sr / 10);
 	//Create Beat/Bar samples
 	beatSample=new float[bipDuration];

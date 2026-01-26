@@ -27,10 +27,11 @@
 
 #include "controllerupdater.hxx"
 #include "timemanager.hxx"
+#include "audioengine.hxx"
 #include <math.h>
 
 
-extern Jack* jack;
+extern AudioEngine* g_pAudioEngine;
 
 LooperClip::LooperClip(int t, int s) :
 	Stately(),
@@ -249,7 +250,7 @@ void LooperClip::bar()
 	if ( _recording ) {
 		// FIXME: assumes 4 beats in a bar
 		_buffer->setBeats( _buffer->getBeats() + 4 );
-		_buffer->setAudioFrames( jack->getTimeManager()->getFpb() * _buffer->getBeats() );
+		_buffer->setAudioFrames( g_pAudioEngine->getTimeManager()->getFpb() * _buffer->getBeats() );
 	}
 
 	if ( _playing ) {
@@ -376,8 +377,10 @@ void LooperClip::setStopped()
 
 void LooperClip::updateController()
 {
-	jack->getControllerUpdater()->setSceneState(track, scene, getState());
-	jack->getControllerUpdater()->setTrackSceneProgress(track, scene, getProgress());
+	if (g_pAudioEngine) {
+		g_pAudioEngine->getControllerUpdater()->setSceneState(track, scene, getState());
+		g_pAudioEngine->getControllerUpdater()->setTrackSceneProgress(track, scene, getProgress());
+	}
 }
 
 GridLogic::State LooperClip::getState()

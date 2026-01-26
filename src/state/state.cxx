@@ -22,9 +22,9 @@
 #include "../event.hxx"
 #include "../eventhandler.hxx"
 
-#include "../jack.hxx"
+#include "../audioengine.hxx"
 
-extern Jack* jack;
+extern AudioEngine* g_pAudioEngine;
 
 using namespace std;
 
@@ -50,7 +50,7 @@ void State::reset()
 		statelys.at(i)->reset();
 	}
 
-	jack->getGridLogic()->updateState();
+	g_pAudioEngine->getGridLogic()->updateState();
 }
 
 void State::finish()

@@ -5,6 +5,7 @@ version_hxx = vcs_tag(
 
 luppp_src = files(
   'audiobuffer.cxx',
+  'audioengine.cxx',
   'controllerupdater.cxx',
   'debug.cxx',
   'diskreader.cxx',
@@ -18,8 +19,6 @@ luppp_src = files(
   'gridlogic.cxx',
   'gtrack.cxx',
   'gui.cxx',
-  'jack.cxx',
-  'jacksendreturn.cxx',
   'logic.cxx',
   'looperclip.cxx',
   'looper.cxx',
@@ -28,6 +27,19 @@ luppp_src = files(
   'timemanager.cxx',
   'trackoutput.cxx'
   )
+
+# Add backend-specific sources
+if get_option('audio_backend') == 'jack'
+  luppp_src += files(
+    'jack.cxx',
+    'jacksendreturn.cxx',
+  )
+elif get_option('audio_backend') == 'rtaudio'
+  luppp_src += files(
+    'rtaudiomidi/RtAudio.cpp',
+    'rtaudiomidi/RtMidi.cpp',
+  )
+endif
 
 subdir('cjson')
 subdir('dsp')

@@ -30,9 +30,9 @@
 
 #include "observer/time.hxx"
 
-#include "jack.hxx"
+#include "audioengine.hxx"
 
-extern Jack* jack;
+extern AudioEngine* g_pAudioEngine;
 
 using namespace std;
 
@@ -40,7 +40,12 @@ TimeManager::TimeManager():
 	transportState( TRANSPORT_ROLLING ),
 	observers()
 {
-	samplerate = jack->getSamplerate();
+	// Default samplerate - can be overridden with setSamplerate()
+	if (g_pAudioEngine && g_pAudioEngine != nullptr) {
+		samplerate = g_pAudioEngine->getSamplerate();
+	} else {
+		samplerate = 44100;  // Default fallback
+	}
 	// 120 BPM default
 	_fpb = samplerate / 2;
 
@@ -67,6 +72,13 @@ TimeManager::TimeManager():
 double TimeManager::getFpb()
 {
 	return _fpb;
+}
+
+void TimeManager::setSamplerate(int sr)
+{
+	samplerate = sr;
+	// Recalculate FPB with new samplerate
+	_fpb = samplerate / 2;  // 120 BPM default
 }
 
 void TimeManager::queueBpmChange(float bpm)
@@ -185,9 +197,9 @@ void TimeManager::setTransportState( TRANSPORT_STATE s )
 {
 	transportState = s;
 	if(transportState == TRANSPORT_STOPPED)
-		jack->transportRolling(false);
+		g_pAudioEngine->transportRolling(false);
 	else {
-		jack->transportRolling(true);
+		g_pAudioEngine->transportRolling(true);
 		barCounter  = 0;
 		beatCounter = 0;
 		beatFrameCountdown = -1;
@@ -236,7 +248,7 @@ void TimeManager::process(Buffers* buffers)
 
 		// process before beat:
 		if(before)
-			jack->processFrames( before );
+			g_pAudioEngine->processFrames( before );
 
 		// handle beat:
 		// inform observers of new beat FIRST
@@ -261,9 +273,9 @@ void TimeManager::process(Buffers* buffers)
 
 		// process after
 		// we need to clear internal buffers in order to write *after* frames to them
-		jack->clearInternalBuffers(nframes);
+		g_pAudioEngine->clearInternalBuffers(nframes);
 		if(after)
-			jack->processFrames( after );
+			g_pAudioEngine->processFrames( after );
 
 		// write new beat to UI (bar info currently not used)
 		EventTimeBarBeat e( barCounter, beatCounter );
@@ -274,7 +286,7 @@ void TimeManager::process(Buffers* buffers)
 		beatFrameCountdown = _fpb-after;
 		beatCounter++;
 	} else {
-		jack->processFrames( nframes );
+		g_pAudioEngine->processFrames( nframes );
 		beatFrameCountdown -= nframes;
 
 	}

@@ -32,16 +32,18 @@
 #include "eventhandler.hxx"
 #include "controllerupdater.hxx"
 #include "timemanager.hxx"
+#include "audioengine.hxx"
 
-extern Jack* jack;
+extern AudioEngine* g_pAudioEngine;
 
 Looper::Looper(int t) :
 	AudioProcessor(),
 	TimeObserver(),
 	track(t)
 {
-	uiUpdateConstant= jack->getSamplerate() / 30.f;
-	uiUpdateCounter = jack->getSamplerate() / 30.f;
+	const uint32_t sr = g_pAudioEngine ? g_pAudioEngine->getSamplerate() : 44100;
+	uiUpdateConstant= sr / 30.f;
+	uiUpdateCounter = sr / 30.f;
 
 	// pre-zero the internal sample
 	//tmpRecordBuffer = (float*)malloc( sizeof(float) * MAX_BUFFER_SIZE );
@@ -53,10 +55,10 @@ Looper::Looper(int t) :
 
 	tmpBuffer.resize( MAX_BUFFER_SIZE );
 
-	fpb = jack->getTimeManager()->getFpb();
+	fpb = g_pAudioEngine ? g_pAudioEngine->getTimeManager()->getFpb() : 0;
 
 	// init faust pitch shift variables
-	fSamplingFreq = jack->getSamplerate();
+	fSamplingFreq = g_pAudioEngine ? g_pAudioEngine->getSamplerate() : 44100;
 	IOTA = 0;
 
 	//tmpRecordBuffer.resize(MAX_BUFFER_SIZE);
@@ -120,8 +122,8 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 			float* inputR = buffers->audio[Buffers::MASTER_INPUT_R];
 
 			for (unsigned int i = 0; i < nframes; i++ ) {
-				inputL[i] *= jack->getInputVolume();
-				inputR[i] *= jack->getInputVolume();
+				inputL[i] *= g_pAudioEngine->getInputVolume();
+				inputR[i] *= g_pAudioEngine->getInputVolume();
 			}
 
 			clips[clip]->record( nframes, inputL, inputR);
@@ -172,7 +174,7 @@ void Looper::process(unsigned int nframes, Buffers* buffers)
 			//printf("Looper %i playing(), speed = %f\n", track, playSpeed );
 
 			if ( uiUpdateCounter > uiUpdateConstant ) {
-				jack->getControllerUpdater()->setTrackSceneProgress(track, clip, clips[clip]->getProgress() );
+				g_pAudioEngine->getControllerUpdater()->setTrackSceneProgress(track, clip, clips[clip]->getProgress() );
 				uiUpdateCounter = 0;
 			}
 			uiUpdateCounter += nframes;

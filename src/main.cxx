@@ -26,7 +26,16 @@
 #include <jack/ringbuffer.h>
 
 #include "gui.hxx"
+#include "audioengine.hxx"
+
+#ifdef AUDIO_BACKEND_JACK
 #include "jack.hxx"
+#endif
+
+#ifdef AUDIO_BACKEND_RTAUDIO
+// RtAudio headers already included in audioengine.hxx
+#endif
+
 #include "event.hxx"
 #include "denormals.hxx"
 
@@ -38,8 +47,11 @@ EventBase* processGuiMem = 0;
 jack_ringbuffer_t* rbToDsp = 0;
 jack_ringbuffer_t* rbToGui = 0;
 
-// global static pointers, for access from EventHandlerGui and EventHandlerDsp
-Gui * gui  = nullptr;
+// Global pointers
+Gui* gui = nullptr;
+AudioEngine* g_pAudioEngine = nullptr;
+
+// Legacy compatibility pointer - points to same instance as g_pAudioEngine
 Jack* jack = nullptr;
 
 
@@ -98,23 +110,33 @@ int main(int argc, char** argv)
 
 		// setup the testing Gui / JACK: Jack first, then GUI
 		gui = new Gui( argv[0] );
-		Jack::setup("LupppTEST");
+
+#ifdef AUDIO_BACKEND_JACK
+		g_pAudioEngine = new Jack("LupppTEST");
+		jack = static_cast<Jack*>(g_pAudioEngine);  // Legacy compatibility
+		g_pAudioEngine->activate();
 
 		// test offline functionality
 		testResult += gui->getDiskReader()->runTests();
 		testResult += gui->getDiskWriter()->runTests();
 
 		// test realtime functionality
-		testResult += jack->getGridLogic()->runTests();
+		testResult += g_pAudioEngine->getGridLogic()->runTests();
 
-		jack->quit();
+		g_pAudioEngine->quit();
 
 		delete gui;
-		delete jack;
-		jack = 0;
+		delete g_pAudioEngine;
+		g_pAudioEngine = nullptr;
+		jack = nullptr;
 
 		// running tests == quitting after testing finishes
 		return testResult;
+#else
+		LUPPP_ERROR("Tests only supported with JACK backend");
+		delete gui;
+		return -1;
+#endif
 	}
 
 #endif
@@ -127,13 +149,33 @@ int main(int argc, char** argv)
 		// the NSM OSC Open message will trigger Jack initialization: necessary
 		// to use the right name to create the JACK client.
 	} else {
-		Jack::setup("Luppp");
-		jack->activate();
+#ifdef AUDIO_BACKEND_JACK
+		g_pAudioEngine = new Jack("Luppp");
+		jack = static_cast<Jack*>(g_pAudioEngine);  // Legacy compatibility
+		g_pAudioEngine->activate();
+#elif defined(AUDIO_BACKEND_RTAUDIO)
+		g_pAudioEngine = AudioEngine::create("Luppp", "rtaudio");
+		if (g_pAudioEngine) {
+			g_pAudioEngine->activate();
+			LUPPP_NOTE("RtAudio backend activated");
+		} else {
+			LUPPP_ERROR("Failed to create RtAudio backend");
+			delete gui;
+			return -1;
+		}
+#else
+		#error "No audio backend defined"
+#endif
 	}
 
 	gui->show();
 
-    delete gui;
+	delete gui;
+
+	if (g_pAudioEngine) {
+		g_pAudioEngine->quit();
+		delete g_pAudioEngine;
+	}
 
 	return 0;
 }

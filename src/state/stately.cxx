@@ -18,18 +18,20 @@
 
 #include "stately.hxx"
 
-#include "../jack.hxx"
+#include "../audioengine.hxx"
 #include "../eventhandler.hxx"
 #include "state.hxx"
 
-extern Jack* jack;
+extern AudioEngine* g_pAudioEngine;
 
 int Stately::saveSuccess = 0;
 int Stately::saveErrors  = 0;
 
 Stately::Stately()
 {
-	jack->getState()->registerStately( this );
+	if (g_pAudioEngine) {
+		g_pAudioEngine->getState()->registerStately( this );
+	}
 }
 
 
@@ -43,8 +45,8 @@ void Stately::save()
 
 void Stately::checkCompletedSave()
 {
-	if ( (saveSuccess + saveErrors) >= jack->getState()->getNumStatelys() ) {
-		jack->getState()->finish();
+	if ( (saveSuccess + saveErrors) >= g_pAudioEngine->getState()->getNumStatelys() ) {
+		g_pAudioEngine->getState()->finish();
 
 		if ( saveErrors ) {
 			// send message to UI to be printed, noting # of clips unsaved due to errors

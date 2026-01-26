@@ -18,8 +18,8 @@
 
 #include "trackoutput.hxx"
 
-#include "jack.hxx"
-extern Jack* jack;
+#include "audioengine.hxx"
+extern AudioEngine* g_pAudioEngine;
 
 TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
 	AudioProcessor(),
@@ -27,11 +27,12 @@ TrackOutput::TrackOutput(int t, AudioProcessor* ap) :
 	_recordArm(false),
 	previousInChain(ap)
 {
+	const uint32_t sr = g_pAudioEngine ? g_pAudioEngine->getSamplerate() : 44100;
 	// UI update
-	uiUpdateConstant = jack->getSamplerate() / 30;
-	uiUpdateCounter  = jack->getSamplerate() / 30;
+	uiUpdateConstant = sr / 30;
+	uiUpdateCounter  = sr / 30;
 
-	dbMeter = new DBMeter( jack->getSamplerate() );
+	dbMeter = new DBMeter( sr );
 
 	_toMaster        = 0.8;
 	_toMasterLag     = 0.8;
@@ -136,7 +137,7 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 	int trackoffset = track * NCHANNELS;
 
 	//compute master volume lag;
-	_toMasterLag += jack->smoothing_value * (_toMaster - _toMasterLag);
+	_toMasterLag += g_pAudioEngine->smoothing_value * (_toMaster - _toMasterLag);
 
 	// get & zero track buffer
 	float* trackBufferL = buffers->audio[Buffers::RETURN_TRACK_0_L + trackoffset];
@@ -178,21 +179,21 @@ void TrackOutput::process(unsigned int nframes, Buffers* buffers)
 	for(unsigned int i = 0; i < nframes; i++) {
 
 		//compute master volume lag;
-		_toMasterLag += jack->smoothing_value * (_toMaster - _toMasterLag);
+		_toMasterLag += g_pAudioEngine->smoothing_value * (_toMaster - _toMasterLag);
 
 		// compute pan lag:
-		_panLLag += jack->smoothing_value * (_panL - _panLLag);
-		_panRLag += jack->smoothing_value * (_panR - _panRLag);
+		_panLLag += g_pAudioEngine->smoothing_value * (_panL - _panLLag);
+		_panRLag += g_pAudioEngine->smoothing_value * (_panR - _panRLag);
 
 		// compute send volume lag:
-		_toSendLag += jack->smoothing_value * (_toSend - _toSendLag);
+		_toSendLag += g_pAudioEngine->smoothing_value * (_toSend - _toSendLag);
 
 		// compute sidechain signal lag
-		_toPostSidechainLag += jack->smoothing_value * (_toPostSidechain - _toPostSidechainLag);
+		_toPostSidechainLag += g_pAudioEngine->smoothing_value * (_toPostSidechain - _toPostSidechainLag);
 
 		// compute discrete lag values
-		_toPostfaderActiveLag += jack->smoothing_value * (float(_toPostfaderActive) - _toPostfaderActiveLag);
-		_toKeyActiveLag       += jack->smoothing_value * (float(_toKeyActive) - _toKeyActiveLag);
+		_toPostfaderActiveLag += g_pAudioEngine->smoothing_value * (float(_toPostfaderActive) - _toPostfaderActiveLag);
+		_toKeyActiveLag       += g_pAudioEngine->smoothing_value * (float(_toKeyActive) - _toKeyActiveLag);
 		
 		// * master for "post-fader" sends
 		float tmpL = trackBufferL[i];
